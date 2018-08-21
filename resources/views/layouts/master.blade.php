@@ -10,13 +10,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
+   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ url("dist/css/AdminLTE.min.css")}}">
   <!-- daterange picker -->
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap-daterangepicker/daterangepicker.css")}}">
   <!-- bootstrap datepicker -->
@@ -29,15 +27,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
   <!-- Select2 -->
   <link rel="stylesheet" href="{{ url("bower_components/select2/dist/css/select2.min.css")}}">
-  <!-- DataTables -->
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ url("dist/css/AdminLTE.min.css")}}">
+    <!-- DataTables -->
   <link rel="stylesheet" href="{{ url("bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css")}}">
-  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-        page. However, you can choose any other skin. Make sure you
-        apply the skin class to the body tag so the changes take effect. -->
-        {{-- <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.min.css")}}"> --}}
   <!-- AdminLTE Skins. Choose a skin from the css/skins
-   folder instead of downloading all of them to reduce the load. -->
-   <link rel="stylesheet" href="{{ url("dist/css/skins/_all-skins.min.css")}}">
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{{ url("dist/css/skins/_all-skins.min.css")}}">
    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -99,37 +95,37 @@ desired effect
   <!-- REQUIRED JS SCRIPTS -->
 
   <!-- jQuery 3 -->
-  <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
-  <!-- Bootstrap 3.3.7 -->
-  <script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
-  <!-- AdminLTE App -->
-  <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
-  <!-- Select2 -->
-  <script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
-  <!-- InputMask -->
-  <script src="{{ url("plugins/input-mask/jquery.inputmask.js")}}"></script>
-  <script src="{{ url("plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
-  <script src="{{ url("plugins/input-mask/jquery.inputmask.extensions.js")}}"></script>
-  <!-- date-range-picker -->
-  <script src="{{ url("bower_components/moment/min/moment.min.js")}}"></script>
-  <script src="{{ url("bower_components/bootstrap-daterangepicker/daterangepicker.js")}}"></script>
-  <!-- bootstrap datepicker -->
-  <script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
-  <!-- bootstrap color picker -->
-  <script src="{{ url("bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js")}}"></script>
-  <!-- bootstrap time picker -->
-  <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
-  <!-- SlimScroll -->
-  <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
-  <!-- iCheck 1.0.1 -->
-  <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
-  <!-- FastClick -->
-  <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
-  <!-- DataTables -->
-  <script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
-  <script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="{{ url("dist/js/demo.js")}}"></script>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
+<!-- Select2 -->
+<script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
+<!-- InputMask -->
+<script src="{{ url("plugins/input-mask/jquery.inputmask.js")}}"></script>
+<script src="{{ url("plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
+<script src="{{ url("plugins/input-mask/jquery.inputmask.extensions.js")}}"></script>
+<!-- date-range-picker -->
+<script src="{{ url("bower_components/moment/min/moment.min.js")}}"></script>
+<script src="{{ url("bower_components/bootstrap-daterangepicker/daterangepicker.js")}}"></script>
+<!-- bootstrap datepicker -->
+<script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
+<!-- bootstrap color picker -->
+<script src="{{ url("bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js")}}"></script>
+<!-- bootstrap time picker -->
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+<!-- SlimScroll -->
+<script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
+<!-- iCheck 1.0.1 -->
+<script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
+<!-- FastClick -->
+<script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
+<!-- AdminLTE App -->
+{{-- <script src="{{ url("dist/js/adminlte.min.js")}}"></script> --}}
+<!-- AdminLTE for demo purposes -->
+<script src="{{ url("dist/js/demo.js")}}"></script>
+<!-- DataTables -->
+<script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
+<script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
   <!-- AdminLTE App -->
   {{-- <script src="{{ url("dist/js/adminlte.min.js")}}"></script> --}}
   @yield('scripts')

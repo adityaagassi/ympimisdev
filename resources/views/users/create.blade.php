@@ -50,7 +50,7 @@
         <div class="form-group row">
           <label class="col-sm-2">User Level</label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="level" style="width: 100%;">
+            <select class="form-control select2" name="level" style="width: 100%;" >
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -58,8 +58,9 @@
                   <option>5</option>
                   <option>6</option>
                   <option>7</option>
-                </select>
+            </select>
           </div>
+
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
@@ -70,10 +71,16 @@
     </div>
     
   </div>
+
   @endsection
 
+@section('scripts')
 <script>
-  	$(function () {
+  $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
+
+  })
 </script>
+@stop
+

@@ -5,11 +5,7 @@
         Blank page
         <small>it all starts here</small>
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
-      </ol>
+                    <button type="button" class="btn btn-block btn-primary">Create New User</button>
     </section>
 @endsection
 
@@ -74,7 +70,9 @@
       'info'        : true,
       'autoWidth'   : false
     })
+    $('.select2').select2()
   })
+
 </script>
 
 @stop
