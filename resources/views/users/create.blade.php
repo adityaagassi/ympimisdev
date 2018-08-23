@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
       <h1>
-        Blank page
+        User page
         <small>it all starts here</small>
       </h1>
       <ol class="breadcrumb">
@@ -79,10 +79,18 @@
 
         </div>
         <!-- /.box-body -->
-        <div class="box-footer form-group row">
-        	<div class="col-sm-6"></div>
+      <div class="box-footer form-group row">
+        	<div class="col-sm-2"></div>
+          
+
           <button type="submit" class="btn btn-primary col-sm-1">Submit</button>
-        </div>
+          <div class="col-sm-1"></div>
+                    <input type="button" value="Submit" onclick= class="btn btn-primary col-sm-1"/>
+          
+          <input type="button" value="Index User" onclick="window.location = 'http://localhost/ympimisdev/public/index/user';"/>
+                    <input type="button" value="Dashboard" onclick="window.location = 'http://localhost/ympimisdev/public/home';"/>
+          
+</div>
       </form>
     </div>
     
