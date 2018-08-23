@@ -31,7 +31,10 @@ return view('tes');
 // });
 Route::get('index/user', 'UserController@index');
 Route::get('create/user', 'UserController@create');
-Route::post('/create/user','UserController@store');
+Route::post('create/user','UserController@store');
+Route::get('destroy/user/{id}', 'UserController@destroy');
+Route::get('edit/user/{id}', 'UserController@edit');
+
 
 Auth::routes();
 

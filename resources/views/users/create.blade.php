@@ -15,6 +15,16 @@
 @section('content')
 <section class="content">
 
+   
+            @if ($errors->has('password'))
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                {{ $errors->first() }}
+            </div>   
+            @endif
+
+
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-header with-border">
@@ -45,6 +55,12 @@
           <label class="col-sm-2">Password</label>
           <div class="col-sm-5">
             <input type="password" class="form-control" name="password" placeholder="Enter Password">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2">Confirm Password</label>
+          <div class="col-sm-5">
+            <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirm Password">
           </div>
         </div>
         <div class="form-group row">

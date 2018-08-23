@@ -15,9 +15,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all()->toArray();
-        return view('users.index', compact('users'));
-        //
+        // $users = User::all()->toArray();
+        // return view('users.index', compact('users'));
+        
+        $users = User::orderBy('name', 'ASC')
+        ->wherenull('deleted_at')
+        ->get();
+        return view('users.index', array(
+            'users' => $users
+        ));
     }
 
     /**
@@ -39,9 +45,10 @@ class UserController extends Controller
      */
     public function store(request $request)
     {
-        $id = Auth::id();
-        // echo $id;
-        $user = new User([
+
+        if($request->get('password') == $request->get('password_confirmation')){
+            $id = Auth::id();
+            $user = new User([
           'user' => $request->get('user'),
           'name' => $request->get('name'),
           'username' => $request->get('username'),
@@ -52,8 +59,11 @@ class UserController extends Controller
         ]);
 
         $user->save();
-        return redirect('/home');
-        
+        return redirect('/index/user')->with('status', 'New user has been created.');
+        }
+        else{
+            return back()->withErrors(['password' => ['Password confirmation is invalid.']]); 
+        }        
     }
 
     /**
@@ -75,6 +85,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $user = User::find($id);
+        return view('users.edit', compact('user', 'id'));
         //
     }
 
@@ -98,6 +110,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $date = date('Y-m-d H:i:s');
+        $user = User::find($id);
+        $user->deleted_at = $date;
+        $user->save();
         //
+        return redirect('/index/user')->with('status', 'User has been deleted.');
     }
 }
