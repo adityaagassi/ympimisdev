@@ -80,13 +80,9 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
-        	<div class="col-sm-6">
-
-          <a class="btn btn-danger col-sm-2" href="{{ url('index/user') }}">Cancel</a>
-
-          <button type="submit" class="btn btn-primary col-sm-2">Submit</button>
-          
-          </div>
+          <div class="col-sm-6"></div>
+          <a class="btn btn-danger col-sm-1" href="{{ url('index/user') }}">Cancel</a>
+          <button type="submit" class="btn btn-primary col-sm-1">Submit</button>
         </div>
       </form>
     </div>

@@ -48,17 +48,17 @@ class UserController extends Controller
         if($request->get('password') == $request->get('password_confirmation')){
             $id = Auth::id();
             $user = new User([
-          'user' => $request->get('user'),
-          'name' => $request->get('name'),
-          'username' => $request->get('username'),
-          'email' => $request->get('email'),
-          'password' => bcrypt($request->get('password')),
-          'level_id' => $request->get('level'),
-          'created_by' => $id
-        ]);
+              'user' => $request->get('user'),
+              'name' => $request->get('name'),
+              'username' => $request->get('username'),
+              'email' => $request->get('email'),
+              'password' => bcrypt($request->get('password')),
+              'level_id' => $request->get('level'),
+              'created_by' => $id
+          ]);
 
-        $user->save();
-        return redirect('/index/user')->with('status', 'New user has been created.');
+            $user->save();
+            return redirect('/index/user')->with('status', 'New user has been created.');
         }
         else{
             return back()->withErrors(['password' => ['Password confirmation is invalid.']]); 
@@ -98,8 +98,41 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        //
+        if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
+            if($request->get('password') == $request->get('password_confirmation')){
+                $user = User::find($id);
+                $user->name = $request->get('name');
+                $user->username = $request->get('username');
+                $user->email = $request->get('email');
+                $user->password = $request->get('password');
+                $user->level_id = $request->get('level');
+                $user->save();
+                return redirect('/index/user')->with('status', 'User data has been edited.');
+            }
+            else
+            {
+                return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+            }
+        }
+        elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
+            if($request->get('password') == $request->get('password_confirmation')){
+                $user = User::find($id);
+                $user->name = $request->get('name');
+                $user->username = $request->get('username');
+                $user->email = $request->get('email');
+                // $user->password = $request->get('password');
+                $user->level_id = $request->get('level');
+                $user->save();
+                return redirect('/index/user')->with('status', 'User data has been edited.');
+            }
+            else
+            {
+                return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+            }
+        }
+    
+        
+            //
     }
 
     /**
