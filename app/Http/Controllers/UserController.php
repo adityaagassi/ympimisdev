@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Database\QueryException;
 
 class UserController extends Controller
 {
@@ -44,25 +45,35 @@ class UserController extends Controller
      */
     public function store(request $request)
     {
+        try{
+            if($request->get('password') == $request->get('password_confirmation')){
+                $id = Auth::id();
+                $user = new User([
+                  'user' => $request->get('user'),
+                  'name' => $request->get('name'),
+                  'username' => $request->get('username'),
+                  'email' => $request->get('email'),
+                  'password' => bcrypt($request->get('password')),
+                  'level_id' => $request->get('level'),
+                  'created_by' => $id
+              ]);
 
-        if($request->get('password') == $request->get('password_confirmation')){
-            $id = Auth::id();
-            $user = new User([
-              'user' => $request->get('user'),
-              'name' => $request->get('name'),
-              'username' => $request->get('username'),
-              'email' => $request->get('email'),
-              'password' => bcrypt($request->get('password')),
-              'level_id' => $request->get('level'),
-              'created_by' => $id
-          ]);
-
-            $user->save();
-            return redirect('/index/user')->with('status', 'New user has been created.');
+                $user->save();
+                return redirect('/index/user')->with('status', 'New user has been created.');
+            }
+            else{
+                return back()->withErrors(['password' => ['Password confirmation is invalid.']]); 
+            }  
         }
-        else{
-            return back()->withErrors(['password' => ['Password confirmation is invalid.']]); 
-        }        
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Username or e-mail already exist.');
+            }
+
+        }
+
     }
 
     /**
@@ -73,6 +84,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $user = User::find($id);
+        return view('users.show', compact('user', 'id'));
         //
     }
 
@@ -98,6 +111,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        try{
+
         if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
             if($request->get('password') == $request->get('password_confirmation')){
                 $user = User::find($id);
@@ -130,8 +146,17 @@ class UserController extends Controller
                 return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
             }
         }
-    
-        
+
+
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Username or e-mail already exist.');
+            }
+
+        }  
             //
     }
 

@@ -35,6 +35,7 @@ Route::post('create/user','UserController@store');
 Route::get('destroy/user/{id}', 'UserController@destroy');
 Route::get('edit/user/{id}', 'UserController@edit');
 Route::post('edit/user/{id}', 'UserController@update');
+Route::get('show/user/{id}', 'UserController@show');
 
 
 Auth::routes();

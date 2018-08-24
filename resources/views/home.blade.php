@@ -15,6 +15,7 @@
  
 @section('content')
 
+<section class="content">
 <div class="row">
     <div class="col-md-4    ">
         <div class="box box-default box-solid">
@@ -70,6 +71,8 @@
         </div>
         <!-- /.box -->
     </div>
+</div>
+</section>
     <!-- /.col -->
     <!-- /.row -->
 

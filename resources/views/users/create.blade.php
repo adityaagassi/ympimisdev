@@ -2,13 +2,13 @@
 @section('header')
 <section class="content-header">
   <h1>
-    User page
+    Create User
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
     <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li>
+    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -23,49 +23,56 @@
     {{ $errors->first() }}
   </div>   
   @endif
+  @if (session('error'))
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                {{ session('error') }}
+            </div>   
+  @endif
 
 
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">Create New User</h3>
+      {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
     <form role="form" method="post" action="{{url('create/user')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
-        <div class="form-group row">
-          <label class="col-sm-2">Name</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" name="name" placeholder="Enter Full Name">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Name</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="name" placeholder="Enter Full Name" required>
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-2">Username</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" name="username" placeholder="Enter Username">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Username</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-2">E-mail</label>
-          <div class="col-sm-5">
-            <input type="email" class="form-control" name="email" placeholder="Enter E-mail">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">E-mail</label>
+          <div class="col-sm-4">
+            <input type="email" class="form-control" name="email" placeholder="Enter E-mail" required>
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-2">Password</label>
-          <div class="col-sm-5">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Password</label>
+          <div class="col-sm-4">
             <input type="password" class="form-control" name="password" placeholder="Enter Password">
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-2">Confirm Password</label>
-          <div class="col-sm-5">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Confirm Password</label>
+          <div class="col-sm-4">
             <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirm Password">
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-2">User Level</label>
-          <div class="col-sm-5">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">User Level</label>
+          <div class="col-sm-4" align="left">
             <select class="form-control select2" name="level" style="width: 100%;" >
               <option>1</option>
               <option>2</option>
@@ -80,9 +87,13 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
-          <div class="col-sm-5"></div>
-          <a class="btn btn-danger col-sm-1" href="{{ url('index/user') }}">Cancel</a>
-          <button type="submit" class="btn btn-primary col-sm-1">Submit</button>
+          <div class="col-sm-4"></div>
+          <div class="btn-group">
+          <a class="btn btn-danger col-sm-14" href="{{ url('index/user') }}">Cancel</a>
+          </div>
+          <div class="btn-group">
+          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+          </div>
         </div>
       </form>
     </div>

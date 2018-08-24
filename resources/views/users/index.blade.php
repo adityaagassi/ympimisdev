@@ -2,11 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Blank page
+    List of Users
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("create/user")}}" class="btn btn-block btn-primary">Create New User</a></li>
+    <li><a href="{{ url("create/user")}}" class="btn btn-primary btn-sm" style="color:white">Create User</a></li>
   </ol>
 </section>
 @endsection
@@ -47,11 +47,11 @@
                   <tbody>
                     @foreach($users as $user)
                     <tr>
-                      <td>{{$user['name']}}</td>
-                      <td>{{$user['username']}}</td>
-                      <td>{{$user['email']}}</td>
-                      <td>{{$user['created_by']}}</td>
-                      <td>{{$user['created_at']}}</td>
+                      <td style="font-size: 14">{{$user['name']}}</td>
+                      <td style="font-size: 14">{{$user['username']}}</td>
+                      <td style="font-size: 14">{{$user['email']}}</td>
+                      <td style="font-size: 14">{{$user['created_by']}}</td>
+                      <td style="font-size: 14">{{$user['created_at']}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
@@ -60,7 +60,7 @@
                     </td> --}}
                     <td>
                       <center>
-                      <a class="btn btn-info btn-xs">View</a>
+                      <a class="btn btn-info btn-xs" href="{{url('show/user', $user['id'])}}">View</a>
                       <a href="{{url('edit/user', $user['id'])}}" class="btn btn-warning btn-xs">Edit</a>
                       <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/user") }}', '{{ $user['name'] }}', '{{ $user['id'] }}');">
                         Delete
@@ -78,10 +78,9 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
+
       </section>
       <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
 
     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">

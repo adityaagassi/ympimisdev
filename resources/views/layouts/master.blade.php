@@ -15,6 +15,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ url("bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css")}}">
   <!-- daterange picker -->
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap-daterangepicker/daterangepicker.css")}}">
   <!-- bootstrap datepicker -->
@@ -29,8 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ url("bower_components/select2/dist/css/select2.min.css")}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ url("dist/css/AdminLTE.min.css")}}">
-    <!-- DataTables -->
-  <link rel="stylesheet" href="{{ url("bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css")}}">
+
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{ url("dist/css/skins/_all-skins.min.css")}}">
@@ -76,14 +77,14 @@ desired effect
     <div class="content-wrapper">
       @yield('header')
       <!-- Main content -->
-      <section class="content container-fluid">
+      {{-- <section class="content container-fluid"> --}}
 
       <!--------------------------
         | Your Page Content Here |
         -------------------------->
         @yield('content')
 
-      </section>
+      {{-- </section> --}}
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -98,6 +99,9 @@ desired effect
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
+<!-- DataTables -->
+<script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
+<script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
 <!-- Select2 -->
 <script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
 <!-- InputMask -->
@@ -120,12 +124,10 @@ desired effect
 <!-- FastClick -->
 <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
 <!-- AdminLTE App -->
-{{-- <script src="{{ url("dist/js/adminlte.min.js")}}"></script> --}}
+<script src="{{ url("dist/js/adminlte.min.js")}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ url("dist/js/demo.js")}}"></script>
-<!-- DataTables -->
-<script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
-<script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
+
   <!-- AdminLTE App -->
   {{-- <script src="{{ url("dist/js/adminlte.min.js")}}"></script> --}}
   @yield('scripts')
