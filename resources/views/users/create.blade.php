@@ -80,7 +80,7 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
-          <div class="col-sm-6"></div>
+          <div class="col-sm-5"></div>
           <a class="btn btn-danger col-sm-1" href="{{ url('index/user') }}">Cancel</a>
           <button type="submit" class="btn btn-primary col-sm-1">Submit</button>
         </div>
