@@ -17,7 +17,6 @@ class UserController extends Controller
     {
         // $users = User::all()->toArray();
         // return view('users.index', compact('users'));
-        
         $users = User::orderBy('name', 'ASC')
         ->wherenull('deleted_at')
         ->get();
@@ -99,6 +98,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         //
     }
 

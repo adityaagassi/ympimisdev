@@ -20,7 +20,7 @@
     <div class="box-header with-border">
       <h3 class="box-title">Create New User</h3>
     </div>  
-    <form role="form" method="post" action="{{url('create/user')}}">
+    <form role="form" method="post" action="{{url('edit/user', $user->id)}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row">
