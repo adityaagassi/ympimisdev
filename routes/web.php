@@ -37,6 +37,10 @@ Route::get('edit/user/{id}', 'UserController@edit');
 Route::post('edit/user/{id}', 'UserController@update');
 Route::get('show/user/{id}', 'UserController@show');
 
+Route::get('index/level', function() {
+return view('404');
+});
+
 
 Auth::routes();
 
