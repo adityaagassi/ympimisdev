@@ -2,11 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    List of Users
+    List of Levels
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("create/user")}}" class="btn btn-primary btn-sm" style="color:white">Create User</a></li>
+    <li><a href="{{ url("create/level")}}" class="btn btn-primary btn-sm" style="color:white">Create Level</a></li>
   </ol>
 </section>
 @endsection
@@ -34,10 +34,8 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>Full Name</th>
-                    <th>Username</th>
-                    <th>E-mail</th>
-                    <th>Level</th>
+                    <th>ID</th>
+                    <th>Level Name</th>
                     <th>Created By</th>
                     <th>Created At</th>
                     <th>Action</th>
@@ -46,14 +44,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach($users as $user)
+                    @foreach($levels as $level)
                     <tr>
-                      <td style="font-size: 14">{{$user->name}}</td>
-                      <td style="font-size: 14">{{$user->username}}</td>
-                      <td style="font-size: 14">{{$user->email}}</td>
-                      <td style="font-size: 14">{{$user->level->level_name}}</td>
-                      <td style="font-size: 14">{{$user->created_by}}</td>
-                      <td style="font-size: 14">{{$user->created_at}}</td>
+                      <td style="font-size: 14">{{$level->id}}</td>
+                      <td style="font-size: 14">{{$level->level_name}}</td>
+                      <td style="font-size: 14">{{$level->user->name}}</td>
+                      <td style="font-size: 14">{{$level->created_at}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
@@ -62,9 +58,9 @@
                     </td> --}}
                     <td>
                       <center>
-                      <a class="btn btn-info btn-xs" href="{{url('show/user', $user['id'])}}">View</a>
-                      <a href="{{url('edit/user', $user['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/user") }}', '{{ $user['name'] }}', '{{ $user['id'] }}');">
+                      <a class="btn btn-info btn-xs" href="{{url('show/level', $level['id'])}}">View</a>
+                      <a href="{{url('edit/level', $level['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                      <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/level") }}', '{{ $level['level_name'] }}', '{{ $level['id'] }}');">
                         Delete
                       </a>
                     </center>

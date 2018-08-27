@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Create User
+    Create Level
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -37,55 +37,22 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/user')}}">
+    <form role="form" method="post" action="{{url('create/level')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Name</label>
+          <label class="col-sm-4">Level Name</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="name" placeholder="Enter Full Name" required>
+            <input type="text" class="form-control" name="level_name" placeholder="Enter Level Name" required>
           </div>
         </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Username</label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">E-mail</label>
-          <div class="col-sm-4">
-            <input type="email" class="form-control" name="email" placeholder="Enter E-mail" required>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Password</label>
-          <div class="col-sm-4">
-            <input type="password" class="form-control" name="password" placeholder="Enter Password">
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Confirm Password</label>
-          <div class="col-sm-4">
-            <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirm Password">
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">User Level</label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="level" style="width: 100%;" >
-              @foreach($levels as $level)
-              <option value="{{ $level->id }}">{{ $level->level_name }}</option>
-              @endforeach
-            </select>
-          </div>
 
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
           <div class="col-sm-4"></div>
           <div class="btn-group">
-          <a class="btn btn-danger col-sm-14" href="{{ url('index/user') }}">Cancel</a>
+          <a class="btn btn-danger col-sm-14" href="{{ url('index/level') }}">Cancel</a>
           </div>
           <div class="btn-group">
           <button type="submit" class="btn btn-primary col-sm-14">Submit</button>

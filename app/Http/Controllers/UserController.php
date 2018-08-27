@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Level;
 use Illuminate\Database\QueryException;
+
 
 class UserController extends Controller
 {
@@ -20,6 +22,7 @@ class UserController extends Controller
         // return view('users.index', compact('users'));
         $users = User::orderBy('name', 'ASC')
         ->wherenull('deleted_at')
+        ->with(array('level'))
         ->get();
         return view('users.index', array(
             'users' => $users
@@ -33,7 +36,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $levels = Level::orderBy('level_name', 'ASC')->get();
+        return view('users.create', array(
+            'levels' => $levels
+        ));
         //
     }
 
@@ -84,8 +90,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $levels = Level::orderBy('level_name', 'ASC')->get();
         $user = User::find($id);
-        return view('users.show', compact('user', 'id'));
+
+        return view('users.show', array(
+            'user' => $user,
+            'levels' => $levels,
+        ));
         //
     }
 
@@ -97,8 +108,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        
+        $levels = Level::orderBy('level_name', 'ASC')->get();
         $user = User::find($id);
-        return view('users.edit', compact('user', 'id'));
+        return view('users.edit', array(
+            'user' => $user,
+            'levels' => $levels,
+        ));
         //
     }
 

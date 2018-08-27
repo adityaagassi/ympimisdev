@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Detail User
+    Detail Level
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -26,76 +26,36 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Detail User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('edit/user', $user->id)}}">
+    <form role="form">
       <div class="box-body">
-      	<input type="hidden" value="{{csrf_token()}}" name="_method" />
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Name</label>
+          <label class="col-sm-5">Level Name</label>
           <div class="col-sm-5" align="left">
-            {{$user->name}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Username</label>
-          <div class="col-sm-5" align="left">
-            {{$user->username}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">E-mail</label>
-          <div class="col-sm-5" align="left">
-            {{$user->email}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">User Level</label>
-          <div class="col-sm-5" align="left">
-            {{$user->level->level_name}}
+            {{$level->level_name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$user->created_by}}
+            {{$level->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$user->updated_at}}
+            {{$level->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$user->created_at}}
+            {{$level->created_at}}
           </div>
         </div>
-
-        <!-- /.box-body -->
-{{--         <div class="box-footer form-group row">
-        	<div class="col-sm-5"></div>
-          <div class="btn-group">
-            <a class="btn btn-danger col-sm-14" href="{{ url('index/user') }}">Cancel</a>
-          </div>
-          <div class="btn-group">
-            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-          </div>
-        </div> --}}
       </form>
     </div>
     
   </div>
 
   @endsection
-
-  @section('scripts')
-  <script>
-    $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-  })
-</script>
-@stop
 

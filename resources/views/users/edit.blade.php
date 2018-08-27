@@ -72,13 +72,13 @@
           <label class="col-sm-4">User Level</label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="level" style="width: 100%;" >
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
+                        @foreach($levels as $level)
+                        @if($user->level_id == $level->id)
+                        <option value="{{ $level->id }}" selected>{{ $level->level_name }}</option>
+                        @else
+                        <option value="{{ $level->id }}">{{ $level->level_name }}</option>
+                        @endif
+                        @endforeach
             </select>
           </div>
 

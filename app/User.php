@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -27,5 +28,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'deleted_at', 'created_at'
     ];
+
+
+
+    public function level()
+    {
+        return $this->belongsTo('App\Level');
+    }
 
 }

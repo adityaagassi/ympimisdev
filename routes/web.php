@@ -37,10 +37,13 @@ Route::get('edit/user/{id}', 'UserController@edit');
 Route::post('edit/user/{id}', 'UserController@update');
 Route::get('show/user/{id}', 'UserController@show');
 
-Route::get('index/level', function() {
-return view('404');
-});
-
+Route::get('index/level', 'LevelController@index');
+Route::get('create/level', 'LevelController@create');
+Route::post('create/level','LevelController@store');
+Route::get('destroy/level/{id}', 'LevelController@destroy');
+Route::get('edit/level/{id}', 'LevelController@edit');
+Route::post('edit/level/{id}', 'LevelController@update');
+Route::get('show/level/{id}', 'LevelController@show');
 
 Auth::routes();
 
