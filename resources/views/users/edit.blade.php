@@ -39,19 +39,19 @@
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Name</label>
+          <label class="col-sm-4">Name<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="name" placeholder="Enter Full Name" value="{{$user->name}}">
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Username</label>
+          <label class="col-sm-4">Username<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="username" placeholder="Enter Username" value="{{$user->username}}">
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">E-mail</label>
+          <label class="col-sm-4">E-mail<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="email" class="form-control" name="email" placeholder="Enter E-mail" value="{{$user->email}}">
           </div>
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">User Level</label>
+          <label class="col-sm-4">User Level<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="level" style="width: 100%;" >
                         @foreach($levels as $level)

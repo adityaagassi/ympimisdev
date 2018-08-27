@@ -72,30 +72,9 @@
           </div>
         </div>
 
-        <!-- /.box-body -->
-{{--         <div class="box-footer form-group row">
-        	<div class="col-sm-5"></div>
-          <div class="btn-group">
-            <a class="btn btn-danger col-sm-14" href="{{ url('index/user') }}">Cancel</a>
-          </div>
-          <div class="btn-group">
-            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-          </div>
-        </div> --}}
       </form>
     </div>
     
   </div>
 
   @endsection
-
-  @section('scripts')
-  <script>
-    $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-  })
-</script>
-@stop
-

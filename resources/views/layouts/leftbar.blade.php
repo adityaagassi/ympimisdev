@@ -9,6 +9,12 @@
         <li class="header">Admin Menu</li>
         <li class="active"><a href="{{ url("/index/user") }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
         <li class="active"><a href="{{ url("/index/level") }}"><i class="fa fa-tag"></i> <span>Levels</span></a></li>
+        <li class="header">Logistic Menu</li>
+        <li class="active"><a href="{{ url("/index/destination") }}"><i class="fa fa-arrows"></i> <span>Destination</span></a></li>
+        <li class="active"><a href="{{ url("/index/shipment_condition") }}"><i class="fa fa-ship"></i> <span>Shipment Condition</span></a></li>
+        <li class="active"><a href="{{ url("/index/container") }}"><i class="fa fa-truck"></i> <span>Container</span></a></li>
+        <li class="active"><a href="{{ url("/index/container_schedule") }}"><i class="fa fa-clock-o"></i> <span>Container Schedule</span></a></li>
+        <li class="active"><a href="{{ url("/index/material_volume") }}"><i class="fa fa-cubes"></i> <span>Material Volume</span></a></li>
         {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>

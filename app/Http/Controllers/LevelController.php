@@ -15,6 +15,11 @@ class LevelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
 
@@ -111,25 +116,25 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-         try{
+       try{
 
-                $level = Level::find($id);
-                $level->level_name = $request->get('level_name');
-                $level->save();
+        $level = Level::find($id);
+        $level->level_name = $request->get('level_name');
+        $level->save();
 
-                return redirect('/index/level')->with('status', 'Level data has been edited.');
+        return redirect('/index/level')->with('status', 'Level data has been edited.');
 
-        }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-            // self::delete($lid);
-                return back()->with('error', 'Level name already exist.');
-            }
-
-        }  
-        //
     }
+    catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
+            // self::delete($lid);
+            return back()->with('error', 'Level name already exist.');
+        }
+
+    }  
+        //
+}
 
     /**
      * Remove the specified resource from storage.

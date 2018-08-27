@@ -41,39 +41,40 @@
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Name</label>
+          <label class="col-sm-4">Name<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="name" placeholder="Enter Full Name" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Username</label>
+          <label class="col-sm-4">Username<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="username" placeholder="Enter Username" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">E-mail</label>
+          <label class="col-sm-4">E-mail<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="email" class="form-control" name="email" placeholder="Enter E-mail" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Password</label>
+          <label class="col-sm-4">Password<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="password" class="form-control" name="password" placeholder="Enter Password">
+            <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Confirm Password</label>
+          <label class="col-sm-4">Confirm Password<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirm Password">
+            <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirm Password" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">User Level</label>
+          <label class="col-sm-4">User Level<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="level" style="width: 100%;" >
+            <select class="form-control select2" name="level" style="width: 100%;" data-placeholder="Choose a Level..." required>
+              <option value=""></option>
               @foreach($levels as $level)
               <option value="{{ $level->id }}">{{ $level->level_name }}</option>
               @endforeach

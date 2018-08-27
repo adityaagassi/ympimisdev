@@ -16,6 +16,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         // $users = User::all()->toArray();
@@ -130,38 +135,38 @@ class UserController extends Controller
 
         try{
 
-        if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
-            if($request->get('password') == $request->get('password_confirmation')){
-                $user = User::find($id);
-                $user->name = $request->get('name');
-                $user->username = $request->get('username');
-                $user->email = $request->get('email');
-                $user->password = $request->get('password');
-                $user->level_id = $request->get('level');
-                $user->save();
-                return redirect('/index/user')->with('status', 'User data has been edited.');
+            if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
+                if($request->get('password') == $request->get('password_confirmation')){
+                    $user = User::find($id);
+                    $user->name = $request->get('name');
+                    $user->username = $request->get('username');
+                    $user->email = $request->get('email');
+                    $user->password = $request->get('password');
+                    $user->level_id = $request->get('level');
+                    $user->save();
+                    return redirect('/index/user')->with('status', 'User data has been edited.');
+                }
+                else
+                {
+                    return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+                }
             }
-            else
-            {
-                return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
-            }
-        }
-        elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
-            if($request->get('password') == $request->get('password_confirmation')){
-                $user = User::find($id);
-                $user->name = $request->get('name');
-                $user->username = $request->get('username');
-                $user->email = $request->get('email');
+            elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
+                if($request->get('password') == $request->get('password_confirmation')){
+                    $user = User::find($id);
+                    $user->name = $request->get('name');
+                    $user->username = $request->get('username');
+                    $user->email = $request->get('email');
                 // $user->password = $request->get('password');
-                $user->level_id = $request->get('level');
-                $user->save();
-                return redirect('/index/user')->with('status', 'User data has been edited.');
+                    $user->level_id = $request->get('level');
+                    $user->save();
+                    return redirect('/index/user')->with('status', 'User data has been edited.');
+                }
+                else
+                {
+                    return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+                }
             }
-            else
-            {
-                return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
-            }
-        }
 
 
         }
