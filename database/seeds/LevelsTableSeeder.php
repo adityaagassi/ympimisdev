@@ -11,12 +11,46 @@ class LevelsTableSeeder extends Seeder
      */
     public function run()
     {
-    	DB::table('levels')->insert([
-    		'level_name' => 'superman',
-    		'created_by' => '1',
-    		'created_at' => date('Y-m-d H:i:s'),
-    		'updated_at' => date('Y-m-d H:i:s'),
-    	]);
+    	DB::table('levels')->insert(
+            [
+              'level_name' => 'Superman',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+        );
+        DB::table('levels')->insert(
+            [
+                'level_name' => 'Management',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('levels')->insert(
+            [
+                'level_name' => 'Logistic',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('levels')->insert(
+            [
+                'level_name' => 'Production Control',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('levels')->insert(
+            [
+                'level_name' => 'Production',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
         //
     }
 }

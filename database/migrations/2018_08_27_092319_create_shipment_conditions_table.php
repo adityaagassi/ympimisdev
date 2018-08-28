@@ -15,6 +15,9 @@ class CreateShipmentConditionsTable extends Migration
     {
         Schema::create('shipment_conditions', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('shipment_condition_code')->unique();
+            $table->string('shipment_condition_name')->unique();
+            $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
         });

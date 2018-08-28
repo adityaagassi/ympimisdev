@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDestinationsTable extends Migration
+class CreateOriginGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDestinationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('destinations', function (Blueprint $table) {
+        Schema::create('origin_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('destination_code')->unique();
-            $table->string('destination_name')->unique();
+            $table->string('origin_group_code')->unique();
+            $table->string('origin_group_name')->unique();
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateDestinationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('destinations');
+        Schema::dropIfExists('origin_groups');
     }
 }

@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ShipmentCondition extends Model
+class OriginGroup extends Model
 {
 	use SoftDeletes;
     //
 	protected $fillable = [
-		'shipment_condition_code', 'shipment_condition_name', 'created_by'
+		'origin_group_code', 'origin_group_name', 'created_by'
 	];
 
 	public function user()

@@ -4,31 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Level;
 use App\User;
+use App\Destination;
 use Illuminate\Database\QueryException;
 
-class LevelController extends Controller
+class DestinationController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    
     public function index()
     {
-
-        $levels = Level::orderBy('level_name', 'ASC')
+        $destinations = Destination::orderBy('destination_code', 'ASC')
         ->with(array('user'))
         ->get();
 
-        return view('levels.index', array(
-            'levels' => $levels
+        return view('destinations.index', array(
+            'destinations' => $destinations
         ));
         //
     }
@@ -40,7 +39,7 @@ class LevelController extends Controller
      */
     public function create()
     {
-        return view('levels.create');
+        return view('destinations.create');
         //
     }
 
@@ -53,20 +52,23 @@ class LevelController extends Controller
     public function store(Request $request)
     {
         try{
+
             $id = Auth::id();
-            $level = new Level([
-              'level_name' => $request->get('level_name'),
+            $destination = new Destination([
+              'destination_code' => $request->get('destination_code'),
+              'destination_name' => $request->get('destination_name'),
               'created_by' => $id
           ]);
-            $level->save();
-            return redirect('/index/level')->with('status', 'New level has been created.');
+
+            $destination->save();
+            return redirect('/index/destination')->with('status', 'New destination has been created.');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Level name already exist.');
+                return back()->with('error', 'Destination code or destination name already exist.');
             }
 
         }
@@ -81,11 +83,11 @@ class LevelController extends Controller
      */
     public function show($id)
     {
+        $destination = Destination::find($id);
         $users = User::orderBy('name', 'ASC')->get();
-        $level = Level::find($id);
 
-        return view('levels.show', array(
-            'level' => $level,
+        return view('destinations.show', array(
+            'destination' => $destination,
             'users' => $users,
         ));
         //
@@ -99,9 +101,10 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        $level = Level::find($id);
-        return view('levels.edit', array(
-            'level' => $level
+        $destination = Destination::find($id);
+
+        return view('destinations.edit', array(
+            'destination' => $destination
         ));
         //
     }
@@ -115,25 +118,27 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-     try{
 
-        $level = Level::find($id);
-        $level->level_name = $request->get('level_name');
-        $level->save();
+        try{
 
-        return redirect('/index/level')->with('status', 'Level data has been edited.');
+            $destination = Destination::find($id);
+            $destination->destination_code = $request->get('destination_code');
+            $destination->destination_name = $request->get('destination_name');
+            $destination->save();
 
-    }
-    catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            // self::delete($lid);
-            return back()->with('error', 'Level name already exist.');
+            return redirect('/index/destination')->with('status', 'Destination data has been edited.');
+
         }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Destination code or destination name already exist.');
+            }
 
-    }  
+        } 
         //
-}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -143,10 +148,10 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
-        $level = Level::find($id);
-        $level->delete();
-        //
-        return redirect('/index/level')->with('status', 'User has been deleted.');
+        $destination = Destination::find($id);
+        $destination->delete();
+
+        return redirect('/index/destination')->with('status', 'Destination has been deleted.');
         //
     }
 }

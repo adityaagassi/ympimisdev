@@ -4,32 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Level;
 use App\User;
+use App\Container;
 use Illuminate\Database\QueryException;
 
-class LevelController extends Controller
+class ContainerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    
     public function index()
     {
-
-        $levels = Level::orderBy('level_name', 'ASC')
+        $containers = Container::orderBy('container_code', 'ASC')
         ->with(array('user'))
         ->get();
 
-        return view('levels.index', array(
-            'levels' => $levels
+        return view('containers.index', array(
+            'containers' => $containers
         ));
+
         //
     }
 
@@ -40,7 +40,7 @@ class LevelController extends Controller
      */
     public function create()
     {
-        return view('levels.create');
+        return view('containers.create');
         //
     }
 
@@ -52,21 +52,25 @@ class LevelController extends Controller
      */
     public function store(Request $request)
     {
+
         try{
+
             $id = Auth::id();
-            $level = new Level([
-              'level_name' => $request->get('level_name'),
+            $container = new Container([
+              'container_code' => $request->get('container_code'),
+              'container_name' => $request->get('container_name'),
               'created_by' => $id
           ]);
-            $level->save();
-            return redirect('/index/level')->with('status', 'New level has been created.');
+
+            $container->save();
+            return redirect('/index/container')->with('status', 'New container has been created.');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Level name already exist.');
+                return back()->with('error', 'Container code or container name already exist.');
             }
 
         }
@@ -81,11 +85,11 @@ class LevelController extends Controller
      */
     public function show($id)
     {
+        $container = Container::find($id);
         $users = User::orderBy('name', 'ASC')->get();
-        $level = Level::find($id);
 
-        return view('levels.show', array(
-            'level' => $level,
+        return view('containers.show', array(
+            'container' => $container,
             'users' => $users,
         ));
         //
@@ -99,9 +103,10 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        $level = Level::find($id);
-        return view('levels.edit', array(
-            'level' => $level
+        $container = Container::find($id);
+
+        return view('containers.edit', array(
+            'container' => $container
         ));
         //
     }
@@ -114,26 +119,27 @@ class LevelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
      try{
 
-        $level = Level::find($id);
-        $level->level_name = $request->get('level_name');
-        $level->save();
+        $container = Container::find($id);
+        $container->container_code = $request->get('container_code');
+        $container->container_name = $request->get('container_name');
+        $container->save();
 
-        return redirect('/index/level')->with('status', 'Level data has been edited.');
+        return redirect('/index/container')->with('status', 'Container data has been edited.');
 
     }
     catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             // self::delete($lid);
-            return back()->with('error', 'Level name already exist.');
+            return back()->with('error', 'Container code or container name already exist.');
         }
 
     }  
         //
-}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -143,10 +149,11 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
-        $level = Level::find($id);
-        $level->delete();
-        //
-        return redirect('/index/level')->with('status', 'User has been deleted.');
+        $container = Container::find($id);
+        $container->delete();
+
+        return redirect('/index/container')->with('status', 'Container has been deleted.');
+
         //
     }
 }

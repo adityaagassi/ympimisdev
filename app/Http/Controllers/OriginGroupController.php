@@ -4,31 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Level;
 use App\User;
+use App\OriginGroup;
 use Illuminate\Database\QueryException;
 
-class LevelController extends Controller
+class OriginGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    
     public function index()
     {
-
-        $levels = Level::orderBy('level_name', 'ASC')
+        $origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')
         ->with(array('user'))
         ->get();
 
-        return view('levels.index', array(
-            'levels' => $levels
+        return view('origin_groups.index', array(
+            'origin_groups' => $origin_groups
         ));
         //
     }
@@ -40,7 +38,7 @@ class LevelController extends Controller
      */
     public function create()
     {
-        return view('levels.create');
+        return view('origin_groups.create');
         //
     }
 
@@ -53,20 +51,23 @@ class LevelController extends Controller
     public function store(Request $request)
     {
         try{
+
             $id = Auth::id();
-            $level = new Level([
-              'level_name' => $request->get('level_name'),
+            $origin_group = new OriginGroup([
+              'origin_group_code' => $request->get('origin_group_code'),
+              'origin_group_name' => $request->get('origin_group_name'),
               'created_by' => $id
           ]);
-            $level->save();
-            return redirect('/index/level')->with('status', 'New level has been created.');
+
+            $origin_group->save();
+            return redirect('/index/origin_group')->with('status', 'New origin group has been created.');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Level name already exist.');
+                return back()->with('error', 'Origin group code or origin group name already exist.');
             }
 
         }
@@ -81,11 +82,11 @@ class LevelController extends Controller
      */
     public function show($id)
     {
+        $origin_group = OriginGroup::find($id);
         $users = User::orderBy('name', 'ASC')->get();
-        $level = Level::find($id);
 
-        return view('levels.show', array(
-            'level' => $level,
+        return view('origin_groups.show', array(
+            'origin_group' => $origin_group,
             'users' => $users,
         ));
         //
@@ -99,9 +100,10 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        $level = Level::find($id);
-        return view('levels.edit', array(
-            'level' => $level
+        $origin_group = OriginGroup::find($id);
+
+        return view('origin_groups.edit', array(
+            'origin_group' => $origin_group
         ));
         //
     }
@@ -115,25 +117,26 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-     try{
+        try{
 
-        $level = Level::find($id);
-        $level->level_name = $request->get('level_name');
-        $level->save();
+            $origin_group = OriginGroup::find($id);
+            $origin_group->origin_group_code = $request->get('origin_group_code');
+            $origin_group->origin_group_name = $request->get('origin_group_name');
+            $origin_group->save();
 
-        return redirect('/index/level')->with('status', 'Level data has been edited.');
+            return redirect('/index/origin_group')->with('status', 'Origin group data has been edited.');
 
-    }
-    catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            // self::delete($lid);
-            return back()->with('error', 'Level name already exist.');
         }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Origin group code or origin group name already exist.');
+            }
 
-    }  
+        } 
         //
-}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -143,10 +146,10 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
-        $level = Level::find($id);
-        $level->delete();
-        //
-        return redirect('/index/level')->with('status', 'User has been deleted.');
+        $origin_group = OriginGroup::find($id);
+        $origin_group->delete();
+
+        return redirect('/index/origin_group')->with('status', 'Origin group has been deleted.');
         //
     }
 }
