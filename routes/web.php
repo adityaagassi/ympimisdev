@@ -77,6 +77,15 @@ Route::get('edit/origin_group/{id}', 'OriginGroupController@edit');
 Route::post('edit/origin_group/{id}', 'OriginGroupController@update');
 Route::get('show/origin_group/{id}', 'OriginGroupController@show');
 
+Route::get('index/material', 'MaterialController@index');
+Route::get('create/material', 'MaterialController@create');
+Route::post('create/material', 'MaterialController@store');
+Route::get('destroy/material/{id}', 'MaterialController@destroy');
+Route::get('edit/material/{id}', 'MaterialController@edit');
+Route::post('edit/material/{id}', 'MaterialController@update');
+Route::get('show/material/{id}', 'MaterialController@show');
+Route::post('import/material', 'MaterialController@import');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

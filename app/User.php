@@ -33,7 +33,7 @@ class User extends Authenticatable
 
     public function level()
     {
-        return $this->belongsTo('App\Level');
+        return $this->belongsTo('App\Level')->withTrashed();
     }
 
 }

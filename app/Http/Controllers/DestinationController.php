@@ -23,7 +23,6 @@ class DestinationController extends Controller
     public function index()
     {
         $destinations = Destination::orderBy('destination_code', 'ASC')
-        ->with(array('user'))
         ->get();
 
         return view('destinations.index', array(
