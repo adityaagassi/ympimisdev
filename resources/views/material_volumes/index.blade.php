@@ -2,15 +2,15 @@
 @section('header')
 <section class="content-header">
   <h1>
-    List of Materials
+    List of Material Volumes
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
 
     <li>
-      <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import Material</a>
+      <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import Material Volumes</a>
       &nbsp;
-      <a href="{{ url("create/material")}}" class="btn btn-primary btn-sm" style="color:white">Create Material</a>
+      <a href="{{ url("create/material_volume")}}" class="btn btn-primary btn-sm" style="color:white">Create Material Volume</a>
     </li>
   </ol>
 </section>
@@ -47,29 +47,37 @@
                 <thead>
                   <tr>
                     <th>Material Number</th>
-                    <th>Description</th>
-                    <th>Base Unit</th>
-                    <th>SLoc</th>
-                    <th>Origin Group</th>
+                    <th>Material Description</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Lot</th>
+                    <th>L</th>
+                    <th>W</th>
+                    <th>H</th>
+                    <th>Vol (m&sup3;)</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach($materials as $material)
+                    @foreach($material_volumes as $material_volume)
                     <tr>
-                      <td style="font-size: 14">{{$material->material_number}}</td>
-                      <td style="font-size: 14">{{$material->material_description}}</td>
-                      <td style="font-size: 14">{{$material->base_unit}}</td>
-                      <td style="font-size: 14">{{$material->issue_storage_location}}</td>
+                      <td style="font-size: 14">{{$material_volume->material_number}}</td>
                       <td style="font-size: 14">
-                        @if(isset($material->origingroup->origin_group_name))
-                        {{$material->origin_group_code}} - {{$material->origingroup->origin_group_name}}
+                        @if(isset($material_volume->material->material_description))
+                        {{$material_volume->material->material_description}}
                         @else
-                        {{$material->origin_group_code}} - Not registered.
+                        Material number not registered.
                         @endif
                       </td>
+                      <td style="font-size: 14">{{$material_volume->category}}</td>
+                      <td style="font-size: 14">{{$material_volume->type}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot}}</td>
+                      <td style="font-size: 14">{{$material_volume->length}}</td>
+                      <td style="font-size: 14">{{$material_volume->width}}</td>
+                      <td style="font-size: 14">{{$material_volume->height}}</td>
+                      <td style="font-size: 14">{{ round($material_volume->height*$material_volume->width*$material_volume->length,4) }}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
@@ -78,9 +86,9 @@
                     </td> --}}
                     <td>
                       <center>
-                        <a class="btn btn-info btn-xs" href="{{url('show/material', $material['id'])}}">View</a>
-                        <a href="{{url('edit/material', $material['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/material") }}', '{{ $material['material_description'] }}', '{{ $material['id'] }}');">
+                        <a class="btn btn-info btn-xs" href="{{url('show/material_volume', $material_volume['id'])}}">View</a>
+                        <a href="{{url('edit/material_volume', $material_volume['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/material_volume") }}', '{{$material_volume->material_number}}', '{{ $material_volume['id'] }}');">
                           Delete
                         </a>
                       </center>
@@ -121,7 +129,7 @@
       <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form id ="importForm" method="post" action="{{ url('import/material') }}" enctype="multipart/form-data">
+            <form id ="importForm" method="post" action="{{ url('import/material_volume') }}" enctype="multipart/form-data">
               <input type="hidden" value="{{csrf_token()}}" name="_token" />
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -129,7 +137,7 @@
               </div>
               <div class="">
                 <div class="modal-body">
-                  <center><input type="file" name="material" id="InputFile" accept="text/plain"></center>
+                  <center><input type="file" name="material_volume" id="InputFile" accept="text/plain"></center>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

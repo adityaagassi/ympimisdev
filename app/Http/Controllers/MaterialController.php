@@ -89,6 +89,11 @@ class MaterialController extends Controller
      */
     public function show($id)
     {
+        $material = Material::find($id);
+
+        return view('materials.show', array(
+            'material' => $material,
+        ));
         //
     }
 
@@ -100,6 +105,12 @@ class MaterialController extends Controller
      */
     public function edit($id)
     {
+        $origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
+        $material = Material::find($id);
+        return view('materials.edit', array(
+            'material' => $material,
+            'origin_groups' => $origin_groups,
+        ));
         //
     }
 
@@ -112,6 +123,27 @@ class MaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
+
+            $material = Material::find($id);
+            $material->material_number = $request->get('material_number');
+            $material->material_description = $request->get('material_description');
+            $material->base_unit = $request->get('base_unit');
+            $material->issue_storage_location = $request->get('issue_storage_location');
+            $material->origin_group_code = $request->get('origin_group_code');
+            $material->save();
+
+            return redirect('/index/material')->with('status', 'Material data has been edited.');
+
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Material number already exist.');
+            }
+
+        }
         //
     }
 

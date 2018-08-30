@@ -15,7 +15,7 @@
         {{-- <li class="active"><a href="{{ url("/index/container_schedule") }}"><i class="fa fa-clock-o"></i> <span>Container Schedule</span></a></li> --}}
         <li class="active"><a href="{{ url("/index/destination") }}"><i class="fa fa-arrows"></i> <span>Destination</span></a></li>
         <li class="active"><a href="{{ url("/index/material") }}"><i class="fa fa-cube"></i> <span>Material</span></a></li>
-        {{-- <li class="active"><a href="{{ url("/index/material_volume") }}"><i class="fa fa-cubes"></i> <span>Material Volume</span></a></li> --}}
+        <li class="active"><a href="{{ url("/index/material_volume") }}"><i class="fa fa-cubes"></i> <span>Material Volume</span></a></li>
         <li class="active"><a href="{{ url("/index/origin_group") }}"><i class="fa fa-bookmark"></i> <span>Origin Gorup</span></a></li>
         {{-- <li class="active"><a href="{{ url("/index/sales_price") }}"><i class="fa fa-dollar"></i> <span>Sales Price</span></a></li> --}}
         {{-- <li class="active"><a href="{{ url("/index/sales_budget") }}"><i class="fa fa-line-chart"></i> <span>Sales Budget</span></a></li> --}}

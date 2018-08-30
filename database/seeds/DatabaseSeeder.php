@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ShipmentConditionsTableSeeder::class);
         $this->call(OriginGroupsTableSeeder::class);
         $this->call(MaterialsTableSeeder::class);
+        $this->call(MaterialVolumesTableSeeder::class);
     }
 }

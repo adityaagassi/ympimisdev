@@ -36,8 +36,6 @@
                   <tr>
                     <th>ID</th>
                     <th>Level Name</th>
-                    <th>Created By</th>
-                    <th>Created At</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -48,8 +46,6 @@
                     <tr>
                       <td style="font-size: 14">{{$level->id}}</td>
                       <td style="font-size: 14">{{$level->level_name}}</td>
-                      <td style="font-size: 14">{{$level->user->name}}</td>
-                      <td style="font-size: 14">{{$level->created_at}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

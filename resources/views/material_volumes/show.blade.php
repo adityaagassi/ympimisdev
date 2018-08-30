@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Detail Material
+    Detail Material Volume
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -31,53 +31,87 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Material Number</label>
           <div class="col-sm-5" align="left">
-            {{$material->material_number}}
+            {{$material_volume->material_number}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Material Description</label>
           <div class="col-sm-5" align="left">
-            {{$material->material_description}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Base Unit</label>
-          <div class="col-sm-5" align="left">
-            {{$material->base_unit}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Storage Location</label>
-          <div class="col-sm-5" align="left">
-            {{$material->issue_storage_location}}
+            {{$material_volume->material->material_description}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Origin Group</label>
           <div class="col-sm-5" align="left">
-            @if(isset($material->origingroup->origin_group_name))
-            {{$material->origin_group_code}} - {{$material->origingroup->origin_group_name}}
+            {{$material_volume->material->origin_group_code}} - {{$material_volume->material->origingroup->origin_group_name}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Category</label>
+          <div class="col-sm-5" align="left">
+            @if($material_volume->category == "FG")
+            FG - Finished Goods
             @else
-            {{$material->origin_group_code}} - Not registered
+            KD - Knock Down Parts
             @endif
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Type</label>
+          <div class="col-sm-5" align="left">
+            @if($material_volume->type == "CTN")
+            CTN - Carton
+            @else
+            PLT - Pallete
+            @endif
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Lot</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->lot}} pc(s)
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Length</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->length}} m
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Width</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->width}} m
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Height</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->height}} m
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Volume</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->height*$material_volume->width*$material_volume->length}} m&sup3;
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$material->user->name}}
+            {{$material_volume->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$material->updated_at}}
+            {{$material_volume->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$material->created_at}}
+            {{$material_volume->created_at}}
           </div>
         </div>
       </form>

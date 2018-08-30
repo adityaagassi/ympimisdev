@@ -86,6 +86,15 @@ Route::post('edit/material/{id}', 'MaterialController@update');
 Route::get('show/material/{id}', 'MaterialController@show');
 Route::post('import/material', 'MaterialController@import');
 
+Route::get('index/material_volume', 'MaterialVolumeController@index');
+Route::get('create/material_volume', 'MaterialVolumeController@create');
+Route::post('create/material_volume', 'MaterialVolumeController@store');
+Route::get('destroy/material_volume/{id}', 'MaterialVolumeController@destroy');
+Route::get('edit/material_volume/{id}', 'MaterialVolumeController@edit');
+Route::post('edit/material_volume/{id}', 'MaterialVolumeController@update');
+Route::get('show/material_volume/{id}', 'MaterialVolumeController@show');
+Route::post('import/material_volume', 'MaterialVolumeController@import');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

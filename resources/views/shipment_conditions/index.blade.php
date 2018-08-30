@@ -36,8 +36,6 @@
                   <tr>
                     <th>Shipment Condition Code</th>
                     <th>Shipment Condition Name</th>
-                    <th>Created By</th>
-                    <th>Created At</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -48,8 +46,6 @@
                     <tr>
                       <td style="font-size: 14">{{$shipment_condition->shipment_condition_code}}</td>
                       <td style="font-size: 14">{{$shipment_condition->shipment_condition_name}}</td>
-                      <td style="font-size: 14">{{$shipment_condition->user->name}}</td>
-                      <td style="font-size: 14">{{$shipment_condition->created_at}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

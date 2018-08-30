@@ -117,7 +117,6 @@ class DestinationController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         try{
 
             $destination = Destination::find($id);

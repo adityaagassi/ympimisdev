@@ -67,7 +67,7 @@
         <div class="form-group row" align="right">
           <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="origin_group_code" style="width: 100%;" data-placeholder="Choose a Origin Group..." required>
+            <select class="form-control select2" name="origin_group_code" style="width: 100%;" data-placeholder="Choose an Origin Group..." required>
               <option value=""></option>
               @foreach($origin_groups as $origin_group)
               <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>

@@ -36,8 +36,6 @@
                   <tr>
                     <th>Destination Code</th>
                     <th>Destination Name</th>
-                    <th>Created By</th>
-                    <th>Created At</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -48,8 +46,6 @@
                     <tr>
                       <td style="font-size: 14">{{$destination->destination_code}}</td>
                       <td style="font-size: 14">{{$destination->destination_name}}</td>
-                      <td style="font-size: 14">{{$destination->user->name}}</td>
-                      <td style="font-size: 14">{{$destination->created_at}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
