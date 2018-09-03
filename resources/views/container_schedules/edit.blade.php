@@ -82,7 +82,7 @@
       <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
       <div class="col-sm-4">
         <div class="input-group">
-          <input type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $container_schedule->quantity }}" required>
+          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $container_schedule->quantity }}" required>
           <span class="input-group-addon">unit(s)</span>
         </div>
       </div>

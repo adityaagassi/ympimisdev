@@ -143,10 +143,10 @@ class ContainerScheduleController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Container with preferred destination and shipment date already exist.')->with('page', 'Container Schedule');
+                return back()->with('error', 'Container schedule with preferred destination and shipment date already exist.')->with('page', 'Container Schedule');
             }
 
-        }  
+        }
         //
     }
 
@@ -162,8 +162,8 @@ class ContainerScheduleController extends Controller
         $container_schedule->forceDelete();
 
         return redirect('/index/container')
-        ->with('status', 'Container has been deleted.')
-        ->with('page', 'Container');
+        ->with('status', 'Container Schedule has been deleted.')
+        ->with('page', 'Container Schedule');
         //
     }
 
