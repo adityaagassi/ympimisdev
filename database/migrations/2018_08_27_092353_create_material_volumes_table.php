@@ -15,9 +15,8 @@ class CreateMaterialVolumesTable extends Migration
     {
         Schema::create('material_volumes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('material_number');
+            $table->string('material_number')->unique();
             $table->string('category');
-            $table->string('type');
             $table->double('lot');
             $table->double('length');
             $table->double('width');
@@ -25,7 +24,6 @@ class CreateMaterialVolumesTable extends Migration
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['material_number', 'type']);
         });
     }
 

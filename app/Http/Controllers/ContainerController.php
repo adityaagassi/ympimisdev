@@ -28,7 +28,7 @@ class ContainerController extends Controller
 
         return view('containers.index', array(
             'containers' => $containers
-        ));
+        ))->with('page', 'Container');
 
         //
     }
@@ -40,7 +40,7 @@ class ContainerController extends Controller
      */
     public function create()
     {
-        return view('containers.create');
+        return view('containers.create')->with('page', 'Container');
         //
     }
 
@@ -59,18 +59,23 @@ class ContainerController extends Controller
             $container = new Container([
               'container_code' => $request->get('container_code'),
               'container_name' => $request->get('container_name'),
+              'capacity' => $request->get('capacity'),
               'created_by' => $id
           ]);
 
             $container->save();
-            return redirect('/index/container')->with('status', 'New container has been created.');
+            return redirect('/index/container')
+            ->with('status', 'New container has been created.')
+            ->with('page', 'Container');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Container code or container name already exist.');
+                return back()
+                ->with('error', 'Container code or container name already exist.')
+                ->with('page', 'Container');
             }
 
         }
@@ -91,7 +96,8 @@ class ContainerController extends Controller
         return view('containers.show', array(
             'container' => $container,
             'users' => $users,
-        ));
+        ))
+        ->with('page', 'Container');
         //
     }
 
@@ -107,7 +113,8 @@ class ContainerController extends Controller
 
         return view('containers.edit', array(
             'container' => $container
-        ));
+        ))
+        ->with('page', 'Container');
         //
     }
 
@@ -125,16 +132,21 @@ class ContainerController extends Controller
         $container = Container::find($id);
         $container->container_code = $request->get('container_code');
         $container->container_name = $request->get('container_name');
+        $container->capacity = $request->get('capacity');
         $container->save();
 
-        return redirect('/index/container')->with('status', 'Container data has been edited.');
+        return redirect('/index/container')
+        ->with('status', 'Container data has been edited.')
+        ->with('page', 'Container');
 
     }
     catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             // self::delete($lid);
-            return back()->with('error', 'Container code or container name already exist.');
+            return back()
+            ->with('error', 'Container code or container name already exist.')
+            ->with('page', 'Container');
         }
 
     }  
@@ -152,7 +164,9 @@ class ContainerController extends Controller
         $container = Container::find($id);
         $container->delete();
 
-        return redirect('/index/container')->with('status', 'Container has been deleted.');
+        return redirect('/index/container')
+        ->with('status', 'Container has been deleted.')
+        ->with('page', 'Container');
 
         //
     }

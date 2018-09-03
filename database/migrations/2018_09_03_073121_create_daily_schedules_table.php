@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContainerSchedulesTable extends Migration
+class CreateDailySchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateContainerSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('container_schedules', function (Blueprint $table) {
+        Schema::create('daily_schedules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('container_code');
+            $table->string('material_number');
             $table->string('destination_code');
-            $table->integer('quantity');
-            $table->date('shipment_date');
+            $table->string('due_date');
+            $table->double('quantity');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['container_code', 'destination_code', 'shipment_date'], 'container_schedule_unique');
+            $table->unique(['material_number', 'destination_code', 'due_date'], 'daily_schedule_unique');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateContainerSchedulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('container_schedules');
+        Schema::dropIfExists('daily_schedules');
     }
 }

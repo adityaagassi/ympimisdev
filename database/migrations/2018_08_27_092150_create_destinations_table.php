@@ -17,6 +17,7 @@ class CreateDestinationsTable extends Migration
             $table->increments('id');
             $table->string('destination_code')->unique();
             $table->string('destination_name')->unique();
+            $table->string('destination_shortname')->unique();
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

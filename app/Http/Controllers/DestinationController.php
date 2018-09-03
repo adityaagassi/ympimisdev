@@ -27,7 +27,7 @@ class DestinationController extends Controller
 
         return view('destinations.index', array(
             'destinations' => $destinations
-        ));
+        ))->with('page', 'Destination');
         //
     }
 
@@ -38,7 +38,7 @@ class DestinationController extends Controller
      */
     public function create()
     {
-        return view('destinations.create');
+        return view('destinations.create')->with('page', 'Destination');
         //
     }
 
@@ -56,18 +56,19 @@ class DestinationController extends Controller
             $destination = new Destination([
               'destination_code' => $request->get('destination_code'),
               'destination_name' => $request->get('destination_name'),
+              'destination_shortname' => $request->get('destination_shortname'),
               'created_by' => $id
           ]);
 
             $destination->save();
-            return redirect('/index/destination')->with('status', 'New destination has been created.');
+            return redirect('/index/destination')->with('status', 'New destination has been created.')->with('page', 'Destination');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Destination code or destination name already exist.');
+                return back()->with('error', 'Destination code or destination name already exist.')->with('page', 'Destination');
             }
 
         }
@@ -88,7 +89,7 @@ class DestinationController extends Controller
         return view('destinations.show', array(
             'destination' => $destination,
             'users' => $users,
-        ));
+        ))->with('page', 'Destination');
         //
     }
 
@@ -104,7 +105,7 @@ class DestinationController extends Controller
 
         return view('destinations.edit', array(
             'destination' => $destination
-        ));
+        ))->with('page', 'Destination');
         //
     }
 
@@ -122,16 +123,17 @@ class DestinationController extends Controller
             $destination = Destination::find($id);
             $destination->destination_code = $request->get('destination_code');
             $destination->destination_name = $request->get('destination_name');
+            $destination->destination_shortname = $request->get('destination_shortname');
             $destination->save();
 
-            return redirect('/index/destination')->with('status', 'Destination data has been edited.');
+            return redirect('/index/destination')->with('status', 'Destination data has been edited.')->with('page', 'Destination');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Destination code or destination name already exist.');
+                return back()->with('error', 'Destination code or destination name already exist.')->with('page', 'Destination');
             }
 
         } 
@@ -149,7 +151,7 @@ class DestinationController extends Controller
         $destination = Destination::find($id);
         $destination->delete();
 
-        return redirect('/index/destination')->with('status', 'Destination has been deleted.');
+        return redirect('/index/destination')->with('status', 'Destination has been deleted.')->with('page', 'Destination');
         //
     }
 }

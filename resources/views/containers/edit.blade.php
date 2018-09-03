@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Edit Container
+    Edit {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -50,6 +50,15 @@
             <input type="text" class="form-control" name="container_name" placeholder="Enter Full Name" value="{{$container->container_name}}">
           </div>
         </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Capacity<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input type="number" class="form-control" name="capacity" placeholder="Enter Capacity" value="{{$container->capacity}}" required>
+              <span class="input-group-addon">m&sup3;</span>
+            </div>
+          </div>
+        </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
           <div class="col-sm-4"></div>
@@ -73,7 +82,14 @@
     //Initialize Select2 Elements
     $('.select2').select2()
 
-  })
-</script>
-@stop
+  });
+
+
+$(document).on("wheel", "input[type=number]", function (e) {
+    $(this).blur();
+});
+
+
+  </script>
+  @stop
 

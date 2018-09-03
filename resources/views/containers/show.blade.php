@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Detail Container
+    Detail {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -38,6 +38,12 @@
           <label class="col-sm-5">Container Name</label>
           <div class="col-sm-5" align="left">
             {{$container->container_name}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Capacity</label>
+          <div class="col-sm-5" align="left">
+            {{$container->capacity}} m&sup3;
           </div>
         </div>
         <div class="form-group row" align="right">

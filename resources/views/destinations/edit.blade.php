@@ -3,7 +3,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Edit Destination
+    Edit {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -42,13 +42,19 @@
         <div class="form-group row" align="right">
           <label class="col-sm-4">Destination Code</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="destination_code" placeholder="Enter Full Name" value="{{$destination->destination_code}}">
+            <input type="text" class="form-control" name="destination_code" placeholder="Enter Destination Code" value="{{$destination->destination_code}}">
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-4">Destination Name</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="destination_name" placeholder="Enter Full Name" value="{{$destination->destination_name}}">
+            <input type="text" class="form-control" name="destination_name" placeholder="Enter Destination Name" value="{{$destination->destination_name}}">
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Destination Shortname</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="destination_shortname" placeholder="Enter Destination Shortname" value="{{$destination->destination_shortname}}">
           </div>
         </div>
         <!-- /.box-body -->

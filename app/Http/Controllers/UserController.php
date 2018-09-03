@@ -31,7 +31,7 @@ class UserController extends Controller
         ->get();
         return view('users.index', array(
             'users' => $users
-        ));
+        ))->with('page', 'User');
     }
 
     /**
@@ -44,7 +44,7 @@ class UserController extends Controller
         $levels = Level::orderBy('level_name', 'ASC')->get();
         return view('users.create', array(
             'levels' => $levels
-        ));
+        ))->with('page', 'User');
         //
     }
 
@@ -70,17 +70,17 @@ class UserController extends Controller
               ]);
 
                 $user->save();
-                return redirect('/index/user')->with('status', 'New user has been created.');
+                return redirect('/index/user')->with('status', 'New user has been created.')->with('page', 'User');
             }
             else{
-                return back()->withErrors(['password' => ['Password confirmation is invalid.']]); 
+                return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User'); 
             }  
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Username or e-mail already exist.');
+                return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
             }
 
         }
@@ -101,7 +101,7 @@ class UserController extends Controller
         return view('users.show', array(
             'user' => $user,
             'levels' => $levels,
-        ));
+        ))->with('page', 'User');
         //
     }
 
@@ -119,7 +119,7 @@ class UserController extends Controller
         return view('users.edit', array(
             'user' => $user,
             'levels' => $levels,
-        ));
+        ))->with('page', 'User');
         //
     }
 
@@ -144,11 +144,11 @@ class UserController extends Controller
                     $user->password = $request->get('password');
                     $user->level_id = $request->get('level');
                     $user->save();
-                    return redirect('/index/user')->with('status', 'User data has been edited.');
+                    return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
                 }
                 else
                 {
-                    return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+                    return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
                 }
             }
             elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
@@ -160,11 +160,11 @@ class UserController extends Controller
                 // $user->password = $request->get('password');
                     $user->level_id = $request->get('level');
                     $user->save();
-                    return redirect('/index/user')->with('status', 'User data has been edited.');
+                    return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
                 }
                 else
                 {
-                    return back()->withErrors(['password' => ['Password confirmation is invalid.']]);
+                    return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
                 }
             }
 
@@ -174,7 +174,7 @@ class UserController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Username or e-mail already exist.');
+                return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
             }
 
         }  
@@ -189,11 +189,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $date = date('Y-m-d H:i:s');
+        // $date = date('Y-m-d H:i:s');
+        // $user = User::find($id);
+        // $user->deleted_at = $date;
+        // $user->save();
+        
         $user = User::find($id);
-        $user->deleted_at = $date;
-        $user->save();
+        $user->delete();
+
+        return redirect('/index/user')->with('status', 'User has been deleted.')->with('page', 'User');
         //
-        return redirect('/index/user')->with('status', 'User has been deleted.');
     }
 }

@@ -27,7 +27,7 @@ class ShipmentConditionController extends Controller
 
         return view('shipment_conditions.index', array(
             'shipment_conditions' => $shipment_conditions
-        ));
+        ))->with('page', 'Shipment Condition');
 
         //
     }
@@ -39,7 +39,7 @@ class ShipmentConditionController extends Controller
      */
     public function create()
     {
-        return view('shipment_conditions.create');
+        return view('shipment_conditions.create')->with('page', 'Shipment Condition');
         //
     }
 
@@ -61,14 +61,14 @@ class ShipmentConditionController extends Controller
           ]);
 
             $shipment_condition->save();
-            return redirect('/index/shipment_condition')->with('status', 'New shipment condition has been created.');
+            return redirect('/index/shipment_condition')->with('status', 'New shipment condition has been created.')->with('page', 'Shipment Condition');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Shipment condition code or shipment condition name already exist.');
+                return back()->with('error', 'Shipment condition code or shipment condition name already exist.')->with('page', 'Shipment Condition');
             }
 
         }
@@ -89,7 +89,7 @@ class ShipmentConditionController extends Controller
         return view('shipment_conditions.show', array(
             'shipment_condition' => $shipment_condition,
             'users' => $users,
-        ));
+        ))->with('page', 'Shipment Condition');
         //
     }
 
@@ -105,7 +105,7 @@ class ShipmentConditionController extends Controller
 
         return view('shipment_conditions.edit', array(
             'shipment_condition' => $shipment_condition
-        ));
+        ))->with('page', 'Shipment Condition');
         //
     }
 
@@ -125,14 +125,14 @@ class ShipmentConditionController extends Controller
             $shipment_condition->shipment_condition_name = $request->get('shipment_condition_name');
             $shipment_condition->save();
 
-            return redirect('/index/shipment_condition')->with('status', 'Shipment condition data has been edited.');
+            return redirect('/index/shipment_condition')->with('status', 'Shipment condition data has been edited.')->with('page', 'Shipment Condition');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Shipment condition code or shipment condition name already exist.');
+                return back()->with('error', 'Shipment condition code or shipment condition name already exist.')->with('page', 'Shipment Condition');
             }
 
         } 
@@ -150,7 +150,7 @@ class ShipmentConditionController extends Controller
         $shipment_condition = ShipmentCondition::find($id);
         $shipment_condition->delete();
 
-        return redirect('/index/shipment_condition')->with('status', 'Shipment condition has been deleted.');
+        return redirect('/index/shipment_condition')->with('status', 'Shipment condition has been deleted.')->with('page', 'Shipment Condition');
         //
     }
 }

@@ -17,6 +17,7 @@ class CreateContainersTable extends Migration
             $table->increments('id');
             $table->string('container_code')->unique();
             $table->string('container_name')->unique();
+            $table->double('capacity')->nullable();
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

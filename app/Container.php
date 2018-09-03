@@ -10,12 +10,12 @@ class Container extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'container_code', 'container_name', 'created_by'
+		'container_code', 'container_name', 'capacity', 'created_by'
 	];
 
 	public function user()
 	{
-		return $this->belongsTo('App\User', 'created_by');
+		return $this->belongsTo('App\User', 'created_by')->withTrashed();
 	}
     //
 }

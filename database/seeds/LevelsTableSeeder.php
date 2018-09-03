@@ -21,6 +21,14 @@ class LevelsTableSeeder extends Seeder
         );
         DB::table('levels')->insert(
             [
+                'level_name' => 'Administrator',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('levels')->insert(
+            [
                 'level_name' => 'Management',
                 'created_by' => '1',
                 'created_at' => date('Y-m-d H:i:s'),

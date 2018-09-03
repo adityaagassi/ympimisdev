@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Detail Destination
+    Detail {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -38,6 +38,12 @@
           <label class="col-sm-5">Destination Name</label>
           <div class="col-sm-5" align="left">
             {{$destination->destination_name}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Destination Shortname</label>
+          <div class="col-sm-5" align="left">
+            {{$destination->destination_shortname}}
           </div>
         </div>
         <div class="form-group row" align="right">

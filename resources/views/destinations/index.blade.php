@@ -2,11 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    List of Destinations
+    List of {{ $page }}s
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("create/destination")}}" class="btn btn-primary btn-sm" style="color:white">Create Destination</a></li>
+    <li><a href="{{ url("create/destination")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
   </ol>
 </section>
 @endsection
@@ -34,8 +34,9 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>Destination Code</th>
-                    <th>Destination Name</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Shortname</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -46,6 +47,7 @@
                     <tr>
                       <td style="font-size: 14">{{$destination->destination_code}}</td>
                       <td style="font-size: 14">{{$destination->destination_name}}</td>
+                      <td style="font-size: 14">{{$destination->destination_shortname}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
@@ -99,7 +101,9 @@
     @section('scripts')
     <script>
       $(function () {
-        $('#example1').DataTable()
+        $('#example1').DataTable({
+            "order": []
+          })
         $('#example2').DataTable({
           'paging'      : true,
           'lengthChange': false,

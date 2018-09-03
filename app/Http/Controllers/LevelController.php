@@ -23,13 +23,13 @@ class LevelController extends Controller
     public function index()
     {
 
-        $levels = Level::orderBy('level_name', 'ASC')
+        $levels = Level::orderBy('ID', 'ASC')
         ->with(array('user'))
         ->get();
 
         return view('levels.index', array(
             'levels' => $levels
-        ));
+        ))->with('page', 'Level');
         //
     }
 
@@ -40,7 +40,7 @@ class LevelController extends Controller
      */
     public function create()
     {
-        return view('levels.create');
+        return view('levels.create')->with('page', 'Level');
         //
     }
 
@@ -59,14 +59,14 @@ class LevelController extends Controller
               'created_by' => $id
           ]);
             $level->save();
-            return redirect('/index/level')->with('status', 'New level has been created.');
+            return redirect('/index/level')->with('status', 'New level has been created.')->with('page', 'Level');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Level name already exist.');
+                return back()->with('error', 'Level name already exist.')->with('page', 'Level');
             }
 
         }
@@ -87,7 +87,7 @@ class LevelController extends Controller
         return view('levels.show', array(
             'level' => $level,
             'users' => $users,
-        ));
+        ))->with('page', 'Level');
         //
     }
 
@@ -102,7 +102,7 @@ class LevelController extends Controller
         $level = Level::find($id);
         return view('levels.edit', array(
             'level' => $level
-        ));
+        ))->with('page', 'Level');
         //
     }
 
@@ -121,14 +121,14 @@ class LevelController extends Controller
         $level->level_name = $request->get('level_name');
         $level->save();
 
-        return redirect('/index/level')->with('status', 'Level data has been edited.');
+        return redirect('/index/level')->with('status', 'Level data has been edited.')->with('page', 'Level');
 
     }
     catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             // self::delete($lid);
-            return back()->with('error', 'Level name already exist.');
+            return back()->with('error', 'Level name already exist.')->with('page', 'Level');
         }
 
     }  
@@ -146,7 +146,7 @@ class LevelController extends Controller
         $level = Level::find($id);
         $level->delete();
         //
-        return redirect('/index/level')->with('status', 'User has been deleted.');
+        return redirect('/index/level')->with('status', 'User has been deleted.')->with('page', 'Level');
         //
     }
 }

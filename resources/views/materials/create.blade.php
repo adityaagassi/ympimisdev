@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Create Material
+    Create {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -74,7 +74,6 @@
               @endforeach
             </select>
           </div>
-
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">

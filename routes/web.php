@@ -19,16 +19,14 @@ Route::get('404', function() {
 return view('404');
 });
 
-Route::get('signin', function() {
-return view('signin');
-});
-
 Route::get('tes', function() {
 return view('tes');
 });
-// Route::get('create', function() {
-// return view('users.create');
-// });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('index/user', 'UserController@index');
 Route::get('create/user', 'UserController@create');
 Route::post('create/user','UserController@store');
@@ -95,6 +93,22 @@ Route::post('edit/material_volume/{id}', 'MaterialVolumeController@update');
 Route::get('show/material_volume/{id}', 'MaterialVolumeController@show');
 Route::post('import/material_volume', 'MaterialVolumeController@import');
 
-Auth::routes();
+Route::get('index/container_schedule', 'ContainerScheduleController@index');
+Route::get('create/container_schedule', 'ContainerScheduleController@create');
+Route::post('create/container_schedule', 'ContainerScheduleController@store');
+Route::get('destroy/container_schedule/{id}', 'ContainerScheduleController@destroy');
+Route::get('edit/container_schedule/{id}', 'ContainerScheduleController@edit');
+Route::post('edit/container_schedule/{id}', 'ContainerScheduleController@update');
+Route::get('show/container_schedule/{id}', 'ContainerScheduleController@show');
+Route::post('import/container_schedule', 'ContainerScheduleController@import');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('index/daily_schedule', 'DailyScheduleController@index');
+Route::get('create/daily_schedule', 'DailyScheduleController@create');
+Route::post('create/daily_schedule', 'DailyScheduleController@store');
+Route::get('destroy/daily_schedule/{id}', 'DailyScheduleController@destroy');
+Route::get('edit/daily_schedule/{id}', 'DailyScheduleController@edit');
+Route::post('edit/daily_schedule/{id}', 'DailyScheduleController@update');
+Route::get('show/daily_schedule/{id}', 'DailyScheduleController@show');
+Route::post('import/daily_schedule', 'DailyScheduleController@import');
+
+

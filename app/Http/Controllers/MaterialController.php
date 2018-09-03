@@ -28,7 +28,7 @@ class MaterialController extends Controller
 
         return view('materials.index', array(
             'materials' => $materials
-        ));
+        ))->with('page', 'Material');
         //
     }
 
@@ -42,7 +42,7 @@ class MaterialController extends Controller
         $origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
         return view('materials.create', array(
             'origin_groups' => $origin_groups
-        ));
+        ))->with('page', 'Material');
         //
     }
 
@@ -67,14 +67,14 @@ class MaterialController extends Controller
           ]);
 
             $material->save();
-            return redirect('/index/material')->with('status', 'New material has been created.');
+            return redirect('/index/material')->with('status', 'New material has been created.')->with('page', 'Material');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Material number already exist.');
+                return back()->with('error', 'Material number already exist.')->with('page', 'Material');
             }
 
         }
@@ -93,7 +93,7 @@ class MaterialController extends Controller
 
         return view('materials.show', array(
             'material' => $material,
-        ));
+        ))->with('page', 'Material');
         //
     }
 
@@ -110,7 +110,7 @@ class MaterialController extends Controller
         return view('materials.edit', array(
             'material' => $material,
             'origin_groups' => $origin_groups,
-        ));
+        ))->with('page', 'Material');
         //
     }
 
@@ -133,14 +133,14 @@ class MaterialController extends Controller
             $material->origin_group_code = $request->get('origin_group_code');
             $material->save();
 
-            return redirect('/index/material')->with('status', 'Material data has been edited.');
+            return redirect('/index/material')->with('status', 'Material data has been edited.')->with('page', 'Material');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Material number already exist.');
+                return back()->with('error', 'Material number already exist.')->with('page', 'Material');
             }
 
         }
@@ -158,7 +158,7 @@ class MaterialController extends Controller
         $material = Material::find($id);
         $material->forceDelete();
 
-        return redirect('/index/material')->with('status', 'Material has been deleted.');
+        return redirect('/index/material')->with('status', 'Material has been deleted.')->with('page', 'Material');
         //
     }
 
@@ -195,12 +195,12 @@ class MaterialController extends Controller
                         $material->save();
                     }
                 }
-                return redirect('/index/material')->with('status', 'New materials has been imported.');
+                return redirect('/index/material')->with('status', 'New materials has been imported.')->with('page', 'Material');
 
             }
             else
             {
-                return redirect('/index/material')->with('error', 'Please select a file.');
+                return redirect('/index/material')->with('error', 'Please select a file.')->with('page', 'Material');
             }
             
         //

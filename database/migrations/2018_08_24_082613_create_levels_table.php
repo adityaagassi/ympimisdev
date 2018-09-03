@@ -17,7 +17,7 @@ class CreateLevelsTable extends Migration
             $table->increments('id');
             $table->string('level_name')->unique();
             $table->integer('created_by');
-            $table->datetime('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

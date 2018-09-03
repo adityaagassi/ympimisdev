@@ -2,11 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    List of Users
+    List of {{ $page }}s
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("create/user")}}" class="btn btn-primary btn-sm" style="color:white">Create User</a></li>
+    <li><a href="{{ url("create/user")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
   </ol>
 </section>
 @endsection
@@ -103,7 +103,9 @@
     @section('scripts')
     <script>
       $(function () {
-        $('#example1').DataTable()
+        $('#example1').DataTable({
+            "order": []
+          })
         $('#example2').DataTable({
           'paging'      : true,
           'lengthChange': false,

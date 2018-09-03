@@ -15,12 +15,12 @@ class Material extends Model
 
 	public function user()
 	{
-		return $this->belongsTo('App\User', 'created_by');
+		return $this->belongsTo('App\User', 'created_by')->withTrashed();
 	}
 
 	public function origingroup()
 	{
-		return $this->belongsTo('App\OriginGroup', 'origin_group_code', 'origin_group_code');
+		return $this->belongsTo('App\OriginGroup', 'origin_group_code', 'origin_group_code')->withTrashed();
 	}
     //
 }

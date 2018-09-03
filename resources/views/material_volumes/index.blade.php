@@ -2,15 +2,15 @@
 @section('header')
 <section class="content-header">
   <h1>
-    List of Material Volumes
+    List of {{ $page }}s
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
 
     <li>
-      <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import Material Volumes</a>
+      <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
-      <a href="{{ url("create/material_volume")}}" class="btn btn-primary btn-sm" style="color:white">Create Material Volume</a>
+      <a href="{{ url("create/material_volume")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
     </li>
   </ol>
 </section>
@@ -49,7 +49,6 @@
                     <th>Material Number</th>
                     <th>Material Description</th>
                     <th>Category</th>
-                    <th>Type</th>
                     <th>Lot</th>
                     <th>L</th>
                     <th>W</th>
@@ -68,11 +67,10 @@
                         @if(isset($material_volume->material->material_description))
                         {{$material_volume->material->material_description}}
                         @else
-                        Material number not registered.
+                        Not registered
                         @endif
                       </td>
                       <td style="font-size: 14">{{$material_volume->category}}</td>
-                      <td style="font-size: 14">{{$material_volume->type}}</td>
                       <td style="font-size: 14">{{$material_volume->lot}}</td>
                       <td style="font-size: 14">{{$material_volume->length}}</td>
                       <td style="font-size: 14">{{$material_volume->width}}</td>
@@ -154,7 +152,9 @@
       @section('scripts')
       <script>
         $(function () {
-          $('#example1').DataTable()
+          $('#example1').DataTable({
+            "order": []
+          })
           $('#example2').DataTable({
             'paging'      : true,
             'lengthChange': false,

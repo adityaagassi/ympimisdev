@@ -29,55 +29,65 @@
     <form role="form">
       <div class="box-body">
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Material Number</label>
+          <label class="col-sm-5">Container Code</label>
           <div class="col-sm-5" align="left">
-            {{$material->material_number}}
+            {{$container_schedule->container_code}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Material Description</label>
+          <label class="col-sm-5">Container Name</label>
           <div class="col-sm-5" align="left">
-            {{$material->material_description}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Base Unit</label>
-          <div class="col-sm-5" align="left">
-            {{$material->base_unit}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Storage Location</label>
-          <div class="col-sm-5" align="left">
-            {{$material->issue_storage_location}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Origin Group</label>
-          <div class="col-sm-5" align="left">
-            @if(isset($material->origingroup->origin_group_name))
-            {{$material->origin_group_code}} - {{$material->origingroup->origin_group_name}}
+            @if(isset($container_schedule->container->container_name))
+            {{$container_schedule->container->container_name}}
             @else
-            {{$material->origin_group_code}} - Not registered
+            Not registered.
             @endif
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Destination Code</label>
+          <div class="col-sm-5" align="left">
+            {{$container_schedule->destination_code}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Destination Name</label>
+          <div class="col-sm-5" align="left">
+            @if(isset($container_schedule->destination->destination_name))
+            {{$container_schedule->destination->destination_name}}
+            @else
+            Not registered.
+            @endif
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Shipment Date</label>
+          <div class="col-sm-5" align="left">
+            {{$container_schedule->shipment_date}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Quantity</label>
+          <div class="col-sm-5" align="left">
+            {{$container_schedule->quantity}} unit(s)
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$material->user->name}}
+            {{$container_schedule->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$material->updated_at}}
+            {{$container_schedule->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$material->created_at}}
+            {{$container_schedule->created_at}}
           </div>
         </div>
       </form>

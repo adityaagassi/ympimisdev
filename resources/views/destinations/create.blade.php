@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Create Destination
+    Create {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -50,6 +50,12 @@
           <label class="col-sm-4">Destination Name<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <input type="text" class="form-control" name="destination_name" placeholder="Enter Destination Name" required>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Destination Shortname<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="destination_shortname" placeholder="Enter Destination Shortname" required>
           </div>
         </div>
         <!-- /.box-body -->

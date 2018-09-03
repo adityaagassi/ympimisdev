@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Detail Material Volume
+    Detail {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -37,13 +37,21 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Material Description</label>
           <div class="col-sm-5" align="left">
+            @if(isset($material_volume->material->material_description))
             {{$material_volume->material->material_description}}
+            @else
+            Not registered.
+            @endif
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Origin Group</label>
           <div class="col-sm-5" align="left">
+            @if(isset($material_volume->material->origin_group_code))
             {{$material_volume->material->origin_group_code}} - {{$material_volume->material->origingroup->origin_group_name}}
+            @else
+            Not registered
+            @endif
           </div>
         </div>
         <div class="form-group row" align="right">
@@ -53,16 +61,6 @@
             FG - Finished Goods
             @else
             KD - Knock Down Parts
-            @endif
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Type</label>
-          <div class="col-sm-5" align="left">
-            @if($material_volume->type == "CTN")
-            CTN - Carton
-            @else
-            PLT - Pallete
             @endif
           </div>
         </div>

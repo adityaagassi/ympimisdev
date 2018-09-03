@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Create User
+    Create {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">

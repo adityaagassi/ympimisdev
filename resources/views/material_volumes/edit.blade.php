@@ -2,7 +2,7 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Edit Material Volume
+    Edit {{ $page }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -67,25 +67,10 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Type<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="type" style="width: 100%;" data-placeholder="Choose a Type..." required>
-              @if($material_volume->type == "CTN")
-              <option value="CTN" selected> CTN - Carton</option>
-              <option value="PLT">PLT - Pallete</option>
-              @else
-              <option value="CTN">CTN - Carton</option>
-              <option value="PLT" selected>PLT - Pallete</option>
-              @endif
-              
-            </select>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
           <label class="col-sm-4">Lot<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="text" class="form-control" name="lot" placeholder="Enter Lot" value="{{$material_volume->lot}}" required>
+              <input type="number" class="form-control" name="lot" placeholder="Enter Lot" value="{{$material_volume->lot}}" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -94,7 +79,7 @@
           <label class="col-sm-4">Length<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="text" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
+              <input type="number" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -103,7 +88,7 @@
           <label class="col-sm-4">Width<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="text" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
+              <input type="number" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -112,7 +97,7 @@
           <label class="col-sm-4">Height<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="text" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
+              <input type="number" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -140,7 +125,10 @@
     //Initialize Select2 Elements
     $('.select2').select2()
 
-  })
+  });
+    $(document).on("wheel", "input[type=number]", function (e) {
+    $(this).blur();
+});
 </script>
 @stop
 

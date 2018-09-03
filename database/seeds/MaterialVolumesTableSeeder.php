@@ -15,8 +15,7 @@ class MaterialVolumesTableSeeder extends Seeder
     		[
     			'material_number' => 'WZ44910',
     			'category' => 'FG',
-    			'type' => 'PLT',
-    			'lot' => '100',
+    			'lot' => '1',
     			'length' => '1.3',
     			'width' => '0.85',
     			'height' => '2.13',
@@ -29,8 +28,7 @@ class MaterialVolumesTableSeeder extends Seeder
     		[
     			'material_number' => 'WZ44940',
     			'category' => 'FG',
-    			'type' => 'PLT',
-    			'lot' => '30',
+    			'lot' => '1',
     			'length' => '1.27',
     			'width' => '1.02',
     			'height' => '2.03',
@@ -43,8 +41,7 @@ class MaterialVolumesTableSeeder extends Seeder
     		[
     			'material_number' => 'ZS97790',
     			'category' => 'FG',
-    			'type' => 'PLT',
-    			'lot' => '240',
+    			'lot' => '1',
     			'length' => '1',
     			'width' => '1.15',
     			'height' => '1.97',
@@ -57,67 +54,10 @@ class MaterialVolumesTableSeeder extends Seeder
     		[
     			'material_number' => 'WZ44990',
     			'category' => 'FG',
-    			'type' => 'PLT',
-    			'lot' => '25',
+    			'lot' => '1',
     			'length' => '1.11',
     			'width' => '1.11',
     			'height' => '1.93',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
-    	DB::table('material_volumes')->insert(
-    		[
-    			'material_number' => 'WZ44910',
-    			'category' => 'FG',
-    			'type' => 'CTN',
-    			'lot' => '10',
-    			'length' => '0.79',
-    			'width' => '0.63',
-    			'height' => '0.4',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
-    	DB::table('material_volumes')->insert(
-    		[
-    			'material_number' => 'WZ44940',
-    			'category' => 'FG',
-    			'type' => 'CTN',
-    			'lot' => '1',
-    			'length' => '0.75',
-    			'width' => '0.25',
-    			'height' => '0.39',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
-    	DB::table('material_volumes')->insert(
-    		[
-    			'material_number' => 'ZS97790',
-    			'category' => 'FG',
-    			'type' => 'CTN',
-    			'lot' => '10',
-    			'length' => '0.56',
-    			'width' => '0.34',
-    			'height' => '0.46',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
-    	DB::table('material_volumes')->insert(
-    		[
-    			'material_number' => 'WZ44990',
-    			'category' => 'FG',
-    			'type' => 'CTN',
-    			'lot' => '1',
-    			'length' => '0.82',
-    			'width' => '0.25',
-    			'height' => '0.36',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),

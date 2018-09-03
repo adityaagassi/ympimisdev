@@ -10,11 +10,11 @@ class Destination extends Model
 	use SoftDeletes;
     //
     protected $fillable = [
-        'destination_code', 'destination_name', 'created_by'
+        'destination_code', 'destination_name', 'destination_shortname', 'created_by'
     ];
     
     public function user()
     {
-    	return $this->belongsTo('App\User', 'created_by');
+    	return $this->belongsTo('App\User', 'created_by')->withTrashed();
     }
 }

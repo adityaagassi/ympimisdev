@@ -27,7 +27,7 @@ class OriginGroupController extends Controller
 
         return view('origin_groups.index', array(
             'origin_groups' => $origin_groups
-        ));
+        ))->with('page', 'Origin Group');
         //
     }
 
@@ -38,7 +38,7 @@ class OriginGroupController extends Controller
      */
     public function create()
     {
-        return view('origin_groups.create');
+        return view('origin_groups.create')->with('page', 'Origin Group');
         //
     }
 
@@ -60,14 +60,14 @@ class OriginGroupController extends Controller
           ]);
 
             $origin_group->save();
-            return redirect('/index/origin_group')->with('status', 'New origin group has been created.');
+            return redirect('/index/origin_group')->with('status', 'New origin group has been created.')->with('page', 'Origin Group');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Origin group code or origin group name already exist.');
+                return back()->with('error', 'Origin group code or origin group name already exist.')->with('page', 'Origin Group');
             }
 
         }
@@ -88,7 +88,7 @@ class OriginGroupController extends Controller
         return view('origin_groups.show', array(
             'origin_group' => $origin_group,
             'users' => $users,
-        ));
+        ))->with('page', 'Origin Group');
         //
     }
 
@@ -104,7 +104,7 @@ class OriginGroupController extends Controller
 
         return view('origin_groups.edit', array(
             'origin_group' => $origin_group
-        ));
+        ))->with('page', 'Origin Group');
         //
     }
 
@@ -124,14 +124,14 @@ class OriginGroupController extends Controller
             $origin_group->origin_group_name = $request->get('origin_group_name');
             $origin_group->save();
 
-            return redirect('/index/origin_group')->with('status', 'Origin group data has been edited.');
+            return redirect('/index/origin_group')->with('status', 'Origin group data has been edited.')->with('page', 'Origin Group');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Origin group code or origin group name already exist.');
+                return back()->with('error', 'Origin group code or origin group name already exist.')->with('page', 'Origin Group');
             }
 
         } 
@@ -149,7 +149,7 @@ class OriginGroupController extends Controller
         $origin_group = OriginGroup::find($id);
         $origin_group->delete();
 
-        return redirect('/index/origin_group')->with('status', 'Origin group has been deleted.');
+        return redirect('/index/origin_group')->with('status', 'Origin group has been deleted.')->with('page', 'Origin Group');
         //
     }
 }
