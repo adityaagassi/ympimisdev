@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Material;
 use App\Destination;
-use App\DailySchedule;
+use App\ProductionSchedule;
 use Illuminate\Database\QueryException;
 
-class DailyScheduleController extends Controller
+class ProductionScheduleController extends Controller
 {
     public function __construct()
     {
@@ -23,12 +23,12 @@ class DailyScheduleController extends Controller
      */
     public function index()
     {
-        $daily_schedules = DailySchedule::orderByRaw('due_date DESC', 'due_date ASC')
+        $production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'due_date ASC')
         ->get();
 
-        return view('daily_schedules.index', array(
-            'daily_schedules' => $daily_schedules
-        ))->with('page', 'Daily Schedule');
+        return view('production_schedules.index', array(
+            'production_schedules' => $production_schedules
+        ))->with('page', 'Production Schedule');
         //
     }
 
@@ -41,11 +41,10 @@ class DailyScheduleController extends Controller
     {
         $materials = Material::orderBy('material_number', 'ASC')->get();
         $destinations = Destination::orderBy('destination_code', 'ASC')->get();
-        return view('daily_schedules.create', array(
+        return view('production_schedules.create', array(
             'destinations' => $destinations,
             'materials' => $materials
-        ))->with('page', 'Daily Schedule');
-        //
+        ))->with('page', 'Production Schedule');
         //
     }
 
@@ -60,7 +59,7 @@ class DailyScheduleController extends Controller
         try
         {
             $id = Auth::id();
-            $daily_schedule = new DailySchedule([
+            $production_schedule = new ProductionSchedule([
               'material_number' => $request->get('material_number'),
               'destination_code' => $request->get('destination_code'),
               'due_date' => $request->get('due_date'),
@@ -68,14 +67,14 @@ class DailyScheduleController extends Controller
               'created_by' => $id
           ]);
 
-            $daily_schedule->save();    
-            return redirect('/index/daily_schedule')->with('status', 'New daily schedule has been created.')->with('page', 'Daily Schedule');
+            $production_schedule->save();    
+            return redirect('/index/production_schedule')->with('status', 'New production schedule has been created.')->with('page', 'Production Schedule');
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Daily for material with preferred destination and due date already exist.')->with('page', 'Daily Schedule');
+                return back()->with('error', 'Production for material with preferred destination and due date already exist.')->with('page', 'Production Schedule');
             }
         }
         //
@@ -89,10 +88,10 @@ class DailyScheduleController extends Controller
      */
     public function show($id)
     {
-        $daily_schedule = DailySchedule::find($id);
-        return view('daily_schedules.show', array(
-            'daily_schedule' => $daily_schedule,
-        ))->with('page', 'Daily Schedule');
+        $production_schedule = ProductionSchedule::find($id);
+        return view('production_schedules.show', array(
+            'production_schedule' => $production_schedule,
+        ))->with('page', 'Production Schedule');
         //
     }
 
@@ -106,12 +105,12 @@ class DailyScheduleController extends Controller
     {
         $materials = Material::orderBy('material_number', 'ASC')->get();
         $destinations = Destination::orderBy('destination_code', 'ASC')->get();
-        $daily_schedule = DailySchedule::find($id);
-        return view('daily_schedules.edit', array(
-            'daily_schedule' => $daily_schedule,
+        $production_schedule = ProductionSchedule::find($id);
+        return view('production_schedules.edit', array(
+            'production_schedule' => $production_schedule,
             'materials' => $materials,
             'destinations' => $destinations,
-        ))->with('page', 'Daily Schedule');
+        ))->with('page', 'Production Schedule');
         //
     }
 
@@ -126,21 +125,21 @@ class DailyScheduleController extends Controller
     {
         try{
 
-            $daily_schedule = DailySchedule::find($id);
-            $daily_schedule->material_number = $request->get('material_number');
-            $daily_schedule->destination_code = $request->get('destination_code');
-            $daily_schedule->due_date = $request->get('due_date');
-            $daily_schedule->quantity = $request->get('quantity');
-            $daily_schedule->save();
+            $production_schedule = ProductionSchedule::find($id);
+            $production_schedule->material_number = $request->get('material_number');
+            $production_schedule->destination_code = $request->get('destination_code');
+            $production_schedule->due_date = $request->get('due_date');
+            $production_schedule->quantity = $request->get('quantity');
+            $production_schedule->save();
 
-            return redirect('/index/daily_schedule')->with('status', 'Daily schedule data has been edited.')->with('page', 'Daily Schedule');
+            return redirect('/index/production_schedule')->with('status', 'Production schedule data has been edited.')->with('page', 'Production Schedule');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Daily schedule for material with preferred destination and shipment date already exist.')->with('page', 'Daily Schedule');
+                return back()->with('error', 'Production schedule for material with preferred destination and shipment date already exist.')->with('page', 'Production Schedule');
             }
 
         }
@@ -155,16 +154,15 @@ class DailyScheduleController extends Controller
      */
     public function destroy($id)
     {
-        $daily_schedule = DailySchedule::find($id);
-        $daily_schedule->forceDelete();
+        $production_schedule = ProductionSchedule::find($id);
+        $production_schedule->forceDelete();
 
-        return redirect('/index/daily_schedule')
-        ->with('status', 'Daily schedule has been deleted.')
-        ->with('page', 'Daily Schedule');
+        return redirect('/index/production_schedule')
+        ->with('status', 'Production schedule has been deleted.')
+        ->with('page', 'Production Schedule');
         //
     }
-
-     /**
+    /**
      * Import resource from Text File.
      *
      * @param  int  $id
@@ -173,12 +171,12 @@ class DailyScheduleController extends Controller
      public function import(Request $request)
      {
         try{
-            if($request->hasFile('daily_schedule')){
+            if($request->hasFile('production_schedule')){
                 // ContainerSchedule::truncate();
 
                 $id = Auth::id();
 
-                $file = $request->file('daily_schedule');
+                $file = $request->file('production_schedule');
                 $data = file_get_contents($file);
 
                 $rows = explode("\r\n", $data);
@@ -186,7 +184,7 @@ class DailyScheduleController extends Controller
                 {
                     if (strlen($row) > 0) {
                         $row = explode("\t", $row);
-                        $daily_schedule = new DailySchedule([
+                        $production_schedule = new ProductionSchedule([
                             'material_number' => $row[0],
                             'destination_code' => $row[1],
                             'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[2]))),
@@ -194,15 +192,15 @@ class DailyScheduleController extends Controller
                             'created_by' => $id,
                         ]);
 
-                        $daily_schedule->save();
+                        $production_schedule->save();
                     }
                 }
-                return redirect('/index/daily_schedule')->with('status', 'New daily schedule has been imported.')->with('page', 'Daily Schedule');
+                return redirect('/index/production_schedule')->with('status', 'New production schedule has been imported.')->with('page', 'Production Schedule');
 
             }
             else
             {
-                return redirect('/index/daily_schedule')->with('error', 'Please select a file.')->with('page', 'Daily Schedule');
+                return redirect('/index/production_schedule')->with('error', 'Please select a file.')->with('page', 'Production Schedule');
             }
         }
         
@@ -210,7 +208,7 @@ class DailyScheduleController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Daily schedule with preferred destination and due date already exist.')->with('page', 'Daily Schedule');
+                return back()->with('error', 'Production schedule with preferred destination and due date already exist.')->with('page', 'Production Schedule');
             }
 
         }

@@ -17,7 +17,10 @@ class CreateMaterialVolumesTable extends Migration
             $table->increments('id');
             $table->string('material_number')->unique();
             $table->string('category');
-            $table->double('lot');
+            $table->double('lot_completion');
+            $table->double('lot_transfer');
+            $table->double('lot_pallet');
+            $table->double('lot_volume');
             $table->double('length');
             $table->double('width');
             $table->double('height');

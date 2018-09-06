@@ -67,10 +67,37 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Lot<span class="text-red">*</span></label>
+          <label class="col-sm-4">Lot Completion<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="lot" placeholder="Enter Lot" value="{{$material_volume->lot}}" required>
+              <input min="0" type="number" class="form-control" name="lot_completion" placeholder="Enter Lot Completion" value="{{$material_volume->lot_completion}}" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Transfer<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_transfer" placeholder="Enter Lot Transfer" value="{{$material_volume->lot_transfer}}" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Pallet<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_pallet" placeholder="Enter Lot Pallet" value="{{$material_volume->lot_pallet}}" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Volume<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_volume" placeholder="Enter Lot Volume" value="{{$material_volume->lot_volume}}" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -79,7 +106,7 @@
           <label class="col-sm-4">Length<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
+              <input min="0" type="number" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -88,7 +115,7 @@
           <label class="col-sm-4">Width<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
+              <input min="0" type="number" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -97,7 +124,7 @@
           <label class="col-sm-4">Height<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
+              <input min="0" type="number" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>

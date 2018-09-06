@@ -60,7 +60,10 @@ class MaterialVolumeController extends Controller
             $material_volume = new MaterialVolume([
               'material_number' => $request->get('material_number'),
               'category' => $request->get('category'),
-              'lot' => $request->get('lot'),
+              'lot_completion' => $request->get('lot_completion'),
+              'lot_transfer' => $request->get('lot_transfer'),
+              'lot_pallet' => $request->get('lot_pallet'),
+              'lot_volume' => $request->get('lot_volume'),
               'length' => $request->get('length'),
               'width' => $request->get('width'),
               'height' => $request->get('height'),
@@ -124,7 +127,10 @@ class MaterialVolumeController extends Controller
         try{
             $material_volume = MaterialVolume::find($id);
             $material_volume->category = $request->get('category');
-            $material_volume->lot = $request->get('lot');
+            $material_volume->lot_completion = $request->get('lot_completion');
+            $material_volume->lot_transfer = $request->get('lot_transfer');
+            $material_volume->lot_pallet = $request->get('lot_pallet');
+            $material_volume->lot_volume = $request->get('lot_volume');
             $material_volume->length = $request->get('length');
             $material_volume->width = $request->get('width');
             $material_volume->height = $request->get('height');
@@ -183,10 +189,13 @@ class MaterialVolumeController extends Controller
                         $material_volume = new MaterialVolume([
                             'material_number' => $row[0],
                             'category' => $row[1],
-                            'lot' => $row[2],
-                            'length' => $row[3],
-                            'width' => $row[4],
-                            'height' => $row[5],
+                            'lot_completion' => $row[2],
+                            'lot_transfer' => $row[3],
+                            'lot_pallet' => $row[4],
+                            'lot_volume' => $row[5],
+                            'length' => $row[6],
+                            'width' => $row[7],
+                            'height' => $row[8],
                             'created_by' => $id,
                         ]);
 

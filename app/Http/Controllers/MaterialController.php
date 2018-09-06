@@ -163,7 +163,7 @@ class MaterialController extends Controller
     }
 
         /**
-     * Import material from Text File
+     * Import resource from Text File.
      *
      * @return List Transfer
      *

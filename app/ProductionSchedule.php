@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DailySchedule extends Model
+class ProductionSchedule extends Model
 {
 	Use SoftDeletes;
 

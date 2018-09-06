@@ -102,13 +102,20 @@ Route::post('edit/container_schedule/{id}', 'ContainerScheduleController@update'
 Route::get('show/container_schedule/{id}', 'ContainerScheduleController@show');
 Route::post('import/container_schedule', 'ContainerScheduleController@import');
 
-Route::get('index/daily_schedule', 'DailyScheduleController@index');
-Route::get('create/daily_schedule', 'DailyScheduleController@create');
-Route::post('create/daily_schedule', 'DailyScheduleController@store');
-Route::get('destroy/daily_schedule/{id}', 'DailyScheduleController@destroy');
-Route::get('edit/daily_schedule/{id}', 'DailyScheduleController@edit');
-Route::post('edit/daily_schedule/{id}', 'DailyScheduleController@update');
-Route::get('show/daily_schedule/{id}', 'DailyScheduleController@show');
-Route::post('import/daily_schedule', 'DailyScheduleController@import');
+Route::get('index/production_schedule', 'ProductionScheduleController@index');
+Route::get('create/production_schedule', 'ProductionScheduleController@create');
+Route::post('create/production_schedule', 'ProductionScheduleController@store');
+Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
+Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
+Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
+Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');
+Route::post('import/production_schedule', 'ProductionScheduleController@import');
 
-
+Route::get('index/weekly_calendar', 'WeeklyCalendarController@index');
+Route::get('create/weekly_calendar', 'WeeklyCalendarController@create');
+Route::post('create/weekly_calendar', 'WeeklyCalendarController@store');
+Route::get('destroy/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@destroy');
+Route::get('edit/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@edit');
+Route::post('edit/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@update');
+Route::get('show/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@show');
+Route::post('import/weekly_calendar', 'WeeklyCalendarController@import');

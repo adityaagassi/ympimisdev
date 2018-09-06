@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MaterialsTableSeeder::class);
         $this->call(MaterialVolumesTableSeeder::class);
         $this->call(ContainerSchedulesTableSeeder::class);
-        $this->call(DailySchedulesTableSeeder::class);
+        $this->call(ProductionSchedulesTableSeeder::class);
+        $this->call(WeeklyCalendarsTableSeeder::class);
     }
 }

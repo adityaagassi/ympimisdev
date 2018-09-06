@@ -47,9 +47,12 @@
                 <thead>
                   <tr>
                     <th>Material Number</th>
-                    <th>Material Description</th>
-                    <th>Category</th>
-                    <th>Lot</th>
+                    <th>Description</th>
+                    <th>Cat.</th>
+                    <th>Lot Comp.</th>
+                    <th>Lot Tran.</th>
+                    <th>Lot Pal.</th>
+                    <th>Lot Vol.</th>
                     <th>L</th>
                     <th>W</th>
                     <th>H</th>
@@ -71,7 +74,10 @@
                         @endif
                       </td>
                       <td style="font-size: 14">{{$material_volume->category}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot_completion}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot_transfer}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot_pallet}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot_volume}}</td>
                       <td style="font-size: 14">{{$material_volume->length}}</td>
                       <td style="font-size: 14">{{$material_volume->width}}</td>
                       <td style="font-size: 14">{{$material_volume->height}}</td>

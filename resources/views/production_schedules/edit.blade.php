@@ -37,16 +37,19 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/container_schedule')}}">
+    <form role="form" method="post" action="{{url('edit/production_schedule', $production_schedule->id)}}">
       <div class="box-body">
-      	<input type="hidden" value="{{csrf_token()}}" name="_token" />
+        <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Container<span class="text-red">*</span></label>
+          <label class="col-sm-4">Material<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="container_code" style="width: 100%;" data-placeholder="Choose a Container Code..." required>
-              <option value=""></option>
-              @foreach($containers as $container)
-              <option value="{{ $container->container_code }}">{{ $container->container_code }} - {{ $container->container_name }}</option>
+            <select class="form-control select2" name="material_number" style="width: 100%;" data-placeholder="Choose a Material Number..." required>
+              @foreach($materials as $material)
+              @if($production_schedule->material_number == $material->material_number)
+              <option value="{{ $material->material_number }}" selected>{{ $material->material_number }} - {{ $material->material_description }}</option>
+              @else
+              <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+              @endif
               @endforeach
             </select>
           </div>
@@ -55,38 +58,40 @@
           <label class="col-sm-4">Destination<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="destination_code" style="width: 100%;" data-placeholder="Choose a Destination Code..." required>
-              <option value=""></option>
               @foreach($destinations as $destination)
+              @if($production_schedule->destination_code == $destination->destination_code)
+              <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
+              @else
               <option value="{{ $destination->destination_code }}">{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
+              @endif
               @endforeach
             </select>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
+          <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
            <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" required>
+            <input type="date" class="form-control" name="due_date" placeholder="Enter Due Date" value="{{ $production_schedule->due_date }}" required>
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
       </div>
-      <div class="form-group row" align="right">
+    </div>
+    <div class="form-group row" align="right">
       <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
       <div class="col-sm-4">
         <div class="input-group">
-          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" required>
-          <span class="input-group-addon">unit(s)</span>
+          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $production_schedule->quantity }}" required>
+          <span class="input-group-addon">pc(s)</span>
         </div>
       </div>
     </div>
-    </div>
-    
     <!-- /.box-body -->
     <div class="box-footer form-group row">
       <div class="col-sm-4"></div>
       <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/container_schedule') }}">Cancel</a>
+        <a class="btn btn-danger col-sm-14" href="{{ url('index/production_schedule') }}">Cancel</a>
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-primary col-sm-14">Submit</button>

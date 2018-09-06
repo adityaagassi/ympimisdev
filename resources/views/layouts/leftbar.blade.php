@@ -55,23 +55,13 @@
                   </li>
                   @endif
 
-                  @if(in_array(Auth::user()->level_id, [1,5,6]))
-                @if(isset($page) && $page == "Daily Schedule")
-                <li class="active">
-                  @else
-                  <li>
-                    @endif
-                    <a href="{{ url("/index/daily_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Daily Schedule</span></a>
-                  </li>
-                  @endif
-
                   @if(in_array(Auth::user()->level_id, [1,4]))
                   @if(isset($page) && $page == "Destination")
                   <li class="active">
                     @else
                     <li>
                       @endif
-                      <a href="{{ url("/index/destination") }}"><i class="fa fa-arrows"></i> <span>Destination</span></a>
+                      <a href="{{ url("/index/destination") }}"><i class="fa fa-arrows-alt"></i> <span>Destination</span></a>
                     </li>
                     @endif
 
@@ -104,19 +94,49 @@
                             <a href="{{ url("/index/origin_group") }}"><i class="fa fa-bookmark"></i> <span>Origin Gorup</span></a>
                           </li>
                           @endif
-                          {{-- <li><a href="{{ url("/index/sales_price") }}"><i class="fa fa-dollar"></i> <span>Sales Price</span></a></li> --}}
-                          {{-- <li><a href="{{ url("/index/sales_budget") }}"><i class="fa fa-line-chart"></i> <span>Sales Budget</span></a></li> --}}
-                          {{-- <li><a href="{{ url("/index/sales_forecast") }}"><i class="fa fa-line-chart"></i> <span>Sales Forecast</span></a></li> --}}
-                          @if(in_array(Auth::user()->level_id, [1,4]))
-                          @if(isset($page) && $page == "Shipment Condition")
+
+                          @if(in_array(Auth::user()->level_id, [1,5,6]))
+                          @if(isset($page) && $page == "Production Schedule")
                           <li class="active">
                             @else
                             <li>
                               @endif
-                              <a href="{{ url("/index/shipment_condition") }}"><i class="fa fa-ship"></i> <span>Shipment Condition</span></a>
+                              <a href="{{ url("/index/production_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Production Schedule</span></a>
                             </li>
                             @endif
-                            {{-- <li><a href="{{ url("/index/weekly_calendar") }}"><i class="fa fa-calendar"></i> <span>Weekly Calendar</span></a></li> --}}
+                            {{-- <li><a href="{{ url("/index/sales_price") }}"><i class="fa fa-dollar"></i> <span>Sales Price</span></a></li> --}}
+                            {{-- <li><a href="{{ url("/index/sales_budget") }}"><i class="fa fa-line-chart"></i> <span>Sales Budget</span></a></li> --}}
+                            {{-- <li><a href="{{ url("/index/sales_forecast") }}"><i class="fa fa-line-chart"></i> <span>Sales Forecast</span></a></li> --}}
+                            @if(in_array(Auth::user()->level_id, [1,4]))
+                            @if(isset($page) && $page == "Shipment Condition")
+                            <li class="active">
+                              @else
+                              <li>
+                                @endif
+                                <a href="{{ url("/index/shipment_condition") }}"><i class="fa fa-ship"></i> <span>Shipment Condition</span></a>
+                              </li>
+                              @endif
+
+                              @if(in_array(Auth::user()->level_id, [1,5]))
+                              @if(isset($page) && $page == "Weekly Calendar")
+                              <li class="active">
+                                @else
+                                <li>
+                                  @endif
+                                  <a href="{{ url("/index/weekly_calendar") }}"><i class="fa fa-calendar-plus-o"></i> <span>Weekly Calendar</span></a>
+                                </li>
+                                @endif
+
+                                @if(in_array(Auth::user()->level_id, [1,4,5]))
+                                @if(isset($page) && $page == "Weekly Schedule")
+                                <li class="active">
+                                  @else
+                                  <li>
+                                    @endif
+                                    <a href="{{ url("/index/weekly_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Weekly Schedule</span></a>
+                                  </li>
+                                  @endif
+
         {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>

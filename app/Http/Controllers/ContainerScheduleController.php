@@ -168,7 +168,7 @@ class ContainerScheduleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Import resource from Text File.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

@@ -37,56 +37,47 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/container_schedule')}}">
+    <form role="form" method="post" action="{{url('create/weekly_calendar')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Container<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="container_code" style="width: 100%;" data-placeholder="Choose a Container Code..." required>
-              <option value=""></option>
-              @foreach($containers as $container)
-              <option value="{{ $container->container_code }}">{{ $container->container_code }} - {{ $container->container_name }}</option>
-              @endforeach
-            </select>
+          <label class="col-sm-4">Fiscal Year<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="fiscal_year" placeholder="Enter Fiscal Year" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="destination_code" style="width: 100%;" data-placeholder="Choose a Destination Code..." required>
-              <option value=""></option>
-              @foreach($destinations as $destination)
-              <option value="{{ $destination->destination_code }}">{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
-              @endforeach
-            </select>
+          <label class="col-sm-4">Week Name<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="week_name" placeholder="Enter Week Name" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
+          <label class="col-sm-4">Date From<span class="text-red">*</span></label>
           <div class="col-sm-4">
            <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" required>
+            <input type="date" class="form-control" name="date_from" placeholder="Enter Date From" required>
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
       </div>
       <div class="form-group row" align="right">
-      <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
-      <div class="col-sm-4">
-        <div class="input-group">
-          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" required>
-          <span class="input-group-addon">unit(s)</span>
+          <label class="col-sm-4">Date To<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+           <div class="input-group">
+            <input type="date" class="form-control" name="date_to" placeholder="Enter Date To" required>
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          </div>
         </div>
       </div>
-    </div>
     </div>
     
     <!-- /.box-body -->
     <div class="box-footer form-group row">
       <div class="col-sm-4"></div>
       <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/container_schedule') }}">Cancel</a>
+        <a class="btn btn-danger col-sm-14" href="{{ url('index/weekly_calendar') }}">Cancel</a>
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-primary col-sm-14">Submit</button>

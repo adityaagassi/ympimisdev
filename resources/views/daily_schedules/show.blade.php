@@ -31,14 +31,14 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Material Number</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->material_number}}
+            {{$daily_schedule->material_number}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Material Description</label>
           <div class="col-sm-5" align="left">
-            @if(isset($material_volume->material->material_description))
-            {{$material_volume->material->material_description}}
+            @if(isset($daily_schedule->material->material_description))
+            {{$daily_schedule->material->material_description}}
             @else
             Not registered.
             @endif
@@ -47,87 +47,57 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Origin Group</label>
           <div class="col-sm-5" align="left">
-            @if(isset($material_volume->material->origin_group_code))
-            {{$material_volume->material->origin_group_code}} - {{$material_volume->material->origingroup->origin_group_name}}
+            @if(isset($daily_schedule->material->origin_group_code))
+            {{$daily_schedule->material->origin_group_code}} - {{$daily_schedule->material->origingroup->origin_group_name}}
             @else
-            Not registered
+            Not registered.
             @endif
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Category</label>
+          <label class="col-sm-5">Destination Code</label>
           <div class="col-sm-5" align="left">
-            @if($material_volume->category == "FG")
-            FG - Finished Goods
+            {{$daily_schedule->destination_code}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Destination Name</label>
+          <div class="col-sm-5" align="left">
+            @if(isset($daily_schedule->destination->destination_name))
+            {{$daily_schedule->destination->destination_name}}
             @else
-            KD - Knock Down Parts
+            Not registered.
             @endif
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Lot Completion</label>
+          <label class="col-sm-5">Due Date</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->lot_completion}} pc(s)
+            {{$daily_schedule->due_date}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Lot Transfer</label>
+          <label class="col-sm-5">Quantity</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->lot_transfer}} pc(s)
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Lot Pallet</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->lot_pallet}} pc(s)
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Lot Volume</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->lot_volume}} pc(s)
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Length</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->length}} m
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Width</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->width}} m
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Height</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->height}} m
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Volume</label>
-          <div class="col-sm-5" align="left">
-            {{$material_volume->height*$material_volume->width*$material_volume->length}} m&sup3;
+            {{$daily_schedule->quantity}} unit(s)
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->user->name}}
+            {{$daily_schedule->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->updated_at}}
+            {{$daily_schedule->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->created_at}}
+            {{$daily_schedule->created_at}}
           </div>
         </div>
       </form>

@@ -62,10 +62,37 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Lot<span class="text-red">*</span></label>
+          <label class="col-sm-4">Lot Completion<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="lot" placeholder="Enter Lot" required>
+              <input min="0" type="number" class="form-control" name="lot_completion" placeholder="Enter Lot Completion" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Transfer<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_transfer" placeholder="Enter Lot Transfer" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Pallet<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_pallet" placeholder="Enter Lot Pallet" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Volume<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_volume" placeholder="Enter Lot Volume" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -74,7 +101,7 @@
           <label class="col-sm-4">Length<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="length" placeholder="Enter Length" required>
+              <input min="0" type="number" class="form-control" name="length" placeholder="Enter Length" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>
@@ -83,7 +110,7 @@
           <label class="col-sm-4">Width<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="width" placeholder="Enter Width" required>
+              <input min="0" type="number" class="form-control" name="width" placeholder="Enter Width" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>
@@ -92,7 +119,7 @@
           <label class="col-sm-4">Height<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input type="number" class="form-control" name="height" placeholder="Enter Height" required>
+              <input min="0" type="number" class="form-control" name="height" placeholder="Enter Height" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>

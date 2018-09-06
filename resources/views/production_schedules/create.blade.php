@@ -37,16 +37,16 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/container_schedule')}}">
+    <form role="form" method="post" action="{{url('create/production_schedule')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Container<span class="text-red">*</span></label>
+          <label class="col-sm-4">Material<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="container_code" style="width: 100%;" data-placeholder="Choose a Container Code..." required>
+            <select class="form-control select2" name="material_number" style="width: 100%;" data-placeholder="Choose a Material Number..." required>
               <option value=""></option>
-              @foreach($containers as $container)
-              <option value="{{ $container->container_code }}">{{ $container->container_code }} - {{ $container->container_name }}</option>
+              @foreach($materials as $material)
+              <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
               @endforeach
             </select>
           </div>
@@ -63,30 +63,29 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
+          <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
            <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" required>
+            <input type="date" class="form-control" name="due_date" placeholder="Enter Due Date" required>
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
       </div>
-      <div class="form-group row" align="right">
+    </div>
+    <div class="form-group row" align="right">
       <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
       <div class="col-sm-4">
         <div class="input-group">
           <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" required>
-          <span class="input-group-addon">unit(s)</span>
+          <span class="input-group-addon">pc(s)</span>
         </div>
       </div>
     </div>
-    </div>
-    
     <!-- /.box-body -->
     <div class="box-footer form-group row">
       <div class="col-sm-4"></div>
       <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/container_schedule') }}">Cancel</a>
+        <a class="btn btn-danger col-sm-14" href="{{ url('index/production_schedule') }}">Cancel</a>
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
