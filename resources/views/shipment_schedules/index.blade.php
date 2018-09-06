@@ -10,7 +10,7 @@
     <li>
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
-      <a href="{{ url("create/daily_schedule")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
+      <a href="{{ url("create/shipment_schedule")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
     </li>
   </ol>
 </section>
@@ -46,12 +46,16 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
+                    <th>Ship. Month</th>
+                    <th>Ship. Week</th>
+                    <th>Sales Order</th>
+                    <th>Ship. Cond.</th>
+                    <th>Dest</th>
                     <th>Material Number</th>
                     <th>Description</th>
-                    <th>Origin Group</th>
-                    <th>Dest. Code</th>
-                    <th>Dest. Name</th>
-                    <th>Due Date</th>
+                    <th>HPL</th>
+                    <th>B/L Date</th>
+                    <th>Ship. Date</th>
                     <th>Qty</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
@@ -59,44 +63,48 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach($daily_schedules as $daily_schedule)
+                    @foreach($shipment_schedules as $shipment_schedule)
                     <tr>
-                      <td style="font-size: 14">{{$daily_schedule->material_number}}</td>
+                      <td style="font-size: 14">{{ date('M-Y', strtotime($shipment_schedule->st_month))}}</td>
                       <td style="font-size: 14">
-                        @if(isset($daily_schedule->material->material_description))
-                        {{$daily_schedule->material->material_description}}
+                      @if(isset($shipment_schedule->weeklycalendar->week_name))
+                        {{$shipment_schedule->weeklycalendar->week_name}}
                         @else
                         Not registered
                         @endif
                       </td>
+                      <td style="font-size: 14">{{$shipment_schedule->sales_order}}</td>
                       <td style="font-size: 14">
-                        @if(isset($daily_schedule->material->origin_group_code))
-                        {{$daily_schedule->material->origingroup->origin_group_name  }}
+                        @if(isset($shipment_schedule->shipmentcondition->shipment_condition_name))
+                        {{$shipment_schedule->shipmentcondition->shipment_condition_name}}
+                        @else
+                        {{$shipment_schedule->shipment_condition_code}} - Not registered
+                        @endif
+                      </td>
+                      <td style="font-size: 14">
+                        @if(isset($shipment_schedule->destination->destination_shortname))
+                        {{$shipment_schedule->destination->destination_shortname}}
+                        @else
+                        {{$shipment_schedule->destination_code}} - Not registered
+                        @endif
+                      </td>
+                      <td style="font-size: 14">{{$shipment_schedule->material_number}}</td>
+                      <td style="font-size: 14">
+                        @if(isset($shipment_schedule->material->material_description))
+                        {{$shipment_schedule->material->material_description}}
                         @else
                         Not registered
                         @endif
                       </td>
-                      <td style="font-size: 14">{{$daily_schedule->destination_code}}</td>
-                      <td style="font-size: 14">
-                        @if(isset($daily_schedule->destination->destination_shortname))
-                        {{$daily_schedule->destination->destination_shortname}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">{{$daily_schedule->due_date}}</td>
-                      <td style="font-size: 14">{{$daily_schedule->quantity}}</td>
-                    {{-- <td>
-                      <form action="{{ url('destroy/user', $user['id']) }}" method="post">
-                                {{ csrf_field() }}
-                                <button class="btn btn-xs btn-danger" type="submit">Delete</button>
-                      </form>
-                    </td> --}}
+                      <td style="font-size: 14">{{$shipment_schedule->hpl}}</td>
+                      <td style="font-size: 14">{{$shipment_schedule->bl_date}}</td>
+                      <td style="font-size: 14">{{$shipment_schedule->st_date}}</td>
+                      <td style="font-size: 14">{{$shipment_schedule->quantity}}</td>
                     <td>
                       <center>
-                        <a class="btn btn-info btn-xs" href="{{url('show/daily_schedule', $daily_schedule['id'])}}">View</a>
-                        <a href="{{url('edit/daily_schedule', $daily_schedule['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/daily_schedule") }}', '{{$daily_schedule->material_number}}', '{{ $daily_schedule['id'] }}');">
+                        <a class="btn btn-info btn-xs" href="{{url('show/shipment_schedule', $shipment_schedule['id'])}}">View</a>
+                        <a href="{{url('edit/shipment_schedule', $shipment_schedule['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/shipment_schedule") }}', '{{$shipment_schedule->material_number}}', '{{ $shipment_schedule['id'] }}');">
                           Delete
                         </a>
                       </center>
@@ -137,7 +145,7 @@
       <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form id ="importForm" method="post" action="{{ url('import/daily_schedule') }}" enctype="multipart/form-data">
+            <form id ="importForm" method="post" action="{{ url('import/shipment_schedule') }}" enctype="multipart/form-data">
               <input type="hidden" value="{{csrf_token()}}" name="_token" />
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -145,7 +153,7 @@
               </div>
               <div class="">
                 <div class="modal-body">
-                  <center><input type="file" name="daily_schedule" id="InputFile" accept="text/plain"></center>
+                  <center><input type="file" name="shipment_schedule" id="InputFile" accept="text/plain"></center>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

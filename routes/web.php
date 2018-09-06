@@ -119,3 +119,12 @@ Route::get('edit/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarCont
 Route::post('edit/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@update');
 Route::get('show/weekly_calendar/{week_name}/{fiscal_year}', 'WeeklyCalendarController@show');
 Route::post('import/weekly_calendar', 'WeeklyCalendarController@import');
+
+Route::get('index/shipment_schedule', 'ShipmentScheduleController@index');
+Route::get('create/shipment_schedule', 'ShipmentScheduleController@create');
+Route::post('create/shipment_schedule', 'ShipmentScheduleController@store');
+Route::get('destroy/shipment_schedule/{id}', 'ShipmentScheduleController@destroy');
+Route::get('edit/shipment_schedule/{id}', 'ShipmentScheduleController@edit');
+Route::post('edit/shipment_schedule/{id}', 'ShipmentScheduleController@update');
+Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
+Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');

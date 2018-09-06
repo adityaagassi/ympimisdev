@@ -61,6 +61,7 @@
             </div>
           </div>
         </div>
+        </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
           <div class="col-sm-4"></div>
@@ -73,8 +74,7 @@
         </div>
       </form>
     </div>
-    
-  </div>
+
 
   @endsection
 

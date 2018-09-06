@@ -23,7 +23,7 @@ class ProductionScheduleController extends Controller
      */
     public function index()
     {
-        $production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'due_date ASC')
+        $production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'material_number ASC')
         ->get();
 
         return view('production_schedules.index', array(

@@ -71,13 +71,13 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="form-group row" align="right">
-      <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
-      <div class="col-sm-4">
-        <div class="input-group">
-          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" required>
-          <span class="input-group-addon">pc(s)</span>
+      <div class="form-group row" align="right">
+        <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+        <div class="col-sm-4">
+          <div class="input-group">
+            <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" required>
+            <span class="input-group-addon">pc(s)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -92,8 +92,6 @@
       </div>
     </div>
   </form>
-</div>
-
 </div>
 
 @endsection

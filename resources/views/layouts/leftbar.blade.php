@@ -117,6 +117,16 @@
                               </li>
                               @endif
 
+                              @if(in_array(Auth::user()->level_id, [1,4,5]))
+                                @if(isset($page) && $page == "Shipment Schedule")
+                                <li class="active">
+                                  @else
+                                  <li>
+                                    @endif
+                                    <a href="{{ url("/index/shipment_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Shipment Schedule</span></a>
+                                  </li>
+                                  @endif
+
                               @if(in_array(Auth::user()->level_id, [1,5]))
                               @if(isset($page) && $page == "Weekly Calendar")
                               <li class="active">
@@ -127,15 +137,7 @@
                                 </li>
                                 @endif
 
-                                @if(in_array(Auth::user()->level_id, [1,4,5]))
-                                @if(isset($page) && $page == "Weekly Schedule")
-                                <li class="active">
-                                  @else
-                                  <li>
-                                    @endif
-                                    <a href="{{ url("/index/weekly_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Weekly Schedule</span></a>
-                                  </li>
-                                  @endif
+                                
 
         {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         <li class="treeview">
