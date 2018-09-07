@@ -77,8 +77,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="form-group row" align="right">
+      <div class="form-group row" align="right">
       <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
       <div class="col-sm-4">
         <div class="input-group">
@@ -87,6 +86,8 @@
         </div>
       </div>
     </div>
+    </div>
+    
     <!-- /.box-body -->
     <div class="box-footer form-group row">
       <div class="col-sm-4"></div>
@@ -98,8 +99,6 @@
       </div>
     </div>
   </form>
-</div>
-
 </div>
 
 @endsection

@@ -63,7 +63,7 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Destination Name</label>
           <div class="col-sm-5" align="left">
-            @if(isset($daily_schedule->destination->destination_name))
+            @if(isset($dproduction_schedule->destination->destination_name))
             {{$dproduction_schedule->destination->destination_name}}
             @else
             Not registered.
@@ -79,7 +79,7 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Quantity</label>
           <div class="col-sm-5" align="left">
-            {{$production_schedule->quantity}} unit(s)
+            {{$production_schedule->quantity}} pc(s)
           </div>
         </div>
         <div class="form-group row" align="right">

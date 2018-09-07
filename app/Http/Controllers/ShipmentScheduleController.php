@@ -12,9 +12,46 @@ use Illuminate\Database\QueryException;
 
 class ShipmentScheduleController extends Controller
 {
+    private $hpl;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->hpl = [
+            'ASBELL&BOW',
+            'ASBODY',
+            'ASFG',
+            'ASKEY',
+            'ASNECK',
+            'ASPAD',
+            'ASPART',
+            'CASE',
+            'CLBARREL',
+            'CLBELL',
+            'CLFG',
+            'CLKEY',
+            'CLLOWER',
+            'CLPART',
+            'CLUPPER',
+            'FLBODY',
+            'FLFG',
+            'FLFOOT',
+            'FLHEAD',
+            'FLKEY',
+            'FLPAD',
+            'FLPART',
+            'MOUTHPIECE',
+            'PN',
+            'PN PARTS',
+            'RC',
+            'TSBELL&BOW',
+            'TSBODY',
+            'TSFG',
+            'TSKEY',
+            'TSNECK',
+            'TSPART',
+            'VENOVA',
+        ];
     }
     /**
      * Display a listing of the resource.
@@ -39,13 +76,16 @@ class ShipmentScheduleController extends Controller
      */
     public function create()
     {
+
+        $hpls = $this->hpl;
         $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();
         $materials = Material::orderBy('material_number', 'ASC')->get();
         $destinations = Destination::orderBy('destination_code', 'ASC')->get();
         return view('shipment_schedules.create', array(
             'destinations' => $destinations,
             'materials' => $materials,
-            'shipment_conditions' => $shipment_conditions
+            'shipment_conditions' => $shipment_conditions,
+            'hpls' => $hpls
         ))->with('page', 'Shipment Schedule');
         //
     }
@@ -97,6 +137,12 @@ class ShipmentScheduleController extends Controller
      */
     public function show($id)
     {
+        $hpls = $this->hpl;
+
+        $shipment_schedule = ShipmentSchedule::find($id);
+        return view('shipment_schedules.show', array(
+            'shipment_schedule' => $shipment_schedule,
+        ))->with('page', 'Shipment Schedule');
         //
     }
 
@@ -108,6 +154,18 @@ class ShipmentScheduleController extends Controller
      */
     public function edit($id)
     {
+        $hpls = $this->hpl;
+        $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();
+        $materials = Material::orderBy('material_number', 'ASC')->get();
+        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
+        $shipment_schedule = ShipmentSchedule::find($id);
+        return view('shipment_schedules.edit', array(
+            'destinations' => $destinations,
+            'materials' => $materials,
+            'shipment_conditions' => $shipment_conditions,
+            'shipment_schedule' => $shipment_schedule,
+            'hpls' => $hpls
+        ))->with('page', 'Shipment Schedule');
         //
     }
 
@@ -132,7 +190,7 @@ class ShipmentScheduleController extends Controller
     public function destroy($id)
     {
         $shipment_schedule = ShipmentSchedule::find($id);
-        $shipment_schedule->forceDelete();
+        $shipment_schedule->delete();
 
         return redirect('/index/shipment_schedule')
         ->with('status', 'Shipment schedule has been deleted.')
