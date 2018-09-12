@@ -77,15 +77,21 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-5">Lot Row</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->lot_row}} pc(s)
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-5">Lot Pallet</label>
           <div class="col-sm-5" align="left">
             {{$material_volume->lot_pallet}} pc(s)
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Lot Volume</label>
+          <label class="col-sm-5">Lot Carton</label>
           <div class="col-sm-5" align="left">
-            {{$material_volume->lot_volume}} pc(s)
+            {{$material_volume->lot_carton}} pc(s)
           </div>
         </div>
         <div class="form-group row" align="right">

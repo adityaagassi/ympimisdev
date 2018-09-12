@@ -6,14 +6,14 @@
       <ul class="sidebar-menu" data-widget="tree">
         <!-- Optionally, you can add icons to the links -->
 
-        @if(isset($page) && $page == "Dashboard")
+        {{-- @if(isset($page) && $page == "Dashboard")
         <li class="active">
           @else
           <li>
             @endif
             <a href="{{ url("/home") }}"><i class="fa fa-industry"></i> <span>Dashboard</span></a>
           </li>
-          {{-- <li class="header">Master Menu</li>
+          <li class="header">Master Menu</li>
 
           @if(in_array(Auth::user()->level_id, [1,2]))
           @if(isset($page) && $page == "User")
@@ -113,7 +113,7 @@
 
 
 
-                            {{-- @if(in_array(Auth::user()->level_id, [1,4]))
+                           {{--  @if(in_array(Auth::user()->level_id, [1,4]))
                             @if(isset($page) && $page == "Shipment Condition")
                             <li class="active">
                               @else
@@ -145,35 +145,59 @@
 
                                   <li class="header">Service Menu</li>
 
-                                  @if(in_array(Auth::user()->level_id, [1]))
-                                  @if(isset($page) && $page == "Print FLO")
-                                  <li class="active">
-                                    @else
-                                    <li>
-                                      @endif
-                                      <a href="{{ url("/index/flo") }}"><i class="glyphicon glyphicon-print"></i> <span>FLO  <i class="fa fa-angle-right"></i> Print</span></a>
-                                    </li>
-                                    @endif
-
                                     @if(in_array(Auth::user()->level_id, [1]))
-                                    @if(isset($page) && $page == "FLO Fulfillment")
+                                    @if(isset($page) && $page == "FLO Serial Number")
                                     <li class="active">
                                       @else
                                       <li>
                                         @endif
-                                        <a href="{{ url("/index/flo") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Fulfillment</span></a>
+                                        <a href="{{ url("/index/flo_sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Instrument</span></a>
                                       </li>
                                       @endif
 
                                       @if(in_array(Auth::user()->level_id, [1]))
-                                      @if(isset($page) && $page == "Print FLO")
+                                      @if(isset($page) && $page == "FLO Fulfillment")
                                       <li class="active">
                                         @else
                                         <li>
                                           @endif
-                                          <a href="{{ url("/index/flo") }}"><i class="fa fa-print"></i> <span>FLO  <i class="fa fa-angle-right"></i> Reprint</span></a>
+                                          <a href="{{ url("/index/flo_pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Instrument</span></a>
                                         </li>
                                         @endif
+
+                                        @if(in_array(Auth::user()->level_id, [1]))
+                                        @if(isset($page) && $page == "Print FLO")
+                                        <li class="active">
+                                          @else
+                                          <li>
+                                            @endif
+                                            <a href="{{ url("/index/flo") }}"><i class="fa fa-print"></i> <span>FLO  <i class="fa fa-angle-right"></i> Reprint</span></a>
+                                          </li>
+                                          @endif
+
+                                          @if(in_array(Auth::user()->level_id, [1]))
+                                          @if(isset($page) && $page == "Print FLO")
+                                          <li class="active">
+                                            @else
+                                            <li>
+                                              @endif
+                                              <a href="{{ url("/index/flo") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Status</span></a>
+                                            </li>
+                                            @endif
+
+                                         {{--  @if(in_array(Auth::user()->level_id, [1]))
+                                          <li class="treeview">
+                                            <a href="#"><i class="fa fa-info-circle"></i> <span>FLO Informations</span>
+                                              <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                              </span>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                              <li><a href="#">Outstanding FLO</a></li>
+                                              <li><a href="#">Link in level 2</a></li>
+                                            </ul>
+                                          </li>
+                                          @endif --}}
 
 
         {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>

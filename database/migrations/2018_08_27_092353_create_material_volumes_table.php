@@ -19,8 +19,9 @@ class CreateMaterialVolumesTable extends Migration
             $table->string('category');
             $table->double('lot_completion');
             $table->double('lot_transfer');
+            $table->double('lot_row');
             $table->double('lot_pallet');
-            $table->double('lot_volume');
+            $table->double('lot_carton');
             $table->double('length');
             $table->double('width');
             $table->double('height');

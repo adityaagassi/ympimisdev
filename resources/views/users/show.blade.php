@@ -56,7 +56,11 @@
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$user->created_by}}
+            @foreach($created_bys as $created_by)
+                        @if($user->created_by == $created_by->id)
+                        {{ $created_by->name }}
+                        @endif
+                        @endforeach
           </div>
         </div>
         <div class="form-group row" align="right">

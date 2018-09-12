@@ -128,3 +128,6 @@ Route::get('edit/shipment_schedule/{id}', 'ShipmentScheduleController@edit');
 Route::post('edit/shipment_schedule/{id}', 'ShipmentScheduleController@update');
 Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
 Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');
+
+Route::get('index/flo_sn', 'FloController@index_sn');
+Route::post('print/flo_sn', 'FloController@print_sn');

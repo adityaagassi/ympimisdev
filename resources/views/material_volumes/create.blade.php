@@ -80,6 +80,15 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot Row<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_row" placeholder="Enter Lot Row" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-4">Lot Pallet<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
@@ -89,10 +98,10 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Lot Volume<span class="text-red">*</span></label>
+          <label class="col-sm-4">Lot Carton<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="lot_volume" placeholder="Enter Lot Volume" required>
+              <input min="0" type="number" class="form-control" name="lot_carton" placeholder="Enter Lot Carton" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>

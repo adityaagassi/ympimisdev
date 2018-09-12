@@ -16,12 +16,12 @@
 
 <section class="content">
   @if (session('status'))
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-                {{ session('status') }}
-            </div>   
-@endif
+  <div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+    {{ session('status') }}
+  </div>   
+  @endif
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -56,12 +56,12 @@
                     </td> --}}
                     <td>
                       <center>
-                      <a class="btn btn-info btn-xs" href="{{url('show/destination', $destination['id'])}}">View</a>
-                      <a href="{{url('edit/destination', $destination['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/destination") }}', '{{ $destination['destination_name'] }}', '{{ $destination['id'] }}');">
-                        Delete
-                      </a>
-                    </center>
+                        <a class="btn btn-info btn-xs" href="{{url('show/destination', $destination['id'])}}">View</a>
+                        <a href="{{url('edit/destination', $destination['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/destination") }}', '{{ $destination['destination_name'] }}', '{{ $destination['id'] }}');">
+                          Delete
+                        </a>
+                      </center>
                     </td>
                   </tr>
                   @endforeach
@@ -74,9 +74,10 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
+      </div>
 
-      </section>
-      <!-- /.content -->
+    </section>
+    <!-- /.content -->
 
     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -102,8 +103,8 @@
     <script>
       $(function () {
         $('#example1').DataTable({
-            "order": []
-          })
+          "order": []
+        })
         $('#example2').DataTable({
           'paging'      : true,
           'lengthChange': false,

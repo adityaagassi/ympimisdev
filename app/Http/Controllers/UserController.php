@@ -18,20 +18,22 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+      $this->middleware('auth');
     }
     
     public function index()
     {
         // $users = User::all()->toArray();
         // return view('users.index', compact('users'));
-        $users = User::orderBy('name', 'ASC')
-        ->wherenull('deleted_at')
-        ->with(array('level'))
-        ->get();
-        return view('users.index', array(
-            'users' => $users
-        ))->with('page', 'User');
+      $created_by = User::orderBy('name', 'ASC')
+      ->get();
+
+      $users = User::orderBy('name', 'ASC')
+      ->get();
+      return view('users.index', array(
+        'users' => $users,
+        'created_by' => $created_by
+      ))->with('page', 'User');
     }
 
     /**
@@ -41,10 +43,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        $levels = Level::orderBy('level_name', 'ASC')->get();
-        return view('users.create', array(
-            'levels' => $levels
-        ))->with('page', 'User');
+      $levels = Level::orderBy('level_name', 'ASC')->get();
+      return view('users.create', array(
+        'levels' => $levels
+      ))->with('page', 'User');
         //
     }
 
@@ -56,34 +58,34 @@ class UserController extends Controller
      */
     public function store(request $request)
     {
-        try{
-            if($request->get('password') == $request->get('password_confirmation')){
-                $id = Auth::id();
-                $user = new User([
-                  'user' => $request->get('user'),
-                  'name' => $request->get('name'),
-                  'username' => $request->get('username'),
-                  'email' => $request->get('email'),
-                  'password' => bcrypt($request->get('password')),
-                  'level_id' => $request->get('level'),
-                  'created_by' => $id
-              ]);
+      try{
+        if($request->get('password') == $request->get('password_confirmation')){
+          $id = Auth::id();
+          $user = new User([
+            'user' => $request->get('user'),
+            'name' => $request->get('name'),
+            'username' => $request->get('username'),
+            'email' => $request->get('email'),
+            'password' => bcrypt($request->get('password')),
+            'level_id' => $request->get('level'),
+            'created_by' => $id
+          ]);
 
-                $user->save();
-                return redirect('/index/user')->with('status', 'New user has been created.')->with('page', 'User');
-            }
-            else{
-                return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User'); 
-            }  
+          $user->save();
+          return redirect('/index/user')->with('status', 'New user has been created.')->with('page', 'User');
         }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
+        else{
+          return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User'); 
+        }  
+      }
+      catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
-            }
-
+          return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
         }
+
+      }
 
     }
 
@@ -95,13 +97,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $levels = Level::orderBy('level_name', 'ASC')->get();
-        $user = User::find($id);
 
-        return view('users.show', array(
-            'user' => $user,
-            'levels' => $levels,
-        ))->with('page', 'User');
+      $created_bys = User::orderBy('name', 'ASC')->get();
+      $levels = Level::orderBy('level_name', 'ASC')->get();
+      $user = User::find($id);
+
+      return view('users.show', array(
+        'user' => $user,
+        'levels' => $levels,
+        'created_bys' => $created_bys
+      ))->with('page', 'User');
         //
     }
 
@@ -113,13 +118,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
-        $levels = Level::orderBy('level_name', 'ASC')->get();
-        $user = User::find($id);
-        return view('users.edit', array(
-            'user' => $user,
-            'levels' => $levels,
-        ))->with('page', 'User');
+
+      $levels = Level::orderBy('level_name', 'ASC')->get();
+      $user = User::find($id);
+      return view('users.edit', array(
+        'user' => $user,
+        'levels' => $levels,
+      ))->with('page', 'User');
         //
     }
 
@@ -133,51 +138,51 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
 
-        try{
+      try{
 
-            if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
-                if($request->get('password') == $request->get('password_confirmation')){
-                    $user = User::find($id);
-                    $user->name = $request->get('name');
-                    $user->username = $request->get('username');
-                    $user->email = $request->get('email');
-                    $user->password = $request->get('password');
-                    $user->level_id = $request->get('level');
-                    $user->save();
-                    return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
-                }
-                else
-                {
-                    return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
-                }
-            }
-            elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
-                if($request->get('password') == $request->get('password_confirmation')){
-                    $user = User::find($id);
-                    $user->name = $request->get('name');
-                    $user->username = $request->get('username');
-                    $user->email = $request->get('email');
-                // $user->password = $request->get('password');
-                    $user->level_id = $request->get('level');
-                    $user->save();
-                    return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
-                }
-                else
-                {
-                    return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
-                }
-            }
-
-
+        if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
+          if($request->get('password') == $request->get('password_confirmation')){
+            $user = User::find($id);
+            $user->name = $request->get('name');
+            $user->username = $request->get('username');
+            $user->email = $request->get('email');
+            $user->password = $request->get('password');
+            $user->level_id = $request->get('level');
+            $user->save();
+            return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+          }
+          else
+          {
+            return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
+          }
         }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-            // self::delete($lid);
-                return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
-            }
+        elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
+          if($request->get('password') == $request->get('password_confirmation')){
+            $user = User::find($id);
+            $user->name = $request->get('name');
+            $user->username = $request->get('username');
+            $user->email = $request->get('email');
+                // $user->password = $request->get('password');
+            $user->level_id = $request->get('level');
+            $user->save();
+            return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+          }
+          else
+          {
+            return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
+          }
+        }
 
-        }  
+
+      }
+      catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
+            // self::delete($lid);
+          return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+        }
+
+      }  
             //
     }
 
@@ -193,11 +198,11 @@ class UserController extends Controller
         // $user = User::find($id);
         // $user->deleted_at = $date;
         // $user->save();
-        
-        $user = User::find($id);
-        $user->delete();
 
-        return redirect('/index/user')->with('status', 'User has been deleted.')->with('page', 'User');
+      $user = User::find($id);
+      $user->delete();
+
+      return redirect('/index/user')->with('status', 'User has been deleted.')->with('page', 'User');
         //
     }
-}
+  }

@@ -10,7 +10,7 @@ class MaterialVolume extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'material_number', 'category', 'lot_completion', 'lot_transfer', 'lot_pallet', 'lot_volume', 'width', 'length', 'height', 'created_by'
+		'material_number', 'category', 'lot_completion', 'lot_transfer', 'lot_row', 'lot_pallet', 'lot_carton', 'width', 'length', 'height', 'created_by'
 	];
 
 		public function user()
