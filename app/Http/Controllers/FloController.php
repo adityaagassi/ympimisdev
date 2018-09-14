@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use DataTables;
+use Yajra\DataTables\Exception;
 
 class FloController extends Controller
 {
@@ -35,18 +36,58 @@ class FloController extends Controller
         //
     }
 
+    public function scan_serial_number_sn(Request $request)
+    {
+        // $validation = Validator::make($request->all(), [
+        //     'flo_number' => 'required',
+        //     'serial_number' => 'required'
+        // ]); 
+
+        // $error_array = array();
+        $success_output = '';
+        // if($validation->fails())
+        // {
+        //     foreach ($validation->messages()->getMessage() as $field_name => $messages) {
+        //         $error_array[] = $messages;
+        //         # code...
+        //     }
+        // }
+        // else
+        // {
+            $id = Auth::id();
+            if ($request->get('serial_number') != "") {
+                $flo_serial_number = new FloSerialNumber([
+                    'serial_number' => $request->get('serial_number'),
+                    'flo_number' => $request->get('flo_number'),
+                    'created_by' => $id
+                ]);
+                $flo_serial_number->save();
+                # code...
+            }
+        // }
+        $output = array(
+            // 'error' => $error_array,
+            'success' => $success_output
+        );
+        echo json_encode($output);
+    }
+
     public function scan_flo_number_sn(Request $request)
     {
-        // if($request->ajax()){
+
             $flo_number = $request->get('flo_number');
+
             $flos = DB::table('flo_serial_numbers')
             ->leftJoin('flos', 'flo_serial_numbers.flo_number', '=', 'flos.flo_number')
             ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
             ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
             ->where('flo_serial_numbers.flo_number', '=', $flo_number)
-            ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_serial_numbers.serial_number')
+            ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_serial_numbers.serial_number', 'flo_serial_numbers.id')
             ->get();
-            return DataTables::of($flos)->make(true);
+            return DataTables::of($flos)->addColumn('action', function($flos){
+                return '<a href="#" class="btn btn-sm btn-danger" id="' . $flos->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
+            })->make(true);
+        
     }
 
     /**

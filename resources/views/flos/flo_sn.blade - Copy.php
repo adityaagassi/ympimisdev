@@ -203,7 +203,7 @@ td:hover {
   //   		"aoColumns": [
   //     			{ "sWidth": "2%" }, // 1st column width 
   //     			{ "sWidth": "12%" }, // 2nd column width 
-  //     			{ "sWidth": "6%" },
+  //     			{ "sWidth": "67%" },
   //     			{ "sWidth": "12%" },
   //     			{ "sWidth": "4%" } // 3rd column width and so on 
   //     			],
@@ -219,28 +219,6 @@ td:hover {
 		// 		}
 		// 	}, 20 );
 		// });
-		$("#finish").click(function(){
-			var table = $('#flo_table').DataTable();
-
-			table.destroy();
-
-			$("#flo_number").prop('disabled', false);
-			
-			$("#material").hide();
-			$("#serial").hide();
-			$("#icon-material").hide();
-			$("#icon-serial").hide();
-			$("#line-flo").hide();
-			$("#finish").hide();
-			$("#flo_table").hide();
-			$("#flo_number").val("");
-			$("#material").val("");
-			$("#serial").val("");
-			$("#flo_number").focus();
-
-
-
-		});
 
 
 		$('#flo_number').keydown(function(event) {
@@ -316,14 +294,11 @@ td:hover {
 				alert( 'You are not logged in' );
 			},
 			"columns": [
-			{ "data": "id",
-			render: function (data, type, row, meta) {
-				return meta.row + meta.settings._iDisplayStart + 1;
-			}, "sWidth": "2%" },
-			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "65%" },
-			{ "data": "serial_number", "sWidth": "14%" },
-			{ "data": "action", "sWidth": "4%" }
+			{ "data": null },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "serial_number" },
+			{ "data": null }
 			]
 
 		});
@@ -342,30 +317,6 @@ function scanSerial(){
 	// create content of FLO here
 	$("#serial").prop('disabled', true);
 	$("#material").prop('disabled', false);
-	
-	var token = '{{ Session::token() }}';
-	var flo_number = $("#flo_number").val();
-	var serial_number = $("#serial").val();
-	var data = {
-		flo_number: flo_number,
-		serial_number: serial_number,
-		_token: token
-	};
-	
-
-	$.ajax({
-		url: "{{ url("scan/serial_number_sn") }}",
-		method: "POST",
-		data: data,
-		dataType: 'json',
-		success:function(data)
-		{
-
-			$('#flo_table').DataTable().ajax.reload();
-
-		}
-
-	});
 	$("#material").val("");
 	$("#serial").val("");
 	$("#material").focus();
