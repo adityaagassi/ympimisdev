@@ -5,22 +5,22 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Flo extends Model
+class FloSerialNumber extends Model
 {
 	use SoftDeletes;
     //
     protected $fillable = [
-        'flo_number', 'invoice_number', 'container_number', 'bl_date', 'shipment_schedule_id', 'quantity', 'actual', 'created_by'
+        'serial_number', 'flo_number', 'created_by'
     ];
-    
-    public function user()
+
+     public function user()
     {
     	return $this->belongsTo('App\User', 'created_by')->withTrashed();
     }
 
     public function shipmentschedule()
     {
-    	return $this->belongsTo('App\ShipmentSchedule', 'shipment_schedule_id', 'id')->withTrashed();
+    	return $this->belongsTo('App\ShipmentSchedule', 'flo_number')->withTrashed();
     }
     //
 }
