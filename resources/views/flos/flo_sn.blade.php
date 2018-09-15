@@ -190,28 +190,6 @@ td:hover {
 		$("#material").val("");
 		$("#serial").val("");
 
-		// $('#flo_table').DataTable({
-		// 	'paging'      	: false,
-		// 	'lengthChange'	: false,
-		// 	'searching'   	: false,
-		// 	'ordering'    	: false,
-		// 	'info'       	: true,
-		// 	'autoWidth'		: false,
-		// 	"sPaginationType": "full_numbers",
-		// 	"bJQueryUI": true,
-  //   		"bAutoWidth": false, // Disable the auto width calculation 
-  //   		"aoColumns": [
-  //     			{ "sWidth": "2%" }, // 1st column width 
-  //     			{ "sWidth": "12%" }, // 2nd column width 
-  //     			{ "sWidth": "6%" },
-  //     			{ "sWidth": "12%" },
-  //     			{ "sWidth": "4%" } // 3rd column width and so on 
-  //     			],
-  //     			"infoCallback": function( settings, start, end, max, total, pre ) {
-  //     				return " Total "+ total +" pc(s)";
-  //     			}
-  //     		});
-
 		// $("#flo_number").on("input", function() {
 		// 	delay(function(){
 		// 		if ($("#flo_number").val().length < 8) {
@@ -219,6 +197,7 @@ td:hover {
 		// 		}
 		// 	}, 20 );
 		// });
+
 		$("#finish").click(function(){
 			var table = $('#flo_table').DataTable();
 
@@ -275,15 +254,6 @@ td:hover {
 
 	function scanFLO() {
 
-		$("#material").show();
-		$("#serial").show();
-		$("#icon-material").show();
-		$("#icon-serial").show();
-		$("#line-flo").show();
-		$("#finish").show();
-		$("#flo_table").show();
-		$("#flo_number").prop('disabled', true);
-		$("#serial").prop('disabled', true);
 		
 		var token = '{{ Session::token() }}';
 		var flo_number = $("#flo_number").val();
@@ -291,44 +261,82 @@ td:hover {
 			flo_number: flo_number,
 			_token: token
 		};
-		$('#flo_table').DataTable( {
-			'paging'      	: false,
-			'lengthChange'	: false,
-			'searching'   	: false,
-			'ordering'    	: false,
-			'info'       	: true,
-			'autoWidth'		: false,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false, // Disable the auto width calculation 
-			"infoCallback": function( settings, start, end, max, total, pre ) {
-				return " Total "+ total +" pc(s)";
-			},
-			"processing": true,
-			"serverSide": true,
+		$.post('{{ url("scan/flo_number_sn") }}', data, function(result, status, xhr){
 
-			"ajax": {
-				"type" : "post",
-				"url" : "{{ url("scan/flo_number_sn") }}",
-				"data": data
-			},
-			error: function (xhr, error, thrown) {
-				alert( 'You are not logged in' );
-			},
-			"columns": [
-			{ "data": "id",
-			render: function (data, type, row, meta) {
-				return meta.row + meta.settings._iDisplayStart + 1;
-			}, "sWidth": "2%" },
-			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "65%" },
-			{ "data": "serial_number", "sWidth": "14%" },
-			{ "data": "action", "sWidth": "4%" }
-			]
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
 
+			if(xhr.status == 200){
+				if(result.status){
+					$("#material").show();
+					$("#serial").show();
+					$("#icon-material").show();
+					$("#icon-serial").show();
+					$("#line-flo").show();
+					$("#finish").show();
+					$("#flo_table").show();
+					$("#flo_number").prop('disabled', true);
+					$("#serial").prop('disabled', true);
+					$('#flo_table').DataTable( {
+						'paging'      	: false,
+						'lengthChange'	: false,
+						'searching'   	: false,
+						'ordering'    	: false,
+						'info'       	: true,
+						'autoWidth'		: false,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false, // Disable the auto width calculation 
+						"infoCallback": function( settings, start, end, max, total, pre ) {
+							return " Total "+ total +" pc(s)";
+						},
+						"processing": true,
+						"serverSide": true,
+						"ajax": {
+							"type" : "post",
+							"url" : "{{ url("index/scan/flo_number_sn") }}",
+							"data": data
+						},
+						"columns": [
+						{ "data": "id",
+						render: function (data, type, row, meta) {
+							return meta.row + meta.settings._iDisplayStart + 1;
+						}, "sWidth": "2%" },
+						{ "data": "material_number", "sWidth": "12%" },
+						{ "data": "material_description", "sWidth": "65%" },
+						{ "data": "serial_number", "sWidth": "14%" },
+						{ "data": "action", "sWidth": "4%" }
+						]
+
+					});
+					$("#material").focus();
+				}
+				else
+				{
+					$("#flo_number").val("");
+				}
+			}
+			else
+			{
+				$("#flo_number").val("");
+			}
+			// if(result.status){
+			// 	$("#material").show();
+			// 	$("#serial").show();
+			// 	$("#icon-material").show();
+			// 	$("#icon-serial").show();
+			// 	$("#line-flo").show();
+			// 	$("#finish").show();
+			// 	$("#flo_table").show();
+			// 	$("#flo_number").prop('disabled', true);
+			// 	$("#serial").prop('disabled', true);
+			// }
+			// else
+			// {
+				
+			// }
 		});
-		$("#material").focus();
-
 	}
 
 	function scanMaterial(){
@@ -352,7 +360,6 @@ function scanSerial(){
 		_token: token
 	};
 	
-
 	$.ajax({
 		url: "{{ url("scan/serial_number_sn") }}",
 		method: "POST",

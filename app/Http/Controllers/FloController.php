@@ -14,6 +14,7 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use DataTables;
 use Yajra\DataTables\Exception;
+use Response;
 
 class FloController extends Controller
 {
@@ -54,16 +55,16 @@ class FloController extends Controller
         // }
         // else
         // {
-            $id = Auth::id();
-            if ($request->get('serial_number') != "") {
-                $flo_serial_number = new FloSerialNumber([
-                    'serial_number' => $request->get('serial_number'),
-                    'flo_number' => $request->get('flo_number'),
-                    'created_by' => $id
-                ]);
-                $flo_serial_number->save();
+        $id = Auth::id();
+        if ($request->get('serial_number') != "") {
+            $flo_serial_number = new FloSerialNumber([
+                'serial_number' => $request->get('serial_number'),
+                'flo_number' => $request->get('flo_number'),
+                'created_by' => $id
+            ]);
+            $flo_serial_number->save();
                 # code...
-            }
+        }
         // }
         $output = array(
             // 'error' => $error_array,
@@ -74,9 +75,34 @@ class FloController extends Controller
 
     public function scan_flo_number_sn(Request $request)
     {
+        $flo_number = $request->get('flo_number');
 
+        $flo = DB::table('flos')->where('flo_number', '=', $flo_number)->first();
+
+        if ($flo == null)
+        {
+            $response = array(
+                'status' => false,
+                'message' => "FLO number not found."
+            );
+
+            return Response::json($response);
+        }
+        else
+        {
+            $response = array(
+                'status' => true
+            );
+
+            return Response::json($response);
+        }
+    }
+
+
+        public function index_scan_flo_number_sn(Request $request)
+        {
             $flo_number = $request->get('flo_number');
-
+            
             $flos = DB::table('flo_serial_numbers')
             ->leftJoin('flos', 'flo_serial_numbers.flo_number', '=', 'flos.flo_number')
             ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
@@ -84,11 +110,14 @@ class FloController extends Controller
             ->where('flo_serial_numbers.flo_number', '=', $flo_number)
             ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_serial_numbers.serial_number', 'flo_serial_numbers.id')
             ->get();
-            return DataTables::of($flos)->addColumn('action', function($flos){
+
+             return DataTables::of($flos)
+            ->addColumn('action', function($flos){
                 return '<a href="#" class="btn btn-sm btn-danger" id="' . $flos->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
-            })->make(true);
-        
-    }
+            })
+            ->make(true);
+
+        }
 
     /**
      * Print FLO based on weekly shipment schedule priority.
@@ -98,25 +127,25 @@ class FloController extends Controller
     public function print_sn(Request $request)
     {
 
-       $id = Auth::id();
-       $material = Material::where('material_number', '=', $request->get('material_number'))
-       ->first();
+     $id = Auth::id();
+     $material = Material::where('material_number', '=', $request->get('material_number'))
+     ->first();
 
-       $shipment_schedule = DB::table('shipment_schedules')
-       ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-       ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
-       ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
-       ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
-       ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
-       ->where('shipment_schedules.material_number', '=' , $request->get('material_number'))
-       ->orderBy('shipment_schedules.st_date', 'asc')
-       ->select('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'materials.material_description', 'shipment_schedules.st_date', DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_row, material_volumes.lot_row, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
-       ->groupBy('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'shipment_schedules.st_date', 'shipment_schedules.quantity', 'material_volumes.lot_row', 'shipment_schedules.st_date', 'materials.material_description')
-       ->having('flo_quantity', '>' , '0')
-       ->first();
+     $shipment_schedule = DB::table('shipment_schedules')
+     ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+     ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
+     ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+     ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
+     ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+     ->where('shipment_schedules.material_number', '=' , $request->get('material_number'))
+     ->orderBy('shipment_schedules.st_date', 'asc')
+     ->select('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'materials.material_description', 'shipment_schedules.st_date', DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_row, material_volumes.lot_row, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
+     ->groupBy('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'shipment_schedules.st_date', 'shipment_schedules.quantity', 'material_volumes.lot_row', 'shipment_schedules.st_date', 'materials.material_description')
+     ->having('flo_quantity', '>' , '0')
+     ->first();
 
-       if($shipment_schedule == null)
-       {
+     if($shipment_schedule == null)
+     {
         return redirect('/index/flo_sn')->with('error', 'There is no shipment schedule for '. $material->material_number . ' - ' . $material->material_description . ' yet.');
     }
     else
