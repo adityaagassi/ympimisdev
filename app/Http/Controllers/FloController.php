@@ -39,51 +39,62 @@ class FloController extends Controller
 
     public function scan_serial_number_sn(Request $request)
     {
-        // $validation = Validator::make($request->all(), [
-        //     'flo_number' => 'required',
-        //     'serial_number' => 'required'
-        // ]); 
-
-        // $error_array = array();
-        $success_output = '';
-        // if($validation->fails())
-        // {
-        //     foreach ($validation->messages()->getMessage() as $field_name => $messages) {
-        //         $error_array[] = $messages;
-        //         # code...
-        //     }
-        // }
-        // else
-        // {
-        $id = Auth::id();
-        if ($request->get('serial_number') != "") {
+        try{
+          $id = Auth::id();
+          if (strlen($request->get('serial_number')) == 8) {
             $flo_serial_number = new FloSerialNumber([
                 'serial_number' => $request->get('serial_number'),
                 'flo_number' => $request->get('flo_number'),
                 'created_by' => $id
             ]);
             $flo_serial_number->save();
-                # code...
+            $response = array(
+                'status' => true,
+                'message' => "FLO fulfillment success."
+            );
+            return Response::json($response);
         }
-        // }
-        $output = array(
-            // 'error' => $error_array,
-            'success' => $success_output
-        );
-        echo json_encode($output);
-    }
-
-    public function scan_flo_number_sn(Request $request)
-    {
-        $flo_number = $request->get('flo_number');
-
-        $flo = DB::table('flos')->where('flo_number', '=', $flo_number)->first();
-
-        if ($flo == null)
-        {
+        else{
             $response = array(
                 'status' => false,
-                'message' => "FLO number not found."
+                'message' => "Serial number does not matches."
+            );
+
+            return Response::json($response);
+        }
+    }
+    catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
+            $response = array(
+                'status' => false,
+                'message' => "Serial number already exist."
+            );
+            return Response::json($response);
+        }
+
+    }  
+}
+
+public function scan_material_number_sn(Request $request)
+{
+    $material_number = $request->get('material_number');
+    $flo_number = $request->get('flo_number');
+
+    $flo = DB::table('flos')
+    ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+    ->where('flos.flo_number', '=', $flo_number)
+    ->where('shipment_schedules.material_number' , '=', $material_number)
+    ->select('flos.quantity', 'flos.actual')
+    ->first();
+
+    if($flo != null)
+    {
+        if($flo->quantity > $flo->actual)
+        {
+            $response = array(
+                'status' => true,
+                'message' => "Material number matches."
             );
 
             return Response::json($response);
@@ -91,33 +102,73 @@ class FloController extends Controller
         else
         {
             $response = array(
-                'status' => true
+                'status' => false,
+                'message' => "FLO already fulfilled."
             );
 
             return Response::json($response);
         }
+
+    }
+    else
+    {
+        $response = array(
+            'status' => false,
+            'message' => "Material number does not match with FLO."
+        );
+
+        return Response::json($response);
     }
 
 
-        public function index_scan_flo_number_sn(Request $request)
-        {
-            $flo_number = $request->get('flo_number');
-            
-            $flos = DB::table('flo_serial_numbers')
-            ->leftJoin('flos', 'flo_serial_numbers.flo_number', '=', 'flos.flo_number')
-            ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
-            ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
-            ->where('flo_serial_numbers.flo_number', '=', $flo_number)
-            ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_serial_numbers.serial_number', 'flo_serial_numbers.id')
-            ->get();
+}
 
-             return DataTables::of($flos)
-            ->addColumn('action', function($flos){
-                return '<a href="#" class="btn btn-sm btn-danger" id="' . $flos->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
-            })
-            ->make(true);
+public function scan_flo_number_sn(Request $request)
+{
+    $flo_number = $request->get('flo_number');
 
-        }
+    $flo = DB::table('flos')->where('flo_number', '=', $flo_number)->first();
+
+    if ($flo == null)
+    {
+        $response = array(
+            'status' => false,
+            'message' => "FLO number does not match."
+        );
+
+        return Response::json($response);
+    }
+    else
+    {
+        $response = array(
+            'status' => true,
+            'message' => "FLO number matches.",
+        );
+
+        return Response::json($response);
+    }
+}
+
+
+public function index_scan_flo_number_sn(Request $request)
+{
+    $flo_number = $request->get('flo_number');
+
+    $flos = DB::table('flo_serial_numbers')
+    ->leftJoin('flos', 'flo_serial_numbers.flo_number', '=', 'flos.flo_number')
+    ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
+    ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+    ->where('flo_serial_numbers.flo_number', '=', $flo_number)
+    ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_serial_numbers.serial_number', 'flo_serial_numbers.id')
+    ->get();
+
+    return DataTables::of($flos)
+    ->addColumn('action', function($flos){
+        return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $flos->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
+    })
+    ->make(true);
+
+}
 
     /**
      * Print FLO based on weekly shipment schedule priority.
@@ -127,25 +178,25 @@ class FloController extends Controller
     public function print_sn(Request $request)
     {
 
-     $id = Auth::id();
-     $material = Material::where('material_number', '=', $request->get('material_number'))
-     ->first();
+       $id = Auth::id();
+       $material = Material::where('material_number', '=', $request->get('material_number'))
+       ->first();
 
-     $shipment_schedule = DB::table('shipment_schedules')
-     ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-     ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
-     ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
-     ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
-     ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
-     ->where('shipment_schedules.material_number', '=' , $request->get('material_number'))
-     ->orderBy('shipment_schedules.st_date', 'asc')
-     ->select('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'materials.material_description', 'shipment_schedules.st_date', DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_row, material_volumes.lot_row, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
-     ->groupBy('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'shipment_schedules.st_date', 'shipment_schedules.quantity', 'material_volumes.lot_row', 'shipment_schedules.st_date', 'materials.material_description')
-     ->having('flo_quantity', '>' , '0')
-     ->first();
+       $shipment_schedule = DB::table('shipment_schedules')
+       ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+       ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
+       ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+       ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
+       ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+       ->where('shipment_schedules.material_number', '=' , $request->get('material_number'))
+       ->orderBy('shipment_schedules.st_date', 'asc')
+       ->select('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'materials.material_description', 'shipment_schedules.st_date', DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_row, material_volumes.lot_row, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
+       ->groupBy('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'shipment_schedules.st_date', 'shipment_schedules.quantity', 'material_volumes.lot_row', 'shipment_schedules.st_date', 'materials.material_description')
+       ->having('flo_quantity', '>' , '0')
+       ->first();
 
-     if($shipment_schedule == null)
-     {
+       if($shipment_schedule == null)
+       {
         return redirect('/index/flo_sn')->with('error', 'There is no shipment schedule for '. $material->material_number . ' - ' . $material->material_description . ' yet.');
     }
     else
@@ -212,6 +263,19 @@ class FloController extends Controller
         }
     }
 
+    public function destroy_serial_number_sn(Request $request)
+    {
+       $flo_serial_number = FloSerialNumber::find($request->get('id'));
+       $flo_serial_number->forceDelete();
+       $response = array(
+            'status' => true,
+            'message' => "Data has been deleted.",
+        );
+
+        return Response::json($response);
+
+        //
+   }
 
     /**
      * Show the form for creating a new resource.

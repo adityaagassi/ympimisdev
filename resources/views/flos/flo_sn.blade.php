@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
 table {
 	table-layout:fixed;
@@ -8,18 +9,9 @@ td{
 	overflow:hidden;
 	text-overflow: ellipsis;
 }
-
 td:hover {
 	overflow: visible;
 }
-/*table {*/
-	/*margin: 0 auto;*/
-	/*width: 100%;*/
-	/*clear: both;*/
-	/*border-collapse: collapse;*/
-	/*table-layout: fixed;         // add this */
-	/*word-wrap:break-word;        // add this */
-	/*}*/
 </style>
 @stop
 @section('header')
@@ -158,37 +150,49 @@ td:hover {
 		<!-- /.row -->
 
 	</section>
+	<div class="modal modal-danger fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="titleModal">Error</h4>
+				</div>
+				<div class="modal-body" id="messageModal">
+					{{-- Are you sure delete? --}}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	@stop
+	@section('scripts')
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script>
 
-</section>
-@stop
-
-@section('scripts')
-
-<script>
-	$(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-});
-
-
-	jQuery(document).ready(function() {
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
+		$(function () {
+			$('.select2').select2()
 		});
 
-		$("#material").hide();
-		$("#serial").hide();
-		$("#icon-material").hide();
-		$("#icon-serial").hide();
-		$("#line-flo").hide();
-		$("#finish").hide();
-		$("#flo_table").hide();
-		$("#flo_number").val("");
-		$("#material").val("");
-		$("#serial").val("");
+		jQuery(document).ready(function() {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$("#material").hide();
+			$("#serial").hide();
+			$("#icon-material").hide();
+			$("#icon-serial").hide();
+			$("#line-flo").hide();
+			$("#finish").hide();
+			$("#flo_table").hide();
+			$("#flo_number").val("");
+			$("#material").val("");
+			$("#serial").val("");
 
 		// $("#flo_number").on("input", function() {
 		// 	delay(function(){
@@ -216,9 +220,6 @@ td:hover {
 			$("#material").val("");
 			$("#serial").val("");
 			$("#flo_number").focus();
-
-
-
 		});
 
 
@@ -229,7 +230,7 @@ td:hover {
 					return false;
 				}
 			}
-		})
+		});
 
 
 		$('#material').keydown(function(event) {
@@ -239,7 +240,7 @@ td:hover {
 					return false;
 				}
 			}
-		})
+		});
 
 		$('#serial').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
@@ -248,45 +249,84 @@ td:hover {
 					return false;
 				}
 			}
-		})
+		});
+
+		// $('.delete').click(function(){
+		// 	var id = $(this).attr('id');
+		// 	var data = {
+		// 		id: id,
+		// 		_token: token
+		// 	};
+		// 	openErrorGritter('Error!', 'Disconnected');
+		// 	if(confirm("Are you sure you want to delete this data?")){
+		// 		$.get('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
+		// 			console.log(status);
+		// 			console.log(result);
+		// 			console.log(xhr);
+
+		// 			if(xhr.status == 200){
+		// 				if(result.status){
+		// 					$('#flo_table').DataTable().ajax.reload();
+		// 					$("#serial").prop('disabled', true);
+		// 					$("#material").prop('disabled', false);
+		// 					$("#serial").val("");
+		// 					$("#material").val("");
+		// 					$("#material").focus();
+		// 					openSuccessGritter('Success!', result.message);
+		// 				}
+		// 				else{
+		// 					openErrorGritter('Error!', result.message);
+		// 					$("#flo_number").val("");
+		// 				}
+		// 			}
+		// 			else{
+		// 				openErrorGritter('Error!', 'Disconnected');
+		// 				$("#flo_number").val("");
+		// 			}
+		// 		});
+		// 	}
+		// 	else{
+		// 		return false;
+		// 	}
+		// });
 
 	});
 
-	function scanFLO() {
+		function scanFLO() {
 
-		
-		var token = '{{ Session::token() }}';
-		var flo_number = $("#flo_number").val();
-		var data = {
-			flo_number: flo_number,
-			_token: token
-		};
-		$.post('{{ url("scan/flo_number_sn") }}', data, function(result, status, xhr){
 
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			var token = '{{ Session::token() }}';
+			var flo_number = $("#flo_number").val();
+			var data = {
+				flo_number: flo_number,
+				_token: token
+			};
+			$.post('{{ url("scan/flo_number_sn") }}', data, function(result, status, xhr){
 
-			if(xhr.status == 200){
-				if(result.status){
-					$("#material").show();
-					$("#serial").show();
-					$("#icon-material").show();
-					$("#icon-serial").show();
-					$("#line-flo").show();
-					$("#finish").show();
-					$("#flo_table").show();
-					$("#flo_number").prop('disabled', true);
-					$("#serial").prop('disabled', true);
-					$('#flo_table').DataTable( {
-						'paging'      	: false,
-						'lengthChange'	: false,
-						'searching'   	: false,
-						'ordering'    	: false,
-						'info'       	: true,
-						'autoWidth'		: false,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+
+				if(xhr.status == 200){
+					if(result.status){
+						$("#material").show();
+						$("#serial").show();
+						$("#icon-material").show();
+						$("#icon-serial").show();
+						$("#line-flo").show();
+						$("#finish").show();
+						$("#flo_table").show();
+						$("#flo_number").prop('disabled', true);
+						$("#serial").prop('disabled', true);
+						$('#flo_table').DataTable( {
+							'paging'      	: false,
+							'lengthChange'	: false,
+							'searching'   	: false,
+							'ordering'    	: false,
+							'info'       	: true,
+							'autoWidth'		: false,
+							"sPaginationType": "full_numbers",
+							"bJQueryUI": true,
 						"bAutoWidth": false, // Disable the auto width calculation 
 						"infoCallback": function( settings, start, end, max, total, pre ) {
 							return " Total "+ total +" pc(s)";
@@ -310,80 +350,162 @@ td:hover {
 						]
 
 					});
-					$("#material").focus();
+						openSuccessGritter('Success!', result.message);
+						$("#material").focus();
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+						$("#flo_number").val("");
+					}
 				}
-				else
-				{
+				else{
+					openErrorGritter('Error!', 'Disconnected');
 					$("#flo_number").val("");
 				}
-			}
-			else
-			{
-				$("#flo_number").val("");
-			}
-			// if(result.status){
-			// 	$("#material").show();
-			// 	$("#serial").show();
-			// 	$("#icon-material").show();
-			// 	$("#icon-serial").show();
-			// 	$("#line-flo").show();
-			// 	$("#finish").show();
-			// 	$("#flo_table").show();
-			// 	$("#flo_number").prop('disabled', true);
-			// 	$("#serial").prop('disabled', true);
-			// }
-			// else
-			// {
-				
-			// }
-		});
-	}
+			});
+		}
 
-	function scanMaterial(){
-	// create validation of material number here
-	$("#serial").prop('disabled', false);
-	$("#material").prop('disabled', true);
-	$("#serial").focus();
-}
+		function scanMaterial(){
 
-function scanSerial(){
-	// create content of FLO here
-	$("#serial").prop('disabled', true);
-	$("#material").prop('disabled', false);
-	
-	var token = '{{ Session::token() }}';
-	var flo_number = $("#flo_number").val();
-	var serial_number = $("#serial").val();
-	var data = {
-		flo_number: flo_number,
-		serial_number: serial_number,
-		_token: token
-	};
-	
-	$.ajax({
-		url: "{{ url("scan/serial_number_sn") }}",
-		method: "POST",
-		data: data,
-		dataType: 'json',
-		success:function(data)
-		{
+			var token = '{{ Session::token() }}';
+			var flo_number = $("#flo_number").val();
+			var material_number = $("#material").val();
+			var data = {
+				flo_number: flo_number,
+				material_number: material_number,
+				_token: token
+			};
 
-			$('#flo_table').DataTable().ajax.reload();
+			$.post('{{ url("scan/material_number_sn") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+
+				if(xhr.status == 200){
+					if(result.status){
+						$("#serial").prop('disabled', false);
+						$("#material").prop('disabled', true);
+						$("#serial").focus();
+						openSuccessGritter('Success!', result.message);
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+						$("#material").val("");
+					}
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					$("#material").val("");
+				}
+
+			});
+		}
+
+		function scanSerial(){
+
+			var token = '{{ Session::token() }}';
+			var flo_number = $("#flo_number").val();
+			var serial_number = $("#serial").val();
+			var data = {
+				flo_number: flo_number,
+				serial_number: serial_number,
+				_token: token
+			};
+			$.post('{{ url("scan/serial_number_sn") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+				if(xhr.status == 200){
+					if(result.status){
+						$("#serial").prop('disabled', true);
+						$('#flo_table').DataTable().ajax.reload();
+						$("#material").val("");
+						$("#serial").val("");
+						$("#material").prop('disabled', false);
+						openSuccessGritter('Success!', result.message);
+						$("#material").focus();
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+						$("#serial").val("");
+					}
+
+				}
+				else{
+					openErrorGritter('Error!', 'Disconnected');
+					$("#serial").val("");
+				}
+
+			});
+
 
 		}
 
-	});
-	$("#material").val("");
-	$("#serial").val("");
-	$("#material").focus();
-}
+		function openErrorGritter(title, message) {
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-danger',
+				image: '{{ url("images/image-stop.png") }}',
+				sticky: false,
+				time: '1000'
+			});
+		}
 
-var delay = (function(){
-	var timer = 0;
-	return function(callback, ms){
-		clearTimeout (timer);
-		timer = setTimeout(callback, ms);
-	};
-})();
-</script>
-@stop
+		function openSuccessGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-success',
+				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '1000'
+			});
+		}
+
+		function deleteConfirmation(id){
+			var token = '{{ Session::token() }}';
+			var data = {
+				id: id
+			};
+			if(confirm("Are you sure you want to delete this data?")){
+				$.post('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
+					console.log(status);
+					console.log(result);
+					console.log(xhr);
+
+					if(xhr.status == 200){
+						if(result.status){
+							$('#flo_table').DataTable().ajax.reload();
+							$("#serial").prop('disabled', true);
+							$("#material").prop('disabled', false);
+							$("#serial").val("");
+							$("#material").val("");
+							$("#material").focus();
+							openSuccessGritter('Success!', result.message);
+						}
+						else{
+							openErrorGritter('Error!', result.message);
+						}
+					}
+					else{
+						openErrorGritter('Error!', 'Disconnected');
+					}
+				});
+			}
+			else{
+				return false;
+			}
+		}
+
+		var delay = (function(){
+			var timer = 0;
+			return function(callback, ms){
+				clearTimeout (timer);
+				timer = setTimeout(callback, ms);
+			};
+		})();
+
+		
+	</script>
+	@stop

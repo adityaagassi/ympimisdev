@@ -133,4 +133,6 @@ Route::get('index/flo_sn', 'FloController@index_sn');
 Route::post('print/flo_sn', 'FloController@print_sn');
 Route::post('scan/flo_number_sn', 'FloController@scan_flo_number_sn');
 Route::post('index/scan/flo_number_sn', 'FloController@index_scan_flo_number_sn');
+Route::post('scan/material_number_sn', 'FloController@scan_material_number_sn');
 Route::post('scan/serial_number_sn', 'FloController@scan_serial_number_sn');
+Route::post('destroy/serial_number_sn', 'FloController@destroy_serial_number_sn');
