@@ -151,7 +151,7 @@
                                       @else
                                       <li>
                                         @endif
-                                        <a href="{{ url("/index/flo_sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Instrument</span></a>
+                                        <a href="{{ url("/index/flo_sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
                                       </li>
                                       @endif
 
@@ -161,11 +161,11 @@
                                         @else
                                         <li>
                                           @endif
-                                          <a href="{{ url("/index/flo_pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Instrument</span></a>
+                                          <a href="{{ url("/index/flo_pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
                                         </li>
                                         @endif
 
-                                        @if(in_array(Auth::user()->level_id, [1]))
+                               {{--          @if(in_array(Auth::user()->level_id, [1]))
                                         @if(isset($page) && $page == "Print FLO")
                                         <li class="active">
                                           @else
@@ -173,7 +173,7 @@
                                             @endif
                                             <a href="{{ url("/index/flo") }}"><i class="fa fa-print"></i> <span>FLO  <i class="fa fa-angle-right"></i> Reprint</span></a>
                                           </li>
-                                          @endif
+                                          @endif --}}
 
                                           @if(in_array(Auth::user()->level_id, [1]))
                                           @if(isset($page) && $page == "Print FLO")

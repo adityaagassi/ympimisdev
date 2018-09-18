@@ -21,7 +21,9 @@ td:hover {
 		<small>Band Instrument</small>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li><a href="{{ url("create/destination")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> --}}
+		<li><button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
+			<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
+		</button></li>
 	</ol>
 </section>
 @stop
@@ -40,7 +42,7 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-danger">
 				<div class="box-header">
-					<h3 class="box-title">FLO <i class="fa fa-angle-right"></i> Print</h3>
+					<h3 class="box-title">Print</h3>
 				</div>
 				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo_sn')}}">
@@ -71,7 +73,7 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">FLO <i class="fa fa-angle-right"></i> Fulfillment</h3>
+					<h3 class="box-title">Fulfillment</h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -122,77 +124,83 @@ td:hover {
 									</thead>
 									<tbody>
 									</tbody>
-									{{-- @foreach($destinations as $destination) --}}
-{{-- 										<tr>
-											<td style="font-size: 14">999</td>
-											<td style="font-size: 14">WWWWWWW</td>
-											<td style="font-size: 14">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</td>
-											<td style="font-size: 14">99999999999</td>
-											<td>
-												<button class="btn btn-danger btn-sm">
-													<i class="glyphicon glyphicon-trash"></i>
-													
-												</button>
-											</td>
-										</tr> --}}
-										{{-- @endforeach --}}
-									</table>
-								</div>
+								</table>
 							</div>
 						</div>
 					</div>
-					<!-- /.box-body -->
 				</div>
-				<!-- /.box -->
+				<!-- /.box-body -->
 			</div>
-			<!-- /.col -->
+			<!-- /.box -->
 		</div>
-		<!-- /.row -->
-
-	</section>
-	<div class="modal modal-danger fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+	<div class="modal modal-default fade" id="reprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="titleModal">Error</h4>
+					<h4 class="modal-title" id="titleModal">Reprint FLO</h4>
 				</div>
-				<div class="modal-body" id="messageModal">
-					{{-- Are you sure delete? --}}
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-				</div>
+				<form class="form-horizontal" role="form" method="post" action="{{url('reprint/flo')}}">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-body" id="messageModal">
+						<label>FLO Number</label>
+						<select class="form-control select2" name="flo_number_reprint" style="width: 100%;" data-placeholder="Choose a FLO..." id="flo_number_reprint" required>
+							<option value=""></option>
+							@foreach($flos as $flo)
+							<option value="{{ $flo->flo_number }}">{{ $flo->flo_number }} || {{ $flo->shipmentschedule->material_number }} || {{ $flo->shipmentschedule->material->material_description }}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 
-	@stop
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script>
+</section>
 
-		$(function () {
-			$('.select2').select2()
+
+@stop
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script>
+
+	$(function () {
+		$('.select2').select2()
+	});
+
+	jQuery(document).ready(function() {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
 		});
 
-		jQuery(document).ready(function() {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+		$("#material").hide();
+		$("#serial").hide();
+		$("#icon-material").hide();
+		$("#icon-serial").hide();
+		$("#line-flo").hide();
+		$("#finish").hide();
+		$("#flo_table").hide();
+		$("#flo_number").val("");
+		$("#flo_number_reprint").val("").change();
+		$("#material").val("");
+		$("#serial").val("");
 
-			$("#material").hide();
-			$("#serial").hide();
-			$("#icon-material").hide();
-			$("#icon-serial").hide();
-			$("#line-flo").hide();
-			$("#finish").hide();
-			$("#flo_table").hide();
-			$("#flo_number").val("");
-			$("#material").val("");
-			$("#serial").val("");
+		var delay = (function(){
+			var timer = 0;
+			return function(callback, ms){
+				clearTimeout (timer);
+				timer = setTimeout(callback, ms);
+			};
+		})();
 
 		// $("#flo_number").on("input", function() {
 		// 	delay(function(){
@@ -204,11 +212,9 @@ td:hover {
 
 		$("#finish").click(function(){
 			var table = $('#flo_table').DataTable();
-
 			table.destroy();
 
 			$("#flo_number").prop('disabled', false);
-			
 			$("#material").hide();
 			$("#serial").hide();
 			$("#icon-material").hide();
@@ -251,82 +257,41 @@ td:hover {
 			}
 		});
 
-		// $('.delete').click(function(){
-		// 	var id = $(this).attr('id');
-		// 	var data = {
-		// 		id: id,
-		// 		_token: token
-		// 	};
-		// 	openErrorGritter('Error!', 'Disconnected');
-		// 	if(confirm("Are you sure you want to delete this data?")){
-		// 		$.get('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
-		// 			console.log(status);
-		// 			console.log(result);
-		// 			console.log(xhr);
-
-		// 			if(xhr.status == 200){
-		// 				if(result.status){
-		// 					$('#flo_table').DataTable().ajax.reload();
-		// 					$("#serial").prop('disabled', true);
-		// 					$("#material").prop('disabled', false);
-		// 					$("#serial").val("");
-		// 					$("#material").val("");
-		// 					$("#material").focus();
-		// 					openSuccessGritter('Success!', result.message);
-		// 				}
-		// 				else{
-		// 					openErrorGritter('Error!', result.message);
-		// 					$("#flo_number").val("");
-		// 				}
-		// 			}
-		// 			else{
-		// 				openErrorGritter('Error!', 'Disconnected');
-		// 				$("#flo_number").val("");
-		// 			}
-		// 		});
-		// 	}
-		// 	else{
-		// 		return false;
-		// 	}
-		// });
-
 	});
 
-		function scanFLO() {
+	function scanFLO() {
+		var token = '{{ Session::token() }}';
+		var flo_number = $("#flo_number").val();
+		var data = {
+			flo_number: flo_number,
+			_token: token
+		};
+		$.post('{{ url("scan/flo_number_sn") }}', data, function(result, status, xhr){
 
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
 
-			var token = '{{ Session::token() }}';
-			var flo_number = $("#flo_number").val();
-			var data = {
-				flo_number: flo_number,
-				_token: token
-			};
-			$.post('{{ url("scan/flo_number_sn") }}', data, function(result, status, xhr){
-
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-
-				if(xhr.status == 200){
-					if(result.status){
-						$("#material").show();
-						$("#serial").show();
-						$("#icon-material").show();
-						$("#icon-serial").show();
-						$("#line-flo").show();
-						$("#finish").show();
-						$("#flo_table").show();
-						$("#flo_number").prop('disabled', true);
-						$("#serial").prop('disabled', true);
-						$('#flo_table').DataTable( {
-							'paging'      	: false,
-							'lengthChange'	: false,
-							'searching'   	: false,
-							'ordering'    	: false,
-							'info'       	: true,
-							'autoWidth'		: false,
-							"sPaginationType": "full_numbers",
-							"bJQueryUI": true,
+			if(xhr.status == 200){
+				if(result.status){
+					$("#material").show();
+					$("#serial").show();
+					$("#icon-material").show();
+					$("#icon-serial").show();
+					$("#line-flo").show();
+					$("#finish").show();
+					$("#flo_table").show();
+					$("#flo_number").prop('disabled', true);
+					$("#serial").prop('disabled', true);
+					$('#flo_table').DataTable( {
+						'paging'      	: false,
+						'lengthChange'	: false,
+						'searching'   	: false,
+						'ordering'    	: false,
+						'info'       	: true,
+						'autoWidth'		: false,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
 						"bAutoWidth": false, // Disable the auto width calculation 
 						"infoCallback": function( settings, start, end, max, total, pre ) {
 							return " Total "+ total +" pc(s)";
@@ -350,162 +315,151 @@ td:hover {
 						]
 
 					});
-						openSuccessGritter('Success!', result.message);
-						$("#material").focus();
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						$("#flo_number").val("");
-					}
+					openSuccessGritter('Success!', result.message);
+					$("#material").focus();
 				}
 				else{
-					openErrorGritter('Error!', 'Disconnected');
+					openErrorGritter('Error!', result.message);
 					$("#flo_number").val("");
 				}
-			});
-		}
+			}
+			else{
+				openErrorGritter('Error!', 'Disconnected');
+				$("#flo_number").val("");
+			}
+		});
+	}
 
-		function scanMaterial(){
+	function scanMaterial(){
+		var token = '{{ Session::token() }}';
+		var flo_number = $("#flo_number").val();
+		var material_number = $("#material").val();
+		var data = {
+			flo_number: flo_number,
+			material_number: material_number,
+			_token: token
+		};
 
-			var token = '{{ Session::token() }}';
-			var flo_number = $("#flo_number").val();
-			var material_number = $("#material").val();
-			var data = {
-				flo_number: flo_number,
-				material_number: material_number,
-				_token: token
-			};
+		$.post('{{ url("scan/material_number_sn") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
 
-			$.post('{{ url("scan/material_number_sn") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-
-				if(xhr.status == 200){
-					if(result.status){
-						$("#serial").prop('disabled', false);
-						$("#material").prop('disabled', true);
-						$("#serial").focus();
-						openSuccessGritter('Success!', result.message);
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						$("#material").val("");
-					}
+			if(xhr.status == 200){
+				if(result.status){
+					$("#serial").prop('disabled', false);
+					$("#material").prop('disabled', true);
+					$("#serial").focus();
+					openSuccessGritter('Success!', result.message);
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 					$("#material").val("");
 				}
+			}
+			else{
+				openErrorGritter('Error!', result.message);
+				$("#material").val("");
+			}
 
-			});
-		}
+		});
+	}
 
-		function scanSerial(){
-
-			var token = '{{ Session::token() }}';
-			var flo_number = $("#flo_number").val();
-			var serial_number = $("#serial").val();
-			var data = {
-				flo_number: flo_number,
-				serial_number: serial_number,
-				_token: token
-			};
-			$.post('{{ url("scan/serial_number_sn") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-				if(xhr.status == 200){
-					if(result.status){
-						$("#serial").prop('disabled', true);
-						$('#flo_table').DataTable().ajax.reload();
-						$("#material").val("");
-						$("#serial").val("");
-						$("#material").prop('disabled', false);
-						openSuccessGritter('Success!', result.message);
-						$("#material").focus();
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						$("#serial").val("");
-					}
-
+	function scanSerial(){
+		var token = '{{ Session::token() }}';
+		var flo_number = $("#flo_number").val();
+		var serial_number = $("#serial").val();
+		var data = {
+			flo_number: flo_number,
+			serial_number: serial_number,
+			_token: token
+		};
+		$.post('{{ url("scan/serial_number_sn") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					$("#serial").prop('disabled', true);
+					$('#flo_table').DataTable().ajax.reload();
+					$("#material").val("");
+					$("#serial").val("");
+					$("#material").prop('disabled', false);
+					openSuccessGritter('Success!', result.message);
+					$("#material").focus();
 				}
 				else{
-					openErrorGritter('Error!', 'Disconnected');
+					openErrorGritter('Error!', result.message);
 					$("#serial").val("");
 				}
 
-			});
-
-
-		}
-
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '1000'
-			});
-		}
-
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '1000'
-			});
-		}
-
-		function deleteConfirmation(id){
-			var token = '{{ Session::token() }}';
-			var data = {
-				id: id
-			};
-			if(confirm("Are you sure you want to delete this data?")){
-				$.post('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
-
-					if(xhr.status == 200){
-						if(result.status){
-							$('#flo_table').DataTable().ajax.reload();
-							$("#serial").prop('disabled', true);
-							$("#material").prop('disabled', false);
-							$("#serial").val("");
-							$("#material").val("");
-							$("#material").focus();
-							openSuccessGritter('Success!', result.message);
-						}
-						else{
-							openErrorGritter('Error!', result.message);
-						}
-					}
-					else{
-						openErrorGritter('Error!', 'Disconnected');
-					}
-				});
 			}
 			else{
-				return false;
+				openErrorGritter('Error!', 'Disconnected');
+				$("#serial").val("");
 			}
+
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '1000'
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '1000'
+		});
+	}
+
+	function deleteConfirmation(id){
+		var flo_number = $("#flo_number").val();
+		var token = '{{ Session::token() }}';
+		var data = {
+			id: id,
+			flo_number: flo_number
+		};
+		if(confirm("Are you sure you want to delete this data?")){
+			$.post('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+
+				if(xhr.status == 200){
+					if(result.status){
+						$('#flo_table').DataTable().ajax.reload();
+						$("#serial").prop('disabled', true);
+						$("#material").prop('disabled', false);
+						$("#serial").val("");
+						$("#material").val("");
+						$("#material").focus();
+						openSuccessGritter('Success!', result.message);
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+					}
+				}
+				else{
+					openErrorGritter('Error!', 'Disconnected');
+				}
+			});
 		}
+		else{
+			return false;
+		}
+	}
 
-		var delay = (function(){
-			var timer = 0;
-			return function(callback, ms){
-				clearTimeout (timer);
-				timer = setTimeout(callback, ms);
-			};
-		})();
-
-		
-	</script>
-	@stop
+</script>
+@stop

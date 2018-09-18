@@ -22,7 +22,7 @@
 }
 
 .growl-success {
-	background: rgba(0,166,90,0.80);
+	background: rgba(0,166,90,0.90);
 }
 
 .growl-warning {
@@ -30,7 +30,7 @@
 }
 
 .growl-danger {
-	background: rgba(221,75,57,0.80);
+	background: rgba(221,75,57,0.90);
 }
 
 .growl-info {

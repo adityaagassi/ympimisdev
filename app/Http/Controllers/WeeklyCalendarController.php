@@ -231,7 +231,6 @@ class WeeklyCalendarController extends Controller
 
         $weekly_calendar->forceDelete();
 
-
         return redirect('/index/weekly_calendar')
         ->with('status', 'Weekly calendar has been deleted.')
         ->with('page', 'Weekly Calendar');
