@@ -51,6 +51,7 @@
                     <th>Cat.</th>
                     <th>Lot Comp.</th>
                     <th>Lot Tran.</th>
+                    <th>Lot FLO</th>
                     <th>Lot Row</th>
                     <th>Lot Pal.</th>
                     <th>Lot Car.</th>
@@ -77,6 +78,7 @@
                       <td style="font-size: 14">{{$material_volume->category}}</td>
                       <td style="font-size: 14">{{$material_volume->lot_completion}}</td>
                       <td style="font-size: 14">{{$material_volume->lot_transfer}}</td>
+                      <td style="font-size: 14">{{$material_volume->lot_flo}}</td>
                       <td style="font-size: 14">{{$material_volume->lot_row}}</td>
                       <td style="font-size: 14">{{$material_volume->lot_pallet}}</td>
                       <td style="font-size: 14">{{$material_volume->lot_carton}}</td>

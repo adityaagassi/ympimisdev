@@ -129,11 +129,25 @@ Route::post('edit/shipment_schedule/{id}', 'ShipmentScheduleController@update');
 Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
 Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');
 
+Route::get('index/code_generator', 'CodeGeneratorController@index');
+Route::get('create/code_generator', 'CodeGeneratorController@create');
+Route::post('create/code_generator', 'CodeGeneratorController@store');
+Route::get('destroy/code_generator/{id}', 'CodeGeneratorController@destroy');
+Route::get('edit/code_generator/{id}', 'CodeGeneratorController@edit');
+Route::post('edit/code_generator/{id}', 'CodeGeneratorController@update');
+Route::get('show/code_generator/{id}', 'CodeGeneratorController@show');
+
 Route::get('index/flo_sn', 'FloController@index_sn');
-Route::post('print/flo_sn', 'FloController@print_sn');
+Route::get('index/flo_pd', 'FloController@index_pd');
+
+Route::post('print/flo', 'FloController@print_flo');
 Route::post('reprint/flo', 'FloController@reprint_flo');
-Route::post('scan/flo_number_sn', 'FloController@scan_flo_number_sn');
-Route::post('index/scan/flo_number_sn', 'FloController@index_scan_flo_number_sn');
+
+Route::post('scan/flo_number', 'FloController@scan_flo_number');
+Route::post('index/scan/flo_number', 'FloController@index_scan_flo_number');
+
 Route::post('scan/material_number_sn', 'FloController@scan_material_number_sn');
 Route::post('scan/serial_number_sn', 'FloController@scan_serial_number_sn');
 Route::post('destroy/serial_number_sn', 'FloController@destroy_serial_number_sn');
+
+

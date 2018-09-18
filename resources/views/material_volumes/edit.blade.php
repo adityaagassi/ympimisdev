@@ -85,6 +85,15 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-4">Lot FLO<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input min="0" type="number" class="form-control" name="lot_flo" placeholder="Enter Lot FLO" value="{{$material_volume->lot_flo}}" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-4">Lot Row<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">

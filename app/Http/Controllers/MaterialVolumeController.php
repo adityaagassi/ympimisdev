@@ -62,6 +62,7 @@ class MaterialVolumeController extends Controller
               'category' => $request->get('category'),
               'lot_completion' => $request->get('lot_completion'),
               'lot_transfer' => $request->get('lot_transfer'),
+              'lot_flo' => $request->get('lot_flo'),
               'lot_row' => $request->get('lot_row'),
               'lot_pallet' => $request->get('lot_pallet'),
               'lot_carton' => $request->get('lot_carton'),
@@ -130,6 +131,7 @@ class MaterialVolumeController extends Controller
             $material_volume->category = $request->get('category');
             $material_volume->lot_completion = $request->get('lot_completion');
             $material_volume->lot_transfer = $request->get('lot_transfer');
+            $material_volume->lot_flo = $request->get('lot_flo');
             $material_volume->lot_row = $request->get('lot_row');
             $material_volume->lot_pallet = $request->get('lot_pallet');
             $material_volume->lot_carton = $request->get('lot_carton');
@@ -193,12 +195,13 @@ class MaterialVolumeController extends Controller
                             'category' => $row[1],
                             'lot_completion' => $row[2],
                             'lot_transfer' => $row[3],
-                            'lot_row' => $row[4],
-                            'lot_pallet' => $row[5],
-                            'lot_carton' => $row[6],
-                            'length' => $row[7],
-                            'width' => $row[8],
-                            'height' => $row[9],
+                            'lot_flo' => $row[4],
+                            'lot_row' => $row[5],
+                            'lot_pallet' => $row[6],
+                            'lot_carton' => $row[7],
+                            'length' => $row[8],
+                            'width' => $row[9],
+                            'height' => $row[10],
                             'created_by' => $id,
                         ]);
 

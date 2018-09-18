@@ -77,6 +77,12 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-5">Lot FLO</label>
+          <div class="col-sm-5" align="left">
+            {{$material_volume->lot_flo}} pc(s)
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-5">Lot Row</label>
           <div class="col-sm-5" align="left">
             {{$material_volume->lot_row}} pc(s)
