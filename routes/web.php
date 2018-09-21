@@ -139,15 +139,26 @@ Route::get('show/code_generator/{id}', 'CodeGeneratorController@show');
 
 Route::get('index/flo_sn', 'FloController@index_sn');
 Route::get('index/flo_pd', 'FloController@index_pd');
+Route::post('index/flo_detail', 'FloController@index_flo_detail');
+Route::post('index/flo', 'FloController@index_flo');
 
-Route::post('print/flo', 'FloController@print_flo');
+// Route::post('print/flo', 'FloController@print_flo');
+
+
+
+// Route::post('index/scan/flo_number', 'FloController@index_scan_flo_number');
+
+// Route::post('scan/material_number_sn', 'FloController@scan_material_number_sn');
+// Route::post('scan/serial_number_sn', 'FloController@scan_serial_number_sn');
+// Route::post('destroy/serial_number_sn', 'FloController@destroy_serial_number_sn');
+
+Route::post('scan/material_number', 'FloController@scan_material_number');
+Route::post('scan/serial_number', 'FloController@scan_serial_number');
+Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
+Route::post('scan/flo_settlement', 'FloController@flo_settlement');
 Route::post('reprint/flo', 'FloController@reprint_flo');
+Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
-Route::post('scan/flo_number', 'FloController@scan_flo_number');
-Route::post('index/scan/flo_number', 'FloController@index_scan_flo_number');
 
-Route::post('scan/material_number_sn', 'FloController@scan_material_number_sn');
-Route::post('scan/serial_number_sn', 'FloController@scan_serial_number_sn');
-Route::post('destroy/serial_number_sn', 'FloController@destroy_serial_number_sn');
 
 

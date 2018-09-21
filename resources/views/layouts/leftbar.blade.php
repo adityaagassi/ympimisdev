@@ -21,7 +21,7 @@
             @else
             <li>
               @endif
-              <a href="{{ url("/index/user") }}"><i class="fa fa-user"></i> <span>Users</span></a>
+              <a href="{{ url("/index/user") }}"><i class="fa fa-users"></i> <span>User</span></a>
             </li>
             @endif
 
@@ -31,7 +31,7 @@
               @else
               <li>
                 @endif
-                <a href="{{ url("/index/level") }}"><i class="fa fa-tag"></i> <span>Levels</span></a>
+                <a href="{{ url("/index/level") }}"><i class="fa fa-map-marker"></i> <span>Level</span></a>
               </li>
               @endif
 
@@ -41,7 +41,7 @@
                 @else
                 <li>
                   @endif
-                  <a href="{{ url("/index/code_generator") }}"><i class="fa fa-tag"></i> <span>Code Generators</span></a>
+                  <a href="{{ url("/index/code_generator") }}"><i class="fa fa-barcode"></i> <span>Code Generator</span></a>
                 </li>
                 @endif
 
@@ -176,23 +176,13 @@
                                         </li>
                                         @endif
 
-                                        @if(in_array(Auth::user()->level_id, [1]))
-                                        @if(isset($page) && $page == "Print FLO")
-                                        <li class="active">
-                                          @else
-                                          <li>
-                                            @endif
-                                            <a href="{{ url("/index/flo") }}"><i class="fa fa-print"></i> <span>FLO  <i class="fa fa-angle-right"></i> Reprint</span></a>
-                                          </li>
-                                          @endif
-
                                           @if(in_array(Auth::user()->level_id, [1]))
                                           @if(isset($page) && $page == "Print FLO")
                                           <li class="active">
                                             @else
                                             <li>
                                               @endif
-                                              <a href="{{ url("/index/flo") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Status</span></a>
+                                              <a href="{{ url("/index/flo") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                             </li>
                                             @endif
 

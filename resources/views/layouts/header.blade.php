@@ -19,19 +19,57 @@
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li>
-            <a href="{{ route('logout') }}"
-            onclick="event.preventDefault();
-            document.getElementById('logout-form').submit();">
-            Logout
-          </a>
 
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            {{ csrf_field() }}
-          </form>
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{{ url("images/image-user.png") }}" class="user-image" alt="User Image">
+              <span class="hidden-xs">Hi, {{Auth::user()->name}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="{{ url("images/image-user.png") }}" class="img-circle" alt="User Image">
+                <p>
+                  {{Auth::user()->name}} - {{Auth::user()->level->level_name}}
+                  <small>{{Auth::user()->email}}</small>
+                </p>
+              </li>
+              <!-- Menu Body -->
+       {{--        <li class="user-body">
+                <div class="row">
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Followers</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Sales</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Friends</a>
+                  </div>
+                </div>
+                <!-- /.row -->
+              </li> --}}
+              <!-- Menu Footer-->
+
+              <li class="user-footer">
+                <div class="row">
+                  <div class="col-xs-4 pull-left">
+                    <a class="btn btn-info btn-flat" href="">Setting</a>
+                  </div>
+                  <div class="col-xs-4 pull-right">
+                    <a class="btn btn-danger btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                      Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      {{ csrf_field() }}
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
         </li>
-      </li>
-    </ul>
-  </div>
-</nav>
+      </ul>
+    </div>
+  </nav>
 </header>
