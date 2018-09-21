@@ -160,5 +160,5 @@ Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
 
-
-
+Route::get('index/trial_export', 'FloController@export_trial');
+Route::post('export/trial', 'FloController@trial');

@@ -23,7 +23,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="{{ url("images/image-user.png") }}" class="user-image" alt="User Image">
-              <span class="hidden-xs">Hi, {{Auth::user()->name}}</span>
+              <span class="hidden-xs">{{Auth::user()->name}}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -35,7 +35,7 @@
                 </p>
               </li>
               <!-- Menu Body -->
-       {{--        <li class="user-body">
+             {{--  <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
                     <a href="#">Followers</a>

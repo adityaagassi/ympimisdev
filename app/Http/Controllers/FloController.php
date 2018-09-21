@@ -24,6 +24,20 @@ class FloController extends Controller
         $this->middleware('auth');
     }
 
+    public function export_trial(){
+        return view('trials.export');
+    }
+
+    public function trial(Request $request){
+
+        $flo_details = DB::table('flo_details')
+        ->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', DB::raw('date_format(flo_details.created_at, "%Y-%m-%d"'))
+        ->get();
+
+        dd($flo_details);
+
+    }
+
     public function index_sn(){
         $flos = Flo::orderBy('flo_number', 'asc')
         ->where('status', '=', 0)
@@ -79,18 +93,18 @@ class FloController extends Controller
             $shipment_schedule = DB::table('shipment_schedules')
             ->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
             ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
-            ->where('shipment_schedule_id', '=', $request->get('material_number'))
+            ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
             ->orderBy('shipment_schedules.st_date', 'ASC')
             ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
             ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo')
             ->having('flo_quantity' , '>', 0)
             ->first();
 
-            if($shipment_schedule == null){
+            if($shipment_schedule != null){
                 $response = array(
                     'status' => true,
                     'message' => 'Shipment schedule available',
-                    'status_code' => 1001
+                    'status_code' => 1001,
                 );
                 return Response::json($response);
             }
@@ -222,6 +236,14 @@ class FloController extends Controller
                         return Response::json($response);
                     }
                 }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'message' => 'There is no shipment schedule for '. $request->get('material_number') . ' yet.',
+                    );
+                    return Response::json($response);
+                }
+
             }
             else{
                 try{
@@ -359,10 +381,10 @@ class FloController extends Controller
         $flo->save();
 
         $response = array(
-        'status' => true,
-        'message' => "FLO " . $request->get('flo_number') . "settlement has been canceled.",
+            'status' => true,
+            'message' => "FLO " . $request->get('flo_number') . "settlement has been canceled.",
         );
-       return Response::json($response);
+        return Response::json($response);
     }
 
     public function flo_settlement(Request $request)

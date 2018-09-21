@@ -56,7 +56,6 @@ td:hover {
 					<div class="box-body">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="box-body">
-							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="row">
 								<div class="col-md-3">
 									<div class="input-group col-md-12">

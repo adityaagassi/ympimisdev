@@ -17,7 +17,7 @@ class CreateWeeklyCalendarsTable extends Migration
             $table->increments('id');
             $table->string('fiscal_year');
             $table->string('week_name');
-            $table->string('week_date');
+            $table->date('week_date');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
