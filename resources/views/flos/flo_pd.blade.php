@@ -12,18 +12,28 @@ td{
 td:hover {
 	overflow: visible;
 }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+input[type=number] {
+	-moz-appearance:textfield;
+}
 </style>
 @stop
 @section('header')
 <section class="content-header">
 	<h1>
-		Final Line Outputs
-		<small>Educational Instrument</small>
+		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
+		<small>Educational Instrument <span class="text-purple">教育管楽器</span></small>
 	</h1>
 	<ol class="breadcrumb">
-		<li><button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
-			<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-		</button></li>
+		<li>
+			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
+				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
+			</button>
+		</li>
 	</ol>
 </section>
 @stop
@@ -49,25 +59,61 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-danger">
 				<div class="box-header">
-					<h3 class="box-title">Print</h3>
+					<h3 class="box-title">Fulfillment <span class="text-purple">FLO充足</span></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
 					<div class="box-body">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="form-group">
-							<label for="material_number" class="col-sm-1 control-label">Material</label>
-
-							<div class="col-md-4">
-								<select class="form-control select2" name="material_number" style="width: 100%;" data-placeholder="Choose a Material..." id="material_number" required>
-									<option value=""></option>
-									@foreach($materials as $material)
-									<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
-									@endforeach
-								</select>
-
+						<div class="box-body">
+							<div class="row">
+								<div class="col-md-3">
+									<div class="input-group col-md-12">
+										<label id="labelYMJ">
+											<input type="checkbox" class="flat-red" id="ymj">
+											<span class="fa fa-caret-left text-red">&nbsp; Check if product for YMJ.</span>
+										</label>
+									</div>
+									&nbsp;
+									<div class="input-group col-md-12">
+										<div class="input-group-addon" id="icon-material">
+											<i class="glyphicon glyphicon-barcode"></i>
+										</div>
+										<input type="text" style="text-align: center" class="form-control" id="material_number" name="material_number" placeholder="Material Number" required>
+									</div>
+									{{-- &nbsp;
+									<div class="input-group col-md-12">
+										<div class="input-group-addon" id="icon-serial">
+											Qty
+										</div>
+										<input type="number" style="text-align: center" class="form-control" id="quantity" name="quantity" placeholder="Quantity" required>
+									</div> --}}
+								</div>
+								<div class="col-md-9">
+									<div class="input-group col-md-8 col-md-offset-2">
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+											FLO
+										</div>
+										<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number" name="flo_number" placeholder="Not Available" required>
+										<div class="input-group-addon" id="icon-serial">
+											<i class="glyphicon glyphicon-lock"></i>
+										</div>
+									</div>
+									<table id="flo_detail_table" class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th style="font-size: 14">#</th>
+												<th style="font-size: 14">Material</th>
+												<th style="font-size: 14">Description</th>
+												<th style="font-size: 14">Serial</th>
+												<th style="font-size: 14">Del.</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							<button type="submit" class="btn btn-danger col-sm-14"><i class="fa fa-print"></i>&nbsp;&nbsp;Print FLO</button>
 						</div>
 						<!-- /.box-body -->
 					</div>
@@ -78,61 +124,41 @@ td:hover {
 		</div>
 
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-success">
 				<div class="box-header">
-					<h3 class="box-title">Fulfillment</h3>
+					<h3 class="box-title">Closure <span class="text-purple">FLO完了</span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<div class="row">
-						<div class="col-md-4">
-							<br>
-							<label>Scan FLO Number</label>
-							<div class="input-group col-md-12">
-								
-								<div class="input-group-addon">
+						<div class="col-md-12">
+							<div class="input-group col-md-8 col-md-offset-2">
+								<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
 									<i class="glyphicon glyphicon-barcode"></i>
 								</div>
-								<input style="text-align: center" type="text" class="form-control" id="flo_number" name="flo_number" placeholder="Enter FLO Number" required>
-							</div>
-							<div class="input-group col-md-12">
-								<hr id="line-flo" style="border: 1px solid #3498DB">
-							</div>
-							<div class="input-group col-md-12">
-								<div class="input-group-addon" id="icon-material">
-									<i class="glyphicon glyphicon-barcode"></i>
-								</div>
-								<input type="text" class="form-control" id="material" name="material" placeholder="Enter Material Number" required>
-							</div>
-							&nbsp;
-							<div class="input-group col-md-12">
+								<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number_settlement" name="flo_number_settlement" placeholder="Scan FLO Here..." required>
 								<div class="input-group-addon" id="icon-serial">
-									<i class="glyphicon glyphicon-barcode"></i>
+									<i class="glyphicon glyphicon-ok-sign"></i>
 								</div>
-								<input type="text" class="form-control" id="serial" name="serial" placeholder="Enter Serial Number" required>
 							</div>
 							<br>
-							<div class="input-group col-md-12">
-								<center><button id="finish" class="btn btn-danger col-sm-14"><i class="fa fa-minus-circle"></i>&nbsp;&nbsp;Finish</button></center>
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<table id="flo_table" class="table table-bordered table-striped">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>Material</th>
-											<th>Description</th>
-											<th>Serial</th>
-											<th>Del.</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
-							</div>
+							<table id="flo_table" class="table table-bordered table-striped">
+								<thead>
+									<tr>
+										<th style="font-size: 14">FLO</th>
+										<th style="font-size: 14">Dest.</th>
+										<th style="font-size: 14">Ship. Date</th>
+										<th style="font-size: 14">By</th>
+										<th style="font-size: 14">Material</th>
+										<th style="font-size: 14">Description</th>
+										<th style="font-size: 14">Qty</th>
+										<th style="font-size: 14">Cancel</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -178,28 +204,37 @@ td:hover {
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 
-	$(function () {
-		$('.select2').select2()
-	});
 
 	jQuery(document).ready(function() {
+		$(function () {
+			$('.select2').select2()
+		});
+
+		$(document).on("wheel", "input[type=number]", function (e) {
+			$(this).blur();
+		})
+
+		$("#ymj").prop('checked', false);
+		$('input[type="checkbox"].flat-red').iCheck({
+			checkboxClass: 'icheckbox_flat-red',
+			radioClass   : 'iradio_flat-red'
+		});
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
 
-		$("#material").hide();
-		$("#serial").hide();
-		$("#icon-material").hide();
-		$("#icon-serial").hide();
-		$("#line-flo").hide();
-		$("#finish").hide();
-		$("#flo_table").hide();
-		$("#flo_number").val("");
-		$("#flo_number_reprint").val("").change();
-		$("#material").val("");
-		$("#serial").val("");
+		// if($('#flo_number').val() != ""){
+		// 	$('#flo_detail_table').DataTable().destroy();
+		// 	fillFloTable($("#flo_number").val());
+		// }
+
+		$('#flo_table').DataTable().destroy();
+		fillFloTableSettlement();
+
+		refresh();
 
 		var delay = (function(){
 			var timer = 0;
@@ -209,204 +244,314 @@ td:hover {
 			};
 		})();
 
-		// $("#flo_number").on("input", function() {
+		// $("#material_number").on("input", function() {
 		// 	delay(function(){
-		// 		if ($("#flo_number").val().length < 8) {
-		// 			$("#flo_number").val("");
+		// 		if ($("#material_number").val().length < 7) {
+		// 			$("#material_number").val("");
 		// 		}
 		// 	}, 20 );
 		// });
 
-		$("#finish").click(function(){
-			var table = $('#flo_table').DataTable();
-			table.destroy();
+		// $("#flo_number_settlement").on("input", function() {
+		// 	delay(function(){
+		// 		if ($("#flo_number_settlement").val().length < 7) {
+		// 			$("#flo_number_settlement").val("");
+		// 		}
+		// 	}, 20 );
+		// });
 
-			$("#flo_number").prop('disabled', false);
-			$("#material").hide();
-			$("#serial").hide();
-			$("#icon-material").hide();
-			$("#icon-serial").hide();
-			$("#line-flo").hide();
-			$("#finish").hide();
-			$("#flo_table").hide();
-			$("#flo_number").val("");
-			$("#material").val("");
-			$("#serial").val("");
-			$("#flo_number").focus();
-		});
-
-
-		$('#flo_number').keydown(function(event) {
+		$('#material_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#flo_number").val().length > 0){
-					scanFLO();
+				if($("#material_number").val().length == 7){
+					scanMaterialNumber();
 					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Material number invalid.');
+					$("#material_number").val("");
 				}
 			}
 		});
 
-
-		$('#material').keydown(function(event) {
+		$('#flo_number_settlement').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#material").val().length > 0){
-					scanMaterial();
+				if($("#flo_number_settlement").val().length > 8){
+					scanFloNumber();
 					return false;
 				}
-			}
-		});
-
-		$('#serial').keydown(function(event) {
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#serial").val().length > 0){
-					scanSerial();
-					return false;
+				else{
+					openErrorGritter('Error!', 'FLO number invalid.');
+					$("#flo_number_settlement").val("");
 				}
 			}
 		});
 
 	});
 
-	function scanFLO() {
-		var token = '{{ Session::token() }}';
-		var flo_number = $("#flo_number").val();
+	function scanMaterialNumber(){
+		var material_number = $("#material_number").val();
+		var ymj = $("#ymj").is(":checked");
 		var data = {
-			flo_number: flo_number,
-			_token: token
-		};
-		$.post('{{ url("scan/flo_number") }}', data, function(result, status, xhr){
-
+			material_number : material_number,
+			ymj : ymj,
+			type : 'pd'
+		}
+		$.post('{{ url("scan/material_number") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
-
 			if(xhr.status == 200){
 				if(result.status){
-					$("#material").show();
-					$("#serial").show();
-					$("#icon-material").show();
-					$("#icon-serial").show();
-					$("#line-flo").show();
-					$("#finish").show();
-					$("#flo_table").show();
-					$("#flo_number").prop('disabled', true);
-					$("#serial").prop('disabled', true);
-					$('#flo_table').DataTable( {
-						'paging'      	: false,
-						'lengthChange'	: false,
-						'searching'   	: false,
-						'ordering'    	: false,
-						'info'       	: true,
-						'autoWidth'		: false,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false, // Disable the auto width calculation 
-						"infoCallback": function( settings, start, end, max, total, pre ) {
-							return " Total "+ total +" pc(s)";
-						},
-						"processing": true,
-						"serverSide": true,
-						"ajax": {
-							"type" : "post",
-							"url" : "{{ url("index/scan/flo_number") }}",
-							"data": data
-						},
-						"columns": [
-						{ "data": "id",
-						render: function (data, type, row, meta) {
-							return meta.row + meta.settings._iDisplayStart + 1;
-						}, "sWidth": "2%" },
-						{ "data": "material_number", "sWidth": "12%" },
-						{ "data": "material_description", "sWidth": "65%" },
-						{ "data": "serial_number", "sWidth": "14%" },
-						{ "data": "action", "sWidth": "4%" }
-						]
+					// if(result.status_code == 1000){
+						$("#flo_number").val(result.flo_number);
+						$('#flo_detail_table').DataTable().destroy();
+						fillFloTable(result.flo_number);
 
-					});
-					openSuccessGritter('Success!', result.message);
-					$("#material").focus();
+						var flo_number = $("#flo_number").val();
+						var data = {
+							material_number : material_number,
+							ymj : ymj,
+							type : 'pd',
+							flo_number : flo_number
+						}
+						$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
+							console.log(status);
+							console.log(result);
+							console.log(xhr);
+							if(xhr.status){
+								openSuccessGritter('Success!', result.message);
+								$("#material_number").val("");
+								if(result.code_status == 1002){
+									$("#flo_number").val(result.flo_number);
+									$('#flo_detail_table').DataTable().destroy();
+									fillFloTable(result.flo_number);
+								}
+								else{
+									$('#flo_detail_table').DataTable().ajax.reload();
+								}
+								$("#material_number").focus();
+							}
+							else{
+								openErrorGritter('Error!', 'Disconnected from server');
+								$("#material_number").val("");
+							}
+						});
+					// }
+					// else{
+					// 	var flo_number = $("#flo_number").val();
+					// 	var data = {
+					// 		material_number : material_number,
+					// 		ymj : ymj,
+					// 		type : 'pd',
+					// 		flo_number : flo_number
+					// 	}
+					// 	$('#flo_detail_table').DataTable().destroy();
+					// 	fillFloTable(result.flo_number);
+					// 	$('#flo_number').val("");
+					// 	$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
+					// 		console.log(status);
+					// 		console.log(result);
+					// 		console.log(xhr);
+					// 		if(xhr.status){
+
+
+					// 		}
+					// 		else{
+					// 			openErrorGritter('Error!', 'Disconnected from server');
+					// 			$("#material_number").val("");
+					// 		}
+					// 	});
+					// }
 				}
 				else{
 					openErrorGritter('Error!', result.message);
-					$("#flo_number").val("");
+					$("#material_number").val("");
 				}
 			}
 			else{
-				openErrorGritter('Error!', 'Disconnected');
-				$("#flo_number").val("");
+				openErrorGritter('Error!', 'Disconnected from server');
+				$("#material_number").val("");
 			}
+			
 		});
 	}
 
-	function scanMaterial(){
-		var token = '{{ Session::token() }}';
-		var flo_number = $("#flo_number").val();
-		var material_number = $("#material").val();
+	function scanFloNumber(){
+		var flo_number = $("#flo_number_settlement").val();
 		var data = {
-			flo_number: flo_number,
-			material_number: material_number,
-			_token: token
-		};
-
-		$.post('{{ url("scan/material_number_sn") }}', data, function(result, status, xhr){
+			flo_number : flo_number
+		}
+		$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
-
 			if(xhr.status == 200){
 				if(result.status){
-					$("#serial").prop('disabled', false);
-					$("#material").prop('disabled', true);
-					$("#serial").focus();
 					openSuccessGritter('Success!', result.message);
-				}
-				else{
-					openErrorGritter('Error!', result.message);
-					$("#material").val("");
-				}
-			}
-			else{
-				openErrorGritter('Error!', result.message);
-				$("#material").val("");
-			}
-
-		});
-	}
-
-	function scanSerial(){
-		var token = '{{ Session::token() }}';
-		var flo_number = $("#flo_number").val();
-		var serial_number = $("#serial").val();
-		var data = {
-			flo_number: flo_number,
-			serial_number: serial_number,
-			_token: token
-		};
-		$.post('{{ url("scan/serial_number_sn") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$("#serial").prop('disabled', true);
 					$('#flo_table').DataTable().ajax.reload();
-					$("#material").val("");
-					$("#serial").val("");
-					$("#material").prop('disabled', false);
-					openSuccessGritter('Success!', result.message);
-					$("#material").focus();
+					$("#flo_number_settlement").val("");
+					$('#flo_detail_table').DataTable().destroy();
+					fillFloTable($("#flo_number").val());
+					$('#flo_number').val("");
+					refresh();
+					$("#flo_number_settlement").focus();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
-					$("#serial").val("");
+					$("#flo_number_settlement").val("");
 				}
-
 			}
 			else{
-				openErrorGritter('Error!', 'Disconnected');
-				$("#serial").val("");
+				openErrorGritter('Error!', 'Disconnected from server');
+				$("#flo_number_settlement").val("");
 			}
-
 		});
+	}
+
+	function fillFloTable(flo_number){
+		var index_flo_number = flo_number;
+		var data_flo = {
+			flo_number : index_flo_number
+		}
+		$('#flo_detail_table').DataTable( {
+			'paging'      	: false,
+			'lengthChange'	: false,
+			'searching'   	: false,
+			// 'ordering'    	: false,
+			'info'       	: false,
+			'autoWidth'		: false,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"infoCallback": function( settings, start, end, max, total, pre ) {
+				return " Total "+ total +" pc(s)";
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "post",
+				"url" : "{{ url("index/flo_detail") }}",
+				"data": data_flo
+			},
+			"columns": [
+			{ "data": "id",
+			render: function (data, type, row, meta) {
+				return meta.row + meta.settings._iDisplayStart + 1;
+			}, "sWidth": "2%" },
+			{ "data": "material_number", "sWidth": "12%" },
+			{ "data": "material_description", "sWidth": "65%" },
+			{ "data": "serial_number", "sWidth": "14%" },
+			{ "data": "action", "sWidth": "4%" }
+			]
+		});
+	}
+
+	function fillFloTableSettlement(){
+		$('#flo_table').DataTable( {
+			'paging'      	: true,
+			'lengthChange'	: true,
+			'searching'   	: true,
+			'ordering'    	: true,
+			'info'       	: true,
+			'autoWidth'		: true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "post",
+				"url" : "{{ url("index/flo") }}",
+			},
+			"columns": [
+			{ "data": "flo_number" },
+			{ "data": "destination_shortname" },
+			{ "data": "st_date" },
+			{ "data": "shipment_condition_name" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "actual" },
+			{ "data": "action" }
+			]
+		});
+	}
+
+	function cancelConfirmation(id){
+		var flo_number = $("#flo_number_settlement").val(); 
+		var data = {
+			id: id,
+			flo_number : flo_number
+		};
+		if(confirm("Are you sure you want to cancel this settlement?")){
+			$.post('{{ url("cancel/flo_settlement") }}', data, function(result, status, xhr){
+				if(xhr.status == 200){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#flo_table').DataTable().ajax.reload();
+						$("#flo_number_settlement").val("");
+						$("#flo_number_settlement").focus();					
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+					}
+				}
+				else{
+					openErrorGritter('Error!', 'Disconnected from server');
+				}
+			});
+		}
+		else{
+			return false;
+		}
+	}
+
+	function deleteConfirmation(id){
+		var flo_number = $("#flo_number").val(); 
+		var data = {
+			id: id,
+			flo_number : flo_number
+		};
+		if(confirm("Are you sure you want to delete this data?")){
+			$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+
+				if(xhr.status == 200){
+					if(result.status){
+						$('#flo_detail_table').DataTable().ajax.reload();
+						$("#serial_number").prop('disabled', true);
+						$("#material_number").prop('disabled', false);
+						$("#serial_number").val("");
+						$("#material_number").val("");
+						$("#material_number").focus();
+						openSuccessGritter('Success!', result.message);
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+					}
+				}
+				else{
+					openErrorGritter('Error!', 'Disconnected from server');
+				}
+			});
+		}
+		else{
+			return false;
+		}
+	}
+
+	function refresh(){
+		$('#labelYMJ').hide();
+		$("#flo_number_reprint").val("").change();
+		$('#quantity').prop('disabled', true);
+		$('#flo_number').prop('disabled', true);
+		// $('#quantity').val('');
+		$('#flo_number').val('');
+		$('#material_number').val('');
+		$('#flo_number_settlement').val('');
+		$("#material_number").prop('disabled', false);
+		$("#material_number").focus();
 	}
 
 	function openErrorGritter(title, message) {
@@ -416,7 +561,7 @@ td:hover {
 			class_name: 'growl-danger',
 			image: '{{ url("images/image-stop.png") }}',
 			sticky: false,
-			time: '1000'
+			time: '2000'
 		});
 	}
 
@@ -427,46 +572,21 @@ td:hover {
 			class_name: 'growl-success',
 			image: '{{ url("images/image-screen.png") }}',
 			sticky: false,
-			time: '1000'
+			time: '2000'
 		});
 	}
 
-	function deleteConfirmation(id){
-		var flo_number = $("#flo_number").val();
-		var token = '{{ Session::token() }}';
-		var data = {
-			id: id,
-			flo_number: flo_number
-		};
-		if(confirm("Are you sure you want to delete this data?")){
-			$.post('{{ url("destroy/serial_number_sn") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-
-				if(xhr.status == 200){
-					if(result.status){
-						$('#flo_table').DataTable().ajax.reload();
-						$("#serial").prop('disabled', true);
-						$("#material").prop('disabled', false);
-						$("#serial").val("");
-						$("#material").val("");
-						$("#material").focus();
-						openSuccessGritter('Success!', result.message);
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-					}
-				}
-				else{
-					openErrorGritter('Error!', 'Disconnected');
-				}
-			});
-		}
-		else{
-			return false;
-		}
+	function openInfoGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-info',
+			image: '{{ url("images/image-unregistered.png") }}',
+			sticky: false,
+			time: '2000'
+		});
 	}
+
 
 </script>
 @stop

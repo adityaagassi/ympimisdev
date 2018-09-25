@@ -17,13 +17,15 @@ td:hover {
 @section('header')
 <section class="content-header">
 	<h1>
-		Final Line Outputs
-		<small>Band Instrument</small>
+		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
+		<small>Band Instrument <span class="text-purple">管楽器</span></small>
 	</h1>
 	<ol class="breadcrumb">
-		<li><button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-			<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-		</button></li>
+		<li>
+			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
+				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
+			</button>
+		</li>
 	</ol>
 </section>
 @stop
@@ -49,7 +51,7 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-danger">
 				<div class="box-header">
-					<h3 class="box-title">Fulfillment</h3>
+					<h3 class="box-title">Fulfillment <span class="text-purple">FLO充足</span></span></h3>
 				</div>
 				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
@@ -58,6 +60,13 @@ td:hover {
 						<div class="box-body">
 							<div class="row">
 								<div class="col-md-3">
+									<div class="input-group col-md-12">
+										<label>
+											<input type="checkbox" class="minimal-red" id="ymj">
+											<span class="fa fa-caret-left text-red">&nbsp; Check if product for YMJ&nbsp;<i class="fa fa-exclamation"></i></span>
+										</label>
+									</div>
+									&nbsp;
 									<div class="input-group col-md-12">
 										<div class="input-group-addon" id="icon-material">
 											<i class="glyphicon glyphicon-barcode"></i>
@@ -109,7 +118,7 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-success">
 				<div class="box-header">
-					<h3 class="box-title">Settlement</h3>
+					<h3 class="box-title">Closure <span class="text-purple">FLO完了</span></h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
@@ -193,16 +202,22 @@ td:hover {
 			$('.select2').select2()
 		});
 
+		$("#ymj").prop('checked', false);
+		$('input[type="checkbox"].minimal-red').iCheck({
+			checkboxClass: 'icheckbox_minimal-red',
+			radioClass   : 'iradio_minimal-red'
+		});
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
 
-		if($('#flo_number').val() != ""){
-			$('#flo_detail_table').DataTable().destroy();
-			fillFloTable($("#flo_number").val());
-		}
+		// if($('#flo_number').val() != ""){
+		// 	$('#flo_detail_table').DataTable().destroy();
+		// 	fillFloTable($("#flo_number").val());
+		// }
 
 		$('#flo_table').DataTable().destroy();
 		fillFloTableSettlement();
@@ -269,7 +284,7 @@ td:hover {
 
 		$('#flo_number_settlement').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#flo_number_settlement").val().length > 10){
+				if($("#flo_number_settlement").val().length > 8){
 					scanFloNumber();
 					return false;
 				}
@@ -283,8 +298,10 @@ td:hover {
 
 	function scanMaterialNumber(){
 		var material_number = $("#material_number").val();
+		var ymj = $("#ymj").is(":checked");
 		var data = {
-			material_number : material_number
+			material_number : material_number,
+			ymj : ymj
 		}
 		$.post('{{ url("scan/material_number") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -292,7 +309,7 @@ td:hover {
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					openInfoGritter('Success!', result.message);
+					openInfoGritter('Info Success!', result.message);
 					$("#material_number").prop('disabled',true);
 					$("#serial_number").prop('disabled', false);
 					if(result.status_code == 1000){
@@ -329,10 +346,12 @@ td:hover {
 		var material_number = $("#material_number").val();
 		var serial_number = $("#serial_number").val();
 		var flo_number = $("#flo_number").val();
+		var ymj = $("#ymj").is(":checked");
 		var data = {
 			material_number : material_number,
 			serial_number : serial_number,
-			flo_number : flo_number
+			flo_number : flo_number,
+			ymj : ymj
 		}
 		$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -345,7 +364,7 @@ td:hover {
 					$("#serial_number").prop('disabled',true);
 					$("#serial_number").val("");
 					$("#material_number").val("");
-					if(result.code_status == 1000){
+					if(result.code_status == 1002){
 						$("#flo_number").val(result.flo_number);
 						$('#flo_detail_table').DataTable().destroy();
 						fillFloTable(result.flo_number);
@@ -571,6 +590,7 @@ td:hover {
 		$("#serial_number").prop('disabled', true);
 		$("#flo_number").prop('disabled', true);
 		$("#material_number").val("");
+		$('#flo_number').val('');
 		$("#flo_number_settlement").val("");
 		$("#material_number").prop('disabled', false);
 		$("#material_number").focus();

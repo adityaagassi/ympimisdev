@@ -18,10 +18,10 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-info">
+				<div class="box-header">
+					<h3 class="box-title">Export Production Result</h3>
+				</div>
 				<div class="box-body">
-
-
-
 					<form class="form-horizontal" role="form" method="post" action="{{url('export/trial')}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="box-body">
@@ -29,7 +29,7 @@
 								<label for="production_date" class="col-sm-2 control-label">Date</label>
 								<div class="col-sm-3">
 									<div class="input-group col-md-12">
-										<input type="date" class="form-control" name="production_date" id="production_date" placeholder="Date">
+										<input type="date" class="form-control" name="production_date" id="production_date" placeholder="Date" required>
 										<div class="input-group-addon" id="icon-material">
 											<i class="fa fa-calendar"></i>
 										</div>
@@ -40,10 +40,6 @@
 							</div>
 						</div>
 					</form>
-
-
-
-
 				</div>
 			</div>
 		</div>

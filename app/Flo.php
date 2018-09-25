@@ -22,5 +22,10 @@ class Flo extends Model
     {
     	return $this->belongsTo('App\ShipmentSchedule', 'shipment_schedule_id')->withTrashed();
     }
-    //
+
+    public function status()
+    {
+        return $this->belongsTo('App\Status', 'status', 'status_code')->withTrashed();
+    }
+
 }

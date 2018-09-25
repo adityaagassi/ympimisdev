@@ -24,11 +24,11 @@
   </div>   
   @endif
   @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
-    {{ session('error') }}
-  </div>   
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                {{ session('error') }}
+            </div>   
   @endif
 
 
@@ -37,40 +37,34 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/destination')}}">
+    <form role="form" method="post" action="{{url('create/status')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination Code<span class="text-red">*</span></label>
+          <label class="col-sm-4">Status Code<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="destination_code" placeholder="Enter Destination Code" required>
+            <input type="text" class="form-control" name="status_code" placeholder="Enter Status Code" required>
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination Name<span class="text-red">*</span></label>
+          <label class="col-sm-4">Status Name<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="destination_name" placeholder="Enter Destination Name" required>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination Shortname<span class="text-red">*</span></label>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="destination_shortname" placeholder="Enter Destination Shortname" required>
+            <input type="text" class="form-control" name="status_name" placeholder="Enter Status Name" required>
           </div>
         </div>
         <!-- /.box-body -->
         <div class="box-footer form-group row">
           <div class="col-sm-4"></div>
           <div class="btn-group">
-            <a class="btn btn-danger col-sm-14" href="{{ url('index/destination') }}">Cancel</a>
+          <a class="btn btn-danger col-sm-14" href="{{ url('index/status') }}">Cancel</a>
           </div>
           <div class="btn-group">
-            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
           </div>
         </div>
       </div>
-    </form>
-  </div>
+      </form>
+    </div>
 
   @endsection
 

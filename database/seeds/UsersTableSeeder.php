@@ -24,7 +24,6 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
-        //
      DB::table('users')->insert(
         [
             'name' => 'Aditya Agassi',
@@ -80,6 +79,18 @@ class UsersTableSeeder extends Seeder
             'email' => 'romy@gmail.com',
             'password' => bcrypt('1234'),
             'level_id' => '6',
+            'created_by' => '1',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]
+    );
+     DB::table('users')->insert(
+        [
+            'name' => 'Trial',
+            'username' => 'trial',
+            'email' => 'trial@gmail.com',
+            'password' => bcrypt('1234'),
+            'level_id' => '7',
             'created_by' => '1',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

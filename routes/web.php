@@ -137,6 +137,16 @@ Route::get('edit/code_generator/{id}', 'CodeGeneratorController@edit');
 Route::post('edit/code_generator/{id}', 'CodeGeneratorController@update');
 Route::get('show/code_generator/{id}', 'CodeGeneratorController@show');
 
+Route::get('index/status', 'StatusController@index');
+Route::get('create/status', 'StatusController@create');
+Route::post('create/status', 'StatusController@store');
+Route::get('destroy/status/{id}', 'StatusController@destroy');
+Route::get('edit/status/{id}', 'StatusController@edit');
+Route::post('edit/status/{id}', 'StatusController@update');
+Route::get('show/status/{id}', 'StatusController@show');
+
+
+
 Route::get('index/flo_sn', 'FloController@index_sn');
 Route::get('index/flo_pd', 'FloController@index_pd');
 Route::post('index/flo_detail', 'FloController@index_flo_detail');

@@ -14,7 +14,7 @@ class CodeGeneratorsTableSeeder extends Seeder
     	DB::table('code_generators')->insert(
             [
               'prefix' => '201809',
-              'length' => '5',
+              'length' => '6',
               'index' => '0',
               'note' => 'flo',
               'created_by' => '1',
@@ -22,6 +22,16 @@ class CodeGeneratorsTableSeeder extends Seeder
               'updated_at' => date('Y-m-d H:i:s'),
           ]
         );
-        //
+        DB::table('code_generators')->insert(
+            [
+              'prefix' => '20180901',
+              'length' => '4',
+              'index' => '0',
+              'note' => 'pd',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+        );
     }
 }
