@@ -12,7 +12,7 @@ td{
 td:hover {
 	overflow: visible;
 }
-input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-outer-spin-button,`
 input[type=number]::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
@@ -99,12 +99,14 @@ input[type=number] {
 											<i class="glyphicon glyphicon-lock"></i>
 										</div>
 									</div>
+									&nbsp;
 									<table id="flo_detail_table" class="table table-bordered table-striped">
 										<thead>
 											<tr>
 												<th style="font-size: 14">#</th>
 												<th style="font-size: 14">Material</th>
 												<th style="font-size: 14">Description</th>
+												<th style="font-size: 14">Qty</th>
 												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Del.</th>
 											</tr>
@@ -139,7 +141,7 @@ input[type=number] {
 								</div>
 								<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number_settlement" name="flo_number_settlement" placeholder="Scan FLO Here..." required>
 								<div class="input-group-addon" id="icon-serial">
-									<i class="glyphicon glyphicon-ok-sign"></i>
+									<i class="glyphicon glyphicon-ok"></i>
 								</div>
 							</div>
 							<br>
@@ -372,14 +374,14 @@ input[type=number] {
 				openErrorGritter('Error!', 'Disconnected from server');
 				$("#material_number").val("");
 			}
-			
 		});
 	}
 
 	function scanFloNumber(){
 		var flo_number = $("#flo_number_settlement").val();
 		var data = {
-			flo_number : flo_number
+			flo_number : flo_number,
+			status : '2',
 		}
 		$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -439,7 +441,8 @@ input[type=number] {
 				return meta.row + meta.settings._iDisplayStart + 1;
 			}, "sWidth": "2%" },
 			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "65%" },
+			{ "data": "material_description", "sWidth": "60%" },
+			{ "data": "quantity", "sWidth": "5%" },
 			{ "data": "serial_number", "sWidth": "14%" },
 			{ "data": "action", "sWidth": "4%" }
 			]
@@ -447,6 +450,9 @@ input[type=number] {
 	}
 
 	function fillFloTableSettlement(){
+		var data = {
+			status : '2'
+		}
 		$('#flo_table').DataTable( {
 			'paging'      	: true,
 			'lengthChange'	: true,
@@ -462,6 +468,7 @@ input[type=number] {
 			"ajax": {
 				"type" : "post",
 				"url" : "{{ url("index/flo") }}",
+				"data" : data,
 			},
 			"columns": [
 			{ "data": "flo_number" },
@@ -480,7 +487,8 @@ input[type=number] {
 		var flo_number = $("#flo_number_settlement").val(); 
 		var data = {
 			id: id,
-			flo_number : flo_number
+			flo_number : flo_number,
+			status : '1',
 		};
 		if(confirm("Are you sure you want to cancel this settlement?")){
 			$.post('{{ url("cancel/flo_settlement") }}', data, function(result, status, xhr){

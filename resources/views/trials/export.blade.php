@@ -41,6 +41,7 @@
 						</div>
 					</form>
 				</div>
+				<a href="{{ url("trial/insert")}}" class="btn btn-primary btn-sm" style="color:white">Trial</a>
 			</div>
 		</div>
 	</div>

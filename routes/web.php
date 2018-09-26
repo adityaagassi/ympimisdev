@@ -145,23 +145,12 @@ Route::get('edit/status/{id}', 'StatusController@edit');
 Route::post('edit/status/{id}', 'StatusController@update');
 Route::get('show/status/{id}', 'StatusController@show');
 
+Route::get('index/flo_view/{id}', 'FloController@index');
+// Route::get('index/flo_pd', 'FloController@index_pd');
+// Route::get('index/flo_delivery', 'FloController@index_delivery');
 
-
-Route::get('index/flo_sn', 'FloController@index_sn');
-Route::get('index/flo_pd', 'FloController@index_pd');
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
 Route::post('index/flo', 'FloController@index_flo');
-
-// Route::post('print/flo', 'FloController@print_flo');
-
-
-
-// Route::post('index/scan/flo_number', 'FloController@index_scan_flo_number');
-
-// Route::post('scan/material_number_sn', 'FloController@scan_material_number_sn');
-// Route::post('scan/serial_number_sn', 'FloController@scan_serial_number_sn');
-// Route::post('destroy/serial_number_sn', 'FloController@destroy_serial_number_sn');
-
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
@@ -170,5 +159,11 @@ Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
 
+
+
+
+
+
 Route::get('index/trial_export', 'FloController@export_trial');
 Route::post('export/trial', 'FloController@trial');
+Route::get('trial/insert', 'TrialController@trial');

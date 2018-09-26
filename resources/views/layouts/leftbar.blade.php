@@ -172,7 +172,7 @@
                                         @else
                                         <li>
                                           @endif
-                                          <a href="{{ url("/index/flo_sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+                                          <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
                                         </li>
                                         @endif
 
@@ -182,7 +182,27 @@
                                           @else
                                           <li>
                                             @endif
-                                            <a href="{{ url("/index/flo_pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+                                            <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+                                          </li>
+                                          @endif
+
+                                          @if(in_array(Auth::user()->level_id, [1]))
+                                        @if(isset($page) && $page == "FLO Delivery")
+                                        <li class="active">
+                                          @else
+                                          <li>
+                                            @endif
+                                            <a href="{{ url("/index/flo_view/delivery") }}"><i class="fa fa-shopping-cart"></i> <span>FLO  <i class="fa fa-angle-right"></i> Delivery</span></a>
+                                          </li>
+                                          @endif
+
+                                          @if(in_array(Auth::user()->level_id, [1]))
+                                        @if(isset($page) && $page == "FLO Stuffing")
+                                        <li class="active">
+                                          @else
+                                          <li>
+                                            @endif
+                                            <a href="{{ url("/index/flo_view/stuffing") }}"><i class="fa fa-truck"></i> <span>FLO  <i class="fa fa-angle-right"></i> Stuffing</span></a>
                                           </li>
                                           @endif
 
@@ -213,7 +233,7 @@
 
                                           <li class="header">Trial Menu</li>
                                           <li>
-                                            <a href="{{ url("/index/flo_sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+                                            <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
                                           </li>
                                           <li>
                                             <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>

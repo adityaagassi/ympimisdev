@@ -62,8 +62,9 @@ td:hover {
 								<div class="col-md-3">
 									<div class="input-group col-md-12">
 										<label>
-											<input type="checkbox" class="minimal-red" id="ymj">
-											<span class="fa fa-caret-left text-red">&nbsp; Check if product for YMJ&nbsp;<i class="fa fa-exclamation"></i></span>
+											<input type="checkbox" class="minimal-red" id="ymj">&nbsp;<i class="fa fa-arrow-left text-red"></i>
+											<br>
+											<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ (CL & SAX Only)&nbsp;<i class="fa fa-exclamation"></i></span>
 										</label>
 									</div>
 									&nbsp;
@@ -91,12 +92,14 @@ td:hover {
 											<i class="glyphicon glyphicon-lock"></i>
 										</div>
 									</div>
+									&nbsp;
 									<table id="flo_detail_table" class="table table-bordered table-striped">
 										<thead>
 											<tr>
 												<th style="font-size: 14">#</th>
 												<th style="font-size: 14">Material</th>
 												<th style="font-size: 14">Description</th>
+												<th style="font-size: 14">Qty</th>
 												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Del.</th>
 											</tr>
@@ -131,7 +134,7 @@ td:hover {
 								</div>
 								<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number_settlement" name="flo_number_settlement" placeholder="Scan FLO Here..." required>
 								<div class="input-group-addon" id="icon-serial">
-									<i class="glyphicon glyphicon-ok-sign"></i>
+									<i class="glyphicon glyphicon-ok"></i>
 								</div>
 							</div>
 							<br>
@@ -389,7 +392,8 @@ td:hover {
 	function scanFloNumber(){
 		var flo_number = $("#flo_number_settlement").val();
 		var data = {
-			flo_number : flo_number
+			flo_number : flo_number,
+			status : '2',
 		}
 		$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -482,7 +486,8 @@ td:hover {
 				return meta.row + meta.settings._iDisplayStart + 1;
 			}, "sWidth": "2%" },
 			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "65%" },
+			{ "data": "material_description", "sWidth": "60%" },
+			{ "data": "quantity", "sWidth": "5%" },
 			{ "data": "serial_number", "sWidth": "14%" },
 			{ "data": "action", "sWidth": "4%" }
 			]
@@ -490,6 +495,9 @@ td:hover {
 	}
 
 	function fillFloTableSettlement(){
+		var data = {
+			status : '1'
+		}
 		$('#flo_table').DataTable( {
 			'paging'      	: true,
 			'lengthChange'	: true,
@@ -505,6 +513,7 @@ td:hover {
 			"ajax": {
 				"type" : "post",
 				"url" : "{{ url("index/flo") }}",
+				"data" : data,
 			},
 			"columns": [
 			{ "data": "flo_number" },
@@ -559,7 +568,8 @@ td:hover {
 		var flo_number = $("#flo_number_settlement").val(); 
 		var data = {
 			id: id,
-			flo_number : flo_number
+			flo_number : flo_number,
+			status : '1',
 		};
 		if(confirm("Are you sure you want to cancel this settlement?")){
 			$.post('{{ url("cancel/flo_settlement") }}', data, function(result, status, xhr){
