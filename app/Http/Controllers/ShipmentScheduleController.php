@@ -197,4 +197,45 @@ class ShipmentScheduleController extends Controller
         ->with('page', 'Shipment Schedule');
         //
     }
+
+    public function import(Request $request)
+    {
+       if($request->hasFile('shipment_schedule')){
+        ShipmentSchedule::truncate();
+
+        $id = Auth::id();
+
+        $file = $request->file('shipment_schedule');
+        $data = file_get_contents($file);
+
+        $rows = explode("\r\n", $data);
+        foreach ($rows as $row)
+        {
+            if (strlen($row) > 0) {
+                $row = explode("\t", $row);
+                $shipment_schedule = new ShipmentSchedule([
+                    'st_month' => date('Y-m-d', strtotime(str_replace('/','-',$row[0]))),
+                    'sales_order' => $row[1],
+                    'shipment_condition_code' => $row[2],
+                    'destination_code' => $row[3],
+                    'material_number' => $row[4],
+                    'hpl' => $row[5],
+                    'bl_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[6]))),
+                    'st_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[7]))),
+                    'quantity' => $row[8],
+                    'created_by' => $id,
+                ]);
+
+                $shipment_schedule->save();
+            }
+        }
+        return redirect('/index/shipment_schedule')->with('status', 'New shipment schedules has been imported.')->with('page', 'Shipment Schedule');
+
+    }
+    else
+    {
+        return redirect('/index/shipment_schedule')->with('error', 'Please select a file.')->with('page', 'Shipment Schedule');
+    }
+}
+
 }

@@ -92,15 +92,15 @@ class FloController extends Controller
             ))->with('page', 'FLO Delivery');
         }
         elseif($id == 'stuffing'){
-           $flos = Flo::orderBy('flo_number', 'asc')
-           ->where('status', '=', 2)
-           ->get();
-           return view('flos.flo_stuffing', array(
+         $flos = Flo::orderBy('flo_number', 'asc')
+         ->where('status', '=', 2)
+         ->get();
+         return view('flos.flo_stuffing', array(
             'flos' => $flos
         ))->with('page', 'FLO Stuffing');
-       }
+     }
 
-   }
+ }
 
     // public function index_pd(){
     //     $flos = Flo::orderBy('flo_number', 'asc')
@@ -120,7 +120,7 @@ class FloController extends Controller
     //     ))->with('page', 'FLO Delivery');
     // }
 
-   public function index_flo_detail(Request $request){
+ public function index_flo_detail(Request $request){
     $flo_details = DB::table('flo_details')
     ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
@@ -231,6 +231,26 @@ public function scan_material_number(Request $request){
 public function scan_serial_number(Request $request)
 {
     $id = Auth::id();
+    
+    if(Auth::user()->username == "Assy-FL"){
+        $printer_name = 'FLO Printer 101';
+    }
+    elseif(Auth::user()->username == "Assy-CL"){
+        $printer_name = 'FLO Printer 102';
+    }
+    elseif(Auth::user()->username == "Assy-SX"){
+        $printer_name = 'FLO Printer 103';
+    }
+    elseif(Auth::user()->username == "superman"){
+        $printer_name = 'FLO Printer 104';
+    }
+    else{
+        $response = array(
+            'status' => false,
+            'message' => "You don't have permission to print FLO"
+        );
+        return Response::json($response);
+    }
 
     if($request->get('serial_number')){
         $serial_number = $request->get('serial_number');
@@ -299,7 +319,9 @@ public function scan_serial_number(Request $request)
                 $flo_number = $code_generator->prefix . $number+1;
 
                 try {
-                    $connector = new WindowsPrintConnector("FLO Printer");
+
+                    $connector = new WindowsPrintConnector($printer_name);
+
                     $printer = new Printer($connector);
 
                     $printer->feed(2);
@@ -486,6 +508,25 @@ public function scan_serial_number(Request $request)
 
 public function reprint_flo(Request $request)
 {
+    if(Auth::user()->username == "Assy-FL"){
+        $printer_name = 'FLO Printer 101';
+    }
+    elseif(Auth::user()->username == "Assy-CL"){
+        $printer_name = 'FLO Printer 102';
+    }
+    elseif(Auth::user()->username == "Assy-SX"){
+        $printer_name = 'FLO Printer 103';
+    }
+    elseif(Auth::user()->username == "superman"){
+        $printer_name = 'FLO Printer 104';
+    }
+    else{
+        $response = array(
+            'status' => false,
+            'message' => "You don't have permission to print FLO"
+        );
+        return Response::json($response);
+    }
     $flo = DB::table('flos')
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id' , '=', 'shipment_schedules.id')
     ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
@@ -499,7 +540,8 @@ public function reprint_flo(Request $request)
     if($flo != null){
         try {
 
-            $connector = new WindowsPrintConnector("FLO Printer");
+            $connector = new WindowsPrintConnector($printer_name);
+            // $connector = new NetworkPrintConnector("172.17.128.104", 9100);
             $printer = new Printer($connector);
 
             $printer->feed(2);

@@ -13,7 +13,7 @@
             @endif
             <a href="{{ url("/home") }}"><i class="fa fa-industry"></i> <span>Dashboard</span></a>
           </li>
-          <li class="header">Adiministration Menu</li>
+          <li class="header">Administration Menu</li>
 
           @if(in_array(Auth::user()->level_id, [1]))
           @if(isset($page) && $page == "Code Generator")
