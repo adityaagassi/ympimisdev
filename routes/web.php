@@ -164,6 +164,8 @@ Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
 
 
-Route::get('index/trial_export', 'FloController@export_trial');
-Route::post('export/trial', 'FloController@trial');
-Route::get('trial/insert', 'TrialController@trial');
+Route::get('index/trial_export', 'TrialController@trial_index');
+Route::post('export/trial', 'TrialController@trial_export');
+
+Route::get('trial/perolehan', 'TrialController@trial_perolehan');
+Route::get('trial/shipment', 'TrialController@trial_shipment');

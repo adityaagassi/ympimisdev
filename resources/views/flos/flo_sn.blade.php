@@ -96,11 +96,11 @@ td:hover {
 									<table id="flo_detail_table" class="table table-bordered table-striped">
 										<thead>
 											<tr>
-												<th style="font-size: 14">#</th>
+												{{-- <th style="font-size: 14">#</th> --}}
+												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Material</th>
 												<th style="font-size: 14">Description</th>
 												<th style="font-size: 14">Qty</th>
-												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Del.</th>
 											</tr>
 										</thead>
@@ -217,6 +217,8 @@ td:hover {
 			}
 		});
 
+		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
 		// if($('#flo_number').val() != ""){
 		// 	$('#flo_detail_table').DataTable().destroy();
 		// 	fillFloTable($("#flo_number").val());
@@ -267,6 +269,7 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', 'Material number invalid.');
+					audio_error.play();
 					$("#material_number").val("");
 				}
 			}
@@ -280,7 +283,12 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', 'Serial number invalid.');
+					audio_error.play();
+					$("#material_number").val("");
 					$("#serial_number").val("");
+					$("#serial_number").prop("disabled", true);
+					$("#material_number").prop("disabled", false);
+					$("#material_number").focus();
 				}
 			}
 		});
@@ -293,6 +301,7 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', 'FLO number invalid.');
+					audio_error.play();
 					$("#flo_number_settlement").val("");
 				}
 			}
@@ -335,11 +344,13 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					audio_error.play();
 					$("#material_number").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
 				$("#material_number").val("");
 			}
 		});
@@ -379,12 +390,22 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					$("#material_number").val("");
 					$("#serial_number").val("");
+					$("#serial_number").prop("disabled", true);
+					$("#material_number").prop("disabled", false);
+					$("#material_number").focus();
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
+				$("#material_number").val("");
 				$("#serial_number").val("");
+				$("#serial_number").prop("disabled", true);
+				$("#material_number").prop("disabled", false);
+				$("#material_number").focus();
 			}
 		});
 	}
@@ -412,11 +433,13 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					audio_error.play();
 					$("#flo_number_settlement").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
 				$("#flo_number_settlement").val("");
 			}
 		});
@@ -460,12 +483,12 @@ td:hover {
 		var data_flo = {
 			flo_number : index_flo_number
 		}
-		$('#flo_detail_table').DataTable( {
+		var t = $('#flo_detail_table').DataTable( {
 			'paging'      	: false,
 			'lengthChange'	: false,
 			'searching'   	: false,
-			// 'ordering'    	: false,
-			'info'       	: false,
+			'ordering'    	: false,
+			'info'       	: true,
 			'autoWidth'		: false,
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
@@ -473,6 +496,7 @@ td:hover {
 			"infoCallback": function( settings, start, end, max, total, pre ) {
 				return " Total "+ total +" pc(s)";
 			},
+			"dom": '<"top"i>rt<"bottom"flp><"clear">',
 			"processing": true,
 			"serverSide": true,
 			"ajax": {
@@ -481,17 +505,31 @@ td:hover {
 				"data": data_flo
 			},
 			"columns": [
-			{ "data": "id",
-			render: function (data, type, row, meta) {
-				return meta.row + meta.settings._iDisplayStart + 1;
-			}, "sWidth": "2%" },
-			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "60%" },
-			{ "data": "quantity", "sWidth": "5%" },
+			// { "data": "id", 
+			// render: function() {
+			// 	var rows = t.rows().count();
+
+			// 	t.column(0).nodes().each(function(cell, i) {
+			// 		cell.innerHTML = rows--;
+			// 	});
+			// }, "sWidth": "2%" },
 			{ "data": "serial_number", "sWidth": "14%" },
+			{ "data": "material_number", "sWidth": "12%" },
+			{ "data": "material_description", "sWidth": "62%" },
+			{ "data": "quantity", "sWidth": "5%" },
 			{ "data": "action", "sWidth": "4%" }
 			]
 		});
+
+		// t.on('order.dt search.dt', function() {
+		// 	var rows = t.rows().count();
+		// 	t.column(0, {
+		// 		search: 'applied',
+		// 		order: 'applied'
+		// 	}).nodes().each(function(cell, i) {
+		// 		cell.innerHTML = rows--;
+		// 	});
+		// }).draw();
 	}
 
 	function fillFloTableSettlement(){
@@ -552,10 +590,12 @@ td:hover {
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						audio_error.play();
 					}
 				}
 				else{
 					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
 				}
 			});
 		}
@@ -582,10 +622,12 @@ td:hover {
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						audio_error.play();
 					}
 				}
 				else{
 					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
 				}
 			});
 		}

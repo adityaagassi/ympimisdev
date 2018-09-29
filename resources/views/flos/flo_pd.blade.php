@@ -103,11 +103,11 @@ input[type=number] {
 									<table id="flo_detail_table" class="table table-bordered table-striped">
 										<thead>
 											<tr>
-												<th style="font-size: 14">#</th>
+												{{-- <th style="font-size: 14">#</th> --}}
+												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Material</th>
 												<th style="font-size: 14">Description</th>
 												<th style="font-size: 14">Qty</th>
-												<th style="font-size: 14">Serial</th>
 												<th style="font-size: 14">Del.</th>
 											</tr>
 										</thead>
@@ -228,6 +228,8 @@ input[type=number] {
 			}
 		});
 
+		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
 		// if($('#flo_number').val() != ""){
 		// 	$('#flo_detail_table').DataTable().destroy();
 		// 	fillFloTable($("#flo_number").val());
@@ -270,6 +272,7 @@ input[type=number] {
 				}
 				else{
 					openErrorGritter('Error!', 'Material number invalid.');
+					audio_error.play();
 					$("#material_number").val("");
 				}
 			}
@@ -283,6 +286,7 @@ input[type=number] {
 				}
 				else{
 					openErrorGritter('Error!', 'FLO number invalid.');
+					audio_error.play();
 					$("#flo_number_settlement").val("");
 				}
 			}
@@ -335,6 +339,7 @@ input[type=number] {
 							}
 							else{
 								openErrorGritter('Error!', 'Disconnected from server');
+								audio_error.play();
 								$("#material_number").val("");
 							}
 						});
@@ -367,11 +372,13 @@ input[type=number] {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					audio_error.play();
 					$("#material_number").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
 				$("#material_number").val("");
 			}
 		});
@@ -400,11 +407,13 @@ input[type=number] {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					audio_error.play();
 					$("#flo_number_settlement").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
 				$("#flo_number_settlement").val("");
 			}
 		});
@@ -419,8 +428,8 @@ input[type=number] {
 			'paging'      	: false,
 			'lengthChange'	: false,
 			'searching'   	: false,
-			// 'ordering'    	: false,
-			'info'       	: false,
+			'ordering'    	: false,
+			'info'       	: true,
 			'autoWidth'		: false,
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
@@ -436,14 +445,14 @@ input[type=number] {
 				"data": data_flo
 			},
 			"columns": [
-			{ "data": "id",
-			render: function (data, type, row, meta) {
-				return meta.row + meta.settings._iDisplayStart + 1;
-			}, "sWidth": "2%" },
-			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "60%" },
-			{ "data": "quantity", "sWidth": "5%" },
+			// { "data": "id",
+			// render: function (data, type, row, meta) {
+			// 	return meta.row + meta.settings._iDisplayStart + 1;
+			// }, "sWidth": "2%" },
 			{ "data": "serial_number", "sWidth": "14%" },
+			{ "data": "material_number", "sWidth": "12%" },
+			{ "data": "material_description", "sWidth": "62%" },
+			{ "data": "quantity", "sWidth": "5%" },
 			{ "data": "action", "sWidth": "4%" }
 			]
 		});
@@ -501,10 +510,12 @@ input[type=number] {
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						audio_error.play();
 					}
 				}
 				else{
 					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
 				}
 			});
 		}
@@ -537,10 +548,12 @@ input[type=number] {
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						audio_error.play();
 					}
 				}
 				else{
 					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
 				}
 			});
 		}

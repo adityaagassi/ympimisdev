@@ -26,45 +26,6 @@ class FloController extends Controller
         $this->middleware('auth');
     }
 
-    public function export_trial(){
-        return view('trials.export');
-    }
-
-    public function trial(Request $request){
-
-        $query = "SELECT weekly_calendars.week_name, DATE_FORMAT(flo_details.created_at, '%Y-%m-%d') as production_date, hpl, shipment_schedules.material_number, materials.material_description, sum(flo_details.quantity) as qty FROM flo_details LEFT JOIN weekly_calendars on weekly_calendars.week_date = DATE_FORMAT(flo_details.created_at, '%Y-%m-%d') LEFT JOIN flos on flos.flo_number = flo_details.flo_number LEFT JOIN shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id LEFT JOIN materials on materials.material_number = shipment_schedules.material_number WHERE DATE_FORMAT(flo_details.created_at, '%Y-%m-%d') = :pd_date GROUP BY weekly_calendars.week_name, production_date, hpl, shipment_schedules.material_number, materials.material_description";
-
-        $flo_details = DB::select($query, ['pd_date' => $request->get('production_date')]);
-
-        if(count($flo_details)>0){
-            $year = date("Y");
-            $month = date("m");
-            $date = date("d");
-            $hour = date("H");
-            $minute = date("i");
-            $second = date("s");
-            $filename = "production_" . $year . $month . $date . $hour . $minute . $second . ".txt";
-            $text = "";
-            $index = 1;
-            $filepath = public_path() . "/outputs/" . $filename;
-
-            foreach ($flo_details as $flo_detail) {
-                $text .= $flo_detail->week_name."\t";
-                $text .= $flo_detail->production_date."\t";
-                $text .= $flo_detail->hpl."\t";
-                $text .= $flo_detail->material_number."\t";
-                $text .= $flo_detail->material_description."\t";
-                $text .= $flo_detail->qty."\t";
-                if ($index < count($flo_details)) {
-                    $text .= "\r\n";
-                }
-                $index++;
-            }
-            File::put($filepath, $text);
-            return Response::download($filepath)->deleteFileAfterSend(true);
-        }
-    }
-
     public function index($id){
 
         if($id == 'sn'){
@@ -102,24 +63,6 @@ class FloController extends Controller
 
  }
 
-    // public function index_pd(){
-    //     $flos = Flo::orderBy('flo_number', 'asc')
-    //     ->where('status', '=', 0)
-    //     ->get();
-    //     return view('flos.flo_pd', array(
-    //         'flos' => $flos
-    //     ))->with('page', 'FLO Production Date');
-    // }
-
-    // public function index_delivery(){
-    //     $flos = Flo::orderBy('flo_number', 'asc')
-    //     ->where('status', '=', 1)
-    //     ->get();
-    //     return view('flos.flo_delivery', array(
-    //         'flos' => $flos
-    //     ))->with('page', 'FLO Delivery');
-    // }
-
  public function index_flo_detail(Request $request){
     $flo_details = DB::table('flo_details')
     ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
@@ -128,6 +71,7 @@ class FloController extends Controller
     ->where('flo_details.flo_number', '=', $request->get('flo_number'))
     ->where('flos.status', '=', 0)
     ->select('shipment_schedules.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.id', 'flo_details.quantity')
+    ->orderBy('flo_details.id', 'DESC')
     ->get();
 
     return DataTables::of($flo_details)

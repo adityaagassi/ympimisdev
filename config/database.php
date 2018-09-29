@@ -56,9 +56,9 @@ return [
 
         'mysql2' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' => '172.17.128.114',
             'port' => '3306',
-            'database' => 'ympi-produksi',
+            'database' => 'ympi-produksi-shipment2',
             'username' => 'root',
             'password' => '',
             'unix_socket' => '',
