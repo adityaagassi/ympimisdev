@@ -15,14 +15,15 @@ class CreateContainerSchedulesTable extends Migration
     {
         Schema::create('container_schedules', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('container_id')->unique();
             $table->string('container_code');
             $table->string('destination_code');
-            $table->integer('quantity');
             $table->date('shipment_date');
+            $table->string('container_number')->nullable();
+            $table->string('att')->nullable();
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['container_code', 'destination_code', 'shipment_date'], 'container_schedule_unique');
         });
     }
 

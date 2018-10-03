@@ -46,11 +46,13 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
+                    <th>Cont. ID</th>
                     <th>Cont. Code</th>
-                    <th>Dest. Code</th>
                     <th>Dest. Name</th>
                     <th>Shipment Date</th>
-                    <th>Qty</th>
+                    <th>Week</th>
+                    <th>Container Number</th>
+                    <th>att</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -59,17 +61,31 @@
                   <tbody>
                     @foreach($container_schedules as $container_schedule)
                     <tr>
+                      <td style="font-size: 14">{{$container_schedule->container_id}}</td>
                       <td style="font-size: 14">{{$container_schedule->container_code}}</td>
-                      <td style="font-size: 14">{{$container_schedule->destination_code}}</td>
                       <td style="font-size: 14">
-                        @if(isset($container_schedule->destination->destination_name))
-                        {{$container_schedule->destination->destination_name}}
+                        @if(isset($container_schedule->destination->destination_shortname))
+                        {{$container_schedule->destination->destination_shortname}}
                         @else
                         Not registered
                         @endif
                       </td>
                       <td style="font-size: 14">{{$container_schedule->shipment_date}}</td>
-                      <td style="font-size: 14">{{$container_schedule->quantity}}</td>
+                      <td style="font-size: 14">
+                        @if(isset($container_schedule->weekly_calendar->week_name))
+                        {{$container_schedule->weeklycalendar->week_name}}
+                        @else
+                        Not registered
+                        @endif
+                      </td>
+                      <td style="font-size: 14">
+                        @if($container_schedule->container_number != null)
+                        {{$container_schedule->container_number}}
+                        @else
+                        -
+                        @endif
+                      </td>
+                      <td style="font-size: 14">{{$container_schedule->att}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

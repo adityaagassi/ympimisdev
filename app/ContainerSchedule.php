@@ -10,7 +10,7 @@ class ContainerSchedule extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'container_code', 'destination_code', 'quantity', 'shipment_date', 'created_by'
+		'container_id', 'container_code', 'destination_code', 'shipment_date', 'container_number', 'att', 'created_by'
 	];
 
 	public function user()
@@ -24,6 +24,10 @@ class ContainerSchedule extends Model
 	public function container()
 	{
 		return $this->belongsTo('App\Container', 'container_code', 'container_code')->withTrashed();
+	}
+	public function weeklycalendar()
+	{
+		return $this->belongsTo('App\WeeklyCalendar', 'shipment_date', 'week_date')->withTrashed();
 	}
     //
 }

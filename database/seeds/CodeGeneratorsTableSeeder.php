@@ -33,5 +33,16 @@ class CodeGeneratorsTableSeeder extends Seeder
               'updated_at' => date('Y-m-d H:i:s'),
           ]
         );
+        DB::table('code_generators')->insert(
+            [
+              'prefix' => '201809',
+              'length' => '2',
+              'index' => '0',
+              'note' => 'container',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+        );
     }
 }

@@ -13,65 +13,65 @@ class ContainerSchedulesTableSeeder extends Seeder
     {
     	DB::table('container_schedules')->insert(
         [
+          'container_id' => '20180901',
           'container_code' => 'F49',
           'destination_code' => 'Y1000Y',
-          'quantity' => '2',
-          'shipment_date' => '2018-08-31',
+          'shipment_date' => '2018-10-01',
           'created_by' => '1',
           'created_at' => date('Y-m-d H:i:s'),
           'updated_at' => date('Y-m-d H:i:s'),
         ]
       );
-    	DB::table('container_schedules')->insert(
+      DB::table('container_schedules')->insert(
         [
+          'container_id' => '20180902',
+          'container_code' => 'F49',
+          'destination_code' => 'Y1000YJ',
+          'shipment_date' => '2018-10-01',
+          'created_by' => '1',
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]
+      );
+      DB::table('container_schedules')->insert(
+        [
+          'container_id' => '20180903',
           'container_code' => 'F49',
           'destination_code' => 'Y31507',
-          'quantity' => '1',
-          'shipment_date' => '2018-08-31',
+          'shipment_date' => '2018-10-02',
           'created_by' => '1',
           'created_at' => date('Y-m-d H:i:s'),
           'updated_at' => date('Y-m-d H:i:s'),
         ]
       );
-    	DB::table('container_schedules')->insert(
+      DB::table('container_schedules')->insert(
         [
+          'container_id' => '20180904',
           'container_code' => 'F49',
-          'destination_code' => 'Y81804',
-          'quantity' => '3',
-          'shipment_date' => '2018-08-31',
+          'destination_code' => 'Y70801',
+          'shipment_date' => '2018-10-02',
           'created_by' => '1',
           'created_at' => date('Y-m-d H:i:s'),
           'updated_at' => date('Y-m-d H:i:s'),
         ]
       );
-    	DB::table('container_schedules')->insert(
+      DB::table('container_schedules')->insert(
         [
-          'container_code' => 'F49',
-          'destination_code' => 'Y1000Y',
-          'quantity' => '1',
-          'shipment_date' => '2018-08-24',
-          'created_by' => '1',
-          'created_at' => date('Y-m-d H:i:s'),
-          'updated_at' => date('Y-m-d H:i:s'),
-        ]
-      );
-    	DB::table('container_schedules')->insert(
-        [
+          'container_id' => '20180905',
           'container_code' => 'F49',
           'destination_code' => 'Y31507',
-          'quantity' => '1',
-          'shipment_date' => '2018-08-24',
+          'shipment_date' => '2018-10-02',
           'created_by' => '1',
           'created_at' => date('Y-m-d H:i:s'),
           'updated_at' => date('Y-m-d H:i:s'),
         ]
       );
-    	DB::table('container_schedules')->insert(
+      DB::table('container_schedules')->insert(
         [
+          'container_id' => '20180906',
           'container_code' => 'F49',
-          'destination_code' => 'Y81804',
-          'quantity' => '2',
-          'shipment_date' => '2018-08-24',
+          'destination_code' => 'Y81107',
+          'shipment_date' => '2018-10-02',
           'created_by' => '1',
           'created_at' => date('Y-m-d H:i:s'),
           'updated_at' => date('Y-m-d H:i:s'),

@@ -29,6 +29,12 @@
     <form role="form">
       <div class="box-body">
         <div class="form-group row" align="right">
+          <label class="col-sm-5">Container ID</label>
+          <div class="col-sm-5" align="left">
+            {{$container_schedule->container_id}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-5">Container Code</label>
           <div class="col-sm-5" align="left">
             {{$container_schedule->container_code}}
@@ -67,9 +73,13 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Quantity</label>
+          <label class="col-sm-5">Week</label>
           <div class="col-sm-5" align="left">
-            {{$container_schedule->quantity}} unit(s)
+            @if(isset($container_schedule->weeklycalendar->week_name))
+            {{$container_schedule->weeklycalendar->week_name}}
+            @else
+            Not registered.
+            @endif
           </div>
         </div>
         <div class="form-group row" align="right">

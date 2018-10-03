@@ -67,7 +67,8 @@ td:hover {
 											<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ (CL & SAX Only)&nbsp;<i class="fa fa-exclamation"></i></span>
 										</label>
 									</div>
-									&nbsp;
+									<br>
+									<i style="font-weight: bold">Inner Box</i>
 									<div class="input-group col-md-12">
 										<div class="input-group-addon" id="icon-material">
 											<i class="glyphicon glyphicon-barcode"></i>
@@ -81,11 +82,25 @@ td:hover {
 										</div>
 										<input type="text" style="text-align: center" class="form-control" id="serial_number" name="serial_number" placeholder="Serial Number" required>
 									</div>
+									<br>
+									<i style="font-weight: bold" id='icon-box2'>Outer Box</i>
+									<div class="input-group col-md-12">
+										<div class="input-group-addon" id="icon-material2">
+											<i class="glyphicon glyphicon-barcode"></i>
+										</div>
+										<input type="text" style="text-align: center" class="form-control" id="material_number2" name="material_number2" placeholder="Material Number" required>
+									</div>
+									&nbsp;
+									<div class="input-group col-md-12">
+										<div class="input-group-addon" id="icon-serial2">
+											<i class="glyphicon glyphicon-barcode"></i>
+										</div>
+										<input type="text" style="text-align: center" class="form-control" id="serial_number2" name="serial_number2" placeholder="Serial Number" required>
+									</div>
 								</div>
 								<div class="col-md-9">
 									<div class="input-group col-md-8 col-md-offset-2">
-										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-											FLO
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">FLO
 										</div>
 										<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number" name="flo_number" placeholder="Not Available" required>
 										<div class="input-group-addon" id="icon-serial">
@@ -126,6 +141,7 @@ td:hover {
 				<!-- /.box-header -->
 				<div class="box-body">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<input type="hidden" value="{{ $user->username }}" id="username" />
 					<div class="row">
 						<div class="col-md-12">
 							<div class="input-group col-md-8 col-md-offset-2">
@@ -164,7 +180,7 @@ td:hover {
 		<!-- /.col -->
 	</div>
 	<!-- /.row -->
-	<div class="modal modal-default fade" id="reprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -275,6 +291,44 @@ td:hover {
 			}
 		});
 
+		$('#material_number2').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#material_number2").val().length == 7 && $("#material_number").val() == $("#material_number2").val()){
+					openSuccessGritter('Success!', 'Outer box material number valid.');
+					$('#material_number2').prop('disabled', true);
+					$('#serial_number2').prop('disabled', false);
+					$('#serial_number2').focus();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Outer box material number invalid.');
+					audio_error.play();
+					$("#material_number2").val("");
+				}
+			}
+		});
+
+		$('#serial_number2').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#serial_number2").val().length == 8 && $("#serial_number2").val() == $("#serial_number").val()){
+					openSuccessGritter('Success!', 'Outer box serial number valid.');
+					$("#material_number").prop('disabled', false);
+					$("#serial_number2").prop('disabled', true);
+					$("#serial_number").val("");
+					$("#material_number").val("");
+					$("#serial_number2").val("");
+					$("#material_number2").val("");
+					$("#material_number").focus();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Outer box serial number invalid.');
+					audio_error.play();
+					$("#serial_number2").val("");
+				}
+			}
+		});
+
 		$('#serial_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
 				if($("#serial_number").val().length == 8){
@@ -374,10 +428,6 @@ td:hover {
 			if(xhr.status == 200){
 				if(result.status){
 					openSuccessGritter('Success!', result.message);
-					$("#material_number").prop('disabled',false);
-					$("#serial_number").prop('disabled',true);
-					$("#serial_number").val("");
-					$("#material_number").val("");
 					if(result.code_status == 1002){
 						$("#flo_number").val(result.flo_number);
 						$('#flo_detail_table').DataTable().destroy();
@@ -386,7 +436,7 @@ td:hover {
 					else{
 						$('#flo_detail_table').DataTable().ajax.reload();
 					}
-					$("#material_number").focus();
+					doublecheck();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
@@ -604,6 +654,21 @@ td:hover {
 		}
 	}
 
+	function doublecheck(){
+		if($('#username').val() == 'superman'){
+			$("#serial_number").prop('disabled', true);
+			$("#material_number2").prop('disabled', false);
+			$("#material_number2").focus();
+		}
+		else{
+			$("#material_number").prop('disabled', false);
+			$("#serial_number").prop('disabled', true);
+			$("#serial_number").val("");
+			$("#material_number").val("");
+			$("#material_number").focus();
+		}
+	}
+
 	function cancelConfirmation(id){
 		var flo_number = $("#flo_number_settlement").val(); 
 		var data = {
@@ -639,13 +704,28 @@ td:hover {
 	function refresh(){
 		$("#flo_number_reprint").val("").change();
 		$("#serial_number").val("");
+		$("#serial_number2").prop('disabled', true);
+		$("#material_number2").prop('disabled', true);
 		$("#serial_number").prop('disabled', true);
 		$("#flo_number").prop('disabled', true);
-		$("#material_number").val("");
+		$("#material_number").val('');
 		$('#flo_number').val('');
-		$("#flo_number_settlement").val("");
+		$("#flo_number_settlement").val('');
 		$("#material_number").prop('disabled', false);
 		$("#material_number").focus();
+		if($('#username').val() == 'superman'){
+			$("#serial_number2").prop('disabled', true);
+			$("#material_number2").prop('disabled', true);
+			$("#serial_number2").val('');
+			$("#material_number2").val('');
+		}
+		else{
+			$("#serial_number2").hide();
+			$("#material_number2").hide();
+			$("#icon-serial2").hide();
+			$("#icon-material2").hide();
+			$("#icon-box2").hide();
+		}
 	}
 
 </script>

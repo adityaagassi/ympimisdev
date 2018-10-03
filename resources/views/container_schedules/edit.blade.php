@@ -40,66 +40,63 @@
     <form role="form" method="post" action="{{url('edit/container_schedule', $container_schedule->id)}}">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Container<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="container_code" style="width: 100%;" data-placeholder="Choose a Container Code..." required>
-              @foreach($containers as $container)
-              @if($container_schedule->container_code == $container->container_code)
-              <option value="{{ $container->container_code }}" selected>{{ $container->container_code }} - {{ $container->container_name }}</option>
-              @else
-              <option value="{{ $container->container_code }}">{{ $container->container_code }} - {{ $container->container_name }}</option>
-              @endif
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="destination_code" style="width: 100%;" data-placeholder="Choose a Destination Code..." required>
-              @foreach($destinations as $destination)
-              @if($container_schedule->destination_code == $destination->destination_code)
-              <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
-              @else
-              <option value="{{ $destination->destination_code }}">{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
-              @endif
-              @endforeach
-            </select>
-          </div>
-        </div>
+
         <div class="form-group row" align="right">
           <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
-           <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" value="{{ $container_schedule->shipment_date }}" required>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          </div>
+            <input type="text" class="form-control" name="container_id" placeholder="Enter Container ID" value="{{ $container_schedule->container_id }}" required disabled>
+        </div>
+      </div>
+      <div class="form-group row" align="right">
+        <label class="col-sm-4">Container<span class="text-red">*</span></label>
+        <div class="col-sm-4" align="left">
+          <select class="form-control select2" name="container_code" style="width: 100%;" data-placeholder="Choose a Container Code..." required>
+            @foreach($containers as $container)
+            @if($container_schedule->container_code == $container->container_code)
+            <option value="{{ $container->container_code }}" selected>{{ $container->container_code }} - {{ $container->container_name }}</option>
+            @else
+            <option value="{{ $container->container_code }}">{{ $container->container_code }} - {{ $container->container_name }}</option>
+            @endif
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="form-group row" align="right">
+        <label class="col-sm-4">Destination<span class="text-red">*</span></label>
+        <div class="col-sm-4" align="left">
+          <select class="form-control select2" name="destination_code" style="width: 100%;" data-placeholder="Choose a Destination Code..." required>
+            @foreach($destinations as $destination)
+            @if($container_schedule->destination_code == $destination->destination_code)
+            <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
+            @else
+            <option value="{{ $destination->destination_code }}">{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
+            @endif
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="form-group row" align="right">
+        <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
+        <div class="col-sm-4">
+         <div class="input-group">
+          <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" value="{{ $container_schedule->shipment_date }}" required>
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
       </div>
     </div>
-    <div class="form-group row" align="right">
-      <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
-      <div class="col-sm-4">
-        <div class="input-group">
-          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $container_schedule->quantity }}" required>
-          <span class="input-group-addon">unit(s)</span>
-        </div>
-      </div>
+  </div>
+  <!-- /.box-body -->
+  <div class="box-footer form-group row">
+    <div class="col-sm-4"></div>
+    <div class="btn-group">
+      <a class="btn btn-danger col-sm-14" href="{{ url('index/container_schedule') }}">Cancel</a>
     </div>
-    <!-- /.box-body -->
-    <div class="box-footer form-group row">
-      <div class="col-sm-4"></div>
-      <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/container_schedule') }}">Cancel</a>
-      </div>
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-      </div>
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
     </div>
-  </form>
+  </div>
 </div>
-
+</form>
 </div>
 
 @endsection

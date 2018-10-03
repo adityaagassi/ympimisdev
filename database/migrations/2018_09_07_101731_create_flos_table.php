@@ -17,7 +17,7 @@ class CreateFlosTable extends Migration
             $table->increments('id');
             $table->string('flo_number')->unique();
             $table->string('invoice_number')->nullable();
-            $table->string('container_number')->nullable();
+            $table->string('container_id')->nullable();
             $table->date('bl_date')->nullable();
             $table->integer('shipment_schedule_id');
             $table->double('quantity')->default('0');

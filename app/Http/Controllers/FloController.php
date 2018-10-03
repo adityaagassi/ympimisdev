@@ -10,6 +10,7 @@ use App\CodeGenerator;
 use App\MaterialVolume;
 use App\Flo;
 use App\FloDetail;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
@@ -28,12 +29,16 @@ class FloController extends Controller
 
     public function index($id){
 
+        $user = User::where('id', Auth::id())
+        ->first();
+
         if($id == 'sn'){
             $flos = Flo::orderBy('flo_number', 'asc')
             ->where('status', '=', 0)
             ->get();
             return view('flos.flo_sn', array(
-                'flos' => $flos
+                'flos' => $flos,
+                'user' => $user,
             ))->with('page', 'FLO Serial Number');
         }
         elseif($id == 'pd'){
@@ -174,6 +179,9 @@ public function scan_material_number(Request $request){
 
 public function scan_serial_number(Request $request)
 {
+    $material_volume = MaterialVolume::where('material_number', '=', $request->get('material_number'))->first();
+    $actual = $material_volume->lot_completion;
+    
     $id = Auth::id();
     
     if(Auth::user()->username == "Assy-FL"){
@@ -211,9 +219,6 @@ public function scan_serial_number(Request $request)
         $serial_number = $code_generator_pd->prefix . $number_pd+1;
 
     }
-
-    $material_volume = MaterialVolume::where('material_number', '=', $request->get('material_number'))->first();
-    $actual = $material_volume->lot_completion;
 
     try{
         if($request->get('flo_number') == ""){
@@ -263,6 +268,31 @@ public function scan_serial_number(Request $request)
                 $flo_number = $code_generator->prefix . $number+1;
 
                 try {
+
+                    $code_generator->index = $code_generator->index+1;
+                    $code_generator->save();
+
+                    if($request->get('type') == 'pd'){
+                        $code_generator_pd->index = $code_generator_pd->index+1;
+                        $code_generator_pd->save(); 
+                    }
+
+                    $flo = new Flo([
+                        'flo_number' => $flo_number,
+                        'shipment_schedule_id' => $shipment_schedule->id,
+                        'quantity' => $shipment_schedule->flo_quantity,
+                        'actual' => $actual,
+                        'created_by' => $id
+                    ]);
+                    $flo->save();
+
+                    $flo_detail = new FloDetail([
+                        'serial_number' =>  $serial_number,
+                        'flo_number' => $flo_number,
+                        'quantity' => $actual,
+                        'created_by' => $id
+                    ]);
+                    $flo_detail->save();
 
                     $connector = new WindowsPrintConnector($printer_name);
 
@@ -328,31 +358,6 @@ public function scan_serial_number(Request $request)
                     $printer->feed(2);
                     $printer->cut();
                     $printer->close();
-
-                    $flo = new Flo([
-                        'flo_number' => $flo_number,
-                        'shipment_schedule_id' => $shipment_schedule->id,
-                        'quantity' => $shipment_schedule->flo_quantity,
-                        'actual' => $actual,
-                        'created_by' => $id
-                    ]);
-                    $flo->save();
-
-                    $flo_detail = new FloDetail([
-                        'serial_number' =>  $serial_number,
-                        'flo_number' => $flo_number,
-                        'quantity' => $actual,
-                        'created_by' => $id
-                    ]);
-                    $flo_detail->save();
-
-                    $code_generator->index = $code_generator->index+1;
-                    $code_generator->save();
-
-                    if($request->get('type') == 'pd'){
-                        $code_generator_pd->index = $code_generator_pd->index+1;
-                        $code_generator_pd->save(); 
-                    }
 
                     $response = array(
                         'status' => true,

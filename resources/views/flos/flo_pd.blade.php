@@ -171,7 +171,7 @@ input[type=number] {
 		<!-- /.col -->
 	</div>
 	<!-- /.row -->
-	<div class="modal modal-default fade" id="reprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

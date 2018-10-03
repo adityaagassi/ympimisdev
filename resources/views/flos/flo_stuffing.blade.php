@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 @stop
 @section('header')
 <section class="content-header">
@@ -44,20 +45,33 @@
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<div class="row">
 						<div class="col-md-12">
-							<div class="input-group col-md-4 col-md-offset-4">
-								<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-									<i class="glyphicon glyphicon-list-alt"></i>
+							<div class="col-md-6 col-md-offset-3">
+								<div class="col-md-10">
+									<div class="input-group">
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+											<i class="glyphicon glyphicon-list-alt"></i>
+										</div>
+										<input type="text" style="text-align: center; font-size: 22" class="form-control" id="invoice_number" name="invoice_number" placeholder="Invoice Number..." required>
+									</div>
+									<br>
 								</div>
-								<input type="text" style="text-align: center; font-size: 22" class="form-control" id="invoice_number" name="invoice_number" placeholder="Invoice Number..." required>
 							</div>
-							<br>
-							<div class="input-group col-md-4 col-md-offset-4">
-								<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-									<i class="fa fa-bus"></i>
+							<div class="col-md-6 col-md-offset-3">
+								<div class="col-md-10">
+									<div class="input-group">
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+											<i class="fa fa-bus"></i>
+										</div>
+										<input type="text" style="text-align: center; font-size: 22" class="form-control" id="container_number" name="container_number" placeholder="Container Number..." required>
+									</div>
+									<br>
 								</div>
-								<input type="text" style="text-align: center; font-size: 22" class="form-control" id="container_number" name="container_number" placeholder="Container Number..." required>
+								<div class="col-md-2">
+									<input id="toggle_lock" data-toggle="toggle" data-on="Lock" data-off="Open" type="checkbox">
+								</div>
 							</div>
-							<br>
+						</div>
+						<div class="col-md-12">
 							<div class="input-group col-md-8 col-md-offset-2">
 								<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
 									<i class="glyphicon glyphicon-barcode"></i>
@@ -70,8 +84,24 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>	
-	</div>
-</section>
-@stop
+			</div>	
+		</div>
+	</section>
+	@stop
+
+	@section('scripts')
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
+	<script>
+		jQuery(document).ready(function() {
+			$('#toggle_lock').change(function(){
+				if(this.checked){
+					alert('lock');
+				}
+				else{
+					alert('open');
+				}
+			});
+		});
+	</script>
+	@stop
