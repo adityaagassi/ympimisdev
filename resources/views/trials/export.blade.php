@@ -40,6 +40,7 @@
 							</div>
 						</div>
 					</form>
+					<a href="{{ url("trial/timezone")}}" class="btn btn-primary btn-sm" style="color:white">Create Trials</a>
 				</div>
 			</div>
 		</div>

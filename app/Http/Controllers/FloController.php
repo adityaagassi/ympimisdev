@@ -10,6 +10,7 @@ use App\CodeGenerator;
 use App\MaterialVolume;
 use App\Flo;
 use App\FloDetail;
+use App\ContainerSchedule;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -61,11 +62,20 @@ class FloController extends Controller
          $flos = Flo::orderBy('flo_number', 'asc')
          ->where('status', '=', 2)
          ->get();
+
+         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+         ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+         ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+         ->get();
+
          return view('flos.flo_stuffing', array(
-            'flos' => $flos
+            'flos' => $flos,
+            'container_schedules' => $container_schedules,
         ))->with('page', 'FLO Stuffing');
      }
-
+     elseif ($id == 'container') {
+         return view('flos.flo_container')->with('page', 'Container');
+     }
  }
 
  public function index_flo_detail(Request $request){
@@ -93,7 +103,8 @@ public function index_flo(Request $request){
     ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
     ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
     ->where('flos.status', '=', $request->get('status'))
-    ->select('flos.flo_number', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'materials.material_number', 'materials.material_description', 'flos.actual', 'flos.id')
+    ->whereNull('flos.bl_date')
+    ->select('flos.flo_number', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'materials.material_number', 'materials.material_description', 'flos.actual', 'flos.id', 'flos.invoice_number', 'flos.invoice_number', 'flos.container_id')
     ->get();
 
     return DataTables::of($flos)
@@ -101,6 +112,42 @@ public function index_flo(Request $request){
         return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="cancelConfirmation(id)" id="' . $flos->id . '"><i class="glyphicon glyphicon-remove-sign"></i></a>';
     })
     ->make(true);
+}
+
+public function index_container(Request $request){
+    $level = Auth::user()->level_id;
+    $invoices = DB::table('flos')
+    ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+    ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+    ->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
+    ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
+    ->whereNotNull('flos.invoice_number')
+    ->select('container_schedules.container_id', 'container_schedules.container_code', 'destinations.destination_shortname', 'container_schedules.shipment_date', 'shipment_conditions.shipment_condition_name', 'container_schedules.container_number')
+    ->get();
+
+    return DataTables::of($invoices)
+    ->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="attConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
+    ->make(true);
+}
+
+public function fetch_container_att(Request $request){
+    $container_id = $request->input('id');
+    $container_schedule = ContainerSchedule::where('container_id', '=', $container_id)->first();
+
+    $output = array(
+        'container_id' => $container_schedule->container_id,
+        'container_number' => $container_schedule->container_number,
+    );
+
+    echo json_encode($output);
+}
+
+public function update_container_att(Request $request){
+    $output = array(
+        'tes1' => $request->get('container_number'),
+        'tes2' => $request->get('container_id'),
+    );
+    return Response::json($output);
 }
 
 public function scan_material_number(Request $request){
@@ -117,7 +164,6 @@ public function scan_material_number(Request $request){
         $flo = DB::table('flos')
         ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
         ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
-        ->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
         ->where('flos.status', '=', '0')
         ->where(DB::raw('flos.quantity-flos.actual'), '>', 0)
         ->first();
@@ -181,9 +227,9 @@ public function scan_serial_number(Request $request)
 {
     $material_volume = MaterialVolume::where('material_number', '=', $request->get('material_number'))->first();
     $actual = $material_volume->lot_completion;
-    
+
     $id = Auth::id();
-    
+
     if(Auth::user()->username == "Assy-FL"){
         $printer_name = 'FLO Printer 101';
     }
@@ -483,6 +529,7 @@ public function reprint_flo(Request $request)
     ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
     ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
     ->where('flos.flo_number', '=', $request->get('flo_number_reprint'))
+    ->whereNull('flos.bl_date')
     ->select('flos.flo_number', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'shipment_schedules.material_number', 'materials.material_description')
     ->first();
 
@@ -629,6 +676,12 @@ public function flo_settlement(Request $request)
     if($flo != null){
 
         $flo->status = $request->get('status');
+
+        if($request->get('status') == 3){
+            $flo->invoice_number = $request->get('invoice_number');
+            $flo->container_id = $request->get('container_id');
+        }
+
         $flo->save();
 
         $response = array(
@@ -636,7 +689,6 @@ public function flo_settlement(Request $request)
             'message' => "FLO " . $request->get('flo_number') . " has been settled.<br>FLO" . $request->get('flo_number') ."完了",
         );
         return Response::json($response);
-
     }
     else{
         $response = array(
@@ -646,5 +698,4 @@ public function flo_settlement(Request $request)
         return Response::json($response);
     }
 }
-
 }

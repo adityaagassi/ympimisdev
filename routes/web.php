@@ -146,11 +146,11 @@ Route::post('edit/status/{id}', 'StatusController@update');
 Route::get('show/status/{id}', 'StatusController@show');
 
 Route::get('index/flo_view/{id}', 'FloController@index');
-// Route::get('index/flo_pd', 'FloController@index_pd');
-// Route::get('index/flo_delivery', 'FloController@index_delivery');
-
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
 Route::post('index/flo', 'FloController@index_flo');
+Route::post('index/flo_container', 'FloController@index_container');
+Route::get('fetch/container_att', 'FloController@fetch_container_att');
+Route::post('update/container_att', 'FloController@update_container_att');
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
@@ -160,12 +160,9 @@ Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
 
 
-
-
-
-
 Route::get('index/trial_export', 'TrialController@trial_index');
 Route::post('export/trial', 'TrialController@trial_export');
 
 Route::get('trial/perolehan', 'TrialController@trial_perolehan');
 Route::get('trial/shipment', 'TrialController@trial_shipment');
+Route::get('trial/timezone', 'TrialController@timezone');

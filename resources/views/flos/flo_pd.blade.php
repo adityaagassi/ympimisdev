@@ -228,8 +228,6 @@ input[type=number] {
 			}
 		});
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
 		// if($('#flo_number').val() != ""){
 		// 	$('#flo_detail_table').DataTable().destroy();
 		// 	fillFloTable($("#flo_number").val());
@@ -293,6 +291,8 @@ input[type=number] {
 		});
 
 	});
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanMaterialNumber(){
 		var material_number = $("#material_number").val();
@@ -466,6 +466,7 @@ input[type=number] {
 			'paging'      	: true,
 			'lengthChange'	: true,
 			'searching'   	: true,
+			'order'       : [],
 			'ordering'    	: true,
 			'info'       	: true,
 			'autoWidth'		: true,

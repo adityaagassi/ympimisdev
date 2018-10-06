@@ -64,7 +64,7 @@ td:hover {
 										<label>
 											<input type="checkbox" class="minimal-red" id="ymj">&nbsp;<i class="fa fa-arrow-left text-red"></i>
 											<br>
-											<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ (CL & SAX Only)&nbsp;<i class="fa fa-exclamation"></i></span>
+											<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ &nbsp;<i class="fa fa-exclamation"></i></span>
 										</label>
 									</div>
 									<br>
@@ -215,7 +215,6 @@ td:hover {
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 
-
 	jQuery(document).ready(function() {
 		$(function () {
 			$('.select2').select2()
@@ -232,8 +231,6 @@ td:hover {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 		// if($('#flo_number').val() != ""){
 		// 	$('#flo_detail_table').DataTable().destroy();
@@ -362,6 +359,8 @@ td:hover {
 		});
 	});
 
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
 	function scanMaterialNumber(){
 		var material_number = $("#material_number").val();
 		var ymj = $("#ymj").is(":checked");
@@ -440,12 +439,12 @@ td:hover {
 				}
 				else{
 					openErrorGritter('Error!', result.message);
-					audio_error.play();
 					$("#material_number").val("");
 					$("#serial_number").val("");
 					$("#serial_number").prop("disabled", true);
 					$("#material_number").prop("disabled", false);
 					$("#material_number").focus();
+					audio_error.play();
 				}
 			}
 			else{
@@ -591,6 +590,7 @@ td:hover {
 			'lengthChange'	: true,
 			'searching'   	: true,
 			'ordering'    	: true,
+			'order'       : [],
 			'info'       	: true,
 			'autoWidth'		: true,
 			"sPaginationType": "full_numbers",
@@ -655,7 +655,7 @@ td:hover {
 	}
 
 	function doublecheck(){
-		if($('#username').val() == 'superman'){
+		if($('#username').val() == 'Assy-CL' || $('#username').val() == 'Assy-FL'){
 			$("#serial_number").prop('disabled', true);
 			$("#material_number2").prop('disabled', false);
 			$("#material_number2").focus();
@@ -713,7 +713,7 @@ td:hover {
 		$("#flo_number_settlement").val('');
 		$("#material_number").prop('disabled', false);
 		$("#material_number").focus();
-		if($('#username').val() == 'superman'){
+		if($('#username').val() == 'Assy-CL' || $('#username').val() == 'Assy-FL'){
 			$("#serial_number2").prop('disabled', true);
 			$("#material_number2").prop('disabled', true);
 			$("#serial_number2").val('');

@@ -150,11 +150,14 @@
         else{
           openErrorGritter('Error!', 'FLO number invalid.');
           $("#flo_number_settlement").val("");
+          audio_error.play();
         }
       }
     });
 
   });
+
+  var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
   function scanFloNumber(){
     var flo_number = $("#flo_number_settlement").val();
@@ -179,12 +182,14 @@
         }
         else{
           openErrorGritter('Error!', result.message);
-          $("#flo_number_settlement").val("");          
+          $("#flo_number_settlement").val("");
+          audio_error.play();          
         }
       }
       else{
         openErrorGritter('Error!', 'Disconnected from server');
         $("#flo_number_settlement").val("");
+        audio_error.play();
       }
 
     });
@@ -200,6 +205,7 @@
       'searching'     : true,
       'ordering'      : true,
       'info'        : true,
+      'order'       : [],
       'autoWidth'   : true,
       "sPaginationType": "full_numbers",
       "bJQueryUI": true,
@@ -275,10 +281,12 @@
           }
           else{
             openErrorGritter('Error!', result.message);
+            audio_error.play();
           }
         }
         else{
           openErrorGritter('Error!', 'Disconnected from server');
+          audio_error.play();
         }
       });
     }

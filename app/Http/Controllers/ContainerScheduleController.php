@@ -172,7 +172,7 @@ class ContainerScheduleController extends Controller
         $container_schedule = ContainerSchedule::find($id);
         $container_schedule->forceDelete();
 
-        return redirect('/index/container')
+        return redirect('/index/container_schedule')
         ->with('status', 'Container Schedule has been deleted.')
         ->with('page', 'Container Schedule');
         //

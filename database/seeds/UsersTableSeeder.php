@@ -12,7 +12,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-     DB::table('users')->insert(
+       DB::table('users')->insert(
         [
             'name' => 'Superman',
             'username' => 'superman',
@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
-     DB::table('users')->insert(
+       DB::table('users')->insert(
         [
             'name' => 'Assy-FL',
             'username' => 'Assy-FL',
@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
-     DB::table('users')->insert(
+       DB::table('users')->insert(
         [
             'name' => 'Assy-CL',
             'username' => 'Assy-CL',
@@ -48,11 +48,11 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
-     DB::table('users')->insert(
+       DB::table('users')->insert(
         [
             'name' => 'Assy-SX',
             'username' => 'Assy-SX',
-            'email' => 'anton@gmail.com',
+            'email' => 'Assy-SX@gmail.com',
             'password' => bcrypt('1234'),
             'level_id' => '4',
             'created_by' => '1',
@@ -60,5 +60,41 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
- }
+       DB::table('users')->insert(
+        [
+            'name' => 'Assy-EDIN',
+            'username' => 'Assy-EDIN',
+            'email' => 'Assy-EDIN@gmail.com',
+            'password' => bcrypt('1234'),
+            'level_id' => '5',
+            'created_by' => '1',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]
+    );
+       DB::table('users')->insert(
+        [
+            'name' => 'WH-Logistic',
+            'username' => 'WH-Logistic',
+            'email' => 'WH-Logistic@gmail.com',
+            'password' => bcrypt('1234'),
+            'level_id' => '6',
+            'created_by' => '1',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]
+    );
+       DB::table('users')->insert(
+        [
+            'name' => 'Logistic',
+            'username' => 'Logistic',
+            'email' => 'Logistic@gmail.com',
+            'password' => bcrypt('1234'),
+            'level_id' => '7',
+            'created_by' => '1',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]
+    );
+   }
 }
