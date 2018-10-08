@@ -11,6 +11,7 @@ use App\MaterialVolume;
 use App\Flo;
 use App\FloDetail;
 use App\ContainerSchedule;
+use App\ContainerAttachment;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -21,6 +22,7 @@ use DataTables;
 use Yajra\DataTables\Exception;
 use Response;
 use File;
+use Storage;
 
 class FloController extends Controller
 {
@@ -59,26 +61,26 @@ class FloController extends Controller
             ))->with('page', 'FLO Delivery');
         }
         elseif($id == 'stuffing'){
-         $flos = Flo::orderBy('flo_number', 'asc')
-         ->where('status', '=', 2)
-         ->get();
+           $flos = Flo::orderBy('flo_number', 'asc')
+           ->where('status', '=', 2)
+           ->get();
 
-         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
-         ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
-         ->where('shipment_date', '<=', DB::raw('last_day(now())'))
-         ->get();
+           $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+           ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+           ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+           ->get();
 
-         return view('flos.flo_stuffing', array(
+           return view('flos.flo_stuffing', array(
             'flos' => $flos,
             'container_schedules' => $container_schedules,
         ))->with('page', 'FLO Stuffing');
-     }
-     elseif ($id == 'container') {
-         return view('flos.flo_container')->with('page', 'Container');
-     }
- }
+       }
+       elseif ($id == 'container') {
+           return view('flos.flo_container')->with('page', 'FLO Container');
+       }
+   }
 
- public function index_flo_detail(Request $request){
+   public function index_flo_detail(Request $request){
     $flo_details = DB::table('flo_details')
     ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
@@ -114,7 +116,7 @@ public function index_flo(Request $request){
     ->make(true);
 }
 
-public function index_container(Request $request){
+public function index_flo_container(Request $request){
     $level = Auth::user()->level_id;
     $invoices = DB::table('flos')
     ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
@@ -126,28 +128,102 @@ public function index_container(Request $request){
     ->get();
 
     return DataTables::of($invoices)
-    ->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="attConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
+    ->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="updateConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
     ->make(true);
 }
 
-public function fetch_container_att(Request $request){
+public function fetch_flo_container(Request $request){
     $container_id = $request->input('id');
     $container_schedule = ContainerSchedule::where('container_id', '=', $container_id)->first();
 
-    $output = array(
+    $response = array(
+        'status' => true,
         'container_id' => $container_schedule->container_id,
         'container_number' => $container_schedule->container_number,
     );
-
-    echo json_encode($output);
+    return Response::json($response);
 }
 
-public function update_container_att(Request $request){
-    $output = array(
-        'tes1' => $request->get('container_number'),
-        'tes2' => $request->get('container_id'),
-    );
-    return Response::json($output);
+public function update_flo_container(Request $request){
+
+    $id = Auth::id();
+
+    if($request->get('container_number') != ""){
+        $container_schedule = ContainerSchedule::where('container_id', '=', $request->get('container_id'))->first();
+        $container_schedule->container_number = $request->get('container_number');
+        $container_schedule->save();
+    }
+
+    if($request->hasFile('container_before')){
+        $files = $request->file('container_before');
+        foreach ($files as $file) 
+        {
+            $data = file_get_contents($file);
+            $code_generator = CodeGenerator::where('note','=','container')->first();
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+            $photo_number = $code_generator->prefix . $number+1;
+            $ext = $file->getClientOriginalExtension();
+            $filepath = public_path() . "/uploads/containers/before/" . $photo_number . "." . $ext;
+            $attachment = new ContainerAttachment([
+                'container_id' => $request->get('container_id'),
+                'att' => "/uploads/containers/before/" . $photo_number . "." . $ext,
+                'created_by' => $id,
+            ]);
+            $attachment->save();
+            File::put($filepath, $data);
+            $code_generator->index = $code_generator->index+1;
+            $code_generator->save();
+        } 
+    }
+
+    if($request->hasFile('container_process')){
+        $files = $request->file('container_process');
+        foreach ($files as $file) 
+        {
+            $data = file_get_contents($file);
+            $code_generator = CodeGenerator::where('note','=','container')->first();
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+            $photo_number = $code_generator->prefix . $number+1;
+            $ext = $file->getClientOriginalExtension();
+            $filepath = public_path() . "/uploads/containers/process/" . $photo_number . "." . $ext;
+            $attachment = new ContainerAttachment([
+                'container_id' => $request->get('container_id'),
+                'att' => "/uploads/containers/process/" . $photo_number . "." . $ext,
+                'created_by' => $id,
+            ]);
+            $attachment->save();
+            File::put($filepath, $data);
+            $code_generator->index = $code_generator->index+1;
+            $code_generator->save();
+        }
+    }
+
+    if($request->hasFile('container_after')){
+        $files = $request->file('container_after');
+        foreach ($files as $file) 
+        {
+            $data = file_get_contents($file);
+            $code_generator = CodeGenerator::where('note','=','container')->first();
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+            $photo_number = $code_generator->prefix . $number+1;
+            $ext = $file->getClientOriginalExtension();
+            $filepath = public_path() . "/uploads/containers/after/" . $photo_number . "." . $ext;
+            $attachment = new ContainerAttachment([
+                'container_id' => "/uploads/containers/after/" . $request->get('container_id'),
+                'att' => $photo_number . "." . $ext,
+                'created_by' => $id,
+            ]);
+            $attachment->save();
+            File::put($filepath, $data);
+            $code_generator->index = $code_generator->index+1;
+            $code_generator->save();
+        }
+    }
+
+    return response()->json([
+        'message' => 'Container data has been updated',
+    ]);
+
 }
 
 public function scan_material_number(Request $request){

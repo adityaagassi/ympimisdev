@@ -23,10 +23,10 @@
             <h5 class="box-title">Raw Material</h5>
         </div>
         <div class="box-body">
+          {{--   <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
-            <a class="list-group-item" href=""></a>
-            <a class="list-group-item" href=""></a>
+            <a class="list-group-item" href=""></a> --}}
         </div>
     </div>
 </div>
@@ -36,10 +36,10 @@
             <h5 class="box-title">Work In Process</h5>
         </div>
         <div class="box-body">
+           {{--  <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
-            <a class="list-group-item" href=""></a>
-            <a class="list-group-item" href=""></a>
+            <a class="list-group-item" href=""></a> --}}
         </div>
     </div>
 </div>
@@ -49,14 +49,14 @@
             <h5 class="box-title">Finished Goods</h5>
         </div>
         <div class="box-body">
-            <a class="list-group-item" href="">Sales Budget-Forecast-Actual</a>
+            {{-- <a class="list-group-item" href="">Sales Budget-Forecast-Actual</a>
             <a class="list-group-item" href="">Sales Amount Progress</a>
             <a class="list-group-item" href="">Daily Finished Goods Achievement</a>
             <a class="list-group-item" href="">Finished Goods Stock</a>
             <a class="list-group-item" href="">Finished Goods Tracking</a>
             <a class="list-group-item" href="">Weekly Shipment Achievement</a>
             <a class="list-group-item" href="">Shipping Container</a>
-            <a class="list-group-item" href="">Weekly Shipment Summary</a>
+            <a class="list-group-item" href="">Weekly Shipment Summary</a> --}}
         </div>
     </div>
 </div>

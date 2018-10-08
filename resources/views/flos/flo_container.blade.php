@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
 
 </style>
@@ -62,11 +63,11 @@
 					<span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Input Container Number & Photos</h4>
 				</div>
-				<form id="attForm" method="post" enctype="multipart/form-data">
+				<form id="form_container" method="post" action="upload" enctype="multipart/form-data">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-6 col-md-offset-3">
-
 								<div class="col-md-12">
 									<div class="input-group">
 										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
@@ -78,21 +79,48 @@
 								</div>
 							</div>
 						</div>
-
 						<div class="col-md-12">
-							<div class="col-md-6 col-md-offset-3">
-								<div class="col-md-12">
-									<div class="input-group">
-										<label for="exampleInputEmail1">Select pictures <i class="fa fa-picture-o"></i></label>
-										<input type="file" id="att_photo" name="att_photo">
-									</div>
+							<div class="col-md-4">
+								<div class="input-group">
+									<label for="exampleInputEmail1">Before <i class="fa fa-picture-o"></i></label>
+									<input type="file" id="container_before" name="container_before[]" multiple="" accept=".jpg,.jpeg">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="input-group">
+									<label for="exampleInputEmail1">Process <i class="fa fa-picture-o"></i></label>
+									<input type="file" id="container_process" name="container_process[]" multiple="" accept=".jpg,.jpeg">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="input-group">
+									<label for="exampleInputEmail1">After <i class="fa fa-picture-o"></i></label>
+									<input type="file" id="container_after" name="container_after[]" multiple="" accept=".jpg,.jpeg">
 								</div>
 							</div>
 						</div>
+						<div class="col-md-12">
+							<div class="col-md-12">
+								<div class="input-group">
+									<p class="help-block" style="font-size: 12">Allowed file type: .jpg .jpeg; max size: 500kb</p>
+								</div>
+							</div>
+						</div>
+				{{-- 		<div class="col-md-12">
+							<div class="col-md-4" id="preview_before">
+								asdas
+							</div>
+							<div class="col-md-4" id="preview_process">
+								asdasd
+							</div>
+							<div class="col-md-4" id="preview_after">
+								asdas
+							</div>
+						</div> --}}
 					</div>
 
 					<div class="modal-footer">
-						<input type="text" name="container_id" id="container_id" value="">
+						<input type="hidden" name="container_id" id="container_id" value="">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary">Confirm</button>
 					</div>
@@ -104,6 +132,7 @@
 	@endsection
 
 	@section('scripts')
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 	<script>
 		$.ajaxSetup({
 			headers: {
@@ -111,40 +140,58 @@
 			}
 		});
 
+		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
 		jQuery(document).ready(function() {
 			fillIvTable()
 
-			$('#attForm').on('submit', function(event){
+			$('#form_container').on('submit', function(event){
 				event.preventDefault();
-				var form_data = new FormData(this);
+				var formdata = new FormData(this);
+
 				$.ajax({
-					url:"{{url('update/container_att')}}",
+					url:"{{url('update/flo_container')}}",
 					method:'post',
-					data:form_data,
+					data:formdata,
 					dataType:"json",
 					processData: false,
 					contentType: false,
 					cache: false,
 					success:function(data){
-							
+						$('#container_after').val('');
+						$('#container_process').val('');
+						$('#container_before').val('');
+						$('#attModal').modal('hide');
+						openSuccessGritter('Success', data.message);
 					}
 				});
+				
+				
 			});
 		});
 
-		function attConfirmation(id) {
-			$.ajax({
-				url:"{{url('fetch/container_att')}}",
-				method:'get',
-				data:{
-					id: id,
-				},
-				dataType:'json',
-				success:function(data){
-					$('#container_id').val(id);
-					$('#container_number').val(data.container_number);
-					$('#attModal').modal('show');
+		function updateConfirmation(id) {
+			var data = {
+				id:id,
+			}
+			$.get('{{ url("fetch/flo_container") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+
+				if(xhr.status == 200){
+					if(result.status){
+						$('#container_id').val(result.container_id);
+						$('#container_number').val(result.container_number);
+						$('#attModal').modal('show');
+					}
 				}
+				else{
+					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
+					$("#material_number").val("");
+				}
+
 			});
 		}
 
@@ -176,6 +223,39 @@
 				{ "data": "container_number" },
 				{ "data": "action" }
 				]
+			});
+		}
+
+		function openErrorGritter(title, message) {
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-danger',
+				image: '{{ url("images/image-stop.png") }}',
+				sticky: false,
+				time: '4000'
+			});
+		}
+
+		function openSuccessGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-success',
+				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '4000'
+			});
+		}
+
+		function openInfoGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-info',
+				image: '{{ url("images/image-unregistered.png") }}',
+				sticky: false,
+				time: '4000'
 			});
 		}
 	</script>

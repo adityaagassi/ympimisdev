@@ -148,15 +148,17 @@ Route::get('show/status/{id}', 'StatusController@show');
 Route::get('index/flo_view/{id}', 'FloController@index');
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
 Route::post('index/flo', 'FloController@index_flo');
-Route::post('index/flo_container', 'FloController@index_container');
-Route::get('fetch/container_att', 'FloController@fetch_container_att');
-Route::post('update/container_att', 'FloController@update_container_att');
+Route::post('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
 Route::post('scan/flo_settlement', 'FloController@flo_settlement');
 Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
+
+
+Route::get('fetch/flo_container', 'FloController@fetch_flo_container');
+Route::post('update/flo_container', 'FloController@update_flo_container');
 
 
 

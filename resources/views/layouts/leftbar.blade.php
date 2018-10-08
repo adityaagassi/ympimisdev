@@ -207,7 +207,7 @@
                                               @endif
 
                                               @if(in_array(Auth::user()->level_id, [1]))
-                                              @if(isset($page) && $page == "Container")
+                                              @if(isset($page) && $page == "FLO Container")
                                               <li class="active">
                                                 @else
                                                 <li>
