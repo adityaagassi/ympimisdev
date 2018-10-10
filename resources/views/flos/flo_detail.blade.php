@@ -1,5 +1,9 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<style type="text/css">
+
+</style>
 @stop
 
 @section('header')
@@ -94,9 +98,9 @@
 										<th style="font-size: 14">Mat. Number</th>
 										<th style="font-size: 14">Mat. Description</th>
 										<th style="font-size: 14">Serial Number</th>
-										<th style="font-size: 14">Quantity</th>
+										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">Created At</th>
-										<th style="font-size: 14">Action</th>
+										<th style="font-size: 14" class="notexport">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -113,12 +117,22 @@
 
 
 	@section('scripts')
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+	<script src="{{ url("js/jszip.min.js")}}"></script>
+	<script src="{{ url("js/pdfmake.min.js")}}"></script>
+	<script src="{{ url("js/vfs_fonts.js")}}"></script>
+	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+	<script src="{{ url("js/buttons.print.min.js")}}"></script>
 	<script>
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
+
+		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 		jQuery(document).ready(function() {
 			clearConfirmation();
@@ -131,6 +145,39 @@
 			});
 			$('.select2').select2()
 		});
+
+		function deleteConfirmation(id){
+			var flo_number = $("#flo_number").val(); 
+			var data = {
+				id: id,
+				flo_number : flo_number
+			};
+			if(confirm("Are you sure you want to delete this data?")){
+				$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
+					console.log(status);
+					console.log(result);
+					console.log(xhr);
+
+					if(xhr.status == 200){
+						if(result.status){
+							$('#flo_detail_table').DataTable().ajax.reload();
+							openSuccessGritter('Success!', result.message);
+						}
+						else{
+							openErrorGritter('Error!', result.message);
+							audio_error.play();
+						}
+					}
+					else{
+						openErrorGritter('Error!', 'Disconnected from server');
+						audio_error.play();
+					}
+				});
+			}
+			else{
+				return false;
+			}
+		}
 
 		function clearConfirmation(){
 			$('#flo_detail_table').DataTable().clear();
@@ -157,6 +204,33 @@
 				flo_number:flo_number,
 			}
 			$('#flo_detail_table').DataTable({
+				'dom': 'Bfrtip',
+				'buttons': {
+					dom: {
+						button: {
+							tag:'button',
+							className:''
+						}
+					},
+					buttons:[
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					]
+				},
 				'paging': true,
 				'lengthChange': true,
 				'searching': true,
@@ -187,6 +261,39 @@
 				]
 			});
 
+		}
+
+		function openErrorGritter(title, message) {
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-danger',
+				image: '{{ url("images/image-stop.png") }}',
+				sticky: false,
+				time: '2000'
+			});
+		}
+
+		function openSuccessGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-success',
+				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '2000'
+			});
+		}
+
+		function openInfoGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-info',
+				image: '{{ url("images/image-unregistered.png") }}',
+				sticky: false,
+				time: '2000'
+			});
 		}
 	</script>
 	@endsection

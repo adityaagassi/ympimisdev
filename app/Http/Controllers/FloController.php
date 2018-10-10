@@ -61,24 +61,24 @@ class FloController extends Controller
             ))->with('page', 'FLO Delivery');
         }
         elseif($id == 'stuffing'){
-           $flos = Flo::orderBy('flo_number', 'asc')
-           ->where('status', '=', 2)
-           ->get();
+         $flos = Flo::orderBy('flo_number', 'asc')
+         ->where('status', '=', 2)
+         ->get();
 
-           $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
-           ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
-           ->where('shipment_date', '<=', DB::raw('last_day(now())'))
-           ->get();
+         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+         ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+         ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+         ->get();
 
-           return view('flos.flo_stuffing', array(
+         return view('flos.flo_stuffing', array(
             'flos' => $flos,
             'container_schedules' => $container_schedules,
         ))->with('page', 'FLO Stuffing');
-       }
-       elseif ($id == 'container') {
-           return view('flos.flo_container')->with('page', 'FLO Container');
-       }
-       elseif ($id == 'detail') {
+     }
+     elseif ($id == 'container') {
+         return view('flos.flo_container')->with('page', 'FLO Container');
+     }
+     elseif ($id == 'detail') {
         $flos = Flo::orderBy('flo_number', 'asc')
         ->where('status', '=', 1)
         ->get();
@@ -765,29 +765,27 @@ public function reprint_flo(Request $request)
 
 public function destroy_serial_number(Request $request)
 {
-    $flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
+    $flo_detail = FloDetail::find($request->get('id'));
+    $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+    $actual = DB::table('flo_details')
+    ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+    ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+    ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+    ->where('flo_details.id', '=', $request->get('id'))
+    ->select('material_volumes.lot_completion')
+    ->first();
 
-    if($flo->status == 0){
-        $flo->actual = $flo->actual-1;
-        $flo->save();
+    $flo->actual = $flo->actual-$actual->lot_completion;
+    $flo->save();
 
-        $flo_detail = FloDetail::find($request->get('id'));
-        $flo_detail->forceDelete();
+    $flo_detail = FloDetail::find($request->get('id'));
+    $flo_detail->forceDelete();
 
-        $response = array(
-            'status' => true,
-            'message' => "Data has been deleted.",
-        );
-        return Response::json($response);
-    }
-    else{
-        $response = array(
-            'status' => false,
-            'message' => "Data invalid.",
-        );
-        return Response::json($response);
-    }
-
+    $response = array(
+        'status' => true,
+        'message' => "Data has been deleted.",
+    );
+    return Response::json($response);
 }
 
 public function cancel_flo_settlement(Request $request)

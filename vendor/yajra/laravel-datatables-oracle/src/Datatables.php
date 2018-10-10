@@ -2,8 +2,6 @@
 
 namespace Yajra\Datatables;
 
-use Illuminate\Support\Collection;
-
 /**
  * Class Datatables.
  *
@@ -20,49 +18,38 @@ class Datatables
     protected $request;
 
     /**
-     * HTML builder instance.
-     *
-     * @var \Yajra\Datatables\Html\Builder
-     */
-    protected $html;
-
-    /**
      * Datatables constructor.
      *
      * @param \Yajra\Datatables\Request $request
      */
     public function __construct(Request $request)
     {
-        $this->request = $request;
+        $this->request = $request->request->count() ? $request : Request::capture();
     }
 
     /**
      * Gets query and returns instance of class.
      *
-     * @param  mixed $source
+     * @param  mixed $object
      * @return mixed
      * @throws \Exception
      */
-    public static function of($source)
+    public static function of($object)
     {
-        $datatables = app(static::class);
+        $datatables = app('datatables');
         $config     = app('config');
         $engines    = $config->get('datatables.engines');
         $builders   = $config->get('datatables.builders');
+        $builder    = get_class($object);
 
-        if (is_array($source)) {
-            $source = new Collection($source);
+        if (array_key_exists($builder, $builders)) {
+            $engine = $builders[$builder];
+            $class  = $engines[$engine];
+
+            return new $class($object, $datatables->getRequest());
         }
 
-        foreach ($builders as $class => $engine) {
-            if ($source instanceof $class) {
-                $class = $engines[$engine];
-
-                return new $class($source, $datatables->getRequest());
-            }
-        }
-
-        throw new \Exception('No available engine for ' . get_class($source));
+        throw new \Exception('No available engine for ' . $builder);
     }
 
     /**
@@ -100,30 +87,11 @@ class Datatables
     /**
      * Datatables using Collection.
      *
-     * @param \Illuminate\Support\Collection|mixed $collection
+     * @param \Illuminate\Support\Collection|mixed $builder
      * @return \Yajra\Datatables\Engines\CollectionEngine
      */
-    public function collection($collection)
+    public function collection($builder)
     {
-        if (is_array($collection)) {
-            $collection = new Collection($collection);
-        }
-
-        return new Engines\CollectionEngine($collection, $this->request);
-    }
-
-    /**
-     * Get html builder instance.
-     *
-     * @return \Yajra\Datatables\Html\Builder
-     * @throws \Exception
-     */
-    public function getHtmlBuilder()
-    {
-        if (! class_exists('\Yajra\Datatables\Html\Builder')) {
-            throw new \Exception('Please install yajra/laravel-datatables-html to be able to use this function.');
-        }
-
-        return $this->html ?: $this->html = app('datatables.html');
+        return new Engines\CollectionEngine($builder, $this->request);
     }
 }

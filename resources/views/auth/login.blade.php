@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
   <meta charset="utf-8">
@@ -19,29 +18,22 @@
     <div class="login-logo">
       <a href="#"><b>YMPI</b><br>Information System</a>
     </div>
-    <!-- /.login-logo -->
     <div class="login-box-body">
       <p class="login-box-msg">Sign in to start your session</p>
-
       <form method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
-
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
           <input type="text" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}" required autofocus>
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
-
         </div>
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
           <input type="password" class="form-control" placeholder="Password" name="password" required>
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          @if ($errors->has('username'))
+          @if($errors->has('username'))
           <span class="help-block">These credentials do not match our records.</span>
           @endif
-
-          
         </div>
         <div class="row">
-          <!-- /.col -->
           <div class="col-xs-8">
           </div>
           <div class="col-xs-4">
@@ -49,7 +41,6 @@
           </div>
         </div>
       </form>
-
     </div>
   </div>
   <script src="{{ asset("bower_components/jquery/dist/jquery.min.js")}}"></script>
@@ -60,7 +51,7 @@
       $('input').iCheck({
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
-        increaseArea: '20%' /* optional */
+        increaseArea: '20%'
       });
     });
   </script>

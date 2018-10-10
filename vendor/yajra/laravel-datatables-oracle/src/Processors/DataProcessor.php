@@ -216,10 +216,11 @@ class DataProcessor
         return array_map(function ($row) {
             if ($this->escapeColumns == '*') {
                 $row = $this->escapeRow($row);
-            } elseif (is_array($this->escapeColumns)) {
-                $columns = array_diff($this->escapeColumns, $this->rawColumns);
-                foreach ($columns as $key) {
-                    array_set($row, $key, e(array_get($row, $key)));
+            } else {
+                foreach ($this->escapeColumns as $key) {
+                    if (array_get($row, $key) && ! in_array($key, $this->rawColumns)) {
+                        array_set($row, $key, e(array_get($row, $key)));
+                    }
                 }
             }
 
@@ -235,15 +236,14 @@ class DataProcessor
      */
     protected function escapeRow(array $row)
     {
-        $arrayDot = array_filter(array_dot($row));
-        foreach ($arrayDot as $key => $value) {
-            if (! in_array($key, $this->rawColumns)) {
-                $arrayDot[$key] = e($value);
+        foreach ($row as $key => $value) {
+            if (is_array($value)) {
+                $row[$key] = $this->escapeRow($value);
+            } else {
+                if (! in_array($key, $this->rawColumns)) {
+                    $row[$key] = e($value);
+                }
             }
-        }
-
-        foreach ($arrayDot as $key => $value) {
-            array_set($row, $key, $value);
         }
 
         return $row;

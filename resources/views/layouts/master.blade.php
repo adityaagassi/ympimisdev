@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="{{ url("dist/css/AdminLTE.min.css")}}">
   <link rel="stylesheet" href="{{ url("dist/css/skins/_all-skins.min.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
+  <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
   @yield('stylesheets')
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
@@ -28,7 +29,6 @@
     </div>
     @include('layouts.footer')
   </div>
-
   <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
   <script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
   <script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>

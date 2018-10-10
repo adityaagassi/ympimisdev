@@ -73,7 +73,8 @@ interface DataTableEngineContract
      * Organizes works.
      *
      * @param bool $mDataSupport
+     * @param bool $orderFirst
      * @return \Illuminate\Http\JsonResponse
      */
-    public function make($mDataSupport = false);
+    public function make($mDataSupport = false, $orderFirst = false);
 }

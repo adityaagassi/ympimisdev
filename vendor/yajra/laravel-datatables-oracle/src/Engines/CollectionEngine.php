@@ -117,85 +117,51 @@ class CollectionEngine extends BaseEngine
             return;
         }
 
-        $criteria = $this->request->orderableColumns();
-        if ($criteria) {
-            $comparer = function ($a, $b) use ($criteria) {
-                foreach ($criteria as $orderable) {
-                    $column = $this->getColumnName($orderable['column']);
-                    $direction = $orderable['direction'];
-                    if ($direction === 'desc') {
-                        $first = $b;
-                        $second = $a;
-                    } else {
-                        $first = $a;
-                        $second = $b;
-                    }
-                    if ($this->isCaseInsensitive()) {
-                        $cmp = strnatcasecmp($first[$column], $second[$column]);
-                    } else {
-                        $cmp = strnatcmp($first[$column], $second[$column]);
-                    }
-                    if ($cmp != 0) {
-                        return $cmp;
-                    }
+        foreach ($this->request->orderableColumns() as $orderable) {
+            $column           = $this->getColumnName($orderable['column']);
+            $this->collection = $this->collection->sortBy(
+                function ($row) use ($column) {
+                    $data = $this->serialize($row);
+
+                    return Arr::get($data, $column);
                 }
-                // all elements were equal
-                return 0;
-            };
+            );
 
-            $this->collection = $this->collection
-                ->map(function ($data) {
-                    return array_dot($data);
-                })
-                ->sort($comparer)
-                ->map(function ($data) {
-                    foreach ($data as $key => $value) {
-                        unset($data[$key]);
-                        array_set($data, $key, $value);
-                    }
-
-                    return $data;
-                });
+            if ($orderable['direction'] == 'desc') {
+                $this->collection = $this->collection->reverse();
+            }
         }
     }
 
     /**
-     * Perform global search for the given keyword.
+     * Perform global search.
      *
-     * @param string $keyword
+     * @return void
      */
-    protected function globalSearch($keyword)
+    public function filtering()
     {
-        if ($this->isCaseInsensitive()) {
-            $keyword = Str::lower($keyword);
-        }
-
-        $columns          = $this->request->columns();
+        $columns          = $this->request['columns'];
         $this->collection = $this->collection->filter(
-            function ($row) use ($columns, $keyword) {
+            function ($row) use ($columns) {
                 $data                  = $this->serialize($row);
                 $this->isFilterApplied = true;
+                $found                 = [];
 
+                $keyword = $this->request->keyword();
                 foreach ($this->request->searchableColumnIndex() as $index) {
                     $column = $this->getColumnName($index);
                     if (! $value = Arr::get($data, $column)) {
                         continue;
                     }
 
-                    if (is_array($value)) {
-                        continue;
-                    }
-
                     if ($this->isCaseInsensitive()) {
-                        $value = Str::lower($value);
-                    }
-
-                    if (Str::contains($value, $keyword)) {
-                        return true;
+                        $found[] = Str::contains(Str::lower($value), Str::lower($keyword));
+                    } else {
+                        $found[] = Str::contains($value, $keyword);
                     }
                 }
 
-                return false;
+                return in_array(true, $found);
             }
         );
     }
@@ -211,7 +177,7 @@ class CollectionEngine extends BaseEngine
         for ($i = 0, $c = count($columns); $i < $c; $i++) {
             if ($this->request->isColumnSearchable($i)) {
                 $this->isFilterApplied = true;
-                $regex                 = $this->request->isRegex($i);
+                $regex = $this->request->isRegex($i);
 
                 $column  = $this->getColumnName($i);
                 $keyword = $this->request->columnKeyword($i);
@@ -249,8 +215,8 @@ class CollectionEngine extends BaseEngine
     public function paging()
     {
         $this->collection = $this->collection->slice(
-            $this->request->input('start'),
-            (int) $this->request->input('length') > 0 ? $this->request->input('length') : 10
+            $this->request['start'],
+            (int)$this->request['length'] > 0 ? $this->request['length'] : 10
         );
     }
 
@@ -268,46 +234,11 @@ class CollectionEngine extends BaseEngine
      * Organizes works.
      *
      * @param bool $mDataSupport
+     * @param bool $orderFirst
      * @return \Illuminate\Http\JsonResponse
      */
-    public function make($mDataSupport = false)
+    public function make($mDataSupport = false, $orderFirst = true)
     {
-        try {
-            $this->totalRecords = $this->totalCount();
-
-            if ($this->totalRecords) {
-                $data   = $this->getProcessedData($mDataSupport);
-                $output = $this->transform($data);
-
-                $this->collection = collect($output);
-                $this->ordering();
-                $this->filterRecords();
-                $this->paginate();
-
-                $this->revertIndexColumn($mDataSupport);
-            }
-
-            return $this->render($this->collection->values()->all());
-        } catch (\Exception $exception) {
-            return $this->errorResponse($exception);
-        }
-    }
-
-    /**
-     * Revert transformed DT_Row_Index back to it's original values.
-     *
-     * @param bool $mDataSupport
-     */
-    private function revertIndexColumn($mDataSupport)
-    {
-        if ($this->columnDef['index']) {
-            $index = $mDataSupport ? config('datatables.index_column', 'DT_Row_Index') : 0;
-            $start = (int) $this->request->input('start');
-            $this->collection->transform(function ($data) use ($index, &$start) {
-                $data[$index] = ++$start;
-
-                return $data;
-            });
-        }
+        return parent::make($mDataSupport, $orderFirst);
     }
 }

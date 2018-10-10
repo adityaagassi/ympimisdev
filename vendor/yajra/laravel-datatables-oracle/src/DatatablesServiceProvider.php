@@ -2,6 +2,7 @@
 
 namespace Yajra\Datatables;
 
+use Collective\Html\HtmlServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
@@ -64,7 +65,7 @@ class DatatablesServiceProvider extends ServiceProvider
 
         $this->app->alias('datatables', Datatables::class);
         $this->app->singleton('datatables', function () {
-            return new Datatables(new Request(app('request')));
+            return new Datatables($this->app->make(Request::class));
         });
 
         $this->registerAliases();
