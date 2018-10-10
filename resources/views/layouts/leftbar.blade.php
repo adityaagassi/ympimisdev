@@ -25,7 +25,7 @@
             </li>
             @endif
 
-            @if(in_array(Auth::user()->level_id, [1,2]))
+            @if(in_array(Auth::user()->level_id, [1]))
             @if(isset($page) && $page == "Level")
             <li class="active">
               @else
@@ -35,7 +35,7 @@
               </li>
               @endif
 
-              @if(in_array(Auth::user()->level_id, [1,2]))
+              @if(in_array(Auth::user()->level_id, [1]))
               @if(isset($page) && $page == "User")
               <li class="active">
                 @else
@@ -45,7 +45,7 @@
                 </li>
                 @endif
 
-                @if(in_array(Auth::user()->level_id, [1,2]))
+                @if(in_array(Auth::user()->level_id, [1]))
                 @if(isset($page) && $page == "Status")
                 <li class="active">
                   @else
@@ -56,7 +56,7 @@
                   @endif
 
                   <li class="header">Master Menu</li>
-                  @if(in_array(Auth::user()->level_id, [1,4]))
+                  @if(in_array(Auth::user()->level_id, [1]))
                   @if(isset($page) && $page == "Container")
                   <li class="active">
                     @else
@@ -66,7 +66,7 @@
                     </li>
                     @endif
 
-                    @if(in_array(Auth::user()->level_id, [1,4]))
+                    @if(in_array(Auth::user()->level_id, [1]))
                     @if(isset($page) && $page == "Container Schedule")
                     <li class="active">
                       @else
@@ -76,7 +76,7 @@
                       </li>
                       @endif
 
-                      @if(in_array(Auth::user()->level_id, [1,4]))
+                      @if(in_array(Auth::user()->level_id, [1]))
                       @if(isset($page) && $page == "Destination")
                       <li class="active">
                         @else
@@ -86,7 +86,7 @@
                         </li>
                         @endif
 
-                        @if(in_array(Auth::user()->level_id, [1,5]))
+                        @if(in_array(Auth::user()->level_id, [1]))
                         @if(isset($page) && $page == "Material")
                         <li class="active">
                           @else
@@ -96,7 +96,7 @@
                           </li>
                           @endif
 
-                          @if(in_array(Auth::user()->level_id, [1,4]))
+                          @if(in_array(Auth::user()->level_id, [1]))
                           @if(isset($page) && $page == "Material Volume")
                           <li class="active">
                             @else
@@ -106,7 +106,7 @@
                             </li>
                             @endif
 
-                            @if(in_array(Auth::user()->level_id, [1,5]))
+                            @if(in_array(Auth::user()->level_id, [1]))
                             @if(isset($page) && $page == "Origin Group")
                             <li class="active">
                               @else
@@ -116,7 +116,7 @@
                               </li>
                               @endif
 
-                              @if(in_array(Auth::user()->level_id, [1,5,6]))
+                              @if(in_array(Auth::user()->level_id, [1]))
                               @if(isset($page) && $page == "Production Schedule")
                               <li class="active">
                                 @else
@@ -134,7 +134,7 @@
 
 
 
-                                @if(in_array(Auth::user()->level_id, [1,4]))
+                                @if(in_array(Auth::user()->level_id, [1]))
                                 @if(isset($page) && $page == "Shipment Condition")
                                 <li class="active">
                                   @else
@@ -144,7 +144,7 @@
                                   </li>
                                   @endif
 
-                                  @if(in_array(Auth::user()->level_id, [1,4,5]))
+                                  @if(in_array(Auth::user()->level_id, [1]))
                                   @if(isset($page) && $page == "Shipment Schedule")
                                   <li class="active">
                                     @else
@@ -154,7 +154,7 @@
                                     </li>
                                     @endif
 
-                                    @if(in_array(Auth::user()->level_id, [1,5]))
+                                    @if(in_array(Auth::user()->level_id, [1]))
                                     @if(isset($page) && $page == "Weekly Calendar")
                                     <li class="active">
                                       @else
@@ -219,12 +219,12 @@
                                                 <li class="header">Report Menu</li>
 
                                                 @if(in_array(Auth::user()->level_id, [1]))
-                                                @if(isset($page) && $page == "Print FLO")
+                                                @if(isset($page) && $page == "FLO Detail")
                                                 <li class="active">
                                                   @else
                                                   <li>
                                                     @endif
-                                                    <a href="{{ url("/index/flo") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+                                                    <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                                   </li>
                                                   @endif
                                          {{--  @if(in_array(Auth::user()->level_id, [1]))
@@ -240,13 +240,15 @@
                                             </ul>
                                           </li>
                                           @endif --}}
-
                                           <li class="header">Trial Menu</li>
                                           <li>
                                             <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
                                           </li>
                                           <li>
                                             <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
+                                          </li>
+                                          <li>
+                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                           </li>
 
         {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>

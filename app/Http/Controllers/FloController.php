@@ -78,9 +78,57 @@ class FloController extends Controller
        elseif ($id == 'container') {
            return view('flos.flo_container')->with('page', 'FLO Container');
        }
-   }
+       elseif ($id == 'detail') {
+        $flos = Flo::orderBy('flo_number', 'asc')
+        ->where('status', '=', 1)
+        ->get();
 
-   public function index_flo_detail(Request $request){
+        return view('flos.flo_detail', array(
+            'flos' => $flos,
+        ))->with('page', 'FLO Detail');
+    }
+}
+
+public function filter_flo_detail(Request $request){
+    $flo_detailsTable = DB::table('flo_details')
+    ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
+    ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
+    ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+    ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+    ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at');
+
+    if(strlen($request->get('datefrom')) > 0){
+        $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flos.created_at, "%Y-%m-%d")'), '>', $date_from);
+    }
+
+    if(strlen($request->get('dateto')) > 0){
+        $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flos.created_at, "%Y-%m-%d")'), '<', $date_to);
+    }
+
+    if(strlen($request->get('origin_group')) > 0){
+        $flo_detailsTable = $flo_detailsTable->where('materials.origin_group_code', '=', $request->get('origin_group'));
+    }
+
+    if(strlen($request->get('material_number')) > 0){
+        $flo_detailsTable = $flo_detailsTable->where('shipment_schedules.material_number', '=', $request->get('material_number'));
+    }
+
+    if(strlen($request->get('flo_number')) > 0){
+        $flo_detailsTable = $flo_detailsTable->where('flo_details.flo_number', '=', $request->get('flo_number'));
+    }
+
+    $flo_details = $flo_detailsTable->orderBy('flo_details.created_at', 'desc')->get();
+    
+    return DataTables::of($flo_details)
+    ->addColumn('action', function($flo_details){
+        return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $flo_details->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
+    })
+    ->make(true);
+}
+
+public function index_flo_detail(Request $request){
     $flo_details = DB::table('flo_details')
     ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
@@ -135,11 +183,35 @@ public function index_flo_container(Request $request){
 public function fetch_flo_container(Request $request){
     $container_id = $request->input('id');
     $container_schedule = ContainerSchedule::where('container_id', '=', $container_id)->first();
+    $before_attachments = ContainerAttachment::where('container_id', '=', $container_id)
+    ->where('file_path', 'like', '%before%')
+    ->get();
+    $process_attachments = ContainerAttachment::where('container_id', '=', $container_id)
+    ->where('file_path', 'like', '%process%')
+    ->get();
+    $after_attachments = ContainerAttachment::where('container_id', '=', $container_id)
+    ->where('file_path', 'like', '%after%')
+    ->get();
+    $file_before[] = "";
+    $file_process[] = "";
+    $file_after[] = "";
+    foreach ($before_attachments as $before_attachment) {
+        $file_before[] = asset($before_attachment->file_path . $before_attachment->file_name);
+    }
+    foreach ($process_attachments as $process_attachment) {
+        $file_process[] = asset($process_attachment->file_path . $process_attachment->file_name);
+    }
+    foreach ($after_attachments as $after_attachment) {
+        $file_after[] = asset($after_attachment->file_path . $after_attachment->file_name);
+    }
 
     $response = array(
         'status' => true,
         'container_id' => $container_schedule->container_id,
         'container_number' => $container_schedule->container_number,
+        'file_before' => $file_before,
+        'file_process' => $file_process,
+        'file_after' => $file_after,
     );
     return Response::json($response);
 }
@@ -166,7 +238,8 @@ public function update_flo_container(Request $request){
             $filepath = public_path() . "/uploads/containers/before/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
                 'container_id' => $request->get('container_id'),
-                'att' => "/uploads/containers/before/" . $photo_number . "." . $ext,
+                'file_name' =>  $photo_number . "." . $ext,
+                'file_path' => "/uploads/containers/before/",
                 'created_by' => $id,
             ]);
             $attachment->save();
@@ -188,7 +261,8 @@ public function update_flo_container(Request $request){
             $filepath = public_path() . "/uploads/containers/process/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
                 'container_id' => $request->get('container_id'),
-                'att' => "/uploads/containers/process/" . $photo_number . "." . $ext,
+                'file_name' =>  $photo_number . "." . $ext,
+                'file_path' => "/uploads/containers/process/",
                 'created_by' => $id,
             ]);
             $attachment->save();
@@ -209,8 +283,9 @@ public function update_flo_container(Request $request){
             $ext = $file->getClientOriginalExtension();
             $filepath = public_path() . "/uploads/containers/after/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
-                'container_id' => "/uploads/containers/after/" . $request->get('container_id'),
-                'att' => $photo_number . "." . $ext,
+                'container_id' => $request->get('container_id'),
+                'file_name' =>  $photo_number . "." . $ext,
+                'file_path' => "/uploads/containers/after/",
                 'created_by' => $id,
             ]);
             $attachment->save();

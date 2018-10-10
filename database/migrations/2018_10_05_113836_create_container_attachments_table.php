@@ -16,7 +16,8 @@ class CreateContainerAttachmentsTable extends Migration
         Schema::create('container_attachments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('container_id');
-            $table->string('att')->unique();
+            $table->string('file_path');
+            $table->string('file_name');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

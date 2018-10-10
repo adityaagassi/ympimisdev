@@ -156,11 +156,9 @@ Route::post('scan/flo_settlement', 'FloController@flo_settlement');
 Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
-
 Route::get('fetch/flo_container', 'FloController@fetch_flo_container');
 Route::post('update/flo_container', 'FloController@update_flo_container');
-
-
+Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
 
 Route::get('index/trial_export', 'TrialController@trial_index');
 Route::post('export/trial', 'TrialController@trial_export');

@@ -56,7 +56,7 @@
 </section>
 
 <div class="modal fade" id="attModal">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -106,19 +106,15 @@
 								</div>
 							</div>
 						</div>
-				{{-- 		<div class="col-md-12">
-							<div class="col-md-4" id="preview_before">
-								asdas
+						<div class="col-md-12">
+							<div class="col-md-4" id="imagePreviewBefore">
 							</div>
-							<div class="col-md-4" id="preview_process">
-								asdasd
+							<div class="col-md-4" id="imagePreviewProcess">
 							</div>
-							<div class="col-md-4" id="preview_after">
-								asdas
-							</div>
-						</div> --}}
+							<div class="col-md-4" id="imagePreviewAfter">
+							</div>					
+						</div>
 					</div>
-
 					<div class="modal-footer">
 						<input type="hidden" name="container_id" id="container_id" value="">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -129,134 +125,191 @@
 		</div>
 	</div>
 
-	@endsection
+	<div class="modal fade" id="imageModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Container Photos</h4>
+					</div>
+					<div class="row">
+						{{-- <div class="col-md-12">
+							<div class="col-md-4">
+								Before
+							</div>
+							<div class="col-md-4">
+								Process
+							</div>
+							<div class="col-md-4">
+								After
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="col-md-4" id="imagePreviewBefore">
+							</div>
+							<div class="col-md-4" id="imagePreviewProcess">
+							</div>
+							<div class="col-md-4" id="imagePreviewAfter">
+							</div>					
+						</div> --}}
+					</div>
+					<div class="modal-footer">
+						<input type="text" name="image_container_id" id="image_container_id" value="">
+						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+		@endsection
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+		@section('scripts')
+		<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+		<script>
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
 
-		jQuery(document).ready(function() {
-			fillIvTable()
+			var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-			$('#form_container').on('submit', function(event){
-				event.preventDefault();
-				var formdata = new FormData(this);
+			jQuery(document).ready(function() {
+				fillIvTable()
 
-				$.ajax({
-					url:"{{url('update/flo_container')}}",
-					method:'post',
-					data:formdata,
-					dataType:"json",
-					processData: false,
-					contentType: false,
-					cache: false,
-					success:function(data){
-						$('#container_after').val('');
-						$('#container_process').val('');
-						$('#container_before').val('');
-						$('#attModal').modal('hide');
-						openSuccessGritter('Success', data.message);
+				$('#form_container').on('submit', function(event){
+					event.preventDefault();
+					var formdata = new FormData(this);
+
+					$.ajax({
+						url:"{{url('update/flo_container')}}",
+						method:'post',
+						data:formdata,
+						dataType:"json",
+						processData: false,
+						contentType: false,
+						cache: false,
+						success:function(data){
+							$('#container_after').val('');
+							$('#container_process').val('');
+							$('#container_before').val('');
+							$('#attModal').modal('hide');
+							$('#iv_table').DataTable().ajax.reload();
+							openSuccessGritter('Success', data.message);
+						}
+					});
+
+
+				});
+			});
+
+			function updateConfirmation(id){
+				var data = {
+					id:id,
+				}
+				$.get('{{ url("fetch/flo_container") }}', data, function(result, status, xhr){
+					console.log(status);
+					console.log(result);
+					console.log(xhr);
+
+					if(xhr.status == 200){
+						if(result.status){
+							$('#container_id').val(result.container_id);
+							$('#container_number').val(result.container_number);
+							$('#imagePreviewBefore').html("");
+							$('#imagePreviewProcess').html("");
+							$('#imagePreviewAfter').html("");
+							$.each(result.file_before, function( index, value ) {
+								if(value.length > 0){
+									$('#imagePreviewBefore').append('<img height="90" width="135" src="'+value+'">'
+										);
+								}
+							});
+							$.each(result.file_process, function( index, value ) {
+								if(value.length > 0){
+									$('#imagePreviewProcess').append('<img height="90" width="135" src="'+value+'">'
+										);
+								}
+							});
+							$.each(result.file_after, function( index, value ) {
+								if(value.length > 0){
+									$('#imagePreviewAfter').append('<img height="90" width="135" src="'+value+'">'
+										);
+								}
+							});
+							$('#attModal').modal('show');
+						}
+					}
+					else{
+						openErrorGritter('Error!', 'Disconnected from server');
+						audio_error.play();
 					}
 				});
-				
-				
-			});
-		});
-
-		function updateConfirmation(id) {
-			var data = {
-				id:id,
 			}
-			$.get('{{ url("fetch/flo_container") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 
-				if(xhr.status == 200){
-					if(result.status){
-						$('#container_id').val(result.container_id);
-						$('#container_number').val(result.container_number);
-						$('#attModal').modal('show');
-					}
-				}
-				else{
-					openErrorGritter('Error!', 'Disconnected from server');
-					audio_error.play();
-					$("#material_number").val("");
-				}
+			function fillIvTable(){
+				$('#iv_table').DataTable( {
+					'paging'      	: true,
+					'lengthChange'	: true,
+					'searching'   	: true,
+					'ordering'    	: true,
+					'order'       	: [],
+					'info'       	: true,
+					'autoWidth'		: true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true,
+					"serverSide": true,
+					"ajax": {
+						"type" : "post",
+						"url" : "{{ url("index/flo_container") }}",
+					},
 
-			});
-		}
+					"columns": [
+					{ "data": "container_id" },
+					{ "data": "container_code" },
+					{ "data": "destination_shortname" },
+					{ "data": "shipment_date" },
+					{ "data": "shipment_condition_name" },
+					{ "data": "container_number" },
+					{ "data": "action" }
+					]
+				});
+			}
 
-		function fillIvTable(){
-			$('#iv_table').DataTable( {
-				'paging'      	: true,
-				'lengthChange'	: true,
-				'searching'   	: true,
-				'ordering'    	: true,
-				'order'       	: [],
-				'info'       	: true,
-				'autoWidth'		: true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "post",
-					"url" : "{{ url("index/flo_container") }}",
-				},
+			function openErrorGritter(title, message) {
+				jQuery.gritter.add({
+					title: title,
+					text: message,
+					class_name: 'growl-danger',
+					image: '{{ url("images/image-stop.png") }}',
+					sticky: false,
+					time: '4000'
+				});
+			}
 
-				"columns": [
-				{ "data": "container_id" },
-				{ "data": "container_code" },
-				{ "data": "destination_shortname" },
-				{ "data": "shipment_date" },
-				{ "data": "shipment_condition_name" },
-				{ "data": "container_number" },
-				{ "data": "action" }
-				]
-			});
-		}
+			function openSuccessGritter(title, message){
+				jQuery.gritter.add({
+					title: title,
+					text: message,
+					class_name: 'growl-success',
+					image: '{{ url("images/image-screen.png") }}',
+					sticky: false,
+					time: '4000'
+				});
+			}
 
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '4000'
-			});
-		}
-
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '4000'
-			});
-		}
-
-		function openInfoGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-info',
-				image: '{{ url("images/image-unregistered.png") }}',
-				sticky: false,
-				time: '4000'
-			});
-		}
-	</script>
-	@endsection
+			function openInfoGritter(title, message){
+				jQuery.gritter.add({
+					title: title,
+					text: message,
+					class_name: 'growl-info',
+					image: '{{ url("images/image-unregistered.png") }}',
+					sticky: false,
+					time: '4000'
+				});
+			}
+		</script>
+		@endsection

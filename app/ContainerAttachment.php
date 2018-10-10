@@ -10,7 +10,7 @@ class ContainerAttachment extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'container_id', 'att', 'created_by'
+		'container_id', 'file_name', 'file_path', 'created_by'
 	];
     //
 }

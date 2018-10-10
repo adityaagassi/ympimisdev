@@ -214,7 +214,11 @@ td:hover {
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
-
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
 	jQuery(document).ready(function() {
 		$(function () {
 			$('.select2').select2()
@@ -226,11 +230,7 @@ td:hover {
 			radioClass   : 'iradio_minimal-red'
 		});
 
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+		
 
 		// if($('#flo_number').val() != ""){
 		// 	$('#flo_detail_table').DataTable().destroy();

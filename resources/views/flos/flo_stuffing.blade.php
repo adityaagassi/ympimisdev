@@ -65,7 +65,10 @@
 										<select class="form-control select2" id="container_id" name="container_id" style="width: 100%;" data-placeholder="Choose a Container ID" required>
 											<option></option>
 											@foreach($container_schedules as $container_schedule)
-											<option value="{{ $container_schedule->container_id }}">{{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }}</option>|
+											<option value="{{ $container_schedule->container_id }}">
+												{{-- {{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }} --}}
+												{{ $container_schedule->container_id }}
+											</option>
 											@endforeach
 										</select>
 									</div>
