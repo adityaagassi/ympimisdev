@@ -212,7 +212,17 @@
                                                 @else
                                                 <li>
                                                   @endif
-                                                  <a href="{{ url("/index/flo_view/container") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
+                                                  <a href="{{ url("/index/flo_view/container") }}"><i class="fa fa-picture-o"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
+                                                </li>
+                                                @endif
+
+                                                @if(in_array(Auth::user()->level_id, [1]))
+                                              @if(isset($page) && $page == "FLO Lading")
+                                              <li class="active">
+                                                @else
+                                                <li>
+                                                  @endif
+                                                  <a href="{{ url("/index/flo_view/container") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Lading</span></a>
                                                 </li>
                                                 @endif
 

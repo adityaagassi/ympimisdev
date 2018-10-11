@@ -95,7 +95,8 @@ public function filter_flo_detail(Request $request){
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
     ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
     ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-    ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at');
+    ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at')
+    ->where('flos.status', '=', 1);
 
     if(strlen($request->get('datefrom')) > 0){
         $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
