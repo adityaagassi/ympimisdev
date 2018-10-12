@@ -1,10 +1,6 @@
   <aside class="main-sidebar">
-
-    <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <!-- Optionally, you can add icons to the links -->
 
         @if(isset($page) && $page == "Dashboard")
         <li class="active">
@@ -126,14 +122,6 @@
                                 </li>
                                 @endif
 
-
-
-                                {{-- <li><a href="{{ url("/index/sales_price") }}"><i class="fa fa-dollar"></i> <span>Sales Price</span></a></li> --}}
-                                {{-- <li><a href="{{ url("/index/sales_budget") }}"><i class="fa fa-line-chart"></i> <span>Sales Budget</span></a></li> --}}
-                                {{-- <li><a href="{{ url("/index/sales_forecast") }}"><i class="fa fa-line-chart"></i> <span>Sales Forecast</span></a></li> --}}
-
-
-
                                 @if(in_array(Auth::user()->level_id, [1]))
                                 @if(isset($page) && $page == "Shipment Condition")
                                 <li class="active">
@@ -207,36 +195,36 @@
                                               @endif
 
                                               @if(in_array(Auth::user()->level_id, [1]))
-                                              @if(isset($page) && $page == "FLO Container")
+                                              @if(isset($page) && $page == "FLO Shipment")
                                               <li class="active">
                                                 @else
                                                 <li>
                                                   @endif
-                                                  <a href="{{ url("/index/flo_view/container") }}"><i class="fa fa-picture-o"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
+                                                  <a href="{{ url("/index/flo_view/shipment") }}"><i class="fa fa-picture-o"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
                                                 </li>
                                                 @endif
 
                                                 @if(in_array(Auth::user()->level_id, [1]))
-                                              @if(isset($page) && $page == "FLO Lading")
-                                              <li class="active">
-                                                @else
-                                                <li>
-                                                  @endif
-                                                  <a href="{{ url("/index/flo_view/container") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Lading</span></a>
-                                                </li>
-                                                @endif
-
-                                                <li class="header">Report Menu</li>
-
-                                                @if(in_array(Auth::user()->level_id, [1]))
-                                                @if(isset($page) && $page == "FLO Detail")
+                                                @if(isset($page) && $page == "FLO Lading")
                                                 <li class="active">
                                                   @else
                                                   <li>
                                                     @endif
-                                                    <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+                                                    <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Lading</span></a>
                                                   </li>
                                                   @endif
+
+                                                  <li class="header">Report Menu</li>
+
+                                                  @if(in_array(Auth::user()->level_id, [1]))
+                                                  @if(isset($page) && $page == "FLO Detail")
+                                                  <li class="active">
+                                                    @else
+                                                    <li>
+                                                      @endif
+                                                      <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+                                                    </li>
+                                                    @endif
                                          {{--  @if(in_array(Auth::user()->level_id, [1]))
                                           <li class="treeview">
                                             <a href="#"><i class="fa fa-info-circle"></i> <span>FLO Informations</span>
@@ -260,23 +248,7 @@
                                           <li>
                                             <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                           </li>
+                                        </ul>
+                                      </section>
+                                    </aside>
 
-        {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="#">Link in level 2</a></li>
-            <li><a href="#">Link in level 2</a></li>
-          </ul>
-        </li> --}}
-      </ul>
-      <!-- /.sidebar-menu -->
-    </section>
-    <!-- /.sidebar -->
-  </aside>
-
-  

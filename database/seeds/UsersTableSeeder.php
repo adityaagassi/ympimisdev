@@ -96,5 +96,17 @@ class UsersTableSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s'),
         ]
     );
+       DB::table('users')->insert(
+        [
+            'name' => 'Leader-Assy',
+            'username' => 'Leader-Assy',
+            'email' => 'Leader-Assy@gmail.com',
+            'password' => bcrypt('1234'),
+            'level_id' => '8',
+            'created_by' => '1',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]
+    );
    }
 }

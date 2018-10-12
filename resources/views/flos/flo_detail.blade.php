@@ -60,16 +60,16 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group" style="width: 100%;">
-									@foreach($flos as $flo)
-									<option value="{{ $flo->shipmentschedule->material->origin_group_code }}">{{ $flo->shipmentschedule->material->origingroup->origin_group_name }}</option>
+									@foreach($origin_groups as $origin_group)
+									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
 									@endforeach
 								</select>
 							</div>
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Material Number" name="material_number" id="material_number" style="width: 100%;">
 									<option value=""></option>
-									@foreach($flos as $flo)
-									<option value="{{ $flo->shipmentschedule->material_number }}">{{ $flo->shipmentschedule->material->material_number }} - {{ $flo->shipmentschedule->material->material_description }}</option>
+									@foreach($materials as $material)
+									<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -78,6 +78,14 @@
 									<option value=""></option>
 									@foreach($flos as $flo)
 									<option value="{{ $flo->flo_number }}">{{ $flo->flo_number }}</option>
+									@endforeach
+								</select>
+							</div>
+							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select FLO Status" name="status" id="status" style="width: 100%;">
+									<option value=""></option>
+									@foreach($statuses as $status)
+									<option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -100,6 +108,7 @@
 										<th style="font-size: 14">Serial Number</th>
 										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">Created At</th>
+										<th style="font-size: 14">Status</th>
 										<th style="font-size: 14" class="notexport">Action</th>
 									</tr>
 								</thead>
@@ -143,7 +152,13 @@
 			$('#dateto').datepicker({
 				autoclose: true
 			});
-			$('.select2').select2()
+			$('.select2').select2({
+			language : {
+				noResults : function(params) {
+					return "There is no flo with status 'close'";
+				}
+			}
+		});
 		});
 
 		function deleteConfirmation(id){
@@ -187,6 +202,7 @@
 			$('#origin_group').val('').change();
 			$('#material_number').val('').change();
 			$('#flo_number').val('').change();
+			$('#status').val('').change();
 		}
 
 		function fillFloDetail(){
@@ -196,12 +212,14 @@
 			var origin_group = $('#origin_group').val();
 			var material_number = $('#material_number').val();
 			var flo_number = $('#flo_number').val();
+			var status = $('#status').val();
 			var data = {
 				datefrom:datefrom,
 				dateto:dateto,
 				origin_group:origin_group,
 				material_number:material_number,
 				flo_number:flo_number,
+				status:status,
 			}
 			$('#flo_detail_table').DataTable({
 				'dom': 'Bfrtip',
@@ -257,6 +275,7 @@
 				{ "data": "serial_number" },
 				{ "data": "quantity" },
 				{ "data": "created_at" },
+				{ "data": "status_name" },
 				{ "data": "action" }
 				]
 			});

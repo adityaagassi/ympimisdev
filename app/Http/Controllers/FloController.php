@@ -61,51 +61,91 @@ class FloController extends Controller
             ))->with('page', 'FLO Delivery');
         }
         elseif($id == 'stuffing'){
-         $flos = Flo::orderBy('flo_number', 'asc')
-         ->where('status', '=', 2)
-         ->get();
+           $flos = Flo::orderBy('flo_number', 'asc')
+           ->where('status', '=', 2)
+           ->get();
 
-         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
-         ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
-         ->where('shipment_date', '<=', DB::raw('last_day(now())'))
-         ->get();
+           $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+           ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+           ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+           ->get();
 
-         return view('flos.flo_stuffing', array(
+           return view('flos.flo_stuffing', array(
             'flos' => $flos,
             'container_schedules' => $container_schedules,
         ))->with('page', 'FLO Stuffing');
-     }
-     elseif ($id == 'container') {
-         return view('flos.flo_container')->with('page', 'FLO Container');
-     }
-     elseif ($id == 'detail') {
-        $flos = Flo::orderBy('flo_number', 'asc')
-        ->where('status', '=', 1)
-        ->get();
+       }
+       elseif ($id == 'shipment'){
+           return view('flos.flo_shipment')->with('page', 'FLO Shipment');
+       }
+       elseif ($id == 'detail'){
+        $flosTable = DB::table('flos')
+        ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+        ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+        ->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
+        ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
+        ->where('flos.status', '=', 0)
+        ->orwhere('flos.status', '=', 1);
+
+        $materials = $flosTable->select('materials.material_number', 'materials.material_description')->distinct()->get();
+        $origin_groups = $flosTable->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->distinct()->get();
+        $flos = $flosTable->select('flos.flo_number')->distinct()->get();
+        $statuses = $flosTable->select('statuses.status_code', 'statuses.status_name')->distinct()->get();
 
         return view('flos.flo_detail', array(
+            'materials' => $materials,
+            'origin_groups' => $origin_groups,
             'flos' => $flos,
+            'statuses' => $statuses,
         ))->with('page', 'FLO Detail');
     }
+    elseif ($id == 'lading') {
+        $invoices = Flo::orderBy('invoice_number', 'asc')
+        ->whereNotNull('invoice_number')
+        ->whereNull('bl_date')
+        ->select('invoice_number')
+        ->get();
+
+        return view('flos.flo_lading', array(
+            'invoices' => $invoices,
+        ))->with('page', 'FLO Lading');
+    }
+}
+
+public function index_flo_invoice(){
+    $invoices = DB::table('flos')
+    ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+    ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+    ->whereNotNull('flos.bl_date')
+    ->select('flos.invoice_number', 'shipment_schedules.st_date', 'shipment_schedules.destination_code', 'destinations.destination_name', 'shipment_schedules.bl_date as plan_bl', 'flos.bl_date as actual_bl')
+    ->groupBy('flos.invoice_number', 'shipment_schedules.st_date', 'shipment_schedules.destination_code', 'destinations.destination_name', 'shipment_schedules.bl_date', 'flos.bl_date')
+    ->orderBy('flos.bl_date', 'desc')
+    ->get();
+
+    return DataTables::of($invoices)
+    ->addColumn('action', function($invoices){
+        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-sm btn-warning" onClick="editConfirmation(id)" id="' . $invoices->invoice_number . '"><i class="fa fa-edit"></i></a>';
+    })
+    ->make(true);
 }
 
 public function filter_flo_detail(Request $request){
     $flo_detailsTable = DB::table('flo_details')
     ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
+    ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
     ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
     ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
     ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-    ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at')
-    ->where('flos.status', '=', 1);
+    ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at', 'statuses.status_name');
 
     if(strlen($request->get('datefrom')) > 0){
         $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flos.created_at, "%Y-%m-%d")'), '>', $date_from);
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flo_details.created_at, "%Y-%m-%d")'), '>=', $date_from);
     }
 
     if(strlen($request->get('dateto')) > 0){
         $date_to = date('Y-m-d', strtotime($request->get('dateto')));
-        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flos.created_at, "%Y-%m-%d")'), '<', $date_to);
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(flo_details.created_at, "%Y-%m-%d")'), '<=', $date_to);
     }
 
     if(strlen($request->get('origin_group')) > 0){
@@ -118,6 +158,10 @@ public function filter_flo_detail(Request $request){
 
     if(strlen($request->get('flo_number')) > 0){
         $flo_detailsTable = $flo_detailsTable->where('flo_details.flo_number', '=', $request->get('flo_number'));
+    }
+
+    if(strlen($request->get('status')) > 0){
+        $flo_detailsTable = $flo_detailsTable->where('flos.status', '=', $request->get('status'));
     }
 
     $flo_details = $flo_detailsTable->orderBy('flo_details.created_at', 'desc')->get();
@@ -179,6 +223,18 @@ public function index_flo_container(Request $request){
     return DataTables::of($invoices)
     ->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="updateConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
     ->make(true);
+}
+
+public function fetch_flo_lading(Request $request){
+    $invoice_number = $request->input('id');
+    $flo = Flo::where('invoice_number', '=', $invoice_number)->first();
+    $bl_date= date('m/d/Y', strtotime($flo->bl_date));
+    $response = array(
+        'status' => true,
+        'invoice_number' => $invoice_number,
+        'bl_date' => $bl_date,
+    );
+    return Response::json($response);
 }
 
 public function fetch_flo_container(Request $request){
@@ -329,8 +385,8 @@ public function scan_material_number(Request $request){
             ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
             ->where('shipment_schedules.destination_code', '=', 'Y1000YJ')
             ->orderBy('shipment_schedules.st_date', 'ASC')
-            ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
-            ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo')
+            ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
+            ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
             ->having('flo_quantity' , '>', 0)
             ->first();
         }
@@ -341,8 +397,8 @@ public function scan_material_number(Request $request){
             ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
             ->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
             ->orderBy('shipment_schedules.st_date', 'ASC')
-            ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
-            ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo')
+            ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
+            ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
             ->having('flo_quantity' , '>', 0)
             ->first();
         }

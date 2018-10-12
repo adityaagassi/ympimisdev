@@ -19,13 +19,14 @@ Route::get('404', function() {
 return view('404');
 });
 
-Route::get('tes', function() {
-return view('tes');
-});
+// Route::get('tes', function() {
+// return view('tes');
+// });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+// route::get('tes', 'FloController@index_flo_invoice');
 
 Route::get('index/user', 'UserController@index');
 Route::get('create/user', 'UserController@create');
@@ -147,6 +148,7 @@ Route::get('show/status/{id}', 'StatusController@show');
 
 Route::get('index/flo_view/{id}', 'FloController@index');
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
+Route::post('index/flo_invoice', 'FloController@index_flo_invoice');
 Route::post('index/flo', 'FloController@index_flo');
 Route::post('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
@@ -157,6 +159,8 @@ Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');
 
 Route::get('fetch/flo_container', 'FloController@fetch_flo_container');
+Route::get('fetch/flo_lading', 'FloController@fetch_flo_lading');
+Route::post('input/flo_lading', 'FloController@input_flo_lading');
 Route::post('update/flo_container', 'FloController@update_flo_container');
 Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
 
