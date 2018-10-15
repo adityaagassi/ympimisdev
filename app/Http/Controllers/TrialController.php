@@ -79,7 +79,7 @@ class TrialController extends Controller
 				$perolehan = DB::connection('mysql2')
 				->table('perolehan')
 				->where('gmc', '=', $flo_detail->material_number)
-				->where('tanggal', '=', $flo_detail->production_date)
+				->where('tanggal', '=', $tanggal)
 				->update(['actual' => $flo_detail->qty]);
 			}
 			catch (QueryException $e){

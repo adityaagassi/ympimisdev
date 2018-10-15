@@ -15,12 +15,16 @@ class CreateFloDetailsTable extends Migration
     {
         Schema::create('flo_details', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('serial_number')->unique();
+            $table->string('serial_number');
+            $table->string('material_number');
             $table->string('flo_number');
+            $table->string('completion')->nullable();
+            $table->string('transfer')->nullable();
             $table->double('quantity');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['serial_number', 'material_number'], 'flo_detail_unique');
         });
     }
 

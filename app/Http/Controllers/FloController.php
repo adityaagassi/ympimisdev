@@ -542,6 +542,7 @@ public function scan_serial_number(Request $request)
 
                     $flo_detail = new FloDetail([
                         'serial_number' =>  $serial_number,
+                        'material_number' => $request->get('material_number'),
                         'flo_number' => $flo_number,
                         'quantity' => $actual,
                         'created_by' => $id
@@ -667,6 +668,7 @@ public function scan_serial_number(Request $request)
                 else{
                     $flo_detail = new FloDetail([
                         'serial_number' =>  $serial_number,
+                        'material_number' => $request->get('material_number'),
                         'flo_number' => $request->get('flo_number'),
                         'quantity' => '1',
                         'created_by' => $id
@@ -823,26 +825,36 @@ public function reprint_flo(Request $request)
 public function destroy_serial_number(Request $request)
 {
     $flo_detail = FloDetail::find($request->get('id'));
-    $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-    $actual = DB::table('flo_details')
-    ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-    ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-    ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-    ->where('flo_details.id', '=', $request->get('id'))
-    ->select('material_volumes.lot_completion')
-    ->first();
+    if($flo_detail->completion != null){
+       $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+       $actual = DB::table('flo_details')
+       ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+       ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+       ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+       ->where('flo_details.id', '=', $request->get('id'))
+       ->select('material_volumes.lot_completion')
+       ->first();
 
-    $flo->actual = $flo->actual-$actual->lot_completion;
-    $flo->save();
+       $flo->actual = $flo->actual-$actual->lot_completion;
+       $flo->save();
 
-    $flo_detail = FloDetail::find($request->get('id'));
-    $flo_detail->forceDelete();
+       $flo_detail = FloDetail::find($request->get('id'));
+       $flo_detail->forceDelete();
 
-    $response = array(
+       $response = array(
         'status' => true,
         'message' => "Data has been deleted.",
     );
+       return Response::json($response);
+   }
+   else{
+    $response = array(
+        'status' => false,
+        'message' => "Data cannot be deleted, because data has been uploaded to SAP.",
+    );
     return Response::json($response);
+}
+
 }
 
 public function cancel_flo_settlement(Request $request)

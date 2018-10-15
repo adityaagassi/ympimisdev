@@ -1,0 +1,6 @@
+/vendor
+composer.phar
+composer.lock
+.DS_Store
+src/config/config.php
+.idea

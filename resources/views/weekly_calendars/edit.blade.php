@@ -62,27 +62,24 @@
         </div>
       </div>
       <div class="form-group row" align="right">
-          <label class="col-sm-4">Date To<span class="text-red">*</span></label>
-          <div class="col-sm-4">
-           <div class="input-group">
-            <input type="date" class="form-control" name="date_to" placeholder="Enter Date To" value="{{ $weekly_calendar->date_to }}" required>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          </div>
+        <label class="col-sm-4">Date To<span class="text-red">*</span></label>
+        <div class="col-sm-4">
+         <div class="input-group">
+          <input type="date" class="form-control" name="date_to" placeholder="Enter Date To" value="{{ $weekly_calendar->date_to }}" required>
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
       </div>
-    <!-- /.box-body -->
-    <div class="box-footer form-group row">
-      <div class="col-sm-4"></div>
+    </div>
+    <div class="col-sm-4 col-sm-offset-6">
       <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/weekly_calendar') }}">Cancel</a>
+        <a class="btn btn-danger" href="{{ url('index/weekly_calendar') }}">Cancel</a>
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
       </div>
     </div>
-  </form>
-</div>
-
+  </div>
+</form>
 </div>
 
 @endsection

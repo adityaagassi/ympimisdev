@@ -63,6 +63,23 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'ftp' => [
+            'driver' => 'ftp',
+            'host' => '133.176.54.55',
+            'port' => 21,
+            'username' => 'ympi',
+            'password' => 'ympi',
+
+    // Settings for SSH key based authentication...
+    // 'privateKey' => '/path/to/privateKey',
+    // 'password' => 'encryption-password',
+
+    // Optional SFTP Settings...
+    // 'port' => 22,
+    // 'root' => '',
+    // 'timeout' => 30,
+        ],
+
     ],
 
 ];

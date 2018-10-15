@@ -21,12 +21,12 @@
     {{ $errors->first() }}
   </div>   
   @endif
-    @if (session('error'))
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-ban"></i> Error!</h4>
-                {{ session('error') }}
-            </div>   
+  @if (session('error'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Error!</h4>
+    {{ session('error') }}
+  </div>   
   @endif
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
@@ -66,37 +66,37 @@
           <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="origin_group_code" style="width: 100%;" >
-                        @foreach($origin_groups as $origin_group)
-                        @if($material->origin_group_code == $origin_group->origin_group_code)
-                        <option value="{{ $origin_group->origin_group_code }}" selected>{{ $origin_group->origin_group_name }}</option>
-                        @else
-                        <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
-                        @endif
-                        @endforeach
+              @foreach($origin_groups as $origin_group)
+              @if($material->origin_group_code == $origin_group->origin_group_code)
+              <option value="{{ $origin_group->origin_group_code }}" selected>{{ $origin_group->origin_group_name }}</option>
+              @else
+              <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
+              @endif
+              @endforeach
             </select>
           </div>
 
         </div>
         <!-- /.box-body -->
-        <div class="box-footer form-group row">
-          <div class="col-sm-4"></div>
+        <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
-            <a class="btn btn-danger col-sm-14" href="{{ url('index/material') }}">Cancel</a>
+            <a class="btn btn-danger" href="{{ url('index/material') }}">Cancel</a>
           </div>
           <div class="btn-group">
             <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
           </div>
         </div>
-      </form>
-    </div>
-    
+      </div>
+    </form>
   </div>
+  
+</div>
 
-  @endsection
+@endsection
 
-  @section('scripts')
-  <script>
-    $(function () {
+@section('scripts')
+<script>
+  $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
 

@@ -24,11 +24,11 @@
   </div>   
   @endif
   @if (session('error'))
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-ban"></i> Error!</h4>
-                {{ session('error') }}
-            </div>   
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Error!</h4>
+    {{ session('error') }}
+  </div>   
   @endif
 
 
@@ -61,19 +61,17 @@
             </div>
           </div>
         </div>
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer form-group row">
-          <div class="col-sm-4"></div>
+        <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
-          <a class="btn btn-danger col-sm-14" href="{{ url('index/container') }}">Cancel</a>
+            <a class="btn btn-danger" href="{{ url('index/container') }}">Cancel</a>
           </div>
           <div class="btn-group">
-          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 
 
   @endsection
@@ -86,8 +84,8 @@
 
   });
     $(document).on("wheel", "input[type=number]", function (e) {
-    $(this).blur();
-});
-</script>
-@stop
+      $(this).blur();
+    });
+  </script>
+  @stop
 

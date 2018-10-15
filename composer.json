@@ -12,7 +12,8 @@
         "mike42/escpos-php": "^2.0",
         "yajra/laravel-datatables-buttons": "1.0",
         "yajra/laravel-datatables-html": "1.0",
-        "yajra/laravel-datatables-oracle": "7.0"
+        "yajra/laravel-datatables-oracle": "7.0",
+        "anchu/ftp": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

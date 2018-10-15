@@ -80,17 +80,16 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- /.box-body -->
-    <div class="box-footer form-group row">
-      <div class="col-sm-4"></div>
-      <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/production_schedule') }}">Cancel</a>
+      <!-- /.box-body -->
+      <div class="col-sm-4 col-sm-offset-6">
+        <div class="btn-group">
+          <a class="btn btn-danger" href="{{ url('index/production_schedule') }}">Cancel</a>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+        </div>
       </div>
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-      </div>
-    </div>
+    </div>    
   </form>
 </div>
 

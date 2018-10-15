@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ShipmentSchedulesTableSeeder::class);
         $this->call(CodeGeneratorsTableSeeder::class);
         $this->call(StatusesTableSeeder::class);
+        $this->call(BatchSettingsTableSeeder::class);
     }
 }

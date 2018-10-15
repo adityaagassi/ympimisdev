@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\UploadCompletions::class,
+        Commands\UploadTransfers::class,
         //
     ];
 
@@ -24,8 +26,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('upload:completions')->dailyAt('09:25');
+        $schedule->command('upload:completions')->dailyAt('16:55');
+        $schedule->command('upload:completions')->dailyAt('19:55');
+
+        $schedule->command('upload:transfers')->dailyAt('09:25');
+        $schedule->command('upload:transfers')->dailyAt('16:55');
+        $schedule->command('upload:transfers')->dailyAt('19:55');
         // $schedule->command('inspire')
         //          ->hourly();
+        //          
+        // foreach (['08:45', '09:15', '09:45', '10:15'] as $time) {
+        //     $schedule->command('command:name')->dailyAt($time);
+        // }
     }
 
     /**

@@ -57,11 +57,9 @@
             <input type="text" class="form-control" name="destination_shortname" placeholder="Enter Destination Shortname" value="{{$destination->destination_shortname}}">
           </div>
         </div>
-        <!-- /.box-body -->
-        <div class="box-footer form-group row">
-          <div class="col-sm-4"></div>
+        <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
-            <a class="btn btn-danger col-sm-14" href="{{ url('index/destination') }}">Cancel</a>
+            <a class="btn btn-danger" href="{{ url('index/destination') }}">Cancel</a>
           </div>
           <div class="btn-group">
             <button type="submit" class="btn btn-primary col-sm-14">Submit</button>

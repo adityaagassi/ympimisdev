@@ -86,6 +86,11 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
             'League\\Flysystem\\' => 17,
             'Laravel\\Tinker\\' => 15,
         ),
+        'J' => 
+        array (
+            'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
+            'JakubOnderka\\PhpConsoleColor\\' => 29,
+        ),
         'I' => 
         array (
             'Illuminate\\' => 11,
@@ -249,6 +254,14 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
         ),
+        'JakubOnderka\\PhpConsoleHighlighter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
+        ),
+        'JakubOnderka\\PhpConsoleColor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
+        ),
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
@@ -322,17 +335,6 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
                 0 => __DIR__ . '/..' . '/maatwebsite/excel/src',
             ),
         ),
-        'J' => 
-        array (
-            'JakubOnderka\\PhpConsoleHighlighter' => 
-            array (
-                0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
-            ),
-            'JakubOnderka\\PhpConsoleColor' => 
-            array (
-                0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
-            ),
-        ),
         'D' => 
         array (
             'Doctrine\\Common\\Inflector\\' => 
@@ -340,10 +342,24 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
                 0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
             ),
         ),
+        'A' => 
+        array (
+            'Anchu\\Ftp\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/anchu/ftp/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
+        'Anchu\\Ftp\\Facades\\Ftp' => __DIR__ . '/..' . '/anchu/ftp/src/Anchu/Ftp/Facades/Ftp.php',
+        'Anchu\\Ftp\\Ftp' => __DIR__ . '/..' . '/anchu/ftp/src/Anchu/Ftp/Ftp.php',
+        'Anchu\\Ftp\\FtpManager' => __DIR__ . '/..' . '/anchu/ftp/src/Anchu/Ftp/FtpManager.php',
+        'Anchu\\Ftp\\FtpServiceProvider' => __DIR__ . '/..' . '/anchu/ftp/src/Anchu/Ftp/FtpServiceProvider.php',
+        'App\\BatchSetting' => __DIR__ . '/../..' . '/app/BatchSetting.php',
         'App\\CodeGenerator' => __DIR__ . '/../..' . '/app/CodeGenerator.php',
+        'App\\Console\\Commands\\UploadCompletions' => __DIR__ . '/../..' . '/app/Console/Commands/UploadCompletions.php',
+        'App\\Console\\Commands\\UploadTransfers' => __DIR__ . '/../..' . '/app/Console/Commands/UploadTransfers.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Container' => __DIR__ . '/../..' . '/app/Container.php',
         'App\\ContainerAttachment' => __DIR__ . '/../..' . '/app/ContainerAttachment.php',
@@ -352,6 +368,7 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Flo' => __DIR__ . '/../..' . '/app/Flo.php',
         'App\\FloDetail' => __DIR__ . '/../..' . '/app/FloDetail.php',
+        'App\\FloLog' => __DIR__ . '/../..' . '/app/FloLog.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -429,6 +446,7 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
         'Barryvdh\\Debugbar\\Twig\\Extension\\Stopwatch' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/Twig/Extension/Stopwatch.php',
         'Barryvdh\\Debugbar\\Twig\\Node\\StopwatchNode' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/Twig/Node/StopwatchNode.php',
         'Barryvdh\\Debugbar\\Twig\\TokenParser\\StopwatchTokenParser' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/Twig/TokenParser/StopwatchTokenParser.php',
+        'BatchSettingsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/BatchSettingsTableSeeder.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
@@ -445,12 +463,14 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
         'Collective\\Html\\HtmlServiceProvider' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlServiceProvider.php',
         'ContainerSchedulesTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ContainerSchedulesTableSeeder.php',
         'ContainersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ContainersTableSeeder.php',
+        'CreateBatchSettingsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_15_091141_create_batch_settings_table.php',
         'CreateCodeGeneratorsTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_10_035118_create_code_generators_table.php',
         'CreateContainerAttachmentsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_05_113836_create_container_attachments_table.php',
         'CreateContainerSchedulesTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_27_092422_create_container_schedules_table.php',
         'CreateContainersTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_27_092249_create_containers_table.php',
         'CreateDestinationsTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_27_092150_create_destinations_table.php',
         'CreateFloDetailsTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_18_030256_create_flo_details_table.php',
+        'CreateFloLogsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_15_165200_create_flo_logs_table.php',
         'CreateFlosTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_07_101731_create_flos_table.php',
         'CreateLevelsTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_24_082613_create_levels_table.php',
         'CreateMaterialVolumesTable' => __DIR__ . '/../..' . '/database/migrations/2018_08_27_092353_create_material_volumes_table.php',
@@ -1771,9 +1791,9 @@ class ComposerStaticInit4e1035c04a1c77ef5ced618d86ed08eb
         'Illuminate\\View\\ViewFinderInterface' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewFinderInterface.php',
         'Illuminate\\View\\ViewName' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewName.php',
         'Illuminate\\View\\ViewServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewServiceProvider.php',
-        'JakubOnderka\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/JakubOnderka/PhpConsoleColor/ConsoleColor.php',
-        'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/JakubOnderka/PhpConsoleColor/InvalidStyleException.php',
-        'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/JakubOnderka/PhpConsoleHighlighter/Highlighter.php',
+        'JakubOnderka\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/ConsoleColor.php',
+        'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/InvalidStyleException.php',
+        'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/Highlighter.php',
         'JsonSerializable' => __DIR__ . '/..' . '/nesbot/carbon/src/JsonSerializable.php',
         'Laravel\\Tinker\\ClassAliasAutoloader' => __DIR__ . '/..' . '/laravel/tinker/src/ClassAliasAutoloader.php',
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',

@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Yajra\Datatables\ButtonsServiceProvider::class,
+        Anchu\Ftp\FtpServiceProvider::class,
 
         /*
          * Package Service Providers...

@@ -78,24 +78,21 @@
         </div>
       </div>
       <div class="form-group row" align="right">
-      <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
-      <div class="col-sm-4">
-        <div class="input-group">
-          <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $production_schedule->quantity }}" required>
-          <span class="input-group-addon">pc(s)</span>
+        <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+        <div class="col-sm-4">
+          <div class="input-group">
+            <input min="1" type="number" class="form-control" name="quantity" placeholder="Enter Quantity" value="{{ $production_schedule->quantity }}" required>
+            <span class="input-group-addon">pc(s)</span>
+          </div>
         </div>
       </div>
-    </div>
-    </div>
-    
-    <!-- /.box-body -->
-    <div class="box-footer form-group row">
-      <div class="col-sm-4"></div>
-      <div class="btn-group">
-        <a class="btn btn-danger col-sm-14" href="{{ url('index/production_schedule') }}">Cancel</a>
-      </div>
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+      <div class="col-sm-4 col-sm-offset-6">
+        <div class="btn-group">
+          <a class="btn btn-danger" href="{{ url('index/production_schedule') }}">Cancel</a>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+        </div>
       </div>
     </div>
   </form>
