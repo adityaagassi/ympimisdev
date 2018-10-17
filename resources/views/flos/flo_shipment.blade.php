@@ -185,19 +185,22 @@
 						$('#imagePreviewAfter').html("");
 						$.each(result.file_before, function( index, value ) {
 							if(value.length > 0){
-								$('#imagePreviewBefore').append('<img height="90" width="135" src="'+value+'">'
+								var conf = value.split('/');
+								$('#imagePreviewBefore').append('<div class="col-md-4"><img height="90" width="110" src="'+value+'"></div><div class="col-md-1"><button type="button" href="javascript:void(0)" id="'+conf[8]+'" class="btn btn-danger btn-xs" onClick="deleteConfirmation(id)">x</button></div>'
 									);
 							}
 						});
 						$.each(result.file_process, function( index, value ) {
 							if(value.length > 0){
-								$('#imagePreviewProcess').append('<img height="90" width="135" src="'+value+'">'
+								var conf = value.split('/');
+								$('#imagePreviewProcess').append('<div class="col-md-4"><img height="90" width="110" src="'+value+'"></div><div class="col-md-1"><button type="button" href="javascript:void(0)" id="'+conf[8]+'" class="btn btn-danger btn-xs" onClick="deleteConfirmation(id)">x</button></div>'
 									);
 							}
 						});
 						$.each(result.file_after, function( index, value ) {
 							if(value.length > 0){
-								$('#imagePreviewAfter').append('<img height="90" width="135" src="'+value+'">'
+								var conf = value.split('/');
+								$('#imagePreviewAfter').append('<div class="col-md-4"><img height="90" width="110" src="'+value+'"></div><div class="col-md-1"><button type="button" href="javascript:void(0)" id="'+conf[8]+'" class="btn btn-danger btn-xs" onClick="deleteConfirmation(id)">x</button></div>'
 									);
 							}
 						});
@@ -240,6 +243,36 @@
 				{ "data": "action" }
 				]
 			});
+		}
+
+		function deleteConfirmation(id){
+			if(confirm("Are you sure you want to delete this attachment?")){
+				var data = {
+					id:id,
+				}
+				$.post('{{ url("destroy/flo_attachment") }}', data, function(result, status, xhr){
+					console.log(status);
+					console.log(result);
+					console.log(xhr);
+					if(xhr.status == 200){
+						if(result.status){
+							$('#container_after').val('');
+							$('#container_process').val('');
+							$('#container_before').val('');
+							$('#attModal').modal('hide');
+							$('#iv_table').DataTable().ajax.reload();
+							openSuccessGritter('Success!', result.message);
+						}
+					}
+					else{
+						openErrorGritter('Error!', 'Disconnected from server');
+						audio_error.play();
+					}
+				});
+			}
+			else{
+				return false;
+			}
 		}
 
 		function openErrorGritter(title, message) {

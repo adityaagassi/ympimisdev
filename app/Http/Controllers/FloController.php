@@ -63,24 +63,24 @@ class FloController extends Controller
             ))->with('page', 'FLO Delivery');
         }
         elseif($id == 'stuffing'){
-         $flos = Flo::orderBy('flo_number', 'asc')
-         ->where('status', '=', 2)
-         ->get();
+           $flos = Flo::orderBy('flo_number', 'asc')
+           ->where('status', '=', 2)
+           ->get();
 
-         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
-         ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
-         ->where('shipment_date', '<=', DB::raw('last_day(now())'))
-         ->get();
+           $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+           ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+           ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+           ->get();
 
-         return view('flos.flo_stuffing', array(
+           return view('flos.flo_stuffing', array(
             'flos' => $flos,
             'container_schedules' => $container_schedules,
         ))->with('page', 'FLO Stuffing');
-     }
-     elseif ($id == 'shipment'){
-         return view('flos.flo_shipment')->with('page', 'FLO Shipment');
-     }
-     elseif ($id == 'detail'){
+       }
+       elseif ($id == 'shipment'){
+           return view('flos.flo_shipment')->with('page', 'FLO Shipment');
+       }
+       elseif ($id == 'detail'){
         $flosTable = DB::table('flos')
         ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
         ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
@@ -112,6 +112,19 @@ class FloController extends Controller
             'invoices' => $invoices,
         ))->with('page', 'FLO Lading');
     }
+}
+
+public function destroy_flo_attachment(Request $request){
+    $container_attachment = ContainerAttachment::where('file_name', '=', $request->get('id'))->first();
+    $filepath = public_path() . $container_attachment->file_path . $container_attachment->file_name;
+    File::delete($filepath);
+    $container_attachment->delete();
+
+    $response = array(
+        'status' => true,
+        'message' => 'Photo has been deleted.'
+    );
+    return Response::json($response);
 }
 
 public function index_flo_invoice(){
@@ -291,8 +304,8 @@ public function update_flo_container(Request $request){
         {
             $data = file_get_contents($file);
             $code_generator = CodeGenerator::where('note','=','container')->first();
-            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-            $photo_number = $code_generator->prefix . $number+1;
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
+            $photo_number = $code_generator->prefix . $number;
             $ext = $file->getClientOriginalExtension();
             $filepath = public_path() . "/uploads/containers/before/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
@@ -314,8 +327,8 @@ public function update_flo_container(Request $request){
         {
             $data = file_get_contents($file);
             $code_generator = CodeGenerator::where('note','=','container')->first();
-            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-            $photo_number = $code_generator->prefix . $number+1;
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
+            $photo_number = $code_generator->prefix . $number;
             $ext = $file->getClientOriginalExtension();
             $filepath = public_path() . "/uploads/containers/process/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
@@ -337,8 +350,8 @@ public function update_flo_container(Request $request){
         {
             $data = file_get_contents($file);
             $code_generator = CodeGenerator::where('note','=','container')->first();
-            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-            $photo_number = $code_generator->prefix . $number+1;
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
+            $photo_number = $code_generator->prefix . $number;
             $ext = $file->getClientOriginalExtension();
             $filepath = public_path() . "/uploads/containers/after/" . $photo_number . "." . $ext;
             $attachment = new ContainerAttachment([
@@ -833,28 +846,28 @@ public function destroy_serial_number(Request $request)
 {
     $flo_detail = FloDetail::find($request->get('id'));
     if($flo_detail->completion != null){
-     $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-     $actual = DB::table('flo_details')
-     ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-     ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-     ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-     ->where('flo_details.id', '=', $request->get('id'))
-     ->select('material_volumes.lot_completion')
-     ->first();
+       $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+       $actual = DB::table('flo_details')
+       ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+       ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+       ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+       ->where('flo_details.id', '=', $request->get('id'))
+       ->select('material_volumes.lot_completion')
+       ->first();
 
-     $flo->actual = $flo->actual-$actual->lot_completion;
-     $flo->save();
+       $flo->actual = $flo->actual-$actual->lot_completion;
+       $flo->save();
 
-     $flo_detail = FloDetail::find($request->get('id'));
-     $flo_detail->forceDelete();
+       $flo_detail = FloDetail::find($request->get('id'));
+       $flo_detail->forceDelete();
 
-     $response = array(
+       $response = array(
         'status' => true,
         'message' => "Data has been deleted.",
     );
-     return Response::json($response);
- }
- else{
+       return Response::json($response);
+   }
+   else{
     $response = array(
         'status' => false,
         'message' => "Data cannot be deleted, because data has been uploaded to SAP.",

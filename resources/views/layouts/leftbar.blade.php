@@ -245,30 +245,30 @@
                                                           <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                                         </li>
                                                         @endif
-                                         {{--  @if(in_array(Auth::user()->level_id, [1]))
-                                          <li class="treeview">
-                                            <a href="#"><i class="fa fa-info-circle"></i> <span>FLO Informations</span>
-                                              <span class="pull-right-container">
-                                                <i class="fa fa-angle-left pull-right"></i>
-                                              </span>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                              <li><a href="#">Outstanding FLO</a></li>
-                                              <li><a href="#">Link in level 2</a></li>
-                                            </ul>
-                                          </li>
-                                          @endif --}}
-                                          <li class="header">Trial Menu</li>
-                                          <li>
-                                            <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
-                                          </li>
-                                          <li>
-                                            <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
-                                          </li>
-                                          <li>
-                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
-                                          </li>
-                                        </ul>
-                                      </section>
-                                    </aside>
+
+                                                        @if(in_array(Auth::user()->level_id, [1]))
+                                                        @if(isset($page) && $page == "Storage Loc. Stock")
+                                                        <li class="active">
+                                                          @else
+                                                          <li>
+                                                            @endif
+                                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>Storage Loc. Stock</span></a>
+                                                          </li>
+                                                          @endif
+
+                                                          
+
+                                                          <li class="header">Trial Menu</li>
+                                                          <li>
+                                                            <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+                                                          </li>
+                                                        </ul>
+                                                      </section>
+                                                    </aside>
 

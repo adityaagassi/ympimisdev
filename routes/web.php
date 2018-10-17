@@ -173,6 +173,7 @@ Route::post('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
+Route::post('destroy/flo_attachment', 'FloController@destroy_flo_attachment');
 Route::post('scan/flo_settlement', 'FloController@flo_settlement');
 Route::post('reprint/flo', 'FloController@reprint_flo');
 Route::post('cancel/flo_settlement', 'FloController@cancel_flo_settlement');

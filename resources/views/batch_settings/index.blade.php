@@ -46,19 +46,8 @@
                     @foreach($batch_settings as $batch_setting)
                     <tr>
                       <td style="font-size: 14">{{ date('H:i', strtotime($batch_setting->batch_time))}}</td>
-                      <td style="font-size: 14">
-                        @if($batch_setting->upload == 1)
-                        ON
-                        @else
-                        OFF
-                        @endif
-                      </td>
-                      <td style="font-size: 14">
-                        @if($batch_setting->download == 1)
-                        ON
-                        @else
-                        OFF
-                      @endif</td>
+                      <td style="font-size: 14">{{ $batch_setting->upload == 1 ? 'ON' : 'OFF' }}</td>
+                      <td style="font-size: 14">{{ $batch_setting->download == 1 ? 'ON' : 'OFF' }}</td>
                       <td style="font-size: 14">{{$batch_setting->remark}}
                       </td>
                       <td>

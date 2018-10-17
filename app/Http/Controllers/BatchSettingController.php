@@ -49,13 +49,15 @@ class BatchSettingController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        $upload = $request->has('upload') ? '1' : '0';
+        $download = $request->has('upload') ? '1' : '0';
 
+        try{
             $id = Auth::id();
             $batch_setting = new BatchSetting([
-              'batch_time' => $request->get('batch_time'),
-              'upload' => $request->get('upload'),
-              'download' => $request->get('download'),
+              'batch_time' => date('H:i:s', strtotime($request->get('batch_time'))),
+              'upload' => $upload,
+              'download' => $download,
               'remark' => $request->get('remark'),
               'created_by' => $id
           ]);
