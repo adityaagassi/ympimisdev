@@ -59,34 +59,39 @@ class UploadCompletions extends Command
         ->where('flo_details.created_at', '<=', $date)
         ->select(
             'materials.issue_storage_location', 
-            'flo_details.material_number', 
+            'flo_details.material_number',
+            DB::raw('date(flo_details.created_at) as date'),
             DB::raw('sum(flo_details.quantity) as qty')
         )
-        ->groupBy('materials.issue_storage_location', 'flo_details.material_number')
+        ->groupBy(
+            'materials.issue_storage_location', 
+            DB::raw('date(flo_details.created_at)'),
+            'flo_details.material_number'
+        )
         ->having(DB::raw('sum(flo_details.quantity)'), '>', 0)
         ->get();
 
         $flo_text = "";
         if(count($flo_completions) > 0){
             foreach ($flo_completions as $flo_completion) {
-                $flo_text .= self::writeString('8190', 4, " ");
-                $flo_text .= self::writeString($flo_completion->issue_storage_location, 4, " ");
-                $flo_text .= self::writeString($flo_completion->material_number, 18, " ");
-                $flo_text .= self::writeDecimal($flo_completion->qty, 14, "0");
-                $flo_text .= self::writeDate(date('Y-m-d H:i:s'), "completion");
-                $flo_text .= self::writeString('', 16, " ");
+                $flo_text .= self::writeString('8190', 4, " "); //plant ympi
+                $flo_text .= self::writeString($flo_completion->issue_storage_location, 4, " "); //sloc
+                $flo_text .= self::writeString($flo_completion->material_number, 18, " "); //gmc
+                $flo_text .= self::writeDecimal($flo_completion->qty, 14, "0"); //qty
+                $flo_text .= self::writeDate($flo_completion->date, "completion"); //date
+                $flo_text .= self::writeString('', 16, " "); //reference number
                 $flo_text .= "\r\n";
             }
             File::put($flofilepath, $flo_text);
 
-            $success = self::uploadFTP($flofilepath, $flofiledestination);
+            // $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            if($success){
-                $flo_details->update(['completion' => $flofilename]);
-            }
-            else{
-                echo 'false';
-            }
+            // if($success){
+            //     $flo_details->update(['completion' => $flofilename]);
+            // }
+            // else{
+            //     echo 'false';
+            // }
         }
         else{
             echo 'false';

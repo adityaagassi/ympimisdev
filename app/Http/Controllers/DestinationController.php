@@ -70,9 +70,7 @@ class DestinationController extends Controller
             // self::delete($lid);
                 return back()->with('error', 'Destination code or destination name already exist.')->with('page', 'Destination');
             }
-
         }
-        //
     }
 
     /**
@@ -84,8 +82,6 @@ class DestinationController extends Controller
     public function show($id)
     {
         $destination = Destination::find($id);
-        $users = User::orderBy('name', 'ASC')->get();
-
         return view('destinations.show', array(
             'destination' => $destination,
         ))->with('page', 'Destination');
@@ -101,7 +97,6 @@ class DestinationController extends Controller
     public function edit($id)
     {
         $destination = Destination::find($id);
-
         return view('destinations.edit', array(
             'destination' => $destination,
         ))->with('page', 'Destination');

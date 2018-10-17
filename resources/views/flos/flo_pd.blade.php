@@ -385,6 +385,7 @@ input[type=number] {
 	}
 
 	function scanFloNumber(){
+		$("#flo_number_settlement").prop("disabled", true);
 		var flo_number = $("#flo_number_settlement").val();
 		var data = {
 			flo_number : flo_number,
@@ -403,17 +404,20 @@ input[type=number] {
 					fillFloTable($("#flo_number").val());
 					$('#flo_number').val("");
 					refresh();
+					$("#flo_number_settlement").prop("disabled", false);
 					$("#flo_number_settlement").focus();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 					audio_error.play();
+					$("#flo_number_settlement").prop("disabled", false);
 					$("#flo_number_settlement").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
 				audio_error.play();
+				$("#flo_number_settlement").prop("disabled", false);
 				$("#flo_number_settlement").val("");
 			}
 		});

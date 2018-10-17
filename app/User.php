@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'level_id', 'created_by'
+        'name', 'username', 'email', 'password', 'level_id', 'department_id', 'created_by'
     ];
 
     /**
@@ -30,11 +30,14 @@ class User extends Authenticatable
         'password', 'remember_token', 'deleted_at', 'created_at'
     ];
 
-
-
     public function level()
     {
-        return $this->belongsTo('App\Level')->withTrashed();
+        return $this->belongsTo('App\Level', 'level_id')->withTrashed();
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\Department', 'department_id')->withTrashed();
     }
 
 }

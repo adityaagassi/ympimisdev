@@ -362,6 +362,7 @@ td:hover {
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanMaterialNumber(){
+		$("#material_number").prop('disabled',true);
 		var material_number = $("#material_number").val();
 		var ymj = $("#ymj").is(":checked");
 		var data = {
@@ -375,7 +376,6 @@ td:hover {
 			if(xhr.status == 200){
 				if(result.status){
 					openInfoGritter('Info Success!', result.message);
-					$("#material_number").prop('disabled',true);
 					$("#serial_number").prop('disabled', false);
 					if(result.status_code == 1000){
 						if($("#flo_number").val() != result.flo_number){
@@ -398,18 +398,21 @@ td:hover {
 				else{
 					openErrorGritter('Error!', result.message);
 					audio_error.play();
+					$("#material_number").prop('disabled', false);
 					$("#material_number").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
 				audio_error.play();
+				$("#material_number").prop('disabled', false);
 				$("#material_number").val("");
 			}
 		});
 	}
 
 	function scanSerialNumber(){
+		$("#serial_number").prop("disabled", true);
 		var material_number = $("#material_number").val();
 		var serial_number = $("#serial_number").val();
 		var flo_number = $("#flo_number").val();
@@ -441,7 +444,6 @@ td:hover {
 					openErrorGritter('Error!', result.message);
 					$("#material_number").val("");
 					$("#serial_number").val("");
-					$("#serial_number").prop("disabled", true);
 					$("#material_number").prop("disabled", false);
 					$("#material_number").focus();
 					audio_error.play();
@@ -452,7 +454,6 @@ td:hover {
 				audio_error.play();
 				$("#material_number").val("");
 				$("#serial_number").val("");
-				$("#serial_number").prop("disabled", true);
 				$("#material_number").prop("disabled", false);
 				$("#material_number").focus();
 			}
@@ -460,6 +461,7 @@ td:hover {
 	}
 
 	function scanFloNumber(){
+		$("#flo_number_settlement").prop("disabled", true);
 		var flo_number = $("#flo_number_settlement").val();
 		var data = {
 			flo_number : flo_number,
@@ -478,17 +480,20 @@ td:hover {
 					fillFloTable($("#flo_number").val());
 					$('#flo_number').val("");
 					refresh();
+					$("#flo_number_settlement").prop("disabled", false);
 					$("#flo_number_settlement").focus();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 					audio_error.play();
+					$("#flo_number_settlement").prop("disabled", false);
 					$("#flo_number_settlement").val("");
 				}
 			}
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
 				audio_error.play();
+					$("#flo_number_settlement").prop("disabled", false);
 				$("#flo_number_settlement").val("");
 			}
 		});

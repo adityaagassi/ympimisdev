@@ -26,7 +26,26 @@ return view('404');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-// route::get('tes', 'FloController@index_flo_invoice');
+route::get('tes', 'TrialController@tes');
+// 
+// Route::get('index/user', 'UserController@index');
+// 
+// 
+Route::get('index/batch_setting', 'BatchSettingController@index');
+Route::get('create/batch_setting', 'BatchSettingController@create');
+Route::post('create/batch_setting','BatchSettingController@store');
+Route::get('destroy/batch_setting/{id}', 'BatchSettingController@destroy');
+Route::get('edit/batch_setting/{id}', 'BatchSettingController@edit');
+Route::post('edit/batch_setting/{id}', 'BatchSettingController@update');
+Route::get('show/batch_setting/{id}', 'BatchSettingController@show');
+
+Route::get('index/department', 'DepartmentController@index');
+Route::get('create/department', 'DepartmentController@create');
+Route::post('create/department','DepartmentController@store');
+Route::get('destroy/department/{id}', 'DepartmentController@destroy');
+Route::get('edit/department/{id}', 'DepartmentController@edit');
+Route::post('edit/department/{id}', 'DepartmentController@update');
+Route::get('show/department/{id}', 'DepartmentController@show');
 
 Route::get('index/user', 'UserController@index');
 Route::get('create/user', 'UserController@create');

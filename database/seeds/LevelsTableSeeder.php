@@ -18,63 +18,30 @@ class LevelsTableSeeder extends Seeder
               'created_at' => date('Y-m-d H:i:s'),
               'updated_at' => date('Y-m-d H:i:s'),
           ]
-        );
+      );
         DB::table('levels')->insert(
             [
-                'level_name' => 'Prod. Assy-FL',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
+              'level_name' => 'Operator',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+      );
         DB::table('levels')->insert(
             [
-                'level_name' => 'Prod. Assy-CL',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
+              'level_name' => 'Staff',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+      );
         DB::table('levels')->insert(
             [
-                'level_name' => 'Prod. Assy-SX',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
-        DB::table('levels')->insert(
-            [
-                'level_name' => 'Prod. Edin',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
-        DB::table('levels')->insert(
-            [
-                'level_name' => 'WH-Logistic',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
-        DB::table('levels')->insert(
-            [
-                'level_name' => 'Logistic',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
-        DB::table('levels')->insert(
-            [
-                'level_name' => 'Assy-Leader',
-                'created_by' => '1',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        );
-        //
+              'level_name' => 'Leader',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+      );
     }
 }

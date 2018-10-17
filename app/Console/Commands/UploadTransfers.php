@@ -3,6 +3,13 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Status;
+use App\FloDetail;
+use Illuminate\Support\Facades\DB;
+use File;
+use Illuminate\Support\Facades\Auth;
+use Response;
+use FTP;
 
 class UploadTransfers extends Command
 {
@@ -38,56 +45,65 @@ class UploadTransfers extends Command
     public function handle()
     {
         $date = date('Y-m-d H:i:s');
-        $flofilename = 'ympi_upload_flo_' . date('ymdhis') . '.txt';
-        $flofilepath = public_path() . "/uploads/sap/completions/" . $flofilename;
-        $flofiledestination = "ma/ympi/prodordconf/" . $flofilename;
+        $flofilename = 'ympigm_upload_flo_' . date('ymdhis') . '.txt';
+        $flofilepath = public_path() . "/uploads/sap/transfers/" . $flofilename;
+        $flofiledestination = "ma/ympigm/" . $flofilename;
 
-        $flo_details = FloDetail::whereNull('flo_details.transfer')
+        $flo_details = FloDetail::leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+        ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
+        ->where('flo_logs.status', '=', 2)
         ->where('flos.status' , '>', 1)
+        ->whereNull('flo_details.transfer')
         ->where('flo_details.created_at', '<=', $date);
 
         $flo_transfers = DB::table('flo_details')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-        ->where('flos.status' , '>', 1)
+        ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
+        ->where('flo_logs.status', '=', 2)
+        ->where('flos.status', '>', 1)
         ->whereNull('flo_details.transfer')
         ->where('flo_details.created_at', '<=', $date)
         ->select(
             'materials.issue_storage_location', 
-            'flo_details.material_number'
-            // DB::raw('sum(flo_details.quantity) as qty')
+            'flo_details.material_number',
+            'flo_details.flo_number',
+            DB::raw('date(flo_logs.updated_at) as date'),
+            DB::raw('sum(flo_details.quantity) as qty')
         )
-        // ->groupBy('materials.issue_storage_location', 'flo_details.material_number')
-        // ->having(DB::raw('sum(flo_details.quantity)'), '>', 0)
+        ->groupBy('materials.issue_storage_location', 'flo_details.material_number', 
+            'flo_details.flo_number', DB::raw('date(flo_logs.updated_at)'))
+        ->having(DB::raw('sum(flo_details.quantity)'), '>', 0)
         ->get();
 
         $flo_text = "";
         if(count($flo_transfers) > 0){
             foreach ($flo_transfers as $flo_transfer) {
-                $flo_text .= self::writeString('8190', 15, " ");
-                $flo_text .= self::writeString('8190', 4, " ");
-                $flo_text .= self::writeString($flo_transfer->material_number, 18, " ");
-                $flo_text .= self::writeString($flo_transfer->issue_storage_location, 4, " ");
-                $flo_text .= self::writeString('8191', 4, " ");
-                $flo_text .= self::writeString('FSTK', 4, " ");
-                $flo_text .= self::writeDecimal($flo_transfer->qty, 13, "0");
-                $flo_text .= self::writeString('', 10, " ");
-                $flo_text .= self::writeString('', 10, " ");
-                $flo_text .= self::writeDate($flo_transfer->qty, "transfer");
-                $flo_text .= self::writeString($flo_transfer->transfer_transaction_code, 20, " ");
-                $flo_text .= self::writeString($flo_transfer->transfer_movement_type, 3, " ");
-                $flo_text .= self::writeString($flo_transfer->transfer_reason_code, 4, " ");
+                $flo_text .= self::writeString('8190', 15, " "); //plant ympi
+                $flo_text .= self::writeString('8190', 4, " "); //plant issue
+                $flo_text .= self::writeString($flo_transfer->material_number, 18, " "); //gmc
+                $flo_text .= self::writeString($flo_transfer->issue_storage_location, 4, " "); //sloc issue
+                $flo_text .= self::writeString('8191', 4, " "); //plant receive
+                $flo_text .= self::writeString('FSTK', 4, " "); // sloc receive
+                $flo_text .= self::writeDecimal($flo_transfer->qty, 13, "0"); //qty
+                $flo_text .= self::writeString('', 10, " "); //cost center
+                $flo_text .= self::writeString('', 10, " "); //gl account
+                $flo_text .= self::writeDate($flo_transfer->date, "transfer"); //date
+                $flo_text .= self::writeString('MB1B', 20, " "); //transaction code
+                $flo_text .= self::writeString('9P1', 3, " "); //mvt
+                $flo_text .= self::writeString('', 4, " "); //reason code
+                $flo_text .= "\r\n";
             }
             File::put($flofilepath, $flo_text);
 
             // $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            if($success){
-                $flo_details->update(['transfer' => $flofilename]);
-            }
-            else{
-                echo 'false';
-            }
+            // if($success){
+            //     $flo_details->update(['transfer' => $flofilename]);
+            // }
+            // else{
+            //     echo 'false';
+            // }
         }
         else{
             echo 'false';

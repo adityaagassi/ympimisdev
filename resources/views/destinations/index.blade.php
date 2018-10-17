@@ -25,7 +25,6 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box">
            {{--  <div class="box-header">
               <h3 class="box-title">Data Table With Full Features</h3>
             </div> --}}
@@ -65,15 +64,11 @@
                     </td>
                   </tr>
                   @endforeach
-                </table>
-              </div>
-              <!-- /.box-body -->
+                </tbody>
+              </table>
             </div>
-            <!-- /.box -->
           </div>
-          <!-- /.col -->
         </div>
-        <!-- /.row -->
       </div>
 
     </section>

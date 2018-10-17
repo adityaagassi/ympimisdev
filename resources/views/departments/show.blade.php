@@ -26,65 +26,48 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Detail User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('edit/user', $user->id)}}">
+    <form role="form">
       <div class="box-body">
-      	<input type="hidden" value="{{csrf_token()}}" name="_method" />
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Name</label>
+          <label class="col-sm-5">Department ID</label>
           <div class="col-sm-5" align="left">
-            {{$user->name}}
+            {{$department->id}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Username</label>
+          <label class="col-sm-5">Department Code</label>
           <div class="col-sm-5" align="left">
-            {{$user->username}}
+            {{$department->department_code}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">E-mail</label>
+          <label class="col-sm-5">Department Name</label>
           <div class="col-sm-5" align="left">
-            {{$user->email}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">User Level</label>
-          <div class="col-sm-5" align="left">
-            {{$user->level->level_name}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Department</label>
-          <div class="col-sm-5" align="left">
-            {{$user->department->department_name}}
+            {{$department->department_name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            @foreach($created_bys as $created_by)
-                        @if($user->created_by == $created_by->id)
-                        {{ $created_by->name }}
-                        @endif
-                        @endforeach
+            {{$department->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$user->updated_at}}
+            {{$department->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$user->created_at}}
+            {{$department->created_at}}
           </div>
         </div>
-
       </form>
     </div>
     
   </div>
 
   @endsection
+

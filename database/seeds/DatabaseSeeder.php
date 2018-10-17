@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CodeGeneratorsTableSeeder::class);
         $this->call(StatusesTableSeeder::class);
         $this->call(BatchSettingsTableSeeder::class);
+        $this->call(DepartmentsTableSeeder::class);
     }
 }

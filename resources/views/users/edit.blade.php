@@ -82,6 +82,20 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Department<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="department" style="width: 100%;" >
+              @foreach($departments as $department)
+              @if($user->department_id == $department->id)
+              <option value="{{ $department->id }}" selected>{{ $department->department_name }}</option>
+              @else
+              <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+              @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/user') }}">Cancel</a>

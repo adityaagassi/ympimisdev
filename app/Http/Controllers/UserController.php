@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Level;
+use App\Department;
 use Illuminate\Database\QueryException;
 
 
@@ -23,13 +24,12 @@ class UserController extends Controller
     
     public function index()
     {
-        // $users = User::all()->toArray();
-        // return view('users.index', compact('users'));
       $created_by = User::orderBy('name', 'ASC')
       ->get();
 
       $users = User::orderBy('name', 'ASC')
       ->get();
+
       return view('users.index', array(
         'users' => $users,
         'created_by' => $created_by
@@ -44,8 +44,10 @@ class UserController extends Controller
     public function create()
     {
       $levels = Level::orderBy('level_name', 'ASC')->get();
+      $departments = Department::orderBy('department_name', 'ASC')->get();
       return view('users.create', array(
-        'levels' => $levels
+        'levels' => $levels,
+        'departments' => $departments,
       ))->with('page', 'User');
         //
     }
@@ -68,6 +70,7 @@ class UserController extends Controller
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
             'level_id' => $request->get('level'),
+            'department_id' => $request->get('department'),
             'created_by' => $id
           ]);
 
@@ -120,10 +123,12 @@ class UserController extends Controller
     {
 
       $levels = Level::orderBy('level_name', 'ASC')->get();
+      $departments = Department::orderBy('department_name', 'ASC')->get();
       $user = User::find($id);
       return view('users.edit', array(
         'user' => $user,
         'levels' => $levels,
+        'departments' => $departments,
       ))->with('page', 'User');
         //
     }
@@ -148,6 +153,7 @@ class UserController extends Controller
             $user->email = $request->get('email');
             $user->password = $request->get('password');
             $user->level_id = $request->get('level');
+            $user->department_id = $request->get('department');
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
           }
@@ -164,6 +170,7 @@ class UserController extends Controller
             $user->email = $request->get('email');
                 // $user->password = $request->get('password');
             $user->level_id = $request->get('level');
+            $user->department_id = $request->get('department');
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
           }
@@ -194,11 +201,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        // $date = date('Y-m-d H:i:s');
-        // $user = User::find($id);
-        // $user->deleted_at = $date;
-        // $user->save();
-
       $user = User::find($id);
       $user->delete();
 

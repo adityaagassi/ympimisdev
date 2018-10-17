@@ -37,7 +37,6 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box">
            {{--  <div class="box-header">
               <h3 class="box-title">Data Table With Full Features</h3>
             </div> --}}
@@ -103,81 +102,78 @@
                     </td>
                   </tr>
                   @endforeach
-                </table>
-              </div>
-              <!-- /.box-body -->
+                </tbody>
+              </table>
             </div>
-            <!-- /.box -->
           </div>
-          <!-- /.col -->
         </div>
-        <!-- /.row -->
+      </div>
 
-      </section>
-      <!-- /.content -->
+    </section>
+    <!-- /.content -->
 
-      <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
+    <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+          </div>
+          <div class="modal-body" id="modalDeleteBody">
+            Are you sure delete?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id ="importForm" method="post" action="{{ url('import/container_schedule') }}" enctype="multipart/form-data">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+              <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
             </div>
-            <div class="modal-body" id="modalDeleteBody">
-              Are you sure delete?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <form id ="importForm" method="post" action="{{ url('import/container_schedule') }}" enctype="multipart/form-data">
-              <input type="hidden" value="{{csrf_token()}}" name="_token" />
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+            <div class="">
+              <div class="modal-body">
+                <center><input type="file" name="container_schedule" id="InputFile" accept="text/plain"></center>
               </div>
-              <div class="">
-                <div class="modal-body">
-                  <center><input type="file" name="container_schedule" id="InputFile" accept="text/plain"></center>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
-                </div>
-              </form>
-            </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+    </div>
 
-      @stop
+    @stop
 
-      @section('scripts')
-      <script>
-        $(function () {
-          $('#example1').DataTable({
-            "order": []
-          })
-          $('#example2').DataTable({
-            'paging'      : true,
-            'lengthChange': false,
-            'searching'   : false,
-            'ordering'    : true,
-            'info'        : true,
-            'autoWidth'   : false
-          })
+    @section('scripts')
+    <script>
+      $(function () {
+        $('#example1').DataTable({
+          "order": []
         })
-        function deleteConfirmation(url, name, id) {
-          jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-          jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-        }
-      </script>
+        $('#example2').DataTable({
+          'paging'      : true,
+          'lengthChange': false,
+          'searching'   : false,
+          'ordering'    : true,
+          'info'        : true,
+          'autoWidth'   : false
+        })
+      })
+      function deleteConfirmation(url, name, id) {
+        jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+        jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+      }
+    </script>
 
-      @stop
+    @stop

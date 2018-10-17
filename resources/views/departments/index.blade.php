@@ -6,7 +6,7 @@
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("create/container")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
+    <li><a href="{{ url("create/department")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
   </ol>
 </section>
 @endsection
@@ -29,23 +29,23 @@
           <table id="example1" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>Container Code</th>
-                <th>Container Name</th>
-                <th>Capacity (m&sup3;)</th>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Name</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($containers as $container)
+              @foreach($departments as $department)
               <tr>
-                <td style="font-size: 14">{{$container->container_code}}</td>
-                <td style="font-size: 14">{{$container->container_name}}</td>
-                <td style="font-size: 14">{{ round($container->capacity,4)}}</td>
+                <td style="font-size: 14">{{$department->id}}</td>
+                <td style="font-size: 14">{{$department->department_code}}</td>
+                <td style="font-size: 14">{{$department->department_name}}</td>
                 <td>
                   <center>
-                    <a class="btn btn-info btn-xs" href="{{url('show/container', $container['id'])}}">View</a>
-                    <a href="{{url('edit/container', $container['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/container") }}', '{{ $container['container_name'] }}', '{{ $container['id'] }}');">
+                    <a class="btn btn-info btn-xs" href="{{url('show/department', $department['id'])}}">View</a>
+                    <a href="{{url('edit/department', $department['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/department") }}', '{{ $department['department_name'] }}', '{{ $department['id'] }}');">
                       Delete
                     </a>
                   </center>

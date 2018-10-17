@@ -37,7 +37,6 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box">
            {{--  <div class="box-header">
               <h3 class="box-title">Data Table With Full Features</h3>
             </div> --}}
@@ -67,7 +66,7 @@
                     <tr>
                       <td style="font-size: 14">{{ date('M-Y', strtotime($shipment_schedule->st_month))}}</td>
                       <td style="font-size: 14">
-                      @if(isset($shipment_schedule->weeklycalendar->week_name))
+                        @if(isset($shipment_schedule->weeklycalendar->week_name))
                         {{$shipment_schedule->weeklycalendar->week_name}}
                         @else
                         Not registered
@@ -100,17 +99,18 @@
                       <td style="font-size: 14">{{$shipment_schedule->bl_date}}</td>
                       <td style="font-size: 14">{{$shipment_schedule->st_date}}</td>
                       <td style="font-size: 14">{{$shipment_schedule->quantity}}</td>
-                    <td>
-                      <center>
-                        <a class="btn btn-info btn-xs" href="{{url('show/shipment_schedule', $shipment_schedule['id'])}}">View</a>
-                        <a href="{{url('edit/shipment_schedule', $shipment_schedule['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/shipment_schedule") }}', '{{$shipment_schedule->material_number}}', '{{ $shipment_schedule['id'] }}');">
-                          Delete
-                        </a>
-                      </center>
-                    </td>
-                  </tr>
-                  @endforeach
+                      <td>
+                        <center>
+                          <a class="btn btn-info btn-xs" href="{{url('show/shipment_schedule', $shipment_schedule['id'])}}">View</a>
+                          <a href="{{url('edit/shipment_schedule', $shipment_schedule['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                          <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/shipment_schedule") }}', '{{$shipment_schedule->material_number}}', '{{ $shipment_schedule['id'] }}');">
+                            Delete
+                          </a>
+                        </center>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
                 </table>
               </div>
               <!-- /.box-body -->

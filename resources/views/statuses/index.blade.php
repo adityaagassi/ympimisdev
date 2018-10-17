@@ -62,9 +62,10 @@
                     </td>
                   </tr>
                   @endforeach
-                </table>
-              </div>
-              <!-- /.box-body -->
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
           </div>
           <!-- /.col -->
         </div>

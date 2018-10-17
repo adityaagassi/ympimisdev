@@ -16,12 +16,12 @@
 
 <section class="content">
   @if (session('status'))
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-                {{ session('status') }}
-            </div>   
-@endif
+  <div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+    {{ session('status') }}
+  </div>   
+  @endif
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -37,6 +37,7 @@
                     <th>Username</th>
                     <th>E-mail</th>
                     <th>Level</th>
+                    <th>Department</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -49,6 +50,7 @@
                       <td style="font-size: 14">{{$user->username}}</td>
                       <td style="font-size: 14">{{$user->email}}</td>
                       <td style="font-size: 14">{{$user->level->level_name}}</td>
+                      <td style="font-size: 14">{{$user->department->department_name}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}
@@ -57,25 +59,27 @@
                     </td> --}}
                     <td>
                       <center>
-                      <a class="btn btn-info btn-xs" href="{{url('show/user', $user['id'])}}">View</a>
-                      <a href="{{url('edit/user', $user['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/user") }}', '{{ $user['name'] }}', '{{ $user['id'] }}');">
-                        Delete
-                      </a>
-                    </center>
+                        <a class="btn btn-info btn-xs" href="{{url('show/user', $user['id'])}}">View</a>
+                        <a href="{{url('edit/user', $user['id'])}}" class="btn btn-warning btn-xs">Edit</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/user") }}', '{{ $user['name'] }}', '{{ $user['id'] }}');">
+                          Delete
+                        </a>
+                      </center>
                     </td>
                   </tr>
                   @endforeach
-                </table>
-              </div>
+                </tbody>
+              </table>
+            </div>
             <!-- /.box -->
           </div>
           <!-- /.col -->
         </div>
-        <!-- /.row -->
+      </div>
+      <!-- /.row -->
 
-      </section>
-      <!-- /.content -->
+    </section>
+    <!-- /.content -->
 
     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -101,8 +105,8 @@
     <script>
       $(function () {
         $('#example1').DataTable({
-            "order": []
-          })
+          "order": []
+        })
         $('#example2').DataTable({
           'paging'      : true,
           'lengthChange': false,

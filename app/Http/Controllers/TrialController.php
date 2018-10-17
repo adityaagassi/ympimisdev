@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use File;
 use Response;
+use App\BatchSetting;
 use Illuminate\Support\Facades\Auth;
 
 class TrialController extends Controller
@@ -14,6 +15,13 @@ class TrialController extends Controller
 
 	public function trial_index(){
 		return view('trials.export');
+	}
+
+	public function tes(){
+		$batchs = BatchSetting::find(1);
+
+		echo date('H:i', strtotime($batchs->batch_time));
+
 	}
 
 	public function trial_export(Request $request){

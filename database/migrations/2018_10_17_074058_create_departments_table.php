@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFloLogsTable extends Migration
+class CreateDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateFloLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('flo_logs', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('flo_number');
-            $table->string('status_code');
+            $table->string('department_code');
+            $table->string('department_name');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['flo_number', 'status_code'], 'flo_log_unique');            
+            $table->unique(['department_code', 'department_name'], 'department_unique');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateFloLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('flo_logs');
+        Schema::dropIfExists('departments');
     }
 }

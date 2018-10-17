@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\BatchSetting;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,19 +27,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('upload:completions')->dailyAt('09:25');
-        $schedule->command('upload:completions')->dailyAt('16:55');
-        $schedule->command('upload:completions')->dailyAt('19:55');
-
-        $schedule->command('upload:transfers')->dailyAt('09:25');
-        $schedule->command('upload:transfers')->dailyAt('16:55');
-        $schedule->command('upload:transfers')->dailyAt('19:55');
-        // $schedule->command('inspire')
-        //          ->hourly();
-        //          
-        // foreach (['08:45', '09:15', '09:45', '10:15'] as $time) {
-        //     $schedule->command('command:name')->dailyAt($time);
-        // }
+        $batchs = BatchSetting::get();
+        
+        foreach($batchs as $batch){
+            if($batch->upload == 1){
+                $schedule->command('upload:completions')->dailyAt(date('H:i', strtotime($batch->batch_time)));
+                $schedule->command('upload:transfers')->dailyAt(date('H:i', strtotime($batch->batch_time)));
+            }
+        }
     }
 
     /**

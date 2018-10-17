@@ -81,6 +81,17 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Department<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="department" style="width: 100%;" data-placeholder="Choose a Department..." required>
+              <option value=""></option>
+              @foreach($departments as $department)
+              <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/user') }}">Cancel</a>

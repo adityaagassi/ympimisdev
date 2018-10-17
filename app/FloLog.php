@@ -10,7 +10,7 @@ class FloLog extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'flo_number', 'status_code','created_by'
+		'flo_number', 'status_code','created_by', 'updated_at'
 	];
 
 	public function user()
