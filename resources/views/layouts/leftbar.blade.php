@@ -247,16 +247,30 @@
                                                         @endif
 
                                                         @if(in_array(Auth::user()->level_id, [1]))
-                                                        @if(isset($page) && $page == "Storage Loc. Stock")
+                                                        @if(isset($page) && $page == "Location Stock")
                                                         <li class="active">
                                                           @else
                                                           <li>
                                                             @endif
-                                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>Storage Loc. Stock</span></a>
+                                                            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-cubes"></i> <span>Location Stock</span></a>
                                                           </li>
                                                           @endif
 
-                                                          
+                                                          <li class="treeview">
+                                                            <a href="#">
+                                                              <i class="fa fa-music"></i> <span>Finished Goods</span>
+                                                              <span class="pull-right-container">
+                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                              </span>
+                                                            </a>
+                                                            <ul class="treeview-menu">
+                                                              <li><a href=""><i class="fa fa-circle-o"></i> Production</a></li>
+                                                              <li><a href=""><i class="fa fa-circle-o"></i> Stock</a></li>
+                                                              <li><a href=""><i class="fa fa-circle-o"></i> Ship. Container</a></li>
+                                                              <li><a href=""><i class="fa fa-circle-o"></i> Shipment</a></li>
+                                                              <li><a href=""><i class="fa fa-circle-o"></i> Summary</a></li>
+                                                            </ul>
+                                                          </li>                                                          
 
                                                           <li class="header">Trial Menu</li>
                                                           <li>

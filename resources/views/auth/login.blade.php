@@ -34,7 +34,10 @@
           @endif
         </div>
         <div class="row">
+          <div class="col-xs-12">
+          </div>
           <div class="col-xs-8">
+            <a href="progress" class="pull-left">Register a new account</a>
           </div>
           <div class="col-xs-4">
             <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>

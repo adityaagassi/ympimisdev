@@ -23,7 +23,7 @@ class StatusesTableSeeder extends Seeder
     	DB::table('statuses')->insert(
     		[
     			'status_code' => '1',
-    			'status_name' => 'Close',
+    			'status_name' => 'Closed',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),
@@ -32,7 +32,7 @@ class StatusesTableSeeder extends Seeder
     	DB::table('statuses')->insert(
     		[
     			'status_code' => '2',
-    			'status_name' => 'Deliver',
+    			'status_name' => 'Delivered',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),
@@ -41,7 +41,7 @@ class StatusesTableSeeder extends Seeder
     	DB::table('statuses')->insert(
     		[
     			'status_code' => '3',
-    			'status_name' => 'Load',
+    			'status_name' => 'Loaded',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),
@@ -50,7 +50,7 @@ class StatusesTableSeeder extends Seeder
     	DB::table('statuses')->insert(
     		[
     			'status_code' => '4',
-    			'status_name' => 'Depart',
+    			'status_name' => 'Departed',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),

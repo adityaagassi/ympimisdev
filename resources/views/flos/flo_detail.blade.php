@@ -247,6 +247,14 @@
 							columns: ':not(.notexport)'
 						}
 					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
 					]
 				},
 				'paging': true,
@@ -279,7 +287,6 @@
 				{ "data": "action" }
 				]
 			});
-
 		}
 
 		function openErrorGritter(title, message) {
