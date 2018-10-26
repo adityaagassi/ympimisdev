@@ -21,8 +21,8 @@ class CreateShipmentSchedulesTable extends Migration
             $table->string('destination_code');
             $table->string('material_number');
             $table->string('hpl');
-            $table->date('bl_date');
             $table->date('st_date');
+            $table->date('bl_date');
             $table->double('quantity');
             $table->integer('created_by');
             $table->softDeletes();

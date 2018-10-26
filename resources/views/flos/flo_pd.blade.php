@@ -324,18 +324,26 @@ input[type=number] {
 							console.log(status);
 							console.log(result);
 							console.log(xhr);
-							if(xhr.status){
-								openSuccessGritter('Success!', result.message);
-								$("#material_number").val("");
-								if(result.code_status == 1002){
-									$("#flo_number").val(result.flo_number);
-									$('#flo_detail_table').DataTable().destroy();
-									fillFloTable(result.flo_number);
+							if(xhr.status == 200){
+								if(result.status){
+									openSuccessGritter('Success!', result.message);
+									$("#material_number").val("");
+									if(result.code_status == 1002){
+										$("#flo_number").val(result.flo_number);
+										$('#flo_detail_table').DataTable().destroy();
+										fillFloTable(result.flo_number);
+									}
+									else{
+										$('#flo_detail_table').DataTable().ajax.reload();
+									}
+									$("#material_number").focus();
 								}
 								else{
-									$('#flo_detail_table').DataTable().ajax.reload();
+									openErrorGritter('Error!', result.message);
+									audio_error.play();
+									$("#material_number").val("");
 								}
-								$("#material_number").focus();
+								
 							}
 							else{
 								openErrorGritter('Error!', 'Disconnected from server');
@@ -389,7 +397,7 @@ input[type=number] {
 		var flo_number = $("#flo_number_settlement").val();
 		var data = {
 			flo_number : flo_number,
-			status : '2',
+			status : '1',
 		}
 		$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -429,6 +437,7 @@ input[type=number] {
 			flo_number : index_flo_number
 		}
 		$('#flo_detail_table').DataTable( {
+			"sDom": '<"top"i>rt<"bottom"flp><"clear">',
 			'paging'      	: false,
 			'lengthChange'	: false,
 			'searching'   	: false,
@@ -439,7 +448,7 @@ input[type=number] {
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"infoCallback": function( settings, start, end, max, total, pre ) {
-				return " Total "+ total +" pc(s)";
+				return "<b>Total "+ total +" pc(s)</b>";
 			},
 			"processing": true,
 			"serverSide": true,
@@ -464,7 +473,7 @@ input[type=number] {
 
 	function fillFloTableSettlement(){
 		var data = {
-			status : '2'
+			status : '1'
 		}
 		$('#flo_table').DataTable( {
 			'paging'      	: true,

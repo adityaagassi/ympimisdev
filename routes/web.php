@@ -19,18 +19,26 @@ Route::get('404', function() {
 return view('404');
 });
 
-// Route::get('tes', function() {
-// return view('tes');
-// });
+Route::get('tes', function() {
+	return view('tes');
+});
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-route::get('tes', 'TrialController@tes');
-// 
+// route::get('tes', 'TrialController@tes');
 // Route::get('index/user', 'UserController@index');
 // 
-// 
+Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
+Route::get('fetch/fg_production', 'FinishedGoodsController@fetch_fg_production');
+Route::get('fetch/tb_production', 'FinishedGoodsController@fetch_tb_production');
+Route::get('index/fg_stock', 'FinishedGoodsController@index_fg_stock');
+Route::get('fetch/fg_stock', 'FinishedGoodsController@fetch_fg_stock');
+Route::get('fetch/tb_stock', 'FinishedGoodsController@fetch_tb_stock');
+
+Route::get('index/inventory', 'InventoryController@index');
+Route::post('fetch/inventory', 'InventoryController@fetch');
+
 Route::get('index/batch_setting', 'BatchSettingController@index');
 Route::get('create/batch_setting', 'BatchSettingController@create');
 Route::post('create/batch_setting','BatchSettingController@store');

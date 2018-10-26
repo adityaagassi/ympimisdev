@@ -76,7 +76,6 @@ class ShipmentScheduleController extends Controller
      */
     public function create()
     {
-
         $hpls = $this->hpl;
         $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();
         $materials = Material::orderBy('material_number', 'ASC')->get();
@@ -178,6 +177,33 @@ class ShipmentScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try
+        {
+            $id = Auth::id();
+            $st_month = date('Y-m-d', strtotime(str_replace('/','-','01/' . $request->get('st_month'))));
+            $shipment_schedule = ShipmentSchedule::find($id);
+
+            $shipment_schedule->st_month = $st_month;
+            $shipment_schedule->sales_order = $request->get('sales_order');
+            $shipment_schedule->shipment_condition_code = $request->get('shipment_condition_code');
+            $shipment_schedule->destination_code = $request->get('destination_shortname');
+            $shipment_schedule->material_number = $request->get('material_number');
+            $shipment_schedule->hpl = $request->get('hpl');
+            $shipment_schedule->bl_date = $request->get('bl_date');
+            $shipment_schedule->st_date = $request->get('st_date');
+            $shipment_schedule->quantity = $request->get('quantity');
+            $shipment_schedule->created_by = $id;
+            $shipment_schedule->save();    
+            
+            return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been created.')->with('page', 'Shipment Schedule');
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+            // self::delete($lid);
+                return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
+            }
+        }
         //
     }
 
@@ -200,8 +226,7 @@ class ShipmentScheduleController extends Controller
 
     public function import(Request $request)
     {
-       if($request->hasFile('shipment_schedule')){
-        ShipmentSchedule::truncate();
+     if($request->hasFile('shipment_schedule')){
 
         $id = Auth::id();
 
@@ -220,8 +245,8 @@ class ShipmentScheduleController extends Controller
                     'destination_code' => $row[3],
                     'material_number' => $row[4],
                     'hpl' => $row[5],
-                    'bl_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[6]))),
-                    'st_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[7]))),
+                    'st_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[6]))),
+                    'bl_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[7]))),
                     'quantity' => $row[8],
                     'created_by' => $id,
                 ]);

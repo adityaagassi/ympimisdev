@@ -22,5 +22,15 @@ class FloDetail extends Model
     {
     	return $this->belongsTo('App\ShipmentSchedule', 'flo_number')->withTrashed();
     }
+
+    public function material()
+    {
+        return $this->belongsTo('App\Material', 'material_number', 'material_number')->withTrashed();
+    }
+
+    public function volume()
+    {
+        return $this->belongsTo('App\MaterialVolume', 'material_number', 'material_number')->withTrashed();
+    }
     //
 }

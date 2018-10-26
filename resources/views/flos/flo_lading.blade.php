@@ -159,7 +159,10 @@
 					console.log(xhr);
 					if(xhr.status == 200){
 						if(result.status){
-							
+							$('#flo_invoice_table').DataTable().ajax.reload();
+							$('#invoice_number').val('').change();
+							$('#bl_date').val('');
+							openSuccessGritter('Success!', result.message);
 						}
 					}
 					else{

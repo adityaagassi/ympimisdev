@@ -84,14 +84,14 @@ class UploadCompletions extends Command
             }
             File::put($flofilepath, $flo_text);
 
-            // $success = self::uploadFTP($flofilepath, $flofiledestination);
+            $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            // if($success){
-            //     $flo_details->update(['completion' => $flofilename]);
-            // }
-            // else{
-            //     echo 'false';
-            // }
+            if($success){
+                $flo_details->update(['completion' => $flofilename]);
+            }
+            else{
+                echo 'false';
+            }
         }
         else{
             echo 'false';

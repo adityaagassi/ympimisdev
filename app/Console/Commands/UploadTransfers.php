@@ -96,14 +96,14 @@ class UploadTransfers extends Command
             }
             File::put($flofilepath, $flo_text);
 
-            // $success = self::uploadFTP($flofilepath, $flofiledestination);
+            $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            // if($success){
-            //     $flo_details->update(['transfer' => $flofilename]);
-            // }
-            // else{
-            //     echo 'false';
-            // }
+            if($success){
+                $flo_details->update(['transfer' => $flofilename]);
+            }
+            else{
+                echo 'false';
+            }
         }
         else{
             echo 'false';

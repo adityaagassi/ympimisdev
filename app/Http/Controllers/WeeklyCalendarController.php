@@ -34,7 +34,7 @@ class WeeklyCalendarController extends Controller
 
         (SELECT fiscal_year, week_name, max(week_date) as date_to FROM `weekly_calendars` group by fiscal_year, week_name) AS B
 
-        where A.fiscal_year = B.fiscal_year and A.week_name = B.week_name";
+        where A.fiscal_year = B.fiscal_year and A.week_name = B.week_name order by date_to desc";
 
 
         $weekly_calendars = DB::select($query);

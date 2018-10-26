@@ -6,14 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "anchu/ftp": "~2.0",
         "barryvdh/laravel-debugbar": "~2.4",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "mike42/escpos-php": "^2.0",
         "yajra/laravel-datatables-buttons": "1.0",
         "yajra/laravel-datatables-html": "1.0",
-        "yajra/laravel-datatables-oracle": "7.0",
-        "anchu/ftp": "~2.0"
+        "yajra/laravel-datatables-oracle": "~7.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

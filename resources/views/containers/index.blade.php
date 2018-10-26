@@ -86,14 +86,6 @@
     $('#example1').DataTable({
       "order": []
     })
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
   })
   function deleteConfirmation(url, name, id) {
     jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");

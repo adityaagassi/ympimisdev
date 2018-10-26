@@ -1,11 +1,11 @@
-
+<!DOCTYPE html>
 <html>
 <head>
   <link rel="shortcut icon" type="image/x-icon" href="{{ url("favicon.png")}}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MIS Development</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <title>MIS Development</title>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
@@ -14,9 +14,10 @@
   <link rel="stylesheet" href="{{ url("plugins/iCheck/all.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/select2/dist/css/select2.min.css")}}">
   <link rel="stylesheet" href="{{ url("dist/css/AdminLTE.min.css")}}">
-  <link rel="stylesheet" href="{{ url("dist/css/skins/_all-skins.min.css")}}">
+  <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
+  <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}">
   @yield('stylesheets')
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
@@ -38,8 +39,10 @@
   <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
   <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
   <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
+  <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script>
   <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
   <script src="{{ url("dist/js/demo.js")}}"></script>
+  <script>$(document).ajaxStart(function() { Pace.restart(); });</script>
   @yield('scripts')
 </body>
 </html>

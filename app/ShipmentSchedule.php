@@ -29,6 +29,11 @@ class ShipmentSchedule extends Model
 		return $this->belongsTo('App\Material', 'material_number', 'material_number')->withTrashed();
 	}
 
+	public function volume()
+	{
+		return $this->belongsTo('App\MaterialVolume', 'material_number', 'material_number')->withTrashed();
+	}
+
 	public function weeklycalendar()
 	{
 		return $this->belongsTo('App\WeeklyCalendar', 'st_date', 'week_date')->withTrashed();

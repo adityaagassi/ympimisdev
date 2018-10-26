@@ -493,7 +493,7 @@ td:hover {
 			else{
 				openErrorGritter('Error!', 'Disconnected from server');
 				audio_error.play();
-					$("#flo_number_settlement").prop("disabled", false);
+				$("#flo_number_settlement").prop("disabled", false);
 				$("#flo_number_settlement").val("");
 			}
 		});
@@ -538,6 +538,7 @@ td:hover {
 			flo_number : index_flo_number
 		}
 		var t = $('#flo_detail_table').DataTable( {
+			"sDom": '<"top"i>rt<"bottom"flp><"clear">',
 			'paging'      	: false,
 			'lengthChange'	: false,
 			'searching'   	: false,
@@ -548,9 +549,8 @@ td:hover {
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"infoCallback": function( settings, start, end, max, total, pre ) {
-				return " Total "+ total +" pc(s)";
+				return "<b>Total "+ total +" pc(s)</b>";
 			},
-			"dom": '<"top"i>rt<"bottom"flp><"clear">',
 			"processing": true,
 			"serverSide": true,
 			"ajax": {

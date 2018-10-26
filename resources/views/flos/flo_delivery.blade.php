@@ -175,7 +175,6 @@
           $('#flo_table').DataTable().ajax.reload();
           $("#flo_number_settlement").val("");
           $('#flo_detail_table').DataTable().destroy();
-          fillFloTable($("#flo_number").val());
           $('#flo_number').val("");
           refresh();
           $("#flo_number_settlement").focus();

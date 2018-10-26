@@ -74,6 +74,14 @@
 								</select>
 							</div>
 							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select Serial Number" name="serial_number" id="serial_number" style="width: 100%;">
+									<option value=""></option>
+									@foreach($serial_numbers as $serial_number)
+									<option value="{{ $serial_number->serial_number }}">{{ $serial_number->serial_number }}</option>
+									@endforeach
+								</select>
+							</div>
+							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select FLO Number" name="flo_number" id="flo_number" style="width: 100%;">
 									<option value=""></option>
 									@foreach($flos as $flo)
@@ -210,6 +218,7 @@
 			var datefrom = $('#datefrom').val();
 			var dateto = $('#dateto').val();
 			var origin_group = $('#origin_group').val();
+			var serial_number = $('#serial_number').val();
 			var material_number = $('#material_number').val();
 			var flo_number = $('#flo_number').val();
 			var status = $('#status').val();
@@ -218,6 +227,7 @@
 				dateto:dateto,
 				origin_group:origin_group,
 				material_number:material_number,
+				serial_number:serial_number,
 				flo_number:flo_number,
 				status:status,
 			}
@@ -268,7 +278,7 @@
 				"bJQueryUI": true,
 				"bAutoWidth": false,
 				"processing": true,
-				"serverSide": true,
+				// "serverSide": true,
 				"ajax": {
 					"type" : "post",
 					"url" : "{{ url("filter/flo_detail") }}",

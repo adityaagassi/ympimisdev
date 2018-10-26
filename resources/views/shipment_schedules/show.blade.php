@@ -97,15 +97,15 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Bill of Lading Date</label>
-          <div class="col-sm-5" align="left">
-            {{ date('d F Y', strtotime($shipment_schedule->bl_date))}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
           <label class="col-sm-5">Shipment Date</label>
           <div class="col-sm-5" align="left">
             {{ date('d F Y', strtotime($shipment_schedule->st_date))}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Bill of Lading Date</label>
+          <div class="col-sm-5" align="left">
+            {{ date('d F Y', strtotime($shipment_schedule->bl_date))}}
           </div>
         </div>
         <div class="form-group row" align="right">

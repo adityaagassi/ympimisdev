@@ -4317,17 +4317,17 @@
     },
     {
         "name": "yajra/laravel-datatables-oracle",
-        "version": "v7.0.0",
-        "version_normalized": "7.0.0.0",
+        "version": "v7.10.2",
+        "version_normalized": "7.10.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/yajra/laravel-datatables.git",
-            "reference": "52b2a58fccbca1ee01667d347e32b28cf93f2f18"
+            "reference": "dc849d04ac52b359495d661a004962a78c213194"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/52b2a58fccbca1ee01667d347e32b28cf93f2f18",
-            "reference": "52b2a58fccbca1ee01667d347e32b28cf93f2f18",
+            "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/dc849d04ac52b359495d661a004962a78c213194",
+            "reference": "dc849d04ac52b359495d661a004962a78c213194",
             "shasum": ""
         },
         "require": {
@@ -4340,14 +4340,15 @@
         },
         "require-dev": {
             "mockery/mockery": "0.9.*",
-            "phpunit/phpunit": "~5.0"
+            "orchestra/testbench": "^3.4",
+            "phpunit/phpunit": "~5.7"
         },
         "suggest": {
             "league/fractal": "Transform your api response into something you won't hate.",
             "yajra/laravel-datatables-buttons": "Plugin for server-side exporting of dataTable.",
             "yajra/laravel-datatables-html": "Plugin for server-side HTML builder of dataTable."
         },
-        "time": "2017-01-27T03:19:41+00:00",
+        "time": "2018-04-05T15:06:31+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

@@ -53,8 +53,8 @@
                     <th>Material Number</th>
                     <th>Description</th>
                     <th>HPL</th>
-                    <th>B/L Date</th>
                     <th>Ship. Date</th>
+                    <th>B/L Date</th>
                     <th>Qty</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
@@ -96,8 +96,8 @@
                         @endif
                       </td>
                       <td style="font-size: 14">{{$shipment_schedule->hpl}}</td>
-                      <td style="font-size: 14">{{$shipment_schedule->bl_date}}</td>
                       <td style="font-size: 14">{{$shipment_schedule->st_date}}</td>
+                      <td style="font-size: 14">{{$shipment_schedule->bl_date}}</td>
                       <td style="font-size: 14">{{$shipment_schedule->quantity}}</td>
                       <td>
                         <center>

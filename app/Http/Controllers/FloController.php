@@ -14,10 +14,9 @@ use App\FloLog;
 use App\ContainerSchedule;
 use App\ContainerAttachment;
 use App\User;
+use App\Inventory;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\PrintConnectors\FilePrintConnector;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 use DataTables;
 use Yajra\DataTables\Exception;
@@ -86,6 +85,7 @@ class FloController extends Controller
         ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
         ->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
         ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
+        ->leftJoin('flo_details', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->where('flos.status', '=', 0)
         ->orwhere('flos.status', '=', 1);
 
@@ -93,12 +93,14 @@ class FloController extends Controller
         $origin_groups = $flosTable->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->distinct()->get();
         $flos = $flosTable->select('flos.flo_number')->distinct()->get();
         $statuses = $flosTable->select('statuses.status_code', 'statuses.status_name')->distinct()->get();
+        $serial_numbers = $flosTable->select('flo_details.serial_number')->distinct()->get();
 
         return view('flos.flo_detail', array(
             'materials' => $materials,
             'origin_groups' => $origin_groups,
             'flos' => $flos,
             'statuses' => $statuses,
+            'serial_numbers' => $serial_numbers,
         ))->with('page', 'FLO Detail');
     }
     elseif ($id == 'lading') {
@@ -106,6 +108,7 @@ class FloController extends Controller
         ->whereNotNull('invoice_number')
         ->whereNull('bl_date')
         ->select('invoice_number')
+        ->distinct()
         ->get();
 
         return view('flos.flo_lading', array(
@@ -139,7 +142,7 @@ public function index_flo_invoice(){
 
     return DataTables::of($invoices)
     ->addColumn('action', function($invoices){
-        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-sm btn-warning" onClick="editConfirmation(id)" id="' . $invoices->invoice_number . '"><i class="fa fa-edit"></i></a>';
+        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editConfirmation(id)" id="' . $invoices->invoice_number . '"><i class="fa fa-edit"></i></a>';
     })
     ->make(true);
 }
@@ -169,6 +172,10 @@ public function filter_flo_detail(Request $request){
 
     if(strlen($request->get('material_number')) > 0){
         $flo_detailsTable = $flo_detailsTable->where('shipment_schedules.material_number', '=', $request->get('material_number'));
+    }
+
+    if(strlen($request->get('serial_number')) > 0){
+        $flo_detailsTable = $flo_detailsTable->where('shipment_schedules.serial_number', '=', $request->get('serial_number'));
     }
 
     if(strlen($request->get('flo_number')) > 0){
@@ -248,6 +255,17 @@ public function fetch_flo_lading(Request $request){
         'status' => true,
         'invoice_number' => $invoice_number,
         'bl_date' => $bl_date,
+    );
+    return Response::json($response);
+}
+
+public function input_flo_lading(Request $request){
+    $bl_date =  date('Y-m-d', strtotime($request->get('bl_date')));
+    $flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date]);
+
+    $response = array(
+        'status' => true,
+        'message' => 'BL date for invoice number "' . $request->get('invoice_number') . '" has been updated',
     );
     return Response::json($response);
 }
@@ -393,12 +411,11 @@ public function scan_material_number(Request $request){
     }
 
     if($flo == null ){
-        if($request->get('ymj') == 'true'){
+        if($request->get('type') == 'pd'){
             $shipment_schedule = DB::table('shipment_schedules')
             ->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
             ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
             ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
-            ->where('shipment_schedules.destination_code', '=', 'Y1000YJ')
             ->orderBy('shipment_schedules.st_date', 'ASC')
             ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
             ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
@@ -406,16 +423,30 @@ public function scan_material_number(Request $request){
             ->first();
         }
         else{
-            $shipment_schedule = DB::table('shipment_schedules')
-            ->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-            ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
-            ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
-            ->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
-            ->orderBy('shipment_schedules.st_date', 'ASC')
-            ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
-            ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
-            ->having('flo_quantity' , '>', 0)
-            ->first();
+            if($request->get('ymj') == 'true'){
+                $shipment_schedule = DB::table('shipment_schedules')
+                ->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+                ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
+                ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
+                ->where('shipment_schedules.destination_code', '=', 'Y1000YJ')
+                ->orderBy('shipment_schedules.st_date', 'ASC')
+                ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
+                ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
+                ->having('flo_quantity' , '>', 0)
+                ->first();
+            }
+            else{
+                $shipment_schedule = DB::table('shipment_schedules')
+                ->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+                ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
+                ->where('shipment_schedules.material_number', '=', $request->get('material_number'))
+                ->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
+                ->orderBy('shipment_schedules.st_date', 'ASC')
+                ->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
+                ->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
+                ->having('flo_quantity' , '>', 0)
+                ->first();
+            }
         }
 
         if($shipment_schedule != null){
@@ -449,6 +480,7 @@ public function scan_material_number(Request $request){
 public function scan_serial_number(Request $request)
 {
     $material_volume = MaterialVolume::where('material_number', '=', $request->get('material_number'))->first();
+    $material = Material::where('material_number', '=', $request->get('material_number'))->first();
     $actual = $material_volume->lot_completion;
 
     $id = Auth::id();
@@ -462,8 +494,17 @@ public function scan_serial_number(Request $request)
     elseif(Auth::user()->username == "Assy-SX"){
         $printer_name = 'FLO Printer 103';
     }
-    elseif(Auth::user()->username == "superman"){
+    elseif(Auth::user()->username == "Assy-PN"){
         $printer_name = 'FLO Printer 104';
+    }
+    elseif(Auth::user()->username == "Assy-RC"){
+        $printer_name = 'FLO Printer 105';
+    }
+    elseif(Auth::user()->username == "Assy-VN"){
+        $printer_name = 'FLO Printer 106';
+    }
+    elseif(Auth::user()->username == "Superman"){
+        $printer_name = 'FLO Printer 107';
     }
     else{
         $response = array(
@@ -491,6 +532,21 @@ public function scan_serial_number(Request $request)
 
     try{
         if($request->get('flo_number') == ""){
+            if($request->get('type') == 'pd'){
+             $shipment_schedule = DB::table('shipment_schedules')
+             ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+             ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
+             ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+             ->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
+             ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+             ->where('shipment_schedules.material_number', '=' , $request->get('material_number'))
+             ->orderBy('shipment_schedules.st_date', 'asc')
+             ->select('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'materials.material_description', 'shipment_schedules.st_date', DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity'))
+             ->groupBy('shipment_schedules.id', 'shipment_conditions.shipment_condition_name', 'destinations.destination_shortname', 'shipment_schedules.material_number', 'shipment_schedules.st_date', 'shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.st_date', 'materials.material_description')
+             ->having('flo_quantity', '>' , '0')
+             ->first();
+         }
+         else{
             if($request->get('ymj') == 'true'){
                 $shipment_schedule = DB::table('shipment_schedules')
                 ->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
@@ -521,214 +577,228 @@ public function scan_serial_number(Request $request)
                 ->having('flo_quantity', '>' , '0')
                 ->first();
             }
+        }
 
-            if($shipment_schedule != null){
-                $prefix_now = date("Y").date("m");
-                $code_generator = CodeGenerator::where('note','=','flo')->first();
-                $material_number = $request->get('material_number');
+        if($shipment_schedule != null){
+            $prefix_now = date("Y").date("m");
+            $code_generator = CodeGenerator::where('note','=','flo')->first();
+            $material_number = $request->get('material_number');
 
-                if ($prefix_now != $code_generator->prefix){
-                    $code_generator->prefix = $prefix_now;
-                    $code_generator->index = '0';
-                    $code_generator->save();
-                }
-
-                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-                $flo_number = $code_generator->prefix . $number+1;
-
-                try {
-
-                    $code_generator->index = $code_generator->index+1;
-                    $code_generator->save();
-
-                    if($request->get('type') == 'pd'){
-                        $code_generator_pd->index = $code_generator_pd->index+1;
-                        $code_generator_pd->save(); 
-                    }
-
-                    $flo = new Flo([
-                        'flo_number' => $flo_number,
-                        'shipment_schedule_id' => $shipment_schedule->id,
-                        'quantity' => $shipment_schedule->flo_quantity,
-                        'actual' => $actual,
-                        'created_by' => $id
-                    ]);
-                    $flo->save();
-
-                    $flo_log = FloLog::updateOrCreate(
-                        ['flo_number' => $flo_number, 'status_code' => 0],
-                        ['flo_number' => $flo_number, 'created_by' => $id, 'status_code' => 0, 'updated_at' => Carbon::now()]
-                    );
-
-                    $flo_detail = new FloDetail([
-                        'serial_number' =>  $serial_number,
-                        'material_number' => $request->get('material_number'),
-                        'flo_number' => $flo_number,
-                        'quantity' => $actual,
-                        'created_by' => $id
-                    ]);
-                    $flo_detail->save();
-
-                    $connector = new WindowsPrintConnector($printer_name);
-
-                    $printer = new Printer($connector);
-
-                    $printer->feed(2);
-                    $printer->setUnderline(true);
-                    $printer->text('FLO:');
-                    $printer->setUnderline(false);
-                    $printer->feed(1);
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->barcode($flo_number, Printer::BARCODE_ITF);
-                    $printer->text($flo_number."\n\n");
-
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->setUnderline(true);
-                    $printer->text('Destination:');
-                    $printer->setUnderline(false);
-                    $printer->feed(1);
-
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->setTextSize(6, 3);
-                    $printer->text(strtoupper($shipment_schedule->destination_shortname."\n\n"));
-                    $printer->initialize();
-
-                    $printer->setUnderline(true);
-                    $printer->text('Shipment Date:');
-                    $printer->setUnderline(false);
-                    $printer->feed(1);
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->setTextSize(4, 2);
-                    $printer->text(date('d-M-Y', strtotime($shipment_schedule->st_date))."\n\n");
-                    $printer->initialize();
-
-                    $printer->setUnderline(true);
-                    $printer->text('By:');
-                    $printer->setUnderline(false);
-                    $printer->feed(1);
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->setTextSize(4, 2);
-                    $printer->text(strtoupper($shipment_schedule->shipment_condition_name)."\n\n");
-
-                    $printer->initialize();
-                    $printer->setTextSize(2, 2);
-                    $printer->text("   ".strtoupper($shipment_schedule->material_number)."\n");
-                    $printer->text("   ".strtoupper($shipment_schedule->material_description)."\n");
-
-                    $printer->initialize();
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->text("------------------------------------");
-                    $printer->feed(1);
-                    $printer->text("|Qty:             |Qty:            |");
-                    $printer->feed(1);
-                    $printer->text("|                 |                |");
-                    $printer->feed(1);
-                    $printer->text("|                 |                |");
-                    $printer->feed(1);
-                    $printer->text("|                 |                |");
-                    $printer->feed(1);
-                    $printer->text("|Production       |Logistic        |");
-                    $printer->feed(1);
-                    $printer->text("------------------------------------");
-                    $printer->feed(2);
-                    $printer->cut();
-                    $printer->close();
-
-                    $response = array(
-                        'status' => true,
-                        'message' => 'New FLO has been printed<br>新FLO発行済み',
-                        'flo_number' => $flo_number,
-                        'code_status' => 1002
-                    ); 
-                    return Response::json($response);
-                }
-                catch(\Exception $e){
-                    $response = array(
-                        'status' => false,
-                        'message' => "Couldn't print to this printer " . $e->getMessage() . "\n."
-                    );
-                    return Response::json($response);
-                }
+            if ($prefix_now != $code_generator->prefix){
+                $code_generator->prefix = $prefix_now;
+                $code_generator->index = '0';
+                $code_generator->save();
             }
-            else{
+
+            $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+            $flo_number = $code_generator->prefix . $number+1;
+
+            try {
+
+                $code_generator->index = $code_generator->index+1;
+                $code_generator->save();
+
+                if($request->get('type') == 'pd'){
+                    $code_generator_pd->index = $code_generator_pd->index+1;
+                    $code_generator_pd->save(); 
+                }
+
+                $flo = new Flo([
+                    'flo_number' => $flo_number,
+                    'shipment_schedule_id' => $shipment_schedule->id,
+                    'quantity' => $shipment_schedule->flo_quantity,
+                    'actual' => $actual,
+                    'created_by' => $id
+                ]);
+                $flo->save();
+
+                $flo_log = FloLog::updateOrCreate(
+                    ['flo_number' => $flo_number, 'status_code' => 0],
+                    ['flo_number' => $flo_number, 'created_by' => $id, 'status_code' => 0, 'updated_at' => Carbon::now()]
+                );
+
+                $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
+                $inventory->quantity = ($inventory->quantity+$actual);
+                $inventory->save();
+
+                $flo_detail = new FloDetail([
+                    'serial_number' =>  $serial_number,
+                    'material_number' => $request->get('material_number'),
+                    'flo_number' => $flo_number,
+                    'quantity' => $actual,
+                    'created_by' => $id
+                ]);
+                $flo_detail->save();
+
+                $connector = new WindowsPrintConnector($printer_name);
+
+                $printer = new Printer($connector);
+
+                $printer->feed(2);
+                $printer->setUnderline(true);
+                $printer->text('FLO:');
+                $printer->setUnderline(false);
+                $printer->feed(1);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->barcode($flo_number, Printer::BARCODE_ITF);
+                $printer->text($flo_number."\n\n");
+
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->setUnderline(true);
+                $printer->text('Destination:');
+                $printer->setUnderline(false);
+                $printer->feed(1);
+
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(6, 3);
+                $printer->text(strtoupper($shipment_schedule->destination_shortname."\n\n"));
+                $printer->initialize();
+
+                $printer->setUnderline(true);
+                $printer->text('Shipment Date:');
+                $printer->setUnderline(false);
+                $printer->feed(1);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(4, 2);
+                $printer->text(date('d-M-Y', strtotime($shipment_schedule->st_date))."\n\n");
+                $printer->initialize();
+
+                $printer->setUnderline(true);
+                $printer->text('By:');
+                $printer->setUnderline(false);
+                $printer->feed(1);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(4, 2);
+                $printer->text(strtoupper($shipment_schedule->shipment_condition_name)."\n\n");
+
+                $printer->initialize();
+                $printer->setTextSize(2, 2);
+                $printer->text("   ".strtoupper($shipment_schedule->material_number)."\n");
+                $printer->text("   ".strtoupper($shipment_schedule->material_description)."\n");
+
+                $printer->initialize();
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text("------------------------------------");
+                $printer->feed(1);
+                $printer->text("|Qty:             |Qty:            |");
+                $printer->feed(1);
+                $printer->text("|                 |                |");
+                $printer->feed(1);
+                $printer->text("|                 |                |");
+                $printer->feed(1);
+                $printer->text("|                 |                |");
+                $printer->feed(1);
+                $printer->text("|Production       |Logistic        |");
+                $printer->feed(1);
+                $printer->text("------------------------------------");
+                $printer->feed(2);
+                $printer->cut();
+                $printer->close();
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'New FLO has been printed<br>新FLO発行済み',
+                    'flo_number' => $flo_number,
+                    'code_status' => 1002
+                ); 
+                return Response::json($response);
+            }
+            catch(\Exception $e){
                 $response = array(
                     'status' => false,
-                    'message' => 'There is no shipment schedule for '. $request->get('material_number') . ' yet.<br>' . $request->get('material_number') . '用の出荷スケジュールはない',
+                    'message' => "Couldn't print to this printer " . $e->getMessage() . "\n."
                 );
                 return Response::json($response);
             }
-
         }
         else{
-            try{
-                if($request->get('type') == 'pd'){
-
-                    $flo_detail = new FloDetail([
-                        'serial_number' =>  $serial_number,
-                        'flo_number' => $request->get('flo_number'),
-                        'quantity' => $actual,
-                        'created_by' => $id
-                    ]);
-                    $flo_detail->save();
-
-                    $flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
-                    $flo->actual = $flo->actual+$actual;
-                    $flo->save();
-
-                    $code_generator_pd->index = $code_generator_pd->index+1;
-                    $code_generator_pd->save();
-
-                    $response = array(
-                        'status' => true,
-                        'message' => 'FLO fulfillment success.<br>FLO充足完了',
-                        'code_status' => 1003
-                    ); 
-                    return Response::json($response);
-                }
-                else{
-                    $flo_detail = new FloDetail([
-                        'serial_number' =>  $serial_number,
-                        'material_number' => $request->get('material_number'),
-                        'flo_number' => $request->get('flo_number'),
-                        'quantity' => '1',
-                        'created_by' => $id
-                    ]);
-                    $flo_detail->save();
-
-                    $flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
-                    $flo->actual = $flo->actual+$actual;
-                    $flo->save();
-
-                    $response = array(
-                        'status' => true,
-                        'message' => 'FLO fulfillment success.<br>FLO充足完了',
-                        'code_status' => 1003
-                    ); 
-                    return Response::json($response);
-                }
-            }
-            catch (QueryException $e){
-                $error_code = $e->errorInfo[1];
-                if($error_code == 1062){
-                    $response = array(
-                        'status' => false,
-                        'message' => "Serial number already exist.<br>製番が既にあった",
-                    );
-                    return Response::json($response);
-                }
-            }
-        }
-    }
-    catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
             $response = array(
                 'status' => false,
-                'message' => "Serial number already exist.<br>製番が既にあった"
+                'message' => 'There is no shipment schedule for '. $request->get('material_number') . ' yet.<br>' . $request->get('material_number') . '用の出荷スケジュールはない',
             );
             return Response::json($response);
         }
+
     }
+    else{
+        try{
+            if($request->get('type') == 'pd'){
+
+                $flo_detail = new FloDetail([
+                    'serial_number' =>  $serial_number,
+                    'material_number' => $request->get('material_number'),
+                    'flo_number' => $request->get('flo_number'),
+                    'quantity' => $actual,
+                    'created_by' => $id
+                ]);
+                $flo_detail->save();
+
+                $flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
+                $flo->actual = $flo->actual+$actual;
+                $flo->save();
+
+                $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
+                $inventory->quantity = ($inventory->quantity+$actual);
+                $inventory->save();
+
+                $code_generator_pd->index = $code_generator_pd->index+1;
+                $code_generator_pd->save();
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'FLO fulfillment success.<br>FLO充足完了',
+                    'code_status' => 1003,
+                ); 
+                return Response::json($response);
+            }
+            else{
+                $flo_detail = new FloDetail([
+                    'serial_number' =>  $serial_number,
+                    'material_number' => $request->get('material_number'),
+                    'flo_number' => $request->get('flo_number'),
+                    'quantity' => '1',
+                    'created_by' => $id
+                ]);
+                $flo_detail->save();
+
+                $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
+                $inventory->quantity = ($inventory->quantity+$actual);
+                $inventory->save();
+
+                $flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
+                $flo->actual = $flo->actual+$actual;
+                $flo->save();
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'FLO fulfillment success.<br>FLO充足完了',
+                    'code_status' => 1003
+                ); 
+                return Response::json($response);
+            }
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                $response = array(
+                    'status' => false,
+                    'message' => "Serial number already exist.<br>製番が既にあった",
+                );
+                return Response::json($response);
+            }
+        }
+    }
+}
+catch (QueryException $e){
+    $error_code = $e->errorInfo[1];
+    if($error_code == 1062){
+        $response = array(
+            'status' => false,
+            'message' => "Serial number already exist.<br>製番が既にあった"
+        );
+        return Response::json($response);
+    }
+}
 }
 
 public function reprint_flo(Request $request)
@@ -845,14 +915,15 @@ public function reprint_flo(Request $request)
 public function destroy_serial_number(Request $request)
 {
     $flo_detail = FloDetail::find($request->get('id'));
-    if($flo_detail->completion != null){
+    if($flo_detail->completion == null){
        $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
        $actual = DB::table('flo_details')
        ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
        ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
        ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+       ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
        ->where('flo_details.id', '=', $request->get('id'))
-       ->select('material_volumes.lot_completion')
+       ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
        ->first();
 
        $flo->actual = $flo->actual-$actual->lot_completion;
@@ -860,6 +931,10 @@ public function destroy_serial_number(Request $request)
 
        $flo_detail = FloDetail::find($request->get('id'));
        $flo_detail->forceDelete();
+
+       $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
+       $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
+       $inventory->save();
 
        $response = array(
         'status' => true,
@@ -888,6 +963,22 @@ public function cancel_flo_settlement(Request $request)
 
         $flo->status = $status;
         $flo->save();
+
+        if($request->get('status') == 2){
+            $inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+            $inventory->quantity = ($inventory->quantity-$flo->actual);
+            $inventory->save();
+
+            $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
+            $inventory->quantity = ($inventory->quantity+$flo->actual);
+            $inventory->save();
+        }
+
+        if($request->get('status') == 3){
+            $inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+            $inventory->quantity = ($inventory->quantity+$flo->actual);
+            $inventory->save();
+        }
 
         $response = array(
             'status' => true,
@@ -921,6 +1012,22 @@ public function flo_settlement(Request $request)
             $flo->container_id = $request->get('container_id');
         }
         $flo->save();
+
+        if($request->get('status') == 2){
+            $inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+            $inventory->quantity = ($inventory->quantity+$flo->actual);
+            $inventory->save();
+
+            $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
+            $inventory->quantity = ($inventory->quantity-$flo->actual);
+            $inventory->save();
+        }
+
+        if($request->get('status') == 3){
+            $inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+            $inventory->quantity = ($inventory->quantity-$flo->actual);
+            $inventory->save();
+        }
 
         $flo_log = FloLog::updateOrCreate(
             ['flo_number' => $request->get('flo_number'), 'status_code' => $request->get('status')],
