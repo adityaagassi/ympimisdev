@@ -74,6 +74,33 @@
 	</div>
 </section>
 
+<div class="modal fade" id="modalContainerDeparture">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title"></h4>
+				<div class="modal-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th style="font-size: 14">Cont. ID</th>
+								<th style="font-size: 14">Destination</th>
+								<th style="font-size: 14">Container Number</th>
+								<th style="font-size: 14">Evidence Att.</th>
+							</tr>
+						</thead>
+						<tbody id="tableBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 
 
@@ -147,15 +174,14 @@
 					}
 					var yAxisLabels = [0,25,50,75,100,110];
 
-					var chart;
-					chart = new Highcharts.chart({
+					Highcharts.chart({
 						colors: ['rgba(255, 255, 255, 0.20)','rgba(75, 30, 120, 0.70)'],
 						chart: {
 							renderTo: 'container1',
 							type: 'column'
 						},
 						title: {
-							text: 'Container Departure Chart'
+							text: 'Containers Depart From YMPI'
 						},
 						xAxis: {
 							categories: xCategories,
@@ -174,7 +200,7 @@
 						yAxis: {
 							min: 0,
 							title: {
-								text: 'Total Departed Container'
+								text: 'Total Container Departed (unit)'
 							},
 							tickPositioner: function() {
 								return yAxisLabels;
@@ -208,7 +234,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalStock(this.Departed , this.series.name);
+											modalContainerDeparture(this.category);
 										}
 									}
 								}
@@ -233,24 +259,49 @@
 						series: seriesData
 					});
 
+					var data = result.jsonData2;
+					// data = data.reverse()
+					var seriesData = [];
+					var xCategories = [];
+					var i, cat;
+					var intVal = function ( i ) {
+						return typeof i === 'string' ?
+						i.replace(/[\$,]/g, '')*1 :
+						typeof i === 'number' ?
+						i : 0;
+					};
+					for(i = 0; i < data.length; i++){
+						cat = data[i].destination_shortname;
+						if(xCategories.indexOf(cat) === -1){
+							xCategories[xCategories.length] = cat;
+						}
+					}
+					for(i = 0; i < data.length; i++){
+						dat = data[i].quantity;
+						if(seriesData.indexOf(cat) === -1){
+							seriesData[seriesData.length] = dat;
+						}
+					}
+
 					Highcharts.chart('container2', {
+						colors: ['rgba(75, 30, 120, 0.70)'],
 						chart: {
 							type: 'bar'
 						},
 						title: {
-							text: 'World\'s largest cities per 2017'
+							text: 'Containers Depart From The Port'
 						},
 						credits: {
 							enabled:false
 						},
 						xAxis: {
-							categories: ['Shanghai', 'Beijing', 'Karachi', 'Shenzhen', 'Guangzhou', 'Istanbul', 'Mumbai', 'Moscow', 'Paulo', 'Delhi', 'Kinshasa', 'Tianjin', 'Lahore'],
+							categories: xCategories,
 							type: 'category'
 						},
 						yAxis: {
 							min: 0,
 							title: {
-								text: 'Population (millions)'
+								text: 'Total Container Departed (unit)'
 							},
 							allowDecimals:false
 						},
@@ -279,8 +330,7 @@
 							},
 						},
 						series: [{
-							name: 'Population',
-							data: [9,7,9,4,3,6,1,2,7,8,4,7]
+							data: seriesData
 						}]
 					});
 
@@ -293,6 +343,10 @@
 				alert('Disconnected from server');
 			}
 		});
+}
+
+function modalContainerDeparture(){
+	$('#modalContainerDeparture').modal('show');
 }
 </script>
 @endsection

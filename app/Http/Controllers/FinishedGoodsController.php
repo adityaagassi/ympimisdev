@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Response;
 use Illuminate\Support\Facades\DB;
 use DataTables;
+use Carbon\Carbon;
 
 class FinishedGoodsController extends Controller
 {
@@ -31,14 +32,12 @@ class FinishedGoodsController extends Controller
 			$container_schedules = $container_schedules->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '>=', $date_from);
 		}
 		else{
-
+			$month = date('Y-m');
+			$container_schedules = $container_schedules->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m")'), '>=', $month);
 		}
 		if(strlen($request->get('dateto')) > 0){
 			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
 			$container_schedules = $container_schedules->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '<=', $date_to);
-		}
-		else{
-
 		}
 
 		$count1 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Open" as status'), DB::raw('count(container_id)-count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
@@ -47,12 +46,40 @@ class FinishedGoodsController extends Controller
 		$count2 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Departed" as status'), DB::raw('count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
 		->groupBy('container_schedules.shipment_date')->get();
 
-		
 		$table1 = $count1->merge($count2);
+
+		// $count3 = DB::table('flos')
+		// ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
+		// ->leftJoin('destinations', 'destinations.destination_code', '=', 'container_schedules.destination_code');
+
+		$container_schedules2 = DB::table('container_schedules');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$container_schedules2 = $container_schedules2->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '>=', $date_from);
+		}
+		else{
+			$month = date('Y-m');
+			$container_schedules2 = $container_schedules2->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m")'), '>=', $month);
+		}
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$container_schedules2 = $container_schedules2->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '<=', $date_to);
+		}
+
+
+		$table2 = $container_schedules2
+		->leftJoin('flos', 'container_schedules.container_id', '=', 'flos.container_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'container_schedules.destination_code')
+		->whereNotNull('flos.bl_date')
+		->select('destinations.destination_shortname', DB::raw('count(distinct container_schedules.container_id) as quantity'))
+		->groupBy('destinations.destination_shortname')
+		->get();
 
 		$response = array(
 			'status' => true,
 			'jsonData1' => $table1,
+			'jsonData2' => $table2,
 		);
 		return Response::json($response); 
 	}

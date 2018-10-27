@@ -46,7 +46,7 @@
 								<th style="font-size: 14">Material</th>
 								<th style="font-size: 14">Description</th>
 								<th style="font-size: 14">Quantity</th>
-								{{-- <th style="font-size: 14">m&sup3;</th> --}}
+								<th style="font-size: 14">m&sup3;</th>
 							</tr>
 						</thead>
 						<tbody id="tableBody">
@@ -114,7 +114,7 @@
 					var chart;
 					// $(document).ready(function() {
 						chart = new Highcharts.Chart({
-							colors: ['rgba(247, 163, 92, 0.80)', 'rgba(144, 238, 126, 0.80)', 'rgba(119, 152, 191, 0.80)'],
+							colors: ['rgba(119, 152, 191, 0.80)', 'rgba(144, 238, 126, 0.80)', 'rgba(247, 163, 92, 0.80)'],
 							chart: {
 								renderTo: 'container',
 								type: 'column'
@@ -211,6 +211,7 @@
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.actual +'</td>';
+						tableData += '<td>'+ (value.length*value.width*value.height).toFixed(2).toLocaleString() +'</td>';
 						tableData += '</tr>';
 
 					});
