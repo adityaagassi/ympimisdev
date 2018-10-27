@@ -35,6 +35,8 @@ Route::get('fetch/tb_production', 'FinishedGoodsController@fetch_tb_production')
 Route::get('index/fg_stock', 'FinishedGoodsController@index_fg_stock');
 Route::get('fetch/fg_stock', 'FinishedGoodsController@fetch_fg_stock');
 Route::get('fetch/tb_stock', 'FinishedGoodsController@fetch_tb_stock');
+Route::get('index/fg_container_departure', 'FinishedGoodsController@index_fg_container_departure');
+Route::get('fetch/fg_container_departure', 'FinishedGoodsController@fetch_fg_container_departure');
 
 Route::get('index/inventory', 'InventoryController@index');
 Route::post('fetch/inventory', 'InventoryController@fetch');

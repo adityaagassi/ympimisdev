@@ -18,17 +18,63 @@ class FinishedGoodsController extends Controller
 		return view('finished_goods.stock')->with('page', 'FG Stock')->with('head', 'Finished Goods');
 	}
 
+	public function index_fg_container_departure(){
+		return view('finished_goods.container_departure')->with('page', 'FG Container Departure')->with('head', 'Finished Goods');
+	}
+
+	public function fetch_fg_container_departure(Request $request){
+
+		$container_schedules = DB::table('container_schedules');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$container_schedules = $container_schedules->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '>=', $date_from);
+		}
+		else{
+
+		}
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$container_schedules = $container_schedules->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '<=', $date_to);
+		}
+		else{
+
+		}
+
+		$count1 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Open" as status'), DB::raw('count(container_id)-count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
+		->groupBy('container_schedules.shipment_date')->get();
+
+		$count2 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Departed" as status'), DB::raw('count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
+		->groupBy('container_schedules.shipment_date')->get();
+
+		
+		$table1 = $count1->merge($count2);
+
+		$response = array(
+			'status' => true,
+			'jsonData1' => $table1,
+		);
+		return Response::json($response); 
+	}
+
 	public function fetch_fg_stock(){
 		$stock = DB::table('flos')
 		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
 		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
 		->whereIn('flos.status', [0,1,2]);
+
+		$total_volume = $stock->sum(DB::raw('((material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton)*flos.actual'));
+
+		$total_stock = $stock->sum('flos.actual');
 
 		$jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK")) as location'), DB::raw('sum(flos.actual) as actual'))->groupBy('destinations.destination_shortname', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK"))'))->orderBy(DB::raw('field(location, "Production", "InTransit", "FSTK")'))->get();
 
 		$response = array(
 			'status' => true,
 			'jsonData' => $jsonData,
+			'total_volume' => $total_volume,
+			'total_stock' => $total_stock,
 		);
 		return Response::json($response);
 	}

@@ -21,9 +21,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				<div class="box-header with-border">
-					<i class="fa fa-info"></i>
-					<h4 class="box-title" id="boxTitle"></h4>
+				<div class="box-header with-border" id="boxTitle">
 				</div>
 				<div class="box-body">
 					<div id="container" style="width:100%; height:450px;"></div>
@@ -85,8 +83,10 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					$('#boxTitle').html('Total Stock: <b>'+  + '</b>pc(s) ()');
+					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Total Stock: <b>'+ result.total_stock + ' pc(s)</b> &#8786; <b>'+ result.total_volume.toFixed(2) +' m&sup3;</b> (<b>' + (result.total_volume/52).toFixed(2) + ' container(s)</b>)</h4>');
+					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
 					var data = result.jsonData;
+					data = data.reverse()
 					var seriesData = [];
 					var xCategories = [];
 					var i, cat;
@@ -112,8 +112,9 @@
 					}
 
 					var chart;
-					$(document).ready(function() {
+					// $(document).ready(function() {
 						chart = new Highcharts.Chart({
+							colors: ['rgba(247, 163, 92, 0.80)', 'rgba(144, 238, 126, 0.80)', 'rgba(119, 152, 191, 0.80)'],
 							chart: {
 								renderTo: 'container',
 								type: 'column'
@@ -137,7 +138,7 @@
 									enabled: true,
 									style: {
 										fontWeight: 'bold',
-										color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+										color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
 									}
 								}
 							},
@@ -146,6 +147,7 @@
 							},
 							plotOptions: {
 								series: {
+									borderColor: '#303030',
 									cursor: 'pointer',
 									stacking: 'normal',
 									point: {
@@ -167,7 +169,7 @@
 							},
 							series: seriesData
 						});
-					});
+					// });
 				}
 				else{
 					alert('Attempt to retrieve data failed');

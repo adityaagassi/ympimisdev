@@ -283,40 +283,44 @@
                                                                       @endif
                                                                       <a href="{{ url("/index/fg_stock") }}"><i class="fa fa-line-chart"></i> Stock</a>
                                                                     </li>
+                                                                    @if(isset($page) && $page == "FG Container Departure")
+                                                                    <li class="active">
+                                                                      @else
+                                                                      <li>
+                                                                        @endif
+                                                                        <a href="{{ url("/index/fg_container_departure") }}"><i class="fa fa-line-chart"></i> Container Departure</a>
+                                                                      </li>
+                                                                      <li>
+                                                                        <a href=""><i class="fa fa-line-chart"></i> Shipment</a>
+                                                                      </li>
+                                                                      <li>
+                                                                        <a href=""><i class="fa fa-line-chart"></i> Summary</a>
+                                                                      </li>
+                                                                    </ul>
+                                                                  </li>
+                                                                  @endif                                                         
+
+                                                                  <li class="header">Trial Menu</li>
+                                                                  <li>
+                                                                    <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+                                                                  </li>
+
+
+                                                                  @if(isset($page) && $page == "FLO Production Date")
+                                                                  <li class="active">
+                                                                    @else
                                                                     <li>
-                                                                      <a href=""><i class="fa fa-line-chart"></i> Ship. Container</a>
+                                                                      @endif
+                                                                      <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+                                                                    </li>
+
+                                                                    <li>
+                                                                      <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
                                                                     </li>
                                                                     <li>
-                                                                      <a href=""><i class="fa fa-line-chart"></i> Shipment</a>
-                                                                    </li>
-                                                                    <li>
-                                                                      <a href=""><i class="fa fa-line-chart"></i> Summary</a>
+                                                                      <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
                                                                     </li>
                                                                   </ul>
-                                                                </li>
-                                                                @endif                                                         
-
-                                                                <li class="header">Trial Menu</li>
-                                                                <li>
-                                                                  <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
-                                                                </li>
-
-
-                                                                @if(isset($page) && $page == "FLO Production Date")
-                                                                <li class="active">
-                                                                  @else
-                                                                  <li>
-                                                                    @endif
-                                                                    <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
-                                                                  </li>
-
-                                                                  <li>
-                                                                    <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
-                                                                  </li>
-                                                                  <li>
-                                                                    <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
-                                                                  </li>
-                                                                </ul>
-                                                              </section>
-                                                            </aside>
+                                                                </section>
+                                                              </aside>
 
