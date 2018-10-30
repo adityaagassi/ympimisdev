@@ -384,7 +384,13 @@ function modalContainerDeparture(st_date){
 					tableData += '<td>'+ value.destination_shortname +'</td>';
 					tableData += '<td>'+ value.container_number +'</td>';
 					tableData += '<td>'+ value.shipment_date +'</td>';
-					tableData += '<td><a href="javascript:void(0)" id="'+ value.container_id +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> '+ value.att +' attachemnt(s)</a></td>';
+					if( value.att > 0 ){
+						tableData += '<td><a href="javascript:void(0)" id="'+ value.container_id +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> '+ value.att +' attachment(s)</a></td>';
+					}
+					else
+					{
+						tableData += '<td><span id="'+ value.container_id +'" class="fa fa-paperclip"> '+ value.att +' attachment(s)</span></td>';
+					}
 					tableData += '</tr>';
 				});
 				$('#tableBody').append(tableData);

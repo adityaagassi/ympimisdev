@@ -39,7 +39,7 @@ input {
 						<div class="form-group">
 							<label>Plant</label>
 							<select class="form-control select2" multiple="multiple" name="plant" id='plant' data-placeholder="Select Plant" style="width: 100%;">
-								<option> </option>
+								<option></option>
 								@foreach($plants as $plant)
 								<option value="{{ $plant }}">{{ $plant }}</option>
 								@endforeach
@@ -50,7 +50,7 @@ input {
 						<div class="form-group">
 							<label>Origin Group</label>
 							<select class="form-control select2" multiple="multiple" name="origin_group" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;">
-								<option> </option>
+								<option></option>
 								@foreach($origin_groups as $origin_group)
 								<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
 								@endforeach
@@ -134,6 +134,10 @@ input {
 		initKeyDown();
 	});
 
+	function clearConfirmation(){
+		location.reload(true);
+	}
+
 	function initKeyDown() {
 		$('#materialArea').keydown(function(event) {
 			if (event.keyCode == 13) {
@@ -198,52 +202,53 @@ input {
 			storage_location:storage_location,
 		}
 		$('#inventoryTable').DataTable({
-				'dom': 'Bfrtip',
-				'buttons': {
-					dom: {
-						button: {
-							tag:'button',
-							className:''
-						}
-					},
-					buttons:[
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					]
+			'dom': 'Bfrtip',
+			"scrollX": true,
+			'buttons': {
+				dom: {
+					button: {
+						tag:'button',
+						className:''
+					}
 				},
-				'paging': true,
-				'lengthChange': true,
-				'searching': true,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
+				buttons:[
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
 				// "serverSide": true,
 				"ajax": {
 					"type" : "post",

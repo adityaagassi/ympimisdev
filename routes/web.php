@@ -39,6 +39,10 @@ Route::get('index/fg_container_departure', 'FinishedGoodsController@index_fg_con
 Route::get('fetch/fg_container_departure', 'FinishedGoodsController@fetch_fg_container_departure');
 Route::get('fetch/tb_container_departure', 'FinishedGoodsController@fetch_tb_container_departure');
 Route::get('download/att_container_departure', 'FinishedGoodsController@download_att_container_departure');
+Route::get('index/fg_weekly_summary', 'FinishedGoodsController@index_fg_weekly_summary');
+Route::get('fetch/fg_weekly_summary', 'FinishedGoodsController@fetch_fg_weekly_summary');
+Route::get('index/fg_monthly_summary', 'FinishedGoodsController@index_fg_monthly_summary');
+Route::get('fetch/fg_monthly_summary', 'FinishedGoodsController@fetch_fg_monthly_summary');
 
 Route::get('index/inventory', 'InventoryController@index');
 Route::post('fetch/inventory', 'InventoryController@fetch');

@@ -55,7 +55,8 @@
 			<table id="productionTable" class="table table-bordered table-striped table-hover">
 				<thead>
 					<tr>
-						<th style="font-size: 14">Ship. Month</th>
+						<th style="font-size: 14">Period</th>
+						<th style="font-size: 14">Sales Order</th>
 						<th style="font-size: 14">Material</th>
 						<th style="font-size: 14">Description</th>
 						<th style="font-size: 14">Dest</th>
@@ -68,8 +69,9 @@
 				</thead>
 				<tbody>
 				</tbody>
-				<tfoot>
+				<tfoot style="background-color: RGB(252, 248, 227);">
 					<tr>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -100,7 +102,7 @@
 <script>
 	$.ajaxSetup({
 		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('RGB(255,204,255)')
 		}
 	});
 
@@ -229,24 +231,24 @@
 					i : 0;
 				};
 				var api = this.api();
-				var total_diff = api.column(6).data().reduce(function (a, b) {
+				var total_diff = api.column(7).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
 				}, 0)
-				$(api.column(6).footer()).html(total_diff.toLocaleString());
+				$(api.column(7).footer()).html(total_diff.toLocaleString());
 				// $("#total_diff").val(total_diff.toLocaleString());
 
-				var total_actual = api.column(5).data().reduce(function (a, b) {
+				var total_actual = api.column(6).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
 				}, 0)
-				$(api.column(5).footer()).html(total_actual.toLocaleString());
+				$(api.column(6).footer()).html(total_actual.toLocaleString());
 
-				var total_plan = api.column(4).data().reduce(function (a, b) {
+				var total_plan = api.column(5).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
 				}, 0)
-				$(api.column(4).footer()).html(total_plan.toLocaleString());
+				$(api.column(5).footer()).html(total_plan.toLocaleString());
 			},
 			"columnDefs": [ {
-				"targets": 6,
+				"targets": 7,
 				"createdCell": function (td, cellData, rowData, row, col) {
 					if ( cellData <  0 ) {
 						$(td).css('background-color', 'RGB(255,204,255)')
@@ -266,6 +268,7 @@
 				},
 				"columns": [
 				{ "data": "st_month" },
+				{ "data": "sales_order" },
 				{ "data": "material_number" },
 				{ "data": "material_description" },
 				{ "data": "destination_shortname" },

@@ -60,6 +60,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group" style="width: 100%;">
+									<option></option>
 									@foreach($origin_groups as $origin_group)
 									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
 									@endforeach
@@ -67,7 +68,7 @@
 							</div>
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Material Number" name="material_number" id="material_number" style="width: 100%;">
-									<option value=""></option>
+									<option></option>
 									@foreach($materials as $material)
 									<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
 									@endforeach
@@ -75,7 +76,7 @@
 							</div>
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Serial Number" name="serial_number" id="serial_number" style="width: 100%;">
-									<option value=""></option>
+									<option></option>
 									@foreach($serial_numbers as $serial_number)
 									<option value="{{ $serial_number->serial_number }}">{{ $serial_number->serial_number }}</option>
 									@endforeach
@@ -83,7 +84,7 @@
 							</div>
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select FLO Number" name="flo_number" id="flo_number" style="width: 100%;">
-									<option value=""></option>
+									<option></option>
 									@foreach($flos as $flo)
 									<option value="{{ $flo->flo_number }}">{{ $flo->flo_number }}</option>
 									@endforeach
@@ -91,7 +92,7 @@
 							</div>
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select FLO Status" name="status" id="status" style="width: 100%;">
-									<option value=""></option>
+									<option></option>
 									@foreach($statuses as $status)
 									<option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
 									@endforeach
@@ -152,8 +153,6 @@
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 		jQuery(document).ready(function() {
-			clearConfirmation();
-
 			$('#datefrom').datepicker({
 				autoclose: true
 			});
@@ -161,12 +160,12 @@
 				autoclose: true
 			});
 			$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no flo with status 'close'";
+				language : {
+					noResults : function(params) {
+						return "There is no flo with status 'close'";
+					}
 				}
-			}
-		});
+			});
 		});
 
 		function deleteConfirmation(id){
@@ -203,14 +202,7 @@
 		}
 
 		function clearConfirmation(){
-			$('#flo_detail_table').DataTable().clear();
-			$('#flo_detail_table').DataTable().destroy();
-			$('#datefrom').val('');
-			$('#dateto').val('');
-			$('#origin_group').val('').change();
-			$('#material_number').val('').change();
-			$('#flo_number').val('').change();
-			$('#status').val('').change();
+			location.reload(true);
 		}
 
 		function fillFloDetail(){

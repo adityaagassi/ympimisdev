@@ -106,32 +106,42 @@
 					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Total Stock: <b>'+ result.total_stock + ' pc(s)</b> &#8786; <b>'+ result.total_volume.toFixed(2) +' m&sup3;</b> (<b>' + (result.total_volume/52).toFixed(2) + ' container(s)</b>)</h4>');
 					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
 					var data = result.jsonData;
-					data = data.reverse()
-					var seriesData = [];
-					var xCategories = [];
-					var i, cat;
-					for(i = 0; i < data.length; i++){
-						cat = data[i].destination;
-						if(xCategories.indexOf(cat) === -1){
-							xCategories[xCategories.length] = cat;
-						}
-					}
-					for(i = 0; i < data.length; i++){
-						if(seriesData){
-							var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == data[i].location;});
-							if(currSeries.length === 0){
-								seriesData[seriesData.length] = currSeries = {name: data[i].location, data: []};
-							} else {
-								currSeries = currSeries[0];
-							}
-							var index = currSeries.data.length;
-							currSeries.data[index] = data[i].actual;
-						} else {
-							seriesData[0] = {name: data[i].location, data: [data[i].actual]}
-						}
-					}
+					// data = data.reverse()
+					// var seriesData = [];
+					// var xCategories = [];
+					// var i, cat;
+					// for(i = 0; i < data.length; i++){
+					// 	cat = data[i].destination;
+					// 	if(xCategories.indexOf(cat) === -1){
+					// 		xCategories[xCategories.length] = cat;
+					// 	}
+					// }
+					// for(i = 0; i < data.length; i++){
+					// 	if(seriesData){
+					// 		var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == data[i].location;});
+					// 		if(currSeries.length === 0){
+					// 			seriesData[seriesData.length] = currSeries = {name: data[i].location, data: []};
+					// 		} else {
+					// 			currSeries = currSeries[0];
+					// 		}
+					// 		var index = currSeries.data.length;
+					// 		currSeries.data[index] = data[i].actual;
+					// 	} else {
+					// 		seriesData[0] = {name: data[i].location, data: [data[i].actual]}
+					// 	}
+					// }
 
-					console.log(seriesData);
+					var xAxis = []
+					, productionCount = []
+					, inTransitCount = []
+					, fstkCount = []
+
+					for (i = 0; i < data.length; i++) {
+						xAxis.push(data[i].destination);
+						productionCount.push(data[i].production);
+						inTransitCount.push(data[i].intransit);
+						fstkCount.push(data[i].fstk);
+					}
 
 					var chart;
 					// $(document).ready(function() {
@@ -145,7 +155,7 @@
 								text: 'Finished Goods Stock By Location Chart'
 							},
 							xAxis: {
-								categories: xCategories,
+								categories: xAxis,
 								gridLineWidth: 1,
 								scrollbar: {
 									enabled: true
@@ -189,7 +199,16 @@
 									'Total: '+ this.point.stackTotal;
 								}
 							},
-							series: seriesData
+							series: [{
+								name: 'Production',
+								data: productionCount,
+							}, {
+								name: 'InTransit',
+								data: inTransitCount,
+							}, {
+								name: 'FSTK',
+								data: fstkCount,
+							}]
 						});
 					// });
 				}
