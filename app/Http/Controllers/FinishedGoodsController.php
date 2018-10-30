@@ -7,6 +7,8 @@ use Response;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use Carbon\Carbon;
+use ZipArchive;
+use File;
 
 class FinishedGoodsController extends Controller
 {
@@ -67,19 +69,23 @@ class FinishedGoodsController extends Controller
 			$container_schedules2 = $container_schedules2->where(DB::raw('DATE_FORMAT(container_schedules.shipment_date, "%Y-%m-%d")'), '<=', $date_to);
 		}
 
-
 		$table2 = $container_schedules2
 		->leftJoin('flos', 'container_schedules.container_id', '=', 'flos.container_id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'container_schedules.destination_code')
-		->whereNotNull('flos.bl_date')
+		->whereNotNull('container_schedules.container_number')
 		->select('destinations.destination_shortname', DB::raw('count(distinct container_schedules.container_id) as quantity'))
 		->groupBy('destinations.destination_shortname')
 		->get();
+
+		$total_plan = $table2->sum('quantity');
+		$total_actual = $count2->sum('quantity');
 
 		$response = array(
 			'status' => true,
 			'jsonData1' => $table1,
 			'jsonData2' => $table2,
+			'total_plan' => $total_plan,
+			'total_actual' => $total_actual,
 		);
 		return Response::json($response); 
 	}
@@ -128,6 +134,23 @@ class FinishedGoodsController extends Controller
 			'total_delivery' => $total_delivery,
 			'total_shipment' => $total_shipment,
 			'st_month' => $st_month2,
+		);
+		return Response::json($response);
+	}
+
+	public function fetch_tb_container_departure(Request $request){
+		$container_schedules = DB::table('container_schedules')
+		->leftJoin('container_attachments', 'container_attachments.container_id', '=', 'container_schedules.container_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'container_schedules.destination_code')
+		->where('container_schedules.shipment_date', '=', $request->get('st_date'))
+		->select('container_schedules.container_id', 'destinations.destination_shortname', 'container_schedules.container_number', 'container_schedules.shipment_date', DB::raw('count(container_attachments.container_id) as att'))
+		->groupBy('container_schedules.container_id', 'destinations.destination_shortname', 'container_schedules.container_number', 'container_schedules.shipment_date')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'table' => $container_schedules,
+			'st_date' => $request->get('st_date'),
 		);
 		return Response::json($response); 
 	}
@@ -185,5 +208,30 @@ class FinishedGoodsController extends Controller
 		}
 
 		return DataTables::of($table)->make(true);
+	}
+
+	public function download_att_container_departure(Request $request){
+		$container_attachments = DB::table('container_attachments')->get();
+
+		$zip = new ZipArchive();
+		$zip_name = $request->get('container_id').".zip";
+		$zip_path = public_path() . '/' . $zip_name;
+		$zip->open($zip_name, ZipArchive::CREATE);
+
+		foreach ($container_attachments as $container_attachment) {
+			$file_path = public_path() . $container_attachment->file_path . $container_attachment->file_name;
+			$file_name = $container_attachment->file_name;
+			$zip->addFile($file_path, $file_name);
+		}
+		$zip->close();
+
+		// File::put($zip_path, $zip);
+		$path = asset($zip_name);
+		
+		$response = array(
+			'status' => true,
+			'file_path' => $path,
+		);
+		return Response::json($response); 
 	}
 }

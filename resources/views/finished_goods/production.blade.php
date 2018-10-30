@@ -12,12 +12,7 @@
 		Production Result <span class="text-purple">?????????????????</span>
 		<small>By Shipment Schedule <span class="text-purple">??????</span></small>
 	</h1>
-	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
+	<ol class="breadcrumb" id="last_update">
 	</ol>
 </section>
 @stop
@@ -113,8 +108,26 @@
 		fillBar();
 		setInterval(function(){
 			fillBar();
-		}, 10000);
+		}, 30000);
 	});
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ")";
+	}
 
 	function fillBar(){
 		$.get('{{ url("fetch/fg_production") }}', function(result, status, xhr){
@@ -123,6 +136,7 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					$('#progress_text_production').html('Total Production vs Ship. Plan of '+result.st_month);
 					$('#progress_number_production').html(result.total_production.toLocaleString() + '/' + result.total_plan.toLocaleString() + ' set(s) <a class="label label-info" onClick="fillTable(id)" id="production"><i class="fa fa-info-circle"></i> Info</a>');
 					$('#progress_bar_production').html(((result.total_production/result.total_plan)*100).toFixed(2) + '%');

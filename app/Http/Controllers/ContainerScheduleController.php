@@ -10,6 +10,7 @@ use App\Container;
 use App\Destination;
 use App\CodeGenerator;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class ContainerScheduleController extends Controller
 {
@@ -24,8 +25,10 @@ class ContainerScheduleController extends Controller
      */
     public function index()
     {
-        $container_schedules = ContainerSchedule::orderBy('shipment_date', 'DESC')
+        $container_schedules = ContainerSchedule::OrderBy('id', 'asc')
         ->get();
+
+        $tes = DB::table('container_schedules')->get();
 
         return view('container_schedules.index', array(
             'container_schedules' => $container_schedules

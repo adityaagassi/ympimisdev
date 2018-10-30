@@ -10,8 +10,7 @@
 		Finished Goods Stock <span class="text-purple">?????????????????</span>
 		<small>By Each Location <span class="text-purple">??????</span></small>
 	</h1>
-	<ol class="breadcrumb">
-
+	<ol class="breadcrumb" id="last_update">
 	</ol>
 </section>
 @stop
@@ -72,9 +71,29 @@
 	});
 
 	jQuery(document).ready(function() {
-
 		fillChart();
+		setInterval(function(){
+			fillChart();
+		}, 30000);
 	});
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
 
 	function fillChart(){
 		$.get('{{ url("fetch/fg_stock") }}', function(result, status, xhr){
@@ -83,6 +102,7 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Total Stock: <b>'+ result.total_stock + ' pc(s)</b> &#8786; <b>'+ result.total_volume.toFixed(2) +' m&sup3;</b> (<b>' + (result.total_volume/52).toFixed(2) + ' container(s)</b>)</h4>');
 					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
 					var data = result.jsonData;
@@ -110,6 +130,8 @@
 							seriesData[0] = {name: data[i].location, data: [data[i].actual]}
 						}
 					}
+
+					console.log(seriesData);
 
 					var chart;
 					// $(document).ready(function() {

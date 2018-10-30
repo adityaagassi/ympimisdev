@@ -240,6 +240,7 @@ public function index_flo_container(Request $request){
     ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
     ->whereNotNull('flos.invoice_number')
     ->select('container_schedules.container_id', 'container_schedules.container_code', 'destinations.destination_shortname', 'container_schedules.shipment_date', 'shipment_conditions.shipment_condition_name', 'container_schedules.container_number')
+    ->distinct()
     ->get();
 
     return DataTables::of($invoices)
@@ -503,7 +504,7 @@ public function scan_serial_number(Request $request)
     elseif(Auth::user()->username == "Assy-VN"){
         $printer_name = 'FLO Printer 106';
     }
-    elseif(Auth::user()->username == "Superman"){
+    elseif(Auth::user()->username == "superman"){
         $printer_name = 'FLO Printer 107';
     }
     else{

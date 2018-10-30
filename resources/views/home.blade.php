@@ -1,14 +1,8 @@
 @extends('layouts.master')
 @section('header')
-<section class="content-header">
-  <h1>
-    Dashboard
-    <small>it all starts here</small>
-</h1>
-<ol class="breadcrumb">
-       {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li> --}}
+<section class="content-header" style="text-align: center;">
+    <span style="font-weight: bold; font-size: 30px">YMPI Information System</span>
+    <ol class="breadcrumb">
     </ol>
 </section>
 @endsection
@@ -17,12 +11,12 @@
 
 <section class="content">
     <div class="row">
-<div class="col-md-4">
-    <div class="box box-default box-solid">
-        <div class="box-header with-border text-center">
-            <h5 class="box-title">Raw Material</h5>
-        </div>
-        <div class="box-body">
+        <div class="col-md-4">
+            <div class="box box-default box-solid">
+                <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
+                    <h5 class="box-title" style="font-weight: bold;">Raw Material</h5>
+                </div>
+                <div class="box-body">
           {{--   <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
@@ -32,8 +26,8 @@
 </div>
 <div class="col-md-4">
     <div class="box box-default box-solid">
-        <div class="box-header with-border text-center">
-            <h5 class="box-title">Work In Process</h5>
+        <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
+            <h5 class="box-title" style="font-weight: bold;">Work In Process</h5>
         </div>
         <div class="box-body">
            {{--  <a class="list-group-item" href=""></a>
@@ -45,48 +39,39 @@
 </div>
 <div class="col-md-4">
     <div class="box box-default box-solid">
-        <div class="box-header with-border text-center">
-            <h5 class="box-title">Finished Goods</h5>
+        <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
+            <h5 class="box-title" style="font-weight: bold;">Finished Goods</h5>
         </div>
         <div class="box-body">
-            {{-- <a class="list-group-item" href="">Sales Budget-Forecast-Actual</a>
-            <a class="list-group-item" href="">Sales Amount Progress</a>
-            <a class="list-group-item" href="">Daily Finished Goods Achievement</a>
-            <a class="list-group-item" href="">Finished Goods Stock</a>
-            <a class="list-group-item" href="">Finished Goods Tracking</a>
-            <a class="list-group-item" href="">Weekly Shipment Achievement</a>
-            <a class="list-group-item" href="">Shipping Container</a>
-            <a class="list-group-item" href="">Weekly Shipment Summary</a> --}}
+            <a class="list-group-item" style="font-weight: bold;" href="{{ url("/index/fg_production") }}"><span class="fa fa-bar-chart"></span> Production Result</a>
+            <a class="list-group-item" style="font-weight: bold;" href="{{ url("/index/fg_stock") }}"><span class="fa fa-bar-chart"></span> Finsihed Goods Stock</a>
+            <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-bar-chart"></span> Weekly Shipment</a>
+            <a class="list-group-item" style="font-weight: bold;" href="{{ url("/index/fg_container_departure") }}"><span class="fa fa-bar-chart"></span> Container Departure</a>
+            <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-table"></span> Weekly Summary</a>
+            <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-table"></span> Monthly Summary</a>
+            <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-table"></span> Traceability</a>
         </div>
     </div>
 </div>
 </div>
-</section>
-
-@stop
-
-
-{{-- @extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
-                </div>
+<div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+        <div class="box box-default box-solid">
+            <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
+                <h5 class="box-title" style="font-weight: bold;">Chorei</h5>
+            </div>
+            <div class="box-body">
+                <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-bar-chart"></span> Daily Production Result</a>
+                <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-bar-chart"></span> Daily Production Accuracy</a>
+                <a class="list-group-item" style="font-weight: bold;" href=""><span class="fa fa-bar-chart"></span> Weekly Shipment</a>
             </div>
         </div>
     </div>
 </div>
-@endsection
- --}}
+</section>
+
+@stop

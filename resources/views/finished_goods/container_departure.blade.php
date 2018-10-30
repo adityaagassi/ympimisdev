@@ -10,8 +10,7 @@
 		Container Departure <span class="text-purple">?????????????????</span>
 		{{-- <small>By Each Location <span class="text-purple">??????</span></small> --}}
 	</h1>
-	<ol class="breadcrumb">
-
+	<ol class="breadcrumb" id="last_update">
 	</ol>
 </section>
 @stop
@@ -21,9 +20,8 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				{{-- <div class="box-header with-border" id="boxTitle">
-					asdasd
-				</div> --}}
+				<div class="box-header with-border" id="boxTitle">
+				</div>
 				<div class="box-body">
 					<div class="col-md-3 col-md-offset-3">
 						<div class="form-group">
@@ -57,7 +55,7 @@
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="#tab_1" data-toggle="tab">By Shipment Date</a></li>
-							<li><a href="#tab_2" data-toggle="tab">By BL Date</a></li>
+							<li><a href="#tab_2" data-toggle="tab">By Destination</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
@@ -87,8 +85,9 @@
 						<thead>
 							<tr>
 								<th style="font-size: 14">Cont. ID</th>
-								<th style="font-size: 14">Destination</th>
-								<th style="font-size: 14">Container Number</th>
+								<th style="font-size: 14">Dest.</th>
+								<th style="font-size: 14">Container No.</th>
+								<th style="font-size: 14">Ship. Date</th>
 								<th style="font-size: 14">Evidence Att.</th>
 							</tr>
 						</thead>
@@ -96,13 +95,13 @@
 						</tbody>
 					</table>
 				</div>
+				{{-- <div class="modal-footer" id="modalFooter"></div> --}}
 			</div>
 		</div>
 	</div>
 </div>
 
 @endsection
-
 
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -128,6 +127,24 @@
 		fillChart();
 	});
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
 	function fillChart(){
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
@@ -141,6 +158,8 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Containeer Plan: <b>'+ result.total_plan + ' unit(s)</b> Container Departed: <b>'+ result.total_actual + ' unit(s)</b>');
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					var data = result.jsonData1;
 					// data = data.reverse()
 					var seriesData = [];
@@ -345,8 +364,58 @@
 		});
 }
 
-function modalContainerDeparture(){
-	$('#modalContainerDeparture').modal('show');
+function modalContainerDeparture(st_date){
+	var data = {
+		st_date:st_date,
+	}
+	$.get('{{ url("fetch/tb_container_departure") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#tableBody').html("");
+				$('.modal-title').html("");
+				$('.modal-title').html('Shipment Date: <b>' + result.st_date + '</b>');
+				var tableData = '';
+				$.each(result.table, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ value.container_id +'</td>';
+					tableData += '<td>'+ value.destination_shortname +'</td>';
+					tableData += '<td>'+ value.container_number +'</td>';
+					tableData += '<td>'+ value.shipment_date +'</td>';
+					tableData += '<td><a href="javascript:void(0)" id="'+ value.container_id +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> '+ value.att +' attachemnt(s)</a></td>';
+					tableData += '</tr>';
+				});
+				$('#tableBody').append(tableData);
+				$('#modalContainerDeparture').modal('show');
+			}
+			else
+				alert('Attempt to retrieve data failed');
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
+
+function downloadAtt(id){
+	var data = {
+		container_id:id
+	}
+	$.get('{{ url("download/att_container_departure") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			// $('#modalFooter').html("<a href='" + result.file_path + "'>Download</a>");
+			document.location.href = (result.file_path);
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+	
 }
 </script>
 @endsection

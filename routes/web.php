@@ -37,6 +37,8 @@ Route::get('fetch/fg_stock', 'FinishedGoodsController@fetch_fg_stock');
 Route::get('fetch/tb_stock', 'FinishedGoodsController@fetch_tb_stock');
 Route::get('index/fg_container_departure', 'FinishedGoodsController@index_fg_container_departure');
 Route::get('fetch/fg_container_departure', 'FinishedGoodsController@fetch_fg_container_departure');
+Route::get('fetch/tb_container_departure', 'FinishedGoodsController@fetch_tb_container_departure');
+Route::get('download/att_container_departure', 'FinishedGoodsController@download_att_container_departure');
 
 Route::get('index/inventory', 'InventoryController@index');
 Route::post('fetch/inventory', 'InventoryController@fetch');

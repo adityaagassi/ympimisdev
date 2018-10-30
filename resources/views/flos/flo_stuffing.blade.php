@@ -66,8 +66,8 @@
 											<option></option>
 											@foreach($container_schedules as $container_schedule)
 											<option value="{{ $container_schedule->container_id }}">
-												{{-- {{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }} --}}
-												{{ $container_schedule->container_id }}
+												{{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }}
+												{{-- {{ $container_schedule->container_id }} --}}
 											</option>
 											@endforeach
 										</select>

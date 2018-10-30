@@ -291,14 +291,43 @@
                                                                         <a href="{{ url("/index/fg_container_departure") }}"><i class="fa fa-line-chart"></i> Container Departure</a>
                                                                       </li>
                                                                       <li>
-                                                                        <a href=""><i class="fa fa-line-chart"></i> Shipment</a>
+                                                                        <a href=""><i class="fa fa-table"></i> Weekly Summary</a>
                                                                       </li>
                                                                       <li>
-                                                                        <a href=""><i class="fa fa-line-chart"></i> Summary</a>
+                                                                        <a href=""><i class="fa fa-table"></i> Monthly Summary</a>
+                                                                      </li>
+                                                                      <li>
+                                                                        <a href=""><i class="fa fa-table"></i> Traceability</a>
                                                                       </li>
                                                                     </ul>
                                                                   </li>
-                                                                  @endif                                                         
+                                                                  @endif
+
+                                                                  @if(in_array(Auth::user()->level_id, [1]))
+                                                                  @if(isset($head) && $head == "Chorei")
+                                                                  <li class="treeview active">
+                                                                    @else
+                                                                    <li class="treeview">
+                                                                      @endif
+                                                                      <a href="#">
+                                                                        <i class="fa fa-music"></i> <span>Chorei</span>
+                                                                        <span class="pull-right-container">
+                                                                          <i class="fa fa-angle-left pull-right"></i>
+                                                                        </span>
+                                                                      </a>
+                                                                      <ul class="treeview-menu">
+                                                                       <li>
+                                                                        <a href=""><i class="fa fa-line-chart"></i> Daily Production</a>
+                                                                      </li>
+                                                                      <li>
+                                                                        <a href=""><i class="fa fa-line-chart"></i> Accuracy of Production</a>
+                                                                      </li>
+                                                                      <li>
+                                                                        <a href=""><i class="fa fa-line-chart"></i> Weekly Shipment</a>
+                                                                      </li>
+                                                                    </ul>
+                                                                  </li>
+                                                                  @endif                                                        
 
                                                                   <li class="header">Trial Menu</li>
                                                                   <li>
