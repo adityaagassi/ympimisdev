@@ -20,7 +20,7 @@ return view('404');
 });
 
 Route::get('tes', function() {
-	return view('tes');
+	return view('layouts.display');
 });
 
 Auth::routes();
@@ -28,7 +28,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 // route::get('tes', 'TrialController@tes');
 // Route::get('index/user', 'UserController@index');
-// 
+
+Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');
+Route::get('fetch/dp_production_result', 'DisplayController@fetch_dp_production_result');
+
 Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
 Route::get('fetch/fg_production', 'FinishedGoodsController@fetch_fg_production');
 Route::get('fetch/tb_production', 'FinishedGoodsController@fetch_tb_production');
@@ -43,6 +46,15 @@ Route::get('index/fg_weekly_summary', 'FinishedGoodsController@index_fg_weekly_s
 Route::get('fetch/fg_weekly_summary', 'FinishedGoodsController@fetch_fg_weekly_summary');
 Route::get('index/fg_monthly_summary', 'FinishedGoodsController@index_fg_monthly_summary');
 Route::get('fetch/fg_monthly_summary', 'FinishedGoodsController@fetch_fg_monthly_summary');
+Route::get('index/fg_traceability', 'FinishedGoodsController@index_fg_traceability');
+Route::get('fetch/fg_traceability', 'FinishedGoodsController@fetch_fg_traceability');
+Route::get('index/fg_shipment_schedule', 'FinishedGoodsController@index_fg_shipment_schedule');
+Route::get('fetch/fg_shipment_schedule', 'FinishedGoodsController@fetch_fg_shipment_schedule');
+
+Route::get('index/ch_daily_production_result', 'ChoreiController@index_ch_daily_production_result');
+Route::get('fetch/daily_production_result_week', 'ChoreiController@fetch_daily_production_result_week');
+Route::get('fetch/daily_production_result_date', 'ChoreiController@fetch_daily_production_result_date');
+Route::get('fetch/daily_production_result', 'ChoreiController@fetch_daily_production_result');
 
 Route::get('index/inventory', 'InventoryController@index');
 Route::post('fetch/inventory', 'InventoryController@fetch');
@@ -94,6 +106,7 @@ Route::get('destroy/destination/{id}', 'DestinationController@destroy');
 Route::get('edit/destination/{id}', 'DestinationController@edit');
 Route::post('edit/destination/{id}', 'DestinationController@update');
 Route::get('show/destination/{id}', 'DestinationController@show');
+Route::post('import/destination', 'DestinationController@import');
 
 Route::get('index/shipment_condition', 'ShipmentConditionController@index');
 Route::get('create/shipment_condition', 'ShipmentConditionController@create');

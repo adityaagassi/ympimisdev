@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet" />
+<link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
 input {
 	line-height: 24px;
@@ -76,26 +76,26 @@ input {
 							<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 							<button id="search" onClick="fillInventoryTable()" class="btn btn-primary">Search</button>
 						</div>
-					</div>	
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<table id="inventoryTable" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th style="font-size: 14">Plant</th>
-									<th style="font-size: 14">Group</th>
-									<th style="font-size: 14">Material</th>
-									<th style="font-size: 14">Description</th>
-									<th style="font-size: 14">SLoc</th>
-									<th style="font-size: 14">Quantity</th>
-									<th style="font-size: 14">Last Updated</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
 					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<table id="inventoryTable" class="table table-bordered table-striped">
+								<thead>
+									<tr>
+										<th style="font-size: 14">Plant</th>
+										<th style="font-size: 14">Group</th>
+										<th style="font-size: 14">Material</th>
+										<th style="font-size: 14">Description</th>
+										<th style="font-size: 14">SLoc</th>
+										<th style="font-size: 14">Quantity</th>
+										<th style="font-size: 14">Last Updated</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>	
 				</div>
 			</div>
 		</div>
@@ -110,7 +110,7 @@ input {
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/pdfmake.min.js")}}"></script>
+{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>

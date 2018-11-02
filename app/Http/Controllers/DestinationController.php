@@ -148,4 +148,38 @@ class DestinationController extends Controller
         return redirect('/index/destination')->with('status', 'Destination has been deleted.')->with('page', 'Destination');
         //
     }
+
+    public function import(Request $request)
+    {
+        if($request->hasFile('destination')){
+            Destination::truncate();
+
+            $id = Auth::id();
+
+            $file = $request->file('destination');
+            $data = file_get_contents($file);
+
+            $rows = explode("\r\n", $data);
+            foreach ($rows as $row)
+            {
+                if (strlen($row) > 0) {
+                    $row = explode("\t", $row);
+                    $destination = new Destination([
+                        'destination_code' => $row[0],
+                        'destination_name' => $row[1],
+                        'destination_shortname' => $row[2],
+                        'created_by' => $id,
+                    ]);
+
+                    $destination->save();
+                }
+            }
+            return redirect('/index/destination')->with('status', 'New destinations has been imported.')->with('page', 'Destination');
+
+        }
+        else
+        {
+            return redirect('/index/destination')->with('error', 'Please select a file.')->with('page', 'Destination');
+        }
+    }
 }

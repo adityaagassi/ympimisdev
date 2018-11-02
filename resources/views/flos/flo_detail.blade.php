@@ -40,7 +40,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom" nama="datefrom">
+									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
 								</div>
 							</div>
 						</div>
@@ -51,7 +51,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto" nama="dateto">
+									<input type="text" class="form-control pull-right" id="dateto" name="dateto">
 								</div>
 							</div>
 						</div>
@@ -139,7 +139,7 @@
 	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
 	<script src="{{ url("js/jszip.min.js")}}"></script>
-	<script src="{{ url("js/pdfmake.min.js")}}"></script>
+	{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
 	<script src="{{ url("js/vfs_fonts.js")}}"></script>
 	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
 	<script src="{{ url("js/buttons.print.min.js")}}"></script>

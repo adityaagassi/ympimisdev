@@ -10,12 +10,10 @@ input {
 @section('header')
 <section class="content-header">
 	<h1>
-		Finsihed Goods Monthly Summary <span class="text-purple">?????????????????</span>
+		Monthly Summary <span class="text-purple">月次まとめ</span>
 		{{-- <small>Material stock details <span class="text-purple">??????</span></small> --}}
 	</h1>
-	<ol class="breadcrumb">
-
-	</ol>
+	<ol class="breadcrumb" id="last_update"></ol>
 </section>
 @stop
 @section('content')
@@ -95,7 +93,7 @@ input {
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/pdfmake.min.js")}}"></script>
+{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
@@ -116,7 +114,30 @@ input {
 		location.reload(true);
 	}
 
+	function clearConfirmation(){
+		location.reload(true);
+	}
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
 	function fillTable(){
+		$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 		$('#monthlySummaryTable').DataTable().clear();
 		$('#monthlySummaryTable').DataTable().destroy();
 		var periodTo = $('#periodTo').val();

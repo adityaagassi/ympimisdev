@@ -51,46 +51,30 @@
                     <th>Shipment Date</th>
                     <th>Week</th>
                     <th>Container Number</th>
-                    <th>att</th>
                     <th>Action</th>
-                    {{-- <th>Edit</th>
-                      <th>Delete</th> --}}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($container_schedules as $container_schedule)
-                    <tr>
-                      <td style="font-size: 14">{{$container_schedule->container_id}}</td>
-                      <td style="font-size: 14">{{$container_schedule->container_code}}</td>
-                      <td style="font-size: 14">{{$container_schedule->destination->destination_shortname}}</td>
-                      <td style="font-size: 14">{{$container_schedule->shipment_date}}</td>
-                      <td style="font-size: 14">
-                        @if(isset($container_schedule->weeklycalendar->week_name))
-                        {{$container_schedule->weeklycalendar->week_name}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">
-                        @if($container_schedule->container_number != null)
-                        {{$container_schedule->container_number}}
-                        @else
-                        <span class="fa fa-paperclip"></span>(0)
-                        @endif
-                      </td>
-                      <td style="font-size: 14">
-                        @if(isset($container_schedule->containerattachment->att))
-                        {{$container_schedule->containerattachment->att}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                    {{-- <td>
-                      <form action="{{ url('destroy/user', $user['id']) }}" method="post">
-                                {{ csrf_field() }}
-                                <button class="btn btn-xs btn-danger" type="submit">Delete</button>
-                      </form>
-                    </td> --}}
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($container_schedules as $container_schedule)
+                  <tr>
+                    <td style="font-size: 14">{{$container_schedule->container_id}}</td>
+                    <td style="font-size: 14">{{$container_schedule->container_code}}</td>
+                    <td style="font-size: 14">{{$container_schedule->destination->destination_shortname}}</td>
+                    <td style="font-size: 14">{{$container_schedule->shipment_date}}</td>
+                    <td style="font-size: 14">
+                      @if(isset($container_schedule->weeklycalendar->week_name))
+                      {{$container_schedule->weeklycalendar->week_name}}
+                      @else
+                      Not registered
+                      @endif
+                    </td>
+                    <td style="font-size: 14">
+                      @if($container_schedule->container_number != null)
+                      {{$container_schedule->container_number}}
+                      @else
+                      -
+                      @endif
+                    </td>
                     <td>
                       <center>
                         <a class="btn btn-info btn-xs" href="{{url('show/container_schedule', $container_schedule['id'])}}">View</a>

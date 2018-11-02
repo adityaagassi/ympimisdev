@@ -6,6 +6,8 @@
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
+    <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
+    &nbsp;
     <li><a href="{{ url("create/destination")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
   </ol>
 </section>
@@ -70,9 +72,7 @@
           </div>
         </div>
       </div>
-
     </section>
-    <!-- /.content -->
 
     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -88,6 +88,27 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id ="importForm" method="post" action="{{ url('import/destination') }}" enctype="multipart/form-data">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+            </div>
+            <div class="modal-body">
+              <center><input type="file" name="destination" id="InputFile" accept="text/plain"></center>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

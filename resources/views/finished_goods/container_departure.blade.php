@@ -7,7 +7,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Container Departure <span class="text-purple">?????????????????</span>
+		Container Departure <span class="text-purple">コンテナー出発</span>
 		{{-- <small>By Each Location <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update">
@@ -421,7 +421,6 @@ function downloadAtt(id){
 			alert('Disconnected from server');
 		}
 	});
-	
 }
 </script>
 @endsection

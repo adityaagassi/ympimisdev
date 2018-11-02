@@ -143,41 +143,40 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
             </div>
-            <div class="">
-              <div class="modal-body">
-                <center><input type="file" name="material_volume" id="InputFile" accept="text/plain"></center>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
-              </div>
-            </form>
-          </div>
+            <div class="modal-body">
+              <center><input type="file" name="material_volume" id="InputFile" accept="text/plain"></center>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    @stop
+  @stop
 
-    @section('scripts')
-    <script>
-      $(function () {
-        $('#example1').DataTable({
-          "order": []
-        })
-        $('#example2').DataTable({
-          'paging'      : true,
-          'lengthChange': false,
-          'searching'   : false,
-          'ordering'    : true,
-          'info'        : true,
-          'autoWidth'   : false
-        })
+  @section('scripts')
+  <script>
+    $(function () {
+      $('#example1').DataTable({
+        "order": []
       })
-      function deleteConfirmation(url, name, id) {
-        jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-        jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-      }
-    </script>
+      $('#example2').DataTable({
+        'paging'      : true,
+        'lengthChange': false,
+        'searching'   : false,
+        'ordering'    : true,
+        'info'        : true,
+        'autoWidth'   : false
+      })
+    })
+    function deleteConfirmation(url, name, id) {
+      jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+    }
+  </script>
 
-    @stop
+  @stop

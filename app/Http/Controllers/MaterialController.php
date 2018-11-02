@@ -202,7 +202,5 @@ class MaterialController extends Controller
             {
                 return redirect('/index/material')->with('error', 'Please select a file.')->with('page', 'Material');
             }
-            
-        //
         }
     }

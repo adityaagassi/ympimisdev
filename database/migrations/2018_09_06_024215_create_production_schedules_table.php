@@ -16,13 +16,14 @@ class CreateProductionSchedulesTable extends Migration
         Schema::create('production_schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->string('material_number');
-            $table->string('destination_code');
+            $table->string('model');
+            $table->string('hpl');
             $table->string('due_date');
             $table->double('quantity');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['material_number', 'destination_code', 'due_date'], 'daily_schedule_unique');
+            $table->unique(['material_number', 'due_date'], 'production_schedule_unique');
         });
     }
 

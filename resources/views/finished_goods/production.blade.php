@@ -1,15 +1,13 @@
 @extends('layouts.master')
 @section('stylesheets')
-
 <style type="text/css">
-
 </style>
 @stop
 
 @section('header')
 <section class="content-header">
 	<h1>
-		Production Result <span class="text-purple">?????????????????</span>
+		Production Result <span class="text-purple">生産実績</span>
 		<small>By Shipment Schedule <span class="text-purple">??????</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
@@ -42,13 +40,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				{{-- <div class="callout callout-info">
-					<h4>Reminder!</h4>
-					Instructions for how to use modals are available on the
-					<a href="http://getbootstrap.com/javascript/#modals">Bootstrap documentation</a>
-				</div> --}}
-				<div id="info">
-				</div>
+				<div id="info"></div>
 			</div>
 		</div>
 		<div class="col-xs-12">
@@ -95,7 +87,7 @@
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/pdfmake.min.js")}}"></script>
+{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
