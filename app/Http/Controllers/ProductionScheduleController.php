@@ -40,9 +40,7 @@ class ProductionScheduleController extends Controller
     public function create()
     {
         $materials = Material::orderBy('material_number', 'ASC')->get();
-        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
         return view('production_schedules.create', array(
-            'destinations' => $destinations,
             'materials' => $materials
         ))->with('page', 'Production Schedule');
         //
@@ -56,13 +54,13 @@ class ProductionScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $due_date = date('Y-m-d', strtotime($request->get('due_date')));
         try
         {
             $id = Auth::id();
             $production_schedule = new ProductionSchedule([
               'material_number' => $request->get('material_number'),
-              'destination_code' => $request->get('destination_code'),
-              'due_date' => $request->get('due_date'),
+              'due_date' => $due_date,
               'quantity' => $request->get('quantity'),
               'created_by' => $id
           ]);
@@ -74,7 +72,7 @@ class ProductionScheduleController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Production for material with preferred destination and due date already exist.')->with('page', 'Production Schedule');
+                return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
             }
         }
         //
@@ -104,12 +102,10 @@ class ProductionScheduleController extends Controller
     public function edit($id)
     {
         $materials = Material::orderBy('material_number', 'ASC')->get();
-        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
         $production_schedule = ProductionSchedule::find($id);
         return view('production_schedules.edit', array(
             'production_schedule' => $production_schedule,
             'materials' => $materials,
-            'destinations' => $destinations,
         ))->with('page', 'Production Schedule');
         //
     }
@@ -123,23 +119,21 @@ class ProductionScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $due_date = date('Y-m-d', strtotime($request->get('due_date')));
         try{
-
             $production_schedule = ProductionSchedule::find($id);
             $production_schedule->material_number = $request->get('material_number');
-            $production_schedule->destination_code = $request->get('destination_code');
-            $production_schedule->due_date = $request->get('due_date');
+            $production_schedule->due_date = $due_date;
             $production_schedule->quantity = $request->get('quantity');
             $production_schedule->save();
 
             return redirect('/index/production_schedule')->with('status', 'Production schedule data has been edited.')->with('page', 'Production Schedule');
-
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Production schedule for material with preferred destination and shipment date already exist.')->with('page', 'Production Schedule');
+                return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
             }
 
         }
@@ -168,8 +162,8 @@ class ProductionScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-     public function import(Request $request)
-     {
+    public function import(Request $request)
+    {
         try{
             if($request->hasFile('production_schedule')){
                 // ContainerSchedule::truncate();
@@ -186,9 +180,8 @@ class ProductionScheduleController extends Controller
                         $row = explode("\t", $row);
                         $production_schedule = new ProductionSchedule([
                             'material_number' => $row[0],
-                            'destination_code' => $row[1],
-                            'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[2]))),
-                            'quantity' => $row[3],
+                            'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+                            'quantity' => $row[2],
                             'created_by' => $id,
                         ]);
 
@@ -196,7 +189,6 @@ class ProductionScheduleController extends Controller
                     }
                 }
                 return redirect('/index/production_schedule')->with('status', 'New production schedule has been imported.')->with('page', 'Production Schedule');
-
             }
             else
             {
@@ -207,8 +199,7 @@ class ProductionScheduleController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
-                return back()->with('error', 'Production schedule with preferred destination and due date already exist.')->with('page', 'Production Schedule');
+                return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
             }
 
         }

@@ -4,44 +4,89 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Response;
+use App\OriginGroup;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DisplayController extends Controller
 {
 	public function index_dp_production_result(){
-		$hpls = DB::table('production_schedules')->select('hpl')->distinct()->get();
+		$origin_groups = OriginGroup::orderBy('origin_group_name', 'asc')->get();
 		return view('displays.daily_production_result', array(
-			'hpls' => $hpls,
+			'origin_groups' => $origin_groups,
 		))->with('page', 'Display Production Result')->with('head', 'Display');
 	}
 
 	public function fetch_dp_production_result(Request $request){
 		$first = date('Y-m-01');
+		if(date('Y-m-d') != date('Y-m-01')){
+			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
+		}
+		else{
+			$last = date('Y-m-d');
+		}
 		$now = date('Y-m-d');
 
-		$plan_now = db::table('production_schedules')->where('due_date', '=', $now)
-		->where('hpl', '=', $request->get('hpl'))->select('material_number', 'quantity');
+		$query = "select result.material_number, materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+		(
+		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date = '". $now ."' 
+		group by material_number
 
-		$plan2 = db::table('production_schedules')->where('due_date', '=', $now)
-		->where('hpl', '=', $request->get('hpl'))->select('material_number', 'quantity')->unionAll($plan_now)
-		->select('material_number', db::raw('sum(quantity) as quantity'))
-		->groupBy('material_number')
-		->get();
+		union all
 
+		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+		from flo_details 
+		where date(created_at) = '". $now ."'  
+		group by material_number
 
-		// $production_schedules = DB::table('production_schedules')
-		// ->where('production_schedules.due_date', '>=', $first)
-		// ->where('production_schedules.due_date', '<=', $now)
-		// ->where('production_schedules.hpl', '=', $request->get('hpl'))
-		// ->leftJoin(db::raw("(select flo_details.material_number, sum(flo_details.quantity) as actual from flo_details where date(flo_details.created_at) >= '". $first ."' and date(flo_details.created_at) <= '". $now ."' group by flo_details.material_number) as flo_details"), 'flo_details.material_number', '=', 'production_schedules.material_number')
-		// ->select('production_schedules.model', db::raw('sum(production_schedules.quantity) as plan'), db::raw('sum(flo_details.actual) as actual'))
-		// ->groupBy('production_schedules.model')
-		// ->get();
+		union all
+
+		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+		(
+		select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+
+		union all
+
+		select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+		) as debt
+		group by material_number
+
+		) as result
+		left join materials on materials.material_number = result.material_number
+		where materials.origin_group_code = '". $request->get('hpl') ."'
+		group by result.material_number, materials.material_description";
+
+		$tableData = DB::select($query);
+
+		$query2 = "select result.material_number, materials.material_description as model, sum(result.plan) as plan, sum(result.actual) as actual from
+		(
+		select material_number, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date >= '". $first ."' and due_date <= '". $now ."' 
+		group by material_number
+
+		union all
+
+		select material_number, 0 as plan, sum(quantity) as actual
+		from flo_details
+		where date(created_at) >= '". $first ."' and date(created_at) <= '". $now ."'
+		group by material_number
+		) as result
+		left join materials on materials.material_number = result.material_number
+		where materials.origin_group_code = '". $request->get('hpl') ."'
+		group by result.material_number, materials.material_description";
+
+		$chartData = DB::select($query2);
+
+		// $totalPlan = DB::select();
 
 		$response = array(
 			'status' => true,
-			'chartData' => $plan2,
+			'tableData' => $tableData,
+			'chartData' => $chartData,
+			// 'totalPlan' => $totalPlan,
 		);
 		return Response::json($response);
 	}

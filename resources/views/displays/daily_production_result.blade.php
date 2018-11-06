@@ -1,6 +1,32 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
+/*table ,tr td{
+	border:1px solid red
+	}*/
+	tbody {
+		display:block;
+		height:465px;
+		overflow:auto;
+	}
+	thead, tbody tr {
+		display:table;
+		width:100%;
+		table-layout:fixed;/* even columns width , fix width of table too*/
+	}
+	thead {
+		width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+	}
+	table {
+		table-layout:fixed;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	td:hover {
+		overflow: visible;
+	}
 </style>
 @endsection
 @section('header')
@@ -15,17 +41,46 @@
 @section('content')
 <section class="content">
 	<div class="row">
-		<div class="col-xs-10">
-			<div id="container" style="width:100%; height:450px;"></div>
+		<div class="col-xs-8">
+			<div id="container" style="width:100%; height:550px;"></div>
 		</div>
-		<div class="col-xs-2">
-			<select class="form-control select2" name="hpl" id='hpl' data-placeholder="HPL" style="width: 60%;">
-				<option></option>
-				@foreach($hpls as $hpl)
-				<option value="{{ $hpl->hpl }}">{{ $hpl->hpl }}</option>
+		<div class="col-xs-4">
+			<select class="form-control select2" name="hpl" id='hpl' data-placeholder="HPL" style="width: 74%;">
+				@foreach($origin_groups as $origin_group)
+				<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
 				@endforeach
 			</select>
-			<button id="search" onClick="fillChart()" class="btn btn-primary"><span class="fa fa-search"></span></button>
+			<button id="search" onClick="fillChart()" class="btn btn-primary" style="width: 24%;"><span class="fa fa-search"></span></button>
+			<br><br>
+		</div>
+		<div class="col-xs-4">
+			<div class="box box-widget">
+				<div class="box-body table-responsive no-padding">
+					<table class="table table-condensed table-hover" style="width: 100%;">
+						<div class="scroll-container">
+							<thead>
+								<tr>
+									<th style="width: 40%">Model</th>
+									<th style="width: 16%">MTD</th>
+									<th style="width: 16%">Plan</th>
+									<th style="width: 16%">Actual</th>
+									<th style="width: 12%"></th>
+								</tr>
+							</thead>
+							<tbody id="tableBody"></tbody>
+						</div>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-widget">
+				<div class="box-footer">
+					<div class="row" id="resume"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -46,6 +101,28 @@
 		$('.select2').select2();	
 	});
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
+	setInterval(function(){
+		fillChart();
+	}, 30000);
+
 	function fillChart(){
 		var hpl = $('#hpl').val();
 		var data = {
@@ -57,10 +134,8 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-
-
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					var data = result.chartData;
-
 					var xAxis = []
 					, planCount = []
 					, actualCount = []
@@ -72,12 +147,13 @@
 					}
 
 					Highcharts.chart('container', {
-						colors: ['rgba(75, 30, 120, 0.40)','rgba(75, 30, 120)'],
+						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
 						chart: {
-							type: 'column'
+							type: 'column',
+							backgroundColor: null
 						},
 						title: {
-							text: 'Efficiency Optimization by Branch'
+							text: 'Month to Date of Production Result'
 						},
 						xAxis: {
 							categories: xAxis,
@@ -103,7 +179,10 @@
 						plotOptions: {
 							series:{
 								pointPadding: 0,
-								groupPadding: 0
+								groupPadding: 0,
+								animation:{
+									duration:500
+								}
 							},
 							column: {
 								grouping: false,
@@ -118,9 +197,71 @@
 						}, {
 							name: 'Actual',
 							data: actualCount,
-							pointPadding: 0.15
+							pointPadding: 0.2
 						}]
 					});
+
+					$('#tableBody').html("");
+					var tableData = '';
+					$.each(result.tableData, function(key, value) {
+						var caret = '';
+						if(value.plan+(-value.debt) == value.actual){
+							caret = '<span class="text-green">&#9679;</span>';
+						}
+						if(value.plan+(-value.debt) > value.actual){
+							caret = '<span class="text-red">&#9660;</span>';
+						}
+						if(value.plan+(-value.debt) < value.actual){
+							caret = '<span class="text-yellow">&#9650;</span>';
+						}
+						tableData += '<tr>';
+						tableData += '<td style="width: 40%">'+ value.model +'</td>';
+						tableData += '<td style="width: 16%">'+ value.debt +'</td>';
+						tableData += '<td style="width: 16%">'+ value.plan +'</td>';
+						tableData += '<td style="width: 16%">'+ value.actual +'</td>';
+						tableData += '<td style="width: 12%; text-align: center;">'+ caret +'</td>';
+						tableData += '</tr>';
+					});
+					$('#tableBody').append(tableData);
+					var totalPlan = 0;
+					var totalActual = 0;
+					$.each(result.chartData, function(key, value) {
+						totalPlan += value.plan;
+						totalActual += value.actual;
+					});
+
+					if(totalActual-totalPlan < 0){
+						totalCaret = '<span class="text-red"><i class="fa fa-caret-down"></i>';
+					}
+					if(totalActual-totalPlan > 0){
+						totalCaret = '<span class="text-yellow"><i class="fa fa-caret-up"></i>';
+					}
+					if(totalActual-totalPlan == 0){
+						totalCaret = '<span class="text-green">&#9679;';
+					}
+
+					$('#resume').html("");
+					var resumeData = '';
+					resumeData += '<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan</span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual</span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +(totalActual-totalPlan) +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference</span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					$('#resume').append(resumeData);
+
 				}
 				else{
 					alert('Attempt to retrieve data failed');
@@ -130,6 +271,6 @@
 				alert('Disconnected from server');
 			}
 		});
-	}
+}
 </script>
 @endsection

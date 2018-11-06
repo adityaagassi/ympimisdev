@@ -226,12 +226,6 @@
             @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
               <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
             </li>
-            <li>
-              <a href=""><i class="fa fa-line-chart"></i> Accuracy of Production</a>
-            </li>
-            <li>
-              <a href=""><i class="fa fa-line-chart"></i> Weekly Shipment</a>
-            </li>
           </ul>
         </li>
         @endif                                                      
@@ -240,23 +234,19 @@
         <li>
           <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
         </li>
-
-
-        @if(isset($page) && $page == "FLO Production Date")
-        <li class="active">
-          @else
-          <li>
-            @endif
-            <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
-          </li>
-
-          <li>
-            <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
-          </li>
-          <li>
-            <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
-          </li>
-        </ul>
-      </section>
-    </aside>
+        <li>
+          <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+        </li>
+        <li>
+          <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
+        </li>
+        <li>
+          <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+        </li>
+        <li>
+          <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
+        </li>
+      </ul>
+    </section>
+  </aside>
 

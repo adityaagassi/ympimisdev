@@ -55,22 +55,6 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Destination Code</label>
-          <div class="col-sm-5" align="left">
-            {{$production_schedule->destination_code}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Destination Name</label>
-          <div class="col-sm-5" align="left">
-            @if(isset($dproduction_schedule->destination->destination_name))
-            {{$dproduction_schedule->destination->destination_name}}
-            @else
-            Not registered.
-            @endif
-          </div>
-        </div>
-        <div class="form-group row" align="right">
           <label class="col-sm-5">Due Date</label>
           <div class="col-sm-5" align="left">
             {{$production_schedule->due_date}}

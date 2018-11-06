@@ -12,7 +12,7 @@ input {
 <section class="content-header">
 	<h1>
 		Finished Goods Tracer <span class="text-purple">完成品追跡</span>
-		<small>Filter <span class="text-purple">??????</span></small>
+		<small>Filters <span class="text-purple">フィルター</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update"></ol>
 </section>
@@ -24,7 +24,7 @@ input {
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Detail Filters<span class="text-purple"> ??????????</span></span></h3>
+					<h3 class="box-title">Detail Filters <span class="text-purple">フィルター詳細</span></span></h3>
 				</div>
 				<div class="box-body">
 					<div class="col-md-4">

@@ -52,22 +52,13 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Destination<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="destination_code" style="width: 100%;" data-placeholder="Choose a Destination Code..." required>
-              <option value=""></option>
-              @foreach($destinations as $destination)
-              <option value="{{ $destination->destination_code }}">{{ $destination->destination_code }} - {{ $destination->destination_name }}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
           <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
-           <div class="input-group">
-            <input type="date" class="form-control" name="due_date" placeholder="Enter Due Date" required>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+           <div class="input-group date">
+            <div class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control pull-right" id="due_date" nama="due_date">
           </div>
         </div>
       </div>
@@ -106,7 +97,7 @@
       $(this).blur();
     })
     //Date picker
-    $('#datepicker').datepicker({
+    $('#due_date').datepicker({
       autoclose: true
     })
   </script>

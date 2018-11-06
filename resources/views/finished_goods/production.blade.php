@@ -8,7 +8,7 @@
 <section class="content-header">
 	<h1>
 		Production Result <span class="text-purple">生産実績</span>
-		<small>By Shipment Schedule <span class="text-purple">??????</span></small>
+		<small>By Shipment Schedule <span class="text-purple">出荷スケジュールによる</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
@@ -274,13 +274,13 @@
 
 		$('#info').html('');
 		if(id == 'production'){
-			$('#info').html('<div class="callout callout-info"><h4>Production!</h4>Total hasil produksi <i>finished goods</i> yang telah diinput serial number ke dalam sistem.</div>');
+			$('#info').html('<div class="callout callout-info"><h4>Production!</h4>Total hasil produksi <i>finished goods</i> yang telah diinput serial number ke dalam sistem.<br>製番記入済みの完成品数</div>');
 		}
 		if(id == 'delivery'){
-			$('#info').html('<div class="callout callout-success"><h4>Delivery!</h4>Total hasil produksi <i>finished goods</i> yang telah dikirim ke gudang (FSTK).</div>');
+			$('#info').html('<div class="callout callout-success"><h4>Delivery!</h4>Total hasil produksi <i>finished goods</i> yang telah dikirim ke gudang (FSTK).<br>倉庫にある完成品数</div>');
 		}
 		if(id == 'shipment'){
-			$('#info').html('<div class="callout callout-warning"><h4>Shipment!</h4>Total hasil produksi <i>finished goods</i> yang telah melewati proses <i>stuffing</i> atau sudah diberangkatkan.</div>');
+			$('#info').html('<div class="callout callout-warning"><h4>Shipment!</h4>Total hasil produksi <i>finished goods</i> yang telah melewati proses <i>stuffing</i> atau sudah diberangkatkan.<br>コンテナ積込・出荷済みの完成品数</div>');
 		}
 	}
 	

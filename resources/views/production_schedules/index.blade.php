@@ -48,49 +48,31 @@
                     <th>Material Number</th>
                     <th>Description</th>
                     <th>Origin Group</th>
-                    <th>Dest. Code</th>
-                    <th>Dest. Name</th>
                     <th>Due Date</th>
                     <th>Qty</th>
                     <th>Action</th>
-                    {{-- <th>Edit</th>
-                      <th>Delete</th> --}}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($production_schedules as $production_schedule)
-                    <tr>
-                      <td style="font-size: 14">{{$production_schedule->material_number}}</td>
-                      <td style="font-size: 14">
-                        @if(isset($production_schedule->material->material_description))
-                        {{$production_schedule->material->material_description}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">
-                        @if(isset($production_schedule->material->origin_group_code))
-                        {{$production_schedule->material->origingroup->origin_group_name  }}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">{{$production_schedule->destination_code}}</td>
-                      <td style="font-size: 14">
-                        @if(isset($production_schedule->destination->destination_shortname))
-                        {{$production_schedule->destination->destination_shortname}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">{{$production_schedule->due_date}}</td>
-                      <td style="font-size: 14">{{$production_schedule->quantity}}</td>
-                    {{-- <td>
-                      <form action="{{ url('destroy/user', $user['id']) }}" method="post">
-                                {{ csrf_field() }}
-                                <button class="btn btn-xs btn-danger" type="submit">Delete</button>
-                      </form>
-                    </td> --}}
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($production_schedules as $production_schedule)
+                  <tr>
+                    <td style="font-size: 14">{{$production_schedule->material_number}}</td>
+                    <td style="font-size: 14">
+                      @if(isset($production_schedule->material->material_description))
+                      {{$production_schedule->material->material_description}}
+                      @else
+                      Not registered
+                      @endif
+                    </td>
+                    <td style="font-size: 14">
+                      @if(isset($production_schedule->material->origin_group_code))
+                      {{$production_schedule->material->origingroup->origin_group_name  }}
+                      @else
+                      Not registered
+                      @endif
+                    </td>
+                    <td style="font-size: 14">{{$production_schedule->due_date}}</td>
+                    <td style="font-size: 14">{{$production_schedule->quantity}}</td>
                     <td>
                       <center>
                         <a class="btn btn-info btn-xs" href="{{url('show/production_schedule', $production_schedule['id'])}}">View</a>
@@ -105,16 +87,10 @@
                 </tbody>
               </table>
             </div>
-            <!-- /.box-body -->
           </div>
-          <!-- /.box -->
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
-
     </section>
-    <!-- /.content -->
 
     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
