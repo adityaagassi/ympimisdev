@@ -75,9 +75,35 @@
               @endforeach
             </select>
           </div>
-
         </div>
-        <!-- /.box-body -->
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">HPL<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="hpl" style="width: 100%;" data-placeholder="Choose a HPL..." required>
+              @foreach($hpls as $hpl)
+              @if($material->hpl == $hpl)
+              <option value="{{ $hpl }}" selected>{{ $hpl }}</option>
+              @else
+              <option value="{{ $hpl }}">{{ $hpl }}</option>
+              @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Category<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="category" style="width: 100%;" data-placeholder="Choose a Category..." required>
+              @foreach($categories as $category)
+              @if($material->category == $category)
+              <option value="{{ $category }}" selected>{{ $category }}</option>
+              @else
+              <option value="{{ $category }}">{{ $category }}</option>
+              @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/material') }}">Cancel</a>

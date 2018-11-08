@@ -20,6 +20,8 @@ class CreateMaterialsTable extends Migration
             $table->string('base_unit');
             $table->string('issue_storage_location');
             $table->string('origin_group_code');
+            $table->string('hpl');
+            $table->string('category');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

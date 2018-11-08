@@ -55,6 +55,8 @@ Route::get('index/ch_daily_production_result', 'ChoreiController@index_ch_daily_
 Route::get('fetch/daily_production_result_week', 'ChoreiController@fetch_daily_production_result_week');
 Route::get('fetch/daily_production_result_date', 'ChoreiController@fetch_daily_production_result_date');
 Route::get('fetch/daily_production_result', 'ChoreiController@fetch_daily_production_result');
+Route::get('fetch/production_result_modal', 'ChoreiController@fetch_production_result_modal');
+Route::get('fetch/production_accuracy_modal', 'ChoreiController@fetch_production_accuracy_modal');
 
 Route::get('index/inventory', 'InventoryController@index');
 Route::post('fetch/inventory', 'InventoryController@fetch');

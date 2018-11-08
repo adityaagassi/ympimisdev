@@ -10,7 +10,7 @@ class CodeGenerator extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'prefix', 'index_length', 'index', 'note', 'created_by'
+		'prefix', 'length', 'index', 'note', 'created_by'
 	];
 
 	public function user()

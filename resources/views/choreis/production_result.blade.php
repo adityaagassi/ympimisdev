@@ -1,12 +1,35 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
+.picker {
+	text-align: center;
+}
+
+.button {
+	position: absolute;
+	top: 50%;
+}
+.nav-tabs-custom > ul.nav.nav-tabs {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+}
+.nav-tabs-custom > ul.nav.nav-tabs > li {
+	float: none;
+	display: table-cell;
+}
+.nav-tabs-custom > ul.nav.nav-tabs > li > a {
+	text-align: center;
+}
+.vendor-tab{
+	width:100%;
+}
 </style>
 @stop
 @section('header')
 <section class="content-header">
 	<h1>
-		Daily Production Result <span class="text-purple">日常生産実績</span>
+		Production Result <span class="text-purple">生産実績</span>
 		{{-- <small>By Shipment Schedule <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update">
@@ -16,20 +39,100 @@
 @section('content')
 <section class="content">
 	<div class="row">
-		<div class="col-md-12" id="weekResult">
+		<div class="col-md-12 picker" id="weekResult">
 		</div>
 		<div class="col-md-12">
 		</div>
-		<div class="col-md-12" id="dateResult">
+		<div class="col-md-12 picker" id="dateResult">
 		</div>
 		<div class="col-md-12">
 			<br>
 		</div>
 		<div class="col-md-12">
-			<div id="container" style="width:100%; height:450px;"></div>			
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab">Production Result <span class="text-purple">生産実績</span></a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab">Production Accuracy <span class="text-purple">週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab">Weekly Shipment <span class="text-purple">週次出荷</span></a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<div id="container1" style="width:100%; height:500px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<div id="container2" style="width:100%; height:500px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_3">
+						<div id="container3" style="width:100%; height:500px;"></div>
+					</div>
+				</div>
+			</div>			
 		</div>
 	</div>
 </section>
+
+<div class="modal fade" id="modalResult">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalResultTitle"></h4>
+				<div class="modal-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th style="font-size: 14">Material</th>
+								<th style="font-size: 14">Description</th>
+								<th style="font-size: 14">Quantity</th>
+							</tr>
+						</thead>
+						<tbody id="modalResultBody">
+						</tbody>
+						<tfoot>
+							<th>Total</th>
+							<th></th>
+							<th id="modalResultTotal"></th>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalAccuracy">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalAccuracyTitle"></h4>
+				<div class="modal-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th style="font-size: 14">Material</th>
+								<th style="font-size: 14">Description</th>
+								<th style="font-size: 14">Quantity</th>
+							</tr>
+						</thead>
+						<tbody id="modalAccuracyBody">
+						</tbody>
+						<tfoot>
+							<th>Total</th>
+							<th></th>
+							<th id="modalAccuracyTotal"></th>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -46,6 +149,9 @@
 		fillWeek();
 		fillDate();
 		fillChart();
+		setInterval(function(){
+			fillChart();
+		}, 10000);
 	});
 
 	function fillWeek(){
@@ -58,7 +164,7 @@
 					$('#weekResult').html('');
 					var weekData = '';
 					$.each(result.weekData, function(key, value) {
-						weekData += '<button type="button" class="btn bg-purple" id="' + value.week_name + '" onClick="fillDate(id)">' + value.week + '</button>&nbsp;';
+						weekData += '<button type="button" class="btn bg-purple btn-lg" id="' + value.week_name + '" onClick="fillDate(id)">' + value.week + '</button>&nbsp;';
 					});
 					$('#weekResult').append(weekData);
 				}
@@ -85,7 +191,7 @@
 					$('#dateResult').html('');
 					var dateData = '';
 					$.each(result.dateData, function(key, value) {
-						dateData += '<button type="button" class="btn bg-olive btn-xs" id="' + value.week_date + '" onClick="fillChart(id)">' + value.week_date_name + '</button>&nbsp;';
+						dateData += '<button type="button" class="btn bg-olive" id="' + value.week_date + '" onClick="fillChart(id)">' + value.week_date_name + '</button>&nbsp;';
 					});
 					$('#dateResult').append(dateData);
 				}
@@ -99,6 +205,24 @@
 		});		
 	}
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
 	function fillChart(id){
 		var data = {
 			date:id,
@@ -109,20 +233,52 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					var yAxisLabels = [0,25,50,75,100,110];
-					Highcharts.chart('container', {
-						colors: ['rgba(255, 255, 255, 0.20)','rgba(75, 30, 120, 0.70)'],
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
+					var data = result.chartResult1;
+					var xAxis = []
+					, planCount = []
+					, actualCount = []
+
+					for (i = 0; i < data.length; i++) {
+						xAxis.push(data[i].hpl);
+						planCount.push(data[i].plan);
+						actualCount.push(data[i].actual);
+					}
+
+					var yAxisLabels = [0,25,50,75,110];
+					Highcharts.chart('container1', {
+						colors: ['rgba(255, 0, 0, 0.25)','rgba(75, 30, 120, 0.70)'],
 						chart: {
-							type: 'column'
+							type: 'column',
+							backgroundColor: null
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
 						},
 						credits: {
 							enabled: false
 						},
 						title: {
-							text: 'Stacked column chart'
+							text: '<span style="font-size: 30px;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)'
+							// style: {
+							// 	fontSize: '30px',
+							// 	fontWeight: 'bold'
+							// }
 						},
 						xAxis: {
-							categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+							categories: xAxis,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
 						},
 						yAxis: {
 							tickPositioner: function() {
@@ -133,33 +289,274 @@
 							},
 							min: 0,
 							title: {
-								text: 'Total fruit consumption'
+								text: ''
+							},
+							stackLabels: {
+								format: 'Total: {total:,.0f}set(s)',
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+								}
 							}
 						},
 						tooltip: {
-							pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
-							shared: true
+							headerFormat: '<b>{point.x}</b><br/>',
+							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
 						},
 						plotOptions: {
+							column: {
+								pointPadding: 0.2,
+								size: '95%',
+								borderWidth: 0,
+								events: {
+									legendItemClick: function () {
+										return false; 
+									}
+								},
+								animation:{
+									duration:0
+								}
+							},
 							series: {
+								pointPadding: 0.95,
+								groupPadding: 0.95,
+								borderWidth: 0.95,
+								shadow: false,
 								borderColor: '#303030',
 								cursor: 'pointer',
 								stacking: 'percent',
 								point: {
 									events: {
 										click: function () {
-											modalContainerDeparture(this.category);
+											modalResult(this.category, this.series.name, result.now, result.first, result.last);
 										}
+									}
+								},
+								dataLabels: {
+									format: '{point.percentage:.0f}%',
+									enabled: true,
+									color: '#000000',
+									style: {
+										textOutline: false,
+										fontWeight: 'bold',
+										fontSize: '30px'
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Plan',
+							data: planCount
+						}, {
+							name: 'Actual',
+							data: actualCount
+						}]
+					});
+
+					var data2 = result.chartResult2;
+					var xAxis2 = []
+					, plusCount = []
+					, minusCount = []
+
+					for (i = 0; i < data2.length; i++) {
+						xAxis2.push(data2[i].hpl);
+						plusCount.push(data2[i].plus);
+						minusCount.push(data2[i].minus);
+					}
+
+					Highcharts.chart('container2', {
+						colors: ['rgba(75, 30, 120, 0.60)', 'rgba(255, 0, 0, 0.60)'],
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 30px;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+						},
+						xAxis: {
+							categories: xAxis2,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						yAxis: {
+							title: {
+								text: 'Set(s)'
+							}
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						plotOptions: {
+							column: {
+								// minPointLength: 2,
+								pointPadding: 0,
+								size: '100%',
+								borderWidth: 1
+							},
+							series: {
+								groupPadding: 0.1,
+								borderColor: '#303030',
+								cursor: 'pointer',
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:,.0f}',
+									style:{
+										fontSize:'20px',
+										color:'black',
+										textOutline: false
+									}
+								},
+								animation:{
+									duration:0
+								},
+								point: {
+									events: {
+										click: function () {
+											modalAccuracy(this.category, this.series.name, result.now, result.first, result.last);
+										}
+									}
+								},
+							}
+						},
+						series: [{
+							name: 'Plus',
+							data: plusCount
+						}, {
+							name: 'Minus',
+							data: minusCount
+						}]
+					});
+
+					var data3 = result.chartResult3;
+					var xAxis3 = []
+					, planBLCount = []
+					, actualBLCount = []
+
+					for (i = 0; i < data3.length; i++) {
+						xAxis3.push(data3[i].hpl);
+						planBLCount.push(data3[i].plan);
+						actualBLCount.push(data3[i].actual);
+					}
+
+					var yAxisLabels = [0,25,50,75,110];
+					Highcharts.chart('container3', {
+						colors: ['rgba(255, 0, 0, 0.15)','rgba(255, 69, 0, 0.70)'],
+						chart: {
+							type: 'column',
+							backgroundColor: null
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						title: {
+							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>'
+							// style: {
+							// 	fontSize: '30px',
+							// 	fontWeight: 'bold'
+							// }
+						},
+						xAxis: {
+							categories: xAxis3,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						yAxis: {
+							tickPositioner: function() {
+								return yAxisLabels;
+							},
+							labels: {
+								enabled:false
+							},
+							min: 0,
+							title: {
+								text: ''
+							},
+							stackLabels: {
+								format: 'Total: {total:,.0f}set(s)',
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+								}
+							}
+						},
+						tooltip: {
+							headerFormat: '<b>{point.x}</b><br/>',
+							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+						},
+						plotOptions: {
+							column: {
+								pointPadding: 0.2,
+								size: '95%',
+								borderWidth: 0,
+								events: {
+									legendItemClick: function () {
+										return false; 
 									}
 								}
 							},
+							series: {
+								animation:{
+									duration:0
+								},
+								pointPadding: 0.95,
+								groupPadding: 0.95,
+								borderWidth: 0.95,
+								shadow: false,
+								borderColor: '#303030',
+								cursor: 'pointer',
+								stacking: 'percent',
+								point: {
+									events: {
+										click: function () {
+											modalBL(this.category , this.series.name);
+										}
+									}
+								},
+								dataLabels: {
+									format: '{point.percentage:.0f}%',
+									enabled: true,
+									color: '#000000',
+									style: {
+										textOutline: false,
+										fontWeight: 'bold',
+										fontSize: '30px'
+									}
+								}
+							}
 						},
 						series: [{
-							name: 'Target',
-							data: [5, 3, 4, 7, 2]
+							name: 'Plan',
+							data: planBLCount
 						}, {
 							name: 'Actual',
-							data: [2, 2, 3, 2, 1]
+							data: actualBLCount
 						}]
 					});
 				}
@@ -171,7 +568,100 @@
 				alert('Disconnected from server');
 			}			
 		});	
-	}
+}
 
+function modalResult(hpl, name, now, first, last){
+	var data = {
+		hpl:hpl,
+		name:name,
+		now:now,
+		first:first,
+		last:last,
+	}
+	$.get('{{ url("fetch/production_result_modal") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#modalResultTitle').html('');
+				$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+				$('#modalResultBody').html('');
+				var resultData = '';
+				var resultTotal = 0;
+				$.each(result.resultData, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ value.material_number +'</td>';
+					resultData += '<td>'+ value.material_description +'</td>';
+					resultData += '<td>'+ value.quantity.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal += value.quantity;
+				});
+				$('#modalResultBody').append(resultData);
+				$('#modalResultTotal').html('');
+				$('#modalResultTotal').append(resultTotal.toLocaleString());
+				$('#modalResult').modal('show');
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
+
+function modalAccuracy(hpl, name, now, first, last){
+	var data = {
+		hpl:hpl,
+		name:name,
+		now:now,
+		first:first,
+		last:last,
+	}
+	$.get('{{ url("fetch/production_accuracy_modal") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#modalAccuracyTitle').html('');
+				$('#modalAccuracyTitle').html('Detail of '+ hpl +' '+ name);
+				$('#modalAccuracyBody').html('');
+				var accuracyData = '';
+				var accuracyTotal = 0;
+				$.each(result.accuracyData, function(key, value) {
+					if(name == 'Minus' && value.minus < 0){
+						accuracyData += '<tr>';
+						accuracyData += '<td>'+ value.material_number +'</td>';
+						accuracyData += '<td>'+ value.material_description +'</td>';
+						accuracyData += '<td>'+ value.minus.toLocaleString() +'</td>';
+						accuracyData += '</tr>';
+						accuracyTotal += value.minus;
+					}
+					if(name == 'Plus' && value.plus > 0){
+						accuracyData += '<tr>';
+						accuracyData += '<td>'+ value.material_number +'</td>';
+						accuracyData += '<td>'+ value.material_description +'</td>';
+						accuracyData += '<td>'+ value.plus.toLocaleString() +'</td>';
+						accuracyData += '</tr>';
+						accuracyTotal += value.plus;
+					}
+				});
+				$('#modalAccuracyBody').append(accuracyData);
+				$('#modalAccuracyTotal').html('');
+				$('#modalAccuracyTotal').append(accuracyTotal.toLocaleString());
+				$('#modalAccuracy').modal('show');
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
 </script>
 @endsection

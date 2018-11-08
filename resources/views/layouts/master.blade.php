@@ -42,7 +42,7 @@
   <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script>
   <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
   <script src="{{ url("dist/js/demo.js")}}"></script>
-  <script>$(document).ajaxStart(function() { Pace.restart(); });</script>
+  {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
   @yield('scripts')
 </body>
 </html>

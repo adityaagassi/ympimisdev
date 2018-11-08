@@ -202,13 +202,7 @@
           </a>
           <ul class="treeview-menu">
             @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
-              <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-line-chart"></i> Daily Production Result</a>
-            </li>
-            <li>
-              <a href=""><i class="fa fa-line-chart"></i> Accuracy of Production</a>
-            </li>
-            <li>
-              <a href=""><i class="fa fa-line-chart"></i> Weekly Shipment</a>
+              <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-line-chart"></i> Production Result</a>
             </li>
           </ul>
         </li>
@@ -230,7 +224,7 @@
         </li>
         @endif                                                      
 
-        <li class="header">Trial Menu</li>
+        {{-- <li class="header">Trial Menu</li>
         <li>
           <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
         </li>
@@ -245,7 +239,7 @@
         </li>
         <li>
           <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
-        </li>
+        </li> --}}
       </ul>
     </section>
   </aside>

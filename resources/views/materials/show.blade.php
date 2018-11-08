@@ -63,6 +63,18 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-5">HPL</label>
+          <div class="col-sm-5" align="left">
+            {{$material->hpl}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Category</label>
+          <div class="col-sm-5" align="left">
+            {{$material->category}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
             {{$material->user->name}}

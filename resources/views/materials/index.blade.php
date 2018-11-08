@@ -50,6 +50,8 @@
                     <th>Base Unit</th>
                     <th>SLoc</th>
                     <th>Origin Group</th>
+                    <th>HPL</th>
+                    <th>Cat.</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -69,6 +71,8 @@
                         {{$material->origin_group_code}} - Not registered
                         @endif
                       </td>
+                      <td style="font-size: 14">{{$material->hpl}}</td>
+                      <td style="font-size: 14">{{$material->category}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

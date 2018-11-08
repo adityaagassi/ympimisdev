@@ -131,21 +131,21 @@
 			if(xhr.status == 200){
 				if(result.status){
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
-					$('#progress_text_production').html('Total Production vs Ship. Plan of '+result.st_month);
+					$('#progress_text_production').html('Total Production vs Ship. Plan of '+result.st_month+'<br>生産数 対　出荷計画');
 					$('#progress_number_production').html(result.total_production.toLocaleString() + '/' + result.total_plan.toLocaleString() + ' set(s) <a class="label label-info" onClick="fillTable(id)" id="production"><i class="fa fa-info-circle"></i> Info</a>');
 					$('#progress_bar_production').html(((result.total_production/result.total_plan)*100).toFixed(2) + '%');
 					$('#progress_bar_production').css('width', (result.total_production/result.total_plan)*100 + '%');
 					$('#progress_bar_production').css('color', 'black');
 					$('#progress_bar_production').css('font-weight', 'bold');
 
-					$('#progress_text_delivery').html('Total Delivery vs Ship. Plan FSTK of '+result.st_month);
+					$('#progress_text_delivery').html('Total Delivery vs Ship. Plan FSTK of '+result.st_month+'<br>倉庫送り数　対　出荷計画');
 					$('#progress_number_delivery').html(result.total_delivery.toLocaleString() + '/' + result.total_plan.toLocaleString() + ' set(s) <a class="label label-success" onClick="fillTable(id)" id="delivery"><i class="fa fa-info-circle"></i> Info</a>');
 					$('#progress_bar_delivery').html(((result.total_delivery/result.total_plan)*100).toFixed(2) + '%');
 					$('#progress_bar_delivery').css('width', (result.total_delivery/result.total_plan)*100 + '%');
 					$('#progress_bar_delivery').css('color', 'black');
 					$('#progress_bar_delivery').css('font-weight', 'bold');
 
-					$('#progress_text_shipment').html('Total Shipment vs Ship. Plan of '+result.st_month);
+					$('#progress_text_shipment').html('Total Shipment vs Ship. Plan of '+result.st_month+'<br>ETD YMPI 出荷数　対　出荷計画');
 					$('#progress_number_shipment').html(result.total_shipment.toLocaleString() + '/' + result.total_plan.toLocaleString() + ' set(s) <a class="label label-warning" onClick="fillTable(id)" id="shipment"><i class="fa fa-info-circle"></i> Info</a>');
 					$('#progress_bar_shipment').html(((result.total_shipment/result.total_plan)*100).toFixed(2) + '%');
 					$('#progress_bar_shipment').css('width', (result.total_shipment/result.total_plan)*100 + '%');

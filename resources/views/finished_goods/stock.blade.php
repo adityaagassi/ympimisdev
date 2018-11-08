@@ -74,7 +74,7 @@
 		fillChart();
 		setInterval(function(){
 			fillChart();
-		}, 30000);
+		}, 60000);
 	});
 
 	function addZero(i) {
@@ -254,7 +254,6 @@
 						tableData += '<td>'+ value.actual +'</td>';
 						tableData += '<td>'+ (value.length*value.width*value.height).toFixed(2).toLocaleString() +'</td>';
 						tableData += '</tr>';
-
 					});
 					$('#tableBody').append(tableData);
 					$('#modalStock').modal('show');

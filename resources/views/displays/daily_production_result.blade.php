@@ -61,7 +61,7 @@
 							<thead>
 								<tr>
 									<th style="width: 40%">Model</th>
-									<th style="width: 16%">MTD</th>
+									<th style="width: 16%">MTD (H-1)</th>
 									<th style="width: 16%">Plan</th>
 									<th style="width: 16%">Actual</th>
 									<th style="width: 12%"></th>
@@ -97,6 +97,10 @@
 		}
 	});
 
+	$(document).ajaxStart(function () {
+		Pace.start()
+	})
+
 	jQuery(document).ready(function() {
 		$('.select2').select2();	
 	});
@@ -121,7 +125,7 @@
 
 	setInterval(function(){
 		fillChart();
-	}, 30000);
+	}, 1000);
 
 	function fillChart(){
 		var hpl = $('#hpl').val();
@@ -153,7 +157,7 @@
 							backgroundColor: null
 						},
 						title: {
-							text: 'Month to Date of Production Result'
+							text: 'Month to Date of Production Result<br><span style="color:rgba(96,92,168);">過去一ヶ月間の生産結果</span>'
 						},
 						xAxis: {
 							categories: xAxis,
@@ -181,7 +185,7 @@
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
-									duration:500
+									duration:0
 								}
 							},
 							column: {
@@ -244,20 +248,20 @@
 					var resumeData = '';
 					resumeData += '<div class="col-sm-4 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan</span>';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan<br><span class="text-purple">計画の集計</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					resumeData += '	<div class="col-sm-4 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual</span>';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual<br><span class="text-purple">実績の集計</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					resumeData += '	<div class="col-sm-4 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +(totalActual-totalPlan) +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference</span>';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +Math.abs(totalActual-totalPlan).toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference<br><span class="text-purple">差異</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					$('#resume').append(resumeData);

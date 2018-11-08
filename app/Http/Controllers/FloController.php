@@ -121,7 +121,7 @@ public function destroy_flo_attachment(Request $request){
     $container_attachment = ContainerAttachment::where('file_name', '=', $request->get('id'))->first();
     $filepath = public_path() . $container_attachment->file_path . $container_attachment->file_name;
     File::delete($filepath);
-    $container_attachment->delete();
+    $container_attachment->forceDelete();
 
     $response = array(
         'status' => true,
