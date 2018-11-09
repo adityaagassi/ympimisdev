@@ -43,18 +43,52 @@
             <h5 class="box-title" style="font-weight: bold;">Finished Goods <span class="text-purple">完成品</span></h5>
         </div>
         <div class="box-body">
+
+            <span style="font-weight: bold; color: red;"><i class="fa fa-caret-right"></i> Sales Control (??????)</span>
+
+            <a class="list-group-item" href="{{ url("/index/sl_budget") }}">
+                <span class="fa fa-bar-chart"></span> Sales Budget/Forecast/Actual <span class="text-purple">???</span> In Progress
+            </a>
+            <a class="list-group-item" href="{{ url("/index/sl_current") }}">
+                <span class="fa fa-bar-chart"></span> Current Sales Progress <span class="text-purple">???</span> In Progress
+            </a>
+
             <span style="font-weight: bold; color: red;"><i class="fa fa-caret-right"></i> Finished Goods Control (??????)</span>
-            <a class="list-group-item" href="{{ url("/index/fg_production") }}"><span class="fa fa-bar-chart"></span> Production Result <span class="text-purple">生産実績</span></a>
-            <a class="list-group-item" style="font-weight: bold;" href="{{ url("/index/fg_stock") }}"><span class="fa fa-bar-chart"></span> Finsihed Goods Stock <span class="text-purple">完成品在庫</span></a>
+
+            <a class="list-group-item" href="{{ url("/index/fg_production") }}">
+                <span class="fa fa-bar-chart"></span> Production Result <span class="text-purple">生産実績</span>
+            </a>
+            <a class="list-group-item" href="{{ url("/index/fg_stock") }}">
+                <span class="fa fa-bar-chart"></span> Finsihed Goods Stock <span class="text-purple">完成品在庫</span>
+            </a>
+
             <span style="font-weight: bold; color: red;"><i class="fa fa-caret-right"></i> Shipment Control (??????)</span>
-            <a class="list-group-item" href="{{ url("/index/fg_container_departure") }}"><span class="fa fa-bar-chart"></span> Container Departure <span class="text-purple">コンテナー出発</span></a>
-            <a class="list-group-item" href="{{ url("/index/fg_shipment_schedule") }}"><span class="fa fa-table"></span> Shipment Schedule Data <span class="text-purple">出荷スケジュール</span></a>
-            <a class="list-group-item" href="{{ url("/index/fg_traceability") }}"><span class="fa fa-table"></span> Traceability <span class="text-purple">完成品追跡</span></a>
+
+            <a class="list-group-item" href="{{ url("/index/fg_container_departure") }}">
+                <span class="fa fa-bar-chart"></span> Container Departure <span class="text-purple">コンテナー出発</span>
+            </a>
+            <a class="list-group-item" href="{{ url("/index/fg_shipment_schedule") }}">
+                <span class="fa fa-table"></span> Shipment Schedule Data <span class="text-purple">出荷スケジュール</span>
+            </a>
+            <a class="list-group-item" href="{{ url("/index/fg_traceability") }}">
+                <span class="fa fa-table"></span> Traceability <span class="text-purple">完成品追跡</span>
+            </a>
+
             <span style="font-weight: bold; color: red;"><i class="fa fa-caret-right"></i> Shipment Performance (??????)</span>
-            <a class="list-group-item" href="{{ url("/index/fg_weekly_summary") }}"><span class="fa fa-table"></span> Weekly Summary <span class="text-purple">週次まとめ</span></a>
-            <a class="list-group-item" href="{{ url("/index/fg_monthly_summary") }}"><span class="fa fa-table"></span> Monthly Summary <span class="text-purple">月次まとめ</span></a>
+
+            <a class="list-group-item" href="{{ url("/index/fg_weekly_summary") }}">
+                <span class="fa fa-table"></span> Weekly Summary <span class="text-purple">週次まとめ</span>
+            </a>
+            <a class="list-group-item" href="{{ url("/index/fg_monthly_summary") }}">
+                <span class="fa fa-table"></span> Monthly Summary <span class="text-purple">月次まとめ</span>
+            </a>
+
             <span style="font-weight: bold; color: red;"><i class="fa fa-caret-right"></i> Chorei (朝礼)</span>
-            <a class="list-group-item" href="{{ url("/index/ch_daily_production_result") }}"><span class="fa fa-bar-chart"></span> Production Summary <span class="text-purple">??????</span></a>
+
+            <a class="list-group-item" href="{{ url("/index/ch_daily_production_result") }}">
+                <span class="fa fa-bar-chart"></span> Production Summary <span class="text-purple">??????</span>
+            </a>
+            
         </div>
     </div>
 </div>

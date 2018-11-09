@@ -90,7 +90,7 @@
 						</thead>
 						<tbody id="modalResultBody">
 						</tbody>
-						<tfoot>
+						<tfoot style="background-color: RGB(252, 248, 227);">
 							<th>Total</th>
 							<th></th>
 							<th id="modalResultTotal"></th>
@@ -102,7 +102,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modalAccuracy">
+{{-- <div class="modal fade" id="modalAccuracy">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -131,7 +131,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> --}}
 
 @endsection
 @section('scripts')
@@ -149,9 +149,9 @@
 		fillWeek();
 		fillDate();
 		fillChart();
-		setInterval(function(){
-			fillChart();
-		}, 10000);
+		// setInterval(function(){
+		// 	fillChart();
+		// }, 10000);
 	});
 
 	function fillWeek(){
@@ -535,7 +535,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalBL(this.category , this.series.name);
+											modalBL(this.category , this.series.name, result.weekTitle);
 										}
 									}
 								},
@@ -626,9 +626,9 @@ function modalAccuracy(hpl, name, now, first, last){
 		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
-				$('#modalAccuracyTitle').html('');
-				$('#modalAccuracyTitle').html('Detail of '+ hpl +' '+ name);
-				$('#modalAccuracyBody').html('');
+				$('#modalResultTitle').html('');
+				$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+				$('#modalResultBody').html('');
 				var accuracyData = '';
 				var accuracyTotal = 0;
 				$.each(result.accuracyData, function(key, value) {
@@ -649,10 +649,10 @@ function modalAccuracy(hpl, name, now, first, last){
 						accuracyTotal += value.plus;
 					}
 				});
-				$('#modalAccuracyBody').append(accuracyData);
-				$('#modalAccuracyTotal').html('');
-				$('#modalAccuracyTotal').append(accuracyTotal.toLocaleString());
-				$('#modalAccuracy').modal('show');
+				$('#modalResultBody').append(accuracyData);
+				$('#modalResultTotal').html('');
+				$('#modalResultTotal').append(accuracyTotal.toLocaleString());
+				$('#modalResult').modal('show');
 			}
 			else{
 				alert('Attempt to retrieve data failed');
@@ -663,5 +663,46 @@ function modalAccuracy(hpl, name, now, first, last){
 		}
 	});
 }
+
+function modalBL(hpl, name, week){
+	var data = {
+		hpl:hpl,
+		name:name,
+		week:'W'+week.substring(5),
+	}
+	$.get('{{ url("fetch/production_bl_modal") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#modalResultTitle').html('');
+				$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+				$('#modalResultBody').html('');
+				var blData = '';
+				var blTotal = 0;
+				$.each(result.blData, function(key, value) {
+						blData += '<tr>';
+						blData += '<td>'+ value.material_number +'</td>';
+						blData += '<td>'+ value.material_description +'</td>';
+						blData += '<td>'+ value.quantity.toLocaleString() +'</td>';
+						blData += '</tr>';
+						blTotal += value.quantity;
+				});
+				$('#modalResultBody').append(blData);
+				$('#modalResultTotal').html('');
+				$('#modalResultTotal').append(blTotal.toLocaleString());
+				$('#modalResult').modal('show');
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
+
 </script>
 @endsection

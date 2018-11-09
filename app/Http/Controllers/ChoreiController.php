@@ -13,6 +13,37 @@ class ChoreiController extends Controller
 		return view('choreis.production_result')->with('page', 'Chorei Production Result')->with('head', 'Chorei');
 	}
 
+	public function fetch_production_bl_modal(Request $request){
+		$blData = DB::table('shipment_schedules')
+		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', 'shipment_schedules.bl_date')
+		->leftJoin(db::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual from flos group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+		->where('weekly_calendars.week_name', '=', $request->get('week'))
+		->where('materials.category', '=', 'FG')
+		->where('materials.hpl', '=', $request->get('hpl'));
+
+		if($request->get('name') == 'Actual'){
+			$blData = $blData->select('materials.material_number', 'materials.material_description', 
+				db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity'))
+			->groupBy('materials.material_number', 'materials.material_description')
+			->having(db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual))'), '>', 0)
+			->get();
+		}
+		if($request->get('name') == 'Plan'){
+			$blData = $blData->select('materials.material_number', 'materials.material_description', 
+				db::raw('if(sum(shipment_schedules.quantity)-sum(flos.actual) < 0, 0, sum(shipment_schedules.quantity)-sum(flos.actual)) as quantity'))
+			->groupBy('materials.material_number', 'materials.material_description')
+			->having(db::raw('if(sum(shipment_schedules.quantity)-sum(flos.actual) < 0, 0, sum(shipment_schedules.quantity)-sum(flos.actual))'), '>', 0)
+			->get();
+		}
+
+		$response = array(
+			'status' => true,
+			'blData' => $blData,
+		);
+		return Response::json($response);
+	}
+
 	public function fetch_production_accuracy_modal(Request $request){
 		$query = "select materials.material_number, materials.material_description, final.plus, final.minus from
 		(
@@ -120,7 +151,6 @@ class ChoreiController extends Controller
 			where materials.hpl = '". $request->get('hpl') ."' and if(final.actual>final.plan, 0, final.plan-final.actual) > 0";
 		}
 		
-
 		$resultData = db::select($query);
 
 		$response = array(
@@ -257,16 +287,20 @@ class ChoreiController extends Controller
 
 		$chartResult2 = DB::select($query2);
 
-		$chartResult3 = DB::table('shipment_schedules')
-		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', 'shipment_schedules.bl_date')
-		->leftJoin(db::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual from flos group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-		->where('weekly_calendars.week_name', '=', $week->week_name)
-		->where('materials.category', '=', 'FG')
-		->select('materials.hpl', db::raw('if(sum(shipment_schedules.quantity)-sum(flos.actual)<0, 0, sum(shipment_schedules.quantity)-sum(flos.actual)) as plan'), db::raw('sum(flos.actual) as actual'))
-		->groupBy('materials.hpl')
-		->orderByRaw('field(materials.hpl, "FLFG", "CLFG", "ASFG", "TSFG", "PN", "VENOVA", "RC")')
-		->get();
+		$query3 = "
+		select hpl, sum(plan)-sum(actual) as plan, sum(actual) as actual from
+		(
+		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where weekly_calendars.week_name = '". $week->week_name ."' and materials.category = 'FG'
+		) as final
+		group by hpl
+		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
+
+		$chartResult3 = DB::select($query3);
 
 		$response = array(
 			'status' => true,

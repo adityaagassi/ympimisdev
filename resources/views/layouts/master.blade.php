@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
-  <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}">
+  {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
@@ -39,7 +39,7 @@
   <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
   <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
   <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
-  <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script>
+  {{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
   <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
   <script src="{{ url("dist/js/demo.js")}}"></script>
   {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
