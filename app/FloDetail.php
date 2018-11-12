@@ -10,7 +10,7 @@ class FloDetail extends Model
 	use SoftDeletes;
     //
     protected $fillable = [
-        'serial_number', 'material_number', 'flo_number', 'quantity', 'created_by'
+        'serial_number', 'material_number', 'origin_group_code', 'flo_number', 'quantity', 'created_by'
     ];
 
      public function user()

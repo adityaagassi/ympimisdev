@@ -28,7 +28,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">FLO Filters <span class="text-purple">FLO ----???</span></span></h3>
+					<h3 class="box-title">FLO Filters <span class="text-purple">FLO フィルター</span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
@@ -103,7 +103,7 @@
 								<button id="search" onClick="fillFloDetail()" class="btn btn-primary">Search</button>
 							</div>
 						</div>
-					</div>			</div>
+					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<table id="flo_detail_table" class="table table-bordered table-striped">
@@ -125,151 +125,152 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
+					</div>		
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
+</section>
 
-	@endsection
+@endsection
 
 
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-	<script src="{{ url("js/jszip.min.js")}}"></script>
-	{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
-	<script src="{{ url("js/vfs_fonts.js")}}"></script>
-	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-	<script src="{{ url("js/buttons.print.min.js")}}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	jQuery(document).ready(function() {
+		$('#datefrom').datepicker({
+			autoclose: true
+		});
+		$('#dateto').datepicker({
+			autoclose: true
+		});
+		$('.select2').select2({
+			language : {
+				noResults : function(params) {
+					return "There is no flo with status 'close'";
+				}
 			}
 		});
+	});
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	function deleteConfirmation(id){
+		var flo_number = $("#flo_number").val(); 
+		var data = {
+			id: id,
+			flo_number : flo_number
+		};
+		if(confirm("Are you sure you want to delete this data?")){
+			$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
 
-		jQuery(document).ready(function() {
-			$('#datefrom').datepicker({
-				autoclose: true
-			});
-			$('#dateto').datepicker({
-				autoclose: true
-			});
-			$('.select2').select2({
-				language : {
-					noResults : function(params) {
-						return "There is no flo with status 'close'";
-					}
-				}
-			});
-		});
-
-		function deleteConfirmation(id){
-			var flo_number = $("#flo_number").val(); 
-			var data = {
-				id: id,
-				flo_number : flo_number
-			};
-			if(confirm("Are you sure you want to delete this data?")){
-				$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
-
-					if(xhr.status == 200){
-						if(result.status){
-							$('#flo_detail_table').DataTable().ajax.reload();
-							openSuccessGritter('Success!', result.message);
-						}
-						else{
-							openErrorGritter('Error!', result.message);
-							audio_error.play();
-						}
+				if(xhr.status == 200){
+					if(result.status){
+						$('#flo_detail_table').DataTable().ajax.reload();
+						openSuccessGritter('Success!', result.message);
 					}
 					else{
-						openErrorGritter('Error!', 'Disconnected from server');
+						openErrorGritter('Error!', result.message);
 						audio_error.play();
 					}
-				});
-			}
-			else{
-				return false;
-			}
+				}
+				else{
+					openErrorGritter('Error!', 'Disconnected from server');
+					audio_error.play();
+				}
+			});
 		}
-
-		function clearConfirmation(){
-			location.reload(true);
+		else{
+			return false;
 		}
+	}
 
-		function fillFloDetail(){
-			$('#flo_detail_table').DataTable().destroy();
-			var datefrom = $('#datefrom').val();
-			var dateto = $('#dateto').val();
-			var origin_group = $('#origin_group').val();
-			var serial_number = $('#serial_number').val();
-			var material_number = $('#material_number').val();
-			var flo_number = $('#flo_number').val();
-			var status = $('#status').val();
-			var data = {
-				datefrom:datefrom,
-				dateto:dateto,
-				origin_group:origin_group,
-				material_number:material_number,
-				serial_number:serial_number,
-				flo_number:flo_number,
-				status:status,
-			}
-			$('#flo_detail_table').DataTable({
-				'dom': 'Bfrtip',
-				'buttons': {
-					dom: {
-						button: {
-							tag:'button',
-							className:''
-						}
-					},
-					buttons:[
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					]
+	function clearConfirmation(){
+		location.reload(true);
+	}
+
+	function fillFloDetail(){
+		$('#flo_detail_table').DataTable().destroy();
+		var datefrom = $('#datefrom').val();
+		var dateto = $('#dateto').val();
+		var origin_group = $('#origin_group').val();
+		var serial_number = $('#serial_number').val();
+		var material_number = $('#material_number').val();
+		var flo_number = $('#flo_number').val();
+		var status = $('#status').val();
+		var data = {
+			datefrom:datefrom,
+			dateto:dateto,
+			origin_group:origin_group,
+			material_number:material_number,
+			serial_number:serial_number,
+			flo_number:flo_number,
+			status:status,
+		}
+		$('#flo_detail_table').DataTable({
+			'dom': 'Bfrtip',
+			'buttons': {
+				dom: {
+					button: {
+						tag:'button',
+						className:''
+					}
 				},
-				'paging': true,
-				'lengthChange': true,
-				'searching': true,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
+				buttons:[
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
 				// "serverSide": true,
 				"ajax": {
 					"type" : "post",
@@ -289,39 +290,39 @@
 				{ "data": "action" }
 				]
 			});
-		}
+	}
 
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '2000'
-			});
-		}
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
 
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '2000'
-			});
-		}
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
 
-		function openInfoGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-info',
-				image: '{{ url("images/image-unregistered.png") }}',
-				sticky: false,
-				time: '2000'
-			});
-		}
-	</script>
-	@endsection
+	function openInfoGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-info',
+			image: '{{ url("images/image-unregistered.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+</script>
+@endsection

@@ -12,6 +12,11 @@ use File;
 
 class FinishedGoodsController extends Controller
 {
+	
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
 
 	public function index_fg_production(){
 		return view('finished_goods.production')->with('page', 'FG Production')->with('head', 'Finished Goods');
@@ -360,7 +365,7 @@ class FinishedGoodsController extends Controller
 		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
 		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
 		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-		->whereIn('flos.status', [0,1,2]);
+		->whereIn('flos.status', [0,1,2,'M']);
 
 		$total_volume = $stock->sum(DB::raw('((material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton)*flos.actual'));
 
@@ -368,7 +373,7 @@ class FinishedGoodsController extends Controller
 
 		// $jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK")) as location'), DB::raw('sum(flos.actual) as actual'))->groupBy('destinations.destination_shortname', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK"))'))->orderBy(DB::raw('field(location, "Production", "InTransit", "FSTK")'))->get();
 
-		$jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('sum(if(flos.status = 0, flos.actual, 0)) as production'), DB::raw('sum(if(flos.status = 1, flos.actual, 0)) as intransit'), DB::raw('sum(if(flos.status = 2, flos.actual, 0)) as fstk'))
+		$jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('sum(if(flos.status = 0 or flos.status = "M", flos.actual, 0)) as production'), DB::raw('sum(if(flos.status = 1, flos.actual, 0)) as intransit'), DB::raw('sum(if(flos.status = 2, flos.actual, 0)) as fstk'))
 		->groupBy('destinations.destination_shortname')->get();
 
 		$response = array(

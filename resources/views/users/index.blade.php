@@ -36,8 +36,7 @@
                     <th>Full Name</th>
                     <th>Username</th>
                     <th>E-mail</th>
-                    <th>Level</th>
-                    <th>Department</th>
+                    <th>Role</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -49,8 +48,7 @@
                       <td style="font-size: 14">{{$user->name}}</td>
                       <td style="font-size: 14">{{$user->username}}</td>
                       <td style="font-size: 14">{{$user->email}}</td>
-                      <td style="font-size: 14">{{$user->level->level_name}}</td>
-                      <td style="font-size: 14">{{$user->department->department_name}}</td>
+                      <td style="font-size: 14">{{$user->role_code}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

@@ -23,7 +23,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">FLO Lading <span class="text-purple">FLO ----???</span></span></h3>
+					<h3 class="box-title">FLO Lading <span class="text-purple">??????</span></span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">

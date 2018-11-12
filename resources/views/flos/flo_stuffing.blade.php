@@ -6,8 +6,8 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Final Line Outputs
-		<small>Containers Stuffing</small>
+		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
+		<small>Containers Stuffing <span class="text-purple">????</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		<li>
@@ -39,7 +39,7 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-header">
-					<h3 class="box-title">Finished Goods Export</h3>
+					<h3 class="box-title">Finished Goods Export <span class="text-purple">????</span></h3>
 				</div>
 				<div class="box-body">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
-use App\Department;
+use App\Navigation;
 
-class DepartmentController extends Controller
+class NavigationController extends Controller
 {
     public function __construct()
     {
@@ -20,12 +20,12 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::orderBy('ID', 'ASC')
+        $navigations = Navigation::orderBy('ID', 'ASC')
         ->get();
 
-        return view('departments.index', array(
-            'departments' => $departments
-        ))->with('page', 'Department');
+        return view('navigations.index', array(
+            'navigations' => $navigations
+        ))->with('page', 'Navigation');
         //
     }
 
@@ -36,8 +36,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('departments.create')->with('page', 'Department');
-        //
+        return view('navigations.create')->with('page', 'Navigation');
     }
 
     /**
@@ -49,23 +48,22 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         try{
-
             $id = Auth::id();
-            $department = new Department([
-                'department_code' => $request->get('department_code'),
-                'department_name' => $request->get('department_name'),
-                'created_by' => $id
-            ]);
+            $navigation = new Navigation([
+              'navigation_code' => $request->get('navigation_code'),
+              'navigation_name' => $request->get('navigation_name'),
+              'created_by' => $id
+          ]);
 
-            $department->save();
-            return redirect('/index/department')->with('status', 'New department has been created.')->with('page', 'Department');
+            $navigation->save();
+            return redirect('/index/navigation')->with('status', 'New navigation has been created.')->with('page', 'Navigation');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
-                return back()->with('error', 'Department code or department name already exist.')->with('page', 'Department');
+                return back()->with('error', 'Navigation code already exist.')->with('page', 'Navigation');
             }
         }
         //
@@ -79,11 +77,10 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        $department = Department::find($id);
-        return view('departments.show', array(
-            'department' => $department,
-        ))->with('page', 'Department');
-        //
+        $navigation = Navigation::find($id);
+        return view('navigations.show', array(
+            'navigation' => $navigation,
+        ))->with('page', 'Navigation');
     }
 
     /**
@@ -94,11 +91,10 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $department = Department::find($id);
-        return view('departments.edit', array(
-            'department' => $department,
-        ))->with('page', 'Department');
-        //
+        $navigation = Navigation::find($id);
+        return view('navigations.edit', array(
+            'navigation' => $navigation,
+        ))->with('page', 'Navigation');
     }
 
     /**
@@ -111,24 +107,20 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         try{
+            $navigation = Navigation::find($id);
+            $navigation->navigation_code = $request->get('navigation_code');
+            $navigation->navigation_name = $request->get('navigation_name');
+            $navigation->save();
 
-            $department = Department::find($id);
-            $department->department_code = $request->get('department_code');
-            $department->department_name = $request->get('department_name');
-            $department->save();
-
-            return redirect('/index/department')->with('status', 'Department data has been edited.')->with('page', 'Department');
+            return redirect('/index/navigation')->with('status', 'Navigation data has been edited.')->with('page', 'Navigation');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
-                return back()->with('error', 'Department code or department name already exist.')->with('page', 'Department');
+                return back()->with('error', 'Navigation code already exist.')->with('page', 'Navigation');
             }
-
         }
-        //
     }
 
     /**
@@ -139,10 +131,9 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        $department = Department::find($id);
-        $department->delete();
+        $navigation = Navigation::find($id);
+        $navigation->forceDelete();
 
-        return redirect('/index/department')->with('status', 'Department has been deleted.')->with('page', 'Department');
-        //
+        return redirect('/index/navigation')->with('status', 'Navigation has been deleted.')->with('page', 'Navigation');
     }
 }

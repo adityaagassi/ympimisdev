@@ -30,7 +30,7 @@
               <li class="user-header">
                 <img src="{{ url("images/image-user.png") }}" class="img-circle" alt="User Image">
                 <p>
-                  {{Auth::user()->name}} - {{Auth::user()->level->level_name}}
+                  {{Auth::user()->name}}
                   <small>{{Auth::user()->email}}</small>
                 </p>
               </li>

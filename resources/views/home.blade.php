@@ -29,7 +29,7 @@
         <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
             <h5 class="box-title" style="font-weight: bold;">Work In Process <span class="text-purple">仕掛品</span></h5>
         </div>
-        <div class="box-body">
+        <div class="box-body">            
            {{--  <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>
             <a class="list-group-item" href=""></a>

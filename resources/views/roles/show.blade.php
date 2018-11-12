@@ -6,9 +6,6 @@
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -21,53 +18,51 @@
     {{ $errors->first() }}
   </div>   
   @endif
-  <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-header with-border">
-      {{-- <h3 class="box-title">Detail User</h3> --}}
     </div>  
     <form role="form">
       <div class="box-body">
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Department ID</label>
+          <label class="col-sm-5">Role Code</label>
           <div class="col-sm-5" align="left">
-            {{$department->id}}
+            {{$role->role_code}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Department Code</label>
+          <label class="col-sm-5">Role Name</label>
           <div class="col-sm-5" align="left">
-            {{$department->department_code}}
+            {{$role->role_name}}
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Department Name</label>
+          <label class="col-sm-5">Permissions</label>
           <div class="col-sm-5" align="left">
-            {{$department->department_name}}
+            @foreach($permissions as $permission)
+            {{ $permission->navigation->navigation_name }};
+            @endforeach
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$department->user->name}}
+            {{$role->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$department->updated_at}}
+            {{$role->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$department->created_at}}
+            {{$role->created_at}}
           </div>
         </div>
       </form>
     </div>
-    
   </div>
 
   @endsection
-

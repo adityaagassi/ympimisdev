@@ -29,27 +29,33 @@
     <form role="form">
       <div class="box-body">
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Level Name</label>
+          <label class="col-sm-5">Navigation Code</label>
           <div class="col-sm-5" align="left">
-            {{$level->level_name}}
+            {{$navigation->navigation_code}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Navigation Name</label>
+          <div class="col-sm-5" align="left">
+            {{$navigation->navigation_name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
-            {{$level->user->name}}
+            {{$navigation->user->name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Last Update</label>
           <div class="col-sm-5" align="left">
-            {{$level->updated_at}}
+            {{$navigation->updated_at}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created At</label>
           <div class="col-sm-5" align="left">
-            {{$level->created_at}}
+            {{$navigation->created_at}}
           </div>
         </div>
       </form>

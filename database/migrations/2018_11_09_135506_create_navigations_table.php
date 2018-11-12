@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLevelsTable extends Migration
+class CreateNavigationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('levels', function (Blueprint $table) {
+        Schema::create('navigations', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('level_name')->unique();
+            $table->string('navigation_code')->unique();
+            $table->string('navigation_name');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
@@ -29,6 +30,6 @@ class CreateLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('levels');
+        Schema::dropIfExists('navigations');
     }
 }

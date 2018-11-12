@@ -59,7 +59,7 @@ input[type=number] {
 		<div class="col-xs-12">
 			<div class="box box-danger">
 				<div class="box-header">
-					<h3 class="box-title">Fulfillment <span class="text-purple">FLO充足</span></span></h3>
+					<h3 class="box-title">Fulfillment <span class="text-purple">FLO充足</span></h3>
 				</div>
 				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
@@ -246,21 +246,21 @@ input[type=number] {
 			};
 		})();
 
-		// $("#material_number").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material_number").val().length < 7) {
-		// 			$("#material_number").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material_number").on("input", function() {
+			delay(function(){
+				if ($("#material_number").val().length < 7) {
+					$("#material_number").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#flo_number_settlement").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#flo_number_settlement").val().length < 7) {
-		// 			$("#flo_number_settlement").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#flo_number_settlement").on("input", function() {
+			delay(function(){
+				if ($("#flo_number_settlement").val().length < 7) {
+					$("#flo_number_settlement").val("");
+				}
+			}, 20 );
+		});
 
 		$('#material_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
@@ -473,7 +473,8 @@ input[type=number] {
 
 	function fillFloTableSettlement(){
 		var data = {
-			status : '1'
+			status : '1',
+			originGroup : ['027','072','073'],
 		}
 		$('#flo_table').DataTable( {
 			'paging'      	: true,

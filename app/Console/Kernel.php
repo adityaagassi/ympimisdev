@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\UploadCompletions::class,
         Commands\UploadTransfers::class,
-        //
+        
     ];
 
     /**

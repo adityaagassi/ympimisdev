@@ -61,10 +61,10 @@
 							<thead>
 								<tr>
 									<th style="width: 40%">Model</th>
-									<th style="width: 16%">MTD (H-1)</th>
-									<th style="width: 16%">Plan</th>
-									<th style="width: 16%">Actual</th>
-									<th style="width: 12%"></th>
+									<th style="width: 15%">MTD (H-1)</th>
+									<th style="width: 15%">Plan</th>
+									<th style="width: 15%">Actual</th>
+									<th style="width: 15%">Diff</th>
 								</tr>
 							</thead>
 							<tbody id="tableBody"></tbody>
@@ -209,21 +209,23 @@
 					var tableData = '';
 					$.each(result.tableData, function(key, value) {
 						var caret = '';
+						var diff = '';
+						diff = value.actual-(value.plan+(-value.debt));
 						if(value.plan+(-value.debt) == value.actual){
-							caret = '<span class="text-green">&#9679;</span>';
+							caret = '<span style="font-weight: bold; background-color: green;">&nbsp;'+ diff +'&nbsp;</span>';
 						}
 						if(value.plan+(-value.debt) > value.actual){
-							caret = '<span class="text-red">&#9660;</span>';
+							caret = '<span style="font-weight: bold; background-color: red;">&nbsp;'+ diff +'&nbsp;</span>';
 						}
 						if(value.plan+(-value.debt) < value.actual){
-							caret = '<span class="text-yellow">&#9650;</span>';
+							caret = '<span style="font-weight: bold; background-color: orange;">&nbsp;'+ diff +'&nbsp;</span>';
 						}
 						tableData += '<tr>';
 						tableData += '<td style="width: 40%">'+ value.model +'</td>';
-						tableData += '<td style="width: 16%">'+ value.debt +'</td>';
-						tableData += '<td style="width: 16%">'+ value.plan +'</td>';
-						tableData += '<td style="width: 16%">'+ value.actual +'</td>';
-						tableData += '<td style="width: 12%; text-align: center;">'+ caret +'</td>';
+						tableData += '<td style="width: 15%">'+ value.debt +'</td>';
+						tableData += '<td style="width: 15%">'+ value.plan +'</td>';
+						tableData += '<td style="width: 15%">'+ value.actual +'</td>';
+						tableData += '<td style="width: 15%">'+ caret +'</td>';
 						tableData += '</tr>';
 					});
 					$('#tableBody').append(tableData);

@@ -10,7 +10,7 @@
 
 	<h1>
 		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
-		<small>After Stuffing & Loading <span class="text-purple">---</span></small>
+		<small>Container Departure <span class="text-purple">コンテナー出発</span></small>
 	</h1>
 	<ol class="breadcrumb">
 
@@ -26,7 +26,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Containers Number & Attachment <span class="text-purple">--</span></span></h3>
+					<h3 class="box-title">Containers Number & Attachment <span class="text-purple">????</span></span></h3>
 				</div>
 				<div class="box-body">
 					<div class="row">

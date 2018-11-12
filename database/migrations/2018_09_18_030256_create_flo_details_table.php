@@ -17,6 +17,7 @@ class CreateFloDetailsTable extends Migration
             $table->increments('id');
             $table->string('serial_number');
             $table->string('material_number');
+            $table->string('origin_group_code');
             $table->string('flo_number');
             $table->string('completion')->nullable();
             $table->string('transfer')->nullable();
@@ -24,7 +25,7 @@ class CreateFloDetailsTable extends Migration
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['serial_number', 'material_number'], 'flo_detail_unique');
+            $table->unique(['serial_number', 'origin_group_code'], 'flo_detail_unique');
         });
     }
 

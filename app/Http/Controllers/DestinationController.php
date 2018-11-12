@@ -143,7 +143,7 @@ class DestinationController extends Controller
     public function destroy($id)
     {
         $destination = Destination::find($id);
-        $destination->delete();
+        $destination->forceDelete();
 
         return redirect('/index/destination')->with('status', 'Destination has been deleted.')->with('page', 'Destination');
         //

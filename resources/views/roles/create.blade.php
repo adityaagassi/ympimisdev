@@ -6,9 +6,6 @@
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -31,31 +28,39 @@
   </div>   
   @endif
 
-
-  <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('create/department')}}">
+    <form role="form" method="post" action="{{url('create/role')}}">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Department Code<span class="text-red">*</span></label>
+        <div class="form-group row">
+          <label class="col-sm-4" style="text-align: right;">Role Code<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="department_code" placeholder="Enter Department Code" required>
+            <input type="text" class="form-control" name="role_code" placeholder="Enter Role Code" required>
           </div>
         </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Department Name<span class="text-red">*</span></label>
+        <div class="form-group row">
+          <label class="col-sm-4" style="text-align: right;">Role Name<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="department_name" placeholder="Enter Department Name" required>
+            <input type="text" class="form-control" name="role_name" placeholder="Enter Role Name" required>
           </div>
         </div>
-        <!-- /.box-body -->
+        <div class="form-group row">
+          <label class="col-sm-4" style="text-align: right;">Role Permissions:</label>
+          <br>
+        </div>
+        <div class="col-sm-12">
+          @foreach($navigations as $navigation)
+          <div class="col-sm-3">
+            <input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}">
+            {{ $navigation->navigation_name }}
+          </div>
+          @endforeach
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
-            <a class="btn btn-danger" href="{{ url('index/department') }}">Cancel</a>
+            <a class="btn btn-danger" href="{{ url('index/role') }}">Cancel</a>
           </div>
           <div class="btn-group">
             <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
@@ -70,10 +75,12 @@
   @section('scripts')
   <script>
     $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-  })
-</script>
-@stop
+      $('.select2').select2()
+    })
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass   : 'iradio_minimal-red'
+    })
+  </script>
+  @stop
 

@@ -9,6 +9,12 @@ use Carbon\Carbon;
 
 class ChoreiController extends Controller
 {
+
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+	
 	public function index_ch_daily_production_result(){
 		return view('choreis.production_result')->with('page', 'Chorei Production Result')->with('head', 'Chorei');
 	}
