@@ -22,7 +22,7 @@ class CreateFlosTable extends Migration
             $table->integer('shipment_schedule_id');
             $table->double('quantity')->default('0');
             $table->double('actual')->default('0');
-            $table->integer('status')->default('0');
+            $table->string('status')->default('0');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

@@ -373,7 +373,7 @@ class FinishedGoodsController extends Controller
 
 		// $jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK")) as location'), DB::raw('sum(flos.actual) as actual'))->groupBy('destinations.destination_shortname', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK"))'))->orderBy(DB::raw('field(location, "Production", "InTransit", "FSTK")'))->get();
 
-		$jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('sum(if(flos.status = 0 or flos.status = "M", flos.actual, 0)) as production'), DB::raw('sum(if(flos.status = 1, flos.actual, 0)) as intransit'), DB::raw('sum(if(flos.status = 2, flos.actual, 0)) as fstk'))
+		$jsonData = $stock->select(db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), DB::raw('sum(if(flos.status = "0" or flos.status = "M", flos.actual, 0)) as production'), DB::raw('sum(if(flos.status = "1", flos.actual, 0)) as intransit'), DB::raw('sum(if(flos.status = "2", flos.actual, 0)) as fstk'))
 		->groupBy('destinations.destination_shortname')->get();
 
 		$response = array(

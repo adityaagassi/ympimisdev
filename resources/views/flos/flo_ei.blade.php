@@ -246,21 +246,21 @@ input[type=number] {
 			};
 		})();
 
-		$("#material_number").on("input", function() {
-			delay(function(){
-				if ($("#material_number").val().length < 7) {
-					$("#material_number").val("");
-				}
-			}, 20 );
-		});
+		// $("#material_number").on("input", function() {
+		// 	delay(function(){
+		// 		if ($("#material_number").val().length < 7) {
+		// 			$("#material_number").val("");
+		// 		}
+		// 	}, 20 );
+		// });
 
-		$("#flo_number_settlement").on("input", function() {
-			delay(function(){
-				if ($("#flo_number_settlement").val().length < 7) {
-					$("#flo_number_settlement").val("");
-				}
-			}, 20 );
-		});
+		// $("#flo_number_settlement").on("input", function() {
+		// 	delay(function(){
+		// 		if ($("#flo_number_settlement").val().length < 7) {
+		// 			$("#flo_number_settlement").val("");
+		// 		}
+		// 	}, 20 );
+		// });
 
 		$('#material_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
@@ -328,7 +328,7 @@ input[type=number] {
 								if(result.status){
 									openSuccessGritter('Success!', result.message);
 									$("#material_number").val("");
-									if(result.code_status == 1002){
+									if(result.status_code == 'new'){
 										$("#flo_number").val(result.flo_number);
 										$('#flo_detail_table').DataTable().destroy();
 										fillFloTable(result.flo_number);
@@ -343,7 +343,6 @@ input[type=number] {
 									audio_error.play();
 									$("#material_number").val("");
 								}
-								
 							}
 							else{
 								openErrorGritter('Error!', 'Disconnected from server');
@@ -351,45 +350,19 @@ input[type=number] {
 								$("#material_number").val("");
 							}
 						});
-					// }
-					// else{
-					// 	var flo_number = $("#flo_number").val();
-					// 	var data = {
-					// 		material_number : material_number,
-					// 		ymj : ymj,
-					// 		type : 'pd',
-					// 		flo_number : flo_number
-					// 	}
-					// 	$('#flo_detail_table').DataTable().destroy();
-					// 	fillFloTable(result.flo_number);
-					// 	$('#flo_number').val("");
-					// 	$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
-					// 		console.log(status);
-					// 		console.log(result);
-					// 		console.log(xhr);
-					// 		if(xhr.status){
-
-
-					// 		}
-					// 		else{
-					// 			openErrorGritter('Error!', 'Disconnected from server');
-					// 			$("#material_number").val("");
-					// 		}
-					// 	});
-					// }
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+						audio_error.play();
+						$("#material_number").val("");
+					}
 				}
 				else{
-					openErrorGritter('Error!', result.message);
+					openErrorGritter('Error!', 'Disconnected from server');
 					audio_error.play();
 					$("#material_number").val("");
 				}
-			}
-			else{
-				openErrorGritter('Error!', 'Disconnected from server');
-				audio_error.play();
-				$("#material_number").val("");
-			}
-		});
+			});
 	}
 
 	function scanFloNumber(){

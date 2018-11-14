@@ -135,8 +135,14 @@
       @endif
 
       @if(in_array('S7', $navs))
-      @if(isset($page) && $page == "FLO Maedaoshi")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/flo_view/maedaoshi") }}"><i class="fa fa-hourglass-start"></i> <span>FLO  <i class="fa fa-angle-right"></i> Maedaoshi</span></a>
+      @if(isset($page) && $page == "FLO Maedaoshi BI")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maedaoshi_bi") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+      </li>
+      @endif
+
+      @if(in_array('S8', $navs))
+      @if(isset($page) && $page == "FLO Maedaoshi EI")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maedaoshi_ei") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
       </li>
       @endif
 

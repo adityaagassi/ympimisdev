@@ -33,6 +33,20 @@ td:hover {
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>   
+	@endif
+	@if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-danger">
@@ -41,7 +55,7 @@ td:hover {
 				</div>
 				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
-					<div class="box-body">
+					{{-- <div class="box-body"> --}}
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="box-body">
 							<div class="row">
@@ -112,7 +126,7 @@ td:hover {
 							</div>
 						</div>
 						<!-- /.box-body -->
-					</div>
+					{{-- </div> --}}
 				</form>
 				<!-- /.box -->
 			</div>
@@ -430,7 +444,7 @@ function scanSerialNumber(){
 		if(xhr.status == 200){
 			if(result.status){
 				openSuccessGritter('Success!', result.message);
-				if(result.code_status == 1002){
+				if(result.status_code == 'new'){
 					$("#flo_number").val(result.flo_number);
 					$('#flo_detail_table').DataTable().destroy();
 					fillFloTable(result.flo_number);

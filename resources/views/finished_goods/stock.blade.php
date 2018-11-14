@@ -74,7 +74,7 @@
 		fillChart();
 		setInterval(function(){
 			fillChart();
-		}, 60000);
+		}, 30000);
 	});
 
 	function addZero(i) {

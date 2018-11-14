@@ -266,7 +266,16 @@ class NavigationsTableSeeder extends Seeder
         DB::table('navigations')->insert(
             [
                 'navigation_code' => 'S7',
-                'navigation_name' => 'Maedaoshi',
+                'navigation_name' => 'Maedaoshi BI',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('navigations')->insert(
+            [
+                'navigation_code' => 'S8',
+                'navigation_name' => 'Maedaoshi EI',
                 'created_by' => '1',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),

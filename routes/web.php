@@ -257,8 +257,22 @@ Route::group(['nav' => 'S6', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'S7', 'middleware' => 'permission'], function(){
-	Route::get('index/flo_view/maedaoshi', 'MaedaoshiController@index');
+	Route::get('index/maedaoshi_bi', 'MaedaoshiController@index_bi');
+	Route::get('index/after_maedaoshi_bi', 'MaedaoshiController@index_after_bi');
 });
+
+Route::group(['nav' => 'S8', 'middleware' => 'permission'], function(){
+	Route::get('index/maedaoshi_ei', 'MaedaoshiController@index_ei');
+});
+
+Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
+Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');
+Route::get('fetch/maedaoshi', 'MaedaoshiController@fetch_maedaoshi');
+Route::get('reprint/maedaoshi', 'MaedaoshiController@reprint_maedaoshi');
+Route::post('destroy/maedaoshi', 'MaedaoshiController@destroy_maedaoshi');
+
+Route::get('scan/after_maedaoshi_material', 'MaedaoshiController@scan_after_maedaoshi_material');
+Route::get('scan/after_maedaoshi_serial', 'MaedaoshiController@scan_after_maedaoshi_serial');
 
 Route::group(['nav' => 'R1', 'middleware' => 'permission'], function(){
 	Route::get('index/flo_view/detail', 'FloController@index_detail');
