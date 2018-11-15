@@ -17,13 +17,15 @@ td:hover {
 @section('header')
 <section class="content-header">
 	<h1>
-		Maedaoshi Educational Instrument <span class="text-purple">?????</span>
+		Maedaoshi <span class="text-purple">?????</span>
+		<small>Educational Instrument <span class="text-purple">教育管楽器</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		<li>
 			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
 				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint Maedaoshi
 			</button>
+			<a href="{{ url("/index/after_maedaoshi_ei") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-fast-forward"></i>&nbsp;&nbsp;After Maedaoshi</a>
 		</li>
 	</ol>
 </section>

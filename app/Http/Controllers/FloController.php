@@ -327,8 +327,8 @@ class FloController extends Controller
             {
                 $data = file_get_contents($file);
                 $code_generator = CodeGenerator::where('note','=','container')->first();
-                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
-                $photo_number = $code_generator->prefix . $number;
+                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+                $photo_number = $code_generator->prefix . $number+1;
                 $ext = $file->getClientOriginalExtension();
                 $filepath = public_path() . "/uploads/containers/before/" . $photo_number . "." . $ext;
                 $attachment = new ContainerAttachment([
@@ -350,8 +350,8 @@ class FloController extends Controller
             {
                 $data = file_get_contents($file);
                 $code_generator = CodeGenerator::where('note','=','container')->first();
-                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
-                $photo_number = $code_generator->prefix . $number;
+                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+                $photo_number = $code_generator->prefix . $number+1;
                 $ext = $file->getClientOriginalExtension();
                 $filepath = public_path() . "/uploads/containers/process/" . $photo_number . "." . $ext;
                 $attachment = new ContainerAttachment([
@@ -490,35 +490,6 @@ class FloController extends Controller
 
         $id = Auth::id();
 
-        if(Auth::user()->role_code == "OP-Assy-FL"){
-            $printer_name = 'FLO Printer 101';
-        }
-        elseif(Auth::user()->role_code == "OP-Assy-CL"){
-            $printer_name = 'FLO Printer 102';
-        }
-        elseif(Auth::user()->role_code == "OP-Assy-SX"){
-            $printer_name = 'FLO Printer 103';
-        }
-        elseif(Auth::user()->role_code == "OP-Assy-PN"){
-            $printer_name = 'FLO Printer 104';
-        }
-        elseif(Auth::user()->role_code == "OP-Assy-RC"){
-            $printer_name = 'FLO Printer 105';
-        }
-        elseif(Auth::user()->role_code == "OP-Assy-VN"){
-            $printer_name = 'FLO Printer 106';
-        }
-        elseif(Auth::user()->role_code == "S"){
-            $printer_name = 'SUPERMAN';
-        }
-        else{
-            $response = array(
-                'status' => false,
-                'message' => "You don't have permission to print FLO"
-            );
-            return Response::json($response);
-        }
-
         if($request->get('serial_number')){
             $serial_number = $request->get('serial_number');
         }
@@ -534,18 +505,9 @@ class FloController extends Controller
             $serial_number = $code_generator_pd->prefix . $number_pd+1;
         }
 
-        $prefix_now = date("Y").date("m");
-        $code_generator = CodeGenerator::where('note','=','flo')->first();
+        
         $material_number = $request->get('material_number');
-
-        if ($prefix_now != $code_generator->prefix){
-            $code_generator->prefix = $prefix_now;
-            $code_generator->index = '0';
-            $code_generator->save();
-        }
-
-        $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-        $flo_number = $code_generator->prefix . $number+1;
+        $prefix_now = date("Y").date("m");
 
         if($request->get('flo_number') == ""){
             if($request->get('type') == 'pd'){
@@ -595,6 +557,20 @@ class FloController extends Controller
                 }
             }
             try{
+
+                $code_generator = CodeGenerator::where('note','=','flo')->first();
+                if ($prefix_now != $code_generator->prefix){
+                    $code_generator->prefix = $prefix_now;
+                    $code_generator->index = '0';
+                    $code_generator->save();
+                }
+
+                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
+                $flo_number = $code_generator->prefix . $number+1;
+
+                $code_generator->index = $code_generator->index+1;
+                $code_generator->save();
+
                 $flo_detail = new FloDetail([
                     'serial_number' =>  $serial_number,
                     'material_number' => $request->get('material_number'),
@@ -623,12 +599,38 @@ class FloController extends Controller
                     ['flo_number' => $flo_number, 'created_by' => $id, 'status_code' => '0', 'updated_at' => Carbon::now()]
                 );
 
-                $code_generator->index = $code_generator->index+1;
-                $code_generator->save();
-
                 if($request->get('type') == 'pd'){
                     $code_generator_pd->index = $code_generator_pd->index+1;
                     $code_generator_pd->save(); 
+                }
+
+                if(Auth::user()->role_code == "OP-Assy-FL"){
+                    $printer_name = 'FLO Printer 101';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-CL"){
+                    $printer_name = 'FLO Printer 102';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-SX"){
+                    $printer_name = 'FLO Printer 103';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-PN"){
+                    $printer_name = 'FLO Printer 104';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-RC"){
+                    $printer_name = 'FLO Printer 105';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-VN"){
+                    $printer_name = 'FLO Printer 106';
+                }
+                elseif(Auth::user()->role_code == "S"){
+                    $printer_name = 'SUPERMAN';
+                }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'message' => "You don't have permission to print FLO"
+                    );
+                    return Response::json($response);
                 }
 
                 $connector = new WindowsPrintConnector($printer_name);
@@ -640,7 +642,7 @@ class FloController extends Controller
                 $printer->setUnderline(false);
                 $printer->feed(1);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->barcode($flo_number, Printer::BARCODE_ITF);
+                $printer->barcode(intVal($flo_number), Printer::BARCODE_ITF);
                 $printer->setTextSize(3, 1);
                 $printer->text($flo_number."\n\n");
                 $printer->initialize();

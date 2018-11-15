@@ -105,6 +105,7 @@
 
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>

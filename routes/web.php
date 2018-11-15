@@ -263,6 +263,7 @@ Route::group(['nav' => 'S7', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S8', 'middleware' => 'permission'], function(){
 	Route::get('index/maedaoshi_ei', 'MaedaoshiController@index_ei');
+	Route::get('index/after_maedaoshi_ei', 'MaedaoshiController@index_after_ei');
 });
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
