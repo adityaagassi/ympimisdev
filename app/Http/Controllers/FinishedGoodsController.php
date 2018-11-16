@@ -429,18 +429,24 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function fetch_tb_stock(Request $request){
+		if($request->get('destination') == 'Maedaoshi'){
+			$destination = null;
+		}
+		else{
+			$destination = $request->get('destination');
+		}
 		$stock = DB::table('flos')
 		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
 		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
-		->leftJoin('material_volumes', 'material_volumes.material_number', 'shipment_schedules.material_number')
-		->leftJoin('materials', 'materials.material_number', 'shipment_schedules.material_number')
-		->where('flos.status', '=', $request->get('status'))
-		->where('destinations.destination_shortname', '=', $request->get('destination'))
-		->select('shipment_schedules.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width', DB::raw('sum(flos.actual) as actual'))
-		->groupBy('shipment_schedules.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width')
+		->leftJoin('material_volumes', 'material_volumes.material_number', 'flos.material_number')
+		->leftJoin('materials', 'materials.material_number', 'flos.material_number')
+		->whereIn('flos.status', $request->get('status'))
+		->where('destinations.destination_shortname', '=', $destination)
+		->select('flos.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width', 'material_volumes.lot_carton', DB::raw('sum(flos.actual) as actual'))
+		->groupBy('flos.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width', 'material_volumes.lot_carton')
 		->get();
 
-		if($request->get('status') == 0){
+		if(in_array(0, $request->get('status')) || in_array('M', $request->get('status'))){
 			$location = 'Production';
 		}
 		elseif($request->get('status') == 1){
@@ -449,6 +455,9 @@ class FinishedGoodsController extends Controller
 		elseif($request->get('status') == 2){
 			$location = 'FSTK';
 		}
+		// else{
+		// 	$location = 'Production';
+		// }
 
 		$response = array(
 			'status' => true,

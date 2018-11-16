@@ -225,7 +225,7 @@
 
 	function modalStock(destination, location){
 		if(location == 'Production'){
-			var status = 0;
+			var status = [0, 'M'];
 		}
 		if(location == 'InTransit'){
 			var status = 1;
@@ -253,7 +253,7 @@
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.actual +'</td>';
-						tableData += '<td>'+ (value.length*value.width*value.height).toFixed(2).toLocaleString() +'</td>';
+						tableData += '<td>'+ (((value.length*value.width*value.height)/value.lot_carton)*value.actual).toFixed(2).toLocaleString() +'</td>';
 						tableData += '</tr>';
 					});
 					$('#tableBody').append(tableData);

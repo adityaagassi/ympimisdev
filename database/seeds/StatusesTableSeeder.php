@@ -56,6 +56,15 @@ class StatusesTableSeeder extends Seeder
     			'updated_at' => date('Y-m-d H:i:s'),
     		]
     	);
+        DB::table('statuses')->insert(
+            [
+                'status_code' => 'M',
+                'status_name' => 'Maedaoshi',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
         //
     }
 }

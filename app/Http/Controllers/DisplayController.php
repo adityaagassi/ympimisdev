@@ -18,6 +18,13 @@ class DisplayController extends Controller
 	}
 
 	public function fetch_dp_production_result(Request $request){
+		if($request->get('hpl') == 'all'){
+			$hpl = "";
+		}
+		else{
+			$hpl = "where materials.origin_group_code = '". $request->get('hpl') ."'";
+		}
+
 		$first = date('Y-m-01');
 		if(date('Y-m-d') != date('Y-m-01')){
 			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
@@ -55,7 +62,7 @@ class DisplayController extends Controller
 
 		) as result
 		left join materials on materials.material_number = result.material_number
-		where materials.origin_group_code = '". $request->get('hpl') ."'
+		". $hpl ."
 		group by result.material_number, materials.material_description";
 
 		$tableData = DB::select($query);
@@ -75,7 +82,7 @@ class DisplayController extends Controller
 		group by material_number
 		) as result
 		left join materials on materials.material_number = result.material_number
-		where materials.origin_group_code = '". $request->get('hpl') ."'
+		". $hpl ."
 		group by result.material_number, materials.material_description";
 
 		$chartData = DB::select($query2);

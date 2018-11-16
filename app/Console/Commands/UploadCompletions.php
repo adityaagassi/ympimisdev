@@ -44,7 +44,6 @@ class UploadCompletions extends Command
      */
     public function handle()
     {
-
         $date = date('Y-m-d H:i:s');
         $flofilename = 'ympi_upload_flo_' . date('ymdhis') . '.txt';
         $flofilepath = public_path() . "/uploads/sap/completions/" . $flofilename;

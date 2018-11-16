@@ -336,6 +336,7 @@ class MaedaoshiController extends Controller
 					$flo = new Flo([
 						'flo_number' => $flo_number,
 						'shipment_schedule_id' => $shipment_schedule->id,
+						'material_number' => $material->material_number,
 						'quantity' => $shipment_schedule->flo_quantity,
 						'actual' => $actual,
 						'created_by' => $id
@@ -454,16 +455,10 @@ class MaedaoshiController extends Controller
 
 				}
 				catch(\Exception $e){
-					// $error_code = $e->errorInfo[1];
-					// if($error_code == 1062){
-					// 	$message = "Serial number already exist.";
-					// }
-					// else{
-					$message = "Couldn't print to this printer " . $e->getMessage() . "\n.";
-					// }
+					$error_code = $e->errorInfo[2];
 					$response = array(
 						'status' => false,
-						'message' => $message,
+						'message' => $error_code,
 					);
 					return Response::json($response);
 				}
@@ -497,13 +492,11 @@ class MaedaoshiController extends Controller
 				}
 				catch (QueryException $e){
 					$error_code = $e->errorInfo[2];
-					// if($error_code == 1062){
 					$response = array(
 						'status' => false,
 						'message' => $error_code,
 					);
 					return Response::json($response);
-					// }
 				}
 			}
 		}		
@@ -619,6 +612,7 @@ class MaedaoshiController extends Controller
 				$flo = new Flo([
 					'flo_number' => 'Maedaoshi'.$request->get('material'),
 					'shipment_schedule_id' => 0,
+					'material_number' => $request->get('material'),
 					'quantity' => 0,
 					'status' => 'M',
 					'actual' => $actual,
@@ -667,7 +661,7 @@ class MaedaoshiController extends Controller
 					'message' => 'New maedaoshi has been printed.',
 					'status_code' => 'new',
 					'maedaoshi' => 'Maedaoshi'.$request->get('material'),
-				); 
+				);
 				return Response::json($response);
 			}
 			catch(\Exception $e){

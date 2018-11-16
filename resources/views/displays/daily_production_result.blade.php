@@ -46,6 +46,7 @@
 		</div>
 		<div class="col-xs-4">
 			<select class="form-control select2" name="hpl" id='hpl' data-placeholder="HPL" style="width: 74%;">
+				<option value="all">All</option>
 				@foreach($origin_groups as $origin_group)
 				<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
 				@endforeach

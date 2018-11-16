@@ -98,8 +98,7 @@ class FloController extends Controller
         ->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
         ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
         ->leftJoin('flo_details', 'flos.flo_number', '=', 'flo_details.flo_number')
-        ->where('flos.status', '=', '0')
-        ->orwhere('flos.status', '=', '1');
+        ->whereIn('flos.status', ['0', '1', 'M']);
 
         $materials = $flosTable->select('materials.material_number', 'materials.material_description')->distinct()->get();
         $origin_groups = $flosTable->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->distinct()->get();
@@ -151,7 +150,7 @@ class FloController extends Controller
         ->leftJoin('flos', 'flo_details.flo_number', '=', 'flos.flo_number')
         ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
         ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
-        ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
+        ->leftJoin('materials', 'flos.material_number', '=', 'materials.material_number')
         ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
         ->select('flo_details.id', 'flo_details.flo_number', 'shipment_schedules.st_date', 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at', 'statuses.status_name');
 
@@ -564,9 +563,8 @@ class FloController extends Controller
                     $code_generator->index = '0';
                     $code_generator->save();
                 }
-
-                $number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-                $flo_number = $code_generator->prefix . $number+1;
+                $number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+                $flo_number = $code_generator->prefix . $number;
 
                 $code_generator->index = $code_generator->index+1;
                 $code_generator->save();
@@ -584,6 +582,7 @@ class FloController extends Controller
                 $flo = new Flo([
                     'flo_number' => $flo_number,
                     'shipment_schedule_id' => $shipment_schedule->id,
+                    'material_number' => $request->get('material_number'),
                     'quantity' => $shipment_schedule->flo_quantity,
                     'actual' => $actual,
                     'created_by' => $id
@@ -710,16 +709,9 @@ class FloController extends Controller
                 return Response::json($response);
             }
             catch(\Exception $e){
-                $error_code = $e->errorInfo[1];
-                if($error_code == 1062){
-                    $message = "Serial number already exist.";
-                }
-                else{
-                    $message = "Couldn't print to this printer " . $e->getMessage() . "\n.";
-                }
                 $response = array(
                     'status' => false,
-                    'message' => $message,
+                    'message' => "Couldn't print to this printer " . $e->getMessage() . "\n.",
                 );
                 return Response::json($response);
             }
@@ -896,32 +888,32 @@ class FloController extends Controller
     {
         $flo_detail = FloDetail::find($request->get('id'));
         if($flo_detail->completion == null){
-         $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-         $actual = DB::table('flo_details')
-         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-         ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-         ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-         ->where('flo_details.id', '=', $request->get('id'))
-         ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
-         ->first();
+           $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+           $actual = DB::table('flo_details')
+           ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+           ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+           ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+           ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
+           ->where('flo_details.id', '=', $request->get('id'))
+           ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
+           ->first();
 
-         $flo->actual = $flo->actual-$actual->lot_completion;
-         $flo->save();
+           $flo->actual = $flo->actual-$actual->lot_completion;
+           $flo->save();
 
-         $flo_detail->forceDelete();
+           $flo_detail->forceDelete();
 
-         $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
-         $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
-         $inventory->save();
+           $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
+           $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
+           $inventory->save();
 
-         $response = array(
+           $response = array(
             'status' => true,
             'message' => "Data has been deleted.",
         );
-         return Response::json($response);
-     }
-     else{
+           return Response::json($response);
+       }
+       else{
         $response = array(
             'status' => false,
             'message' => "Data cannot be deleted, because data has been uploaded to SAP.",
