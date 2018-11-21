@@ -138,7 +138,7 @@
 					$('#progress_bar_production').css('color', 'black');
 					$('#progress_bar_production').css('font-weight', 'bold');
 
-					$('#progress_text_delivery').html('Total Delivery vs Ship. Plan FSTK of '+result.st_month+'<br>倉庫送り数　対　出荷計画');
+					$('#progress_text_delivery').html('Total Delivery FSTK vs Ship. Plan of '+result.st_month+'<br>倉庫送り数　対　出荷計画');
 					$('#progress_number_delivery').html(result.total_delivery.toLocaleString() + '/' + result.total_plan.toLocaleString() + ' set(s) <a class="label label-success" onClick="fillTable(id)" id="delivery"><i class="fa fa-info-circle"></i> Info</a>');
 					$('#progress_bar_delivery').html(((result.total_delivery/result.total_plan)*100).toFixed(2) + '%');
 					$('#progress_bar_delivery').css('width', (result.total_delivery/result.total_plan)*100 + '%');

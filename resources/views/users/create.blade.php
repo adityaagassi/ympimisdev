@@ -71,23 +71,12 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">User Level<span class="text-red">*</span></label>
+          <label class="col-sm-4">User Role<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="level" style="width: 100%;" data-placeholder="Choose a Level..." required>
+            <select class="form-control select2" name="role_code" style="width: 100%;" data-placeholder="Choose a Role..." required>
               <option value=""></option>
-              @foreach($levels as $level)
-              <option value="{{ $level->id }}">{{ $level->level_name }}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-4">Department<span class="text-red">*</span></label>
-          <div class="col-sm-4" align="left">
-            <select class="form-control select2" name="department" style="width: 100%;" data-placeholder="Choose a Department..." required>
-              <option value=""></option>
-              @foreach($departments as $department)
-              <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+              @foreach($roles as $role)
+              <option value="{{ $role->role_code }}">{{ $role->role_name }}</option>
               @endforeach
             </select>
           </div>
@@ -104,15 +93,13 @@
     </form>
   </div>
 
-@endsection
+  @endsection
 
-@section('scripts')
-<script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-  })
-</script>
-@stop
+  @section('scripts')
+  <script>
+    $(function () {
+      $('.select2').select2()
+    });
+  </script>
+  @stop
 

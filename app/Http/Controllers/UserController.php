@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Database\QueryException;
+use App\Role;
 
 
 class UserController extends Controller
@@ -41,11 +42,9 @@ class UserController extends Controller
      */
     public function create()
     {
-      $levels = Level::orderBy('level_name', 'ASC')->get();
-      $departments = Department::orderBy('department_name', 'ASC')->get();
+      $roles = Role::orderBy('role_name', 'ASC')->get();
       return view('users.create', array(
-        'levels' => $levels,
-        'departments' => $departments,
+        'roles' => $roles,
       ))->with('page', 'User');
         //
     }
@@ -62,13 +61,11 @@ class UserController extends Controller
         if($request->get('password') == $request->get('password_confirmation')){
           $id = Auth::id();
           $user = new User([
-            'user' => $request->get('user'),
             'name' => $request->get('name'),
             'username' => $request->get('username'),
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
-            'level_id' => $request->get('level'),
-            'department_id' => $request->get('department'),
+            'role_code' => $request->get('role_code'),
             'created_by' => $id
           ]);
 
@@ -100,12 +97,10 @@ class UserController extends Controller
     {
 
       $created_bys = User::orderBy('name', 'ASC')->get();
-      $levels = Level::orderBy('level_name', 'ASC')->get();
       $user = User::find($id);
 
       return view('users.show', array(
         'user' => $user,
-        'levels' => $levels,
         'created_bys' => $created_bys
       ))->with('page', 'User');
         //
@@ -120,13 +115,11 @@ class UserController extends Controller
     public function edit($id)
     {
 
-      $levels = Level::orderBy('level_name', 'ASC')->get();
-      $departments = Department::orderBy('department_name', 'ASC')->get();
+      $roles = Role::orderBy('role_name', 'ASC')->get();
       $user = User::find($id);
       return view('users.edit', array(
         'user' => $user,
-        'levels' => $levels,
-        'departments' => $departments,
+        'roles' => $roles,
       ))->with('page', 'User');
         //
     }
@@ -150,8 +143,7 @@ class UserController extends Controller
             $user->username = $request->get('username');
             $user->email = $request->get('email');
             $user->password = $request->get('password');
-            $user->level_id = $request->get('level');
-            $user->department_id = $request->get('department');
+            $user->role_code = $request->get('role_code');
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
           }
@@ -167,8 +159,7 @@ class UserController extends Controller
             $user->username = $request->get('username');
             $user->email = $request->get('email');
                 // $user->password = $request->get('password');
-            $user->level_id = $request->get('level');
-            $user->department_id = $request->get('department');
+            $user->role_code = $request->get('role_code');
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
           }

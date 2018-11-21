@@ -42,8 +42,15 @@ class ContainersTableSeeder extends Seeder
           'updated_at' => date('Y-m-d H:i:s'),
         ]
       );
-
-
-
+      DB::table('containers')->insert(
+        [
+          'container_code' => 'TR',
+          'container_name' => 'Truck',
+          'capacity' => '0',
+          'created_by' => '1',
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]
+      );
     }
   }

@@ -166,7 +166,7 @@ class ProductionScheduleController extends Controller
     {
         try{
             if($request->hasFile('production_schedule')){
-                // ContainerSchedule::truncate();
+                ProductionSchedule::truncate();
 
                 $id = Auth::id();
 

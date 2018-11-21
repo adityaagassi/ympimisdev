@@ -48,25 +48,19 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">User Level</label>
+          <label class="col-sm-5">User Role</label>
           <div class="col-sm-5" align="left">
-            {{$user->level->level_name}}
-          </div>
-        </div>
-        <div class="form-group row" align="right">
-          <label class="col-sm-5">Department</label>
-          <div class="col-sm-5" align="left">
-            {{$user->department->department_name}}
+            {{$user->role->role_name}}
           </div>
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-5">Created By</label>
           <div class="col-sm-5" align="left">
             @foreach($created_bys as $created_by)
-                        @if($user->created_by == $created_by->id)
-                        {{ $created_by->name }}
-                        @endif
-                        @endforeach
+            @if($user->created_by == $created_by->id)
+            {{ $created_by->name }}
+            @endif
+            @endforeach
           </div>
         </div>
         <div class="form-group row" align="right">

@@ -29,6 +29,15 @@ class ShipmentConditionsTableSeeder extends Seeder
               'updated_at' => date('Y-m-d H:i:s'),
           ]
         );
+        DB::table('shipment_conditions')->insert(
+            [
+              'shipment_condition_code' => 'TR',
+              'shipment_condition_name' => 'Truck',
+              'created_by' => '1',
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+          ]
+        );
         //
     }
 }

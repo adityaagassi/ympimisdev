@@ -23,6 +23,7 @@ Route::get('404', function() {
 Auth::routes();
 
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
+Route::get('download/manual/{reference_file}', 'HomeController@download');
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');

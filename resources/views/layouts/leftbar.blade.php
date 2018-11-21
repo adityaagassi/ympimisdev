@@ -90,7 +90,7 @@
 
       @if(in_array('M6', $navs))
       @if(isset($page) && $page == "Origin Group")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/origin_group") }}"><i class="fa fa-bookmark"></i> <span>Origin Gorup</span></a>
+        <a href="{{ url("/index/origin_group") }}"><i class="fa fa-bookmark"></i> <span>Origin Group</span></a>
       </li>
       @endif
 

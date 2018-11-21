@@ -92,19 +92,12 @@ class FloController extends Controller
     }
 
     public function index_detail(){
-        $flosTable = DB::table('flos')
-        ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-        ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-        ->leftJoin('origin_groups', 'origin_groups.origin_group_code', '=', 'materials.origin_group_code')
-        ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
-        ->leftJoin('flo_details', 'flos.flo_number', '=', 'flo_details.flo_number')
-        ->whereIn('flos.status', ['0', '1', 'M']);
-
-        $materials = $flosTable->select('materials.material_number', 'materials.material_description')->distinct()->get();
-        $origin_groups = $flosTable->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->distinct()->get();
-        $flos = $flosTable->select('flos.flo_number')->distinct()->get();
-        $statuses = $flosTable->select('statuses.status_code', 'statuses.status_name')->distinct()->get();
-        $serial_numbers = $flosTable->select('flo_details.serial_number')->distinct()->get();
+        
+        $materials = DB::table('materials')->select('material_number', 'material_description')->get();
+        $origin_groups = DB::table('origin_groups')->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->get();
+        $flos = DB::table('flos')->whereIn('flos.status', ['0', '1', 'M'])->select('flos.flo_number')->distinct()->get();
+        $statuses = DB::table('statuses')->select('statuses.status_code', 'statuses.status_name')->get();
+        $serial_numbers = DB::table('flo_details')->select('flo_details.serial_number')->distinct()->get();
 
         return view('flos.flo_detail', array(
             'materials' => $materials,

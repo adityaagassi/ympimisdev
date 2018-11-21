@@ -294,7 +294,7 @@ class ChoreiController extends Controller
 		$chartResult2 = DB::select($query2);
 
 		$query3 = "
-		select hpl, sum(plan)-sum(actual) as plan, sum(actual) as actual from
+		select hpl, sum(plan)-IFNULL(sum(actual),0) as plan, IFNULL(sum(actual),0) as actual from
 		(
 		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date

@@ -88,7 +88,8 @@
 @endsection
 
 @section('scripts')
-<script src="{{ url("js/highcharts.js")}}"></script>
+{{-- <script src="{{ url("js/highcharts.js")}}"></script> --}}
+<script src="{{ url("js/highstock.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
@@ -97,10 +98,6 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-
-	$(document).ajaxStart(function () {
-		Pace.start()
-	})
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();	
@@ -160,11 +157,15 @@
 						title: {
 							text: 'Month to Date of Production Result<br><span style="color:rgba(96,92,168);">過去一ヶ月間の生産結果</span>'
 						},
+
 						xAxis: {
+							tickInterval:  1,
+							overflow: true,
 							categories: xAxis,
 							labels:{
-								rotation: -45
-							}							
+								rotation: -45,
+							},
+							min: 0					
 						},
 						yAxis: [{
 							min: 0,
@@ -213,13 +214,13 @@
 						var diff = '';
 						diff = value.actual-(value.plan+(-value.debt));
 						if(value.plan+(-value.debt) == value.actual){
-							caret = '<span style="font-weight: bold; background-color: green;">&nbsp;'+ diff +'&nbsp;</span>';
+							caret = '<span style="font-weight: bold;" class="text-green">&nbsp;'+ diff +'&nbsp;</span>';
 						}
 						if(value.plan+(-value.debt) > value.actual){
-							caret = '<span style="font-weight: bold; background-color: red;">&nbsp;'+ diff +'&nbsp;</span>';
+							caret = '<span style="font-weight: bold;" class="text-red">&nbsp;'+ diff +'&nbsp;</span>';
 						}
 						if(value.plan+(-value.debt) < value.actual){
-							caret = '<span style="font-weight: bold; background-color: orange;">&nbsp;'+ diff +'&nbsp;</span>';
+							caret = '<span style="font-weight: bold;" class="text-yellow">&nbsp;+'+ diff +'&nbsp;</span>';
 						}
 						tableData += '<tr>';
 						tableData += '<td style="width: 40%">'+ value.model +'</td>';

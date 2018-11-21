@@ -22,5 +22,10 @@ class Role extends Model
 	{
 		return $this->hasMany('App\Permission', 'role_code', 'role_code')->withTrashed();
 	}
+
+	public function role()
+	{
+		return $this->belongsTo('App\Role', 'role_code', 'role_code')->withTrashed();
+	}
     //
 }

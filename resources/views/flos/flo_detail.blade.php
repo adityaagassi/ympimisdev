@@ -10,7 +10,7 @@
 <section class="content-header">
 	<h1>
 		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
-		<small>Details <span class="text-purple">??????</span></small>
+		<small>Details <span class="text-purple">詳細</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		{{-- <li>
@@ -62,7 +62,7 @@
 								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group" style="width: 100%;">
 									<option></option>
 									@foreach($origin_groups as $origin_group)
-									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
+									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -94,7 +94,7 @@
 								<select class="form-control select2" data-placeholder="Select FLO Status" name="status" id="status" style="width: 100%;">
 									<option></option>
 									@foreach($statuses as $status)
-									<option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
+									<option value="{{ $status->status_code }}">{{ $status->status_code }} - {{ $status->status_name }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -118,7 +118,7 @@
 										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">Created At</th>
 										<th style="font-size: 14">Status</th>
-										<th style="font-size: 14" class="notexport">Action</th>
+										{{-- <th style="font-size: 14" class="notexport">Action</th> --}}
 									</tr>
 								</thead>
 								<tbody>
@@ -286,8 +286,8 @@
 				{ "data": "serial_number" },
 				{ "data": "quantity" },
 				{ "data": "created_at" },
-				{ "data": "status_name" },
-				{ "data": "action" }
+				{ "data": "status_name" }
+				// { "data": "action" }
 				]
 			});
 	}

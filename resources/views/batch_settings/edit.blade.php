@@ -92,8 +92,13 @@
   $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
+  });
 
-  })
+  $('.timepicker').timepicker({
+    showInputs: false,
+    showMeridian: false,
+    defaultTime: '0:00',
+  });
 </script>
 @stop
 

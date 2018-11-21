@@ -1,6 +1,6 @@
   <header class="main-header">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <a href="#" class="logo">
+    <a href="{{ url("/home") }}" class="logo">
       <span class="logo-mini"><b>M</b>IS</span>
       <span class="logo-lg"><b>YMPI </b>System</span>
     </a>
@@ -13,7 +13,7 @@
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service Desk <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Management Information System <b>(MIS)</b></a></li>
+              <li><a href="{{ url("index/wjo_mis") }}">Management Information System <b>(MIS)</b></a></li>
             </ul>
           </li>
           <li class="dropdown user user-menu">

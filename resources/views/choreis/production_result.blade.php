@@ -51,9 +51,9 @@
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab">Production Result <span class="text-purple">生産実績</span></a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab">Production Accuracy <span class="text-purple">週次出荷</span></a></li>
-					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab">Weekly Shipment <span class="text-purple">週次出荷</span></a></li>
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Production Result <span class="text-purple">生産実績</span></a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Production Accuracy <span class="text-purple">週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Weekly Shipment <span class="text-purple">週次出荷</span></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1">
@@ -152,6 +152,22 @@
 		// setInterval(function(){
 		// 	fillChart();
 		// }, 10000);
+	});
+
+	$(function() {
+		$(document).keydown(function(e) {
+			switch(e.which) {
+				case 49:
+				$("#tab_header_1").trigger("click")
+				break;
+				case 50:
+				$("#tab_header_2").click()
+				break;
+				case 51:
+				$("#tab_header_3").trigger("click")
+				break;
+			}
+		});
 	});
 
 	function fillWeek(){
@@ -682,12 +698,12 @@ function modalBL(hpl, name, week){
 				var blData = '';
 				var blTotal = 0;
 				$.each(result.blData, function(key, value) {
-						blData += '<tr>';
-						blData += '<td>'+ value.material_number +'</td>';
-						blData += '<td>'+ value.material_description +'</td>';
-						blData += '<td>'+ value.quantity.toLocaleString() +'</td>';
-						blData += '</tr>';
-						blTotal += value.quantity;
+					blData += '<tr>';
+					blData += '<td>'+ value.material_number +'</td>';
+					blData += '<td>'+ value.material_description +'</td>';
+					blData += '<td>'+ value.quantity.toLocaleString() +'</td>';
+					blData += '</tr>';
+					blTotal += value.quantity;
 				});
 				$('#modalResultBody').append(blData);
 				$('#modalResultTotal').html('');
