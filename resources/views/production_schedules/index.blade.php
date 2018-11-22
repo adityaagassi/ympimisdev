@@ -8,6 +8,8 @@
   <ol class="breadcrumb">
 
     <li>
+      <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
+      &nbsp;
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
       <a href="{{ url("create/production_schedule")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
@@ -71,7 +73,7 @@
                       Not registered
                       @endif
                     </td>
-                    <td style="font-size: 14">{{$production_schedule->due_date}}</td>
+                    <td style="font-size: 14">{{date('d-M-Y', strtotime($production_schedule->due_date))}}</td>
                     <td style="font-size: 14">{{$production_schedule->quantity}}</td>
                     <td>
                       <center>
@@ -92,68 +94,134 @@
       </div>
     </section>
 
-    <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-          </div>
-          <div class="modal-body" id="modalDeleteBody">
-            Are you sure delete?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form id ="importForm" method="post" action="{{ url('import/production_schedule') }}" enctype="multipart/form-data">
+          <form id ="importForm" method="get" action="{{ url('delete/production_schedule') }}" enctype="multipart/form-data">
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+              <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
-            <div class="">
-              <div class="modal-body">
-                <center><input type="file" name="production_schedule" id="InputFile" accept="text/plain"></center>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>From</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control pull-right" id="datefrom" name="datefrom" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>To</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control pull-right" id="dateto" name="dateto" required>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
-              </div>
-            </form>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Origin Group</label>
+                    <select class="form-control select2" multiple="multiple" name="origin_group[]" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;" required>
+                      <option></option>
+                      @foreach($origin_groups as $origin_group)
+                      <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+            </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this production schedule?');" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+        </div>
+        <div class="modal-body" id="modalDeleteBody">
+          Are you sure delete?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
         </div>
       </div>
     </div>
+  </div>
 
-    @stop
+  <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id ="importForm" method="post" action="{{ url('import/production_schedule') }}" enctype="multipart/form-data">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+              Format: [Material Number][Due Date][Quantity]<br>
+              Sample: <a href="{{ url('download/manual/import_production_schedule.txt') }}">import_production_schedule.txt</a> Code: #Add
+          </div>
+          <div class="">
+            <div class="modal-body">
+              <center><input type="file" name="production_schedule" id="InputFile" accept="text/plain"></center>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    @section('scripts')
-    <script>
-      $(function () {
-        $('#example1').DataTable({
-          "order": []
-        })
-        $('#example2').DataTable({
-          'paging'      : true,
-          'lengthChange': false,
-          'searching'   : false,
-          'ordering'    : true,
-          'info'        : true,
-          'autoWidth'   : false
-        })
-      })
-      function deleteConfirmation(url, name, id) {
-        jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-        jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-      }
-    </script>
+  @stop
 
-    @stop
+  @section('scripts')
+  <script>
+    $(function () {
+      $('#datefrom').datepicker({
+        autoclose: true
+      });
+      $('#dateto').datepicker({
+        autoclose: true
+      });
+      $('.select2').select2();
+      $('#example1').DataTable({
+        "order": []
+      });
+      $('#example2').DataTable({
+        'paging'      : true,
+        'lengthChange': false,
+        'searching'   : false,
+        'ordering'    : true,
+        'info'        : true,
+        'autoWidth'   : false
+      });
+    })
+    function deleteConfirmation(url, name, id) {
+      jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+    }
+  </script>
+
+  @stop

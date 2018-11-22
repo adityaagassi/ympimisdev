@@ -124,6 +124,8 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+              Format: [Material Number][Description][Uom][SLoc][Origin Group][HPL][Category]<br>
+              Sample: <a href="{{ url('download/manual/import_material.txt') }}">import_material.txt</a> Code: #Truncate
             </div>
             <div class="">
               <div class="modal-body">

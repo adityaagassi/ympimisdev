@@ -100,6 +100,8 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+              Format: [Destination Code][Destination Name][Destination Shortname]<br>
+              Sample: <a href="{{ url('download/manual/import_destination.txt') }}">import_destination.txt</a> Code: #Truncate
             </div>
             <div class="modal-body">
               <center><input type="file" name="destination" id="InputFile" accept="text/plain"></center>

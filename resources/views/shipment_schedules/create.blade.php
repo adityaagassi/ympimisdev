@@ -105,7 +105,7 @@
         <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
         <div class="col-sm-4">
          <div class="input-group">
-          <input type="date" class="form-control" name="st_date" placeholder="Enter Shipment Date" required>
+          <input type="text" class="form-control" id="st_date" name="st_date" placeholder="Enter Shipment Date" required>
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
       </div>
@@ -114,7 +114,7 @@
       <label class="col-sm-4">Bill of Lading Date<span class="text-red">*</span></label>
       <div class="col-sm-4">
        <div class="input-group">
-        <input type="date" class="form-control" name="bl_date" placeholder="Enter B/L Date" required>
+        <input type="text" class="form-control" id="bl_date" name="bl_date" placeholder="Enter B/L Date" required>
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
       </div>
     </div>
@@ -158,6 +158,14 @@
       format: "mm/yyyy",
       viewMode: "months", 
       minViewMode: "months"
+    })
+    $('#st_date').datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+    })
+    $('#bl_date').datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
     })
 
   </script>

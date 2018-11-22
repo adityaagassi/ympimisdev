@@ -26,7 +26,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Containers Number & Attachment <span class="text-purple">????</span></span></h3>
+					<h3 class="box-title">Containers Number & Attachment <span class="text-purple">コンテナ番号・付属品</span></span></h3>
 				</div>
 				<div class="box-body">
 					<div class="row">

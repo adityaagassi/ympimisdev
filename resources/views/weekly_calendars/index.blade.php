@@ -59,8 +59,8 @@
                     <tr>
                       <td style="font-size: 14">{{$weekly_calendar->fiscal_year}}</td>
                       <td style="font-size: 14">{{$weekly_calendar->week_name}}</td>
-                      <td style="font-size: 14">{{$weekly_calendar->date_from}}</td>
-                      <td style="font-size: 14">{{$weekly_calendar->date_to}}</td>
+                      <td style="font-size: 14">{{date('d-M-Y', strtotime($weekly_calendar->date_from))}}</td>
+                      <td style="font-size: 14">{{date('d-M-Y', strtotime($weekly_calendar->date_to))}}</td>
                       {{-- <td style="font-size: 14">{{$weekly_calendar->week_date}}</td> --}}
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
@@ -119,6 +119,8 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+                Format: [FY][Week][Date From][Date To]<br>
+                Sample: <a href="{{ url('download/manual/import_weekly_calendar.txt') }}">import_weekly_calendar.txt</a> Code: #Add
             </div>
             <div class="">
               <div class="modal-body">

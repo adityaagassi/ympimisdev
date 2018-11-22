@@ -57,7 +57,7 @@
           <label class="col-sm-4">Date From<span class="text-red">*</span></label>
           <div class="col-sm-4">
            <div class="input-group">
-            <input type="date" class="form-control" name="date_from" placeholder="Enter Date From" required>
+            <input type="text" class="form-control" id="date_from" name="date_from" placeholder="Enter Date From" required>
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
@@ -66,7 +66,7 @@
         <label class="col-sm-4">Date To<span class="text-red">*</span></label>
         <div class="col-sm-4">
          <div class="input-group">
-          <input type="date" class="form-control" name="date_to" placeholder="Enter Date To" required>
+          <input type="text" class="form-control" id="date_to" name="date_to" placeholder="Enter Date To" required>
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
       </div>
@@ -88,16 +88,19 @@
 @section('scripts')
 <script>
   $(function () {
-    //Initialize Select2 Elements
     $('.select2').select2()
   })
-    //Turn off input number wheel
     $(document).on("wheel", "input[type=number]", function (e) {
       $(this).blur();
     })
-    //Date picker
-    $('#datepicker').datepicker({
-      autoclose: true
+
+    $('#date_from').datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
+    })
+    $('#date_to').datepicker({
+      format: "dd/mm/yyyy",
+      autoclose: true,
     })
   </script>
   @stop

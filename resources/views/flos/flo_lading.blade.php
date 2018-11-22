@@ -10,7 +10,7 @@
 <section class="content-header">
 	<h1>
 		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
-		<small>Lading <span class="text-purple">??????</span></small>
+		<small>Lading <span class="text-purple">荷揚げ</span></small>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -23,7 +23,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">FLO Lading <span class="text-purple">??????</span></span></h3>
+					<h3 class="box-title">FLO Lading <span class="text-purple">FLO荷揚げ</span></span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">

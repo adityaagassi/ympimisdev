@@ -142,6 +142,8 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+              Format: [Material Number][Category][Lot Completion][Lot Transfer][Lot Max FLO][Lot per Row][Lot per Pallet][Length][Width][Height]<br>
+              Sample: <a href="{{ url('download/manual/import_material_volume.txt') }}">import_material_volume.txt</a> Code: #Truncate
             </div>
             <div class="modal-body">
               <center><input type="file" name="material_volume" id="InputFile" accept="text/plain"></center>

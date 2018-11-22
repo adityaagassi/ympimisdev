@@ -82,7 +82,7 @@ class ContainerScheduleController extends Controller
                 'container_id' => $container_id,
                 'container_code' => $request->get('container_code'),
                 'destination_code' => $request->get('destination_code'),
-                'shipment_date' => $request->get('shipment_date'),
+                'shipment_date' => date('Y-m-d', strtotime(str_replace('/','-', $request->get('shipment_date')))),
                 'created_by' => $id
             ]);
 
@@ -147,7 +147,7 @@ class ContainerScheduleController extends Controller
             $container_schedule = ContainerSchedule::find($id);
             $container_schedule->container_code = $request->get('container_code');
             $container_schedule->destination_code = $request->get('destination_code');
-            $container_schedule->shipment_date = $request->get('shipment_date');
+            $container_schedule->shipment_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('shipment_date'))));
             $container_schedule->save();
 
             return redirect('/index/container_schedule')->with('status', 'Container schedule data has been edited.')->with('page', 'Container Schedule');

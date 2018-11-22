@@ -17,7 +17,7 @@ td:hover {
 @section('header')
 <section class="content-header">
 	<h1>
-		Maedaoshi <span class="text-purple">?????</span>
+		Maedaoshi <span class="text-purple">前倒し</span>
 		<small>Band Instrument <span class="text-purple">管楽器</span></small>
 	</h1>
 	<ol class="breadcrumb">
@@ -51,7 +51,7 @@ td:hover {
 		<div class="col-xs-12">
 			<div class="box box-danger">
 				<div class="box-header">
-					<h3 class="box-title">Scan Maedaoshi<span class="text-purple"> ??????????</span></h3>
+					<h3 class="box-title">Scan Maedaoshi<span class="text-purple"> 前倒しスキャン</span></h3>
 				</div>
 				<div class="box-body">
 					<div class="row">

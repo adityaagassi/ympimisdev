@@ -56,7 +56,7 @@
           <label class="col-sm-4">Date From<span class="text-red">*</span></label>
           <div class="col-sm-4">
            <div class="input-group">
-            <input type="date" class="form-control" name="date_from" placeholder="Enter Date From" value="{{ $weekly_calendar->date_from }}" required>
+            <input type="text" class="form-control" id="date_from" name="date_from" placeholder="Enter Date From" value="{{ date('d/m/Y', strtotime($weekly_calendar->date_from)) }}" required>
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
@@ -65,7 +65,7 @@
         <label class="col-sm-4">Date To<span class="text-red">*</span></label>
         <div class="col-sm-4">
          <div class="input-group">
-          <input type="date" class="form-control" name="date_to" placeholder="Enter Date To" value="{{ $weekly_calendar->date_to }}" required>
+          <input type="text" class="form-control" id="date_to" name="date_to" placeholder="Enter Date To" value="{{ date('d/m/Y', strtotime($weekly_calendar->date_to)) }}" required>
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
       </div>
@@ -87,17 +87,19 @@
 @section('scripts')
 <script>
   $(function () {
-    //Initialize Select2 Elements
     $('.select2').select2()
   })
-    //Turn off input number wheel
-    $(document).on("wheel", "input[type=number]", function (e) {
-      $(this).blur();
-    })
-    //Date picker
-    $('#datepicker').datepicker({
-      autoclose: true
-    })
-  </script>
-  @stop
+  $(document).on("wheel", "input[type=number]", function (e) {
+    $(this).blur();
+  })
+  $('#date_from').datepicker({
+    format: "dd/mm/yyyy",
+    autoclose: true,
+  })
+  $('#date_to').datepicker({
+    format: "dd/mm/yyyy",
+    autoclose: true,
+  })
+</script>
+@stop
 

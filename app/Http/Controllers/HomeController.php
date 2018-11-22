@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     public function download($reference_file){
         if (file_exists(public_path() . "/manuals/" . $reference_file)) {
-            header("Content-Length: " . filesize(public_path() . "/guides/" . $reference_file));
+            header("Content-Length: " . filesize(public_path() . "/manuals/" . $reference_file));
             header('Content-Type: application/octet-stream');
             header('Content-Disposition: attachment; filename=' . $reference_file);
             readfile(public_path() . "/manuals/" . $reference_file);

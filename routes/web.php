@@ -185,6 +185,7 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::get('create/production_schedule', 'ProductionScheduleController@create');
 	Route::post('create/production_schedule', 'ProductionScheduleController@store');
 	Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
+	Route::get('delete/production_schedule', 'ProductionScheduleController@delete');
 	Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
 	Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
 	Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');

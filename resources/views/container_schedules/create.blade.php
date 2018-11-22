@@ -65,9 +65,11 @@
         <div class="form-group row" align="right">
           <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
-           <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" required>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+           <div class="input-group date">
+            <div class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control pull-right" id="shipment_date" name="shipment_date" placeholder="Select Shipment Date" required>
           </div>
         </div>
       </div>
@@ -87,18 +89,18 @@
 
 @section('scripts')
 <script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-  })
-    //Turn off input number wheel
+  jQuery(document).ready(function() {
+    $(function () {
+      $('.select2').select2()
+    })
     $(document).on("wheel", "input[type=number]", function (e) {
       $(this).blur();
     })
-    //Date picker
-    $('#datepicker').datepicker({
+    $('#shipment_date').datepicker({
+      format: "dd/mm/yyyy",
       autoclose: true
-    })
-  </script>
-  @stop
+    });
+  });
+</script>
+@stop
 

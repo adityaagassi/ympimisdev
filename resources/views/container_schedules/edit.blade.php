@@ -78,23 +78,25 @@
         <div class="form-group row" align="right">
           <label class="col-sm-4">Shipment Date<span class="text-red">*</span></label>
           <div class="col-sm-4">
-           <div class="input-group">
-            <input type="date" class="form-control" name="shipment_date" placeholder="Enter Shipment Date" value="{{ $container_schedule->shipment_date }}" required>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right" id="shipment_date" value="{{ date('d/m/Y', strtotime($container_schedule->shipment_date)) }}" name="shipment_date" placeholder="Select Shipment Date" required>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-6">
+          <div class="btn-group">
+            <a class="btn btn-danger" href="{{ url('index/container_schedule') }}">Cancel</a>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
           </div>
         </div>
       </div>
-      <div class="col-sm-4 col-sm-offset-6">
-        <div class="btn-group">
-          <a class="btn btn-danger" href="{{ url('index/container_schedule') }}">Cancel</a>
-        </div>
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-        </div>
-      </div>
     </div>
-  </div>
-</form>
+  </form>
 </div>
 
 @endsection
@@ -110,7 +112,8 @@
       $(this).blur();
     })
     //Date picker
-    $('#datepicker').datepicker({
+    $('#shipment_date').datepicker({
+      format: "dd/mm/yyyy",
       autoclose: true
     })
   </script>

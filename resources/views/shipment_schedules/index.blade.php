@@ -96,8 +96,8 @@
                         @endif
                       </td>
                       <td style="font-size: 14">{{$shipment_schedule->hpl}}</td>
-                      <td style="font-size: 14">{{$shipment_schedule->st_date}}</td>
-                      <td style="font-size: 14">{{$shipment_schedule->bl_date}}</td>
+                      <td style="font-size: 14">{{date('d-M-Y', strtotime($shipment_schedule->st_date))}}</td>
+                      <td style="font-size: 14">{{date('d-M-Y', strtotime($shipment_schedule->bl_date))}}</td>
                       <td style="font-size: 14">{{$shipment_schedule->quantity}}</td>
                       <td>
                         <center>
@@ -150,6 +150,8 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+                Format: [Shipment Month][Sales Order][Shipment Condition Code][Destination Code][Material Number][HPL][Shipment Date][BL Date][Quantity]<br>
+                Sample: <a href="{{ url('download/manual/import_shipment_schedule.txt') }}">import_shipment_schedule.txt</a> Code: #Add
               </div>
               <div class="">
                 <div class="modal-body">

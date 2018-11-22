@@ -8,7 +8,9 @@ use App\User;
 use App\Material;
 use App\Destination;
 use App\ProductionSchedule;
+use App\OriginGroup;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class ProductionScheduleController extends Controller
 {
@@ -25,9 +27,11 @@ class ProductionScheduleController extends Controller
     {
         $production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'material_number ASC')
         ->get();
+        $origin_groups = OriginGroup::orderBy('origin_group_code', 'asc')->get();
 
         return view('production_schedules.index', array(
-            'production_schedules' => $production_schedules
+            'production_schedules' => $production_schedules,
+            'origin_groups' => $origin_groups,
         ))->with('page', 'Production Schedule');
         //
     }
@@ -156,6 +160,24 @@ class ProductionScheduleController extends Controller
         ->with('page', 'Production Schedule');
         //
     }
+
+    public function delete(Request $request){
+
+        $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+        $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+
+        $materials = Material::whereIn('origin_group_code', $request->get('origin_group'))->select('material_number')->get();
+
+        $production_schedule = ProductionSchedule::where('due_date', '>=', $date_from)
+        ->where('due_date', '<=', $date_to)
+        ->whereIn('material_number', $materials)
+        ->forceDelete();
+
+        return redirect('/index/production_schedule')
+        ->with('status', 'Production schedules has been deleted.')
+        ->with('page', 'Production Schedule');
+    }
+
     /**
      * Import resource from Text File.
      *
@@ -166,7 +188,7 @@ class ProductionScheduleController extends Controller
     {
         try{
             if($request->hasFile('production_schedule')){
-                ProductionSchedule::truncate();
+                // ProductionSchedule::truncate();
 
                 $id = Auth::id();
 
@@ -200,6 +222,9 @@ class ProductionScheduleController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
                 return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
+            }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Production Schedule');
             }
 
         }

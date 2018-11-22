@@ -12,8 +12,8 @@ input {
 @section('header')
 <section class="content-header">
 	<h1>
-		Location Stock <span class="text-purple">?????????????????</span>
-		<small>Material stock details <span class="text-purple">??????</span></small>
+		Location Stock <span class="text-purple">在庫の位置</span>
+		<small>Material stock details <span class="text-purple">材料の在庫の詳細</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		{{-- <li>
@@ -31,7 +31,7 @@ input {
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Detail Filters<span class="text-purple"> ??????????</span></span></h3>
+					<h3 class="box-title">Detail Filters<span class="text-purple"> フィルター詳細</span></span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">

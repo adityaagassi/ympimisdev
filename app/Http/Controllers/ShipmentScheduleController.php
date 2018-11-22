@@ -9,6 +9,7 @@ use App\Destination;
 use App\ShipmentCondition;
 use App\ShipmentSchedule;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class ShipmentScheduleController extends Controller
 {
@@ -109,8 +110,8 @@ class ShipmentScheduleController extends Controller
                 'destination_code' => $request->get('destination_code'),
                 'material_number' => $request->get('material_number'),
                 'hpl' => $request->get('hpl'),
-                'bl_date' => $request->get('bl_date'),
-                'st_date' => $request->get('st_date'),
+                'st_date' => date('Y-m-d', strtotime(str_replace('/','-', $request->get('st_date')))),
+                'bl_date' => date('Y-m-d', strtotime(str_replace('/','-', $request->get('bl_date')))),
                 'quantity' => $request->get('quantity'),
                 'created_by' => $id
             ]);
@@ -186,22 +187,25 @@ class ShipmentScheduleController extends Controller
             $shipment_schedule->st_month = $st_month;
             $shipment_schedule->sales_order = $request->get('sales_order');
             $shipment_schedule->shipment_condition_code = $request->get('shipment_condition_code');
-            $shipment_schedule->destination_code = $request->get('destination_shortname');
+            $shipment_schedule->destination_code = $request->get('destination_code');
             $shipment_schedule->material_number = $request->get('material_number');
             $shipment_schedule->hpl = $request->get('hpl');
-            $shipment_schedule->bl_date = $request->get('bl_date');
-            $shipment_schedule->st_date = $request->get('st_date');
+            $shipment_schedule->st_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('st_date'))));
+            $shipment_schedule->bl_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('bl_date'))));
             $shipment_schedule->quantity = $request->get('quantity');
             $shipment_schedule->created_by = $id;
             $shipment_schedule->save();    
             
-            return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been created.')->with('page', 'Shipment Schedule');
+            return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been updated.')->with('page', 'Shipment Schedule');
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
             // self::delete($lid);
                 return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
+            }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Shipment Schedule');
             }
         }
         //
@@ -226,7 +230,7 @@ class ShipmentScheduleController extends Controller
 
     public function import(Request $request)
     {
-     if($request->hasFile('shipment_schedule')){
+       if($request->hasFile('shipment_schedule')){
 
         $id = Auth::id();
 

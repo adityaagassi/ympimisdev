@@ -64,32 +64,32 @@ class WeeklyCalendarController extends Controller
      */
     public function store(Request $request)
     {
-        $date_from = date('Y-m-d', strtotime($request->get('date_from').'-1 day'));
+        $date_from = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_from').'-1 day')));
+        $dateFrom = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_from'))));
+        $dateTo = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_to'))));
 
-        $datediff = ((strtotime($request->get('date_to'))-strtotime($request->get('date_from')))/86400)+1;
-
+        $datediff = ((strtotime($dateTo)-strtotime($dateFrom))/86400)+1;
         $id = Auth::id();
         try
         {
-
             for ($i=0; $i < $datediff ; $i++) { 
 
-             $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
+               $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
 
-             $weekly_calendar = new WeeklyCalendar([
-              'fiscal_year' => $request->get('fiscal_year'),
-              'week_name' => $request->get('week_name'),
-              'week_date' => $date_from,
-              'created_by' => $id
-          ]);
-             $weekly_calendar->save();
-         }
+               $weekly_calendar = new WeeklyCalendar([
+                  'fiscal_year' => $request->get('fiscal_year'),
+                  'week_name' => $request->get('week_name'),
+                  'week_date' => $date_from,
+                  'created_by' => $id
+              ]);
+               $weekly_calendar->save();
+           }
 
-         return redirect('/index/weekly_calendar')
-         ->with('status', 'New weekly calendar has been created.')
-         ->with('page', 'Weekly Calendar');
-     }
-     catch (QueryException $e){
+           return redirect('/index/weekly_calendar')
+           ->with('status', 'New weekly calendar has been created.')
+           ->with('page', 'Weekly Calendar');
+       }
+       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             // self::delete($lid);
@@ -174,9 +174,11 @@ class WeeklyCalendarController extends Controller
      */
     public function update(Request $request, $week_name, $fiscal_year)
     {
-        $date_from = date('Y-m-d', strtotime($request->get('date_from').'-1 day'));
+        $date_from = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_from').'-1 day')));
+        $dateFrom = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_from'))));
+        $dateTo = date('Y-m-d', strtotime(str_replace('/', '-', $request->get('date_to'))));
 
-        $datediff = ((strtotime($request->get('date_to'))-strtotime($request->get('date_from')))/86400)+1;
+        $datediff = ((strtotime($dateTo)-strtotime($dateFrom))/86400)+1;
 
         $id = Auth::id();
         
@@ -189,23 +191,23 @@ class WeeklyCalendarController extends Controller
 
             for ($i=0; $i < $datediff ; $i++) { 
 
-             $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
+               $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
 
-             $weekly_calendar = new WeeklyCalendar([
-              'fiscal_year' => $request->get('fiscal_year'),
-              'week_name' => $request->get('week_name'),
-              'week_date' => $date_from,
-              'created_by' => $id
-          ]);
+               $weekly_calendar = new WeeklyCalendar([
+                  'fiscal_year' => $request->get('fiscal_year'),
+                  'week_name' => $request->get('week_name'),
+                  'week_date' => $date_from,
+                  'created_by' => $id
+              ]);
 
-             $weekly_calendar->save();
-         }
+               $weekly_calendar->save();
+           }
 
-         return redirect('/index/weekly_calendar')
-         ->with('status', 'Weekly calendar data has been edited.')
-         ->with('page', 'Weekly Calendar');
-     }
-     catch (QueryException $e){
+           return redirect('/index/weekly_calendar')
+           ->with('status', 'Weekly calendar data has been edited.')
+           ->with('page', 'Weekly Calendar');
+       }
+       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
             // self::delete($lid);
@@ -252,44 +254,44 @@ class WeeklyCalendarController extends Controller
                 $file = $request->file('weekly_calendar');
                 $data = file_get_contents($file);
                 $rows = explode("\r\n", $data);
-            foreach ($rows as $row)
-            {
-                if (strlen($row) > 0) {
-                    $row = explode("\t", $row);
-                    $date_from = date('Y-m-d', strtotime(str_replace('/','-',$row[2]).'-1 day'));
-                    $datediff = ((strtotime(str_replace('/','-',$row[3]))-strtotime(str_replace('/','-',$row[2])))/86400)+1;
+                foreach ($rows as $row)
+                {
+                    if (strlen($row) > 0) {
+                        $row = explode("\t", $row);
+                        $date_from = date('Y-m-d', strtotime(str_replace('/','-',$row[2]).'-1 day'));
+                        $datediff = ((strtotime(str_replace('/','-',$row[3]))-strtotime(str_replace('/','-',$row[2])))/86400)+1;
 
-                    for ($i=0; $i < $datediff ; $i++) 
-                    { 
-                        $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
+                        for ($i=0; $i < $datediff ; $i++) 
+                        { 
+                            $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
 
-                        $weekly_calendar = new WeeklyCalendar([
-                          'fiscal_year' => $row[0],
-                          'week_name' => $row[1],
-                          'week_date' => $date_from,
-                          'created_by' => $id
-                      ]);
-                        $weekly_calendar->save();
+                            $weekly_calendar = new WeeklyCalendar([
+                              'fiscal_year' => $row[0],
+                              'week_name' => $row[1],
+                              'week_date' => $date_from,
+                              'created_by' => $id
+                          ]);
+                            $weekly_calendar->save();
+                        }
                     }
-                }
-            }   
+                }   
 
-            return redirect('/index/weekly_calendar')->with('status', 'New weekly calendar has been imported.')->with('page', 'Weekly Calendar');   
-        }
-        else
-        {
-            return redirect('/index/weekly_calendar')->with('error', 'Please select a file.')->with('page', 'Weekly Calendar');
-        }
+                return redirect('/index/weekly_calendar')->with('status', 'New weekly calendar has been imported.')->with('page', 'Weekly Calendar');   
+            }
+            else
+            {
+                return redirect('/index/weekly_calendar')->with('error', 'Please select a file.')->with('page', 'Weekly Calendar');
+            }
 
-    }
-    catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
+        }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
             // self::delete($lid);
-            return back()->with('error', 'Weekly calendar with preferred fiscal year, week name and date already exist.')->with('page', 'Weekly Calendar');
-        }
+                return back()->with('error', 'Weekly calendar with preferred fiscal year, week name and date already exist.')->with('page', 'Weekly Calendar');
+            }
 
-    }
+        }
         //
     }
 

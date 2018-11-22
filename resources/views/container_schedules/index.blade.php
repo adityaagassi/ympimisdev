@@ -60,7 +60,7 @@
                     <td style="font-size: 14">{{$container_schedule->container_id}}</td>
                     <td style="font-size: 14">{{$container_schedule->container_code}}</td>
                     <td style="font-size: 14">{{$container_schedule->destination->destination_shortname}}</td>
-                    <td style="font-size: 14">{{$container_schedule->shipment_date}}</td>
+                    <td style="font-size: 14">{{date('d-M-Y', strtotime($container_schedule->shipment_date))}}</td>
                     <td style="font-size: 14">
                       @if(isset($container_schedule->weeklycalendar->week_name))
                       {{$container_schedule->weeklycalendar->week_name}}
@@ -122,7 +122,7 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
               Format: [Container Code][Destination Code][Shipment Date][Quantity Unit Container]<br>
-              Sample: <a href="{{ url('download/manual/import_container_schedule.txt') }}">import_container_schedule.txt</a>
+              Sample: <a href="{{ url('download/manual/import_container_schedule.txt') }}">import_container_schedule.txt</a> Code: #Add
             </div>
             <div class="">
               <div class="modal-body">
