@@ -67,16 +67,16 @@ input {
 										<th>Achievement %</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
+								{{-- <tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
 										<th>Total</th>
 										<th id="totalQty"></th>
 										<th id="totalBO"></th>
 										<th id="avgPercentage"></th>
 									</tr>
-								</tfoot>
+								</tfoot> --}}
 							</table>
 						</div>
 					</div>
@@ -136,8 +136,7 @@ input {
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
 
-	function fillTable(){
-		$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
+	function fillTable() {
 		$('#monthlySummaryTable').DataTable().clear();
 		$('#monthlySummaryTable').DataTable().destroy();
 		var periodTo = $('#periodTo').val();
@@ -146,121 +145,154 @@ input {
 			periodTo:periodTo,
 			periodFrom:periodFrom,
 		}
-
-		$('#monthlySummaryTable').DataTable({
-			"scrollX": true,
-			'dom': 'Bfrtip',
-			'buttons': {
-				dom: {
-					button: {
-						tag:'button',
-						className:''
-					}
-				},
-				buttons:[
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"footerCallback": function (tfoot, data, start, end, display) {
-				var intVal = function ( i ) {
-					return typeof i === 'string' ?
-					i.replace(/[\$%,]/g, '')*1 :
-					typeof i === 'number' ?
-					i : 0;
-				};
-				var api = this.api();
-				var total = api.column(1).data().reduce(function (a, b) {
-					return intVal(a)+intVal(b);
-				}, 0)
-				$(api.column(1).footer()).html(total.toLocaleString());
-				var bo = api.column(2).data().reduce(function (a, b) {
-					return intVal(a)+intVal(b);
-				}, 0)
-				$(api.column(2).footer()).html(bo.toLocaleString());
-				var percentage = api.column(3).data().reduce(function (a, b) {
-					return intVal(a)+intVal(b);
-				}, 0)
-				$(api.column(3).footer()).html((percentage/api.column(3).data().filter(function(value,index){return intVal(value)>0?true:false;}).count()).toFixed(2) + '%');
-			},
-			"columnDefs": [ {
-				"targets": 2,
-				"createdCell": function (td, cellData, rowData, row, col) {
-					if ( cellData >  0 ) {
-						$(td).css('background-color', 'RGB(255,204,255)')
-					}
-					else
-					{
-						$(td).css('background-color', 'RGB(204,255,255)')
-					}
+		$.get('{{ url("fetch/fg_monthly_summary") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
+					$('#monthlySummaryTable').DataTable().clear();
+					$('#monthlySummaryTable').DataTable().destroy();
+					$('#tableBody').html("");
+					var tableData = '';
+					$.each(result.tableData, function(key, value) {
+						tableData += '<tr>';
+						tableData += '<td>'+ value.period +'</td>';
+						tableData += '<td>'+ value.total +'</td>';
+						if( value.bo > 0 ){
+							tableData += '<td><a href="javascript:void(0)" id="'+ value.period +'" onClick="modalBackOrder(id)"> '+ value.bo +'</a></td>';
+						}
+						else
+						{
+							tableData += '<td>'+ value.bo +'</td>';
+						}
+						tableData += '<td>'+ value.percentage +'</td>';
+						tableData += '</tr>';
+					});
+					$('#tableBody').append(tableData);
+					$('#monthlySummaryTable').DataTable({
+						"scrollX": true,
+						'dom': 'Bfrtip',
+						'buttons': {
+							dom: {
+								button: {
+									tag:'button',
+									className:''
+								}
+							},
+							buttons:[
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'searching': true,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true,
+						// "footerCallback": function (tfoot, data, start, end, display) {
+						// 	var intVal = function ( i ) {
+						// 		return typeof i === 'string' ?
+						// 		i.replace(/[\$%,]/g, '')*1 :
+						// 		typeof i === 'number' ?
+						// 		i : 0;
+						// 	};
+						// 	var api = this.api();
+						// 	var total = api.column(1).data().reduce(function (a, b) {
+						// 		return intVal(a)+intVal(b);
+						// 	}, 0)
+						// 	$(api.column(1).footer()).html(total.toLocaleString());
+						// 	var bo = api.column(2).data().reduce(function (a, b) {
+						// 		return intVal(a)+intVal(b);
+						// 	}, 0)
+						// 	$(api.column(2).footer()).html(bo.toLocaleString());
+						// 	var percentage = api.column(3).data().reduce(function (a, b) {
+						// 		return intVal(a)+intVal(b);
+						// 	}, 0)
+						// 	$(api.column(3).footer()).html((percentage/api.column(3).data().filter(function(value,index){return intVal(value)>0?true:false;}).count()).toFixed(2) + '%');
+						// },
+						"columnDefs": [ {
+							"targets": 2,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData >  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)');
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)');
+								}
+							}
+						},
+						{
+							"targets": 3,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								var intVal = function ( i ) {
+									return typeof i === 'string' ?
+									i.replace(/[\$%,]/g, '')*1 :
+									typeof i === 'number' ?
+									i : 0;
+								};
+								if ( intVal(cellData) <  100 ) {
+									$(td).css('background-color', 'RGB(255,204,255)');
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)');
+								}
+							}
+						}
+						]
+					});
 				}
-			},
-			{
-				"targets": 3,
-				"createdCell": function (td, cellData, rowData, row, col) {
-					var intVal = function ( i ) {
-						return typeof i === 'string' ?
-						i.replace(/[\$%,]/g, '')*1 :
-						typeof i === 'number' ?
-						i : 0;
-					};
-					if ( intVal(cellData) <  100 ) {
-						$(td).css('background-color', 'RGB(255,204,255)')
-					}
-					else
-					{
-						$(td).css('background-color', 'RGB(204,255,255)')
-					}
+				else{
+					alert('Attempt to retrieve data failed');
 				}
 			}
-			],
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/fg_monthly_summary") }}",
-				"data" : data,
-			},
-			"columns": [
-			{ "data": "period" },
-			{ "data": "total" },
-			{ "data": "bo" },
-			{ "data": "percentage" },
-			]
+			else{
+				alert('Disconnected from server');
+			}
 		});
+}
 
+function modalBackOrder(period){
+	var data = {
+		period:period,
 	}
 
+	$.get('{{ url("fetch/tb_monthly_summary") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+	});
+}
 </script>
 @endsection

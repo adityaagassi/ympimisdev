@@ -45,6 +45,7 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('fetch/fg_weekly_summary', 'FinishedGoodsController@fetch_fg_weekly_summary');
 	Route::get('index/fg_monthly_summary', 'FinishedGoodsController@index_fg_monthly_summary');
 	Route::get('fetch/fg_monthly_summary', 'FinishedGoodsController@fetch_fg_monthly_summary');
+	Route::get('fetch/tb_monthly_summary', 'FinishedGoodsController@fetch_tb_monthly_summary');
 	Route::get('index/fg_traceability', 'FinishedGoodsController@index_fg_traceability');
 	Route::get('fetch/fg_traceability', 'FinishedGoodsController@fetch_fg_traceability');
 	Route::get('index/fg_shipment_schedule', 'FinishedGoodsController@index_fg_shipment_schedule');
