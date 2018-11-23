@@ -47,16 +47,28 @@
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-sm-4" style="text-align: right;">Role Permissions:</label>
+          <label class="col-sm-4" style="text-align: right;">Role Permissions</label>
           <br>
         </div>
-        <div class="col-sm-12">
-          @foreach($navigations as $navigation)
-          <div class="col-sm-3">
-            <input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}">
-            {{ $navigation->navigation_name }}
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-md-3">
+              @foreach($nav_admins as $nav_admin)<label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $nav_admin->navigation_code }}"> {{ $nav_admin->navigation_name }}</label><br>
+              @endforeach
+            </div>
+            <div class="col-md-3">
+              @foreach($nav_masters as $nav_master)<label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $nav_master->navigation_code }}"> {{ $nav_master->navigation_name }}</label><br>
+              @endforeach
+            </div>
+            <div class="col-md-3">
+              @foreach($nav_services as $nav_service)<label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $nav_service->navigation_code }}"> {{ $nav_service->navigation_name }}</label><br>
+              @endforeach
+            </div>
+            <div class="col-md-3">
+              @foreach($nav_reports as $nav_report)<label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $nav_report->navigation_code }}"> {{ $nav_report->navigation_name }}</label><br>
+              @endforeach
+            </div>
           </div>
-          @endforeach
         </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
@@ -67,20 +79,21 @@
           </div>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>
 
-  @endsection
+@endsection
 
-  @section('scripts')
-  <script>
-    $(function () {
-      $('.select2').select2()
-    })
-    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-      checkboxClass: 'icheckbox_minimal-red',
-      radioClass   : 'iradio_minimal-red'
-    })
-  </script>
-  @stop
+@section('scripts')
+<script>
+  $(function () {
+    $('.select2').select2()
+  })
+  $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+    checkboxClass: 'icheckbox_minimal-red',
+    radioClass   : 'iradio_minimal-red'
+  })
+</script>
+@stop
 

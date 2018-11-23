@@ -258,7 +258,7 @@ class FloController extends Controller
 
     public function input_flo_lading(Request $request){
         $bl_date =  date('Y-m-d', strtotime($request->get('bl_date')));
-        $flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date]);
+        $flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);
 
         $response = array(
             'status' => true,

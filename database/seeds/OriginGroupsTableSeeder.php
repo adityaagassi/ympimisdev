@@ -51,7 +51,7 @@ class OriginGroupsTableSeeder extends Seeder
     	DB::table('origin_groups')->insert(
     		[
     			'origin_group_code' => '072',
-    			'origin_group_name' => 'PL Recorder',
+    			'origin_group_name' => 'Recorder',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
     			'updated_at' => date('Y-m-d H:i:s'),
@@ -66,24 +66,24 @@ class OriginGroupsTableSeeder extends Seeder
     			'updated_at' => date('Y-m-d H:i:s'),
     		]
     	);
-    	DB::table('origin_groups')->insert(
-    		[
-    			'origin_group_code' => 'A02',
-    			'origin_group_name' => 'CASE',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
-    	DB::table('origin_groups')->insert(
-    		[
-    			'origin_group_code' => 'A03',
-    			'origin_group_name' => 'IN-DIRECT',
-    			'created_by' => '1',
-    			'created_at' => date('Y-m-d H:i:s'),
-    			'updated_at' => date('Y-m-d H:i:s'),
-    		]
-    	);
+    	// DB::table('origin_groups')->insert(
+    	// 	[
+    	// 		'origin_group_code' => 'A02',
+    	// 		'origin_group_name' => 'CASE',
+    	// 		'created_by' => '1',
+    	// 		'created_at' => date('Y-m-d H:i:s'),
+    	// 		'updated_at' => date('Y-m-d H:i:s'),
+    	// 	]
+    	// );
+    	// DB::table('origin_groups')->insert(
+    	// 	[
+    	// 		'origin_group_code' => 'A03',
+    	// 		'origin_group_name' => 'IN-DIRECT',
+    	// 		'created_by' => '1',
+    	// 		'created_at' => date('Y-m-d H:i:s'),
+    	// 		'updated_at' => date('Y-m-d H:i:s'),
+    	// 	]
+    	// );
         //
     }
 }

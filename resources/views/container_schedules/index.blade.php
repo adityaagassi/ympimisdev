@@ -121,7 +121,7 @@
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
-              Format: [Container Code][Destination Code][Shipment Date][Quantity Unit Container]<br>
+              Format: [Container Code][Destination Code][Shipment Date]<br>
               Sample: <a href="{{ url('download/manual/import_container_schedule.txt') }}">import_container_schedule.txt</a> Code: #Add
             </div>
             <div class="">

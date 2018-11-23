@@ -11,7 +11,7 @@ use Illuminate\Database\QueryException;
 
 class RoleController extends Controller
 {
-    
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -24,6 +24,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::orderBy('id', 'ASC')
+        ->where('role_code', '<>', 'S')
         ->get();
 
         return view('roles.index', array(
@@ -38,11 +39,27 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $navigations = Navigation::orderBy('ID', 'asc')
+        $nav_admins = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'A%')
+        ->get();
+
+        $nav_masters = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'M%')
+        ->get();
+
+        $nav_services = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'S%')
+        ->get();
+
+        $nav_reports = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'R%')
         ->get();
 
         return view('roles.create', array(
-            'navigations' => $navigations,
+            'nav_admins' => $nav_admins,
+            'nav_masters' => $nav_masters,
+            'nav_services' => $nav_services,
+            'nav_reports' => $nav_reports,
         ))->with('page', 'Role');
         //
     }
@@ -64,15 +81,25 @@ class RoleController extends Controller
             ]);
             $role->save();
 
+            $permission = new Permission([
+                'role_code' => $request->get('role_code'),
+                'navigation_code' => 'Dashboard',
+                'created_by' => $id
+            ]);
+            $permission->save();
+
             $navigations = $request->get('navigation_code');
 
-            foreach ($navigations as $navigation) {
-                $permission = new Permission([
-                    'role_code' => $request->get('role_code'),
-                    'navigation_code' => $navigation,
-                    'created_by' => $id
-                ]);
-                $permission->save();
+            $permission = '';
+            if($navigations != ''){
+                foreach ($navigations as $navigation) {
+                    $permission = new Permission([
+                        'role_code' => $request->get('role_code'),
+                        'navigation_code' => $navigation,
+                        'created_by' => $id
+                    ]);
+                    $permission->save();
+                }
             }
 
             return redirect('/index/role')->with('status', 'New role has been created.')->with('page', 'Role');
@@ -112,7 +139,23 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $navigations = Navigation::orderBy('id', 'asc')->get();
+        
+        $nav_admins = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'A%')
+        ->get();
+
+        $nav_masters = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'M%')
+        ->get();
+
+        $nav_services = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'S%')
+        ->get();
+
+        $nav_reports = Navigation::orderBy('ID', 'asc')
+        ->where('navigation_code', 'like', 'R%')
+        ->get();
+
         $permissions = Permission::where('role_code', '=', $role->role_code)->orderBy('id', 'asc')->get();
 
         $perm[] = '';
@@ -122,7 +165,10 @@ class RoleController extends Controller
 
         return view('roles.edit', array(
             'role' => $role,
-            'navigations' => $navigations,
+            'nav_admins' => $nav_admins,
+            'nav_masters' => $nav_masters,
+            'nav_services' => $nav_services,
+            'nav_reports' => $nav_reports,
             'permissions' => $perm,
         ))->with('page', 'Role');
     }
@@ -142,18 +188,22 @@ class RoleController extends Controller
             $role->role_name = $request->get('role_name');
             $role->save();
 
-            $permissions = Permission::where('role_code', '=', $role->role_code);
+            $permissions = Permission::where('role_code', '=', $role->role_code)
+            ->where('navigation_code', '<>', 'Dashboard');
             $permissions->forceDelete();
 
             $navigations = $request->get('navigation_code');
 
-            foreach ($navigations as $navigation) {
-                $permission = new Permission([
-                    'role_code' => $role->role_code,
-                    'navigation_code' => $navigation,
-                    'created_by' => $id
-                ]);
-                $permission->save();
+            $permission = '';
+            if($navigations != ''){
+                foreach ($navigations as $navigation) {
+                    $permission = new Permission([
+                        'role_code' => $role->role_code,
+                        'navigation_code' => $navigation,
+                        'created_by' => $id
+                    ]);
+                    $permission->save();
+                }
             }
 
             return redirect('/index/role')->with('status', 'Role data has been edited.')->with('page', 'Role');

@@ -50,6 +50,12 @@
 						</thead>
 						<tbody id="tableBody">
 						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th>Total</th>
+							<th></th>
+							<th id="totalQty"></th>
+							<th id="totalM3"></th>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -57,7 +63,6 @@
 	</div>
 </div>
 @endsection
-
 
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -225,13 +230,13 @@
 
 	function modalStock(destination, location){
 		if(location == 'Production'){
-			var status = [0, 'M'];
+			var status = ['0', 'M'];
 		}
 		if(location == 'InTransit'){
-			var status = 1;
+			var status = ['1'];
 		}
 		if(location == 'FSTK'){
-			var status = 2;
+			var status = ['2'];
 		}
 		var data = {
 			status:status,
@@ -248,7 +253,11 @@
 					$('.modal-title').html("");
 					$('.modal-title').html('Location <b>' + result.location+ '</b> for Destination <b>' +result.title+'</b>');
 					var tableData = '';
+					var totalQty = 0;
+					var totalM3 = 0;
 					$.each(result.table, function(key, value) {
+						totalQty += value.actual;
+						totalM3 += (((value.length*value.width*value.height)/value.lot_carton)*value.actual);
 						tableData += '<tr>';
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
@@ -258,6 +267,10 @@
 					});
 					$('#tableBody').append(tableData);
 					$('#modalStock').modal('show');
+					$('#totalQty').html('');
+					$('#totalQty').append(totalQty.toLocaleString());
+					$('#totalM3').html('');
+					$('#totalM3').append(totalM3.toFixed(2).toLocaleString());
 				}
 				else{
 					alert('Attempt to retrieve data failed');

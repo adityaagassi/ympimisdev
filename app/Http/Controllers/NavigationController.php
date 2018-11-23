@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\Navigation;
+use App\Permission;
 
 class NavigationController extends Controller
 {
@@ -21,6 +22,7 @@ class NavigationController extends Controller
     public function index()
     {
         $navigations = Navigation::orderBy('ID', 'ASC')
+        ->where('navigation_code', '<>', 'Dashboard')
         ->get();
 
         return view('navigations.index', array(
@@ -50,23 +52,28 @@ class NavigationController extends Controller
         try{
             $id = Auth::id();
             $navigation = new Navigation([
-              'navigation_code' => $request->get('navigation_code'),
-              'navigation_name' => $request->get('navigation_name'),
-              'created_by' => $id
-          ]);
-
+                'navigation_code' => $request->get('navigation_code'),
+                'navigation_name' => $request->get('navigation_name'),
+                'created_by' => $id,
+            ]);
             $navigation->save();
+
+            $permission = new Permission([
+                'role_code' => 'S',
+                'navigation_code' => $request->get('navigation_code'),
+                'created_by' => $id
+            ]);
+            $permission->save();
+
             return redirect('/index/navigation')->with('status', 'New navigation has been created.')->with('page', 'Navigation');
 
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Navigation code already exist.')->with('page', 'Navigation');
             }
         }
-        //
     }
 
     /**

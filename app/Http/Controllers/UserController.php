@@ -27,6 +27,7 @@ class UserController extends Controller
       ->get();
 
       $users = User::orderBy('name', 'ASC')
+      ->where('role_code', '<>', 'S')
       ->get();
 
       return view('users.index', array(
@@ -42,7 +43,9 @@ class UserController extends Controller
      */
     public function create()
     {
-      $roles = Role::orderBy('role_name', 'ASC')->get();
+      $roles = Role::orderBy('role_name', 'ASC')
+      ->where('role_code', '<>', 'S')
+      ->get();
       return view('users.create', array(
         'roles' => $roles,
       ))->with('page', 'User');
@@ -115,7 +118,10 @@ class UserController extends Controller
     public function edit($id)
     {
 
-      $roles = Role::orderBy('role_name', 'ASC')->get();
+      $roles = Role::orderBy('role_name', 'ASC')
+      ->where('role_code', '<>', 'S')
+      ->get();
+      
       $user = User::find($id);
       return view('users.edit', array(
         'user' => $user,

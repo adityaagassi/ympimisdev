@@ -12,17 +12,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-     DB::table('users')->insert(
-        [
-            'name' => 'Clark Kent',
-            'username' => 'superman',
-            'email' => 'superman@gmail.com',
-            'password' => bcrypt('superman'),
-            'role_code' => 'S',
-            'created_by' => '1',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]
-    );
- }
+        DB::table('users')->insert(
+            [
+                'name' => 'Clark Kent',
+                'username' => 'clark',
+                'email' => 'superman@gmail.com',
+                'password' => bcrypt('loislane'),
+                'role_code' => 'S',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+    }
 }
