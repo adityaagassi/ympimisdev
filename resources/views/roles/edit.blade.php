@@ -55,11 +55,11 @@
           @foreach($navigations as $navigation)
           <div class="col-sm-3">
             @if(in_array($navigation->navigation_code, $permissions))
-            <input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}" checked>
-            {{ $navigation->navigation_name }}
+            <label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}" checked>
+            {{ $navigation->navigation_name }}</label>
             @else
-            <input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}">
-            {{ $navigation->navigation_name }}
+            <label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}">
+            {{ $navigation->navigation_name }}</label>
             @endif
           </div>
           @endforeach

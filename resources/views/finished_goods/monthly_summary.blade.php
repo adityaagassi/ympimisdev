@@ -69,14 +69,14 @@ input {
 								</thead>
 								<tbody id="tableBody">
 								</tbody>
-								{{-- <tfoot style="background-color: RGB(252, 248, 227);">
+								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th>Total</th>
-										<th id="totalQty"></th>
+										<th>Total/Average</th>
+										<th id="totalSales"></th>
 										<th id="totalBO"></th>
 										<th id="avgPercentage"></th>
 									</tr>
-								</tfoot> --}}
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -85,6 +85,37 @@ input {
 		</div>
 	</div>
 </section>
+
+<div class="modal fade" id="modalBackOrder">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalBackOrderTitle"></h4>
+				<div class="modal-body table-responsive no-padding">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th style="font-size: 14">Material</th>
+								<th style="font-size: 14">Description</th>
+								<th style="font-size: 14">Quantity</th>
+							</tr>
+						</thead>
+						<tbody id="modalBackOrderBody">
+						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th>Total</th>
+							<th></th>
+							<th id="modalBackOrderTotal"></th>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 @endsection
 
@@ -156,21 +187,35 @@ input {
 					$('#monthlySummaryTable').DataTable().destroy();
 					$('#tableBody').html("");
 					var tableData = '';
+					var totalSales = '';
+					var totalBO = '';
+					var totalPercentage = 0;
+					var divider = 0;
 					$.each(result.tableData, function(key, value) {
+						totalSales += value.total;
+						totalBO += value.bo;
+						totalPercentage += value.percentage;
+						divider += 1;
 						tableData += '<tr>';
 						tableData += '<td>'+ value.period +'</td>';
 						tableData += '<td>'+ value.total +'</td>';
 						if( value.bo > 0 ){
 							tableData += '<td><a href="javascript:void(0)" id="'+ value.period +'" onClick="modalBackOrder(id)"> '+ value.bo +'</a></td>';
 						}
-						else
-						{
+						else{
 							tableData += '<td>'+ value.bo +'</td>';
 						}
-						tableData += '<td>'+ value.percentage +'</td>';
+						tableData += '<td>'+ value.percentage +'%</td>';
 						tableData += '</tr>';
 					});
+					$('#tableBody').html('');
 					$('#tableBody').append(tableData);
+					$('#totalSales').html('');
+					$('#totalSales').append(totalSales.toLocaleString());
+					$('#totalBO').html('');
+					$('#totalBO').append(totalBO.toLocaleString());
+					$('#avgPercentage').html('');
+					$('#avgPercentage').append((totalPercentage/divider).toFixed(2)+'%');
 					$('#monthlySummaryTable').DataTable({
 						"scrollX": true,
 						'dom': 'Bfrtip',
@@ -292,6 +337,33 @@ function modalBackOrder(period){
 		console.log(status);
 		console.log(result);
 		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#modalBackOrderTitle').html('');
+				$('#modalBackOrderTitle').html('Detail Backorder '+ period);
+				$('#modalBackOrderBody').html('');
+				var resultData = '';
+				var resultTotal = 0;
+				$.each(result.resultData, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ value.material_number +'</td>';
+					resultData += '<td>'+ value.material_description +'</td>';
+					resultData += '<td>'+ value.actual.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal += value.actual;
+				});
+				$('#modalBackOrderBody').append(resultData);
+				$('#modalBackOrderTotal').html('');
+				$('#modalBackOrderTotal').append(resultTotal.toLocaleString());
+				$('#modalBackOrder').modal('show');
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
 	});
 }
 </script>

@@ -247,7 +247,9 @@ class ContainerScheduleController extends Controller
             // self::delete($lid);
                 return back()->with('error', 'Container with preferred destination and shipment date already exist.')->with('page', 'Container Schedule');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Container Schedule');
+            }
         }
             //
     }

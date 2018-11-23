@@ -264,7 +264,7 @@ class ChoreiController extends Controller
 		left join materials on materials.material_number = final.material_number
 		where category = 'FG'
 		group by materials.hpl, materials.category
-		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
+		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'RC', 'VENOVA')";
 
 		$chartResult1 = DB::select($query);
 
@@ -289,7 +289,7 @@ class ChoreiController extends Controller
 		left join materials on materials.material_number = final.material_number
 		where materials.category = 'FG'
 		group by materials.hpl
-		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
+		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'RC', 'VENOVA')";
 
 		$chartResult2 = DB::select($query2);
 

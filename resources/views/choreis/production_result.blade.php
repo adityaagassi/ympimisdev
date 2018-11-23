@@ -4,7 +4,6 @@
 .picker {
 	text-align: center;
 }
-
 .button {
 	position: absolute;
 	top: 50%;
@@ -51,9 +50,12 @@
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Production Result <span class="text-purple">生産実績</span></a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Production Accuracy <span class="text-purple">週次出荷</span></a></li>
-					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Weekly Shipment <span class="text-purple">週次出荷</span></a></li>
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">BI Production Result<br><span class="text-purple">BI生産実績</span></a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">BI Production Accuracy<br><span class="text-purple">BI週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">BI Weekly Shipment<br><span class="text-purple">BI週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">EI Production Result<br><span class="text-purple">EI生産実績</span></a></li>
+					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">EI Production Accuracy<br><span class="text-purple">EI週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">EI Weekly Shipment<br><span class="text-purple">EI週次出荷</span></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1">
@@ -64,6 +66,15 @@
 					</div>
 					<div class="tab-pane" id="tab_3">
 						<div id="container3" style="width:100%; height:500px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_4">
+						<div id="container4" style="width:100%; height:500px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_5">
+						<div id="container5" style="width:100%; height:500px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_6">
+						<div id="container6" style="width:100%; height:500px;"></div>
 					</div>
 				</div>
 			</div>			
@@ -102,37 +113,6 @@
 	</div>
 </div>
 
-{{-- <div class="modal fade" id="modalAccuracy">
-	<div class="modal-dialog modal-sm">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="modalAccuracyTitle"></h4>
-				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th style="font-size: 14">Material</th>
-								<th style="font-size: 14">Description</th>
-								<th style="font-size: 14">Quantity</th>
-							</tr>
-						</thead>
-						<tbody id="modalAccuracyBody">
-						</tbody>
-						<tfoot>
-							<th>Total</th>
-							<th></th>
-							<th id="modalAccuracyTotal"></th>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div> --}}
-
 @endsection
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -158,13 +138,22 @@
 		$(document).keydown(function(e) {
 			switch(e.which) {
 				case 49:
-				$("#tab_header_1").trigger("click")
+				$("#tab_header_1").click()
 				break;
 				case 50:
 				$("#tab_header_2").click()
 				break;
 				case 51:
-				$("#tab_header_3").trigger("click")
+				$("#tab_header_3").click()
+				break;
+				case 52:
+				$("#tab_header_4").click()
+				break;
+				case 53:
+				$("#tab_header_5").click()
+				break;
+				case 54:
+				$("#tab_header_6").click()
 				break;
 			}
 		});
@@ -254,11 +243,21 @@
 					var xAxis = []
 					, planCount = []
 					, actualCount = []
+					, xAxisEI = []
+					, planCountEI = []
+					, actualCountEI = []
 
 					for (i = 0; i < data.length; i++) {
-						xAxis.push(data[i].hpl);
-						planCount.push(data[i].plan);
-						actualCount.push(data[i].actual);
+						if(jQuery.inArray(data[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
+							xAxis.push(data[i].hpl);
+							planCount.push(data[i].plan);
+							actualCount.push(data[i].actual);							
+						}
+						if(jQuery.inArray(data[i].hpl, ['RC', 'VENOVA', 'PN']) !== -1){
+							xAxisEI.push(data[i].hpl);
+							planCountEI.push(data[i].plan);
+							actualCountEI.push(data[i].actual);
+						}
 					}
 
 					var yAxisLabels = [0,25,50,75,110];
@@ -370,15 +369,133 @@
 						}]
 					});
 
+					Highcharts.chart('container4', {
+						colors: ['rgba(255, 0, 0, 0.25)','rgba(75, 30, 120, 0.70)'],
+						chart: {
+							type: 'column',
+							backgroundColor: null
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						title: {
+							text: '<span style="font-size: 30px;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)'
+							// style: {
+							// 	fontSize: '30px',
+							// 	fontWeight: 'bold'
+							// }
+						},
+						xAxis: {
+							categories: xAxisEI,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						yAxis: {
+							tickPositioner: function() {
+								return yAxisLabels;
+							},
+							labels: {
+								enabled:false
+							},
+							min: 0,
+							title: {
+								text: ''
+							},
+							stackLabels: {
+								format: 'Total: {total:,.0f}set(s)',
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+								}
+							}
+						},
+						tooltip: {
+							headerFormat: '<b>{point.x}</b><br/>',
+							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+						},
+						plotOptions: {
+							column: {
+								pointPadding: 0.2,
+								size: '95%',
+								borderWidth: 0,
+								events: {
+									legendItemClick: function () {
+										return false; 
+									}
+								},
+								animation:{
+									duration:0
+								}
+							},
+							series: {
+								pointPadding: 0.95,
+								groupPadding: 0.95,
+								borderWidth: 0.95,
+								shadow: false,
+								borderColor: '#303030',
+								cursor: 'pointer',
+								stacking: 'percent',
+								point: {
+									events: {
+										click: function () {
+											modalResult(this.category, this.series.name, result.now, result.first, result.last);
+										}
+									}
+								},
+								dataLabels: {
+									format: '{point.percentage:.0f}%',
+									enabled: true,
+									color: '#000000',
+									style: {
+										textOutline: false,
+										fontWeight: 'bold',
+										fontSize: '30px'
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Plan',
+							data: planCountEI
+						}, {
+							name: 'Actual',
+							data: actualCountEI
+						}]
+					});
+
 					var data2 = result.chartResult2;
 					var xAxis2 = []
 					, plusCount = []
 					, minusCount = []
+					, xAxis2EI = []
+					, plusCountEI = []
+					, minusCountEI = []
 
 					for (i = 0; i < data2.length; i++) {
-						xAxis2.push(data2[i].hpl);
-						plusCount.push(data2[i].plus);
-						minusCount.push(data2[i].minus);
+						if(jQuery.inArray(data[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
+							xAxis2.push(data2[i].hpl);
+							plusCount.push(data2[i].plus);
+							minusCount.push(data2[i].minus);
+						}
+						if(jQuery.inArray(data[i].hpl, ['VENOVA', 'RC', 'PN']) !== -1){
+							xAxis2EI.push(data2[i].hpl);
+							plusCountEI.push(data2[i].plus);
+							minusCountEI.push(data2[i].minus);
+						}
 					}
 
 					Highcharts.chart('container2', {
@@ -456,18 +573,102 @@
 						}]
 					});
 
+					Highcharts.chart('container5', {
+						colors: ['rgba(75, 30, 120, 0.60)', 'rgba(255, 0, 0, 0.60)'],
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 30px;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+						},
+						xAxis: {
+							categories: xAxis2EI,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						yAxis: {
+							title: {
+								text: 'Set(s)'
+							}
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						plotOptions: {
+							column: {
+								// minPointLength: 2,
+								pointPadding: 0,
+								size: '100%',
+								borderWidth: 1
+							},
+							series: {
+								groupPadding: 0.1,
+								borderColor: '#303030',
+								cursor: 'pointer',
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:,.0f}',
+									style:{
+										fontSize:'20px',
+										color:'black',
+										textOutline: false
+									}
+								},
+								animation:{
+									duration:0
+								},
+								point: {
+									events: {
+										click: function () {
+											modalAccuracy(this.category, this.series.name, result.now, result.first, result.last);
+										}
+									}
+								},
+							}
+						},
+						series: [{
+							name: 'Plus',
+							data: plusCountEI
+						}, {
+							name: 'Minus',
+							data: minusCountEI
+						}]
+					});
+
 					var data3 = result.chartResult3;
 					var xAxis3 = []
 					, planBLCount = []
 					, actualBLCount = []
+					, xAxis3EI = []
+					, planBLCountEI = []
+					, actualBLCountEI = []
 
 					for (i = 0; i < data3.length; i++) {
-						xAxis3.push(data3[i].hpl);
-						planBLCount.push(data3[i].plan);
-						actualBLCount.push(data3[i].actual);
+						if(jQuery.inArray(data[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
+							xAxis3.push(data3[i].hpl);
+							planBLCount.push(data3[i].plan);
+							actualBLCount.push(data3[i].actual);
+						}
+						if(jQuery.inArray(data[i].hpl, ['VENOVA', 'RC', 'PN']) !== -1){
+							xAxis3EI.push(data3[i].hpl);
+							planBLCountEI.push(data3[i].plan);
+							actualBLCountEI.push(data3[i].actual);
+						}
 					}
 
-					var yAxisLabels = [0,25,50,75,110];
 					Highcharts.chart('container3', {
 						colors: ['rgba(255, 0, 0, 0.15)','rgba(255, 69, 0, 0.70)'],
 						chart: {
@@ -573,6 +774,114 @@
 						}, {
 							name: 'Actual',
 							data: actualBLCount
+						}]
+					});
+
+					Highcharts.chart('container6', {
+						colors: ['rgba(255, 0, 0, 0.15)','rgba(255, 69, 0, 0.70)'],
+						chart: {
+							type: 'column',
+							backgroundColor: null
+						},
+						legend: {
+							enabled:true,
+							itemStyle: {
+								fontSize:'20px',
+								font: '20pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						title: {
+							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>'
+							// style: {
+							// 	fontSize: '30px',
+							// 	fontWeight: 'bold'
+							// }
+						},
+						xAxis: {
+							categories: xAxis3EI,
+							labels: {
+								style: {
+									color: 'rgba(75, 30, 120)',
+									fontSize: '20px',
+									fontWeight: 'bold'
+								}
+							}
+						},
+						yAxis: {
+							tickPositioner: function() {
+								return yAxisLabels;
+							},
+							labels: {
+								enabled:false
+							},
+							min: 0,
+							title: {
+								text: ''
+							},
+							stackLabels: {
+								format: 'Total: {total:,.0f}set(s)',
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+								}
+							}
+						},
+						tooltip: {
+							headerFormat: '<b>{point.x}</b><br/>',
+							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+						},
+						plotOptions: {
+							column: {
+								pointPadding: 0.2,
+								size: '95%',
+								borderWidth: 0,
+								events: {
+									legendItemClick: function () {
+										return false; 
+									}
+								}
+							},
+							series: {
+								animation:{
+									duration:0
+								},
+								pointPadding: 0.95,
+								groupPadding: 0.95,
+								borderWidth: 0.95,
+								shadow: false,
+								borderColor: '#303030',
+								cursor: 'pointer',
+								stacking: 'percent',
+								point: {
+									events: {
+										click: function () {
+											modalBL(this.category , this.series.name, result.weekTitle);
+										}
+									}
+								},
+								dataLabels: {
+									format: '{point.percentage:.0f}%',
+									enabled: true,
+									color: '#000000',
+									style: {
+										textOutline: false,
+										fontWeight: 'bold',
+										fontSize: '30px'
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Plan',
+							data: planBLCountEI
+						}, {
+							name: 'Actual',
+							data: actualBLCountEI
 						}]
 					});
 				}
