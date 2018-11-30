@@ -353,7 +353,6 @@
 							data: seriesData
 						}]
 					});
-
 				}
 				else{
 					alert('Attempt to retrieve data failed');
