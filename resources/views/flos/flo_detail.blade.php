@@ -35,7 +35,7 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>From</label>
+								<label>Prod. Date From</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
@@ -46,7 +46,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>To</label>
+								<label>Prod. Date To</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
@@ -74,14 +74,14 @@
 									@endforeach
 								</select>
 							</div>
-							<div class="form-group">
+							{{-- <div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Serial Number" name="serial_number" id="serial_number" style="width: 100%;">
 									<option></option>
 									@foreach($serial_numbers as $serial_number)
 									<option value="{{ $serial_number->serial_number }}">{{ $serial_number->serial_number }}</option>
 									@endforeach
 								</select>
-							</div>
+							</div> --}}
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select FLO Number" name="flo_number" id="flo_number" style="width: 100%;">
 									<option></option>
@@ -226,14 +226,24 @@
 		}
 		$('#flo_detail_table').DataTable({
 			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
 			'buttons': {
-				dom: {
-					button: {
-						tag:'button',
-						className:''
-					}
-				},
+				// dom: {
+				// 	button: {
+				// 		tag:'button',
+				// 		className:''
+				// 	}
+				// },
 				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+					// text: '<i class="fa fa-print"></i> Show',
+				},
 				{
 					extend: 'copy',
 					className: 'btn btn-success',

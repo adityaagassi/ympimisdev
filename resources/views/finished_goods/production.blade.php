@@ -169,16 +169,26 @@
 			id:id,
 		}
 		$('#productionTable').DataTable({
-			"scrollX": true,
+			'scrollX': true,
+			'responsive':true,
 			'dom': 'Bfrtip',
+			'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
 			'buttons': {
-				dom: {
-					button: {
-						tag:'button',
-						className:''
-					}
-				},
+				// dom: {
+				// 	button: {
+				// 		tag:'button',
+				// 		className:''
+				// 	}
+				// },
 				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+					// text: '<i class="fa fa-print"></i> Show',
+				},
 				{
 					extend: 'copy',
 					className: 'btn btn-success',

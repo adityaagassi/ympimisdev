@@ -133,13 +133,13 @@
       };
     })();
 
-    // $("#flo_number_settlement").on("input", function() {
-    //  delay(function(){
-    //    if ($("#flo_number_settlement").val().length < 10) {
-    //      $("#flo_number_settlement").val("");
-    //    }
-    //  }, 20 );
-    // });
+    $("#flo_number_settlement").on("input", function() {
+     delay(function(){
+       if ($("#flo_number_settlement").val().length < 10) {
+         $("#flo_number_settlement").val("");
+       }
+     }, 20 );
+    });
 
     $('#flo_number_settlement').keydown(function(event) {
       if (event.keyCode == 13 || event.keyCode == 9) {

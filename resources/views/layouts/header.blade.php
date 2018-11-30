@@ -2,7 +2,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <a href="{{ url("/home") }}" class="logo">
       <span class="logo-mini"><b>M</b>IS</span>
-      <span class="logo-lg"><b>YMPI </b>System</span>
+      <span class="logo-lg"><b>YMPI </b>情報システム</span>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -32,7 +32,7 @@
               <li class="user-footer">
                 <div class="row">
                   <div class="col-xs-4 pull-left">
-                    <a class="btn btn-info btn-flat" href="">Setting</a>
+                    <a class="btn btn-info btn-flat" href="{{ url("setting/user") }}">Setting</a>
                   </div>
                   <div class="col-xs-4 pull-right">
                     <a class="btn btn-danger btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

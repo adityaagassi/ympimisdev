@@ -131,13 +131,13 @@ td:hover {
 			};
 		})();
 
-		// $("#material_number").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material_number").val().length < 7) {
-		// 			$("#material_number").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material_number").on("input", function() {
+			delay(function(){
+				if ($("#material_number").val().length < 7) {
+					$("#material_number").val("");
+				}
+			}, 20 );
+		});
 
 		$('#material').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {

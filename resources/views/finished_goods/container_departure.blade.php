@@ -415,8 +415,13 @@ function downloadAtt(id){
 		console.log(result);
 		console.log(xhr);
 		if(xhr.status == 200){
-			// $('#modalFooter').html("<a href='" + result.file_path + "'>Download</a>");
-			document.location.href = (result.file_path);
+			var file_path = result.file_path;
+			var a = document.createElement('A');
+			a.href = file_path;
+			a.download = file_path.substr(file_path.lastIndexOf('/') + 1);
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
 		}
 		else{
 			alert('Disconnected from server');

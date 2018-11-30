@@ -166,7 +166,7 @@
 
       @if(in_array('S6', $navs))
       @if(isset($page) && $page == "FLO Lading")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Lading</span></a>
+        <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> On Board</span></a>
       </li>
       @endif
 
@@ -183,6 +183,25 @@
       @if(in_array('R2', $navs))
       @if(isset($page) && $page == "Location Stock")<li class="active">@else<li>@endif
         <a href="{{ url("/index/inventory") }}"><i class="fa fa-cubes"></i> <span>Location Stock</span></a>
+      </li>
+      @endif
+
+      @if(in_array('R6', $navs))
+      @if(isset($head) && $head == "Transaction")<li class="treeview active">@else<li class="treeview">@endif
+        <a href="#">
+          <i class="fa fa-tv"></i> <span>Transaction</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i> Completion</a>
+          </li>
+          @if(isset($page) && $page == "Transfer Transaction")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i> Transfer</a>
+          </li>
+        </ul>
       </li>
       @endif
 
@@ -220,7 +239,9 @@
       </li>
       @endif
 
-      @if(in_array('R4', $navs))
+
+
+{{--       @if(in_array('R4', $navs))
       @if(isset($head) && $head == "Chorei")<li class="treeview active">@else<li class="treeview">@endif
         <a href="#">
           <i class="fa fa-tv"></i> <span>Chorei</span>
@@ -234,7 +255,7 @@
           </li>
         </ul>
       </li>
-      @endif
+      @endif --}}
 
       @if(in_array('R5', $navs))
       @if(isset($head) && $head == "Display")<li class="treeview active">@else<li class="treeview">@endif
@@ -246,11 +267,20 @@
         </a>
         <ul class="treeview-menu">
           @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
+            <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Production Result</a>
+          </li>
+          @if(isset($page) && $page == "Display Shipment Result")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/dp_shipment_result") }}"><i class="fa fa-line-chart"></i> Shipment Result</a>
           </li>
         </ul>
       </li>
-      @endif                                                      
+      @endif   
+
+      @if(in_array('R4', $navs))
+      @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
+      </li>
+      @endif                                                   
 
         {{-- <li class="header">Trial Menu</li>
         <li>

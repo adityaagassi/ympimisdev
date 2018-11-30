@@ -154,273 +154,273 @@ td:hover {
 			};
 		})();
 
-		// $("#material_number").on("input", function() {
-			// 	delay(function(){
-				// 		if ($("#material_number").val().length < 7) {
-					// 			$("#material_number").val("");
-					// 		}
-					// 	}, 20 );
-					// });
+		$("#material_number").on("input", function() {
+			delay(function(){
+				if ($("#material_number").val().length < 7) {
+					$("#material_number").val("");
+				}
+			}, 20 );
+		});
 
-					// $("#serial_number").on("input", function() {
-						// 	delay(function(){
-							// 		if ($("#serial_number").val().length < 8) {
-								// 			$("#serial_number").val("");
-								// 		}
-								// 	}, 20 );
-								// });
+		$("#serial_number").on("input", function() {
+			delay(function(){
+				if ($("#serial_number").val().length < 8) {
+					$("#serial_number").val("");
+				}
+			}, 20 );
+		});
 
-								// $("#material_number2").on("input", function() {
-									// 	delay(function(){
-										// 		if ($("#material_number2").val().length < 7) {
-											// 			$("#material_number2").val("");
-											// 		}
-											// 	}, 20 );
-											// });
+		$("#material_number2").on("input", function() {
+			delay(function(){
+				if ($("#material_number2").val().length < 7) {
+					$("#material_number2").val("");
+				}
+			}, 20 );
+		});
 
-											// $("#serial_number2").on("input", function() {
-												// 	delay(function(){
-													// 		if ($("#serial_number2").val().length < 8) {
-														// 			$("#serial_number2").val("");
-														// 		}
-														// 	}, 20 );
-														// });
+		$("#serial_number2").on("input", function() {
+			delay(function(){
+				if ($("#serial_number2").val().length < 8) {
+					$("#serial_number2").val("");
+				}
+			}, 20 );
+		});
 
-														$('#material').keydown(function(event) {
-															if (event.keyCode == 13 || event.keyCode == 9) {
-																if($("#material").val().length == 7){
-																	scanMaterialNumber();
-																	return false;
-																}
-																else{
-																	openErrorGritter('Error!', 'Material number invalid.');
-																	audio_error.play();
-																	$("#material").val("");
-																}
-															}
-														});
+		$('#material').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#material").val().length == 7){
+					scanMaterialNumber();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Material number invalid.');
+					audio_error.play();
+					$("#material").val("");
+				}
+			}
+		});
 
-														$('#serial').keydown(function(event) {
-															if (event.keyCode == 13 || event.keyCode == 9) {
-																if($("#serial").val().length == 8){
-																	scanSerialNumber();
-																	return false;
-																}
-																else{
-																	openErrorGritter('Error!', 'Serial number invalid.');
-																	audio_error.play();
-																	$("#material").val("");
-																	$("#serial").val("");
-																	$("#serial").prop("disabled", true);
-																	$("#material").prop("disabled", false);
-																	$("#material").focus();
-																}
-															}
-														});
+		$('#serial').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#serial").val().length == 8){
+					scanSerialNumber();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Serial number invalid.');
+					audio_error.play();
+					$("#material").val("");
+					$("#serial").val("");
+					$("#serial").prop("disabled", true);
+					$("#material").prop("disabled", false);
+					$("#material").focus();
+				}
+			}
+		});
 
-														$('#material2').keydown(function(event) {
-															if (event.keyCode == 13 || event.keyCode == 9) {
-																if($("#material2").val().length == 7 && $("#material").val() == $("#material2").val()){
-																	openSuccessGritter('Success!', 'Outer box material number valid.');
-																	$('#material2').prop('disabled', true);
-																	$('#serial2').prop('disabled', false);
-																	$('#serial2').focus();
-																	return false;
-																}
-																else{
-																	openErrorGritter('Error!', 'Outer box material number invalid.');
-																	audio_error.play();
-																	$("#material2").val("");
-																}
-															}
-														});
+		$('#material2').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#material2").val().length == 7 && $("#material").val() == $("#material2").val()){
+					openSuccessGritter('Success!', 'Outer box material number valid.');
+					$('#material2').prop('disabled', true);
+					$('#serial2').prop('disabled', false);
+					$('#serial2').focus();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Outer box material number invalid.');
+					audio_error.play();
+					$("#material2").val("");
+				}
+			}
+		});
 
-														$('#serial2').keydown(function(event) {
-															if (event.keyCode == 13 || event.keyCode == 9) {
-																if($("#serial2").val().length == 8 && $("#serial2").val() == $("#serial").val()){
-																	openSuccessGritter('Success!', 'Outer box serial number valid.');
-																	$("#material").prop('disabled', false);
-																	$("#serial2").prop('disabled', true);
-																	$("#serial").val("");
-																	$("#material").val("");
-																	$("#serial2").val("");
-																	$("#material2").val("");
-																	$("#material").focus();
-																	return false;
-																}
-																else{
-																	openErrorGritter('Error!', 'Outer box serial number invalid.');
-																	audio_error.play();
-																	$("#serial2").val("");
-																}
-															}
-														});
-													});
+		$('#serial2').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#serial2").val().length == 8 && $("#serial2").val() == $("#serial").val()){
+					openSuccessGritter('Success!', 'Outer box serial number valid.');
+					$("#material").prop('disabled', false);
+					$("#serial2").prop('disabled', true);
+					$("#serial").val("");
+					$("#material").val("");
+					$("#serial2").val("");
+					$("#material2").val("");
+					$("#material").focus();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Outer box serial number invalid.');
+					audio_error.play();
+					$("#serial2").val("");
+				}
+			}
+		});
+	});
 
-var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-function scanMaterialNumber(){
-	$("#material").prop('disabled',true);
-	var material_number = $("#material").val();
-	var ymj = $("#ymj").is(":checked");
-	var data = {
-		material_number : material_number,
-		ymj : ymj
+	function scanMaterialNumber(){
+		$("#material").prop('disabled',true);
+		var material_number = $("#material").val();
+		var ymj = $("#ymj").is(":checked");
+		var data = {
+			material_number : material_number,
+			ymj : ymj
+		}
+		$.get('{{ url("scan/after_maedaoshi_material") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					openInfoGritter('Info Success!', result.message);
+					$("#serial").prop('disabled', false);
+					if(result.status_code == 'open'){
+						if($("#flo_number").val() != result.flo_number){
+							$("#flo_number").val(result.flo_number);
+							$('#flo_detail_table').DataTable().destroy();
+							fillFloTable(result.flo_number);
+						}
+						else{
+							$("#flo_number").val(result.flo_number);
+						}
+					}
+					else{
+						$('#flo_detail_table').DataTable().destroy();
+						fillFloTable(result.flo_number);
+						$('#flo_number').val("");
+
+					}
+					$("#serial").focus();
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					$("#material").prop('disabled', false);
+					$("#material").val("");
+				}
+			}
+			else{
+				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
+				$("#material_number").prop('disabled', false);
+				$("#material_number").val("");
+			}
+		});
 	}
-	$.get('{{ url("scan/after_maedaoshi_material") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
-		if(xhr.status == 200){
-			if(result.status){
-				openInfoGritter('Info Success!', result.message);
-				$("#serial").prop('disabled', false);
-				if(result.status_code == 'open'){
-					if($("#flo_number").val() != result.flo_number){
+
+	function scanSerialNumber(){
+		$("#serial_number").prop("disabled", true);
+		var material_number = $("#material").val();
+		var serial_number = $("#serial").val();
+		var flo_number = $("#flo_number").val();
+		var ymj = $("#ymj").is(":checked");
+		var data = {
+			material_number : material_number,
+			serial_number : serial_number,
+			flo_number : flo_number,
+			ymj : ymj,
+			type: 'bi',
+		}
+		$.get('{{ url("scan/after_maedaoshi_serial") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					if(result.status_code == 'new'){
 						$("#flo_number").val(result.flo_number);
 						$('#flo_detail_table').DataTable().destroy();
 						fillFloTable(result.flo_number);
 					}
 					else{
-						$("#flo_number").val(result.flo_number);
+						$('#flo_detail_table').DataTable().ajax.reload();
 					}
+					doublecheck();
 				}
 				else{
-					$('#flo_detail_table').DataTable().destroy();
-					fillFloTable(result.flo_number);
-					$('#flo_number').val("");
-
+					openErrorGritter('Error!', result.message);
+					$("#material").val("");
+					$("#serial").val("");
+					$("#material").prop("disabled", false);
+					$("#serial").prop("disabled", true);
+					$("#material").focus();
+					audio_error.play();
 				}
-				$("#serial").focus();
 			}
 			else{
-				openErrorGritter('Error!', result.message);
+				openErrorGritter('Error!', 'Disconnected from server');
 				audio_error.play();
-				$("#material").prop('disabled', false);
-				$("#material").val("");
-			}
-		}
-		else{
-			openErrorGritter('Error!', 'Disconnected from server');
-			audio_error.play();
-			$("#material_number").prop('disabled', false);
-			$("#material_number").val("");
-		}
-	});
-}
-
-function scanSerialNumber(){
-	$("#serial_number").prop("disabled", true);
-	var material_number = $("#material").val();
-	var serial_number = $("#serial").val();
-	var flo_number = $("#flo_number").val();
-	var ymj = $("#ymj").is(":checked");
-	var data = {
-		material_number : material_number,
-		serial_number : serial_number,
-		flo_number : flo_number,
-		ymj : ymj,
-		type: 'bi',
-	}
-	$.get('{{ url("scan/after_maedaoshi_serial") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
-		if(xhr.status == 200){
-			if(result.status){
-				openSuccessGritter('Success!', result.message);
-				if(result.status_code == 'new'){
-					$("#flo_number").val(result.flo_number);
-					$('#flo_detail_table').DataTable().destroy();
-					fillFloTable(result.flo_number);
-				}
-				else{
-					$('#flo_detail_table').DataTable().ajax.reload();
-				}
-				doublecheck();
-			}
-			else{
-				openErrorGritter('Error!', result.message);
 				$("#material").val("");
 				$("#serial").val("");
 				$("#material").prop("disabled", false);
 				$("#serial").prop("disabled", true);
 				$("#material").focus();
-				audio_error.play();
 			}
-		}
-		else{
-			openErrorGritter('Error!', 'Disconnected from server');
-			audio_error.play();
-			$("#material").val("");
-			$("#serial").val("");
-			$("#material").prop("disabled", false);
-			$("#serial").prop("disabled", true);
-			$("#material").focus();
-		}
-	});
-}
-
-function openErrorGritter(title, message) {
-	jQuery.gritter.add({
-		title: title,
-		text: message,
-		class_name: 'growl-danger',
-		image: '{{ url("images/image-stop.png") }}',
-		sticky: false,
-		time: '2000'
-	});
-}
-
-function openSuccessGritter(title, message){
-	jQuery.gritter.add({
-		title: title,
-		text: message,
-		class_name: 'growl-success',
-		image: '{{ url("images/image-screen.png") }}',
-		sticky: false,
-		time: '2000'
-	});
-}
-
-function openInfoGritter(title, message){
-	jQuery.gritter.add({
-		title: title,
-		text: message,
-		class_name: 'growl-info',
-		image: '{{ url("images/image-unregistered.png") }}',
-		sticky: false,
-		time: '2000'
-	});
-}
-
-function fillFloTable(flo_number){
-	var index_flo_number = flo_number;
-	var data_flo = {
-		flo_number : index_flo_number
+		});
 	}
-	var t = $('#flo_detail_table').DataTable( {
-		"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-		'paging'      	: false,
-		'lengthChange'	: false,
-		'searching'   	: false,
-		'ordering'    	: false,
-		'info'       	: true,
-		'autoWidth'		: false,
-		"sPaginationType": "full_numbers",
-		"bJQueryUI": true,
-		"bAutoWidth": false,
-		"infoCallback": function( settings, start, end, max, total, pre ) {
-			return "<b>Total "+ total +" pc(s)</b>";
-		},
-		"processing": true,
-		"serverSide": true,
-		"ajax": {
-			"type" : "post",
-			"url" : "{{ url("index/flo_detail") }}",
-			"data": data_flo
-		},
-		"columns": [
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function openInfoGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-info',
+			image: '{{ url("images/image-unregistered.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function fillFloTable(flo_number){
+		var index_flo_number = flo_number;
+		var data_flo = {
+			flo_number : index_flo_number
+		}
+		var t = $('#flo_detail_table').DataTable( {
+			"sDom": '<"top"i>rt<"bottom"flp><"clear">',
+			'paging'      	: false,
+			'lengthChange'	: false,
+			'searching'   	: false,
+			'ordering'    	: false,
+			'info'       	: true,
+			'autoWidth'		: false,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"infoCallback": function( settings, start, end, max, total, pre ) {
+				return "<b>Total "+ total +" pc(s)</b>";
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "post",
+				"url" : "{{ url("index/flo_detail") }}",
+				"data": data_flo
+			},
+			"columns": [
 		// { "data": "id", 
 		// render: function() {
 			// 	var rows = t.rows().count();

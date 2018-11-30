@@ -12,17 +12,17 @@ class DisplayController extends Controller
 {
 	public function index_dp_production_result(){
 		$origin_groups = OriginGroup::orderBy('origin_group_name', 'asc')->get();
-		return view('displays.daily_production_result', array(
+		return view('displays.production_result', array(
 			'origin_groups' => $origin_groups,
 		))->with('page', 'Display Production Result')->with('head', 'Display');
 	}
 
 	public function fetch_dp_production_result(Request $request){
 		if($request->get('hpl') == 'all'){
-			$hpl = "";
+			$hpl = "where materials.category = 'FG'";
 		}
 		else{
-			$hpl = "where materials.origin_group_code = '". $request->get('hpl') ."'";
+			$hpl = "where materials.category = 'FG' and materials.origin_group_code = '". $request->get('hpl') ."'";
 		}
 
 		$first = date('Y-m-01');
@@ -63,7 +63,8 @@ class DisplayController extends Controller
 		) as result
 		left join materials on materials.material_number = result.material_number
 		". $hpl ."
-		group by result.material_number, materials.material_description";
+		group by result.material_number, materials.material_description
+		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0";
 
 		$tableData = DB::select($query);
 
@@ -83,7 +84,8 @@ class DisplayController extends Controller
 		) as result
 		left join materials on materials.material_number = result.material_number
 		". $hpl ."
-		group by result.material_number, materials.material_description";
+		group by result.material_number, materials.material_description
+		having sum(result.plan) <> 0 or sum(result.actual) <> 0";
 
 		$chartData = DB::select($query2);
 

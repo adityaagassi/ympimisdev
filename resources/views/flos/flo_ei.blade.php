@@ -246,21 +246,21 @@ input[type=number] {
 			};
 		})();
 
-		// $("#material_number").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material_number").val().length < 7) {
-		// 			$("#material_number").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material_number").on("input", function() {
+			delay(function(){
+				if ($("#material_number").val().length < 7) {
+					$("#material_number").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#flo_number_settlement").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#flo_number_settlement").val().length < 7) {
-		// 			$("#flo_number_settlement").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#flo_number_settlement").on("input", function() {
+			delay(function(){
+				if ($("#flo_number_settlement").val().length < 7) {
+					$("#flo_number_settlement").val("");
+				}
+			}, 20 );
+		});
 
 		$('#material_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {

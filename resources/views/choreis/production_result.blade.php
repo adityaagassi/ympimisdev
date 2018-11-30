@@ -131,7 +131,7 @@
 		fillChart();
 		// setInterval(function(){
 		// 	fillChart();
-		// }, 10000);
+		// }, 1000);
 	});
 
 	$(function() {
@@ -321,6 +321,7 @@
 						},
 						plotOptions: {
 							column: {
+								minPointLength: 1,
 								pointPadding: 0.2,
 								size: '95%',
 								borderWidth: 0,
@@ -429,6 +430,7 @@
 						},
 						plotOptions: {
 							column: {
+								minPointLength: 1,
 								pointPadding: 0.2,
 								size: '95%',
 								borderWidth: 0,
@@ -729,6 +731,7 @@
 						},
 						plotOptions: {
 							column: {
+								minPointLength: 1,
 								pointPadding: 0.2,
 								size: '95%',
 								borderWidth: 0,
@@ -837,6 +840,7 @@
 						},
 						plotOptions: {
 							column: {
+								minPointLength: 1,
 								pointPadding: 0.2,
 								size: '95%',
 								borderWidth: 0,

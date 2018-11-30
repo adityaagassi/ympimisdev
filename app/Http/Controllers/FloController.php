@@ -97,14 +97,14 @@ class FloController extends Controller
         $origin_groups = DB::table('origin_groups')->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->get();
         $flos = DB::table('flos')->whereIn('flos.status', ['0', '1', 'M'])->select('flos.flo_number')->distinct()->get();
         $statuses = DB::table('statuses')->select('statuses.status_code', 'statuses.status_name')->get();
-        $serial_numbers = DB::table('flo_details')->select('flo_details.serial_number')->distinct()->get();
+        // $serial_numbers = DB::table('flo_details')->select('flo_details.serial_number')->distinct()->get();
 
         return view('flos.flo_detail', array(
             'materials' => $materials,
             'origin_groups' => $origin_groups,
             'flos' => $flos,
             'statuses' => $statuses,
-            'serial_numbers' => $serial_numbers,
+            // 'serial_numbers' => $serial_numbers,
         ))->with('page', 'FLO Detail');
     }
 
@@ -881,32 +881,32 @@ class FloController extends Controller
     {
         $flo_detail = FloDetail::find($request->get('id'));
         if($flo_detail->completion == null){
-           $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-           $actual = DB::table('flo_details')
-           ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-           ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-           ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-           ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-           ->where('flo_details.id', '=', $request->get('id'))
-           ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
-           ->first();
+         $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+         $actual = DB::table('flo_details')
+         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+         ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+         ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
+         ->where('flo_details.id', '=', $request->get('id'))
+         ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
+         ->first();
 
-           $flo->actual = $flo->actual-$actual->lot_completion;
-           $flo->save();
+         $flo->actual = $flo->actual-$actual->lot_completion;
+         $flo->save();
 
-           $flo_detail->forceDelete();
+         $flo_detail->forceDelete();
 
-           $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
-           $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
-           $inventory->save();
+         $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
+         $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
+         $inventory->save();
 
-           $response = array(
+         $response = array(
             'status' => true,
             'message' => "Data has been deleted.",
         );
-           return Response::json($response);
-       }
-       else{
+         return Response::json($response);
+     }
+     else{
         $response = array(
             'status' => false,
             'message' => "Data cannot be deleted, because data has been uploaded to SAP.",

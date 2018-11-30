@@ -248,45 +248,45 @@ td:hover {
 			};
 		})();
 
-		// $("#material_number").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material_number").val().length < 7) {
-		// 			$("#material_number").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material_number").on("input", function() {
+			delay(function(){
+				if ($("#material_number").val().length < 7) {
+					$("#material_number").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#serial_number").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#serial_number").val().length < 8) {
-		// 			$("#serial_number").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#serial_number").on("input", function() {
+			delay(function(){
+				if ($("#serial_number").val().length < 8) {
+					$("#serial_number").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#material_number2").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material_number2").val().length < 7) {
-		// 			$("#material_number2").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material_number2").on("input", function() {
+			delay(function(){
+				if ($("#material_number2").val().length < 7) {
+					$("#material_number2").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#serial_number2").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#serial_number2").val().length < 8) {
-		// 			$("#serial_number2").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#serial_number2").on("input", function() {
+			delay(function(){
+				if ($("#serial_number2").val().length < 8) {
+					$("#serial_number2").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#flo_number_settlement").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#flo_number_settlement").val().length < 10) {
-		// 			$("#flo_number_settlement").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#flo_number_settlement").on("input", function() {
+			delay(function(){
+				if ($("#flo_number_settlement").val().length < 10) {
+					$("#flo_number_settlement").val("");
+				}
+			}, 20 );
+		});
 
 		$('#material_number').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {

@@ -281,14 +281,23 @@ input {
 					$('#traceabilityTable').DataTable({
 						'dom': 'Bfrtip',
 						"scrollX": true,
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
 						'buttons': {
-							dom: {
-								button: {
-									tag:'button',
-									className:''
-								}
-							},
+							// dom: {
+							// 	button: {
+							// 		tag:'button',
+							// 		className:''
+							// 	}
+							// },
 							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
 							{
 								extend: 'copy',
 								className: 'btn btn-success',

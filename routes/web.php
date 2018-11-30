@@ -30,6 +30,16 @@ Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('fetch/dp_production_result', 'DisplayController@fetch_dp_production_result');
 });
 
+Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
+	Route::get('index/tr_completion', 'InventoryController@indexCompletion');
+	Route::get('fetch/tr_completion', 'InventoryController@fetchCompletion');
+	Route::get('download/tr_completion', 'InventoryController@downloadCompletion');
+
+	Route::get('index/tr_transfer', 'InventoryController@indexTransfer');
+	Route::get('fetch/tr_transfer', 'InventoryController@fetchTransfer');
+	Route::get('download/tr_transfer', 'InventoryController@downloadTransfer');
+});
+
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
 	Route::get('fetch/fg_production', 'FinishedGoodsController@fetch_fg_production');
@@ -86,6 +96,10 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 	Route::post('edit/user/{id}', 'UserController@update');
 	Route::get('show/user/{id}', 'UserController@show');
 });
+	Route::get('setting/user', 'UserController@index_setting');
+	Route::post('setting/user', 'UserController@setting');
+	Route::get('register', 'UserController@indexRegister');
+	Route::post('register', 'UserController@register');
 
 Route::group(['nav' => 'A3', 'middleware' => 'permission'], function(){
 	Route::get('index/navigation', 'NavigationController@index');

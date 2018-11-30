@@ -156,21 +156,21 @@ td:hover {
 			};
 		})();
 
-		// $("#material").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#material").val().length < 7) {
-		// 			$("#material").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#material").on("input", function() {
+			delay(function(){
+				if ($("#material").val().length < 7) {
+					$("#material").val("");
+				}
+			}, 20 );
+		});
 
-		// $("#serial").on("input", function() {
-		// 	delay(function(){
-		// 		if ($("#serial").val().length < 8) {
-		// 			$("#serial").val("");
-		// 		}
-		// 	}, 20 );
-		// });
+		$("#serial").on("input", function() {
+			delay(function(){
+				if ($("#serial").val().length < 8) {
+					$("#serial").val("");
+				}
+			}, 20 );
+		});
 
 		$('#material').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {

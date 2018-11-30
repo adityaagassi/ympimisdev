@@ -168,7 +168,7 @@
 								}
 							},
 							yAxis: {
-								min: 0,
+								min: 1,
 								title: {
 									text: 'Total Finished Goods'
 								},
@@ -178,7 +178,8 @@
 										fontWeight: 'bold',
 										color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
 									}
-								}
+								},
+								type: 'logarithmic'
 							},
 							credits: {
 								enabled: false
@@ -196,6 +197,9 @@
 											}
 										}
 									}
+								},
+								column: {
+									minPointLength: 4
 								}
 							},
 							tooltip: {

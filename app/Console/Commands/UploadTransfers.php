@@ -49,9 +49,10 @@ class UploadTransfers extends Command
         $flofilepath = public_path() . "/uploads/sap/transfers/" . $flofilename;
         $flofiledestination = "ma/ympigm/" . $flofilename;
 
-        $flo_details = FloDetail::leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+        $flo_details = DB::table('flo_details')
+        ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
-        ->where('flo_logs.status', '=', 2)
+        ->where('flo_logs.status_code', '=', 2)
         ->where('flos.status' , '>', 1)
         ->whereNull('flo_details.transfer')
         ->where('flo_details.created_at', '<=', $date);
@@ -60,7 +61,7 @@ class UploadTransfers extends Command
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
-        ->where('flo_logs.status', '=', 2)
+        ->where('flo_logs.status_code', '=', 2)
         ->where('flos.status', '>', 1)
         ->whereNull('flo_details.transfer')
         ->where('flo_details.created_at', '<=', $date)
@@ -99,7 +100,7 @@ class UploadTransfers extends Command
             $success = self::uploadFTP($flofilepath, $flofiledestination);
 
             if($success){
-                $flo_details->update(['transfer' => $flofilename]);
+                $flo_details->update(['flo_details.transfer' => $flofilename]);
             }
             else{
                 echo 'false';

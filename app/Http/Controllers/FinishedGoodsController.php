@@ -137,7 +137,7 @@ class FinishedGoodsController extends Controller
 			$prodTo = date('Y-m-d', strtotime($request->get('prodTo')));
 			$flo_details = $flo_details->where(DB::raw('DATE_FORMAT(flo_details.created_at, "%Y-%m-%d")'), '<=', $prodTo);
 		}
-		if(strlen($request->get('materialNumber')) > 0){
+		if($request->get('materialNumber') != null){
 			$flo_details = $flo_details->whereIn('flo_details.material_number', $request->get('materialNumber'));
 		}
 		if(strlen($request->get('serialNumber')) > 0){
@@ -163,13 +163,13 @@ class FinishedGoodsController extends Controller
 
 		$flo_details = $flo_details->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number');
 
-		if(strlen($request->get('originGroup')) > 0){
+		if($request->get('originGroup') != null){
 			$flo_details = $flo_details->whereIn('materials.origin_group_code', $request->get('originGroup'));
 		}
 
 		$flo_details = $flo_details->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id');
 
-		if(strlen($request->get('destination')) > 0){
+		if($request->get('destination') != null){
 			$flo_details = $flo_details->whereIn('shipment_schedules.destination_code', $request->get('destination'));
 		}
 		if(strlen($request->get('shipFrom')) > 0){
@@ -511,11 +511,12 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function download_att_container_departure(Request $request){
-		$container_attachments = DB::table('container_attachments')->get();
+		$container_attachments = DB::table('container_attachments')->where('container_id', '=', $request->get('container_id'))->get();
 
 		$zip = new ZipArchive();
 		$zip_name = $request->get('container_id').".zip";
 		$zip_path = public_path() . '/' . $zip_name;
+		File::delete($zip_path);
 		$zip->open($zip_name, ZipArchive::CREATE);
 
 		foreach ($container_attachments as $container_attachment) {
@@ -525,7 +526,6 @@ class FinishedGoodsController extends Controller
 		}
 		$zip->close();
 
-		// File::put($zip_path, $zip);
 		$path = asset($zip_name);
 
 		$response = array(

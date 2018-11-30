@@ -35,7 +35,6 @@ class UserController extends Controller
         'created_by' => $created_by
       ))->with('page', 'User');
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -109,6 +108,56 @@ class UserController extends Controller
         //
     }
 
+    public function index_setting(){
+      $user = User::find(Auth::id());
+
+      return view('auth.setting', array(
+        'user' => $user,
+      ))->with('page', 'Setting');
+    }
+
+    public function setting(Request $request){
+      $oldPassword = Auth::user()->password;
+      try{
+        $user = User::find(Auth::id());
+        if(strlen($request->get('oldPassword'))>0 && strlen($request->get('newPassword')>0) && strlen($request->get('confirmPassword')>0)){
+          if($oldPassword == bcrypt($request->get('oldPassword'))){
+            if($request->get('newPassword') == $request->get('confirmPassword')){
+              $user->name = $request->get('name');
+              $user->email = $request->get('email');
+              $user->password = bcrypt($request->get('newPassword'));
+              $user->role_code = $request->get('role_code');
+              $user->save();
+              return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+            }
+            else{
+              return back()->with('error', 'Password confirmation did not match.')->with('page', 'User');
+            }
+          }
+          else{
+            return back()->with('error', 'Old Password did not match.')->with('page', 'User');
+          }
+        }
+        else{
+          $user->name = $request->get('name');
+          $user->email = $request->get('email');
+          $user->role_code = $request->get('role_code');
+          $user->save();
+          return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+        }
+      }
+      catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
+          return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+        }
+        else{
+          return back()->with('error', $e->getMessage())->with('page', 'User');
+        }
+
+      }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -142,13 +191,13 @@ class UserController extends Controller
 
       try{
 
-        if(strlen($request->get('password'))>0 || strlen($request->get('password_confirmation')>0)){
+        if(strlen($request->get('password'))>0 && strlen($request->get('password_confirmation')>0)){
           if($request->get('password') == $request->get('password_confirmation')){
             $user = User::find($id);
             $user->name = $request->get('name');
             $user->username = $request->get('username');
             $user->email = $request->get('email');
-            $user->password = $request->get('password');
+            $user->password = bcrypt($request->get('password'));
             $user->role_code = $request->get('role_code');
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
@@ -158,21 +207,14 @@ class UserController extends Controller
             return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
           }
         }
-        elseif ($request->get('password')=='' || $request->get('password_confirmation')=='') {
-          if($request->get('password') == $request->get('password_confirmation')){
-            $user = User::find($id);
-            $user->name = $request->get('name');
-            $user->username = $request->get('username');
-            $user->email = $request->get('email');
-                // $user->password = $request->get('password');
-            $user->role_code = $request->get('role_code');
-            $user->save();
-            return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
-          }
-          else
-          {
-            return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
-          }
+        elseif ($request->get('password')=='' && $request->get('password_confirmation')=='') {
+          $user = User::find($id);
+          $user->name = $request->get('name');
+          $user->username = $request->get('username');
+          $user->email = $request->get('email');
+          $user->role_code = $request->get('role_code');
+          $user->save();
+          return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
         }
 
 
@@ -184,7 +226,7 @@ class UserController extends Controller
           return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
         }
 
-      }  
+      }
             //
     }
 

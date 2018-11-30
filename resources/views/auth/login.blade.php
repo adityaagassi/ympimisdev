@@ -23,11 +23,11 @@
       <form method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-          <input autocomplete="off" type="text" class="form-control" placeholder="Username" name="username" value="{{ old('username') }}" required autofocus>
+          <input autocomplete="off" type="text" class="form-control" placeholder="Username" id="username" name="username" value="{{ old('username') }}" required autofocus>
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-          <input autocomplete="off" type="password" class="form-control" placeholder="Password" name="password" required>
+          <input autocomplete="off" type="password" class="form-control" placeholder="Password" id="password" name="password" required>
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           @if($errors->has('username'))
           <span class="help-block">These credentials do not match our records.</span>
@@ -37,7 +37,7 @@
           <div class="col-xs-12">
           </div>
           <div class="col-xs-8">
-            <a href="progress" class="pull-left">Register a new account</a>
+            <a href="{{ url("register") }}" class="pull-left">Register a new account</a>
           </div>
           <div class="col-xs-4">
             <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
@@ -56,6 +56,11 @@
         radioClass: 'iradio_square-blue',
         increaseArea: '20%'
       });
+    });
+
+    jQuery(document).ready(function() {
+      $('#username').val('');
+      $('#password').val('');
     });
   </script>
 </body>

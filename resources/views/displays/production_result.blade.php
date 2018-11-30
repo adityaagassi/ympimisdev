@@ -88,8 +88,8 @@
 @endsection
 
 @section('scripts')
-{{-- <script src="{{ url("js/highcharts.js")}}"></script> --}}
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
+{{-- <script src="{{ url("js/highstock.js")}}"></script> --}}
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
@@ -167,12 +167,13 @@
 							},
 							min: 0					
 						},
-						yAxis: [{
-							min: 0,
+						yAxis: {
+							min: 1,
 							title: {
 								text: 'Set(s)'
-							}
-						}],
+							},
+							type:'logarithmic'
+						},
 						credits:{
 							enabled: false
 						},
@@ -193,7 +194,7 @@
 							column: {
 								grouping: false,
 								shadow: false,
-								borderWidth: 0
+								borderWidth: 0,
 							}
 						},
 						series: [{

@@ -59,38 +59,30 @@
                     <th>H</th>
                     <th>Vol (m&sup3;)</th>
                     <th>Action</th>
-                    {{-- <th>Edit</th>
-                      <th>Delete</th> --}}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($material_volumes as $material_volume)
-                    <tr>
-                      <td style="font-size: 14">{{$material_volume->material_number}}</td>
-                      <td style="font-size: 14">
-                        @if(isset($material_volume->material->material_description))
-                        {{$material_volume->material->material_description}}
-                        @else
-                        Not registered
-                        @endif
-                      </td>
-                      <td style="font-size: 14">{{$material_volume->category}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_completion}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_transfer}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_flo}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_row}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_pallet}}</td>
-                      <td style="font-size: 14">{{$material_volume->lot_carton}}</td>
-                      <td style="font-size: 14">{{$material_volume->length}}</td>
-                      <td style="font-size: 14">{{$material_volume->width}}</td>
-                      <td style="font-size: 14">{{$material_volume->height}}</td>
-                      <td style="font-size: 14">{{ round($material_volume->height*$material_volume->width*$material_volume->length,4) }}</td>
-                    {{-- <td>
-                      <form action="{{ url('destroy/user', $user['id']) }}" method="post">
-                                {{ csrf_field() }}
-                                <button class="btn btn-xs btn-danger" type="submit">Delete</button>
-                      </form>
-                    </td> --}}
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($material_volumes as $material_volume)
+                  <tr>
+                    <td style="font-size: 14">{{$material_volume->material_number}}</td>
+                    <td style="font-size: 14">
+                      @if(isset($material_volume->material->material_description))
+                      {{$material_volume->material->material_description}}
+                      @else
+                      Not registered
+                      @endif
+                    </td>
+                    <td style="font-size: 14">{{$material_volume->category}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_completion}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_transfer}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_flo}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_row}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_pallet}}</td>
+                    <td style="font-size: 14">{{$material_volume->lot_carton}}</td>
+                    <td style="font-size: 14">{{$material_volume->length}}</td>
+                    <td style="font-size: 14">{{$material_volume->width}}</td>
+                    <td style="font-size: 14">{{$material_volume->height}}</td>
+                    <td style="font-size: 14">{{ round($material_volume->height*$material_volume->width*$material_volume->length,4) }}</td>
                     <td>
                       <center>
                         <a class="btn btn-info btn-xs" href="{{url('show/material_volume', $material_volume['id'])}}">View</a>
@@ -156,29 +148,28 @@
         </div>
       </div>
     </div>
-  </div>
 
-  @stop
+    @stop
 
-  @section('scripts')
-  <script>
-    $(function () {
-      $('#example1').DataTable({
-        "order": []
+    @section('scripts')
+    <script>
+      $(function () {
+        $('#example1').DataTable({
+          "order": []
+        })
+        $('#example2').DataTable({
+          'paging'      : true,
+          'lengthChange': false,
+          'searching'   : false,
+          'ordering'    : true,
+          'info'        : true,
+          'autoWidth'   : false
+        })
       })
-      $('#example2').DataTable({
-        'paging'      : true,
-        'lengthChange': false,
-        'searching'   : false,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : false
-      })
-    })
-    function deleteConfirmation(url, name, id) {
-      jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-    }
-  </script>
+      function deleteConfirmation(url, name, id) {
+        jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+        jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+      }
+    </script>
 
-  @stop
+    @stop

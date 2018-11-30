@@ -50,7 +50,7 @@ class BatchSettingController extends Controller
     public function store(Request $request)
     {
         $upload = $request->has('upload') ? '1' : '0';
-        $download = $request->has('upload') ? '1' : '0';
+        $download = $request->has('download') ? '1' : '0';
 
         try{
             $id = Auth::id();
@@ -72,8 +72,10 @@ class BatchSettingController extends Controller
             // self::delete($lid);
                 return back()->with('error', 'Batch remark with preferred time already exist.')->with('page', 'Batch Setting');
             }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Batch Setting');
+            }
         }
-        //
     }
 
     /**
@@ -115,12 +117,14 @@ class BatchSettingController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $upload = $request->has('upload') ? '1' : '0';
+        $download = $request->has('download') ? '1' : '0';
         try{
 
             $batch_setting = BatchSetting::find($id);
             $batch_setting->batch_time = $request->get('batch_time');
-            $batch_setting->upload = $request->get('upload');
-            $batch_setting->download = $request->get('download');
+            $batch_setting->upload = $upload;
+            $batch_setting->download = $download;
             $batch_setting->remark = $request->get('remark');
             $batch_setting->save();
 
@@ -130,12 +134,12 @@ class BatchSettingController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Batch remark with preferred time already exist.')->with('page', 'Batch Setting');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Batch Setting');
+            }
         }
-        //
     }
 
     /**
