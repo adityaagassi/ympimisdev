@@ -102,7 +102,7 @@
 		fillBar();
 		setInterval(function(){
 			fillBar();
-		}, 30000);
+		}, 10000);
 	});
 
 	function addZero(i) {

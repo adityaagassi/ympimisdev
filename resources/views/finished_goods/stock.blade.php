@@ -80,7 +80,7 @@
 		fillChart();
 		setInterval(function(){
 			fillChart();
-		}, 30000);
+		}, 60000);
 	});
 
 	function addZero(i) {
