@@ -17,6 +17,4 @@ class CodeGenerator extends Model
 	{
 		return $this->belongsTo('App\User', 'created_by')->withTrashed();
 	}
-
-    //
 }

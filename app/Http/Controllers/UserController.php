@@ -68,6 +68,7 @@ class UserController extends Controller
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
             'role_code' => $request->get('role_code'),
+            'avatar' => 'image-user.png',
             'created_by' => $id
           ]);
 

@@ -14,7 +14,7 @@ class BatchSettingsTableSeeder extends Seeder
     	DB::table('batch_settings')->insert(
         [
           'batch_time' => '09:20',
-          'upload' => '1',
+          'upload' => '0',
           'download' => '0',
           'remark' => 'FLO',
           'created_by' => '1',
@@ -25,7 +25,7 @@ class BatchSettingsTableSeeder extends Seeder
       DB::table('batch_settings')->insert(
         [
           'batch_time' => '16:50',
-          'upload' => '1',
+          'upload' => '0',
           'download' => '0',
           'remark' => 'FLO',
           'created_by' => '1',
@@ -34,16 +34,15 @@ class BatchSettingsTableSeeder extends Seeder
         ]
       );
       DB::table('batch_settings')->insert(
-            [
-              'batch_time' => '19:55',
-              'upload' => '1',
-              'download' => '0',
-              'remark' => 'FLO',
-              'created_by' => '1',
-              'created_at' => date('Y-m-d H:i:s'),
-              'updated_at' => date('Y-m-d H:i:s'),
-          ]
-        );
-        //
+        [
+          'batch_time' => '19:55',
+          'upload' => '0',
+          'download' => '0',
+          'remark' => 'FLO',
+          'created_by' => '1',
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]
+      );
     }
   }

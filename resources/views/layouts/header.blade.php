@@ -18,12 +18,15 @@
           </li>
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{ url("images/image-user.png") }}" class="user-image" alt="User Image">
+              @php
+              $avatar = 'images/avatar/'.Auth::user()->avatar;
+              @endphp
+              <img src="{{ url($avatar) }}" class="user-image" alt="User Image">
               <span class="hidden-xs">{{Auth::user()->name}}</span>
             </a>
             <ul class="dropdown-menu">
               <li class="user-header">
-                <img src="{{ url("images/image-user.png") }}" class="img-circle" alt="User Image">
+                <img src="{{ url($avatar) }}" class="img-circle" alt="User Image">
                 <p>
                   {{Auth::user()->name}}
                   <small>{{Auth::user()->email}}</small>
