@@ -18,30 +18,53 @@
             <a href="#"><b>YMPI</b><br>Information System</a>
         </div>
         <div class="register-box-body">
-            <p class="login-box-msg">Register a new membership</p>
-            <form action="{{ url("register")}}" method="post">
+            <p class="login-box-msg">Register a new account</p>
+            <form action="{{ route("register")}}" method="post">
                 {{ csrf_field() }}
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback {{ $errors->has('name') ? ' has-error' : '' }}">
                     <input type="text" class="form-control" name="name" id="name" placeholder="Full name">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    @if ($errors->has('name'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('name') }}</strong>
+                    </span>
+                    @endif
                 </div>
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    @if ($errors->has('email'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                    @endif
                 </div>
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
                     <input type="text" class="form-control" name="username" id="username" placeholder="Username">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                    @if ($errors->has('name'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('username') }}</strong>
+                    </span>
+                    @endif
                 </div>
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
                     <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    @if ($errors->has('password'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('password') }}</strong>
+                    </span>
+                    @endif
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Retype password">
-                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Confirm password">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
+                    <div class="col-xs-5 pull-left">
+                        <a href="{{ url("/") }}" class="pull-left"><span class="fa fa-caret-left"></span> Back to sign in</a>
+                    </div>
                     <div class="col-xs-4 pull-right">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
                     </div>
@@ -59,6 +82,11 @@
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%'
             });
+        });
+
+        jQuery(document).ready(function() {
+            $('#username').val('');
+            $('#password').val('');
         });
     </script>
 </body>

@@ -98,8 +98,8 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 });
 	Route::get('setting/user', 'UserController@index_setting');
 	Route::post('setting/user', 'UserController@setting');
-	Route::get('register', 'UserController@indexRegister');
-	Route::post('register', 'UserController@register');
+	// Route::get('register', 'UserController@indexRegister');
+	// Route::post('register', 'UserController@register');
 
 Route::group(['nav' => 'A3', 'middleware' => 'permission'], function(){
 	Route::get('index/navigation', 'NavigationController@index');
