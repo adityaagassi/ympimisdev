@@ -47,6 +47,7 @@
 		<div class="col-md-12">
 			<br>
 		</div>
+		<input type="hidden" name="dateHidden" id="dateHidden">
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
@@ -128,10 +129,10 @@
 	jQuery(document).ready(function() {
 		fillWeek();
 		fillDate();
-		fillChart();
-		// setInterval(function(){
-		// 	fillChart();
-		// }, 1000);
+		
+		setInterval(function(){
+			fillChart($('#dateHidden').val());
+		}, 10000);
 	});
 
 	$(function() {
@@ -229,8 +230,12 @@
 	}
 
 	function fillChart(id){
+		if(id != 0){
+			$('#dateHidden').val(id);
+		}
+		var date = id;
 		var data = {
-			date:id,
+			date:date,
 		};
 		$.get('{{ url("fetch/daily_production_result") }}', data, function(result, status, xhr){
 			console.log(status);

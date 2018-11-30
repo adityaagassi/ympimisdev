@@ -148,6 +148,7 @@ input {
 									<th style="font-size: 14">Material</th>
 									<th style="font-size: 14">Description</th>
 									<th style="font-size: 14">Serial No.</th>
+									<th style="font-size: 14">Qty</th>
 									<th style="font-size: 14">Ship. Date</th>
 									<th style="font-size: 14">BL Date</th>
 									<th style="font-size: 14">Dest.</th>
@@ -264,6 +265,7 @@ input {
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.serial_number +'</td>';
+						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.st_date +'</td>';
 						tableData += '<td>'+ value.bl_date +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';
