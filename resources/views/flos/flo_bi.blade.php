@@ -253,7 +253,7 @@ td:hover {
 				if ($("#material_number").val().length < 7) {
 					$("#material_number").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$("#serial_number").on("input", function() {
@@ -261,7 +261,7 @@ td:hover {
 				if ($("#serial_number").val().length < 8) {
 					$("#serial_number").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$("#material_number2").on("input", function() {
@@ -269,7 +269,7 @@ td:hover {
 				if ($("#material_number2").val().length < 7) {
 					$("#material_number2").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$("#serial_number2").on("input", function() {
@@ -277,7 +277,7 @@ td:hover {
 				if ($("#serial_number2").val().length < 8) {
 					$("#serial_number2").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$("#flo_number_settlement").on("input", function() {
@@ -285,7 +285,7 @@ td:hover {
 				if ($("#flo_number_settlement").val().length < 10) {
 					$("#flo_number_settlement").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$('#material_number').keydown(function(event) {

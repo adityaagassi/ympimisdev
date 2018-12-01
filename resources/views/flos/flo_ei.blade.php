@@ -251,7 +251,7 @@ input[type=number] {
 				if ($("#material_number").val().length < 7) {
 					$("#material_number").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$("#flo_number_settlement").on("input", function() {
@@ -259,7 +259,7 @@ input[type=number] {
 				if ($("#flo_number_settlement").val().length < 7) {
 					$("#flo_number_settlement").val("");
 				}
-			}, 20 );
+			}, 100 );
 		});
 
 		$('#material_number').keydown(function(event) {

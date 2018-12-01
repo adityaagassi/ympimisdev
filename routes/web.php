@@ -12,6 +12,10 @@
 |
 */
 
+if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
+	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+}
+
 Route::get('/', function () {
 	return view('auth.login');
 });
@@ -96,8 +100,8 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 	Route::post('edit/user/{id}', 'UserController@update');
 	Route::get('show/user/{id}', 'UserController@show');
 });
-	Route::get('setting/user', 'UserController@index_setting');
-	Route::post('setting/user', 'UserController@setting');
+Route::get('setting/user', 'UserController@index_setting');
+Route::post('setting/user', 'UserController@setting');
 	// Route::get('register', 'UserController@indexRegister');
 	// Route::post('register', 'UserController@register');
 
