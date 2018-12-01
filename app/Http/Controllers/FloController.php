@@ -609,10 +609,10 @@ class FloController extends Controller
                     $printer_name = 'FLO Printer 104';
                 }
                 elseif(Auth::user()->role_code == "OP-Assy-RC"){
-                    $printer_name = 'FLO Printer 105';
+                    $printer_name = 'FLO Printer RC';
                 }
                 elseif(Auth::user()->role_code == "OP-Assy-VN"){
-                    $printer_name = 'FLO Printer 106';
+                    $printer_name = 'FLO Printer VN';
                 }
                 elseif(Auth::user()->role_code == "S"){
                     $printer_name = 'SUPERMAN';
@@ -769,10 +769,10 @@ class FloController extends Controller
             $printer_name = 'FLO Printer 104';
         }
         elseif(Auth::user()->role_code == "OP-Assy-RC"){
-            $printer_name = 'FLO Printer 105';
+            $printer_name = 'FLO Printer RC';
         }
         elseif(Auth::user()->role_code == "OP-Assy-VN"){
-            $printer_name = 'FLO Printer 106';
+            $printer_name = 'FLO Printer VN';
         }
         elseif(Auth::user()->role_code == "S"){
             $printer_name = 'SUPERMAN';

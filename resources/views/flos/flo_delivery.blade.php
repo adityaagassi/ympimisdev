@@ -138,7 +138,7 @@
        if ($("#flo_number_settlement").val().length < 10) {
          $("#flo_number_settlement").val("");
        }
-     }, 20 );
+     }, 100 );
     });
 
     $('#flo_number_settlement').keydown(function(event) {
