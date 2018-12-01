@@ -141,7 +141,7 @@ td:hover {
 				<!-- /.box-header -->
 				<div class="box-body">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<input type="hidden" value="{{ Auth::user()->role_code }}" id="role_name" />
+					<input type="hidden" value="{{ Auth::user()->role_code }}" id="role_code" />
 					<div class="row">
 						<div class="col-md-12">
 							<div class="input-group col-md-8 col-md-offset-2">
