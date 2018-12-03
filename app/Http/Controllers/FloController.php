@@ -95,7 +95,7 @@ class FloController extends Controller
         
         $materials = DB::table('materials')->select('material_number', 'material_description')->get();
         $origin_groups = DB::table('origin_groups')->select('origin_groups.origin_group_code', 'origin_groups.origin_group_name')->get();
-        $flos = DB::table('flos')->whereIn('flos.status', ['0', '1', 'M'])->select('flos.flo_number')->distinct()->get();
+        $flos = DB::table('flos')->whereIn('flos.status', ['0', '1', 'M', '2'])->select('flos.flo_number')->distinct()->get();
         $statuses = DB::table('statuses')->select('statuses.status_code', 'statuses.status_name')->get();
         // $serial_numbers = DB::table('flo_details')->select('flo_details.serial_number')->distinct()->get();
 
