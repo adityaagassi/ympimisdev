@@ -16,6 +16,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
+Route::get('trial/perolehan', 'TrialController@trial_perolehan');
+
 Route::get('/', function () {
 	return view('auth.login');
 });
