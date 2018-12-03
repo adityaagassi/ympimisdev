@@ -64,6 +64,7 @@
                   <th style="font-size: 14">Material</th>
                   <th style="font-size: 14">Description</th>
                   <th style="font-size: 14">Qty</th>
+                  <th style="font-size: 14">Scan Date</th>
                   <th style="font-size: 14">Cancel</th>
                 </tr>
               </thead>
@@ -224,6 +225,7 @@
       { "data": "material_number" },
       { "data": "material_description" },
       { "data": "actual" },
+      { "data": "updated_at" },
       { "data": "action" }
       ]
     });

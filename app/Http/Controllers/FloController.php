@@ -210,14 +210,16 @@ class FloController extends Controller
         ->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
         ->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
         ->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+        ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flos.flo_number')
         ->where('flos.status', '=', $request->get('status'))
+        ->where('flo_logs.status_code', '=', $request->get('status'))
         ->whereNull('flos.bl_date');
 
         if(!empty($request->get('originGroup'))){
             $flos = $flos->whereIn('materials.origin_group_code', $request->get('originGroup'));
         }
 
-        $flos = $flos->select('flos.flo_number', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'materials.material_number', 'materials.material_description', 'flos.actual', 'flos.id', 'flos.invoice_number', 'flos.invoice_number', 'flos.container_id')
+        $flos = $flos->select('flos.flo_number', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'materials.material_number', 'materials.material_description', 'flos.actual', 'flos.id', 'flos.invoice_number', 'flos.invoice_number', 'flos.container_id', 'flo_logs.updated_at')
         ->get();
 
         return DataTables::of($flos)
