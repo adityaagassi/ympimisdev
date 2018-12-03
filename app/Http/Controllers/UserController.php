@@ -127,7 +127,6 @@ class UserController extends Controller
               $user->name = $request->get('name');
               $user->email = $request->get('email');
               $user->password = bcrypt($request->get('newPassword'));
-              $user->role_code = $request->get('role_code');
               $user->save();
               return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
             }
@@ -142,7 +141,6 @@ class UserController extends Controller
         else{
           $user->name = $request->get('name');
           $user->email = $request->get('email');
-          $user->role_code = $request->get('role_code');
           $user->save();
           return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
         }
