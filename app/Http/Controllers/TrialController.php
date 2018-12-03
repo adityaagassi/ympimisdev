@@ -8,7 +8,7 @@ use Illuminate\Database\QueryException;
 
 class TrialController extends Controller
 {
-	public function trial_perolehan{
+	public function trial_perolehan(){
 		$year = date("Y");
 		$month = date("m");
 		$date = date("d");
