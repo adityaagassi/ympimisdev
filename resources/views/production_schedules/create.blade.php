@@ -58,7 +58,7 @@
             <div class="input-group-addon">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control pull-right" id="due_date" nama="due_date">
+            <input type="text" class="form-control pull-right" id="due_date" name="due_date">
           </div>
         </div>
       </div>

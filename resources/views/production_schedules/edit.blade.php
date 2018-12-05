@@ -61,7 +61,7 @@
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" value="{{ date('m/d/Y', strtotime($production_schedule->due_date))}}" id="due_date" nama="due_date">
+              <input type="text" class="form-control pull-right" value="{{ date('d/m/Y', strtotime($production_schedule->due_date))}}" id="due_date" name="due_date">
             </div>
            {{-- <div class="input-group">
             <input type="date" class="form-control" name="due_date" placeholder="Enter Due Date" value="{{ $production_schedule->due_date }}" required>
