@@ -123,11 +123,11 @@ class ProductionScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $due_date = date('Y-m-d', strtotime($request->get('due_date')));
+        // $due_date = date('Y-m-d', strtotime($request->get('due_date')));
         try{
             $production_schedule = ProductionSchedule::find($id);
             $production_schedule->material_number = $request->get('material_number');
-            $production_schedule->due_date = $due_date;
+            $production_schedule->due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
             $production_schedule->quantity = $request->get('quantity');
             $production_schedule->save();
 
@@ -139,7 +139,6 @@ class ProductionScheduleController extends Controller
             // self::delete($lid);
                 return back()->with('error', 'Production schedule with preferred due date already exist.')->with('page', 'Production Schedule');
             }
-
         }
         //
     }
