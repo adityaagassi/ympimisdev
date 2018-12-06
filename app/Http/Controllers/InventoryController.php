@@ -127,12 +127,12 @@ class InventoryController extends Controller
 
         if(strlen($request->get('dateFrom')) > 0){
             $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
-            $transfers = $transfers->where(DB::raw('DATE_FORMAT(flo_details.created_at, "%Y-%m-%d")'), '>=', $date_from);
+            $transfers = $transfers->where(DB::raw('DATE_FORMAT(flo_logs.updated_at, "%Y-%m-%d")'), '>=', $date_from);
         }
 
         if(strlen($request->get('dateTo')) > 0){
             $date_to = date('Y-m-d', strtotime($request->get('dateTo')));
-            $transfers = $transfers->where(DB::raw('DATE_FORMAT(flo_details.created_at, "%Y-%m-%d")'), '<=', $date_to);
+            $transfers = $transfers->where(DB::raw('DATE_FORMAT(flo_logs.updated_at, "%Y-%m-%d")'), '<=', $date_to);
         }
 
         if(strlen($request->get('materialNumber')) > 0){

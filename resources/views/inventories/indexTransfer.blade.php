@@ -34,7 +34,7 @@ input {
 				<div class="box-body">
 					<div class="col-md-4 col-md-offset-2">
 						<div class="form-group">
-							<label>Prod. Date From</label>
+							<label>Transfer. Date From</label>
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
@@ -45,7 +45,7 @@ input {
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label>Prod. Date To</label>
+							<label>Transfer. Date To</label>
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
@@ -131,7 +131,6 @@ input {
 </section>
 
 @endsection
-
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
