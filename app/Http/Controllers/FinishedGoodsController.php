@@ -307,6 +307,7 @@ class FinishedGoodsController extends Controller
 			db::raw('format(sum(flos.delay),0) as delay'), 
 			db::raw('concat(round(((sum(shipment_schedules.quantity)-sum(flos.delay))/sum(shipment_schedules.quantity))*100, 2),"%") as delay_percentage'))
 		->groupBy('weekly_calendars.fiscal_year', 'weekly_calendars.week_name', db::raw('year(weekly_calendars.week_date)'))
+		->orderBy('weekly_calendars.week_date', 'asc')
 		->get();
 
 		// $response = array(
