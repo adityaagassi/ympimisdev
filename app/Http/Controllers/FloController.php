@@ -145,7 +145,7 @@ class FloController extends Controller
         ->leftJoin('shipment_schedules', 'flos.shipment_schedule_id','=', 'shipment_schedules.id')
         ->leftJoin('materials', 'flos.material_number', '=', 'materials.material_number')
         ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-        ->select('flo_details.id', 'flo_details.flo_number', db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at', 'statuses.status_name');
+        ->select('flo_details.id', 'shipment_schedules.sales_order', 'flo_details.flo_number', db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'destinations.destination_shortname', 'materials.material_number', 'materials.material_description', 'flo_details.serial_number', 'flo_details.quantity', 'flo_details.created_at', 'statuses.status_name');
 
         if(strlen($request->get('datefrom')) > 0){
             $date_from = date('Y-m-d', strtotime($request->get('datefrom')));

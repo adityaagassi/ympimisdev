@@ -105,7 +105,7 @@
     //Date picker
     $('#due_date').datepicker({
       format: "dd/mm/yyyy",
-      autoclose: true
+      autoclose: true,
     })
   </script>
   @stop

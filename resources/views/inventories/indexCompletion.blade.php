@@ -107,7 +107,7 @@ input {
 										<th style="font-size: 14">Quantity</th>
 										<th style="font-size: 14">Dest.</th>
 										<th style="font-size: 14">Upload</th>
-										<th style="font-size: 14">Created At</th>
+										<th style="font-size: 14">Completed At</th>
 									</tr>
 								</thead>
 								<tbody id="completionTableBody">

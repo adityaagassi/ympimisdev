@@ -107,7 +107,7 @@ input {
 										<th style="font-size: 14">Quantity</th>
 										<th style="font-size: 14">Dest.</th>
 										<th style="font-size: 14">Upload</th>
-										<th style="font-size: 14">Created At</th>
+										<th style="font-size: 14">Transfered At</th>
 									</tr>
 								</thead>
 								<tbody id="transferTableBody">
@@ -262,7 +262,7 @@ input {
 						else{
 							tableData += '<td>'+ value.transfer +'</td>';
 						}
-						tableData += '<td>'+ value.created_at +'</td>';
+						tableData += '<td>'+ value.updated_at +'</td>';
 						tableData += '</tr>';
 					});
 					$('#transferTableBody').append(tableData);

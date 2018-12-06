@@ -109,6 +109,7 @@
 							<table id="flo_detail_table" class="table table-bordered table-striped">
 								<thead>
 									<tr>
+										<th style="font-size: 14">SO Number</th>
 										<th style="font-size: 14">FLO Number</th>
 										<th style="font-size: 14">Ship. Date</th>
 										<th style="font-size: 14">Dest.</th>
@@ -118,11 +119,22 @@
 										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">Created At</th>
 										<th style="font-size: 14">Status</th>
-										{{-- <th style="font-size: 14" class="notexport">Action</th> --}}
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<th>Total</th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tfoot>
 							</table>
 						</div>
 					</div>		
@@ -270,6 +282,19 @@
 				},
 				]
 			},
+			"footerCallback": function (tfoot, data, start, end, display) {
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+					i.replace(/[\$%,]/g, '')*1 :
+					typeof i === 'number' ?
+					i : 0;
+				};
+				var api = this.api();
+				var totalPlan = api.column(7).data().reduce(function (a, b) {
+					return intVal(a)+intVal(b);
+				}, 0)
+				$(api.column(7).footer()).html(totalPlan.toLocaleString());
+			},
 			'paging': true,
 			'lengthChange': true,
 			'searching': true,
@@ -288,6 +313,7 @@
 					"data" : data,
 				},
 				"columns": [
+				{ "data": "sales_order" },
 				{ "data": "flo_number" },
 				{ "data": "st_date" },
 				{ "data": "destination_shortname" },

@@ -121,7 +121,9 @@ class InventoryController extends Controller
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-        ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code');
+        ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+        ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
+        ->where('flo_logs.status', '=', '2');
 
         if(strlen($request->get('dateFrom')) > 0){
             $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
@@ -163,7 +165,7 @@ class InventoryController extends Controller
             'flo_details.quantity',
             db::raw('if(flos.shipment_schedule_id = 0, "Maedaoshi", destinations.destination_shortname) as destination'),
             db::raw('if(flo_details.transfer is not null, flo_details.transfer, "-") as transfer'),
-            'flo_details.created_at'
+            'flo_logs.updated_at'
         )
         ->get();
 
