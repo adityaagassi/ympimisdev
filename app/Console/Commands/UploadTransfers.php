@@ -53,18 +53,18 @@ class UploadTransfers extends Command
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
         ->where('flo_logs.status_code', '=', 2)
-        ->where('flos.status' , '>', 1)
+        ->whereIn('flos.status', ['2','3','4'])
         ->whereNull('flo_details.transfer')
-        ->where('flo_details.created_at', '<=', $date);
+        ->where('flo_logs.created_at', '<=', $date);
 
         $flo_transfers = DB::table('flo_details')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
         ->where('flo_logs.status_code', '=', 2)
-        ->where('flos.status', '>', 1)
+        ->whereIn('flos.status', ['2','3','4'])
         ->whereNull('flo_details.transfer')
-        ->where('flo_details.created_at', '<=', $date)
+        ->where('flo_logs.created_at', '<=', $date)
         ->select(
             'materials.issue_storage_location', 
             'flo_details.material_number',
@@ -100,7 +100,7 @@ class UploadTransfers extends Command
             $success = self::uploadFTP($flofilepath, $flofiledestination);
 
             if($success){
-                $flo_details->update(['flo_details.transfer' => $flofilename]);
+                $flo_details->update(['transfer' => $flofilename]);
             }
             else{
                 echo 'false';
