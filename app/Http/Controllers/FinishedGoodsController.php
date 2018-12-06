@@ -33,7 +33,11 @@ class FinishedGoodsController extends Controller
 	public function index_fg_weekly_summary(){
 		$weeks = DB::table('weekly_calendars')->select('week_name')->distinct()->orderBy(db::raw('convert(mid(week_name,2), unsigned integer)'), 'asc')->get();
 		$years = DB::table('weekly_calendars')->select(db::raw('year(week_date) as year'))->distinct()->orderBy(db::raw('year(week_date)'), 'asc')->get();
-		$fiscalYears = DB::table('weekly_calendars')->select('fiscal_year')->distinct()->orderBy(db::raw('convert(mid(week_name,2), unsigned integer)'), 'asc')->get();
+		$fiscalYears = DB::table('weekly_calendars')
+		->select('fiscal_year')
+		->distinct()
+		// ->orderBy(db::raw('convert(mid(week_name,2), unsigned integer)'), 'asc')
+		->get();
 
 		return view('finished_goods.weekly_summary', array(
 			'weeks' => $weeks,
