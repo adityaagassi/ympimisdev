@@ -106,6 +106,7 @@
 										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">I/V</th>
 										<th style="font-size: 14">Cont. ID</th>
+										<th style="font-size: 14">Stuff. Date</th>
 										<th style="font-size: 14">Cancel</th>
 									</tr>
 								</thead>
@@ -321,6 +322,7 @@
 				{ "data": "actual" },
 				{ "data": "invoice_number" },
 				{ "data": "container_id" },
+				{ "data": "updated_at" },
 				{ "data": "action" }
 				]
 			});
