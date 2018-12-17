@@ -161,7 +161,7 @@ td:hover {
 				if ($("#material").val().length < 7) {
 					$("#material").val("");
 				}
-			}, 20 );
+			}, 200 );
 		});
 
 		$("#serial").on("input", function() {
@@ -169,7 +169,7 @@ td:hover {
 				if ($("#serial").val().length < 8) {
 					$("#serial").val("");
 				}
-			}, 20 );
+			}, 200 );
 		});
 
 		$('#material').keydown(function(event) {
