@@ -170,6 +170,12 @@
       </li>
       @endif
 
+      @if(in_array('S9', $navs))
+      @if(isset($page) && $page == "FLO Deletion")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/flo_view/deletion") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Deletion</span></a>
+      </li>
+      @endif
+
       @if(in_array('R0', $navs))
       <li class="header">Report Menu</li>
       @endif

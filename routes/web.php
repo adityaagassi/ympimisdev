@@ -17,6 +17,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('trial/perolehan', 'TrialController@trial_perolehan');
+Route::get('index/censor', 'TrialController@indexCensor');
+Route::get('trial/censor', 'TrialController@trialCensor');
 
 Route::get('/', function () {
 	return view('auth.login');
@@ -287,6 +289,11 @@ Route::group(['nav' => 'S7', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S8', 'middleware' => 'permission'], function(){
 	Route::get('index/maedaoshi_ei', 'MaedaoshiController@index_ei');
 	Route::get('index/after_maedaoshi_ei', 'MaedaoshiController@index_after_ei');
+});
+
+Route::group(['nav' => 'S9', 'middleware' => 'permission'], function(){
+	Route::get('index/flo_view/deletion', 'FloController@index_deletion');
+	Route::get('destroy/flo_deletion/{id}', 'FloController@destroy_flo_deletion');	
 });
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
