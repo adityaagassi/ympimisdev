@@ -123,7 +123,8 @@ class InventoryController extends Controller
         ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
         ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
-        ->where('flo_logs.status_code', '=', '2');
+        ->where('flo_logs.status_code', '=', '2')
+        ->whereIn('flos.status', ['2','3','4']);
 
         if(strlen($request->get('dateFrom')) > 0){
             $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
