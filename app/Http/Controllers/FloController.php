@@ -1036,9 +1036,19 @@ public function flo_settlement(Request $request)
     }
 }
 
-
 public function destroy_flo_deletion($id){
   $flo_detail = FloDetail::find($id);
+  $material = Material::where('material_number', '=', $flo_detail->material_number)->first();
+
+  $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+
+  $flo->actual = $flo->actual-$flo_detail->quantity;
+  $flo->save();
+
+  $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
+  $inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
+  $inventory->save();
+
   $flo_detail->forceDelete();
   return redirect('/index/flo_view/deletion')->with('status', 'Material has been deleted.');
 }
