@@ -64,8 +64,8 @@ class FloController extends Controller
         ->get();
 
         $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
-        ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
-        ->where('shipment_date', '<=', DB::raw('last_day(now())'))
+        // ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
+        // ->where('shipment_date', '<=', DB::raw('last_day(now())'))
         ->get();
 
         return view('flos.flo_stuffing', array(
