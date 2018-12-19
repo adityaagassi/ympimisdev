@@ -349,33 +349,33 @@ class MaedaoshiController extends Controller
 					);
 
 					if(Auth::user()->role_code == "OP-Assy-FL"){
-						$printer_name = 'FLO Printer 101';
-					}
-					elseif(Auth::user()->role_code == "OP-Assy-CL"){
-						$printer_name = 'FLO Printer 102';
-					}
-					elseif(Auth::user()->role_code == "OP-Assy-SX"){
-						$printer_name = 'FLO Printer 103';
-					}
-					elseif(Auth::user()->role_code == "OP-Assy-PN"){
-						$printer_name = 'FLO Printer 104';
-					}
-					elseif(Auth::user()->role_code == "OP-Assy-RC"){
-						$printer_name = 'FLO Printer RC';
-					}
-					elseif(Auth::user()->role_code == "OP-Assy-VN"){
-						$printer_name = 'FLO Printer VN';
-					}
-					elseif(Auth::user()->role_code == "S"){
-						$printer_name = 'SUPERMAN';
-					}
-					else{
-						$response = array(
-							'status' => false,
-							'message' => "You don't have permission to print FLO"
-						);
-						return Response::json($response);
-					}
+                    $printer_name = 'FLO Printer 101';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-CL"){
+                    $printer_name = 'FLO Printer 102';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-SX"){
+                    $printer_name = 'FLO Printer 103';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-PN"){
+                    $printer_name = 'FLO Printer 104';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-RC"){
+                    $printer_name = 'FLO Printer RC';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-VN"){
+                    $printer_name = 'FLO Printer VN';
+                }
+                elseif(Auth::user()->role_code == "S"){
+                    $printer_name = 'SUPERMAN';
+                }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'message' => "You don't have permission to print FLO"
+                    );
+                    return Response::json($response);
+                }
 
 					$connector = new WindowsPrintConnector($printer_name);
 					$printer = new Printer($connector);
@@ -510,33 +510,33 @@ class MaedaoshiController extends Controller
 		$id = Auth::id();
 
 		if(Auth::user()->role_code == "OP-Assy-FL"){
-			$printer_name = 'FLO Printer 101';
-		}
-		elseif(Auth::user()->role_code == "OP-Assy-CL"){
-			$printer_name = 'FLO Printer 102';
-		}
-		elseif(Auth::user()->role_code == "OP-Assy-SX"){
-			$printer_name = 'FLO Printer 103';
-		}
-		elseif(Auth::user()->role_code == "OP-Assy-PN"){
-			$printer_name = 'FLO Printer 104';
-		}
-		elseif(Auth::user()->role_code == "OP-Assy-RC"){
-			$printer_name = 'FLO Printer RC';
-		}
-		elseif(Auth::user()->role_code == "OP-Assy-VN"){
-			$printer_name = 'FLO Printer VN';
-		}
-		elseif(Auth::user()->role_code == "S"){
-			$printer_name = 'SUPERMAN';
-		}
-		else{
-			$response = array(
-				'status' => false,
-				'message' => "You don't have permission to print FLO"
-			);
-			return Response::json($response);
-		}
+                    $printer_name = 'FLO Printer 101';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-CL"){
+                    $printer_name = 'FLO Printer 102';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-SX"){
+                    $printer_name = 'FLO Printer 103';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-PN"){
+                    $printer_name = 'FLO Printer 104';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-RC"){
+                    $printer_name = 'FLO Printer RC';
+                }
+                elseif(Auth::user()->role_code == "OP-Assy-VN"){
+                    $printer_name = 'FLO Printer VN';
+                }
+                elseif(Auth::user()->role_code == "S"){
+                    $printer_name = 'SUPERMAN';
+                }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'message' => "You don't have permission to print FLO"
+                    );
+                    return Response::json($response);
+                }
 
 		if($request->get('serial')){
 			$serial_number = $request->get('serial');
