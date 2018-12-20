@@ -42,7 +42,7 @@ class FloController extends Controller
 
     public function index_ei(){
         $flos = Flo::orderBy('flo_number', 'asc')
-        ->where('status', '=', '0')
+        ->whereIn('status', ['0', '1'])
         ->get();
         return view('flos.flo_ei', array(
             'flos' => $flos
@@ -51,7 +51,7 @@ class FloController extends Controller
 
     public function index_delivery(){
         $flos = Flo::orderBy('flo_number', 'asc')
-        ->where('status', '=', '1')
+        ->whereIn('status', ['1', '2'])
         ->get();
         return view('flos.flo_delivery', array(
             'flos' => $flos
@@ -721,7 +721,7 @@ class FloController extends Controller
                     'message' => 'New FLO has been printed',
                     'flo_number' => $flo_number,
                     'status_code' => 'new',
-                ); 
+                );
                 return Response::json($response);
             }
             catch(\Exception $e){
