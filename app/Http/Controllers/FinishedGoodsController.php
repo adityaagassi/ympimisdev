@@ -104,8 +104,7 @@ class FinishedGoodsController extends Controller
 			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual)) as actual'), 
 			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual))-shipment_schedules.quantity as diff'),
 			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'),
-			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y") as bl_date_plan'),
-			db::raw('if(date_format(flos.bl_date, "%d-%b-%Y") is null, "-", date_format(flos.bl_date, "%d-%b-%Y")) as bl_date')
+			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y") as bl_date_plan')
 		)
 		->groupBy(
 			db::raw('date_format(shipment_schedules.st_month, "%b-%Y")'),
@@ -116,8 +115,7 @@ class FinishedGoodsController extends Controller
 			'materials.material_description', 
 			'shipment_schedules.quantity', 
 			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'),
-			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y")'),
-			'flos.bl_date'
+			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y")')
 		)
 		->get();
 
