@@ -94,7 +94,8 @@ class FloController extends Controller
     public function index_deletion(){
         $flo_details = FloDetail::leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-        ->whereIn('flos.status', ['M', '0', '1'])
+        ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
+        // ->whereIn('flos.status', ['M', '0', '1'])
         ->select(
             'flo_details.id',
             'flo_details.flo_number',
@@ -103,6 +104,8 @@ class FloController extends Controller
             'materials.material_description',
             'flo_details.quantity',
             db::raw('if(flo_details.completion is not null, "Uploaded", "-") as completion'),
+            db::raw('if(flo_details.transfer is not null, "Uploaded", "-") as transfer'),
+            'statuses.status_name',
             'flo_details.created_at'
         )
         ->get();

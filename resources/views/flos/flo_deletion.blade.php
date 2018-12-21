@@ -42,6 +42,8 @@ thead input {
                     <th style="font-size: 14">Material</th>
                     <th style="font-size: 14">Description</th>
                     <th style="font-size: 14">Quantity</th>
+                    <th style="font-size: 14">Completion</th>
+                    <th style="font-size: 14">Transfer</th>
                     <th style="font-size: 14">Status</th>
                     <th style="font-size: 14">Created At</th>
                     <th style="font-size: 14">Action</th>
@@ -56,6 +58,8 @@ thead input {
                     <td style="font-size: 14">{{$flo_detail->material_description}}</td>
                     <td style="font-size: 14">{{$flo_detail->quantity}}</td>
                     <td style="font-size: 14">{{$flo_detail->completion}}</td>
+                    <td style="font-size: 14">{{$flo_detail->transfer}}</td>
+                    <th style="font-size: 14">{{$flo_detail->status}}</th>
                     <td style="font-size: 14">{{$flo_detail->created_at}}</td>
                     <td>
                       <center>
@@ -69,6 +73,8 @@ thead input {
                 </tbody>
                 <tfoot>
                   <tr>
+                    <th></th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
