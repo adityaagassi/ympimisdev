@@ -1045,9 +1045,10 @@ public function destroy_flo_deletion($id){
   $material = Material::where('material_number', '=', $flo_detail->material_number)->first();
 
   $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-
-  $flo->actual = $flo->actual-$flo_detail->quantity;
-  $flo->save();
+if($flo != null){
+$flo->actual = $flo->actual-$flo_detail->quantity;
+$flo->save();
+}
 
   $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
   $inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
