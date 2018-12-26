@@ -161,7 +161,7 @@ td:hover {
 				if ($("#material").val().length < 7) {
 					$("#material").val("");
 				}
-			}, 200 );
+			}, 300 );
 		});
 
 		$('#material').keydown(function(event) {
