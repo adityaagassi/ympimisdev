@@ -51,6 +51,7 @@ td:hover {
 				</div>
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<input type="hidden" value="{{ Auth::user()->role_code }}" id="role_code" />
 					<div class="box-body">
 						<div class="row">
 							<div class="col-md-3">
