@@ -251,7 +251,7 @@ input[type=number] {
 				if ($("#material_number").val().length < 7) {
 					$("#material_number").val("");
 				}
-			}, 100 );
+			}, 200 );
 		});
 
 		$("#flo_number_settlement").on("input", function() {
@@ -259,7 +259,7 @@ input[type=number] {
 				if ($("#flo_number_settlement").val().length < 7) {
 					$("#flo_number_settlement").val("");
 				}
-			}, 100 );
+			}, 200 );
 		});
 
 		$('#material_number').keydown(function(event) {
@@ -278,7 +278,7 @@ input[type=number] {
 
 		$('#flo_number_settlement').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#flo_number_settlement").val().length > 8){
+				if($("#flo_number_settlement").val().length > 7){
 					scanFloNumber();
 					return false;
 				}

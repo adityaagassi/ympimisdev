@@ -161,7 +161,7 @@
 			$('#flo_number_settlement').keydown(function(event) {
 				if (event.keyCode == 13 || event.keyCode == 9) {
 					if($("#invoice_number").val().length == 6 && $("#container_id").val() != ""){
-						if($("#flo_number_settlement").val().length > 8){
+						if($("#flo_number_settlement").val().length > 7){
 							scanFloNumber();
 							return false;
 						}

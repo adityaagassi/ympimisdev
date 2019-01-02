@@ -360,7 +360,7 @@ td:hover {
 
 		$('#flo_number_settlement').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#flo_number_settlement").val().length > 8){
+				if($("#flo_number_settlement").val().length > 7){
 					scanFloNumber();
 					return false;
 				}
