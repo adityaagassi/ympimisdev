@@ -513,7 +513,7 @@ class FloController extends Controller
             $serial_number = $request->get('serial_number');
         }
         else{
-            $prefix_now_pd = date("Y").date("m").date("d");
+            $prefix_now_pd = date("y").date("m").date("d");
             $code_generator_pd = CodeGenerator::where('note','=','pd')->first();
             if ($prefix_now_pd != $code_generator_pd->prefix){
                 $code_generator_pd->prefix = $prefix_now_pd;
@@ -526,7 +526,7 @@ class FloController extends Controller
 
         
         $material_number = $request->get('material_number');
-        $prefix_now = date("Y").date("m");
+        $prefix_now = date("y").date("m");
 
         if($request->get('flo_number') == ""){
             if($request->get('type') == 'pd'){
@@ -661,7 +661,7 @@ class FloController extends Controller
                 $printer->setUnderline(false);
                 $printer->feed(1);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->barcode(intVal($flo_number), Printer::BARCODE_ITF);
+                $printer->barcode(intVal($flo_number), Printer::BARCODE_CODE39);
                 $printer->setTextSize(3, 1);
                 $printer->text($flo_number."\n\n");
                 $printer->initialize();
@@ -834,7 +834,7 @@ class FloController extends Controller
                 $printer->setUnderline(false);
                 $printer->feed(1);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->barcode($flo->flo_number, Printer::BARCODE_ITF);
+                $printer->barcode($flo->flo_number, Printer::BARCODE_CODE39);
                 $printer->setTextSize(3, 1);
                 $printer->text($flo->flo_number."\n\n");
                 $printer->initialize();
@@ -1045,16 +1045,16 @@ public function destroy_flo_deletion($id){
   $material = Material::where('material_number', '=', $flo_detail->material_number)->first();
 
   $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-if($flo != null){
-$flo->actual = $flo->actual-$flo_detail->quantity;
-$flo->save();
+  if($flo != null){
+    $flo->actual = $flo->actual-$flo_detail->quantity;
+    $flo->save();
 }
 
-  $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
-  $inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
-  $inventory->save();
+$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
+$inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
+$inventory->save();
 
-  $flo_detail->forceDelete();
-  return redirect('/index/flo_view/deletion')->with('status', 'Material has been deleted.');
+$flo_detail->forceDelete();
+return redirect('/index/flo_view/deletion')->with('status', 'Material has been deleted.');
 }
 }
