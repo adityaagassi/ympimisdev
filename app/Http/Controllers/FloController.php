@@ -59,11 +59,16 @@ class FloController extends Controller
     }
 
     public function index_stuffing(){
+        $first = date('Y-m-01');
+        $now = date('Y-m-d');
+
         $flos = Flo::orderBy('flo_number', 'asc')
         ->where('status', '=', '2')
         ->get();
 
-        $container_schedules = ContainerSchedule::orderBy('container_id', 'asc')
+        $container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
+        ->where('shipment_date', '>=', $first)
+        ->where('shipment_date', '<=', $now)
         // ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
         // ->where('shipment_date', '<=', DB::raw('last_day(now())'))
         ->get();
@@ -922,32 +927,32 @@ class FloController extends Controller
     {
         $flo_detail = FloDetail::find($request->get('id'));
         if($flo_detail->completion == null){
-         $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
-         $actual = DB::table('flo_details')
-         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-         ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
-         ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-         ->where('flo_details.id', '=', $request->get('id'))
-         ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
-         ->first();
+           $flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
+           $actual = DB::table('flo_details')
+           ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+           ->leftJoin('shipment_schedules', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
+           ->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
+           ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
+           ->where('flo_details.id', '=', $request->get('id'))
+           ->select('material_volumes.lot_completion', 'materials.material_number', 'materials.issue_storage_location')
+           ->first();
 
-         $flo->actual = $flo->actual-$actual->lot_completion;
-         $flo->save();
+           $flo->actual = $flo->actual-$actual->lot_completion;
+           $flo->save();
 
-         $flo_detail->forceDelete();
+           $flo_detail->forceDelete();
 
-         $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
-         $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
-         $inventory->save();
+           $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $actual->material_number, 'storage_location' => $actual->issue_storage_location]);
+           $inventory->quantity = ($inventory->quantity-$actual->lot_completion);
+           $inventory->save();
 
-         $response = array(
+           $response = array(
             'status' => true,
             'message' => "Data has been deleted.",
         );
-         return Response::json($response);
-     }
-     else{
+           return Response::json($response);
+       }
+       else{
         $response = array(
             'status' => false,
             'message' => "Data cannot be deleted, because data has been uploaded to SAP.",
