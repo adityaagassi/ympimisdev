@@ -261,7 +261,7 @@ input {
 						else{
 							tableData += '<td>'+ value.transfer +'</td>';
 						}
-						tableData += '<td>'+ value.updated_at +'</td>';
+						tableData += '<td>'+ value.created_at +'</td>';
 						tableData += '</tr>';
 					});
 					$('#transferTableBody').append(tableData);
