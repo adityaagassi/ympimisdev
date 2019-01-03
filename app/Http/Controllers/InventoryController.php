@@ -166,7 +166,7 @@ class InventoryController extends Controller
             'flo_details.quantity',
             db::raw('if(flos.shipment_schedule_id = 0, "Maedaoshi", destinations.destination_shortname) as destination'),
             db::raw('if(flo_details.transfer is not null, flo_details.transfer, "-") as transfer'),
-            'flo_logs.updated_at'
+            'flo_logs.created_at'
         )
         ->get();
 
