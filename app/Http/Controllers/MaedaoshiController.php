@@ -142,6 +142,30 @@ class MaedaoshiController extends Controller
 		->where('materials.material_number', '=', $request->get('material'))
 		->first();
 
+		$first = date('Y-m-01');
+		$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+
+		$query = "select material_number, sum(plan) as plan, sum(actual) as actual from
+		(
+		select material_number, quantity as plan, 0 as actual from production_schedules where due_date >= '".$first."' and due_date <= '".$last."'
+
+		union all
+
+		select material_number, 0 as plan, quantity as actual from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."'
+		) as result
+		group by result.material_number
+		having plan <= actual and material_number = '".$request->get('material')."'";
+
+		$productionPlan = DB::select($query);
+
+		if(!empty($productionPlan)){
+			$response = array(
+				'status' => false,
+				'message' => 'There is no production schedule for material '. $request->get('material') .'.',
+			);
+			return Response::json($response);
+		}
+
 		if($material != null){
 
 			$flo = DB::table('flos')
@@ -349,33 +373,33 @@ class MaedaoshiController extends Controller
 					);
 
 					if(Auth::user()->role_code == "OP-Assy-FL"){
-                    $printer_name = 'FLO Printer 101';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-CL"){
-                    $printer_name = 'FLO Printer 102';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-SX"){
-                    $printer_name = 'FLO Printer 103';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-PN"){
-                    $printer_name = 'FLO Printer 104';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-RC"){
-                    $printer_name = 'FLO Printer RC';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-VN"){
-                    $printer_name = 'FLO Printer VN';
-                }
-                elseif(Auth::user()->role_code == "S"){
-                    $printer_name = 'SUPERMAN';
-                }
-                else{
-                    $response = array(
-                        'status' => false,
-                        'message' => "You don't have permission to print FLO"
-                    );
-                    return Response::json($response);
-                }
+						$printer_name = 'FLO Printer 101';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-CL"){
+						$printer_name = 'FLO Printer 102';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-SX"){
+						$printer_name = 'FLO Printer 103';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-PN"){
+						$printer_name = 'FLO Printer 104';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-RC"){
+						$printer_name = 'FLO Printer RC';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-VN"){
+						$printer_name = 'FLO Printer VN';
+					}
+					elseif(Auth::user()->role_code == "S"){
+						$printer_name = 'SUPERMAN';
+					}
+					else{
+						$response = array(
+							'status' => false,
+							'message' => "You don't have permission to print FLO"
+						);
+						return Response::json($response);
+					}
 
 					$connector = new WindowsPrintConnector($printer_name);
 					$printer = new Printer($connector);
@@ -510,33 +534,33 @@ class MaedaoshiController extends Controller
 		$id = Auth::id();
 
 		if(Auth::user()->role_code == "OP-Assy-FL"){
-                    $printer_name = 'FLO Printer 101';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-CL"){
-                    $printer_name = 'FLO Printer 102';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-SX"){
-                    $printer_name = 'FLO Printer 103';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-PN"){
-                    $printer_name = 'FLO Printer 104';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-RC"){
-                    $printer_name = 'FLO Printer RC';
-                }
-                elseif(Auth::user()->role_code == "OP-Assy-VN"){
-                    $printer_name = 'FLO Printer VN';
-                }
-                elseif(Auth::user()->role_code == "S"){
-                    $printer_name = 'SUPERMAN';
-                }
-                else{
-                    $response = array(
-                        'status' => false,
-                        'message' => "You don't have permission to print FLO"
-                    );
-                    return Response::json($response);
-                }
+			$printer_name = 'FLO Printer 101';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-CL"){
+			$printer_name = 'FLO Printer 102';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-SX"){
+			$printer_name = 'FLO Printer 103';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-PN"){
+			$printer_name = 'FLO Printer 104';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-RC"){
+			$printer_name = 'FLO Printer RC';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-VN"){
+			$printer_name = 'FLO Printer VN';
+		}
+		elseif(Auth::user()->role_code == "S"){
+			$printer_name = 'SUPERMAN';
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => "You don't have permission to print FLO"
+			);
+			return Response::json($response);
+		}
 
 		if($request->get('serial')){
 			$serial_number = $request->get('serial');
