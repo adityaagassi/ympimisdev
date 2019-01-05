@@ -100,7 +100,9 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('.select2').select2();	
+		$('body').toggleClass("sidebar-collapse");
+		$('.select2').select2();
+		fillChart();
 	});
 
 	function addZero(i) {
@@ -121,9 +123,9 @@
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
 
-	setInterval(function(){
-		fillChart();
-	}, 1000);
+	// setInterval(function(){
+	// 	fillChart();
+	// }, 1000);
 
 	function fillChart(){
 		var hpl = $('#hpl').val();
@@ -185,7 +187,7 @@
 						},
 						plotOptions: {
 							series:{
-        						minPointLength: 10,
+								minPointLength: 10,
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
@@ -271,7 +273,7 @@
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					$('#resume').append(resumeData);
-
+					setTimeout(fillChart, 1000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
