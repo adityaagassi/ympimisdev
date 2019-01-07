@@ -546,7 +546,13 @@ class FloController extends Controller
         
         $material_number = $request->get('material_number');
         $prefix_now = date("y").date("m");
-
+        $code_generator = CodeGenerator::where('note','=','flo')->first();
+        if ($prefix_now != $code_generator->prefix){
+            $code_generator->prefix = $prefix_now;
+            $code_generator->index = '0';
+            $code_generator->save();
+        }
+        
         if($request->get('flo_number') == ""){
             if($request->get('type') == 'pd'){
                 $shipment_schedule = DB::table('shipment_schedules')
@@ -596,12 +602,6 @@ class FloController extends Controller
             }
             try{
 
-                $code_generator = CodeGenerator::where('note','=','flo')->first();
-                if ($prefix_now != $code_generator->prefix){
-                    $code_generator->prefix = $prefix_now;
-                    $code_generator->index = '0';
-                    $code_generator->save();
-                }
                 $number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
                 $flo_number = $code_generator->prefix . $number;
 
