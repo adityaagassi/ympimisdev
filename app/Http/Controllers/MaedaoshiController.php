@@ -1,4 +1,4 @@
-<?php
+\<?php
 
 namespace App\Http\Controllers;
 
@@ -268,7 +268,7 @@ class MaedaoshiController extends Controller
 				$serial_number = $request->get('serial_number');
 			}
 			else{
-				$prefix_now_pd = date("Y").date("m").date("d");
+				$prefix_now_pd = date("y").date("m").date("d");
 				$code_generator_pd = CodeGenerator::where('note','=','pd')->first();
 				if ($prefix_now_pd != $code_generator_pd->prefix){
 					$code_generator_pd->prefix = $prefix_now_pd;
@@ -330,7 +330,7 @@ class MaedaoshiController extends Controller
 				}
 
 				try{
-					$prefix_now = date("Y").date("m");
+					$prefix_now = date("y").date("m");
 					$code_generator = CodeGenerator::where('note','=','flo')->first();
 					if ($prefix_now != $code_generator->prefix){
 						$code_generator->prefix = $prefix_now;
@@ -566,7 +566,7 @@ class MaedaoshiController extends Controller
 			$serial_number = $request->get('serial');
 		}
 		else{
-			$prefix_now_pd = date("Y").date("m").date("d");
+			$prefix_now_pd = date("y").date("m").date("d");
 			$code_generator_pd = CodeGenerator::where('note','=','pd')->first();
 			if ($prefix_now_pd != $code_generator_pd->prefix){
 				$code_generator_pd->prefix = $prefix_now_pd;
