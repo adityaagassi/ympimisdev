@@ -282,7 +282,7 @@ td:hover {
 
 		$("#flo_number_settlement").on("input", function() {
 			delay(function(){
-				if ($("#flo_number_settlement").val().length < 10) {
+				if ($("#flo_number_settlement").val().length < 7) {
 					$("#flo_number_settlement").val("");
 				}
 			}, 100 );
