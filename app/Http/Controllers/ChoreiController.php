@@ -294,15 +294,19 @@ class ChoreiController extends Controller
 		$chartResult2 = DB::select($query2);
 
 		$query3 = "
-		select hpl, sum(plan)-IFNULL(sum(actual),0) as plan, IFNULL(sum(actual),0) as actual from
+		select hpl, sum(plan) as plan, sum(actual) as actual, avg(prc1) as prc_plan, 1-avg(prc1) as prc_actual from
+		(
+		select material_number, hpl, category, sum(plan) as plan, coalesce(sum(actual), 0) as actual, coalesce(sum(actual), 0)/sum(plan) as prc1 from
 		(
 		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
 		left join materials on materials.material_number = shipment_schedules.material_number
-		where weekly_calendars.week_name = '". $week->week_name ."' and materials.category = 'FG'
-		) as final
+		where weekly_calendars.week_name = '".$week->week_name."' and materials.category = 'FG'
+		) as result1
+		group by material_number, hpl, category
+		) result2
 		group by hpl
 		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
 
