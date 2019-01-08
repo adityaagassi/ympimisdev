@@ -668,13 +668,13 @@
 					for (i = 0; i < data3.length; i++) {
 						if(jQuery.inArray(data3[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
 							xAxis3.push(data3[i].hpl);
-							planBLCount.push(data3[i].plan);
-							actualBLCount.push(data3[i].actual);
+							planBLCount.push(data3[i].prc_plan);
+							actualBLCount.push(data3[i].prc_actual);
 						}
 						if(jQuery.inArray(data3[i].hpl, ['VENOVA', 'RC', 'PN']) !== -1){
 							xAxis3EI.push(data3[i].hpl);
-							planBLCountEI.push(data3[i].plan);
-							actualBLCountEI.push(data3[i].actual);
+							planBLCountEI.push(data3[i].prc_plan);
+							actualBLCountEI.push(data3[i].prc_actual);
 						}
 					}
 
