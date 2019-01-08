@@ -294,7 +294,7 @@ class ChoreiController extends Controller
 		$chartResult2 = DB::select($query2);
 
 		$query3 = "
-		select hpl, sum(plan) as plan, sum(actual) as actual, avg(prc1) as prc_plan, 1-avg(prc1) as prc_actual from
+		select hpl, sum(plan)-sum(actual) as plan, sum(actual) as actual, avg(prc1) as prc_plan, 1-avg(prc1) as prc_actual from
 		(
 		select material_number, hpl, category, sum(plan) as plan, coalesce(sum(actual), 0) as actual, coalesce(sum(actual), 0)/sum(plan) as prc1 from
 		(
