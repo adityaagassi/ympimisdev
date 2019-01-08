@@ -722,19 +722,19 @@
 							min: 0,
 							title: {
 								text: ''
-							},
-							stackLabels: {
-								format: 'Total: {total:,.0f}set(s)',
-								enabled: true,
-								style: {
-									fontWeight: 'bold',
-									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-								}
 							}
+							// stackLabels: {
+							// 	format: 'Total: {total:,.0f}set(s)',
+							// 	enabled: true,
+							// 	style: {
+							// 		fontWeight: 'bold',
+							// 		color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+							// 	}
+							// }
 						},
 						tooltip: {
 							headerFormat: '<b>{point.x}</b><br/>',
-							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+							pointFormat: '{series.name}: {point.percentage:.0f}%'
 						},
 						plotOptions: {
 							column: {
@@ -831,19 +831,19 @@
 							min: 0,
 							title: {
 								text: ''
-							},
-							stackLabels: {
-								format: 'Total: {total:,.0f}set(s)',
-								enabled: true,
-								style: {
-									fontWeight: 'bold',
-									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-								}
 							}
+							// stackLabels: {
+							// 	format: 'Total: {total:,.0f}set(s)',
+							// 	enabled: true,
+							// 	style: {
+							// 		fontWeight: 'bold',
+							// 		color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+							// 	}
+							// }
 						},
 						tooltip: {
 							headerFormat: '<b>{point.x}</b><br/>',
-							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+							pointFormat: '{series.name}: {point.percentage:.0f}%'
 						},
 						plotOptions: {
 							column: {

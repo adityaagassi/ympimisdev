@@ -37,9 +37,9 @@ class ChoreiController extends Controller
 		}
 		if($request->get('name') == 'Plan'){
 			$blData = $blData->select('materials.material_number', 'materials.material_description', 
-				db::raw('if(sum(shipment_schedules.quantity)-sum(flos.actual) < 0, 0, sum(shipment_schedules.quantity)-sum(flos.actual)) as quantity'))
+				db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity'))
 			->groupBy('materials.material_number', 'materials.material_description')
-			->having(db::raw('if(sum(shipment_schedules.quantity)-sum(flos.actual) < 0, 0, sum(shipment_schedules.quantity)-sum(flos.actual))'), '>', 0)
+			->having(db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0))'), '>', 0)
 			->get();
 		}
 
