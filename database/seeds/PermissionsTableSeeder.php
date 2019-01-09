@@ -284,6 +284,24 @@ class PermissionsTableSeeder extends Seeder
         DB::table('permissions')->insert(
             [
                 'role_code' => 'S',
+                'navigation_code' => 'S9',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('permissions')->insert(
+            [
+                'role_code' => 'S',
+                'navigation_code' => 'S10',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('permissions')->insert(
+            [
+                'role_code' => 'S',
                 'navigation_code' => 'R0',
                 'created_by' => '1',
                 'created_at' => date('Y-m-d H:i:s'),

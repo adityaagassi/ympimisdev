@@ -292,6 +292,15 @@ class NavigationsTableSeeder extends Seeder
         );
         DB::table('navigations')->insert(
             [
+                'navigation_code' => 'S10',
+                'navigation_name' => 'Counter Serial Number',
+                'created_by' => '1',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]
+        );
+        DB::table('navigations')->insert(
+            [
                 'navigation_code' => 'R0',
                 'navigation_name' => 'Report Menu',
                 'created_by' => '1',
