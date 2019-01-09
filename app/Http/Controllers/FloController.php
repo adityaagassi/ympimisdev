@@ -1153,7 +1153,6 @@ class FloController extends Controller
 
 				$printer->initialize();
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->text("Qty Actual:".$flo->actual."\n"); 
 				$printer->text("------------------------------------");
 				$printer->feed(1);
 				$printer->text("|Qty:             |Qty:            |");
@@ -1168,6 +1167,7 @@ class FloController extends Controller
 				$printer->feed(1);
 				$printer->text("------------------------------------");
 				$printer->feed(2);
+				$printer->text("Qty Actual:".$flo->actual."\n"); 
 				$printer->text($list."\n"); 
 				$printer->feed(2);
 				$printer->initialize();                   
