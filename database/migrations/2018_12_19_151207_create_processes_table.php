@@ -17,6 +17,7 @@ class CreateProcessesTable extends Migration
             $table->increments('id');
             $table->string('process_code');
             $table->string('process_name');
+            $table->string('remark');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
