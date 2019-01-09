@@ -984,7 +984,6 @@ class FloController extends Controller
 			);
 			return Response::json($response);
 		}
-
 	}
 
 	public function cancel_flo_settlement(Request $request)
@@ -1036,6 +1035,15 @@ class FloController extends Controller
 		$status = $request->get('status')-1;
 		$flo = Flo::where('flo_number', '=', $request->get('flo_number'))
 		->where('status', '=', $status)
+		->first();
+
+		$closure = Flo::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+		->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
+		->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
+		->where('flo_number', '=', $request->get('flo_number'))
+		->where('status', '=', $status)
+		->select('materials.material_number', 'flos.flo_number', 'destinations.destination_shortname', 'shipment_conditions.shipment_condition_name', 'materials.material_description', 'flos.actual', 'shipment_schedules.st_date')
 		->first();
 
 		if($flo != null){
@@ -1109,9 +1117,9 @@ class FloController extends Controller
 				$printer->setUnderline(false);
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->barcode(intVal($flo_number), Printer::BARCODE_CODE39);
+				$printer->barcode(intVal($closure->flo_number), Printer::BARCODE_CODE39);
 				$printer->setTextSize(3, 1);
-				$printer->text($flo_number."\n\n");
+				$printer->text($closure->flo_number."\n\n");
 				$printer->initialize();
 
 				$printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -1122,7 +1130,7 @@ class FloController extends Controller
 
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(6, 3);
-				$printer->text(strtoupper($shipment_schedule->destination_shortname."\n\n"));
+				$printer->text(strtoupper($closure->destination_shortname."\n\n"));
 				$printer->initialize();
 
 				$printer->setUnderline(true);
@@ -1131,7 +1139,7 @@ class FloController extends Controller
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(4, 2);
-				$printer->text(date('d-M-Y', strtotime($shipment_schedule->st_date))."\n\n");
+				$printer->text(date('d-M-Y', strtotime($closure->st_date))."\n\n");
 				$printer->initialize();
 
 				$printer->setUnderline(true);
@@ -1140,35 +1148,35 @@ class FloController extends Controller
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(4, 2);
-				$printer->text(strtoupper($shipment_schedule->shipment_condition_name)."\n\n");
+				$printer->text(strtoupper($closure->shipment_condition_name)."\n\n");
 
 				$printer->initialize();
 				$printer->setTextSize(2, 2);
-				$printer->text("   ".strtoupper($shipment_schedule->material_number)."\n");
-				$printer->text("   ".strtoupper($shipment_schedule->material_description)."\n");
+				$printer->text("   ".strtoupper($closure->material_number)."\n");
+				$printer->text("   ".strtoupper($closure->material_description)."\n");
 
 				$printer->initialize();
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->text("Qty:".$flo->actual."\n"); 
-				$printer->text("------------------");
+				$printer->text("------------------------------------");
 				$printer->feed(1);
-				$printer->text("|Check Qty:      |");
+				$printer->text("|Qty:             |Qty:            |");
 				$printer->feed(1);
-				$printer->text("|                |");
+				$printer->text("|                 |                |");
 				$printer->feed(1);
-				$printer->text("|                |");
+				$printer->text("|                 |                |");
 				$printer->feed(1);
-				$printer->text("|                |");
+				$printer->text("|                 |                |");
 				$printer->feed(1);
-				$printer->text("|Logistic        |");
+				$printer->text("|Production       |Logistic        |");
 				$printer->feed(1);
-				$printer->text("------------------");
+				$printer->text("------------------------------------");
 				$printer->feed(2);
+				$printer->text("Qty:".$closure->actual."\n");
+				$printer->text($list."\n");
 				$printer->initialize();                   
 				$printer->cut();
 				$printer->close();
 			}
-			
 
 			$response = array(
 				'status' => true,
