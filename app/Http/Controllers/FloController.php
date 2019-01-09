@@ -1034,11 +1034,7 @@ class FloController extends Controller
 	{
 		$id = Auth::id();
 		$status = $request->get('status')-1;
-		$flo = Flo::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-		->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
-		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
-		->where('flo_number', '=', $request->get('flo_number'))
+		$flo = Flo::where('flo_number', '=', $request->get('flo_number'))
 		->where('status', '=', $status)
 		->first();
 
@@ -1113,9 +1109,9 @@ class FloController extends Controller
 				$printer->setUnderline(false);
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->barcode(intVal($request->get('flo_number')), Printer::BARCODE_CODE39);
+				$printer->barcode(intVal($flo_number), Printer::BARCODE_CODE39);
 				$printer->setTextSize(3, 1);
-				$printer->text($request->get('flo_number')."\n\n");
+				$printer->text($flo_number."\n\n");
 				$printer->initialize();
 
 				$printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -1126,7 +1122,7 @@ class FloController extends Controller
 
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(6, 3);
-				$printer->text(strtoupper($flo->destination_shortname."\n\n"));
+				$printer->text(strtoupper($shipment_schedule->destination_shortname."\n\n"));
 				$printer->initialize();
 
 				$printer->setUnderline(true);
@@ -1135,7 +1131,7 @@ class FloController extends Controller
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(4, 2);
-				$printer->text(date('d-M-Y', strtotime($flo->st_date))."\n\n");
+				$printer->text(date('d-M-Y', strtotime($shipment_schedule->st_date))."\n\n");
 				$printer->initialize();
 
 				$printer->setUnderline(true);
@@ -1144,37 +1140,36 @@ class FloController extends Controller
 				$printer->feed(1);
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(4, 2);
-				$printer->text(strtoupper($flo->shipment_condition_name)."\n\n");
+				$printer->text(strtoupper($shipment_schedule->shipment_condition_name)."\n\n");
 
 				$printer->initialize();
 				$printer->setTextSize(2, 2);
-				$printer->text("   ".strtoupper($flo->material_number)."\n");
-				$printer->text("   ".strtoupper($flo->material_description)."\n");
+				$printer->text("   ".strtoupper($shipment_schedule->material_number)."\n");
+				$printer->text("   ".strtoupper($shipment_schedule->material_description)."\n");
 
 				$printer->initialize();
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->text("------------------------------------");
+				$printer->text("Qty:".$flo->actual."\n"); 
+				$printer->text("------------------");
 				$printer->feed(1);
-				$printer->text("|Qty:             |Qty:            |");
+				$printer->text("|Check Qty:      |");
 				$printer->feed(1);
-				$printer->text("|                 |                |");
+				$printer->text("|                |");
 				$printer->feed(1);
-				$printer->text("|                 |                |");
+				$printer->text("|                |");
 				$printer->feed(1);
-				$printer->text("|                 |                |");
+				$printer->text("|                |");
 				$printer->feed(1);
-				$printer->text("|Production       |Logistic        |");
+				$printer->text("|Logistic        |");
 				$printer->feed(1);
-				$printer->text("------------------------------------");
-				$printer->feed(2);
-				$printer->text("Qty Actual:".$flo->actual."\n"); 
-				$printer->text($list."\n"); 
+				$printer->text("------------------");
 				$printer->feed(2);
 				$printer->initialize();                   
 				$printer->cut();
 				$printer->close();
 			}
 			
+
 			$response = array(
 				'status' => true,
 				'message' => "FLO " . $request->get('flo_number') . " has been settled.",
