@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use App\Libraries\ActMLEasyIf;
+use Response;
 
 class TrialController extends Controller
 {
@@ -34,6 +36,29 @@ class TrialController extends Controller
 				$error_code = $e->errorInfo[1];
 				echo $e;
 			}
-		}	
+		}
+	}
+
+	public function indexCensor(){
+		return view('trials.censor');
+	}
+
+	public function trialCensor(){
+		try{
+			$plc = new ActMLEasyIf(0);
+			$datas = $plc->read_data('D0', 16);
+
+			$response = array(
+				'status' => true,
+				'dataCensor' => $datas,
+			);
+			return Response::json($response);
+		}
+		catch (Exception $e){
+			$response = array(
+				'status' => false,
+			);
+			return Response::json($response);
+		}
 	}
 }

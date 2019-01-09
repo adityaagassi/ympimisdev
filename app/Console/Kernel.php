@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\UploadCompletions::class,
         Commands\UploadTransfers::class,
+        Commands\PlanStamps::class,
     ];
 
     /**
@@ -26,12 +27,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $batchs = BatchSetting::get();
+        $batch_flos = BatchSetting::where('remark', '=', 'FLO')->get();
+        $batch_plan_stamps = BatchSetting::where('remark', '=', 'PLANSTAMP')->get();
         
-        foreach($batchs as $batch){
-            if($batch->upload == 1){
-                $schedule->command('upload:completions')->dailyAt(date('H:i', strtotime($batch->batch_time)));
-                $schedule->command('upload:transfers')->dailyAt(date('H:i', strtotime($batch->batch_time)));
+        foreach($batch_flos as $batch_flo){
+            if($batch_flo->upload == 1){
+                $schedule->command('upload:completions')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
+                $schedule->command('upload:transfers')->dailyAt(date('H:i', strtotime($batch_flo->batch_time)));
+            }
+        }
+
+        foreach($batch_plan_stamps as $batch_plan_stamp){
+            if($batch_plan_stamp->upload == 1){
+                $schedule->command('plan:stamps')->dailyAt(date('H:i', strtotime($batch_plan_stamp->batch_time)));
             }
         }
     }

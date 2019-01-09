@@ -176,6 +176,22 @@
       </li>
       @endif
 
+      @if(in_array('S10', $navs))
+      @if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
+        <a href="#">
+          <i class="fa fa-tv"></i> <span>Assembly Process</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
+          </li>
+        </ul>
+      </li>
+      @endif
+
       @if(in_array('R0', $navs))
       <li class="header">Report Menu</li>
       @endif
