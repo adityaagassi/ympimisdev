@@ -52,6 +52,7 @@
                     <th>Origin Group</th>
                     <th>HPL</th>
                     <th>Cat.</th>
+                    <th>Mod.</th>
                     <th>Action</th>
                     {{-- <th>Edit</th>
                       <th>Delete</th> --}}
@@ -73,6 +74,7 @@
                       </td>
                       <td style="font-size: 14">{{$material->hpl}}</td>
                       <td style="font-size: 14">{{$material->category}}</td>
+                      <td style="font-size: 14">{{$material->model}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

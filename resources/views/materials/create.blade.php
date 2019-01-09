@@ -97,6 +97,12 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Model<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="model" placeholder="Enter Model" required>
+          </div>
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/material') }}">Cancel</a>

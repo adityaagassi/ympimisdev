@@ -111,6 +111,7 @@ class MaterialController extends Controller
           'origin_group_code' => $request->get('origin_group_code'),
           'hpl' => $request->get('hpl'),
           'category' => $request->get('category'),
+          'model' => $request->get('model'),
           'created_by' => $id
         ]);
 
@@ -162,6 +163,7 @@ class MaterialController extends Controller
         'origin_groups' => $origin_groups,
         'hpls' => $hpls,
         'categories' => $categories,
+        'model' => $model,
       ))->with('page', 'Material');
         //
     }
@@ -185,6 +187,7 @@ class MaterialController extends Controller
         $material->origin_group_code = $request->get('origin_group_code');
         $material->hpl = $request->get('hpl');
         $material->category = $request->get('category');
+        $material->model = $request->get('model');
         $material->save();
 
         return redirect('/index/material')->with('status', 'Material data has been edited.')->with('page', 'Material');
@@ -245,6 +248,7 @@ class MaterialController extends Controller
                   'origin_group_code' => $row[4],
                   'hpl' => $row[5],
                   'category' => $row[6],
+                  'model' => $row[7],
                   'created_by' => $id,
                 ]);
 
