@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMaterialsTable extends Migration
+class CreatePlcCountersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,14 @@ class CreateMaterialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('materials', function (Blueprint $table) {
+        Schema::create('plc_counters', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('material_number')->unique();
-            $table->string('material_description');
-            $table->string('base_unit');
-            $table->string('issue_storage_location');
             $table->string('origin_group_code');
-            $table->string('hpl');
-            $table->string('category');
-            $table->string('model');
+            $table->string('plc_counter');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['origin_group_code', 'plc_counter'], 'plc_counter_unique');
         });
     }
 
@@ -36,6 +31,6 @@ class CreateMaterialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('plc_counters');
     }
 }

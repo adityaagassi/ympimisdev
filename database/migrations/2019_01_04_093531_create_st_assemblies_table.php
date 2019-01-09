@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMaterialsTable extends Migration
+class CreateStAssembliesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreateMaterialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('materials', function (Blueprint $table) {
+        Schema::create('st_assemblies', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('material_number')->unique();
-            $table->string('material_description');
-            $table->string('base_unit');
-            $table->string('issue_storage_location');
             $table->string('origin_group_code');
-            $table->string('hpl');
-            $table->string('category');
             $table->string('model');
+            $table->string('process_code');
+            $table->double('st')->default('0');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
@@ -36,6 +32,6 @@ class CreateMaterialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('st_assemblies');
     }
 }
