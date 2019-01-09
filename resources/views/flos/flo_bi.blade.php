@@ -480,6 +480,7 @@ function scanFloNumber(){
 	var data = {
 		flo_number : flo_number,
 		status : '1',
+		type : 'bi',
 	}
 	$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 		console.log(status);
