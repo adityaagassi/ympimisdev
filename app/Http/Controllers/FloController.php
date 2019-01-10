@@ -848,6 +848,9 @@ class FloController extends Controller
 		elseif(Auth::user()->role_code == "S"){
 			$printer_name = 'SUPERMAN';
 		}
+		elseif(Auth::user()->role_code == "OP-WH-Exim"){
+			$printer_name = 'FLO Printer WH';
+		}
 		else{
 			$response = array(
 				'status' => false,
