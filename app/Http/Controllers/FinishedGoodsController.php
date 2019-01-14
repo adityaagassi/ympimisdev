@@ -333,13 +333,12 @@ class FinishedGoodsController extends Controller
 		}
 
 		$count1 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Open" as status'), DB::raw('count(container_id)-count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
-		->groupBy('container_schedules.shipment_date')->get();
+		->groupBy('container_schedules.shipment_date')->orderBy('container_schedules.shipment_date')->get();
 
 		$count2 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Departed" as status'), DB::raw('count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
-		->groupBy('container_schedules.shipment_date')->get();
+		->groupBy('container_schedules.shipment_date')->orderBy('container_schedules.shipment_date')->get();
 
-		$merge = $count1->merge($count2);
-		$table1 = $merge->sortBy('shipment_date');
+		$table1 = $count1->merge($count2);
 
 		// $count3 = DB::table('flos')
 		// ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
