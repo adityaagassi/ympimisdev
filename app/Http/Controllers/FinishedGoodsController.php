@@ -338,7 +338,8 @@ class FinishedGoodsController extends Controller
 		$count2 = $container_schedules->select('container_schedules.shipment_date', DB::raw('"Departed" as status'), DB::raw('count(if(container_schedules.container_number is null or container_schedules.container_number = "", null, 1)) as quantity'))
 		->groupBy('container_schedules.shipment_date')->get();
 
-		$table1 = $count1->merge($count2);
+		$merge = $count1->merge($count2);
+		$table1 = $merge->sortBy('shipment_date');
 
 		// $count3 = DB::table('flos')
 		// ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
