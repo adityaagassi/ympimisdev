@@ -153,7 +153,6 @@ thead input {
 					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
 					var data = result.jsonData;
 
-
 					$('#tableStockBody').html("");
 					var tableStockData = '';
 					$('#tableStock').DataTable().clear();
