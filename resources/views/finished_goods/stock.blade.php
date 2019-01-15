@@ -118,9 +118,9 @@ thead input {
 
 	jQuery(document).ready(function() {
 		fillChart();
-		setInterval(function(){
+		// setInterval(function(){
 			fillChart();
-		}, 60000);
+		// }, 60000);
 	});
 
 	function addZero(i) {
@@ -156,6 +156,8 @@ thead input {
 
 					$('#tableStockBody').html("");
 					var tableStockData = '';
+					$('#tableStock').DataTable().clear();
+					$('#tableStock').DataTable().destroy();
 
 					$.each(result.stockData, function(key, value) {
 						tableStockData += '<tr>';
