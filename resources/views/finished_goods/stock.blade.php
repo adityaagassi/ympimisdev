@@ -1,6 +1,11 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}
 </style>
 @stop
 
@@ -24,6 +29,34 @@
 				</div>
 				<div class="box-body">
 					<div id="container" style="width:100%; height:450px;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="box">
+				<div class="box-header with-border" id="boxTitle">
+				</div>
+				<div class="box-body">
+					<table id="tableStock" class="table table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th style="width : 10%">Material Number</th>
+								<th style="width : 40%">Description</th>
+								<th style="width : 10%">Destination</th>
+								<th style="width : 10%">Location</th>
+								<th style="width : 20%">Quantity</th>
+							</tr>
+						</thead>
+						<tbody id="tableStockBody">
+						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+						</tfoot>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -69,6 +102,13 @@
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+{{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -112,6 +152,81 @@
 					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Total Stock: <b>'+ result.total_stock + ' pc(s)</b> &#8786; <b>'+ result.total_volume.toFixed(2) +' m&sup3;</b> (<b>' + (result.total_volume/52).toFixed(2) + ' container(s)</b>)</h4>');
 					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
 					var data = result.jsonData;
+
+
+					$('#tableStockBody').html("");
+					var tableStockData = '';
+
+					$.each(result.stockData, function(key, value) {
+						tableStockData += '<tr>';
+						tableStockData += '<td>'+ value.material_number +'</td>';
+						tableStockData += '<td>'+ value.material_description +'</td>';
+						tableStockData += '<td>'+ value.destination_shortname +'</td>';
+						tableStockData += '<td>'+ value.location +'</td>';
+						tableStockData += '<td>'+ value.quantity +'</td>';
+						tableStockData += '</tr>';
+					});
+					$('#tableStockBody').append(tableStockData);
+
+					$('#tableStock tfoot th').each( function () {
+						var title = $(this).text();
+						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+					});
+
+					var table = $('#tableStock').DataTable({
+						'dom': 'Bfrtip',
+						'responsive': true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							]
+						}
+					});
+
+					table.columns().every( function () {
+						var that = this;
+
+						$( 'input', this.footer() ).on( 'keyup change', function () {
+							if ( that.search() !== this.value ) {
+								that
+								.search( this.value )
+								.draw();
+							}
+						} );
+					});
+
+					$('#tableStock tfoot tr').appendTo('#tableStock thead');
 					// data = data.reverse()
 					// var seriesData = [];
 					// var xCategories = [];
@@ -230,61 +345,61 @@
 				alert('Disconnected from server');
 			}
 		});
+}
+
+function modalStock(destination, location){
+	if(location == 'Production'){
+		var status = ['0', 'M'];
+	}
+	if(location == 'InTransit'){
+		var status = ['1'];
+	}
+	if(location == 'FSTK'){
+		var status = ['2'];
+	}
+	var data = {
+		status:status,
+		destination:destination
 	}
 
-	function modalStock(destination, location){
-		if(location == 'Production'){
-			var status = ['0', 'M'];
-		}
-		if(location == 'InTransit'){
-			var status = ['1'];
-		}
-		if(location == 'FSTK'){
-			var status = ['2'];
-		}
-		var data = {
-			status:status,
-			destination:destination
-		}
-
-		$.get('{{ url("fetch/tb_stock") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$('#tableBody').html("");
-					$('.modal-title').html("");
-					$('.modal-title').html('Location <b>' + result.location+ '</b> for Destination <b>' +result.title+'</b>');
-					var tableData = '';
-					var totalQty = 0;
-					var totalM3 = 0;
-					$.each(result.table, function(key, value) {
-						totalQty += value.actual;
-						totalM3 += (((value.length*value.width*value.height)/value.lot_carton)*value.actual);
-						tableData += '<tr>';
-						tableData += '<td>'+ value.material_number +'</td>';
-						tableData += '<td>'+ value.material_description +'</td>';
-						tableData += '<td>'+ value.actual +'</td>';
-						tableData += '<td>'+ (((value.length*value.width*value.height)/value.lot_carton)*value.actual).toFixed(2).toLocaleString() +'</td>';
-						tableData += '</tr>';
-					});
-					$('#tableBody').append(tableData);
-					$('#modalStock').modal('show');
-					$('#totalQty').html('');
-					$('#totalQty').append(totalQty.toLocaleString());
-					$('#totalM3').html('');
-					$('#totalM3').append(totalM3.toFixed(2).toLocaleString());
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
+	$.get('{{ url("fetch/tb_stock") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#tableBody').html("");
+				$('.modal-title').html("");
+				$('.modal-title').html('Location <b>' + result.location+ '</b> for Destination <b>' +result.title+'</b>');
+				var tableData = '';
+				var totalQty = 0;
+				var totalM3 = 0;
+				$.each(result.table, function(key, value) {
+					totalQty += value.actual;
+					totalM3 += (((value.length*value.width*value.height)/value.lot_carton)*value.actual);
+					tableData += '<tr>';
+					tableData += '<td>'+ value.material_number +'</td>';
+					tableData += '<td>'+ value.material_description +'</td>';
+					tableData += '<td>'+ value.actual +'</td>';
+					tableData += '<td>'+ (((value.length*value.width*value.height)/value.lot_carton)*value.actual).toFixed(2).toLocaleString() +'</td>';
+					tableData += '</tr>';
+				});
+				$('#tableBody').append(tableData);
+				$('#modalStock').modal('show');
+				$('#totalQty').html('');
+				$('#totalQty').append(totalQty.toLocaleString());
+				$('#totalM3').html('');
+				$('#totalM3').append(totalM3.toFixed(2).toLocaleString());
 			}
 			else{
-				alert('Disconnected from server');
+				alert('Attempt to retrieve data failed');
 			}
-		});
-	}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
 
 </script>
 @endsection

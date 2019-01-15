@@ -399,11 +399,24 @@ class FinishedGoodsController extends Controller
 		$jsonData = $stock->select(db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), DB::raw('sum(if(flos.status = "0" or flos.status = "M", flos.actual, 0)) as production'), DB::raw('sum(if(flos.status = "1", flos.actual, 0)) as intransit'), DB::raw('sum(if(flos.status = "2", flos.actual, 0)) as fstk'), DB::raw('sum(flos.actual) as actual'))
 		->groupBy('destinations.destination_shortname')->orderBy(db::raw('actual'), 'desc')->get();
 
+		$stock = DB::table('flos')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->select('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', db::raw('if(flos.status = "M" or flos.status = "0", "Production", if(flos.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(flos.actual) as quantity'))
+		->whereIn('flos.status', ['0', '1', '2', 'M'])
+		->where('flos.actual', '>', 0)
+		->whereNotNull('shipment_schedules.id')
+		->groupBy('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', 'flos.status')
+		->orderBy('shipment_schedules.material_number', 'destinations.destination_shortname')
+		->get();
+
 		$response = array(
 			'status' => true,
 			'jsonData' => $jsonData,
 			'total_volume' => $total_volume,
 			'total_stock' => $total_stock,
+			'stockData' => $stock,
 		);
 		return Response::json($response);
 	}
