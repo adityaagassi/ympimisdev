@@ -39,7 +39,7 @@
 </section>
 @endsection
 @section('content')
-<section class="content">
+<section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-8">
 			<div id="container" style="width:100%; height:550px;"></div>

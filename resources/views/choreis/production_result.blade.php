@@ -39,7 +39,7 @@
 </section>
 @stop
 @section('content')
-<section class="content">
+<section class="content" style="padding-top: 0">
 	<div class="row">
 		<div class="col-md-12 picker" id="weekResult">
 		</div>
