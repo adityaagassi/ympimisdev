@@ -49,12 +49,14 @@ thead input {
 						</thead>
 						<tbody id="tableStockBody">
 						</tbody>
-						<tfoot style="background-color: RGB(252, 248, 227);">
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
+						<tfoot >
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
 						</tfoot>
 					</table>
 				</div>
@@ -118,9 +120,9 @@ thead input {
 
 	jQuery(document).ready(function() {
 		fillChart();
-		// setInterval(function(){
+		setInterval(function(){
 			fillChart();
-		// }, 60000);
+		}, 60000);
 	});
 
 	function addZero(i) {
@@ -148,6 +150,8 @@ thead input {
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+					$('#tableStock').DataTable().clear();
+					$('#tableStock').DataTable().destroy();
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Total Stock: <b>'+ result.total_stock + ' pc(s)</b> &#8786; <b>'+ result.total_volume.toFixed(2) +' m&sup3;</b> (<b>' + (result.total_volume/52).toFixed(2) + ' container(s)</b>)</h4>');
 					$('#boxTitle').append('<div class="pull-right"><b>1 Container &#8786; 52 m&sup3</b></div>');
@@ -155,8 +159,6 @@ thead input {
 
 					$('#tableStockBody').html("");
 					var tableStockData = '';
-					$('#tableStock').DataTable().clear();
-					$('#tableStock').DataTable().destroy();
 
 					$.each(result.stockData, function(key, value) {
 						tableStockData += '<tr>';
@@ -171,8 +173,8 @@ thead input {
 
 					$('#tableStock tfoot th').each( function () {
 						var title = $(this).text();
-						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-					});
+						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+					} );
 
 					var table = $('#tableStock').DataTable({
 						'dom': 'Bfrtip',
@@ -225,7 +227,7 @@ thead input {
 								.draw();
 							}
 						} );
-					});
+					} );
 
 					$('#tableStock tfoot tr').appendTo('#tableStock thead');
 					// data = data.reverse()
