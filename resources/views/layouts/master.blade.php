@@ -20,7 +20,7 @@
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
 </head>
-<body class="hold-transition skin-purple sidebar-mini">
+<body class="hold-transition skin-purple fixed sidebar-mini">
   <div class="wrapper">
     @include('layouts.header')
     @include('layouts.leftbar')
