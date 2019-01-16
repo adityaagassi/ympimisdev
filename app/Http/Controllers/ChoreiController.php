@@ -322,6 +322,7 @@ class ChoreiController extends Controller
 			'chartResult2' => $chartResult2,
 			'chartResult3' => $chartResult3,
 			'week' => 'Week ' . substr($week2->week_name, 1),
+			// 'week2' => $week2->week_name,
 			'weekTitle' => 'Week ' . substr($week->week_name, 1),
 			'dateTitle' => date('d F Y', strtotime($date)),
 			'now' => $now,

@@ -50,14 +50,14 @@
 		<div class="col-md-12">
 			<br>
 		</div>
-		<input type="hidden" name="dateHidden" id="dateHidden">
+		<input type="hidden" name="dateHidden" value="{{ date('Y-m-d') }}" id="dateHidden">
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">BI Production Result<br><span class="text-purple">BI生産実績</span></a></li>
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Production Result<br><span class="text-purple">生産実績</span></a></li>
 					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">BI Production Accuracy<br><span class="text-purple">BI週次出荷</span></a></li>
 					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">BI Weekly Shipment<br><span class="text-purple">BI週次出荷</span></a></li>
-					<li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">EI Production Result<br><span class="text-purple">EI生産実績</span></a></li>
+					{{-- <li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">EI Production Result<br><span class="text-purple">EI生産実績</span></a></li> --}}
 					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">EI Production Accuracy<br><span class="text-purple">EI週次出荷</span></a></li>
 					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">EI Weekly Shipment<br><span class="text-purple">EI週次出荷</span></a></li>
 				</ul>
@@ -71,9 +71,9 @@
 					<div class="tab-pane" id="tab_3">
 						<div id="container3" style="width:100%; height:500px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_4">
+					{{-- <div class="tab-pane" id="tab_4">
 						<div id="container4" style="width:100%; height:500px;"></div>
-					</div>
+					</div> --}}
 					<div class="tab-pane" id="tab_5">
 						<div id="container5" style="width:100%; height:500px;"></div>
 					</div>
@@ -152,13 +152,13 @@
 				case 51:
 				$("#tab_header_3").click()
 				break;
+				// case 52:
+				// $("#tab_header_4").click()
+				// break;
 				case 52:
-				$("#tab_header_4").click()
-				break;
-				case 53:
 				$("#tab_header_5").click()
 				break;
-				case 54:
+				case 53:
 				$("#tab_header_6").click()
 				break;
 			}
@@ -237,8 +237,6 @@
 	}
 
 	function fillChart(id){
-		$("#dateResult .btn").removeClass("btn-active");
-		$("#"+id+"").addClass("btn-active");
 		if(id != 0){
 			$('#dateHidden').val(id);
 		}
@@ -261,17 +259,20 @@
 					, planCountEI = []
 					, actualCountEI = []
 
+					$("#dateResult .btn").removeClass("btn-active");
+					$("#"+date+"").addClass("btn-active");
+
 					for (i = 0; i < data.length; i++) {
-						if(jQuery.inArray(data[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
+						// if(jQuery.inArray(data[i].hpl, ['CLFG', 'ASFG', 'TSFG', 'FLFG']) !== -1){
 							xAxis.push(data[i].hpl);
 							planCount.push(data[i].plan);
 							actualCount.push(data[i].actual);							
-						}
-						if(jQuery.inArray(data[i].hpl, ['RC', 'VENOVA', 'PN']) !== -1){
-							xAxisEI.push(data[i].hpl);
-							planCountEI.push(data[i].plan);
-							actualCountEI.push(data[i].actual);
-						}
+						// }
+						// if(jQuery.inArray(data[i].hpl, ['RC', 'VENOVA', 'PN']) !== -1){
+						// 	xAxisEI.push(data[i].hpl);
+						// 	planCountEI.push(data[i].plan);
+						// 	actualCountEI.push(data[i].actual);
+						// }
 					}
 
 					var yAxisLabels = [0,25,50,75,110];
@@ -384,114 +385,114 @@
 						}]
 					});
 
-					Highcharts.chart('container4', {
-						colors: ['rgba(255, 0, 0, 0.25)','rgba(75, 30, 120, 0.70)'],
-						chart: {
-							type: 'column',
-							backgroundColor: null
-						},
-						legend: {
-							enabled:true,
-							itemStyle: {
-								fontSize:'20px',
-								font: '20pt Trebuchet MS, Verdana, sans-serif',
-								color: '#000000'
-							}
-						},
-						credits: {
-							enabled: false
-						},
-						title: {
-							text: '<span style="font-size: 30px;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)'
-							// style: {
-							// 	fontSize: '30px',
-							// 	fontWeight: 'bold'
-							// }
-						},
-						xAxis: {
-							categories: xAxisEI,
-							labels: {
-								style: {
-									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
-									fontWeight: 'bold'
-								}
-							}
-						},
-						yAxis: {
-							tickPositioner: function() {
-								return yAxisLabels;
-							},
-							labels: {
-								enabled:false
-							},
-							min: 0,
-							title: {
-								text: ''
-							},
-							stackLabels: {
-								format: 'Total: {total:,.0f}set(s)',
-								enabled: true,
-								style: {
-									fontWeight: 'bold',
-									color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-								}
-							}
-						},
-						tooltip: {
-							headerFormat: '<b>{point.x}</b><br/>',
-							pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
-						},
-						plotOptions: {
-							column: {
-								minPointLength: 1,
-								pointPadding: 0.2,
-								size: '95%',
-								borderWidth: 0,
-								events: {
-									legendItemClick: function () {
-										return false; 
-									}
-								},
-								animation:{
-									duration:0
-								}
-							},
-							series: {
-								pointPadding: 0.95,
-								groupPadding: 0.95,
-								borderWidth: 0.95,
-								shadow: false,
-								borderColor: '#303030',
-								cursor: 'pointer',
-								stacking: 'percent',
-								point: {
-									events: {
-										click: function () {
-											modalResult(this.category, this.series.name, result.now, result.first, result.last);
-										}
-									}
-								},
-								dataLabels: {
-									format: '{point.percentage:.0f}%',
-									enabled: true,
-									color: '#000000',
-									style: {
-										textOutline: false,
-										fontWeight: 'bold',
-										fontSize: '30px'
-									}
-								}
-							}
-						},
-						series: [{
-							name: 'Plan',
-							data: planCountEI
-						}, {
-							name: 'Actual',
-							data: actualCountEI
-						}]
-					});
+					// Highcharts.chart('container4', {
+					// 	colors: ['rgba(255, 0, 0, 0.25)','rgba(75, 30, 120, 0.70)'],
+					// 	chart: {
+					// 		type: 'column',
+					// 		backgroundColor: null
+					// 	},
+					// 	legend: {
+					// 		enabled:true,
+					// 		itemStyle: {
+					// 			fontSize:'20px',
+					// 			font: '20pt Trebuchet MS, Verdana, sans-serif',
+					// 			color: '#000000'
+					// 		}
+					// 	},
+					// 	credits: {
+					// 		enabled: false
+					// 	},
+					// 	title: {
+					// 		text: '<span style="font-size: 30px;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)'
+					// 		// style: {
+					// 		// 	fontSize: '30px',
+					// 		// 	fontWeight: 'bold'
+					// 		// }
+					// 	},
+					// 	xAxis: {
+					// 		categories: xAxisEI,
+					// 		labels: {
+					// 			style: {
+					// 				color: 'rgba(75, 30, 120)',
+					// 				fontSize: '20px',
+					// 				fontWeight: 'bold'
+					// 			}
+					// 		}
+					// 	},
+					// 	yAxis: {
+					// 		tickPositioner: function() {
+					// 			return yAxisLabels;
+					// 		},
+					// 		labels: {
+					// 			enabled:false
+					// 		},
+					// 		min: 0,
+					// 		title: {
+					// 			text: ''
+					// 		},
+					// 		stackLabels: {
+					// 			format: 'Total: {total:,.0f}set(s)',
+					// 			enabled: true,
+					// 			style: {
+					// 				fontWeight: 'bold',
+					// 				color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+					// 			}
+					// 		}
+					// 	},
+					// 	tooltip: {
+					// 		headerFormat: '<b>{point.x}</b><br/>',
+					// 		pointFormat: '{series.name}: {point.y}set(s) {point.percentage:.0f}%'
+					// 	},
+					// 	plotOptions: {
+					// 		column: {
+					// 			minPointLength: 1,
+					// 			pointPadding: 0.2,
+					// 			size: '95%',
+					// 			borderWidth: 0,
+					// 			events: {
+					// 				legendItemClick: function () {
+					// 					return false; 
+					// 				}
+					// 			},
+					// 			animation:{
+					// 				duration:0
+					// 			}
+					// 		},
+					// 		series: {
+					// 			pointPadding: 0.95,
+					// 			groupPadding: 0.95,
+					// 			borderWidth: 0.95,
+					// 			shadow: false,
+					// 			borderColor: '#303030',
+					// 			cursor: 'pointer',
+					// 			stacking: 'percent',
+					// 			point: {
+					// 				events: {
+					// 					click: function () {
+					// 						modalResult(this.category, this.series.name, result.now, result.first, result.last);
+					// 					}
+					// 				}
+					// 			},
+					// 			dataLabels: {
+					// 				format: '{point.percentage:.0f}%',
+					// 				enabled: true,
+					// 				color: '#000000',
+					// 				style: {
+					// 					textOutline: false,
+					// 					fontWeight: 'bold',
+					// 					fontSize: '30px'
+					// 				}
+					// 			}
+					// 		}
+					// 	},
+					// 	series: [{
+					// 		name: 'Plan',
+					// 		data: planCountEI
+					// 	}, {
+					// 		name: 'Actual',
+					// 		data: actualCountEI
+					// 	}]
+					// });
 
 					var data2 = result.chartResult2;
 					var xAxis2 = []
