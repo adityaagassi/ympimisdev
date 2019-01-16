@@ -120,9 +120,9 @@ thead input {
 
 	jQuery(document).ready(function() {
 		fillChart();
-		setInterval(function(){
-			fillChart();
-		}, 60000);
+		// setInterval(function(){
+		// 	fillChart();
+		// }, 10000);
 	});
 
 	function addZero(i) {
@@ -158,6 +158,7 @@ thead input {
 					var data = result.jsonData;
 
 					$('#tableStockBody').html("");
+					
 					var tableStockData = '';
 
 					$.each(result.stockData, function(key, value) {
@@ -170,11 +171,10 @@ thead input {
 						tableStockData += '</tr>';
 					});
 					$('#tableStockBody').append(tableStockData);
-
 					$('#tableStock tfoot th').each( function () {
 						var title = $(this).text();
 						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
-					} );
+					});
 
 					var table = $('#tableStock').DataTable({
 						'dom': 'Bfrtip',
@@ -228,7 +228,7 @@ thead input {
 							}
 						} );
 					} );
-
+					$('#tableStock thead').html("");
 					$('#tableStock tfoot tr').appendTo('#tableStock thead');
 					// data = data.reverse()
 					// var seriesData = [];
