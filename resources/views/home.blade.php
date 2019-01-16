@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('header')
 <section class="content-header" style="text-align: center;">
-    <span style="font-weight: bold; font-size: 30px">YMPI Information System <span class="text-purple">YMPI 情報システム</span></span>
+    <span style="font-size: 30px;" class="text-purple"><span style="font-size:36px;"><b>M</b></span>anufactur<span style="font-size:37px;"><b>i</b></span>ng <span style="font-size:36px;"><b>R</b></span>ealtime <span style="font-size:36px;"><b>A</b></span>cquisition of <span style="font-size:36px;"><b>I</b></span>nformation</span>
     <ol class="breadcrumb">
     </ol>
 </section>

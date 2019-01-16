@@ -1,8 +1,8 @@
   <header class="main-header">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <a href="{{ url("/home") }}" class="logo">
-      <span class="logo-mini"><b>M</b>IS</span>
-      <span class="logo-lg"><b>YMPI </b>情報システム</span>
+      <span class="logo-mini">MIS</span>
+      <span class="logo-lg"><b>M I R A I</b></span>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
