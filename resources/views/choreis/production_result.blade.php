@@ -23,6 +23,9 @@
 .vendor-tab{
 	width:100%;
 }
+.btn-active {
+	border: 5px solid rgb(255,77,77) !important;
+}
 </style>
 @stop
 @section('header')
@@ -131,7 +134,7 @@
 		$('body').toggleClass("sidebar-collapse");
 		fillWeek();
 		fillDate();
-		
+		fillChart($('#dateHidden').val());
 		setInterval(function(){
 			fillChart($('#dateHidden').val());
 		}, 10000);
@@ -187,6 +190,8 @@
 	}
 
 	function fillDate(id){
+		$("#weekResult .btn").removeClass("btn-active");
+		$("#"+id+"").addClass("btn-active");
 		var data = {
 			week:id,
 		}
@@ -232,6 +237,8 @@
 	}
 
 	function fillChart(id){
+		$("#dateResult .btn").removeClass("btn-active");
+		$("#"+id+"").addClass("btn-active");
 		if(id != 0){
 			$('#dateHidden').val(id);
 		}
