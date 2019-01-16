@@ -215,6 +215,7 @@ class ChoreiController extends Controller
 			$now = date('Y-m-d', strtotime($date));
 			$first = date('Y-m-d', strtotime(Carbon::parse('first day of '. date('F Y', strtotime($date)))));
 			$week = DB::table('weekly_calendars')->where('week_date', '=', $week_date)->first();
+			$week2 = DB::table('weekly_calendars')->where('week_date', '=', $date)->first();
 		}
 		else{
 			$date = date('Y-m-d');
@@ -222,6 +223,7 @@ class ChoreiController extends Controller
 			$week_date = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 			$first = date('Y-m-01');
 			$week = DB::table('weekly_calendars')->where('week_date', '=', $week_date)->first();
+			$week2 = DB::table('weekly_calendars')->where('week_date', '=', $date)->first();
 		}
 
 		if($date == date('Y-m-01', strtotime($date))){
@@ -319,6 +321,7 @@ class ChoreiController extends Controller
 			'chartResult1' => $chartResult1,
 			'chartResult2' => $chartResult2,
 			'chartResult3' => $chartResult3,
+			'week' => 'Week ' . substr($week2->week_name, 1),
 			'weekTitle' => 'Week ' . substr($week->week_name, 1),
 			'dateTitle' => date('d F Y', strtotime($date)),
 			'now' => $now,
