@@ -14,10 +14,11 @@
   <link rel="stylesheet" href="{{ asset("fonts/SourceSansPro.css")}}">
 </head>
 <body class="hold-transition login-page">
+  <div class="login-logo" style="padding-top: 100px;">
+    <a href="#" style="font-size: 40px"><b>MI</b>RAI<br></a>
+    <div class="col-md-12" style="text-align: center;"><span style="font-size: 24px"><b>M</b>anufactur<b>i</b>ng <b>R</b>ealtime <b>A</b>cquisition of <b>I</b>nformation</div></span>
+  </div>
   <div class="login-box">
-    <div class="login-logo">
-      <a href="#"><b>MI</b>RAI<br></a>
-    </div>
     <div class="login-box-body">
       <p class="login-box-msg">Sign in to start your session</p>
       <form method="post" action="{{ route('login') }}">
