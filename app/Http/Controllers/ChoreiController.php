@@ -20,27 +20,92 @@ class ChoreiController extends Controller
 	}
 
 	public function fetch_production_bl_modal(Request $request){
-		$blData = DB::table('shipment_schedules')
-		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', 'shipment_schedules.bl_date')
-		->leftJoin(db::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual from flos group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-		->where('weekly_calendars.week_name', '=', $request->get('week'))
-		->where('materials.category', '=', 'FG')
-		->where('materials.hpl', '=', $request->get('hpl'));
+		// $blData = DB::table('shipment_schedules')
+		// ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		// ->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', 'shipment_schedules.bl_date')
+		// ->leftJoin(db::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual from flos group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+		// ->where('weekly_calendars.week_name', '=', $request->get('week'))
+		// ->where('materials.category', '=', 'FG')
+		// ->where('materials.hpl', '=', $request->get('hpl'));
+
+		// if($request->get('name') == 'Actual'){
+		// 	$blData = $blData->select('materials.material_number', 'materials.material_description', 
+		// 		db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity'))
+		// 	->groupBy('materials.material_number', 'materials.material_description')
+		// 	->having(db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual))'), '>', 0)
+		// 	->get();
+		// }
+		// if($request->get('name') == 'Plan'){
+		// 	$blData = $blData->select('materials.material_number', 'materials.material_description', 
+		// 		db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity'))
+		// 	->groupBy('materials.material_number', 'materials.material_description')
+		// 	->having(db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0))'), '>', 0)
+		// 	->get();
+		// }
+		
+		$last_date = DB::table('weekly_calendars')
+		->where('week_name', '=', $request->get('week'))
+		->where('fiscal_year', '=', 'FY195')
+		->select(db::raw('min(week_date)'))
+		->first();
+
+		$query1 = "select material_number, material_description, sum(quantity) as quantity from
+		(
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0
+
+		union all
+
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
+		) as result1
+		group by material_number, material_description";
+
+		$query2 = "select material_number, material_description, sum(quantity) as quantity from
+		(
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0
+
+		union all
+
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
+		) as result1
+		group by material_number, material_description";
 
 		if($request->get('name') == 'Actual'){
-			$blData = $blData->select('materials.material_number', 'materials.material_description', 
-				db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity'))
-			->groupBy('materials.material_number', 'materials.material_description')
-			->having(db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual))'), '>', 0)
-			->get();
+			$blData = db::select($query1);
 		}
 		if($request->get('name') == 'Plan'){
-			$blData = $blData->select('materials.material_number', 'materials.material_description', 
-				db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity'))
-			->groupBy('materials.material_number', 'materials.material_description')
-			->having(db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0))'), '>', 0)
-			->get();
+			$blData = db::select($query2);
 		}
 
 		$response = array(
