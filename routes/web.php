@@ -313,6 +313,8 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::get('fetch/process_assy_fl_3/stockChart', 'ProcessController@fetchProcessAssyFL3StockChart');
 	Route::get('fetch/process_assy_fl_4/stockChart', 'ProcessController@fetchProcessAssyFL4StockChart');
 	Route::get('fetch/process_assy_fl_Display/stockChart', 'ProcessController@fetchProcessAssyFLDisplayStockChart');
+	Route::get('fetch/wipflallstock', 'ProcessController@fetchwipflallstock');
+	Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');
 
 	Route::get('fetch/process_assy_fl_2/actualChart', 'ProcessController@fetchProcessAssyFL2ActualChart');
 	Route::get('fetch/process_assy_fl_3/actualChart', 'ProcessController@fetchProcessAssyFL3ActualChart');
@@ -338,6 +340,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('stamp/stamp_detail', 'ProcessController@filter_stamp_detail');
 	Route::get('stamp/resumes', 'ProcessController@indexResumes');
 	Route::get('stamp/display', 'ProcessController@indexDisplay');
+	Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 });
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');

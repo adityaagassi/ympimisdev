@@ -267,7 +267,7 @@
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					resumeData += '	<div class="col-sm-4 col-xs-6">';
-					resumeData += '		<div class="description-block border-right">';
+					resumeData += '		<div class="description-block">';
 					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +Math.abs(totalActual-totalPlan).toLocaleString() +'</span></h5>';
 					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference<br><span class="text-purple">差異</span></span>';
 					resumeData += '		</div>';

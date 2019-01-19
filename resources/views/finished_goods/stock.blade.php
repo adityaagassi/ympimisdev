@@ -76,12 +76,10 @@ thead input {
 				<div class="modal-body table-responsive no-padding">
 					<table class="table table-hover">
 						<thead>
-							<tr>
-								<th style="font-size: 14">Material</th>
-								<th style="font-size: 14">Description</th>
-								<th style="font-size: 14">Quantity</th>
-								<th style="font-size: 14">m&sup3;</th>
-							</tr>
+							<th style="font-size: 14">Material</th>
+							<th style="font-size: 14">Description</th>
+							<th style="font-size: 14">Quantity</th>
+							<th style="font-size: 14">m&sup3;</th>
 						</thead>
 						<tbody id="tableBody">
 						</tbody>
@@ -170,6 +168,7 @@ thead input {
 						tableStockData += '<td>'+ value.quantity +'</td>';
 						tableStockData += '</tr>';
 					});
+
 					$('#tableStockBody').append(tableStockData);
 					$('#tableStock tfoot th').each( function () {
 						var title = $(this).text();

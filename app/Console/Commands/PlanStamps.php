@@ -21,7 +21,7 @@ class PlanStamps extends Command
      *
      * @var string
      */
-    protected $description = 'Creating plan for stamp';
+    protected $description = 'Creating plan for stamp process';
 
     /**
      * Create a new command instance.
@@ -44,7 +44,27 @@ class PlanStamps extends Command
 
         $now = date('Y-m-d');
 
-        $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+
+        if(date('D')=='Fri'){
+            $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+        }
+        elseif(date('D')=='Sat'){
+            $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+        }
+        else{
+            $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+        }
+
+        if(date('D')=='Fri'){
+            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+        }
+        elseif(date('D')=='Sat'){
+            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+        }
+        else{
+            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+        }
+
 
         $query = "select model, '" . $now . "' as due_date, sum(plan) as plan from
         (
@@ -53,6 +73,12 @@ class PlanStamps extends Command
         select material_number, quantity as plan
         from production_schedules 
         where due_date >= '" . $first . "' and due_date <= '" . $h4 . "'
+
+        union all
+
+        select material_number, round(quantity*0.2) as plan
+        from production_schedules 
+        where due_date = '" . $h5 . "'
 
         union all
 
@@ -68,7 +94,7 @@ class PlanStamps extends Command
         select model, -(quantity) as plan
         from stamp_inventories
         ) as result
-        group by model, due_date
+        group by model, due_date    
         having plan > 0";
 
         $planData = DB::select($query);

@@ -23,8 +23,10 @@ td:hover {
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<a href="{{ url("/stamp/display") }}" class="btn btn-warning btn-sm" style="color:white"><i class="fa fa-television "></i>&nbsp;Display</a>
-			<a href="javascript:void(0)" onclick="reprint()" class="btn btn-info btn-sm" style="color:white"><i class="fa fa-print "></i>&nbsp;Reprint</a>
+			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-warning btn-sm" style="color:white"><i class="fa fa-television "></i>&nbsp;Display</a>
+			<button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
+				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
+			</button>
 			<a href="javascript:void(0)" onclick="adjust()" class="btn btn-danger btn-sm" style="color:white"><i class="fa fa-edit "></i>&nbsp;Adjust Serial</a>
 			<a href="{{ url("/stamp/resumes") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
 		</li>
@@ -37,6 +39,20 @@ td:hover {
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>   
+	@endif
+	@if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
@@ -163,6 +179,33 @@ td:hover {
 	</div>
 </div>
 
+<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="titleModal">Reprint Stamp</h4>
+				</div>
+				<form class="form-horizontal" role="form" method="post" action="{{url('reprint/stamp')}}">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-body" id="messageModal">
+						<label>Serial Number</label>
+						<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
+							<option value=""></option>
+							@foreach($model2 as $model)
+							<option value="{{ $model->serial_number }}">{{ $model->serial_number }}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
