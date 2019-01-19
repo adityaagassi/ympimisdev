@@ -685,6 +685,12 @@ class FloController extends Controller
 				elseif(Auth::user()->role_code == "OP-Assy-VN"){
 					$printer_name = 'FLO Printer VN';
 				}
+				elseif(Auth::user()->role_code == "OP-WH-Exim"){
+					$printer_name = 'FLO Printer LOG';
+				}
+				elseif(Auth::user()->role_code == "MIS"){
+					$printer_name = 'FLO Printer MIS';
+				}				
 				elseif(Auth::user()->role_code == "S"){
 					$printer_name = 'SUPERMAN';
 				}
@@ -1108,6 +1114,9 @@ class FloController extends Controller
 				elseif(Auth::user()->role_code == "MIS"){
 					$printer_name = 'FLO Printer MIS';
 				}
+				elseif(Auth::user()->role_code == "OP-WH-Exim"){
+					$printer_name = 'FLO Printer LOG';
+				}				
 				$flo_details = DB::table('flo_details')->where('flo_number', '=', $request->get('flo_number'))->select('serial_number')->get();
 
 				foreach ($flo_details as $flo_detail) {

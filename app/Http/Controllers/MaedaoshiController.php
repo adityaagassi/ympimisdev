@@ -390,6 +390,12 @@ class MaedaoshiController extends Controller
 					elseif(Auth::user()->role_code == "OP-Assy-VN"){
 						$printer_name = 'FLO Printer VN';
 					}
+					elseif(Auth::user()->role_code == "OP-WH-Exim"){
+						$printer_name = 'FLO Printer LOG';
+					}
+					elseif(Auth::user()->role_code == "MIS"){
+						$printer_name = 'FLO Printer MIS';
+					}
 					elseif(Auth::user()->role_code == "S"){
 						$printer_name = 'SUPERMAN';
 					}
@@ -551,6 +557,12 @@ class MaedaoshiController extends Controller
 		elseif(Auth::user()->role_code == "OP-Assy-VN"){
 			$printer_name = 'FLO Printer VN';
 		}
+		elseif(Auth::user()->role_code == "OP-WH-Exim"){
+			$printer_name = 'FLO Printer LOG';
+		}
+		elseif(Auth::user()->role_code == "MIS"){
+			$printer_name = 'FLO Printer MIS';
+					}		
 		elseif(Auth::user()->role_code == "S"){
 			$printer_name = 'SUPERMAN';
 		}
@@ -736,13 +748,19 @@ class MaedaoshiController extends Controller
 			$printer_name = 'FLO Printer 104';
 		}
 		elseif(Auth::user()->role_code == "OP-Assy-RC"){
-			$printer_name = 'FLO Printer 105';
+			$printer_name = 'FLO Printer RC';
 		}
 		elseif(Auth::user()->role_code == "OP-Assy-VN"){
-			$printer_name = 'FLO Printer 106';
+			$printer_name = 'FLO Printer VN';
 		}
 		elseif(Auth::user()->role_code == "S"){
 			$printer_name = 'SUPERMAN';
+		}
+		elseif(Auth::user()->role_code == "MIS"){
+			$printer_name = 'FLO Printer MIS';
+		}
+			elseif(Auth::user()->role_code == "OP-WH-Exim"){
+			$printer_name = 'FLO Printer LOG';
 		}
 		else{
 			$response = array(

@@ -46,7 +46,7 @@ class ChoreiController extends Controller
 		$last_date = DB::table('weekly_calendars')
 		->where('week_name', '=', $request->get('week'))
 		->where('fiscal_year', '=', 'FY195')
-		->select(db::raw('min(week_date)'))
+		->select(db::raw('min(week_date) as week_date'))
 		->first();
 
 		$query1 = "select material_number, material_description, sum(quantity) as quantity from
