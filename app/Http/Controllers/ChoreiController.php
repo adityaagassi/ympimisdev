@@ -307,7 +307,16 @@ class ChoreiController extends Controller
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
 		left join materials on materials.material_number = shipment_schedules.material_number
-		where weekly_calendars.week_name = '".$week->week_name."' and materials.category = 'FG'
+		where weekly_calendars.week_name = '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG'
+
+		union all
+
+		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, flos.actual as actual from shipment_schedules 
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where weekly_calendars.week_name <> '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
 		) as result1
 		group by material_number, hpl, category
 		) result2
