@@ -4,7 +4,37 @@
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-	padding: 2px;
+	padding: 1px;
+}
+table.table-bordered{
+	border:1px solid black;
+	margin-top:20px;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid black;
+}
+.outer .chart-container {
+	width: 100%;
+	float: right;
+	height: 250px;
+}
+.highcharts-yaxis-grid .highcharts-grid-line {
+	display: none;
+}
+
+@media (max-width: 100%) {
+	.outer {
+		width: 100%;
+		height: 400px;
+	}
+	.outer .chart-container {
+		width: 100%;
+		float: right;
+		/*margin: 0 auto;*/
+	}
 }
 </style>
 @stop
@@ -41,54 +71,73 @@
 					<br>
 				</div>
 				<div class="col-xs-8">
-					<div id="chartActual" style="width: 100%; height: 300px"></div>
-					<div class="box box-solid">
-						<div class="box-body">
-							<table id="tableActual" class="table" style="width: 100%;">
-								<thead id="tableHeadActual">
-								</thead>
-								<tbody id="tableBodyActual">
-								</tbody>
-								<tfoot id="tableFootActual">
-								</tfoot>
-							</table>
+					<div id="container" style="width:100%; height:550px;"></div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box box-widget">
+								<div class="box-footer">
+									<div class="row" id="resume"></div>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div id="chartEfficiency" style="width: 100%; height: 200px"></div>
-					<div class="box box-solid">
-						<div class="box-body">
-							<table id="tableEfficiency" class="table" style="width: 100%;">
-								<thead id="tableHeadEfficiency">
-								</thead>
-								<tbody id="tableBodyEfficiency">
-								</tbody>
-								<tfoot id="tableFootEfficiency">
-								</tfoot>
-							</table>
-						</div>
-					</div>
+					</div>					
 				</div>
-				<div class="col-xs-4">
-					<center>
-						<div id="chartStock" style="width: 100%"></div>
-					</center>
-					<div class="box box-solid bg-light-blue-gradient">
-						<div class="box-body">
-							<table id="tableStock" class="table table-bordered" style="width: 100%;">
+				<div class="col-xs-4 outer">
+					<div id="container2" class="chart-container" style="width:100%;"></div>
+					<div class="row">
+						<div class="col-xs-12">
+							<table class="table table-bordered" style="width: 100%;">
 								<thead>
-									<th style="text-align: center; width: 30%;">Model</th>
-									<th style="text-align: center; width: 30%;">Plan</th>
-									<th style="text-align: center; width: 40%;">Stock WIP</th>
+									<tr>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Last Input</th>
+									</tr>
 								</thead>
-								<tbody id="tableBodyStock">
+								<tbody>
+									<tr>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="lastOutput">-</td>
+									</tr>
 								</tbody>
-								<tfoot id="tableFootStock">
-								</tfoot>
+							</table>
+							<table class="table table-bordered" style="width: 100%;">
+								<thead>
+									<tr>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Target Efficiency</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Manpower</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="targetEff">118%</td>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actManpower">-</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered" style="width: 100%;">
+								<thead>
+									<tr>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Standard Time</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="stdTime">00:00:00</td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="table table-bordered" style="width: 100%;">
+								<thead>
+									<tr>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Attendance Time</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actTime">00:00:00</td>
+									</tr>
+								</tbody>
 							</table>
 						</div>
 					</div>
-				</div>
-				<div class="col-xs-4">
 				</div>
 			</div>
 		</div>
@@ -99,6 +148,8 @@
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/highcharts-more.js")}}"></script>
+<script src="{{ url("js/solid-gauge.js")}}"></script>
 {{-- <script src="{{ url("js/highstock.js")}}"></script> --}}
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -117,10 +168,6 @@
 		$('#manPower').val("");
 		$('#manPower').focus();
 		fillChartActual();
-		fillChartStock();
-		fillChartEfficiency();
-		// setInterval(fillChartActual,10000);
-		// setInterval(fillChartStock,10000);
 		$('#toggle_lock').change(function(){				
 			if(this.checked){
 				$('#manPower').prop('disabled', true);
@@ -151,7 +198,7 @@
 	// 			$("#serialNumber").val("");
 	// 		}
 	// 	}, 100 );
-	// }); 
+	// });
 
 	$('#serialNumber').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
@@ -184,6 +231,12 @@
 				if(xhr.status == 200){
 					if(result.status){
 						openSuccessGritter('Success', result.message);
+						fillChartActual();
+						$('#actManpower').html("");
+						$('#actManpower').html("<center>"+manPower+"</center>");
+
+						$('#lastOutput').html("");
+						$('#lastOutput').html("<center>"+result.model+" - "+result.serial+"</center>");
 						$('#serialNumber').val('');
 						$('#serialNumber').focus();
 					}
@@ -208,116 +261,6 @@
 		}
 	}
 
-	function fillChartEfficiency(){
-
-		$.get('{{ url("fetch/process_assy_fl_4/efficiencyChart") }}', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					var data = result.efficiencyData;
-					var effCat = [];
-					var effSer = [];
-
-					for (i = 0; i < data.length; i++) {
-						effCat.push(data[i].due_date);
-						effSer.push(data[i].efficiency*100);
-					}
-
-					var headEfficiencyData = '';
-					headEfficiencyData += '<tr >';
-					headEfficiencyData += '<th colspan="3" style="width:8%; color:purple">Daily Average Efficiency / Model</th>';
-					headEfficiencyData += '</tr>';
-					headEfficiencyData += '<tr>';
-					headEfficiencyData += '<th style="width:8%;">Remark</th>';
-					$.each(result.efficiencyTable, function(key, value) {
-						headEfficiencyData += '<th>'+ value.model +'</th>';
-					});
-					$('#tableHeadEfficiency').append(headEfficiencyData);
-					headEfficiencyData += '</tr>';
-					
-					var bodyEfficiencyData = '';
-					bodyEfficiencyData += '<tr><td>Std Time</td>';
-					$.each(result.efficiencyTable, function(key, value) {
-						bodyEfficiencyData += '<td>'+ value.std_time +'</td>';
-					});
-					bodyEfficiencyData += '</tr>';
-					bodyEfficiencyData += '<tr><td>Act Time</td>';
-					$.each(result.efficiencyTable, function(key, value) {
-						bodyEfficiencyData += '<td>'+ value.actual_time +'</td>';
-					});
-					bodyEfficiencyData += '</tr>';
-
-					bodyEfficiencyData += '<tr><td>Eff</td>';
-					$.each(result.efficiencyTable, function(key, value) {
-						bodyEfficiencyData += '<td>'+ value.efficiency*100 +'%</td>';
-					});
-					bodyEfficiencyData += '</tr>';
-					$('#tableBodyEfficiency').append(bodyEfficiencyData);
-
-					var yAxisLabels = [90,95,100,105,110];
-					var chart = Highcharts.chart('chartEfficiency', {
-						chart: {
-							type: 'column',
-							backgroundColor:'rgba(255, 255, 255, 0.0)'
-						},
-						title:{
-							text: 'Daily Average Efficiency'
-						},
-						legend:{
-							enabled:false
-						},
-						credits:{
-							enabled:false
-						},
-						plotOptions: {
-							series: {
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									format: '{point.y:.1f}%'
-								}
-							}
-						},
-						xAxis: {
-							categories: effCat
-						},
-						yAxis:{
-							labels: {
-								enabled:false
-							},
-							type: 'logarithmic',
-							title: {
-								text: 'Percentage'
-							},
-							plotLines: [{
-								value: 100,
-								color: 'red',
-								dashStyle: 'shortdash',
-								width: 2
-							}]
-						},
-						series: [{
-							name: 'Eff',
-							type: 'line',
-							data: effSer
-						}]
-					});
-
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
-			}
-			else{
-				alert('Disconnected from server');
-			}
-
-		});
-		
-	}
-
 	function fillChartActual(){
 		$.get('{{ url("fetch/process_assy_fl_4/actualChart") }}', function(result, status, xhr){
 			console.log(status);
@@ -325,163 +268,216 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					var data = result.planData;
-					var actualPlan = [];
-					var actualResult = [];
-					var tableActualData = '';
-					var aCategory = [];
+					var data = result.chartData;
+					var xAxis = []
+					, planCount = []
+					, actualCount = []
 
 					for (i = 0; i < data.length; i++) {
-						actualResult.push(data[i].actual);
-						actualPlan.push(data[i].plan);
-						aCategory.push(data[i].due_date);
+						xAxis.push(data[i].model);
+						planCount.push(data[i].plan);
+						actualCount.push(data[i].actual);
 					}
 
-					var headActualData = '';
-					headActualData += '<th style="width:8%;">Remark</th>';
-					$.each(result.planTable, function(key, value) {
-						headActualData += '<th>'+ value.model +'</th>';
-					});
-					$('#tableHeadActual').append(headActualData);
-
-					var bodyActualData = '';
-					bodyActualData += '<tr><td>Plan</td>';
-					$.each(result.planTable, function(key, value) {
-						bodyActualData += '<td>'+ value.plan +'</td>';
-					});
-					bodyActualData += '</tr>';
-					bodyActualData += '<tr><td>Actual</td>';
-					$.each(result.planTable, function(key, value) {
-						bodyActualData += '<td>'+ value.actual +'</td>';
-					});
-					bodyActualData += '</tr>';
-
-					bodyActualData += '<tr><td>Diff</td>';
-					$.each(result.planTable, function(key, value) {
-						bodyActualData += '<td>'+ (value.actual-value.plan) +'</td>';
-					});
-					bodyActualData += '</tr>';
-					$('#tableBodyActual').append(bodyActualData);
-
-
-					var chart = Highcharts.chart('chartActual', {
+					Highcharts.chart('container', {
+						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
 						chart: {
 							type: 'column',
-							backgroundColor:'rgba(255, 255, 255, 0.0)'
-						},
-						title:{
-							text: 'Actual production'
-						},
-						credits:{
-							enabled:false
-						},
-						xAxis: {
-							categories: aCategory
-						},
-						yAxis:{
-							type: 'logarithmic'
-						},
-						series: [{
-							name: 'Actual',
-							data: actualResult
-						}, {
-							name: 'Plan',
-							color: 'red',
-							type: 'line',
-							data: actualPlan
-						}]
-					});
-
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
-			}
-			else{
-				alert('Disconnected from server');
-			}
-
-		});
-	}
-
-	function fillChartStock(){
-		$.get('{{ url("fetch/process_assy_fl_4/stockChart") }}', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status==200){
-				if(result.status){
-					var data = result.stockData;
-					var stockSeries = [];
-					var tableStockData = '';
-
-					for (i = 0; i < data.length; i++) {
-						stockSeries.push({name: data[i].model, y: data[i].stock});
-					}
-
-					$.each(result.stockTable, function(key, value) {
-						tableStockData += '<tr>';
-						tableStockData += '<td style="width: 40%">'+ value.model +'</td>';
-						tableStockData += '<td style="width: 15%">'+ value.plan +'</td>';
-						tableStockData += '<td style="width: 15%">'+ value.quantity +'</td>';
-						tableStockData += '</tr>';
-					});
-					$('#tableBodyStock').append(tableStockData);
-
-					// alert(JSON.stringify(stockSeries));
-					
-					$('#tableStock').DataTable({
-						'paging'      : true,
-						'lengthChange': false,
-						'searching'   : false,
-						'ordering'    : false,
-						'info'        : true,
-						'autoWidth'   : false,
-						'pageLength'  : 10,
-						'infoCallback': function( settings, start, end, max, total, pre ) {
-							return "<b>Total "+ total +" set(s)</b>";
-						},
-					})
-
-					Highcharts.chart('chartStock', {
-						chart: {
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false,
-							type: 'pie',
-							backgroundColor:'rgba(255, 255, 255, 0.0)'
+							backgroundColor: null
 						},
 						title: {
-							text: 'Actual Stock'
+							text: 'Month to Date of Production Result<br><span style="color:rgba(96,92,168);">過去一ヶ月間の生産結果</span>'
 						},
-						tooltip: {
-							pointFormat: '{series.name}: <b>{point.y}</b>',
-							enabled:false
+						exporting: { enabled: false },
+						xAxis: {
+							tickInterval:  1,
+							overflow: true,
+							categories: xAxis,
+							labels:{
+								rotation: -45,
+							},
+							min: 0					
+						},
+						yAxis: {
+							min: 1,
+							title: {
+								text: 'Set(s)'
+							},
+							type:'logarithmic'
 						},
 						credits:{
-							enabled:false
+							enabled: false
 						},
-						exporting:{
-							enabled:false,
+						legend: {
+							enabled: false
+						},
+						tooltip: {
+							shared: true
 						},
 						plotOptions: {
-							pie: {
-								allowPointSelect: true,
-								cursor: 'pointer',
-								dataLabels: {
-									enabled: true,
-									distance:-50,
-									format: '<b>{point.name}</b><br>{point.y} set(s)'
-								},
-								showInLegend: false
+							series:{
+								minPointLength: 10,
+								pointPadding: 0,
+								groupPadding: 0,
+								animation:{
+									duration:0
+								}
+							},
+							column: {
+								grouping: false,
+								shadow: false,
+								borderWidth: 0,
 							}
 						},
 						series: [{
-							name: 'Quantity',
-							colorByPoint: true,
-							data: stockSeries
+							name: 'Plan',
+							data: planCount,
+							pointPadding: 0.05
+						}, {
+							name: 'Actual',
+							data: actualCount,
+							pointPadding: 0.2
 						}]
 					});
+
+					var totalPlan = 0;
+					var totalActual = 0;
+					$.each(result.chartData, function(key, value) {
+						totalPlan += value.plan;
+						totalActual += value.actual;
+					});
+
+					if(totalActual-totalPlan < 0){
+						totalCaret = '<span class="text-red"><i class="fa fa-caret-down"></i>';
+					}
+					if(totalActual-totalPlan > 0){
+						totalCaret = '<span class="text-yellow"><i class="fa fa-caret-up"></i>';
+					}
+					if(totalActual-totalPlan == 0){
+						totalCaret = '<span class="text-green">&#9679;';
+					}
+
+					$('#resume').html("");
+					var resumeData = '';
+					resumeData += '<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan<br><span class="text-purple">計画の集計</span></span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual<br><span class="text-purple">実績の集計</span></span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '		<div class="description-block">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +Math.abs(totalActual-totalPlan).toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference<br><span class="text-purple">差異</span></span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					$('#resume').append(resumeData);
+
+					var gaugeOptions = {
+
+						chart: {
+							type: 'solidgauge',
+							backgroundColor: null,
+							spacingTop: 0,
+							spacingLeft: 0,
+							spacingRight: 0,
+							spacingBottom: 0
+						},
+
+						title: 'Efficiency',
+						exporting: { enabled: false },
+						pane: {
+							center: ['50%', '85%'],
+							size: '140%',
+							startAngle: -90,
+							endAngle: 90,
+							background: {
+								backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+								innerRadius: '60%',
+								outerRadius: '100%',
+								shape: 'arc'
+							}
+						},
+
+						tooltip: {
+							enabled: false
+						},
+
+						yAxis: {
+							stops: [
+							[0.5, '#FF0000'],
+							[0.6, '#55BF3B']
+							// [0.5, '#DDDF0D'],
+							// [0.9, '#DF5353']
+							],
+							lineWidth: 0,
+							minorTickInterval: null,
+							tickAmount: 2,
+							title: {
+								y: -70
+							},
+							labels: {
+								y: 16
+							}
+						},
+
+						plotOptions: {
+							solidgauge: {
+								dataLabels: {
+									y: 5,
+									borderWidth: 0,
+									useHTML: true
+								}
+							}
+						}
+					};
+
+					var act_time = 0;
+					var std_time = 0;
+					$.each(result.effData, function(key, value) {
+						act_time += value.act_time;
+						std_time += value.std_time;
+					});
+
+					var eff = 0;
+					eff = Math.round((std_time/act_time)*100);
+
+					$('#actTime').html("");
+					$('#stdTime').html("");
+					$('#actTime').html("<center>"+secondsTimeSpanToHMS(act_time)+"</center>");
+					$('#stdTime').html("<center>"+secondsTimeSpanToHMS(std_time)+"</center>");
+
+					Highcharts.chart('container2', Highcharts.merge(gaugeOptions, {
+						yAxis: {
+							min: 0,
+							max: 200,
+							title: {
+								text: 'Efficiency',
+								y:-100
+								// enabled:false
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'Efficiency',
+							data: [eff],
+							dataLabels: {
+								format: '<span style="font-size:5vw;">{y}%</span>',
+								// x: 0,
+								y: 30
+							}
+						}]
+
+					}));
+
 				}
 				else{
 					alert('Attempt to retrieve data failed');
@@ -490,19 +486,28 @@
 			else{
 				alert('Disconnected from server');
 			}
-		});
-	}
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '2000'
 		});
-	}
+}
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '2000'
+	});
+}
+
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600); //Get whole hours
+    s -= h*3600;
+    var m = Math.floor(s/60); //Get remaining minutes
+    s -= m*60;
+    return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
+}
 
 </script>
 @endsection
