@@ -458,8 +458,8 @@ table.table-bordered > tbody > tr > td{
 					var act_time_set = 0;
 					var std_time_set = 0;
 					eff = Math.round((std_time/act_time)*100);
-					act_time_set = act_time/qty;
-					std_time_set = std_time/qty;
+					act_time_set = Math.round(act_time/qty);
+					std_time_set = Math.round(std_time/qty);
 
 					$('#actTime').html("");
 					$('#stdTime').html("");

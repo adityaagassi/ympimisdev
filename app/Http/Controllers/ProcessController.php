@@ -152,7 +152,7 @@ public function fetchProcessAssyFL2ActualChart(){
 
 	$chartData = DB::select($query);
 
-	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, min(manpower) as manpower, max(log_processes.created_at) as last_input,
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select min(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
 	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time, 
 	if(max(log_processes.created_at)>'".date('Y-m-d 09:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-600, 
 	if(max(log_processes.created_at)>'".date('Y-m-d 12:40:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3000, 
