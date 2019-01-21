@@ -231,12 +231,6 @@ table.table-bordered > tbody > tr > td{
 				if(xhr.status == 200){
 					if(result.status){
 						openSuccessGritter('Success', result.message);
-						fillChartActual();
-						$('#actManpower').html("");
-						$('#actManpower').html("<center>"+manPower+"</center>");
-
-						$('#lastOutput').html("");
-						$('#lastOutput').html("<center>"+result.model+" - "+result.serial+"</center>");
 						$('#serialNumber').val('');
 						$('#serialNumber').focus();
 					}
@@ -440,18 +434,39 @@ table.table-bordered > tbody > tr > td{
 
 					var act_time = 0;
 					var std_time = 0;
+					var qty = 0;
+					var actmanpower = 0;
+					var lastInput = "";
 					$.each(result.effData, function(key, value) {
 						act_time += value.act_time;
 						std_time += value.std_time;
+						qty += value.quantity;
+						actmanpower += value.manpower;
+						lastInput += value.last_input;
 					});
 
+					if(qty == 0){
+						qty = qty+1;
+					}
+					if(lastInput == ""){
+						lastInput = "00-00-00 00:00:00";
+					}
+
 					var eff = 0;
+					var act_time_set = 0;
+					var std_time_set = 0;
 					eff = Math.round((std_time/act_time)*100);
+					act_time_set = Math.round(act_time/qty);
+					std_time_set = Math.round(std_time/qty);
 
 					$('#actTime').html("");
 					$('#stdTime').html("");
-					$('#actTime').html("<center>"+secondsTimeSpanToHMS(act_time)+"</center>");
-					$('#stdTime').html("<center>"+secondsTimeSpanToHMS(std_time)+"</center>");
+					$('#actManpower').html("");
+					$('#lastOutput').html("");
+					$('#lastOutput').html("<center>"+lastInput+"</center>");
+					$('#actTime').html("<center>"+secondsTimeSpanToHMS(act_time_set)+"</center>");
+					$('#stdTime').html("<center>"+secondsTimeSpanToHMS(std_time_set)+"</center>");
+					$('#actManpower').html("<center>"+actmanpower+"</center>");
 
 					Highcharts.chart('container2', Highcharts.merge(gaugeOptions, {
 						yAxis: {
@@ -475,9 +490,8 @@ table.table-bordered > tbody > tr > td{
 								y: 30
 							}
 						}]
-
 					}));
-
+					setTimeout(fillChartActual, 5000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
@@ -486,7 +500,6 @@ table.table-bordered > tbody > tr > td{
 			else{
 				alert('Disconnected from server');
 			}
-
 		});
 }
 
