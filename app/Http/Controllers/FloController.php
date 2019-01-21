@@ -24,8 +24,8 @@ use Response;
 use File;
 use Storage;
 use Carbon\Carbon;
-// use App\StampInventory;
-// use App\LogProcess;
+use App\StampInventory;
+use App\LogProcess;
 
 class FloController extends Controller
 {
@@ -602,20 +602,20 @@ class FloController extends Controller
 				}
 			}
 			try{
-				// $log_process = new LogProcess([
-				// 	'process_code' => '5',
-				// 	'serial_number' => $request->get('serialNumber'),
-				// 	'model' => $material->model,
-				// 	'manpower' => 2,
-				// 	'quantity' => 1,
-				// 	'created_by' => $id
-				// ]);
-				// $log_process->save();
+				$log_process = new LogProcess([
+					'process_code' => '5',
+					'serial_number' => $request->get('serialNumber'),
+					'model' => $material->model,
+					'manpower' => 2,
+					'quantity' => 1,
+					'created_by' => $id
+				]);
+				$log_process->save();
 
-				// $inventory_stamp = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
-				// ->where('model', '=', $material->model)
-				// ->first();
-				// $inventory_stamp->forceDelete();
+				$inventory_stamp = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
+				->where('model', '=', $material->model)
+				->first();
+				$inventory_stamp->forceDelete();
 
 				$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
 				$flo_number = $code_generator->prefix . $number;
@@ -788,6 +788,21 @@ class FloController extends Controller
 		}
 		else{
 			try{
+				$log_process = new LogProcess([
+					'process_code' => '5',
+					'serial_number' => $request->get('serialNumber'),
+					'model' => $material->model,
+					'manpower' => 2,
+					'quantity' => 1,
+					'created_by' => $id
+				]);
+				$log_process->save();
+
+				$inventory_stamp = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
+				->where('model', '=', $material->model)
+				->first();
+				$inventory_stamp->forceDelete();
+
 				$flo_detail = new FloDetail([
 					'serial_number' =>  $serial_number,
 					'material_number' => $request->get('material_number'),
