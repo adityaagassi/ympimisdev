@@ -224,6 +224,9 @@ class UserController extends Controller
             // self::delete($lid);
           return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
         }
+        else{
+          return back()->with('error', $e->getMessage())->with('page', 'User');
+        }
 
       }
             //
