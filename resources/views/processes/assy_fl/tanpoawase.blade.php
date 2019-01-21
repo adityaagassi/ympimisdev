@@ -231,8 +231,6 @@ table.table-bordered > tbody > tr > td{
 				if(xhr.status == 200){
 					if(result.status){
 						openSuccessGritter('Success', result.message);
-						fillChartActual();
-
 						$('#serialNumber').val('');
 						$('#serialNumber').focus();
 					}
@@ -493,6 +491,7 @@ table.table-bordered > tbody > tr > td{
 							}
 						}]
 					}));
+					setTimeout(fillChartActual, 5000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
