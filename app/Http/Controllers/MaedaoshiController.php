@@ -19,6 +19,8 @@ use App\Inventory;
 use App\FloLog;
 use App\CodeGenerator;
 use Carbon\Carbon;
+use App\StampInventory;
+use App\LogProcess;
 
 class MaedaoshiController extends Controller
 {
@@ -562,7 +564,7 @@ class MaedaoshiController extends Controller
 		}
 		elseif(Auth::user()->role_code == "MIS"){
 			$printer_name = 'FLO Printer MIS';
-					}		
+		}		
 		elseif(Auth::user()->role_code == "S"){
 			$printer_name = 'SUPERMAN';
 		}
@@ -612,6 +614,23 @@ class MaedaoshiController extends Controller
 				if($request->get('type') == 'pd'){
 					$code_generator_pd->index = $code_generator_pd->index+1;
 					$code_generator_pd->save();
+				}
+
+				$log_process = LogProcess::firstOrNew([
+					'process_code' => '5',
+					'serial_number' => $serial_number,
+					'model' => $material->model,
+					'manpower' => 2,
+					'quantity' => $actual,
+					'created_by' => $id
+				]);
+				$log_process->save();
+
+				$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+				->where('model', '=', $material->model)
+				->first();
+				if($inventory_stamp != null){
+					$inventory_stamp->forceDelete();
 				}
 
 				$response = array(
@@ -692,6 +711,23 @@ class MaedaoshiController extends Controller
 				$printer->cut();
 				$printer->close();
 
+				$log_process = LogProcess::firstOrNew([
+					'process_code' => '5',
+					'serial_number' => $serial_number,
+					'model' => $material->model,
+					'manpower' => 2,
+					'quantity' => $actual,
+					'created_by' => $id
+				]);
+				$log_process->save();
+
+				$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+				->where('model', '=', $material->model)
+				->first();
+				if($inventory_stamp != null){
+					$inventory_stamp->forceDelete();
+				}
+
 				$response = array(
 					'status' => true,
 					'message' => 'New maedaoshi has been printed.',
@@ -759,7 +795,7 @@ class MaedaoshiController extends Controller
 		elseif(Auth::user()->role_code == "MIS"){
 			$printer_name = 'FLO Printer MIS';
 		}
-			elseif(Auth::user()->role_code == "OP-WH-Exim"){
+		elseif(Auth::user()->role_code == "OP-WH-Exim"){
 			$printer_name = 'FLO Printer LOG';
 		}
 		else{
