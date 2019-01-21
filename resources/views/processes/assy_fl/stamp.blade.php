@@ -217,6 +217,10 @@ td:hover {
 	});
 
 	jQuery(document).ready(function() {
+		$(function () {
+			$('.select2').select2()
+		});
+		
 		setTimeout(stamp, 500);
 		$('body').toggleClass("sidebar-collapse");
 		fillPlan();

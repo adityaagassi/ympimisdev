@@ -500,7 +500,6 @@ table.table-bordered > tbody > tr > td{
 			else{
 				alert('Disconnected from server');
 			}
-
 		});
 }
 

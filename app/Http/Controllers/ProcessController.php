@@ -31,10 +31,9 @@ class ProcessController extends Controller
 	}
 
 	public function indexProcessAssyFL1(){
-		$now = date('Y-m-d');
+		//$now = date('Y-m-d',strtotime('-4 days'));
 
-		$model2 = StampInventory::where(db::raw('date(created_at)'), '=', $now)
-		->orderBy('created_at', 'desc')
+		$model2 = StampInventory::orderBy('created_at', 'desc')
 		->get();
 		return view('processes.assy_fl.stamp',array(
 			'model2' => $model2,
