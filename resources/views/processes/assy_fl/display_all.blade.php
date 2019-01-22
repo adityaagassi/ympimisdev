@@ -35,8 +35,11 @@ table.table-bordered > tfoot > tr > th{
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
-		<div class="col-md-12">
-			<div id="container" style="min-width: 310px; height: 250; margin: 0 auto"></div>
+		<div class="col-md-8">
+			<div id="container" style="width: 100%; height: 250; margin: 0 auto;"></div>
+		</div>
+		<div class="col-md-4">
+			<div id="container2" style="width: 100%; margin: 0 auto;"></div>
 		</div>
 		<div class="col-md-12">
 			<table id="tableStock" class="table table-bordered">
@@ -44,7 +47,7 @@ table.table-bordered > tfoot > tr > th{
 				</thead>
 				<tbody id="tableBody">
 				</tbody>
-				<tfoot id="tableFoot">
+				<tfoot id="tableFoot" style="background-color: RGB(252, 248, 227);">
 				</tfoot>
 			</table>
 		</div>
@@ -177,6 +180,57 @@ table.table-bordered > tfoot > tr > th{
 							pointPadding: 0.2
 						}]
 					});
+
+					Highcharts.chart('container2', {
+						colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee',
+						'#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+						chart: {
+							backgroundColor: null,
+							type: 'pie'
+						},
+						title: {
+							text: null
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						plotOptions: {
+							pie: {
+								allowPointSelect: true,
+								cursor: 'pointer',
+								dataLabels: {
+									enabled: false
+								},
+								showInLegend: true
+							}
+						},
+						credits:{
+							enabled: false
+						},
+						series: [{
+							name: 'Brands',
+							colorByPoint: true,
+							data: [{
+								name: 'Chrome',
+								y: 61.41
+							}, {
+								name: 'Internet Explorer',
+								y: 11.84
+							}, {
+								name: 'Firefox',
+								y: 10.85
+							}, {
+								name: 'Edge',
+								y: 4.67
+							}, {
+								name: 'Safari',
+								y: 4.18
+							}, {
+								name: 'Other',
+								y: 7.05
+							}]
+						}]
+					});
 					setTimeout(fetchChartStock, 1000);
 				}
 				else{
@@ -203,14 +257,14 @@ table.table-bordered > tfoot > tr > th{
 					var heads = [];
 					tableHead += '<tr>';
 					tableFoot += '<tr>';
-					tableHead += '<th style="width:10%; background-color: null; text-align: center; font-size: 14px;">Process</th>';
-					tableFoot += '<th style="text-align: center; width: 10%;">Total</th>';
+					tableHead += '<th style="width:10%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Process/Model</th>';
+					tableFoot += '<th style="text-align: center; width: 10%; font-size: 2vw;">Total</th>';
 					totalHead = 0;
 					$.each(result.inventory, function(index, value) {
 						if ($.inArray(value.model, heads)==-1) {
 							heads.push(value.model);
-							tableHead += '<th style="width:4.5%; background-color: null; text-align: center; font-size: 14px;">'+value.model+'</th>';
-							tableFoot += '<th style="text-align: center; width: 4.5%;"></th>';
+							tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.9); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
+							tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
 							totalHead += 1;
 						}
 					});
@@ -223,34 +277,34 @@ table.table-bordered > tfoot > tr > th{
 					var tableBody = '';
 
 					tableBody += '<tr>';
-					tableBody += '<td>Stamping-Kariawase</td>';
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';
 					$.each(result.inventory, function(index, value){
 						if(value.process_code == 1){
-							tableBody += '<td style="background-color: rgba(248,161,63,1); text-align: center; color: black; font-size: 2vw; font-weight: bold;">'+value.quantity+'</td>'
+							tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
 						}
 					})
 					tableBody += '</tr>';
 					tableBody += '<tr>';
-					tableBody += '<td>Tanpo awase</td>';
+					tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Tanpo awase</td>';
 					$.each(result.inventory, function(index, value){
 						if(value.process_code == 2){
-							tableBody += '<td style="background-color: rgba(126,86,134,.9); text-align: center; color: black; font-size: 2vw; font-weight: bold;">'+value.quantity+'</td>'
+							tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
 						}
 					})
 					tableBody += '</tr>';
 					tableBody += '<tr>';
-					tableBody += '<td>Seasoning-Kanggou</td>';
+					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Seasoning-Kanggou</td>';
 					$.each(result.inventory, function(index, value){
 						if(value.process_code == 3){
-							tableBody += '<td style="background-color: rgba(248,161,63,1); text-align: center; color: black; font-size: 2vw; font-weight: bold;">'+value.quantity+'</td>'
+							tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
 						}
 					})
 					tableBody += '</tr>';
 					tableBody += '<tr>';
-					tableBody += '<td>Chousei</td>';
+					tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Chousei</td>';
 					$.each(result.inventory, function(index, value){
 						if(value.process_code == 4){
-							tableBody += '<td style="background-color: rgba(126,86,134,.9); text-align: center; color: black; font-size: 2vw; font-weight: bold;">'+value.quantity+'</td>'
+							tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
 						}
 					})
 					tableBody += '</tr>';
