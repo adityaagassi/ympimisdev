@@ -371,7 +371,7 @@
 									style: {
 										textOutline: false,
 										fontWeight: 'bold',
-										fontSize: '30px'
+										fontSize: '3vw'
 									}
 								}
 							}
@@ -564,7 +564,7 @@
 									enabled: true,
 									format: '{point.y:,.0f}',
 									style:{
-										fontSize:'20px',
+										fontSize:'3vw',
 										color:'black',
 										textOutline: false
 									}
@@ -639,7 +639,7 @@
 									enabled: true,
 									format: '{point.y:,.0f}',
 									style:{
-										fontSize:'20px',
+										fontSize:'3vw',
 										color:'black',
 										textOutline: false
 									}
@@ -781,7 +781,7 @@
 									style: {
 										textOutline: false,
 										fontWeight: 'bold',
-										fontSize: '30px'
+										fontSize: '3vw'
 									}
 								}
 							}
@@ -890,7 +890,7 @@
 									style: {
 										textOutline: false,
 										fontWeight: 'bold',
-										fontSize: '30px'
+										fontSize: '3vw'
 									}
 								}
 							}
