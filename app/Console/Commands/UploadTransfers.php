@@ -52,7 +52,7 @@ class UploadTransfers extends Command
         $flo_details = DB::table('flo_details')
         ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
-        ->where('flo_logs.status_code', '=', 2)
+        ->where('flo_logs.status_code', '=', '2')
         ->whereIn('flos.status', ['2','3','4'])
         ->whereNull('flo_details.transfer')
         ->where('flo_logs.created_at', '<=', $date);
