@@ -120,11 +120,36 @@ table.table-bordered > tfoot > tr > th{
 						stockActual.push(data[i].stock);
 					}
 
+					var stockData = result.stockData;
+					var stock1 = '';
+					var stock2 = '';
+					var stock3 = '';
+					var stock4 = '';
+
+					for (x = 0; x < stockData.length; x++) {
+						if(stockData[x].process_code == 1){
+							stock1 = stockData[x].qty;
+						}
+						if(stockData[x].process_code == 2){
+							stock2 = stockData[x].qty;
+						}
+						if(stockData[x].process_code == 3){
+							stock3 = stockData[x].qty;
+						}
+						if(stockData[x].process_code == 4){
+							stock4 = stockData[x].qty;
+						}
+					}
+
 					Highcharts.chart('container', {
 						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
 						chart: {
 							type: 'column',
-							backgroundColor: null
+							backgroundColor: null,
+							spacingTop: 0,
+							spacingLeft: 0,
+							spacingRight: 0,
+							spacingBottom: 0
 						},
 						title: {
 							text: 'WIP Stock Accuracy <br><span style="color:rgba(96,92,168);"> ??? </span>'
@@ -161,7 +186,7 @@ table.table-bordered > tfoot > tr > th{
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
-									duration:0
+									duration:false
 								}
 							},
 							column: {
@@ -182,52 +207,61 @@ table.table-bordered > tfoot > tr > th{
 					});
 
 					Highcharts.chart('container2', {
-						colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee',
-						'#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+						// colors: ['#50B432','#ED561B','#24CBE5','#FFF263'],
 						chart: {
 							backgroundColor: null,
-							type: 'pie'
+							type: 'pie',
+							spacingTop: 0,
+							spacingLeft: 0,
+							spacingRight: 0,
+							spacingBottom: 0
 						},
+						exporting: { enabled: false },
 						title: {
 							text: null
 						},
 						tooltip: {
-							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+							pointFormat: '{series.name}: <b>{point.y}</b>'
+						},
+						legend:{
+							enabled:false
 						},
 						plotOptions: {
 							pie: {
 								allowPointSelect: true,
 								cursor: 'pointer',
 								dataLabels: {
-									enabled: false
+									enabled: true,
+									format: '<b>{point.name}<br/>{point.y} sets</b>',
+									distance: -50,
+									style:{
+										fontSize:'14px'
+									}
 								},
 								showInLegend: true
+							},
+							series:{
+								animation:{
+									duration:false
+								}
 							}
 						},
 						credits:{
 							enabled: false
 						},
 						series: [{
-							name: 'Brands',
-							colorByPoint: true,
 							data: [{
-								name: 'Chrome',
-								y: 61.41
+								name: 'Stamp-Kariawase',
+								y: stock1
 							}, {
-								name: 'Internet Explorer',
-								y: 11.84
+								name: 'Tanpoawase',
+								y: stock2
 							}, {
-								name: 'Firefox',
-								y: 10.85
+								name: 'Yuge-Kanggou',
+								y: stock3
 							}, {
-								name: 'Edge',
-								y: 4.67
-							}, {
-								name: 'Safari',
-								y: 4.18
-							}, {
-								name: 'Other',
-								y: 7.05
+								name: 'Chousei',
+								y: stock4
 							}]
 						}]
 					});
@@ -348,6 +382,6 @@ table.table-bordered > tfoot > tr > th{
 				alert('Disconnected from server');
 			}
 		});
-	}
+}
 </script>
 @endsection

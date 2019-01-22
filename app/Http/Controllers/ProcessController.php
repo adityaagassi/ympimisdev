@@ -1167,6 +1167,8 @@ public function fetchwipflallchart(){
 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
 	}
 
+	$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories group by stamp_inventories.process_code";
+
 	$query2 = "select model, sum(plan) as plan, sum(stock) as stock from
 	(
 	select materials.model, sum(plan) as plan, 0 as stock from
@@ -1185,9 +1187,12 @@ public function fetchwipflallchart(){
 	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
 	$efficiencyData = DB::select($query2);
+	$stockData = DB::select($query);
+	
 	$response = array(
 		'status' => true,
 		'efficiencyData' => $efficiencyData,
+		'stockData' => $stockData,
 	);
 	return Response::json($response);
 }
