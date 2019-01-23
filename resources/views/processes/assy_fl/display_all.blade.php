@@ -313,7 +313,7 @@ table.table-bordered > tfoot > tr > th{
 					var tableBody = '';
 
 					tableHead += '<tr>';
-					tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Plan</th>';
+					tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock Plan</th>';
 					$.each(result.plan, function(index, value){
 						tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
 					})
