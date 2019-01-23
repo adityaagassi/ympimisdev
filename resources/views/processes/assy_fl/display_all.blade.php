@@ -207,7 +207,7 @@ table.table-bordered > tfoot > tr > th{
 					});
 
 					Highcharts.chart('container2', {
-						// colors: ['#50B432','#ED561B','#24CBE5','#FFF263'],
+						colors: ['rgb(241,92,128)','rgb(128,133,233)','rgb(247,163,92)','rgb(144,237,125)'],
 						chart: {
 							backgroundColor: null,
 							type: 'pie',
@@ -235,8 +235,10 @@ table.table-bordered > tfoot > tr > th{
 									format: '<b>{point.name}<br/>{point.y} sets</b>',
 									distance: -50,
 									style:{
-										fontSize:'14px'
-									}
+										fontSize:'14px',
+										textOutline:0
+									},
+									color:'black',
 								},
 								showInLegend: true
 							},
@@ -286,6 +288,7 @@ table.table-bordered > tfoot > tr > th{
 			if(xhr.status == 200){
 				if(result.status){
 					$('#tableHead').html("");
+					$('#tableFoot').html("");
 					var tableHead = '';
 					var tableFoot = '';
 					var heads = [];
@@ -349,7 +352,9 @@ table.table-bordered > tfoot > tr > th{
 						}
 					})
 					tableBody += '</tr>';
+
 					$('#tableBody').append(tableBody);
+					$('#tableStock').DataTable().destroy();
 
 					$('#tableStock').DataTable({
 						// 'scrollX': true,
@@ -380,6 +385,7 @@ table.table-bordered > tfoot > tr > th{
 							}
 						}
 					});
+					setTimeout(fetchTableStock, 1000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
