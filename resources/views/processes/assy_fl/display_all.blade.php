@@ -304,11 +304,18 @@ table.table-bordered > tfoot > tr > th{
 					});
 					tableHead += '</tr>';
 					tableFoot += '</tr>';
-					$('#tableHead').append(tableHead);
 					$('#tableFoot').append(tableFoot);
 
 					$('#tableBody').html("");
 					var tableBody = '';
+
+					tableHead += '<tr>';
+					tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Plan</th>';
+					$.each(result.plan, function(index, value){
+						tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
+					})
+					tableHead += '</tr>';
+					$('#tableHead').append(tableHead);
 
 					tableBody += '<tr>';
 					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';

@@ -116,20 +116,49 @@ public function indexDisplayWipFL(){
 }
 
 public function fetchwipflallstock(){
+	$first = date('Y-m-01');
+	if(date('D')=='Fri'){
+		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	}
+	else{
+		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	}
+
 	$query = "
 	select result1.model, result1.process_code, result1.process_name, if(result2.quantity is null, 0, result2.quantity) as quantity from
-	(select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
+	(
+	select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
 	left join
 	(
 	select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories group by stamp_inventories.model, stamp_inventories.process_code
 	) as result2 
 	on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
 
-	$inventory =DB::select($query);
+	$query2 = "
+	select result1.model, if(result2.plan is null or result2.plan < 0, 0, result2.plan) as plan from
+	(
+	select distinct materials.model from materials where materials.origin_group_code = '041' and materials.category = 'FG'
+	) as result1
+	left join
+	(
+	select materials.model, sum(plan) as plan from
+	(
+	select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+	union all
+	select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
+	) r
+	left join materials on materials.material_number = r.material_number
+	group by materials.model
+	) as result2
+	on result1.model = result2.model order by result1.model asc";
+
+	$inventory = DB::select($query);
+	$plan = DB::select($query2);
 
 	$response = array(
 		'status' => true,
 		'inventory' => $inventory,
+		'plan' => $plan,
 	);
 	return Response::json($response);
 }
@@ -143,7 +172,7 @@ public function fetchProcessAssyFL2ActualChart(){
 	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
 	union all
-
+	
 	select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
 	) as plan
 	group by model
@@ -1186,8 +1215,8 @@ public function fetchwipflallchart(){
 	) as result2
 	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
-	$efficiencyData = DB::select($query2);
 	$stockData = DB::select($query);
+	$efficiencyData = DB::select($query2);
 	
 	$response = array(
 		'status' => true,
