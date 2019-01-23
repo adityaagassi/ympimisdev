@@ -233,18 +233,18 @@ table.table-bordered > tbody > tr > td{
 						openSuccessGritter('Success', result.message);
 						$('#serialNumber').val('');
 						$('#serialNumber').focus();					}
+						else{
+							audio_error.play();
+							alert(result.message);
+							$('#serialNumber').val('');
+							$('#serialNumber').focus();
+						}
+					}
 					else{
 						audio_error.play();
-						alert(result.message);
-						$('#serialNumber').val('');
-						$('#serialNumber').focus();
+						alert('Disconnected from server');
 					}
-				}
-				else{
-					audio_error.play();
-					alert('Disconnected from server');
-				}
-			});
+				});
 		}
 		else{
 			audio_error.play();
@@ -404,7 +404,8 @@ table.table-bordered > tbody > tr > td{
 
 						yAxis: {
 							stops: [
-							[0.5, '#FF0000'],
+							[0.54, '#FF0000'],
+							[0.57, '#DDDF0D'],
 							[0.6, '#55BF3B']
 							// [0.5, '#DDDF0D'],
 							// [0.9, '#DF5353']
