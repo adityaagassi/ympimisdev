@@ -41,8 +41,8 @@ table.table-bordered > tbody > tr > td{
 @section('header')
 <section class="content-header">
 	<h1>
-		Chosei Kanggo Flute<span class="text-purple"> ??? </span>
-		<small>Serial Number <span class="text-purple"> ??? </span></small>
+		Chosei-Packing Flute<span class="text-purple"> ??? </span>
+		<small>WIP Control <span class="text-purple"> ??? </span></small>
 	</h1>
 </section>
 @stop
@@ -89,7 +89,7 @@ table.table-bordered > tbody > tr > td{
 							<table class="table table-bordered" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Last Input</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Last Output Time</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -115,7 +115,7 @@ table.table-bordered > tbody > tr > td{
 							<table class="table table-bordered" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Standard Time</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average STD Time Per Set</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -127,7 +127,7 @@ table.table-bordered > tbody > tr > td{
 							<table class="table table-bordered" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Attendance Time</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average ACT Time Per Set</th>
 									</tr>
 								</thead>
 								<tbody>

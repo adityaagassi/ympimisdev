@@ -42,7 +42,7 @@ table.table-bordered > tbody > tr > td{
 <section class="content-header">
 	<h1>
 		Tanpo Awase Flute<span class="text-purple"> ??? </span>
-		<small>Serial Number <span class="text-purple"> ??? </span></small>
+		<small>WIP Control <span class="text-purple"> ??? </span></small>
 	</h1>
 </section>
 @stop
