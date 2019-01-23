@@ -297,7 +297,7 @@ Route::group(['nav' => 'S9', 'middleware' => 'permission'], function(){
 	Route::get('destroy/flo_deletion/{id}', 'FloController@destroy_flo_deletion');	
 });
 
-Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
+// Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::get('index/process_assy_fl', 'ProcessController@indexProcessAssyFL');
 	Route::get('index/process_assy_fl_1', 'ProcessController@indexProcessAssyFL1');
 	Route::get('index/process_assy_fl_2', 'ProcessController@indexProcessAssyFL2');
@@ -341,7 +341,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::get('stamp/resumes', 'ProcessController@indexResumes');
 	Route::get('stamp/display', 'ProcessController@indexDisplay');
 	Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
-});
+// });
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');

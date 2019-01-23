@@ -20,9 +20,9 @@
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Vendor To YMPI (ベンダー⇒YMPI)</span>
 
-                        <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
-                            <span class="fa fa-bar-chart"></span> Weekly MilkRun Parts<br><span class="text-purple">週次ミルクラン部品納入 </span>
-                        </a>
+                    <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
+                        <span class="fa fa-bar-chart"></span> Weekly MilkRun Parts<br><span class="text-purple">週次ミルクラン部品納入 </span>
+                    </a>
                     
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Weekly JIT Parts<br><span class="text-purple">週次JIT部品納入 </span> 
@@ -55,7 +55,23 @@
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> WIP Monitoring (仕掛品監視)</span>
 
+                    <a class="list-group-item" href="{{ url("/index/displayWipFl") }}" style="text-align: center;">
+                        FL Subassy-Assy Resume<br><span class="text-purple">???</span>
+                    </a>
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
+                        FL Kariawase<br><span class="text-purple">仕掛品監視</span> 
+                    </a>
+                    <a class="list-group-item" href="{{ url("index/process_assy_fl_2") }}" style="text-align: center;">
+                        FL Tanpoawase<br><span class="text-purple">FLタンポ合わせ作業</span>
+                    </a>
+                    <a class="list-group-item" href="{{ url("index/process_assy_fl_3") }}" style="text-align: center;">
+                        FL Seasoning-Kanggou<br><span class="text-purple">FLシーズニング作業・篏合作業</span> 
+                    </a>
+                    <a class="list-group-item" href="{{ url("index/process_assy_fl_4") }}" style="text-align: center;">
+                        FL Chousei<br><span class="text-purple">FL調整作業</span> 
+                    </a>
+
+                  {{--   <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Production Result<br><span class="text-purple">生産実績</span>
                     </a>
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
@@ -69,8 +85,8 @@
                     </a>
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> WIP Data Record<br><span class="text-purple">仕掛品データ記録</span> 
-                    </a>
-
+                    </a> --}}
+{{-- 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> WIP Performance (仕掛品業績)</span>
 
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
@@ -81,7 +97,7 @@
                     </a>
                     <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Assembly Efficiency & Loss Time Monthly<br><span class="text-purple">月次　組立の能率・ロス時間</span> 
-                    </a>
+                    </a> --}}
 
                 </div>
             </div>
@@ -93,14 +109,14 @@
                 </div>
                 <div class="box-body">
 
-                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Sales Control (売上管理)</span>
+                  {{--   <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Sales Control (売上管理)</span>
 
                     <a class="list-group-item" href="{{ url("/index/sl_budget") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Sales Budget/Forecast/Actual<br><span class="text-purple">売上予算・見通し・実績</span>
                     </a>
                     <a class="list-group-item" href="{{ url("/index/sl_current") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Current Sales Progress<br><span class="text-purple">現在売上進捗</span>
-                    </a>
+                    </a> --}}
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Finished Goods Control (完成品管理)</span>
 
@@ -136,6 +152,12 @@
 
                     <a class="list-group-item" href="{{ url("/index/ch_daily_production_result") }}" style="text-align: center;">
                         <span class="fa fa-bar-chart"></span> Production Summary<br><span class="text-purple">生産まとめ</span>
+                    </a>
+
+                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Display (表示)</span>
+
+                    <a class="list-group-item" href="{{ url("/index/dp_production_result") }}" style="text-align: center;">
+                        <span class="fa fa-bar-chart"></span> Daily Production Result<br><span class="text-purple">日常生産実績</span>
                     </a>
 
                 </div>
