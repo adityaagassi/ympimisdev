@@ -45,54 +45,51 @@ class PlanStamps extends Command
         $now = date('Y-m-d');
 
 
-        if(date('D')=='Fri'){
+        if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+            $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+        }
+        elseif(date('D')=='Sun'){
             $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
         }
-        elseif(date('D')=='Sat'){
+        else{
             $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
         }
-        else{
-            $h4 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-        }
 
-        if(date('D')=='Fri'){
-            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-        }
-        elseif(date('D')=='Sat'){
-            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-        }
-        else{
-            $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-        }
+        // if(date('D')=='Thu'){
+        //     $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(6)));
+        // }
+        // elseif(date('D')=='Fri'){
+        //     $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+        // }
+        // elseif(date('D')=='Sat'){
+        //     $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+        // }
+        // else{
+        //     $h5 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+        // }
 
 
         $query = "select model, '" . $now . "' as due_date, sum(plan) as plan from
         (
-        select materials.model, sum(plan) as plan from
-        (
-        select material_number, quantity as plan
-        from production_schedules 
-        where due_date >= '" . $first . "' and due_date <= '" . $h4 . "'
+            select materials.model, sum(plan) as plan from
+            (
+                select material_number, quantity as plan
+                from production_schedules 
+                where due_date >= '" . $first . "' and due_date <= '" . $h4 . "'
 
-        union all
+                union all
 
-        select material_number, quantity as plan
-        from production_schedules 
-        where due_date = '" . $h5 . "'
+                select material_number, -(quantity) as plan
+                from flo_details
+                where date(created_at) >= '" . $first . "' and date(created_at) <= '" . $h4 . "'
+            ) as plan
+            left join materials on materials.material_number = plan.material_number
+            group by materials.model
 
-        union all
+            union all
 
-        select material_number, -(quantity) as plan
-        from flo_details
-        where date(created_at) >= '" . $first . "' and date(created_at) <= '" . $h4 . "'
-        ) as plan
-        left join materials on materials.material_number = plan.material_number
-        group by materials.model
-
-        union all
-
-        select model, -(quantity) as plan
-        from stamp_inventories
+            select model, -(quantity) as plan
+            from stamp_inventories
         ) as result
         group by model, due_date    
         having plan > 0";
