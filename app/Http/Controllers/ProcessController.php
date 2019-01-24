@@ -1033,14 +1033,11 @@ public function updateStamp(Request $request){
 
 public function reprint_stamp(Request $request)
 {
-
-
 	$model = db::table('stamp_inventories')
 	->where('model', 'like', 'YFL%')
 	->where('serial_number', '=', $request->get('stamp_number_reprint'))
 	->select ('model')
 	->first();
-
 
 	if ($request->get('stamp_number_reprint') != null){
 		try {
@@ -1057,17 +1054,16 @@ public function reprint_stamp(Request $request)
 			$printer->setBarcodeWidth(2);
 			$printer->setBarcodeHeight(64);
 			$printer->barcode($request->get('stamp_number_reprint'), Printer::BARCODE_CODE39);
-				// $printer->qrCode($request->get('serialNumber'));
+			// $printer->qrCode($request->get('serialNumber'));
 			$printer->setTextSize(3, 1);
 			$printer->text($request->get('stamp_number_reprint')."\n\n");
 			$printer->feed(1);
 			$printer->text($model->model."\n\n");
 			$printer->cut();
 			$printer->close();
-
-
+			
 			return back()->with('status', 'Stamp has been reprinted.')->with('page', 'Assembly Process');
-		} 
+		}
 		catch(\Exception $e){
 			return back()->with("error", "Couldn't print to this printer " . $e->getMessage() . "\n");
 		}
