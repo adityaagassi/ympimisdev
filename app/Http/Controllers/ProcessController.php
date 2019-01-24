@@ -117,11 +117,15 @@ public function indexDisplayWipFL(){
 
 public function fetchwipflallstock(){
 	$first = date('Y-m-01');
-	if(date('D')=='Fri'){
+	
+	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	}
+	elseif(date('D')=='Sun'){
 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
 	}
 	else{
-		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 	}
 
 	$query = "
