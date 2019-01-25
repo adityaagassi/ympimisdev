@@ -113,11 +113,13 @@ table.table-bordered > tfoot > tr > th{
 					var stockCat = [];
 					var stockPlan = [];
 					var stockActual = [];
+					var maxPlan = [];
 
 					for (i = 0; i < data.length; i++) {
 						stockCat.push(data[i].model);
 						stockPlan.push(data[i].plan);
 						stockActual.push(data[i].stock);
+						maxPlan.push(data[i].max_plan);
 					}
 
 					var stockData = result.stockData;
@@ -186,7 +188,7 @@ table.table-bordered > tfoot > tr > th{
 						},
 						plotOptions: {
 							series:{
-								minPointLength: 10,
+								minPointLength: 0,
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
@@ -212,10 +214,10 @@ table.table-bordered > tfoot > tr > th{
 								symbol: 'c-rect',
 								lineWidth:3,
 								lineColor: 'rgb(255,0,0)',
-								radius: 10
+								radius: 10,
 							},
 							type: 'scatter',
-							data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 54.4, 54.4, 54.4, 54.4]
+							data: maxPlan
 						}]
 					});
 

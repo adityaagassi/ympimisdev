@@ -1213,7 +1213,6 @@ public function fetchwipflallchart(){
 	$dayFL = floor($stockFL/$targetFL)-1;
 	$addFL = ($stockFL/$targetFL)-$dayFL;
 
-
 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
 		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
 		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
