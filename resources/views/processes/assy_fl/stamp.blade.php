@@ -31,9 +31,6 @@ td:hover {
 			<a href="{{ url("/stamp/resumes") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
 		</li>
 	</ol>
-	{{-- <ol class="breadcrumb">
-		<button onclick="stamp()" class="btn btn-danger">tes stamp</button>
-	</ol> --}}
 </section>
 @stop
 @section('content')
@@ -180,32 +177,32 @@ td:hover {
 </div>
 
 <div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="titleModal">Reprint Stamp</h4>
-				</div>
-				<form class="form-horizontal" role="form" method="post" action="{{url('reprint/stamp')}}">
-					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<div class="modal-body" id="messageModal">
-						<label>Serial Number</label>
-						<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
-							<option value=""></option>
-							@foreach($model2 as $model)
-							<option value="{{ $model->serial_number }}">{{ $model->serial_number }}</option>
-							@endforeach
-						</select>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
-					</div>
-				</form>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="titleModal">Reprint Stamp</h4>
 			</div>
+			<form class="form-horizontal" role="form" method="post" action="{{url('reprint/stamp')}}">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="modal-body" id="messageModal">
+					<label>Serial Number</label>
+					<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
+						<option value=""></option>
+						@foreach($model2 as $model)
+						<option value="{{ $model->serial_number }}">{{ $model->serial_number }}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
+				</div>
+			</form>
 		</div>
 	</div>
-	
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
