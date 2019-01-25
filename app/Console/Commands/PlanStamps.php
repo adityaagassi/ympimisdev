@@ -98,7 +98,7 @@ class PlanStamps extends Command
         from stamp_inventories
         ) as result
         group by model, due_date    
-        having plan > 0 and model like 'YFL%'";
+        having plan > 0 and model like 'YFL%' order by model asc";
 
         $planFL = DB::select($queryFL);
 
