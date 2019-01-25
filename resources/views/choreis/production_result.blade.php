@@ -63,22 +63,22 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1">
-						<div id="container1" style="width:100%; height:500px;"></div>
+						<div id="container1" style="width:100%; height:520px;"></div>
 					</div>
 					<div class="tab-pane" id="tab_2">
-						<div id="container2" style="width:100%; height:500px;"></div>
+						<div id="container2" style="width:100%; height:520px;"></div>
 					</div>
 					<div class="tab-pane" id="tab_3">
-						<div id="container3" style="width:100%; height:500px;"></div>
+						<div id="container3" style="width:100%; height:520px;"></div>
 					</div>
 					{{-- <div class="tab-pane" id="tab_4">
-						<div id="container4" style="width:100%; height:500px;"></div>
+						<div id="container4" style="width:100%; height:520px;"></div>
 					</div> --}}
 					<div class="tab-pane" id="tab_5">
-						<div id="container5" style="width:100%; height:500px;"></div>
+						<div id="container5" style="width:100%; height:520px;"></div>
 					</div>
 					<div class="tab-pane" id="tab_6">
-						<div id="container6" style="width:100%; height:500px;"></div>
+						<div id="container6" style="width:100%; height:520px;"></div>
 					</div>
 				</div>
 			</div>			
@@ -294,18 +294,18 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 30px;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)'
-							// style: {
-							// 	fontSize: '30px',
-							// 	fontWeight: 'bold'
-							// }
+							text: '<span style="font-size: 3vw;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: xAxis,
 							labels: {
 								style: {
 									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
+									fontSize: '30px',
 									fontWeight: 'bold'
 								}
 							}
@@ -522,13 +522,17 @@
 						},
 						title: {
 							text: '<span style="font-size: 30px;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: xAxis2,
 							labels: {
 								style: {
 									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
+									fontSize: '30px',
 									fontWeight: 'bold'
 								}
 							}
@@ -597,13 +601,17 @@
 						},
 						title: {
 							text: '<span style="font-size: 30px;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: xAxis2EI,
 							labels: {
 								style: {
 									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
+									fontSize: '30px',
 									fontWeight: 'bold'
 								}
 							}
@@ -704,18 +712,18 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>'
-							// style: {
-							// 	fontSize: '30px',
-							// 	fontWeight: 'bold'
-							// }
+							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: xAxis3,
 							labels: {
 								style: {
 									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
+									fontSize: '30px',
 									fontWeight: 'bold'
 								}
 							}
@@ -813,18 +821,18 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>'
-							// style: {
-							// 	fontSize: '30px',
-							// 	fontWeight: 'bold'
-							// }
+							text: '<span style="font-size: 30px;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: xAxis3EI,
 							labels: {
 								style: {
 									color: 'rgba(75, 30, 120)',
-									fontSize: '20px',
+									fontSize: '30px',
 									fontWeight: 'bold'
 								}
 							}
