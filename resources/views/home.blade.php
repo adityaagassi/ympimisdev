@@ -55,20 +55,8 @@
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> WIP Monitoring (仕掛品監視)</span>
 
-                    <a class="list-group-item" href="{{ url("/index/displayWipFl") }}" style="text-align: center;">
-                        FL Subassy-Assy Resume<br><span class="text-purple">???</span>
-                    </a>
-                    <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
-                        FL Kariawase<br><span class="text-purple">仕掛品監視</span> 
-                    </a>
-                    <a class="list-group-item" href="{{ url("index/process_assy_fl_2") }}" style="text-align: center;">
-                        FL Tanpoawase<br><span class="text-purple">FLタンポ合わせ作業</span>
-                    </a>
-                    <a class="list-group-item" href="{{ url("index/process_assy_fl_3") }}" style="text-align: center;">
-                        FL Seasoning-Kanggou<br><span class="text-purple">FLシーズニング作業・篏合作業</span> 
-                    </a>
-                    <a class="list-group-item" href="{{ url("index/process_assy_fl_4") }}" style="text-align: center;">
-                        FL Chousei<br><span class="text-purple">FL調整作業</span> 
+                    <a class="list-group-item" href="{{ url("/index/process_assy_fl") }}" style="text-align: center;">
+                        FL Subassy-Assy<br><span class="text-purple">???</span>
                     </a>
 
                   {{--   <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">

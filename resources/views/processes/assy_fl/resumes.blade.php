@@ -13,11 +13,6 @@
 		<small>Details <span class="text-purple">詳細</span></small>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -57,22 +52,33 @@
 						</div>
 					</div>
 					
+					<div class="col-md-12 col-md-offset-3">
+						<div class="col-md-6">
+							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select Process Code" name="code" id="code" style="width: 100%;">
+									<option value="">All</option>
+									@foreach($code as $code) 
+									<option value="{{ $code->process_code }}">{{ $code->process_code }} - {{ $code->process_name }}</option>
+									@endforeach
+								</select>
+							</div>
 							<div class="form-group pull-right">
 								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 								<button id="search" onClick="fillFloDetail()" class="btn btn-primary">Search</button>
 							</div>
 						</div>
-					
+					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<table id="flo_detail_table" class="table table-bordered table-striped">
 								<thead>
 									<tr>
 										<th style="font-size: 14">Serial Number</th>
+										<th style="font-size: 14">Process</th>
 										<th style="font-size: 14">Model</th>
 										<th style="font-size: 14">Qty</th>
 										<th style="font-size: 14">Created At</th>
-										
+
 									</tr>
 								</thead>
 								<tbody>
@@ -82,21 +88,17 @@
 									<th></th>
 									<th></th>
 									<th></th>
-									
+									<th></th>
 								</tfoot>
 							</table>
 						</div>
-					</div>		
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </section>
-
 @endsection
-
-
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
@@ -141,10 +143,12 @@
 		$('#flo_detail_table').DataTable().destroy();
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
+		var code = $('#code').val();
 		
 		var data = {
 			datefrom:datefrom,
-			dateto:dateto
+			dateto:dateto,
+			code:code
 		}
 		$('#flo_detail_table').DataTable({
 			'dom': 'Bfrtip',
@@ -200,10 +204,10 @@
 					i : 0;
 				};
 				var api = this.api();
-				var totalPlan = api.column(2).data().reduce(function (a, b) {
+				var totalPlan = api.column(3).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
 				}, 0)
-				$(api.column(2).footer()).html(totalPlan.toLocaleString());
+				$(api.column(3).footer()).html(totalPlan.toLocaleString());
 			},
 			'paging': true,
 			'lengthChange': true,
@@ -224,6 +228,7 @@
 				},
 				"columns": [
 				{ "data": "serial_number" },
+				{ "data": "process_name" },
 				{ "data": "model" },
 				{ "data": "quantity" },
 				{ "data": "st_date" }

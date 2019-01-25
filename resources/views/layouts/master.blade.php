@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
+  <style>
+
+</style>
 </head>
 <body class="hold-transition skin-purple fixed sidebar-mini">
   <div class="wrapper">
