@@ -19,7 +19,7 @@ use App\CodeGenerator;
 use App\StampInventory;
 use App\StampSchedule;
 use App\Material;
-
+use App\Process;
 class ProcessController extends Controller
 {
 	public function __construct(){
@@ -96,12 +96,17 @@ class ProcessController extends Controller
 	return Response::json($response);
 }
 
-
 public function indexResumes(){
-	return view('processes.assy_fl.resumes', array(
-			// 'models' => $models,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+	$code = Process::orderBy('process_code', 'asc')
+		->get();
+		return view('processes.assy_fl.resumes',array(
+			'code' => $code,
+		))
+
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
+
 
 public function indexDisplay(){
 	return view('processes.assy_fl.display', array(
@@ -1163,12 +1168,17 @@ public function stamp(Request $request){
 
 public function filter_stamp_detail(Request $request){
 	$flo_detailsTable = DB::table('log_processes')
-
-	->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
+	->leftJoin('processes', 'processes.process_code', '=', 'log_processes.process_code')
+	->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','processes.process_name', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
 
 	if(strlen($request->get('datefrom')) > 0){
 		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
 		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
+	}
+
+	if(strlen($request->get('code')) > 0){
+		$code = $request->get('code');
+		$flo_detailsTable = $flo_detailsTable->where('log_processes.process_code','=', $code );
 	}
 
 	if(strlen($request->get('dateto')) > 0){
@@ -1188,6 +1198,7 @@ public function filter_stamp_detail(Request $request){
 public function fetchwipflallchart(){
 
 	$first = date('Y-m-01');
+	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
 
 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
 		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
@@ -1206,6 +1217,8 @@ public function fetchwipflallchart(){
 	select materials.model, sum(plan) as plan, 0 as stock from
 	(
 	select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+	union all
+	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
 	union all
 	select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
 	) result1
