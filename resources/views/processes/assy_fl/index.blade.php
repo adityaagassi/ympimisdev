@@ -25,17 +25,17 @@
 			@endif
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>
-			<a href="{{ url("index/process_assy_fl_4") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Chosei</a>
+			<a href="{{ url("index/process_assy_fl_4") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Chousei</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> NG <i class="fa fa-angle-double-down"></i></span>
 			<a href="#" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Repair</a>
 			<a href="#" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Return</a>
-			<a href="#" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Stock Repair</a>
+			<a href="#" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Repair Inventory</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("/stamp/resumes") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">WIP Inventory</a>
+			<a href="{{ url("/stamp/resumes") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">WIP Production Result</a>
 			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart WIP Inventory</a>
 		</div>
 	</div>
@@ -50,7 +50,7 @@
 		}
 	});
 	jQuery(document).ready(function() {
-
+		
 	});
 </script>
 @endsection
