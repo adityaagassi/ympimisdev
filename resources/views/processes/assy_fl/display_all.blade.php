@@ -148,7 +148,7 @@ table.table-bordered > tfoot > tr > th{
 					};
 
 					Highcharts.chart('container', {
-						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
+						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)','rgba(255,0,0,1)'],
 						chart: {
 							type: 'column',
 							backgroundColor: null,
@@ -185,10 +185,11 @@ table.table-bordered > tfoot > tr > th{
 						},
 						tooltip: {
 							shared: true
+							// enabled:true
 						},
 						plotOptions: {
 							series:{
-								minPointLength: 0,
+								minPointLength: 3,
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
@@ -210,6 +211,7 @@ table.table-bordered > tfoot > tr > th{
 							data: stockActual,
 							pointPadding: 0.2
 						}, {
+							name: 'MaxPlan',
 							marker: {
 								symbol: 'c-rect',
 								lineWidth:3,
@@ -245,6 +247,7 @@ table.table-bordered > tfoot > tr > th{
 							pie: {
 								allowPointSelect: true,
 								cursor: 'pointer',
+								borderColor: 'rgb(126,86,134)',
 								dataLabels: {
 									enabled: true,
 									format: '<b>{point.name}<br/>{point.y} sets</b>',
