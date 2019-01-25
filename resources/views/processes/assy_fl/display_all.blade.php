@@ -141,6 +141,10 @@ table.table-bordered > tfoot > tr > th{
 						}
 					}
 
+					Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+						return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+					};
+
 					Highcharts.chart('container', {
 						colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
 						chart: {
@@ -203,6 +207,15 @@ table.table-bordered > tfoot > tr > th{
 							name: 'Actual',
 							data: stockActual,
 							pointPadding: 0.2
+						}, {
+							marker: {
+								symbol: 'c-rect',
+								lineWidth:3,
+								lineColor: 'rgb(255,0,0)',
+								radius: 10
+							},
+							type: 'scatter',
+							data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 54.4, 54.4, 54.4, 54.4]
 						}]
 					});
 
@@ -277,86 +290,86 @@ table.table-bordered > tfoot > tr > th{
 				alert('Disconnected from server')
 			}
 		});
-		
-	}
 
-	function fetchTableStock(){
-		$.get('{{ url("fetch/wipflallstock") }}', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$('#tableHead').html("");
-					$('#tableFoot').html("");
-					var tableHead = '';
-					var tableFoot = '';
-					var heads = [];
-					tableHead += '<tr>';
-					tableFoot += '<tr>';
-					tableHead += '<th style="width:10%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Process/Model</th>';
-					tableFoot += '<th style="text-align: center; width: 10%; font-size: 2vw;">Total</th>';
-					totalHead = 0;
-					$.each(result.inventory, function(index, value) {
-						if ($.inArray(value.model, heads)==-1) {
-							heads.push(value.model);
-							tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.9); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
-							tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
-							totalHead += 1;
-						}
-					});
-					tableHead += '</tr>';
-					tableFoot += '</tr>';
-					$('#tableFoot').append(tableFoot);
+}
 
-					$('#tableBody').html("");
-					var tableBody = '';
+function fetchTableStock(){
+	$.get('{{ url("fetch/wipflallstock") }}', function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#tableHead').html("");
+				$('#tableFoot').html("");
+				var tableHead = '';
+				var tableFoot = '';
+				var heads = [];
+				tableHead += '<tr>';
+				tableFoot += '<tr>';
+				tableHead += '<th style="width:10%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Process/Model</th>';
+				tableFoot += '<th style="text-align: center; width: 10%; font-size: 2vw;">Total</th>';
+				totalHead = 0;
+				$.each(result.inventory, function(index, value) {
+					if ($.inArray(value.model, heads)==-1) {
+						heads.push(value.model);
+						tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.9); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
+						tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
+						totalHead += 1;
+					}
+				});
+				tableHead += '</tr>';
+				tableFoot += '</tr>';
+				$('#tableFoot').append(tableFoot);
 
-					tableHead += '<tr>';
-					tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock Plan</th>';
-					$.each(result.plan, function(index, value){
-						tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
-					})
-					tableHead += '</tr>';
-					$('#tableHead').append(tableHead);
+				$('#tableBody').html("");
+				var tableBody = '';
 
-					tableBody += '<tr>';
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';
-					$.each(result.inventory, function(index, value){
-						if(value.process_code == 1){
-							tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
-						}
-					})
-					tableBody += '</tr>';
-					tableBody += '<tr>';
-					tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Tanpo awase</td>';
-					$.each(result.inventory, function(index, value){
-						if(value.process_code == 2){
-							tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
-						}
-					})
-					tableBody += '</tr>';
-					tableBody += '<tr>';
-					tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Seasoning-Kanggou</td>';
-					$.each(result.inventory, function(index, value){
-						if(value.process_code == 3){
-							tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
-						}
-					})
-					tableBody += '</tr>';
-					tableBody += '<tr>';
-					tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Chousei</td>';
-					$.each(result.inventory, function(index, value){
-						if(value.process_code == 4){
-							tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
-						}
-					})
-					tableBody += '</tr>';
+				tableHead += '<tr>';
+				tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock Plan</th>';
+				$.each(result.plan, function(index, value){
+					tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
+				})
+				tableHead += '</tr>';
+				$('#tableHead').append(tableHead);
 
-					$('#tableBody').append(tableBody);
-					$('#tableStock').DataTable().destroy();
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';
+				$.each(result.inventory, function(index, value){
+					if(value.process_code == 1){
+						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+					}
+				})
+				tableBody += '</tr>';
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Tanpo awase</td>';
+				$.each(result.inventory, function(index, value){
+					if(value.process_code == 2){
+						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+					}
+				})
+				tableBody += '</tr>';
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Seasoning-Kanggou</td>';
+				$.each(result.inventory, function(index, value){
+					if(value.process_code == 3){
+						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+					}
+				})
+				tableBody += '</tr>';
+				tableBody += '<tr>';
+				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Chousei</td>';
+				$.each(result.inventory, function(index, value){
+					if(value.process_code == 4){
+						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+					}
+				})
+				tableBody += '</tr>';
 
-					$('#tableStock').DataTable({
+				$('#tableBody').append(tableBody);
+				$('#tableStock').DataTable().destroy();
+
+				$('#tableStock').DataTable({
 						// 'scrollX': true,
 						'responsive':true,
 						// 'dom': 'Bfrtip',
@@ -385,16 +398,16 @@ table.table-bordered > tfoot > tr > th{
 							}
 						}
 					});
-					setTimeout(fetchTableStock, 1000);
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
+				setTimeout(fetchTableStock, 1000);
 			}
 			else{
-				alert('Disconnected from server');
+				alert('Attempt to retrieve data failed');
 			}
-		});
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
 }
 </script>
 @endsection
