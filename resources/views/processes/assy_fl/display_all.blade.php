@@ -250,7 +250,7 @@ table.table-bordered > tfoot > tr > th{
 									format: '<b>{point.name}<br/>{point.y} sets</b>',
 									distance: -50,
 									style:{
-										fontSize:'14px',
+										fontSize:'16px',
 										textOutline:0
 									},
 									color:'black',
