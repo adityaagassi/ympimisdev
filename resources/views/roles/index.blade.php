@@ -1,4 +1,13 @@
 @extends('layouts.master')
+@section('stylesheets')
+<style type="text/css">
+thead input {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+</style>
+@endsection
 @section('header')
 <section class="content-header">
   <h1>
@@ -51,6 +60,13 @@
               </tr>
               @endforeach
             </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -78,11 +94,77 @@
 @stop
 
 @section('scripts')
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
+  jQuery(document).ready(function() {
+    $('#example1 tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="30"/>' );
+    } );
+    var table = $('#example1').DataTable({
+      "order": [],
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      }
+    });
+
+    table.columns().every( function () {
+      var that = this;
+
+      $( 'input', this.footer() ).on( 'keyup change', function () {
+        if ( that.search() !== this.value ) {
+          that
+          .search( this.value )
+          .draw();
+        }
+      } );
+    } );
+
+    $('#example1 tfoot tr').appendTo('#example1 thead');
+
+  }); 
   $(function () {
-    $('#example1').DataTable({
-      "order": []
-    })
+    
     $('#example2').DataTable({
       'paging'      : true,
       'lengthChange': false,
