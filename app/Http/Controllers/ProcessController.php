@@ -99,10 +99,10 @@ class ProcessController extends Controller
 public function indexResumes(){
 
 	$code = Process::orderBy('process_code', 'asc')
-		->get();
-		return view('processes.assy_fl.resumes',array(
-			'code' => $code,
-		))
+	->get();
+	return view('processes.assy_fl.resumes',array(
+		'code' => $code,
+	))
 
 	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
@@ -1199,35 +1199,60 @@ public function fetchwipflallchart(){
 
 	$first = date('Y-m-01');
 	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+	$now = date('Y-m-d');
+
+	$target = DB::table('production_schedules')
+	->leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
+	->where('production_schedules.due_date', '=', $now)
+	->where('materials.category', '=', 'FG');
+	$stock = DB::table('stamp_inventories');
+
+	$targetFL = $target->where('origin_group_code', '=', '041')->sum('production_schedules.quantity');
+	$stockFL = $stock->where('origin_group_code', '=', '041')->sum('stamp_inventories.quantity');
+
+	$dayFL = floor($stockFL/$targetFL)-1;
+	$addFL = ($stockFL/$targetFL)-$dayFL;
+
 
 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
-		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
 	}
 	elseif(date('D')=='Sun'){
-		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
 	}
 	else{
-		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
 	}
 
 	$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories group by stamp_inventories.process_code";
 
-	$query2 = "select model, sum(plan) as plan, sum(stock) as stock from
+	$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
 	(
-	select materials.model, sum(plan) as plan, 0 as stock from
+	select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
 	(
-	select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+	select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
+
 	union all
-	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+
+	select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
+
 	union all
-	select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
+
+	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
+
+	union all
+
+	select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
 	) result1
 	left join materials on materials.material_number = result1.material_number
 	group by materials.model
 
 	union all
 
-	select model, 0 as plan, sum(quantity) as stock from stamp_inventories group by model
+	select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories group by model
 	) as result2
 	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
