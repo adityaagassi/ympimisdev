@@ -224,7 +224,7 @@ table.table-bordered > tbody > tr > td{
 				originGroupCode : '041',
 				manPower : manPower
 			}
-			$.post('{{ url("input/process_assy_fl_2") }}', data, function(result, status, xhr){
+			$.post('{{ url("input/process_assy_fl") }}', data, function(result, status, xhr){
 				console.log(status);
 				console.log(result);
 				console.log(xhr);

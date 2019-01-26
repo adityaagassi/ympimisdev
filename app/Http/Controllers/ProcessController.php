@@ -708,14 +708,179 @@ public function fetchProcessAssyFLDisplayEfficiencyChart(){
 	);
 	return Response::json($response);
 }
-function inputProcessAssyFL2(Request $request){
+// function inputProcessAssyFL2(Request $request){
 
+// 	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
+// 	->where('model', 'like', 'YFL%')
+// 	// ->where('process_code', '=', 1)
+// 	->first();
+
+// 	// if($stamp != ""){
+// 	try{
+// 		$id = Auth::id();
+
+// 		$log_process = new LogProcess([
+// 			'process_code' => $request->get('processCode'),
+// 			'serial_number' => $request->get('serialNumber'),
+// 			'model' => $stamp->model,
+// 			'manpower' => $request->get('manPower'),
+// 			'quantity' => 1,
+// 			'created_by' => $id
+// 		]);
+
+// 		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
+// 		->where('model', 'like', 'YFL%')
+// 			// ->where('process_code', '=', 1)
+// 		->first();
+
+// 		$inventory->process_code = $request->get('processCode');
+
+// 		$inventory->save();
+// 		$log_process->save();
+// 			// $stamp->forceDelete();
+
+// 		$response = array(
+// 			'status' => true,
+// 			'model' => $stamp->model,
+// 			'serial' => $stamp->serial_number,
+// 			'message' => 'Input success',
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	catch (QueryException $e){
+// 		$response = array(
+// 			'status' => false,
+// 			'message' => $e->getMessage(),
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	// }
+// 	// else{
+// 	// 	$response = array(
+// 	// 		'status' => false,
+// 	// 		'message' => 'Process invalid',
+// 	// 	);
+// 	// 	return Response::json($response);
+// 	// }
+
+// }
+
+
+// function inputProcessAssyFL3(Request $request){
+
+// 	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
+// 	->where('model', 'like', 'YFL%')
+// 	// ->where('process_code', '=', 2)
+// 	->first();
+
+// 	// if($stamp != ""){
+// 	try{
+// 		$id = Auth::id();
+
+// 		$log_process = new LogProcess([
+// 			'process_code' => $request->get('processCode'),
+// 			'serial_number' => $request->get('serialNumber'),
+// 			'model' => $stamp->model,
+// 			'manpower' => $request->get('manPower'),
+// 			'quantity' => 1,
+// 			'created_by' => $id
+// 		]);
+
+// 		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
+// 		->where('model', 'like', 'YFL%')
+// 			// ->where('process_code', '=', 2)
+// 		->first();
+
+// 		$inventory->process_code = $request->get('processCode');
+
+// 		$inventory->save();
+// 		$log_process->save();
+// 			// $stamp->forceDelete();
+
+// 		$response = array(
+// 			'status' => true,
+// 			'message' => 'Input success',
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	catch (QueryException $e){
+// 		$response = array(
+// 			'status' => false,
+// 			'message' => $e->getMessage(),
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	// }
+// 	// else{
+// 	// 	$response = array(
+// 	// 		'status' => false,
+// 	// 		'message' => 'Process invalid',
+// 	// 	);
+// 	// 	return Response::json($response);
+// 	// }
+
+// }
+
+// function inputProcessAssyFL4(Request $request){
+
+// 	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
+// 	->where('model', 'like', 'YFL%')
+// 	// ->where('process_code', '=', 3)
+// 	->first();
+
+// 	// if($stamp != ""){
+// 	try{
+// 		$id = Auth::id();
+
+// 		$log_process = new LogProcess([
+// 			'process_code' => $request->get('processCode'),
+// 			'serial_number' => $request->get('serialNumber'),
+// 			'model' => $stamp->model,
+// 			'manpower' => $request->get('manPower'),
+// 			'quantity' => 1,
+// 			'created_by' => $id
+// 		]);
+
+// 		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
+// 		->where('model', 'like', 'YFL%')
+// 			// ->where('process_code', '=', 3)
+// 		->first();
+
+// 		$inventory->process_code = $request->get('processCode');
+
+// 		$inventory->save();
+// 		$log_process->save();
+// 			// $stamp->forceDelete();
+
+// 		$response = array(
+// 			'status' => true,
+// 			'message' => 'Input success',
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	catch (QueryException $e){
+// 		$response = array(
+// 			'status' => false,
+// 			'message' => $e->getMessage(),
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	// }
+// 	// else{
+// 	// 	$response = array(
+// 	// 		'status' => false,
+// 	// 		'message' => 'Process invalid',
+// 	// 	);
+// 	// 	return Response::json($response);
+// 	// }
+
+// }
+
+public function inputProcessAssyFL(Request $request){
 	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
 	->where('model', 'like', 'YFL%')
-	// ->where('process_code', '=', 1)
 	->first();
 
-	// if($stamp != ""){
 	try{
 		$id = Auth::id();
 
@@ -730,72 +895,12 @@ function inputProcessAssyFL2(Request $request){
 
 		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
 		->where('model', 'like', 'YFL%')
-			// ->where('process_code', '=', 1)
 		->first();
 
 		$inventory->process_code = $request->get('processCode');
 
 		$inventory->save();
 		$log_process->save();
-			// $stamp->forceDelete();
-
-		$response = array(
-			'status' => true,
-			'model' => $stamp->model,
-			'serial' => $stamp->serial_number,
-			'message' => 'Input success',
-		);
-		return Response::json($response);
-	}
-	catch (QueryException $e){
-		$response = array(
-			'status' => false,
-			'message' => $e->getMessage(),
-		);
-		return Response::json($response);
-	}
-	// }
-	// else{
-	// 	$response = array(
-	// 		'status' => false,
-	// 		'message' => 'Process invalid',
-	// 	);
-	// 	return Response::json($response);
-	// }
-
-}
-
-
-function inputProcessAssyFL3(Request $request){
-
-	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
-	->where('model', 'like', 'YFL%')
-	// ->where('process_code', '=', 2)
-	->first();
-
-	// if($stamp != ""){
-	try{
-		$id = Auth::id();
-
-		$log_process = new LogProcess([
-			'process_code' => $request->get('processCode'),
-			'serial_number' => $request->get('serialNumber'),
-			'model' => $stamp->model,
-			'manpower' => $request->get('manPower'),
-			'quantity' => 1,
-			'created_by' => $id
-		]);
-
-		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
-		->where('model', 'like', 'YFL%')
-			// ->where('process_code', '=', 2)
-		->first();
-
-		$inventory->process_code = $request->get('processCode');
-
-		$inventory->save();
-		$log_process->save();
-			// $stamp->forceDelete();
 
 		$response = array(
 			'status' => true,
@@ -810,70 +915,6 @@ function inputProcessAssyFL3(Request $request){
 		);
 		return Response::json($response);
 	}
-	// }
-	// else{
-	// 	$response = array(
-	// 		'status' => false,
-	// 		'message' => 'Process invalid',
-	// 	);
-	// 	return Response::json($response);
-	// }
-
-}
-
-function inputProcessAssyFL4(Request $request){
-
-	$stamp = LogProcess::where('serial_number', '=', $request->get('serialNumber'))
-	->where('model', 'like', 'YFL%')
-	// ->where('process_code', '=', 3)
-	->first();
-
-	// if($stamp != ""){
-	try{
-		$id = Auth::id();
-
-		$log_process = new LogProcess([
-			'process_code' => $request->get('processCode'),
-			'serial_number' => $request->get('serialNumber'),
-			'model' => $stamp->model,
-			'manpower' => $request->get('manPower'),
-			'quantity' => 1,
-			'created_by' => $id
-		]);
-
-		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
-		->where('model', 'like', 'YFL%')
-			// ->where('process_code', '=', 3)
-		->first();
-
-		$inventory->process_code = $request->get('processCode');
-
-		$inventory->save();
-		$log_process->save();
-			// $stamp->forceDelete();
-
-		$response = array(
-			'status' => true,
-			'message' => 'Input success',
-		);
-		return Response::json($response);
-	}
-	catch (QueryException $e){
-		$response = array(
-			'status' => false,
-			'message' => $e->getMessage(),
-		);
-		return Response::json($response);
-	}
-	// }
-	// else{
-	// 	$response = array(
-	// 		'status' => false,
-	// 		'message' => 'Process invalid',
-	// 	);
-	// 	return Response::json($response);
-	// }
-
 }
 
 
