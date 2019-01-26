@@ -1243,8 +1243,13 @@ class FloController extends Controller
 
 		$flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
 		if($flo != null){
-			$flo->actual = $flo->actual-$flo_detail->quantity;
-			$flo->save();
+			if(($flo->actual-$flo_detail->quantity) <= 0){
+				$flo->forceDelete();
+			}
+			else{
+				$flo->actual = $flo->actual-$flo_detail->quantity;
+				$flo->save();
+			}
 		}
 
 		$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
