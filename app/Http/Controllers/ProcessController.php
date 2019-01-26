@@ -20,10 +20,16 @@ use App\StampInventory;
 use App\StampSchedule;
 use App\Material;
 use App\Process;
+
 class ProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
+	}
+
+	public function indexRepairFl(){
+		return view('processes.assy_fl.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
 	}
 
 	public function indexProcessAssyFL(){
@@ -51,6 +57,16 @@ class ProcessController extends Controller
 
 	public function indexProcessAssyFL4(){
 		return view('processes.assy_fl.choseikanggo')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function fetchReturnTableFl(){
+		$stamp_inventories = StampInventory::where('origin_group_code', '=', '041')
+		->where('status', '=', 'return')
+		->orderBy('serial_number')
+		->get();
+
+		return DataTables::of($stamp_inventories)
+		->make(true);
 	}
 
 	public function fetchProcessAssyFLDisplayStockChart(){

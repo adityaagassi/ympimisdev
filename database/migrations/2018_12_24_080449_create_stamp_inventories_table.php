@@ -19,7 +19,7 @@ class CreateStampInventoriesTable extends Migration
             $table->string('model');
             $table->string('serial_number');
             $table->double('quantity')->default('0');
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
