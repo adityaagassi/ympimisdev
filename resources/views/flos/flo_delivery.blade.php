@@ -1,6 +1,13 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<style type="text/css">
+thead input {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}  
+</style>
 @stop
 @section('header')
 <section class="content-header">
@@ -54,22 +61,35 @@
               </div>
             </div>
             <br>
-            <table id="flo_table" class="table table-bordered table-striped">
+            <table id="flo_table" class="table table-bordered table-striped" style="width: 100%;">
               <thead>
                 <tr>
-                  <th style="font-size: 14">FLO</th>
-                  <th style="font-size: 14">Dest.</th>
-                  <th style="font-size: 14">Ship. Date</th>
-                  <th style="font-size: 14">By</th>
-                  <th style="font-size: 14">Material</th>
-                  <th style="font-size: 14">Description</th>
-                  <th style="font-size: 14">Qty</th>
-                  <th style="font-size: 14">Scan Date</th>
-                  <th style="font-size: 14">Cancel</th>
+                  <th>FLO</th>
+                  <th>Dest.</th>
+                  <th>Ship. Date</th>
+                  <th>By</th>
+                  <th>Material</th>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>Scan Date</th>
+                  <th>Cancel</th>
                 </tr>
               </thead>
               <tbody>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -140,7 +160,7 @@
          $("#flo_number_settlement").val("");
        }
      }, 100 );
-    });
+   });
 
     $('#flo_number_settlement').keydown(function(event) {
       if (event.keyCode == 13 || event.keyCode == 9) {
@@ -199,7 +219,11 @@
     var data = {
       status : '2',
     }
-    $('#flo_table').DataTable( {
+    $('#flo_table tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+    });
+    var table = $('#flo_table').DataTable( {
       'paging'        : true,
       'lengthChange'  : true,
       'searching'     : true,
@@ -229,6 +253,20 @@
       { "data": "action" }
       ]
     });
+
+    table.columns().every( function () {
+      var that = this;
+
+      $( 'input', this.footer() ).on( 'keyup change', function () {
+        if ( that.search() !== this.value ) {
+          that
+          .search( this.value )
+          .draw();
+        }
+      });
+    });
+
+    $('#flo_table tfoot tr').appendTo('#flo_table thead');
   }
 
   function openErrorGritter(title, message) {

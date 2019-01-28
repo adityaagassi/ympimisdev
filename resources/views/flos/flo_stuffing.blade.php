@@ -2,6 +2,13 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
+<style>
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}  
+</style>
 @stop
 @section('header')
 <section class="content-header">
@@ -97,21 +104,36 @@
 							<table id="flo_table" class="table table-bordered table-striped">
 								<thead>
 									<tr>
-										<th style="font-size: 14">FLO</th>
-										<th style="font-size: 14">Dest.</th>
-										<th style="font-size: 14">Ship. Date</th>
-										<th style="font-size: 14">By</th>
-										<th style="font-size: 14">Material</th>
-										<th style="font-size: 14">Description</th>
-										<th style="font-size: 14">Qty</th>
-										<th style="font-size: 14">I/V</th>
-										<th style="font-size: 14">Cont. ID</th>
-										<th style="font-size: 14">Stuff. Date</th>
-										<th style="font-size: 14">Cancel</th>
+										<th>FLO</th>
+										<th>Dest.</th>
+										<th>Ship. Date</th>
+										<th>By</th>
+										<th>Material</th>
+										<th>Description</th>
+										<th>Qty</th>
+										<th>I/V</th>
+										<th>Cont. ID</th>
+										<th>Stuff. Date</th>
+										<th>Cancel</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -294,7 +316,11 @@
 			var data = {
 				status : '3'
 			}
-			$('#flo_table').DataTable( {
+			$('#flo_table tfoot th').each( function () {
+				var title = $(this).text();
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+			});
+			var table = $('#flo_table').DataTable( {
 				'paging'      	: true,
 				'lengthChange'	: true,
 				'searching'   	: true,
@@ -326,6 +352,20 @@
 				{ "data": "action" }
 				]
 			});
+
+			table.columns().every( function () {
+				var that = this;
+
+				$( 'input', this.footer() ).on( 'keyup change', function () {
+					if ( that.search() !== this.value ) {
+						that
+						.search( this.value )
+						.draw();
+					}
+				});
+			});
+
+			$('#flo_table tfoot tr').appendTo('#flo_table thead');
 		}
 	</script>
 	@stop

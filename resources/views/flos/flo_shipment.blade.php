@@ -2,7 +2,11 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
-
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}  
 </style>
 @endsection
 @section('header')
@@ -32,20 +36,31 @@
 					<div class="row">
 						<div class="col-md-12">
 							<br>
-							<table id="iv_table" class="table table-bordered table-striped">
+							<table id="iv_table" class="table table-bordered table-striped" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="font-size: 14">Container ID</th>
-										<th style="font-size: 14">Cont. Code</th>
-										<th style="font-size: 14">Destination</th>
-										<th style="font-size: 14">Ship. Date</th>
-										<th style="font-size: 14">Ship. Cond.</th>
-										<th style="font-size: 14">Cont. Number</th>
-										<th style="font-size: 14">Action</th>
+										<th>Container ID</th>
+										<th>Cont. Code</th>
+										<th>Destination</th>
+										<th>Ship. Date</th>
+										<th>Ship. Cond.</th>
+										<th>Cont. Number</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -215,7 +230,11 @@
 		}
 
 		function fillIvTable(){
-			$('#iv_table').DataTable( {
+			$('#iv_table tfoot th').each( function () {
+				var title = $(this).text();
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+			});
+			var table = $('#iv_table').DataTable( {
 				'paging'      	: true,
 				'lengthChange'	: true,
 				'searching'   	: true,
@@ -243,6 +262,20 @@
 				{ "data": "action" }
 				]
 			});
+
+			table.columns().every( function () {
+				var that = this;
+
+				$( 'input', this.footer() ).on( 'keyup change', function () {
+					if ( that.search() !== this.value ) {
+						that
+						.search( this.value )
+						.draw();
+					}
+				});
+			});
+
+			$('#iv_table tfoot tr').appendTo('#iv_table thead');
 		}
 
 		function deleteConfirmation(id){

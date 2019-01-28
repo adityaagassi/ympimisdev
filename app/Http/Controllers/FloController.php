@@ -99,28 +99,7 @@ class FloController extends Controller
 	}
 
 	public function index_deletion(){
-		$flo_details = FloDetail::leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
-		->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-        // ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
-		->whereIn('flos.status', ['M', '0', '1'])
-		->orWhereNull('flos.status')
-		->select(
-			'flo_details.id',
-			'flo_details.flo_number',
-			'flo_details.serial_number',
-			'materials.material_number',
-			'materials.material_description',
-			'flo_details.quantity',
-			db::raw('if(flo_details.completion is not null, "Uploaded", "-") as completion'),
-			db::raw('if(flo_details.transfer is not null, "Uploaded", "-") as transfer'),
-			db::raw('if(flos.status is not null, flos.status, "error") as status'),
-			'flo_details.created_at'
-		)
-		->get();
-
-		return view('flos.flo_deletion', array(
-			'flo_details' => $flo_details,
-		))->with('page', 'FLO Deletion');
+		return view('flos.flo_deletion')->with('page', 'FLO Deletion');
 	}
 
 	public function index_detail(){
@@ -1237,8 +1216,8 @@ class FloController extends Controller
 		}
 	}
 
-	public function destroy_flo_deletion($id){
-		$flo_detail = FloDetail::find($id);
+	public function destroy_flo_deletion(Request $request){
+		$flo_detail = FloDetail::find($request->get('id'));
 		$material = Material::where('material_number', '=', $flo_detail->material_number)->first();
 
 		$flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
@@ -1255,8 +1234,39 @@ class FloController extends Controller
 		$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
 		$inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
 		$inventory->save();
-
 		$flo_detail->forceDelete();
-		return redirect('/index/flo_view/deletion')->with('status', 'Material has been deleted.');
+
+		$response = array(
+			'status' => true,
+			'message' => "Item has been deleted.",
+		);
+		return Response::json($response);
+	}
+
+	public function fetch_flo_deletion(){
+		$flo_details = FloDetail::leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+		->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
+        // ->leftJoin('statuses', 'statuses.status_code', '=', 'flos.status')
+		->whereIn('flos.status', ['M', '0', '1'])
+		->orWhereNull('flos.status')
+		->select(
+			'flo_details.id',
+			'flo_details.flo_number',
+			'flo_details.serial_number',
+			'materials.material_number',
+			'materials.material_description',
+			'flo_details.quantity',
+			db::raw('if(flo_details.completion is not null, "Uploaded", "-") as completion'),
+			db::raw('if(flo_details.transfer is not null, "Uploaded", "-") as transfer'),
+			db::raw('if(flos.status is not null, flos.status, "error") as status'),
+			'flo_details.created_at'
+		)
+		->get();
+
+		return DataTables::of($flo_details)
+		->addColumn('action', function($flo_details){
+			return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-danger" onClick="deleteConfirmation(id)" id="' . $flo_details->id . '"><i class="fa fa-trash"></i></a>';
+		})
+		->make(true);
 	}
 }

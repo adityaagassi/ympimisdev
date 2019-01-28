@@ -293,8 +293,9 @@ Route::group(['nav' => 'S8', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'S9', 'middleware' => 'permission'], function(){
-	Route::get('index/flo_view/deletion', 'FloController@index_deletion');
-	Route::get('destroy/flo_deletion/{id}', 'FloController@destroy_flo_deletion');	
+	Route::get('index/flo_view/deletion', 'FloController@index_deletion');	
+	Route::get('fetch/flo_deletion', 'FloController@fetch_flo_deletion');	
+	Route::post('destroy/flo_deletion', 'FloController@destroy_flo_deletion');
 });
 
 Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){

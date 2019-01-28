@@ -2,7 +2,11 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}  
 </style>
 @stop
 
@@ -58,17 +62,26 @@
 							<table id="flo_invoice_table" class="table table-bordered table-striped">
 								<thead>
 									<tr>
-										<th style="font-size: 14">Invoice Number</th>
-										<th style="font-size: 14">Ship. Date</th>
-										<th style="font-size: 14">Dest.</th>
-										<th style="font-size: 14">Dest. Name</th>
-										<th style="font-size: 14">Plan BL Date</th>
-										<th style="font-size: 14">Actual BL Date</th>
-										<th style="font-size: 14" class="notexport">Action</th>
+										<th>Invoice Number</th>
+										<th>Ship. Date</th>
+										<th>Dest.</th>
+										<th>Dest. Name</th>
+										<th>Plan BL Date</th>
+										<th>Actual BL Date</th>
+										<th class="notexport">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -201,7 +214,12 @@
 
 		function fillInvoiceTable(){
 			$('#flo_invoice_table').DataTable().destroy();
-			$('#flo_invoice_table').DataTable({
+
+			$('#flo_invoice_table tfoot th').each( function () {
+				var title = $(this).text();
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+			});
+			var table = $('#flo_invoice_table').DataTable({
 				'dom': 'Bfrtip',
 				'buttons': {
 					dom: {
@@ -255,6 +273,20 @@
 				{ "data": "action" }
 				]
 			});
+			
+			table.columns().every( function () {
+				var that = this;
+
+				$( 'input', this.footer() ).on( 'keyup change', function () {
+					if ( that.search() !== this.value ) {
+						that
+						.search( this.value )
+						.draw();
+					}
+				});
+			});
+
+			$('#flo_invoice_table tfoot tr').appendTo('#flo_invoice_table thead');
 		}
 
 		function openErrorGritter(title, message) {
