@@ -57,17 +57,20 @@ class UploadCompletions extends Command
         ->whereNull('flo_details.completion')
         ->where('flo_details.created_at', '<=', $date)
         ->select(
+            DB::raw('if(flo_details.flo_number like "Maedaoshi%", "M", "F") as stats'),
             'materials.issue_storage_location', 
             'flo_details.material_number',
             DB::raw('date(flo_details.created_at) as date'),
             DB::raw('sum(flo_details.quantity) as qty')
         )
         ->groupBy(
+            DB::raw('if(flo_details.flo_number like "Maedaoshi%", "M", "F")'),
             'materials.issue_storage_location', 
             DB::raw('date(flo_details.created_at)'),
             'flo_details.material_number'
         )
         ->having(DB::raw('sum(flo_details.quantity)'), '>', 0)
+        ->orderByRaw('if(flo_details.flo_number like "Maedaoshi%", "M", "F"), flo_details.material_number')
         ->get();
 
         $flo_text = "";
