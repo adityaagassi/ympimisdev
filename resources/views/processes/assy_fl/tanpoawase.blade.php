@@ -405,9 +405,9 @@ table.table-bordered > tbody > tr > td{
 
 						yAxis: {
 							stops: [
-							[0.54, '#FF0000'],
-							[0.57, '#DDDF0D'],
-							[0.6, '#55BF3B']
+							[0, '#FF0000'],
+							[0.565, '#DDDF0D'],
+							[0.59, '#55BF3B']
 							// [0.5, '#DDDF0D'],
 							// [0.9, '#DF5353']
 							],
