@@ -150,4 +150,3 @@ td {text-align:center}
 	}
 </script>
 @endsection
-

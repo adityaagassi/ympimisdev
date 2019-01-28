@@ -27,6 +27,24 @@ class ProcessController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function indexLog(){
+		return view('processes.assy_fl.log')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function fetchLogTableFl(){
+		$logs = DB::table('stamp_inventories')
+		->leftJoin('log_processes', 'log_processes.serial_number', '=', 'stamp_inventories.serial_number')
+		->where('log_processes.model', 'like', 'YFL%')
+		->select('log_processes.serial_number', 'stamp_inventories.model')
+		->orderBy('log_processes.serial_number', 'asc')
+		->get();
+		$response = array(
+			'status' => true,
+			'logs' => $logs
+		);
+		return Response::json($response);
+	}
+
 	public function indexRepairFl(){
 		return view('processes.assy_fl.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
@@ -1276,6 +1294,8 @@ public function fetchwipflallchart(){
 		$addFL = 1;
 	}
 
+	$currStock = round($stockFL/$targetFL,1);
+
 	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
 		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
 		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
@@ -1325,6 +1345,7 @@ public function fetchwipflallchart(){
 		'status' => true,
 		'efficiencyData' => $efficiencyData,
 		'stockData' => $stockData,
+		'currStock' => $currStock,
 	);
 	return Response::json($response);
 }

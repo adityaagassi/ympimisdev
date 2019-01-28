@@ -158,7 +158,11 @@ table.table-bordered > tfoot > tr > th{
 							spacingBottom: 0
 						},
 						title: {
-							text: 'WIP Stock Accuracy <br><span style="color:rgba(96,92,168);"> ??? </span>'
+							text: '<span>Current WIP Stock '+result.currStock+' Day(s)</span>',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
 						},
 						exporting: { enabled: false },
 						xAxis: {
@@ -318,7 +322,7 @@ function fetchTableStock(){
 				$.each(result.inventory, function(index, value) {
 					if ($.inArray(value.model, heads)==-1) {
 						heads.push(value.model);
-						tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.9); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
+						tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">'+value.model.substring(3)+'</th>';
 						tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
 						totalHead += 1;
 					}
@@ -331,7 +335,7 @@ function fetchTableStock(){
 				var tableBody = '';
 
 				tableHead += '<tr>';
-				tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock Plan</th>';
+				tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock+1Day Plan</th>';
 				$.each(result.plan, function(index, value){
 					tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
 				})

@@ -33,6 +33,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("/stamp/log") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Log Process</a>
 			<a href="{{ url("/stamp/resumes") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result</a>
 			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart Inventory</a>
 		</div>

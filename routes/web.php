@@ -319,6 +319,7 @@ Route::get('fetch/process_assy_fl_Display/stockChart', 'ProcessController@fetchP
 Route::get('fetch/wipflallstock', 'ProcessController@fetchwipflallstock');
 Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');
 Route::get('fetch/returnTableFl', 'ProcessController@fetchReturnTableFl');
+Route::get('fetch/logTableFl', 'ProcessController@fetchLogTableFl');
 
 Route::get('fetch/process_assy_fl_2/actualChart', 'ProcessController@fetchProcessAssyFL2ActualChart');
 Route::get('fetch/process_assy_fl_3/actualChart', 'ProcessController@fetchProcessAssyFL3ActualChart');
@@ -343,7 +344,7 @@ Route::post('destroy/stamp', 'ProcessController@destroyStamp');
 
 Route::post('stamp/stamp_detail', 'ProcessController@filter_stamp_detail');
 Route::get('stamp/resumes', 'ProcessController@indexResumes');
-// Route::get('stamp/display', 'ProcessController@indexDisplay');
+Route::get('stamp/log', 'ProcessController@indexLog');
 Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 // });
 
