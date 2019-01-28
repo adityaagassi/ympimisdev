@@ -4,6 +4,9 @@
 thead>tr>th{
 	text-align:center;
 }
+tbody>tr>td{
+	text-align:center;
+}
 </style>
 @stop
 
@@ -21,7 +24,7 @@ thead>tr>th{
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">
-			<table id="logTable" style="width: 100%;" class="table table-bordered table-hover tabel-striped">
+			<table id="logTable" style="width: 100%;" class="table table-bordered table-hover table-striped">
 				<thead>
 					<tr>
 						<th style="width: 10%;">Serial Number</th>
@@ -71,14 +74,26 @@ thead>tr>th{
 	});
 
 	function fetchTableLog(){
-
 		$.get('{{ url("fetch/logTableFl") }}', function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-
+					$('#logTableBody').html("");
+					var tableBody = '';
+					$.each(result.logs, function(key, value) {
+						tableBody += '<tr>';
+						tableBody += '<td>'+value.serial_number+'</td>';
+						tableBody += '<td>'+value.model+'</td>';
+						tableBody += '<td>'+value.kariawase+'</td>';
+						tableBody += '<td>'+value.tanpoawase+'</td>';
+						tableBody += '<td>'+value.yuge+'</td>';
+						tableBody += '<td>'+value.chousei+'</td>';
+						tableBody += '<td>'+value.status+'</td>';
+						tableBody += '</tr>';
+					});
+					$('#logTableBody').append(tableBody);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
@@ -89,6 +104,5 @@ thead>tr>th{
 			}
 		});
 	}
-
 </script>
 @endsection

@@ -32,12 +32,15 @@ class ProcessController extends Controller
 	}
 
 	public function fetchLogTableFl(){
-		$logs = DB::table('stamp_inventories')
-		->leftJoin('log_processes', 'log_processes.serial_number', '=', 'stamp_inventories.serial_number')
-		->where('log_processes.model', 'like', 'YFL%')
-		->select('log_processes.serial_number', 'stamp_inventories.model')
-		->orderBy('log_processes.serial_number', 'asc')
-		->get();
+		$query = "select stamp_inventories.serial_number, stamp_inventories.model, max(if(log_processes.process_code = 1, log_processes.created_at, null)) as kariawase, max(if(log_processes.process_code = 2, log_processes.created_at, null)) as tanpoawase, max(if(log_processes.process_code = 3, log_processes.created_at, null)) as yuge, max(if(log_processes.process_code = 4, log_processes.created_at, null)) as chousei, if(stamp_inventories.status is null, 'InProcess', stamp_inventories.`status`) as `status` 
+		from stamp_inventories 
+		left join log_processes 
+		on log_processes.serial_number = stamp_inventories.serial_number 
+		where stamp_inventories.model like 'YFL%' 
+		group by stamp_inventories.serial_number, stamp_inventories.model, stamp_inventories.status
+		order by stamp_inventories.serial_number asc";
+
+		$logs = DB::select($query);
 		$response = array(
 			'status' => true,
 			'logs' => $logs
