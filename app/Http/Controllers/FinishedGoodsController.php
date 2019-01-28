@@ -388,11 +388,12 @@ class FinishedGoodsController extends Controller
 		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
 		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
 		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'shipment_schedules.material_number')
-		->whereIn('flos.status', [0,1,2,'M']);
+		->whereIn('flos.status', [0,1,2,'M'])
+		->where('flos.actual', '>', 0);
 
-		$total_volume = $stock->sum(DB::raw('((material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton)*flos.actual'));
+		$total_volume = $stock2->sum(DB::raw('((material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton)*flos.actual'));
 
-		$total_stock = $stock->sum('flos.actual');
+		$total_stock = $stock2->sum('flos.actual');
 
 		// $jsonData = $stock->select('destinations.destination_shortname as destination', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK")) as location'), DB::raw('sum(flos.actual) as actual'))->groupBy('destinations.destination_shortname', DB::raw('if(flos.status = 0, "Production", if(flos.status = 1, "InTransit", "FSTK"))'))->orderBy(DB::raw('field(location, "Production", "InTransit", "FSTK")'))->get();
 
@@ -402,13 +403,12 @@ class FinishedGoodsController extends Controller
 		$stock = DB::table('flos')
 		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->select('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', db::raw('if(flos.status = "M" or flos.status = "0", "Production", if(flos.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(flos.actual) as quantity'))
+		->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
 		->whereIn('flos.status', ['0', '1', '2', 'M'])
 		->where('flos.actual', '>', 0)
-		->whereNotNull('shipment_schedules.id')
-		->groupBy('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', 'flos.status')
-		->orderBy('shipment_schedules.material_number', 'destinations.destination_shortname')
+		->select('materials.material_number', 'materials.material_description', db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), db::raw('if(flos.status = "M" or flos.status = "0", "Production", if(flos.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(flos.actual) as quantity'))
+		->groupBy('materials.material_number', 'materials.material_description', 'destinations.destination_shortname', 'flos.status')
+		->orderBy('materials.material_number', 'destinations.destination_shortname')
 		->get();
 
 		$response = array(

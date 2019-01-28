@@ -161,11 +161,11 @@ thead input {
 
 					$.each(result.stockData, function(key, value) {
 						tableStockData += '<tr>';
-						tableStockData += '<td>'+ value.material_number +'</td>';
+						tableStockData += '<td style="width: 10%;">'+ value.material_number +'</td>';
 						tableStockData += '<td>'+ value.material_description +'</td>';
-						tableStockData += '<td>'+ value.destination_shortname +'</td>';
-						tableStockData += '<td>'+ value.location +'</td>';
-						tableStockData += '<td>'+ value.quantity +'</td>';
+						tableStockData += '<td style="width: 10%;">'+ value.destination +'</td>';
+						tableStockData += '<td style="width: 10%;">'+ value.location +'</td>';
+						tableStockData += '<td style="width: 10%;">'+ value.quantity +'</td>';
 						tableStockData += '</tr>';
 					});
 
@@ -227,7 +227,7 @@ thead input {
 							}
 						} );
 					} );
-					$('#tableStock thead').html("");
+					// $('#tableStock thead').html("");
 					$('#tableStock tfoot tr').appendTo('#tableStock thead');
 					// data = data.reverse()
 					// var seriesData = [];
