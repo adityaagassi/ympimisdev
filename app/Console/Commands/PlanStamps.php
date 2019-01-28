@@ -52,9 +52,14 @@ class PlanStamps extends Command
         $targetFL = $target->where('origin_group_code', '=', '041')->sum('production_schedules.quantity');
         $stockFL = $stock->where('origin_group_code', '=', '041')->sum('stamp_inventories.quantity');
 
-        $dayFL = floor($stockFL/$targetFL)-1;
-        $addFL = ($stockFL/$targetFL)-$dayFL;
-
+        if($targetFL != 0){
+            $dayFL = floor($stockFL/$targetFL);
+            $addFL = ($stockFL/$targetFL)-$dayFL;
+        }
+        else{
+            $dayFL = 3;
+            $addFL = 1;
+        }
 
         if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
             $hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
@@ -68,6 +73,9 @@ class PlanStamps extends Command
             $hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
             $aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
         }
+
+        // echo $targetFL.'-'.$stockFL.'-'.$dayFL.'-'.$addFL.'-'.$hFL.'-'.$aFL;
+        // exit;
 
         $queryFL = "select model, '" . $now . "' as due_date, sum(plan) as plan from
         (
