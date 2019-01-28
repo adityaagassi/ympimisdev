@@ -57,7 +57,7 @@ class PlanStamps extends Command
             $addFL = ($stockFL/$targetFL)-$dayFL;
         }
         else{
-            $dayFL = 3;
+            $dayFL = 2;
             $addFL = 1;
         }
 
