@@ -405,10 +405,12 @@ table.table-bordered > tbody > tr > td{
 						yAxis: {
 							stops: [
 							[0, '#FF0000'],
-							[0.565, '#DDDF0D'],
-							[0.59, '#55BF3B']
-							// [0.5, '#DDDF0D'],
-							// [0.9, '#DF5353']
+							[113/200, '#FF0000'],
+							[114/200, '#DDDF0D'],
+							[115/200, '#DDDF0D'],
+							[116/200, '#DDDF0D'],
+							[117/200, '#DDDF0D'],
+							[118/200, '#55BF3B']
 							],
 							lineWidth: 0,
 							minorTickInterval: null,

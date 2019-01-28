@@ -38,7 +38,7 @@ class ProcessController extends Controller
 		on log_processes.serial_number = stamp_inventories.serial_number 
 		where stamp_inventories.model like 'YFL%' 
 		group by stamp_inventories.serial_number, stamp_inventories.model, stamp_inventories.status
-		order by stamp_inventories.serial_number asc";
+		order by stamp_inventories.serial_number desc";
 
 		$logs = DB::select($query);
 		$response = array(
