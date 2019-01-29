@@ -89,6 +89,25 @@
 
                 </div>
             </div>
+
+            <div class="box box-default box-solid">
+                <div class="box-header with-border text-center" style="background-color: rgba(144, 238, 126, 0.60);">
+                    <h5 class="box-title" style="font-weight: bold;">Production Support Monitoring<br><span class="text-purple">生産支援モニタリング</span></h5>
+                </div>
+                <div class="box-body">
+                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Plant Maintenance (工場保全管理)</span>
+                    <a class="list-group-item" href="http://172.17.129.99/zed/dashboard/awal" style="text-align: center;" target="blank">
+                        OEE (Overall Equipment Efficiency)<br><span class="text-purple">稼働率</span>
+                    </a>
+                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> HR Management (???)</span>
+                    <a class="list-group-item" href="http://172.17.128.4/myhris/home/presensi" style="text-align: center;" target="blank">
+                        Manpower Attendance<br><span class="text-purple">勤怠管理</span>
+                    </a>
+                    <a class="list-group-item" href="http://172.17.128.4/myhris/home/karyawan_graph" style="text-align: center;" target="blank">
+                        Manpower Database<br><span class="text-purple">社員構成</span>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="box box-default box-solid">
