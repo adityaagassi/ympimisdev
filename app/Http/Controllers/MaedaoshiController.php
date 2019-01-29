@@ -248,7 +248,7 @@ class MaedaoshiController extends Controller
 		$maedaoshi = FloDetail::where('flo_details.material_number', '=', $request->get('material_number'))
 		->where('flo_details.flo_number', 'like', 'Maedaoshi%');
 
-		if($request->get('type') == 'ei'){
+		if($request->get('type') == 'pd'){
 			$maedaoshi = $maedaoshi->first();
 		}
 		else{
