@@ -418,7 +418,7 @@ class MaedaoshiController extends Controller
 					$printer->setUnderline(false);
 					$printer->feed(1);
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->barcode($flo_number, Printer::BARCODE_ITF);
+					$printer->barcode($flo_number, Printer::BARCODE_CODE39);
 					$printer->setTextSize(3, 1);
 					$printer->text($flo_number."\n\n");
 					$printer->initialize();
