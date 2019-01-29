@@ -41,11 +41,7 @@ class ProcessController extends Controller
 		order by stamp_inventories.serial_number desc";
 
 		$logs = DB::select($query);
-		$response = array(
-			'status' => true,
-			'logs' => $logs
-		);
-		return Response::json($response);
+		return DataTables::of($logs)->make(true);
 	}
 
 	public function indexRepairFl(){
