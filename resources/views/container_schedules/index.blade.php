@@ -60,18 +60,18 @@ thead input {
             <tbody>
               @foreach($container_schedules as $container_schedule)
               <tr>
-                <td style="font-size: 14">{{$container_schedule->container_id}}</td>
-                <td style="font-size: 14">{{$container_schedule->container_code}}</td>
-                <td style="font-size: 14">{{$container_schedule->destination->destination_shortname}}</td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($container_schedule->shipment_date))}}</td>
-                <td style="font-size: 14">
+                <td style="width: 8%;">{{$container_schedule->container_id}}</td>
+                <td style="width: 5%;">{{$container_schedule->container_code}}</td>
+                <td style="width: 8%;">{{$container_schedule->destination->destination_shortname}}</td>
+                <td>{{date('d-M-Y', strtotime($container_schedule->shipment_date))}}</td>
+                <td style="width: 5%;">
                   @if(isset($container_schedule->weeklycalendar->week_name))
                   {{$container_schedule->weeklycalendar->week_name}}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">
+                <td>
                   @if($container_schedule->container_number != null)
                   {{$container_schedule->container_number}}
                   @else

@@ -43,8 +43,8 @@
                   <tbody>
                     @foreach($origin_groups as $origin_group)
                     <tr>
-                      <td style="font-size: 14">{{$origin_group->origin_group_code}}</td>
-                      <td style="font-size: 14">{{$origin_group->origin_group_name}}</td>
+                      <td style="width: 15%">{{$origin_group->origin_group_code}}</td>
+                      <td>{{$origin_group->origin_group_name}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

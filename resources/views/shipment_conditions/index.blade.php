@@ -43,8 +43,8 @@
                   <tbody>
                     @foreach($shipment_conditions as $shipment_condition)
                     <tr>
-                      <td style="font-size: 14">{{$shipment_condition->shipment_condition_code}}</td>
-                      <td style="font-size: 14">{{$shipment_condition->shipment_condition_name}}</td>
+                      <td style="width: 20%">{{$shipment_condition->shipment_condition_code}}</td>
+                      <td>{{$shipment_condition->shipment_condition_name}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

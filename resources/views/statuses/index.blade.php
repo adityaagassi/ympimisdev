@@ -43,8 +43,8 @@
                   <tbody>
                     @foreach($statuses as $status)
                     <tr>
-                      <td style="font-size: 14">{{$status->status_code}}</td>
-                      <td style="font-size: 14">{{$status->status_name}}</td>
+                      <td style="width: 5%">{{$status->status_code}}</td>
+                      <td>{{$status->status_name}}</td>
                     {{-- <td>
                       <form action="{{ url('destroy/user', $user['id']) }}" method="post">
                                 {{ csrf_field() }}

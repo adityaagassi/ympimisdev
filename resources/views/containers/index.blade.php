@@ -47,9 +47,9 @@ thead input {
             <tbody>
               @foreach($containers as $container)
               <tr>
-                <td style="font-size: 14">{{$container->container_code}}</td>
+                <td style="width: 5%;">{{$container->container_code}}</td>
                 <td style="font-size: 14">{{$container->container_name}}</td>
-                <td style="font-size: 14">{{ round($container->capacity,4)}}</td>
+                <td style="width: 10%;">{{ round($container->capacity,4)}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/container', $container['id'])}}">View</a>

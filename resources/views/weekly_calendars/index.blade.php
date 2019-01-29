@@ -60,10 +60,10 @@ thead input {
             <tbody>
               @foreach($weekly_calendars as $weekly_calendar)
               <tr>
-                <td style="font-size: 14">{{$weekly_calendar->fiscal_year}}</td>
-                <td style="font-size: 14">{{$weekly_calendar->week_name}}</td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($weekly_calendar->date_from))}}</td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($weekly_calendar->date_to))}}</td>
+                <td style="width: 10%">{{$weekly_calendar->fiscal_year}}</td>
+                <td style="width: 10%">{{$weekly_calendar->week_name}}</td>
+                <td>{{date('d-M-Y', strtotime($weekly_calendar->date_from))}}</td>
+                <td>{{date('d-M-Y', strtotime($weekly_calendar->date_to))}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/weekly_calendar/' . $weekly_calendar->week_name . '/' . $weekly_calendar->fiscal_year)}}">View</a>

@@ -46,8 +46,8 @@ thead input {
             <tbody>
               @foreach($roles as $role)
               <tr>
-                <td style="font-size: 14">{{$role->role_code}}</td>
-                <td style="font-size: 14">{{$role->role_name}}</td>
+                <td style="width: 15%">{{$role->role_code}}</td>
+                <td>{{$role->role_name}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/role', $role['id'])}}">View</a>

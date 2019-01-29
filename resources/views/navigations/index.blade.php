@@ -45,8 +45,8 @@ thead input {
             <tbody>
               @foreach($navigations as $navigation)
               <tr>
-                <td style="font-size: 14">{{$navigation->navigation_code}}</td>
-                <td style="font-size: 14">{{$navigation->navigation_name}}</td>
+                <td style="width: 15%">{{$navigation->navigation_code}}</td>
+                <td>{{$navigation->navigation_name}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/navigation', $navigation['id'])}}">View</a>

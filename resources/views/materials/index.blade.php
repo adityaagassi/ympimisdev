@@ -52,7 +52,7 @@ thead input {
               <tr>
                 <th>Material Number</th>
                 <th>Description</th>
-                <th>Base Unit</th>
+                <th>BUn</th>
                 <th>SLoc</th>
                 <th>Origin Group</th>
                 <th>HPL</th>
@@ -64,20 +64,20 @@ thead input {
             <tbody>
               @foreach($materials as $material)
               <tr>
-                <td style="font-size: 14">{{$material->material_number}}</td>
-                <td style="font-size: 14">{{$material->material_description}}</td>
-                <td style="font-size: 14">{{$material->base_unit}}</td>
-                <td style="font-size: 14">{{$material->issue_storage_location}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%;">{{$material->material_number}}</td>
+                <td>{{$material->material_description}}</td>
+                <td style="width: 5%;">{{$material->base_unit}}</td>
+                <td style="width: 5%;">{{$material->issue_storage_location}}</td>
+                <td>
                   @if(isset($material->origingroup->origin_group_name))
                   {{$material->origin_group_code}} - {{$material->origingroup->origin_group_name}}
                   @else
                   {{$material->origin_group_code}} - Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{$material->hpl}}</td>
-                <td style="font-size: 14">{{$material->category}}</td>
-                <td style="font-size: 14">{{$material->model}}</td>
+                <td style="width: 5%;">{{$material->hpl}}</td>
+                <td style="width: 5%;">{{$material->category}}</td>
+                <td>{{$material->model}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/material', $material['id'])}}">View</a>

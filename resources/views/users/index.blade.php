@@ -45,10 +45,10 @@ thead input {
             <tbody>
               @foreach($users as $user)
               <tr>
-                <td style="font-size: 14">{{$user->name}}</td>
-                <td style="font-size: 14">{{$user->username}}</td>
-                <td style="font-size: 14">{{$user->email}}</td>
-                <td style="font-size: 14">{{$user->role_code}}</td>
+                <td>{{$user->name}}</td>
+                <td>{{$user->username}}</td>
+                <td>{{$user->email}}</td>
+                <td style="width: 10%">{{$user->role_code}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/user', $user['id'])}}">View</a>

@@ -67,41 +67,41 @@ thead input {
             <tbody>
               @foreach($shipment_schedules as $shipment_schedule)
               <tr>
-                <td style="font-size: 14">{{ date('M-Y', strtotime($shipment_schedule->st_month))}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%">{{ date('M-Y', strtotime($shipment_schedule->st_month))}}</td>
+                <td style="width: 5%">
                   @if(isset($shipment_schedule->weeklycalendar->week_name))
                   {{$shipment_schedule->weeklycalendar->week_name}}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{$shipment_schedule->sales_order}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%">{{$shipment_schedule->sales_order}}</td>
+                <td style="width: 5%">
                   @if(isset($shipment_schedule->shipmentcondition->shipment_condition_name))
                   {{$shipment_schedule->shipmentcondition->shipment_condition_name}}
                   @else
                   {{$shipment_schedule->shipment_condition_code}} - Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">
+                <td style="width: 5%">
                   @if(isset($shipment_schedule->destination->destination_shortname))
                   {{$shipment_schedule->destination->destination_shortname}}
                   @else
                   {{$shipment_schedule->destination_code}} - Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{$shipment_schedule->material_number}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%">{{$shipment_schedule->material_number}}</td>
+                <td>
                   @if(isset($shipment_schedule->material->material_description))
                   {{$shipment_schedule->material->material_description}}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{$shipment_schedule->hpl}}</td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($shipment_schedule->st_date))}}</td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($shipment_schedule->bl_date))}}</td>
-                <td style="font-size: 14">{{$shipment_schedule->quantity}}</td>
+                <td style="width: 5%">{{$shipment_schedule->hpl}}</td>
+                <td style="width: 8%">{{date('d-M-Y', strtotime($shipment_schedule->st_date))}}</td>
+                <td style="width: 8%">{{date('d-M-Y', strtotime($shipment_schedule->bl_date))}}</td>
+                <td style="width: 5%">{{$shipment_schedule->quantity}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/shipment_schedule', $shipment_schedule['id'])}}">View</a>

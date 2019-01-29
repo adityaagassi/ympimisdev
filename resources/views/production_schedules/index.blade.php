@@ -63,23 +63,23 @@ thead input {
             <tbody>
               @foreach($production_schedules as $production_schedule)
               <tr>
-                <td style="font-size: 14">{{$production_schedule->material_number}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%">{{$production_schedule->material_number}}</td>
+                <td>
                   @if(isset($production_schedule->material->material_description))
                   {{$production_schedule->material->material_description}}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">
+                <td style="width: 8%">
                   @if(isset($production_schedule->material->origin_group_code))
                   {{$production_schedule->material->origingroup->origin_group_name  }}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{date('d-M-Y', strtotime($production_schedule->due_date))}}</td>
-                <td style="font-size: 14">{{$production_schedule->quantity}}</td>
+                <td style="width: 10%">{{date('d-M-Y', strtotime($production_schedule->due_date))}}</td>
+                <td style="width: 8%">{{$production_schedule->quantity}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/production_schedule', $production_schedule['id'])}}">View</a>

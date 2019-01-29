@@ -69,25 +69,25 @@ thead input {
             <tbody>
               @foreach($material_volumes as $material_volume)
               <tr>
-                <td style="font-size: 14">{{$material_volume->material_number}}</td>
-                <td style="font-size: 14">
+                <td style="width: 5%">{{$material_volume->material_number}}</td>
+                <td>
                   @if(isset($material_volume->material->material_description))
                   {{$material_volume->material->material_description}}
                   @else
                   Not registered
                   @endif
                 </td>
-                <td style="font-size: 14">{{$material_volume->category}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_completion}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_transfer}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_flo}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_row}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_pallet}}</td>
-                <td style="font-size: 14">{{$material_volume->lot_carton}}</td>
-                <td style="font-size: 14">{{$material_volume->length}}</td>
-                <td style="font-size: 14">{{$material_volume->width}}</td>
-                <td style="font-size: 14">{{$material_volume->height}}</td>
-                <td style="font-size: 14">{{ round($material_volume->height*$material_volume->width*$material_volume->length,4) }}</td>
+                <td style="width: 3%">{{$material_volume->category}}</td>
+                <td style="width: 3%">{{$material_volume->lot_completion}}</td>
+                <td style="width: 3%">{{$material_volume->lot_transfer}}</td>
+                <td style="width: 5%">{{$material_volume->lot_flo}}</td>
+                <td style="width: 5%">{{$material_volume->lot_row}}</td>
+                <td style="width: 5%">{{$material_volume->lot_pallet}}</td>
+                <td style="width: 5%">{{$material_volume->lot_carton}}</td>
+                <td style="width: 3%">{{$material_volume->length}}</td>
+                <td style="width: 3%">{{$material_volume->width}}</td>
+                <td style="width: 3%">{{$material_volume->height}}</td>
+                <td style="width: 5%">{{ round($material_volume->height*$material_volume->width*$material_volume->length,4) }}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/material_volume', $material_volume['id'])}}">View</a>

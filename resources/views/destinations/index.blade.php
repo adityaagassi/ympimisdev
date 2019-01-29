@@ -49,9 +49,9 @@ thead input {
             <tbody>
               @foreach($destinations as $destination)
               <tr>
-                <td style="font-size: 14">{{$destination->destination_code}}</td>
-                <td style="font-size: 14">{{$destination->destination_name}}</td>
-                <td style="font-size: 14">{{$destination->destination_shortname}}</td>
+                <td style="width: 7%">{{$destination->destination_code}}</td>
+                <td>{{$destination->destination_name}}</td>
+                <td style="width: 7%">{{$destination->destination_shortname}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/destination', $destination['id'])}}">View</a>
