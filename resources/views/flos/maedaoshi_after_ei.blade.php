@@ -162,7 +162,8 @@ td:hover {
 		var ymj = $("#ymj").is(":checked");
 		var data = {
 			material_number : material_number,
-			ymj : ymj
+			ymj : ymj,
+			type : 'pd',
 		}
 		$.get('{{ url("scan/after_maedaoshi_material") }}', data, function(result, status, xhr){
 			console.log(status);

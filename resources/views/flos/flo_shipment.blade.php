@@ -122,12 +122,9 @@ thead input {
 							</div>
 						</div>
 						<div class="col-md-12">
-							<div class="col-md-4" id="imagePreviewBefore">
-							</div>
-							<div class="col-md-4" id="imagePreviewProcess">
-							</div>
-							<div class="col-md-4" id="imagePreviewAfter">
-							</div>					
+							<div class="col-md-4" id="imagePreviewBefore"></div>
+							<div class="col-md-4" id="imagePreviewProcess"></div>
+							<div class="col-md-4" id="imagePreviewAfter"></div>					
 						</div>
 					</div>
 					<div class="modal-footer">
