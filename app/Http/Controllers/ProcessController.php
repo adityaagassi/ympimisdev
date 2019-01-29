@@ -1272,7 +1272,6 @@ public function filter_stamp_detail(Request $request){
 public function fetchwipflallchart(){
 
 	$first = date('Y-m-01');
-	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
 	$now = date('Y-m-d');
 
 	$target = DB::table('production_schedules')
@@ -1292,6 +1291,8 @@ public function fetchwipflallchart(){
 		$dayFL = 2;
 		$addFL = 1;
 	}
+	
+	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
 
 	$currStock = round($stockFL/$targetFL,1);
 

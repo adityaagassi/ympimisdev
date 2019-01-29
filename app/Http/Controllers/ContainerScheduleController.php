@@ -23,6 +23,11 @@ class ContainerScheduleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
+    public function indexContainerAttachment(){
+        return view('container_schedules.attachment')->with('page', 'Container Attachment');
+    }
+
     public function index()
     {
         $container_schedules = ContainerSchedule::OrderBy('id', 'asc')

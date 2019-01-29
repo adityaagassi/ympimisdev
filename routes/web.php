@@ -105,6 +105,12 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 	Route::post('edit/user/{id}', 'UserController@update');
 	Route::get('show/user/{id}', 'UserController@show');
 });
+
+
+Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
+	Route::get('index/container_attachment', 'ContainerScheduleController@indexContainerAttachment');
+});
+
 Route::get('setting/user', 'UserController@index_setting');
 Route::post('setting/user', 'UserController@setting');
 	// Route::get('register', 'UserController@indexRegister');

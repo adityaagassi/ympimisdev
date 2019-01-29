@@ -54,6 +54,12 @@
       </li>
       @endif
 
+      @if(in_array('A7', $navs))
+      @if(isset($page) && $page == "Container Attachment")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/container_attachment") }}"><i class="fa fa-users"></i> <span>Container Attachment</span></a>
+      </li>
+      @endif
+
       @if(in_array('M0', $navs))
       <li class="header">Master Menu</li>
       @endif
