@@ -200,7 +200,7 @@ td:hover {
 			material_number : material_number,
 			flo_number : flo_number,
 			ymj : ymj,
-			type: 'ei',
+			type: 'pd',
 		}
 		$.get('{{ url("scan/after_maedaoshi_serial") }}', data, function(result, status, xhr){
 			console.log(status);

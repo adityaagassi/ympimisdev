@@ -149,11 +149,11 @@ class MaedaoshiController extends Controller
 
 		$query = "select material_number, sum(plan) as plan, sum(actual) as actual from
 		(
-		select material_number, quantity as plan, 0 as actual from production_schedules where due_date >= '".$first."' and due_date <= '".$last."'
+			select material_number, quantity as plan, 0 as actual from production_schedules where due_date >= '".$first."' and due_date <= '".$last."'
 
-		union all
+			union all
 
-		select material_number, 0 as plan, quantity as actual from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."'
+			select material_number, 0 as plan, quantity as actual from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."'
 		) as result
 		group by result.material_number
 		having plan <= actual and material_number = '".$request->get('material')."'";
@@ -487,10 +487,9 @@ class MaedaoshiController extends Controller
 
 				}
 				catch(\Exception $e){
-					$error_code = $e->errorInfo[2];
 					$response = array(
 						'status' => false,
-						'message' => $error_code,
+						'message' => "Couldn't print to this printer " . $e->getMessage() . "\n.",
 					);
 					return Response::json($response);
 				}
