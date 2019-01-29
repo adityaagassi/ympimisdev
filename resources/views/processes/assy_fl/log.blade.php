@@ -20,7 +20,7 @@ table.table-bordered > thead > tr > th{
 	border:1px solid black;
 }
 table.table-bordered > tbody > tr > td{
-	border:1px solid black;
+	border:1px solid rgb(211,211,211);
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid black;
