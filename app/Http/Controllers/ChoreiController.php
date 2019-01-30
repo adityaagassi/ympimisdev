@@ -276,7 +276,7 @@ class ChoreiController extends Controller
 	public function fetch_daily_production_result(Request $request){
 		if(strlen($request->get('date')) > 0){
 			$date = date('Y-m-d', strtotime($request->get('date')));
-			$week_date = date('Y-m-d', strtotime($date. '+ 3 day'));
+			$week_date = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 			$now = date('Y-m-d', strtotime($date));
 			$first = date('Y-m-d', strtotime(Carbon::parse('first day of '. date('F Y', strtotime($date)))));
 			$week = DB::table('weekly_calendars')->where('week_date', '=', $week_date)->first();
