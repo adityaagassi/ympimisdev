@@ -59,6 +59,13 @@
                         FL Subassy-Assembly<br><span class="text-purple">???</span>
                     </a>
 
+                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> CDM Cek Dimensi Material (???)</span>
+
+                    <a class="list-group-item" href="http://172.17.128.114/digital-ik-cdm/" style="text-align: center;" target="blank">
+                        Work Instruction Digital System<br><span class="text-purple">作業手順書デジタル化</span>
+                    </a>
+
+
                   {{--   <a class="list-group-item" href="{{ url("/404") }}" style="text-align: center; color: rgb(190,190,190);">
                         <span class="fa fa-bar-chart"></span> Production Result<br><span class="text-purple">生産実績</span>
                     </a>
