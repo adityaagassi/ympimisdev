@@ -73,7 +73,7 @@ class PlanStamps extends Command
             $hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
             $aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
         }
-
+        
         // echo $targetFL.'-'.$stockFL.'-'.$dayFL.'-'.$addFL.'-'.$hFL.'-'.$aFL;
         // exit;
 

@@ -239,7 +239,7 @@ public function fetchProcessAssyFL2ActualChart(){
 			$deduction = 7500;
 		}
 		else{
-			$deduction = 0;			
+			$deduction = 0;
 		}
 	}
 	else{
@@ -317,7 +317,7 @@ public function fetchProcessAssyFL3ActualChart(){
 			$deduction = 7500;
 		}
 		else{
-			$deduction = 0;			
+			$deduction = 0;
 		}
 	}
 	else{
@@ -398,7 +398,7 @@ public function fetchProcessAssyFL4ActualChart(){
 			$deduction = 7500;
 		}
 		else{
-			$deduction = 0;			
+			$deduction = 0;
 		}
 	}
 	else{

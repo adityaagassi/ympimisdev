@@ -18,9 +18,13 @@ table.table-bordered{
 }
 table.table-bordered > thead > tr > th{
 	border:1px solid black;
+	font-size: 20px;
 }
 table.table-bordered > tbody > tr > td{
 	border:1px solid rgb(211,211,211);
+/*	padding: 0; 
+	margin: 0;*/
+	font-size: 20px;
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid black;
@@ -31,7 +35,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Log Process Flute <span class="text-purple">???</span>
+		Log Process Flute <span class="text-purple">ログプロセスフルート</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -42,7 +46,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">
-			<table id="logTable" style="width: 100%;" class="table table-bordered table-hover table-striped">
+			<table id="logTable" cellspacing="0" cellpadding="0" style="width: 100%;" class="table table-bordered table-hover table-striped">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
 						<th style="width: 10%;">Serial Number</th>
