@@ -31,15 +31,15 @@ thead input {
                 <thead>
                   <tr>
                     <th>FLO Number</th>
-                    <th>Serial Number</th>
-                    <th>Material</th>
-                    <th>Description</th>
-                    <th style="width: 4%;">Quantity</th>
-                    <th>Completion</th>
-                    <th>Transfer</th>
-                    <th>Status</th>
-                    <th style="width: 12%;">Created At</th>
-                    <th style="width: 4%;">Action</th>
+                    <th style="width: 4%;">Serial Number</th>
+                    <th style="width: 4%;">Material</th>
+                    <th style="width: 45%;">Description</th>
+                    <th style="width: 4%;">Qty</th>
+                    <th style="width: 4%;">Completion</th>
+                    <th style="width: 4%;">Transfer</th>
+                    <th style="width: 4%;">Status</th>
+                    <th style="width: 27%;">Created At</th>
+                    <th style="width: 4%;">Act</th>
                   </tr>
                 </thead>
                 <tbody>
