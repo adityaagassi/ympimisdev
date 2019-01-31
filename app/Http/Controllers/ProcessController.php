@@ -222,11 +222,50 @@ public function fetchProcessAssyFL2ActualChart(){
 
 	$chartData = DB::select($query);
 
-	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select min(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 09:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-600, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 12:40:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3000, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 14:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3600, timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at)))))*(select min(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as act_time 
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as act_time 
 	from log_processes 
 	left join st_assemblies 
 	on st_assemblies.model = log_processes.model 
@@ -261,11 +300,53 @@ public function fetchProcessAssyFL3ActualChart(){
 
 	$chartData = DB::select($query);
 
-	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select min(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 09:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-600, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 12:40:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3000, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 14:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3600, timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at)))))*(select min(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as act_time 
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+
+	// echo $deduction;
+	// exit;
+
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as act_time 
 	from log_processes 
 	left join st_assemblies 
 	on st_assemblies.model = log_processes.model 
@@ -300,11 +381,50 @@ public function fetchProcessAssyFL4ActualChart(){
 
 	$chartData = DB::select($query);
 
-	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select min(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 09:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-600, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 12:40:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3000, 
-	if(max(log_processes.created_at)>'".date('Y-m-d 14:30:00')."', timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-3600, timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at)))))*(select min(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as act_time 
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as act_time 
 	from log_processes 
 	left join st_assemblies 
 	on st_assemblies.model = log_processes.model 
@@ -337,6 +457,7 @@ public function fetchProcessAssyFLDisplayActualChart(){
 	group by due_date";
 
 	$planData = DB::select($query);
+
 
 	$query2 = "select model, sum(plan) as plan, sum(actual) as actual from
 	(

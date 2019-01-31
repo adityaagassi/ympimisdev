@@ -469,7 +469,7 @@ table.table-bordered > tbody > tr > td{
 					$('#lastOutput').html("<center>"+lastInput+"</center>");
 					$('#actTime').html("<center>"+secondsTimeSpanToHMS(act_time_set)+"</center>");
 					$('#stdTime').html("<center>"+secondsTimeSpanToHMS(std_time_set)+"</center>");
-					$('#actManpower').html("<center>"+actmanpower+"</center>");
+					$('#actManpower').html("<center>"+Math.round(actmanpower,2)+"</center>");
 
 					Highcharts.chart('container2', Highcharts.merge(gaugeOptions, {
 						yAxis: {
