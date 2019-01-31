@@ -259,7 +259,7 @@ public function fetchProcessAssyFL2ActualChart(){
 			$deduction = 5700;
 		}
 		else{
-			$deduction = 0;			
+			$deduction = 0;
 		}
 	}
 
@@ -1329,11 +1329,9 @@ public function stamp(Request $request){
 				$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
 				// $printer->qrCode($request->get('serialNumber'));
 				$printer->setTextSize(3, 1);
-				$printer->text($request->get('serialNumber')."\n");
+				$printer->text($request->get('serialNumber')."\n\n");
 				$printer->feed(1);
-				$printer->text($request->get('model')."\n");
-				$printer->setTextSize(1, 1);
-				$printer->text(date("d-M-Y h:i:s"));
+				$printer->text($request->get('model')."\n\n");
 				$printer->cut();
 				$printer->close();
 
