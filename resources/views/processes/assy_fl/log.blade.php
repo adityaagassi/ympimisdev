@@ -22,9 +22,10 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
 	border:1px solid rgb(211,211,211);
-/*	padding: 0; 
-	margin: 0;*/
-	font-size: 20px;
+	padding: 0; 
+	margin: 0;
+	font-size: 18px;
+	font-family: sans-serif;
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid black;
