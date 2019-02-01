@@ -6,7 +6,6 @@ thead>tr>th{
 }
 tbody>tr>td{
 	text-align:center;
-	margin:0; padding:0;
 }
 tfoot>tr>th{
 	text-align:center;
@@ -22,6 +21,8 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
 	border:1px solid rgb(211,211,211);
+	margin:0; 
+	padding:0;
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid rgb(211,211,211);
