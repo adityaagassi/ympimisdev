@@ -1274,7 +1274,7 @@ public function reprint_stamp(Request $request)
 	}
 	else{
 		return back()->with('error', 'Serial number '. $request->get('stamp_number_reprint') . ' not found.');
-	}  
+	}
 }
 
 public function stamp(Request $request){

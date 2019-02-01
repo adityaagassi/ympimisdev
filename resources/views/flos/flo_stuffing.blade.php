@@ -7,7 +7,32 @@ thead input {
 	width: 100%;
 	padding: 3px;
 	box-sizing: border-box;
-}  
+}
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -102,19 +127,19 @@ thead input {
 						<div class="col-md-12">
 							<br>
 							<table id="flo_table" class="table table-bordered table-striped">
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>FLO</th>
-										<th>Dest.</th>
-										<th>Ship. Date</th>
-										<th>By</th>
-										<th>Material</th>
-										<th>Description</th>
-										<th>Qty</th>
-										<th>I/V</th>
-										<th>Cont. ID</th>
-										<th>Stuff. Date</th>
-										<th>Cancel</th>
+										<th style="width: 5%">FLO</th>
+										<th style="width: 10%">Dest.</th>
+										<th style="width: 5%">Ship. Date</th>
+										<th style="width: 5%">By</th>
+										<th style="width: 5%">Material</th>
+										<th style="width: 30%">Description</th>
+										<th style="width: 5%">Qty</th>
+										<th style="width: 5%">I/V</th>
+										<th style="width: 5%">Cont. ID</th>
+										<th style="width: 15%">Stuff. Date</th>
+										<th style="width: 5%">Cancel</th>
 									</tr>
 								</thead>
 								<tbody>

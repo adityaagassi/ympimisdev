@@ -2,6 +2,11 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}
 table {
 	table-layout:fixed;
 }
@@ -12,6 +17,31 @@ td{
 td:hover {
 	overflow: visible;
 }
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -109,14 +139,13 @@ td:hover {
 									</div>
 									&nbsp;
 									<table id="flo_detail_table" class="table table-bordered table-striped">
-										<thead>
+										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
-												{{-- <th style="font-size: 14">#</th> --}}
-												<th style="font-size: 14">Serial</th>
-												<th style="font-size: 14">Material</th>
-												<th style="font-size: 14">Description</th>
-												<th style="font-size: 14">Qty</th>
-												<th style="font-size: 14">Del.</th>
+												<th>Serial</th>
+												<th>Material</th>
+												<th>Description</th>
+												<th>Qty</th>
+												<th>Del.</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -155,20 +184,32 @@ td:hover {
 							</div>
 							<br>
 							<table id="flo_table" class="table table-bordered table-striped">
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="font-size: 14">FLO</th>
-										<th style="font-size: 14">Dest.</th>
-										<th style="font-size: 14">Ship. Date</th>
-										<th style="font-size: 14">By</th>
-										<th style="font-size: 14">Material</th>
-										<th style="font-size: 14">Description</th>
-										<th style="font-size: 14">Qty</th>
-										<th style="font-size: 14">Cancel</th>
+										<th style="width: 5%">FLO</th>
+										<th style="width: 10%">Dest.</th>
+										<th style="width: 10%">Ship. Date</th>
+										<th style="width: 5%">By</th>
+										<th style="width: 5%">Material</th>
+										<th style="width: 35%">Description</th>
+										<th style="width: 10%">Qty</th>
+										<th style="width: 5%">Cancel</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -213,6 +254,13 @@ td:hover {
 @stop
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/pdfmake.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -574,21 +622,13 @@ function fillFloTable(flo_number){
 			"data": data_flo
 		},
 		"columns": [
-			// { "data": "id", 
-			// render: function() {
-			// 	var rows = t.rows().count();
-
-			// 	t.column(0).nodes().each(function(cell, i) {
-			// 		cell.innerHTML = rows--;
-			// 	});
-			// }, "sWidth": "2%" },
-			{ "data": "serial_number", "sWidth": "14%" },
-			{ "data": "material_number", "sWidth": "12%" },
-			{ "data": "material_description", "sWidth": "62%" },
-			{ "data": "quantity", "sWidth": "5%" },
-			{ "data": "action", "sWidth": "4%" }
-			]
-		});
+		{ "data": "serial_number", "sWidth": "14%" },
+		{ "data": "material_number", "sWidth": "12%" },
+		{ "data": "material_description", "sWidth": "62%" },
+		{ "data": "quantity", "sWidth": "5%" },
+		{ "data": "action", "sWidth": "4%" }
+		]
+	});
 
 		// t.on('order.dt search.dt', function() {
 		// 	var rows = t.rows().count();
@@ -606,7 +646,11 @@ function fillFloTable(flo_number){
 			status : '1',
 			originGroup : ['041','042','043'],			
 		}
-		$('#flo_table').DataTable( {
+		$('#flo_table tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var table = $('#flo_table').DataTable( {
 			'paging'      	: true,
 			'lengthChange'	: true,
 			'searching'   	: true,
@@ -635,6 +679,20 @@ function fillFloTable(flo_number){
 			{ "data": "action" }
 			]
 		});
+
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+
+		$('#flo_table tfoot tr').appendTo('#flo_table thead');
 	}
 
 	function deleteConfirmation(id){

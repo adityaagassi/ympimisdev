@@ -6,7 +6,32 @@ thead input {
 	width: 100%;
 	padding: 3px;
 	box-sizing: border-box;
-}  
+}
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -28,7 +53,7 @@ thead input {
 <section class='content'>
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Containers Number & Attachment <span class="text-purple">コンテナ番号・付属品</span></span></h3>
 				</div>
@@ -36,16 +61,16 @@ thead input {
 					<div class="row">
 						<div class="col-md-12">
 							<br>
-							<table id="iv_table" class="table table-bordered table-striped" style="width: 100%;">
-								<thead>
+							<table id="iv_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Container ID</th>
-										<th>Cont. Code</th>
-										<th>Destination</th>
-										<th>Ship. Date</th>
-										<th>Ship. Cond.</th>
-										<th>Cont. Number</th>
-										<th>Action</th>
+										<th style="width: 5%">Container ID</th>
+										<th style="width: 5%">Cont. Code</th>
+										<th style="width: 7%">Destination</th>
+										<th style="width: 5%">Ship. Date</th>
+										<th style="width: 5%">Ship. Cond.</th>
+										<th style="width: 20%">Cont. Number</th>
+										<th style="width: 5%">Action</th>
 									</tr>
 								</thead>
 								<tbody>

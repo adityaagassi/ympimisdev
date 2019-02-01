@@ -6,6 +6,31 @@ thead input {
   padding: 3px;
   box-sizing: border-box;
 }
+thead>tr>th{
+  text-align:center;
+}
+tbody>tr>td{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table.table-bordered{
+  border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -22,13 +47,13 @@ thead input {
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
-      <div class="box box-primary">
+      <div class="box">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
               <table id="tableFlo" class="table table-bordered table-striped table-hover">
-                <thead>
+                <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
                     <th>FLO Number</th>
                     <th style="width: 4%;">Serial Number</th>
