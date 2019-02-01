@@ -1260,9 +1260,10 @@ public function reprint_stamp(Request $request)
 			$printer->barcode($request->get('stamp_number_reprint'), Printer::BARCODE_CODE39);
 			// $printer->qrCode($request->get('serialNumber'));
 			$printer->setTextSize(3, 1);
-			$printer->text($request->get('stamp_number_reprint')."\n\n");
+			$printer->text($request->get('stamp_number_reprint')."\n");
 			$printer->feed(1);
-			$printer->text($model->model."\n\n");
+			$printer->text($model->model."\n");
+			$printer->text(date("d-M-Y H:i:s")."\n");
 			$printer->cut();
 			$printer->close();
 			
