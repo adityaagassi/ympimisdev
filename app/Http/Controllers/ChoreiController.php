@@ -411,7 +411,7 @@ class ChoreiController extends Controller
 			) as result1
 		) result2
 		group by hpl
-		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
+		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'RC', 'VENOVA')";
 
 		$chartResult3 = DB::select($query3);
 
