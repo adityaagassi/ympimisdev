@@ -6,6 +6,7 @@ thead>tr>th{
 }
 tbody>tr>td{
 	text-align:center;
+	margin:0; padding:0;
 }
 tfoot>tr>th{
 	text-align:center;
@@ -232,7 +233,7 @@ table.table-bordered > tfoot > tr > th{
 					});
 					$('#tableBody').append(tableData);
 					$('#tableActual').DataTable({
-						"scrollY": "465px",
+						"scrollY": "440px",
 						// 	"scrollCollapse": true,
 						"paging": false,
 						// 	'lengthChange': false,

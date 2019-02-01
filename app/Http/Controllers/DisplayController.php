@@ -34,6 +34,24 @@ class DisplayController extends Controller
 		}
 		$now = date('Y-m-d');
 
+		if($first != $now){
+			$debt = "union all
+
+			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+			(
+			select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+
+			union all
+
+			select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+			) as debt
+			group by material_number";
+		}
+		else{
+			$debt= "";
+		}
+		
+
 		$query = "select result.material_number, materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
 		(
 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
@@ -48,17 +66,7 @@ class DisplayController extends Controller
 		where date(created_at) = '". $now ."'  
 		group by material_number
 
-		union all
-
-		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-		(
-		select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
-
-		union all
-
-		select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-		) as debt
-		group by material_number
+		".$debt."
 
 		) as result
 		left join materials on materials.material_number = result.material_number
