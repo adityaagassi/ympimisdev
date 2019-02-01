@@ -5,6 +5,31 @@
 input {
 	line-height: 22px;
 }
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 
@@ -140,7 +165,7 @@ input {
 					</div>
 					<div class="col-md-12">
 						<table id="traceabilityTable" class="table table-bordered table-striped table-hover">
-							<thead>
+							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="font-size: 14">Prod. Date</th>
 									<th style="font-size: 14">FLO No.</th>
@@ -158,6 +183,8 @@ input {
 							</thead>
 							<tbody id="tableBody">
 							</tbody>
+							<tfoot>
+							</tfoot>
 						</table>
 					</div>
 				</div>

@@ -1,32 +1,30 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-/*table ,tr td{
-	border:1px solid red
-	}*/
-	tbody {
-		display:block;
-		height:465px;
-		overflow:auto;
-	}
-	thead, tbody tr {
-		display:table;
-		width:100%;
-		table-layout:fixed;/* even columns width , fix width of table too*/
-	}
-	thead {
-		width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
-	}
-	table {
-		table-layout:fixed;
-	}
-	td{
-		overflow:hidden;
-		text-overflow: ellipsis;
-	}
-	td:hover {
-		overflow: visible;
-	}
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
 </style>
 @endsection
 @section('header')
@@ -55,11 +53,11 @@
 			<br><br>
 		</div>
 		<div class="col-xs-4">
-			<div class="box box-widget">
-				<div class="box-body table-responsive no-padding">
-					<table class="table table-condensed table-hover" style="width: 100%;">
-						<div class="scroll-container">
-							<thead>
+			{{-- <div class="box box-widget"> --}}
+				{{-- <div class="box-body"> --}}
+					<table id="tableActual" class="table table-hover table-bordered" style="width: 100%;">
+						{{-- <div class="scroll-container"> --}}
+							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="width: 40%">Model</th>
 									<th style="width: 15%">MTD (H-1)</th>
@@ -69,10 +67,11 @@
 								</tr>
 							</thead>
 							<tbody id="tableBody"></tbody>
-						</div>
+							<tfoot></tfoot>
+						{{-- </div> --}}
 					</table>
-				</div>
-			</div>
+				{{-- </div> --}}
+			{{-- </div> --}}
 		</div>
 	</div>
 	<div class="row">
@@ -122,10 +121,6 @@
 		var s = addZero(d.getSeconds());
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
-
-	// setInterval(function(){
-	// 	fillChart();
-	// }, 1000);
 
 	function fillChart(){
 		var hpl = $('#hpl').val();
@@ -211,6 +206,7 @@
 						}]
 					});
 
+					$('#tableActual').DataTable().destroy();
 					$('#tableBody').html("");
 					var tableData = '';
 					$.each(result.tableData, function(key, value) {
@@ -235,6 +231,16 @@
 						tableData += '</tr>';
 					});
 					$('#tableBody').append(tableData);
+					$('#tableActual').DataTable({
+						"scrollY": "465px",
+						// 	"scrollCollapse": true,
+						"paging": false,
+						// 	'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+					});
 					var totalPlan = 0;
 					var totalActual = 0;
 					$.each(result.chartData, function(key, value) {

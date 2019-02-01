@@ -6,6 +6,31 @@ thead input {
 	padding: 3px;
 	box-sizing: border-box;
 }
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 
@@ -38,9 +63,9 @@ thead input {
 				</div>
 				<div class="box-body">
 					<table id="tableStock" class="table table-bordered table-striped table-hover">
-						<thead>
+						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width : 10%">Material Number</th>
+								<th style="width : 5%">Material Number</th>
 								<th style="width : 40%">Description</th>
 								<th style="width : 10%">Destination</th>
 								<th style="width : 10%">Location</th>
@@ -75,11 +100,11 @@ thead input {
 				<h4 class="modal-title"></h4>
 				<div class="modal-body table-responsive no-padding">
 					<table class="table table-hover">
-						<thead>
-							<th style="font-size: 14">Material</th>
-							<th style="font-size: 14">Description</th>
-							<th style="font-size: 14">Quantity</th>
-							<th style="font-size: 14">m&sup3;</th>
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<th>Material</th>
+							<th>Description</th>
+							<th>Quantity</th>
+							<th>m&sup3;</th>
 						</thead>
 						<tbody id="tableBody">
 						</tbody>
