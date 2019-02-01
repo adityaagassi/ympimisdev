@@ -327,6 +327,8 @@ function fetchTableStock(){
 						totalHead += 1;
 					}
 				});
+				tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
+				tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Total</th>';
 				tableHead += '</tr>';
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);
@@ -336,43 +338,58 @@ function fetchTableStock(){
 
 				tableHead += '<tr>';
 				tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock+1Day Plan</th>';
+				totalPlan = 0;
 				$.each(result.plan, function(index, value){
 					tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+value.plan+'</th>';
+					totalPlan += value.plan;
 				})
+				tableHead += '<th style="width:4.5%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">'+totalPlan+'</th>';
 				tableHead += '</tr>';
 				$('#tableHead').append(tableHead);
 
 				tableBody += '<tr>';
 				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';
+				total1 = 0;
 				$.each(result.inventory, function(index, value){
 					if(value.process_code == 1){
-						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
+						total1 += value.quantity;
 					}
 				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total1+'</td>';
 				tableBody += '</tr>';
 				tableBody += '<tr>';
 				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Tanpo awase</td>';
+				total2 = 0;
 				$.each(result.inventory, function(index, value){
 					if(value.process_code == 2){
-						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
+						total2 += value.quantity;
 					}
 				})
+				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total2+'</td>';
 				tableBody += '</tr>';
 				tableBody += '<tr>';
 				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Seasoning-Kanggou</td>';
+				total3 = 0;
 				$.each(result.inventory, function(index, value){
 					if(value.process_code == 3){
-						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+						tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
+						total3 += value.quantity;
 					}
 				})
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total3+'</td>';
 				tableBody += '</tr>';
 				tableBody += '<tr>';
 				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 16px; font-weight: bold;">Chousei</td>';
+				total4 = 0;
 				$.each(result.inventory, function(index, value){
 					if(value.process_code == 4){
-						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>'
+						tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+value.quantity+'</td>';
+						total4 += value.quantity;
 					}
 				})
+				tableBody += '<td style="background-color: rgb(255,255,255); text-align: center; color: black; font-size: 24px; font-weight: bold;">'+total4+'</td>';
 				tableBody += '</tr>';
 
 				$('#tableBody').append(tableBody);
