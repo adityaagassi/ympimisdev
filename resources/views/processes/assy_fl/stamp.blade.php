@@ -2,6 +2,15 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
 td{
 	overflow:hidden;
 	text-overflow: ellipsis;
@@ -11,6 +20,19 @@ table {
 }
 td:hover {
 	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+	/*margin-top:20px;*/
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
 </style>
@@ -69,8 +91,8 @@ td:hover {
 							<center>
 								<span style="font-size: 24px;">Schedule:</span>
 							</center>
-							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
-								<thead>
+							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped" style="width: 100%;">
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<th>Model</th>
 									<th>Plan</th>
 									<th>Act</th>
@@ -78,7 +100,11 @@ td:hover {
 								</thead>
 								<tbody id="planTableBody">
 								</tbody>
-								<tfoot>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<th>Total</th>
+									<th></th>
+									<th></th>
+									<th></th>
 								</tfoot>
 							</table>
 						</div>
@@ -96,9 +122,6 @@ td:hover {
 								<button type="button" style="width: 49%; margin-top: 5px;" class="btn btn-info" id="kd" onclick="category(id)"> KD</button>
 								<input type="hidden" class="form-control" value="fg" name="category" id="category"><br><br>
 								<div id="listModel">
-									{{-- @foreach($models as $model)
-									<button type="button" class="btn bg-olive btn-lg" style="margin-top: 5px; width: 32.5%; font-size: 1.5vw" id="{{ $model->model }}" onclick="model(id)">{{ $model->model }}</button>
-									@endforeach --}}
 								</div>
 							</center>
 						</div>
@@ -107,7 +130,7 @@ td:hover {
 								<span style="font-size: 24px;">Result:</span>
 							</center>
 							<table id="resultTable" name="resultTable" class="table table-bordered table-striped table-hover rowclick">
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<th style="width: 20%">Serial Number</th>
 									<th style="width: 25%">Model</th>
 									<th style="width: 40%">Stamped At</th>
@@ -115,7 +138,7 @@ td:hover {
 								</thead>
 								<tbody id="resultTableBody">
 								</tbody>
-								<tfoot>
+								<tfoot style="background-color: RGB(252, 248, 227);">
 								</tfoot>
 							</table>
 						</div>
@@ -238,6 +261,7 @@ td:hover {
 			console.log(xhr);
 			if(xhr.status = 200){
 				if(result.status){
+					$('#planTable').DataTable().destroy();
 					$('#planTableBody').html("");
 					var planData = '';
 					$.each(result.planData, function(key, value) {
@@ -253,6 +277,50 @@ td:hover {
 					$.unique(result.model.map(function (d) {
 						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
 					}));
+					$('#planTable').DataTable({
+						'paging': false,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"footerCallback": function (tfoot, data, start, end, display) {
+							var intVal = function ( i ) {
+								return typeof i === 'string' ?
+								i.replace(/[\$,]/g, '')*1 :
+								typeof i === 'number' ?
+								i : 0;
+							};
+							var api = this.api();
+							var total_diff = api.column(1).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(1).footer()).html(total_diff.toLocaleString());
+
+							var total_actual = api.column(2).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(2).footer()).html(total_actual.toLocaleString());
+
+							var total_plan = api.column(3).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(3).footer()).html(total_plan.toLocaleString());
+						},
+						"columnDefs": [ {
+							"targets": 3,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData <  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						}]
+					});
 				}
 				else{
 					audio_error.play();

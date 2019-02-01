@@ -45,7 +45,7 @@
 		</div>
 		<div class="col-xs-12">
 			<table id="productionTable" class="table table-bordered table-striped table-hover">
-				<thead>
+				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
 						<th style="font-size: 14">Period</th>
 						<th style="font-size: 14">Sales Order</th>
@@ -173,9 +173,9 @@
 			'responsive':true,
 			'dom': 'Bfrtip',
 			'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					],
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
 			'buttons': {
 				// dom: {
 				// 	button: {

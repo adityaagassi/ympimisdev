@@ -56,7 +56,7 @@
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> WIP Monitoring (仕掛品監視)</span>
 
                     <a class="list-group-item" href="{{ url("/index/process_assy_fl") }}" style="text-align: center;">
-                        FL Subassy-Assembly<br><span class="text-purple">???</span>
+                        FL Subassy-Assembly<br><span class="text-purple">フルート仮組~組立</span>
                     </a>
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> CDM Cek Dimensi Material (???)</span>
@@ -111,7 +111,7 @@
                     <a class="list-group-item" href="http://172.17.129.99/zed/dashboard/awal" style="text-align: center;" target="blank">
                         OEE (Overall Equipment Efficiency)<br><span class="text-purple">稼働率</span>
                     </a>
-                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> HR Management (???)</span>
+                    <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> HR Management (人材管理)</span>
                     <a class="list-group-item" href="http://172.17.128.4/myhris/home/presensi" style="text-align: center;" target="blank">
                         Manpower Attendance<br><span class="text-purple">勤怠管理</span>
                     </a>
