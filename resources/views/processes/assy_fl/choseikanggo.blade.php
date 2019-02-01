@@ -41,8 +41,8 @@ table.table-bordered > tbody > tr > td{
 @section('header')
 <section class="content-header">
 	<h1>
-		Chosei-Packing Flute<span class="text-purple"> ??? </span>
-		<small>WIP Control <span class="text-purple"> ??? </span></small>
+		Chosei-Packing Flute<span class="text-purple"> FL調整・梱包</span>
+		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
 	</h1>
 </section>
 @stop

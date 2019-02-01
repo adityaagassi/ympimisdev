@@ -9,7 +9,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Stamp Record <span class="text-purple">???</span>
+		Stamp Record <span class="text-purple">刻印記録</span>
 		<small>Details <span class="text-purple">詳細</span></small>
 	</h1>
 	<ol class="breadcrumb">

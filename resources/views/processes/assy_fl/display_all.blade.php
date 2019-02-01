@@ -24,8 +24,8 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Display WIP Flute<span class="text-purple"> </span>
-		<small>Daily WIP <span class="text-purple">  </span></small>
+		Display WIP Flute<span class="text-purple"> FL仕掛品表示</span>
+		<small>Daily WIP <span class="text-purple">  Daily WIP 本日の仕掛品</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
