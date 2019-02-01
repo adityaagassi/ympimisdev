@@ -6,6 +6,31 @@
 input {
 	line-height: 24px;
 }
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 
@@ -80,19 +105,30 @@ input {
 					<div class="row">
 						<div class="col-md-12">
 							<table id="inventoryTable" class="table table-bordered table-striped">
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="font-size: 14">Plant</th>
-										<th style="font-size: 14">Group</th>
-										<th style="font-size: 14">Material</th>
-										<th style="font-size: 14">Description</th>
-										<th style="font-size: 14">SLoc</th>
-										<th style="font-size: 14">Quantity</th>
-										<th style="font-size: 14">Last Updated</th>
+										<th>Plant</th>
+										<th>Group</th>
+										<th>Material</th>
+										<th>Description</th>
+										<th>SLoc</th>
+										<th>Quantity</th>
+										<th>Last Updated</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<tr>
+										<th>Total</th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 					</div>	
@@ -250,6 +286,19 @@ input {
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
 			"bAutoWidth": false,
+			"footerCallback": function (tfoot, data, start, end, display) {
+				var intVal = function ( i ) {
+					return typeof i === 'string' ?
+					i.replace(/[\$,]/g, '')*1 :
+					typeof i === 'number' ?
+					i : 0;
+				};
+				var api = this.api();
+				var total_diff = api.column(5).data().reduce(function (a, b) {
+					return intVal(a)+intVal(b);
+				}, 0)
+				$(api.column(5).footer()).html(total_diff.toLocaleString());
+			},
 			"processing": true,
 				// "serverSide": true,
 				"ajax": {

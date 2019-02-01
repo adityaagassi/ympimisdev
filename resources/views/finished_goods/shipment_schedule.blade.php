@@ -83,21 +83,21 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<table id="shipmentScheduleTable" class="table table-bordered table-striped">
+							<table id="shipmentScheduleTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Period</th>
-										<th>Sales Order</th>
-										<th>Destination</th>
-										<th>Material</th>
-										<th>Description</th>
-										<th>Plan</th>
-										<th>Actual</th>
-										<th>Diff</th>
-										<th>Ship. Date</th>
-										<th>BL Date Plan</th>
+										<th style="width: 3%;">Period</th>
+										<th style="width: 3%;">Sales Order</th>
+										<th style="width: 5%;">Destination</th>
+										<th style="width: 5%;">Material</th>
+										<th style="width: 40%;">Description</th>
+										<th style="width: 5%;">Plan</th>
+										<th style="width: 5%;">Actual</th>
+										<th style="width: 5%;">Diff</th>
+										<th style="width: 10%;">Ship. Date</th>
+										<th style="width: 10%;">BL Date Plan</th>
 										{{-- <th>BL Date Actual</th> --}}
-										<th>Container ID</th>
+										{{-- <th style="width: 5%">Container ID</th> --}}
 									</tr>
 								</thead>
 								<tbody id="tableBody">
@@ -115,7 +115,7 @@ table.table-bordered > tfoot > tr > th{
 										<th></th>
 										<th></th>
 										{{-- <th></th> --}}
-										<th></th>
+										{{-- <th></th> --}}
 									</tr>
 								</tfoot>
 							</table>
@@ -204,7 +204,7 @@ table.table-bordered > tfoot > tr > th{
 						tableData += '<td>'+ value.st_date +'</td>';
 						tableData += '<td>'+ value.bl_date_plan +'</td>';
 						// tableData += '<td>'+ value.bl_date +'</td>';
-						tableData += '<td>'+ value.container_id +'</td>';
+						// tableData += '<td>'+ value.container_id +'</td>';
 						tableData += '</tr>';		
 					});
 					$('#tableBody').append(tableData);

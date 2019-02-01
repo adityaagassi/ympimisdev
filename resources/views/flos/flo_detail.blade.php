@@ -2,10 +2,33 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
-
 @section('header')
 <section class="content-header">
 	<h1>
@@ -107,33 +130,35 @@
 					<div class="row">
 						<div class="col-md-12">
 							<table id="flo_detail_table" class="table table-bordered table-striped">
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="font-size: 14">SO Number</th>
-										<th style="font-size: 14">FLO Number</th>
-										<th style="font-size: 14">Ship. Date</th>
-										<th style="font-size: 14">Dest.</th>
-										<th style="font-size: 14">Mat. Number</th>
-										<th style="font-size: 14">Mat. Description</th>
-										<th style="font-size: 14">Serial Number</th>
-										<th style="font-size: 14">Qty</th>
-										<th style="font-size: 14">Created At</th>
-										<th style="font-size: 14">Status</th>
+										<th style="width: 5%">SO Number</th>
+										<th style="width: 5%">FLO Number</th>
+										<th style="width: 10%">Ship. Date</th>
+										<th style="width: 10%">Dest.</th>
+										<th style="width: 5%">Mat. Number</th>
+										<th>Mat. Description</th>
+										<th style="width: 5%">Serial Number</th>
+										<th style="width: 5%">Qty</th>
+										<th style="width: 15%">Created At</th>
+										<th style="width: 5%">Status</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
-									<th>Total</th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
+									<tr>
+										<th>Total</th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
 								</tfoot>
 							</table>
 						</div>
