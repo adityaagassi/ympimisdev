@@ -211,9 +211,12 @@ table.table-bordered > tfoot > tr > th{
 					$('#monthlySummaryTable').DataTable().clear();
 					$('#monthlySummaryTable').DataTable().destroy();
 					$('#tableBody').html("");
+					$('#totalSales').html('');
+					$('#totalBO').html('');
+					$('#avgPercentage').html('');
 					var tableData = '';
-					var totalSales = '';
-					var totalBO = '';
+					var totalSales = 0;
+					var totalBO = 0;
 					var totalPercentage = 0;
 					var divider = 0;
 					$.each(result.tableData, function(key, value) {
@@ -223,23 +226,19 @@ table.table-bordered > tfoot > tr > th{
 						divider += 1;
 						tableData += '<tr>';
 						tableData += '<td>'+ value.period +'</td>';
-						tableData += '<td>'+ value.total +'</td>';
+						tableData += '<td>'+ value.total.toLocaleString() +'</td>';
 						if( value.bo > 0 ){
-							tableData += '<td><a href="javascript:void(0)" id="'+ value.period +'" onClick="modalBackOrder(id)"> '+ value.bo +'</a></td>';
+							tableData += '<td><a href="javascript:void(0)" id="'+ value.period +'" onClick="modalBackOrder(id)"> '+ value.bo.toLocaleString() +'</a></td>';
 						}
 						else{
-							tableData += '<td>'+ value.bo +'</td>';
+							tableData += '<td>'+ value.bo.toLocaleString() +'</td>';
 						}
 						tableData += '<td>'+ value.percentage +'%</td>';
 						tableData += '</tr>';
 					});
-					$('#tableBody').html('');
 					$('#tableBody').append(tableData);
-					$('#totalSales').html('');
 					$('#totalSales').append(totalSales.toLocaleString());
-					$('#totalBO').html('');
 					$('#totalBO').append(totalBO.toLocaleString());
-					$('#avgPercentage').html('');
 					$('#avgPercentage').append((totalPercentage/divider).toFixed(2)+'%');
 					$('#monthlySummaryTable').DataTable({
 						"scrollX": true,
