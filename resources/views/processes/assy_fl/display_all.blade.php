@@ -309,8 +309,10 @@ function fetchTableStock(){
 		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
+				$('#tableStock').DataTable().destroy();
 				$('#tableHead').html("");
 				$('#tableFoot').html("");
+				$('#tableBody').html("");
 				var tableHead = '';
 				var tableFoot = '';
 				var totalFoot = '';
@@ -331,7 +333,6 @@ function fetchTableStock(){
 				tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Total</th>';
 				tableHead += '</tr>';
 
-				$('#tableBody').html("");
 				var tableBody = '';
 
 				tableHead += '<tr>';
@@ -395,7 +396,6 @@ function fetchTableStock(){
 				tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw; background-color: RGB(255,204,255);">'+totalFoot+'</th>';
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);
-				$('#tableStock').DataTable().destroy();
 
 				$('#tableStock').DataTable({
 						// 'scrollX': true,

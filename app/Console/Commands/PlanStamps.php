@@ -87,7 +87,7 @@ class PlanStamps extends Command
 
         union all
 
-        select material_number, round(quantity*".$addFL.") as plan
+        select material_number, round(quantity*".$addFL.",0) as plan
         from production_schedules 
         where due_date = '" . $aFL . "'
 
