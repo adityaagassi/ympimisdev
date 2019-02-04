@@ -308,6 +308,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('input/process_assy_fl', 'ProcessController@inputProcessAssyFL');
 });
 Route::get('index/process_assy_fl', 'ProcessController@indexProcessAssyFL');
+Route::get('index/process_assy_fl_0', 'ProcessController@indexProcessAssyFL0');
 Route::get('index/process_assy_fl_1', 'ProcessController@indexProcessAssyFL1');
 Route::get('index/process_assy_fl_2', 'ProcessController@indexProcessAssyFL2');
 Route::get('index/process_assy_fl_3', 'ProcessController@indexProcessAssyFL3');
@@ -327,6 +328,8 @@ Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');
 Route::get('fetch/returnTableFl', 'ProcessController@fetchReturnTableFl');
 Route::get('fetch/logTableFl', 'ProcessController@fetchLogTableFl');
 
+
+Route::get('fetch/process_assy_fl_0/actualChart', 'ProcessController@fetchProcessAssyFL0ActualChart');
 Route::get('fetch/process_assy_fl_2/actualChart', 'ProcessController@fetchProcessAssyFL2ActualChart');
 Route::get('fetch/process_assy_fl_3/actualChart', 'ProcessController@fetchProcessAssyFL3ActualChart');
 Route::get('fetch/process_assy_fl_4/actualChart', 'ProcessController@fetchProcessAssyFL4ActualChart');

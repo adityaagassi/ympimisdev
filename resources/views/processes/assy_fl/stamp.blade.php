@@ -499,12 +499,14 @@ table.table-bordered > tfoot > tr > th{
 		var serialNumber = $('#nextCounter').val();
 		var originGroupCode = '041';
 		var processCode = '1';
+		var manPower = '27';
 		var data = {
 			model:model,
 			category:category,
 			serialNumber:serialNumber,
 			originGroupCode:originGroupCode,
-			processCode:processCode
+			processCode:processCode,
+			manPower:manPower
 		}
 		$.get('{{ url("stamp/stamp") }}', data, function(result, status, xhr){
 			console.log(status);

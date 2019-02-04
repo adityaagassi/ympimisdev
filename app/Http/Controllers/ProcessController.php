@@ -64,6 +64,10 @@ class ProcessController extends Controller
 		->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 	}
 
+	public function indexProcessAssyFL0(){
+		return view('processes.assy_fl.kariawase')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
 	public function indexProcessAssyFL2(){
 		return view('processes.assy_fl.tanpoawase')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 	}
@@ -201,6 +205,84 @@ public function fetchwipflallstock(){
 			'status' => true,
 			'inventory' => $inventory,
 			'plan' => $plan,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchProcessAssyFL0ActualChart(){
+		$first = date('Y-m-01');
+		$now = date('Y-m-d');
+
+		$query = "select model, sum(plan) as plan, sum(actual) as actual from
+		(
+			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+			union all
+			
+			select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
+		) as plan
+		group by model
+		having model like 'YFL%'";
+
+		$chartData = DB::select($query);
+
+		if(date('D')=='Fri'){
+			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+				$deduction = 600;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+				$deduction = 4800;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+				$deduction = 5400;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+				$deduction = 5800;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+				$deduction = 7500;
+			}
+			else{
+				$deduction = 0;
+			}
+		}
+		else{
+			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+				$deduction = 600;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+				$deduction = 3000;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+				$deduction = 3600;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+				$deduction = 4200;
+			}
+			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+				$deduction = 5700;
+			}
+			else{
+				$deduction = 0;
+			}
+		}
+
+		$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+		round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+		(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as act_time 
+		from log_processes 
+		left join st_assemblies 
+		on st_assemblies.model = log_processes.model 
+		where log_processes.process_code = 2 and st_assemblies.process_code = 1 
+		and date(log_processes.created_at) = '".$now."' 
+		group by date(log_processes.created_at)";
+
+		$effData = DB::select($query2);
+
+		$response = array(
+			'status' => true,
+			'chartData' => $chartData,
+			'effData' => $effData,
 		);
 		return Response::json($response);
 	}

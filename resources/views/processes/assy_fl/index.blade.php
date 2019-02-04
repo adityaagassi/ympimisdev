@@ -21,8 +21,9 @@
 			@if(Auth::user()->role_code == "OP-SubAssy-FL")
 			<a href="{{ url("index/process_assy_fl_1") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp-Kariawase</a>
 			@else
-			<a href="{{ url("404") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp-Kariawase</a>
+			<a href="{{ url("404") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">IoT Stamp</a>
 			@endif
+			<a href="{{ url("index/process_assy_fl_0") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp-Kariawase</a>
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>
 			<a href="{{ url("index/process_assy_fl_4") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Chousei</a>
