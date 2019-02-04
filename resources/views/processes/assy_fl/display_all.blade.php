@@ -313,6 +313,7 @@ function fetchTableStock(){
 				$('#tableFoot').html("");
 				var tableHead = '';
 				var tableFoot = '';
+				var totalFoot = '';
 				var heads = [];
 				tableHead += '<tr>';
 				tableFoot += '<tr>';
@@ -327,11 +328,8 @@ function fetchTableStock(){
 						totalHead += 1;
 					}
 				});
-				tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw;"></th>';
 				tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Total</th>';
 				tableHead += '</tr>';
-				tableFoot += '</tr>';
-				$('#tableFoot').append(tableFoot);
 
 				$('#tableBody').html("");
 				var tableBody = '';
@@ -393,6 +391,10 @@ function fetchTableStock(){
 				tableBody += '</tr>';
 
 				$('#tableBody').append(tableBody);
+				totalFoot = total1+total2+total3+total4;
+				tableFoot += '<th style="text-align: center; width: 4.5%; font-size: 2vw; background-color: RGB(255,204,255);">'+totalFoot+'</th>';
+				tableFoot += '</tr>';
+				$('#tableFoot').append(tableFoot);
 				$('#tableStock').DataTable().destroy();
 
 				$('#tableStock').DataTable({
