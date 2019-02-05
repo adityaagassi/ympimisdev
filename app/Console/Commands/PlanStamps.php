@@ -61,7 +61,7 @@ class PlanStamps extends Command
             $addFL = 1;
         }
 
-        if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+        if(date('D')=='Fri' || date('D')=='Thu' || date('D')=='Sat'){
             $hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
             $aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
         }
