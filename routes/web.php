@@ -306,7 +306,17 @@ Route::group(['nav' => 'S9', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('input/process_assy_fl', 'ProcessController@inputProcessAssyFL');
+	Route::post('scan/serial_number_return_fl', 'ProcessController@scanSerialNumberReturnFl');
+	Route::post('stamp/adjustSerial', 'ProcessController@adjustSerial');
+	Route::get('stamp/stamp', 'ProcessController@stamp');
+	Route::get('stamp/adjust', 'ProcessController@adjust');
+	Route::post('stamp/adjust', 'ProcessController@adjustUpdate');
+	Route::get('edit/stamp', 'ProcessController@editStamp');
+	Route::post('edit/stamp', 'ProcessController@updateStamp');
+	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
+	Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 });
+
 Route::get('index/process_assy_fl', 'ProcessController@indexProcessAssyFL');
 Route::get('index/process_assy_fl_0', 'ProcessController@indexProcessAssyFL0');
 Route::get('index/process_assy_fl_1', 'ProcessController@indexProcessAssyFL1');
@@ -343,18 +353,10 @@ Route::get('fetch/process_assy_fl_Display/efficiencyChart', 'ProcessController@f
 Route::get('stamp/fetchPlan', 'ProcessController@fetchStampPlan');
 Route::get('stamp/fetchSerialNumber', 'ProcessController@fetchSerialNumber');
 Route::get('stamp/fetchResult', 'ProcessController@fetchResult');
-Route::post('stamp/adjustSerial', 'ProcessController@adjustSerial');
-Route::get('stamp/stamp', 'ProcessController@stamp');
-Route::get('stamp/adjust', 'ProcessController@adjust');
-Route::post('stamp/adjust', 'ProcessController@adjustUpdate');
-Route::get('edit/stamp', 'ProcessController@editStamp');
-Route::post('edit/stamp', 'ProcessController@updateStamp');
-Route::post('destroy/stamp', 'ProcessController@destroyStamp');
 
 Route::post('stamp/stamp_detail', 'ProcessController@filter_stamp_detail');
 Route::get('stamp/resumes', 'ProcessController@indexResumes');
 Route::get('stamp/log', 'ProcessController@indexLog');
-Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 // });
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');

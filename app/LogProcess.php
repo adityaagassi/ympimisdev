@@ -10,7 +10,7 @@ class LogProcess extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'process_code', 'serial_number', 'model', 'manpower', 'created_by'
+		'process_code', 'serial_number', 'model', 'manpower', 'created_by', 'origin_group_code', 'created_at'
 	];
 
 	public function user()

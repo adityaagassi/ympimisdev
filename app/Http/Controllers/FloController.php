@@ -734,21 +734,39 @@ class FloController extends Controller
 				$printer->cut();
 				$printer->close();				
 
-				$log_process = LogProcess::firstOrNew([
-					'process_code' => '5',
-					'serial_number' => $serial_number,
-					'model' => $material->model,
-					'manpower' => 2,
-					'quantity' => 1,
-					'created_by' => $id
-				]);
-				$log_process->save();
+				// $log_process = LogProcess::firstOrNew([
+				// 	'process_code' => '5',
+				// 	'origin_group_code' => $material->origin_group_code,
+				// 	'serial_number' => $serial_number,
+				// 	'model' => $material->model,
+				// 	'manpower' => 2,
+				// 	'quantity' => 1,
+				// 	'created_by' => $id
+				// ]);
+				// $log_process->save();
 
-				$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
-				->where('model', '=', $material->model)
-				->first();
-				if($inventory_stamp != null){
-					$inventory_stamp->forceDelete();
+				if($material->origin_group_code == '041'){
+					$log_process = LogProcess::updateOrCreate(
+						[
+							'process_code' => '5', 
+							'serial_number' => $serial_number,
+							'origin_group_code' => $material->origin_group_code
+						],
+						[
+							'model' => $material->model,
+							'manpower' => 2,
+							'quantity' => $actual,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s')
+						]
+					);
+
+					$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+					->where('origin_group_code', '=', $material->origin_group_code)
+					->first();
+					if($inventory_stamp != null){
+						$inventory_stamp->forceDelete();
+					}
 				}
 
 				$response = array(
@@ -792,23 +810,41 @@ class FloController extends Controller
 					$code_generator_pd->save();
 				}
 
-				$log_process = LogProcess::firstOrNew([
-					'process_code' => '5',
-					'serial_number' => $serial_number,
-					'model' => $material->model,
-					'manpower' => 2,
-					'quantity' => $actual,
-					'created_by' => $id
-				]);
-				$log_process->save();
+				// $log_process = LogProcess::firstOrNew([
+				// 	'process_code' => '5',
+				// 	'origin_group_code' => $material->origin_group_code,
+				// 	'serial_number' => $serial_number,
+				// 	'model' => $material->model,
+				// 	'manpower' => 2,
+				// 	'quantity' => 1,
+				// 	'created_by' => $id
+				// ]);
+				// $log_process->save();
 
-				$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
-				->where('model', '=', $material->model)
-				->first();
-				if($inventory_stamp != null){
-					$inventory_stamp->forceDelete();
+				if($material->origin_group_code == '041'){
+					$log_process = LogProcess::updateOrCreate(
+						[
+							'process_code' => '5', 
+							'serial_number' => $serial_number,
+							'origin_group_code' => $material->origin_group_code
+						],
+						[
+							'model' => $material->model,
+							'manpower' => 2,
+							'quantity' => $actual,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s')
+						]
+					);
+
+					$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+					->where('origin_group_code', '=', $material->origin_group_code)
+					->first();
+					if($inventory_stamp != null){
+						$inventory_stamp->forceDelete();
+					}
 				}
-
+				
 				$response = array(
 					'status' => true,
 					'message' => 'FLO fulfillment success.',

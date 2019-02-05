@@ -83,11 +83,24 @@ class ProcessController extends Controller
 	public function fetchReturnTableFl(){
 		$stamp_inventories = StampInventory::where('origin_group_code', '=', '041')
 		->where('status', '=', 'return')
-		->orderBy('serial_number')
+		->orderBy('updated_at', 'desc')
 		->get();
 
 		return DataTables::of($stamp_inventories)
 		->make(true);
+	}
+
+	public function scanSerialNumberReturnFl(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'return']);
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
 	}
 
 	public function fetchProcessAssyFLDisplayStockChart(){
@@ -144,7 +157,6 @@ public function indexResumes(){
 	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
-
 public function indexDisplay(){
 	return view('processes.assy_fl.display', array(
 			// 'models' => $models,
@@ -173,437 +185,437 @@ public function fetchwipflallstock(){
 	$query = "
 	select result1.model, result1.process_code, result1.process_name, if(result2.quantity is null, 0, result2.quantity) as quantity from
 	(
-		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
-		left join
-		(
-			select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories group by stamp_inventories.model, stamp_inventories.process_code
-		) as result2 
-		on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
+	select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
+	left join
+	(
+	select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories group by stamp_inventories.model, stamp_inventories.process_code
+	) as result2 
+	on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
 
-		$query2 = "
-		select result1.model, if(result2.plan is null or result2.plan < 0, 0, result2.plan) as plan from
-		(
-			select distinct materials.model from materials where materials.origin_group_code = '041' and materials.category = 'FG'
-		) as result1
-		left join
-		(
-			select materials.model, sum(plan) as plan from
-			(
-				select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
-				union all
-				select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
-			) r
-			left join materials on materials.material_number = r.material_number
-			group by materials.model
-		) as result2
-		on result1.model = result2.model order by result1.model asc";
+	$query2 = "
+	select result1.model, if(result2.plan is null or result2.plan < 0, 0, result2.plan) as plan from
+	(
+	select distinct materials.model from materials where materials.origin_group_code = '041' and materials.category = 'FG'
+	) as result1
+	left join
+	(
+	select materials.model, sum(plan) as plan from
+	(
+	select material_number, sum(quantity) as plan from production_schedules where due_date >= '".$first."' and due_date <= '".$h4."' group by material_number
+	union all
+	select material_number, -(sum(quantity)) as plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$h4."' group by material_number
+	) r
+	left join materials on materials.material_number = r.material_number
+	group by materials.model
+	) as result2
+	on result1.model = result2.model order by result1.model asc";
 
-		$inventory = DB::select($query);
-		$plan = DB::select($query2);
+	$inventory = DB::select($query);
+	$plan = DB::select($query2);
 
-		$response = array(
-			'status' => true,
-			'inventory' => $inventory,
-			'plan' => $plan,
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'inventory' => $inventory,
+		'plan' => $plan,
+	);
+	return Response::json($response);
+}
 
-	public function fetchProcessAssyFL0ActualChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
+public function fetchProcessAssyFL0ActualChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
 
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
-			union all
-			
-			select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
+	union all
 
-		$chartData = DB::select($query);
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like 'YFL%'";
 
-		if(date('D')=='Fri'){
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
-				$deduction = 4800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
-				$deduction = 5400;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
-				$deduction = 5800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 7500;
-			}
-			else{
-				$deduction = 0;
-			}
+	$chartData = DB::select($query);
+
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
 		}
 		else{
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
-				$deduction = 3000;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
-				$deduction = 3600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
-				$deduction = 4200;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 5700;
-			}
-			else{
-				$deduction = 0;
-			}
+			$deduction = 0;
 		}
-
-		$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-		round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
-		(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as act_time 
-		from log_processes 
-		left join st_assemblies 
-		on st_assemblies.model = log_processes.model 
-		where log_processes.process_code = 2 and st_assemblies.process_code = 1 
-		and date(log_processes.created_at) = '".$now."' 
-		group by date(log_processes.created_at)";
-
-		$effData = DB::select($query2);
-
-		$response = array(
-			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-		);
-		return Response::json($response);
 	}
-
-	public function fetchProcessAssyFL2ActualChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
-
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
-
-			union all
-			
-			select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
-
-		$chartData = DB::select($query);
-
-		if(date('D')=='Fri'){
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
-				$deduction = 4800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
-				$deduction = 5400;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
-				$deduction = 5800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 7500;
-			}
-			else{
-				$deduction = 0;
-			}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
 		}
 		else{
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
-				$deduction = 3000;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
-				$deduction = 3600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
-				$deduction = 4200;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 5700;
-			}
-			else{
-				$deduction = 0;
-			}
+			$deduction = 0;
 		}
-
-		$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-		round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
-		(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as act_time 
-		from log_processes 
-		left join st_assemblies 
-		on st_assemblies.model = log_processes.model 
-		where log_processes.process_code = 3 and st_assemblies.process_code = 2 
-		and date(log_processes.created_at) = '".$now."' 
-		group by date(log_processes.created_at)";
-
-		$effData = DB::select($query2);
-
-		$response = array(
-			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-		);
-		return Response::json($response);
 	}
 
-	public function fetchProcessAssyFL3ActualChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 1 and date(created_at) = '".$now."') as act_time 
+	from log_processes 
+	left join st_assemblies 
+	on st_assemblies.model = log_processes.model 
+	where log_processes.process_code = 2 and st_assemblies.process_code = 1 
+	and date(log_processes.created_at) = '".$now."' 
+	group by date(log_processes.created_at)";
 
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+	$effData = DB::select($query2);
 
-			union all
+	$response = array(
+		'status' => true,
+		'chartData' => $chartData,
+		'effData' => $effData,
+	);
+	return Response::json($response);
+}
 
-			select model, 0 as plan, quantity as actual from log_processes where process_code = '4' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
+public function fetchProcessAssyFL2ActualChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
 
-		$chartData = DB::select($query);
+	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
-		if(date('D')=='Fri'){
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
-				$deduction = 4800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
-				$deduction = 5400;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
-				$deduction = 5800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 7500;
-			}
-			else{
-				$deduction = 0;
-			}
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like 'YFL%'";
+
+	$chartData = DB::select($query);
+
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
 		}
 		else{
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
-				$deduction = 3000;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
-				$deduction = 3600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
-				$deduction = 4200;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 5700;
-			}
-			else{
-				$deduction = 0;			
-			}
+			$deduction = 0;
 		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;
+		}
+	}
+
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 2 and date(created_at) = '".$now."') as act_time 
+	from log_processes 
+	left join st_assemblies 
+	on st_assemblies.model = log_processes.model 
+	where log_processes.process_code = 3 and st_assemblies.process_code = 2 
+	and date(log_processes.created_at) = '".$now."' 
+	group by date(log_processes.created_at)";
+
+	$effData = DB::select($query2);
+
+	$response = array(
+		'status' => true,
+		'chartData' => $chartData,
+		'effData' => $effData,
+	);
+	return Response::json($response);
+}
+
+public function fetchProcessAssyFL3ActualChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
+
+	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '4' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like 'YFL%'";
+
+	$chartData = DB::select($query);
+
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
+		}
+		else{
+			$deduction = 0;
+		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
 
 	// echo $deduction;
 	// exit;
 
-		$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-		round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
-		(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as act_time 
-		from log_processes 
-		left join st_assemblies 
-		on st_assemblies.model = log_processes.model 
-		where log_processes.process_code = 4 and st_assemblies.process_code = 3 
-		and date(log_processes.created_at) = '".$now."' 
-		group by date(log_processes.created_at)";
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 3 and date(created_at) = '".$now."') as act_time 
+	from log_processes 
+	left join st_assemblies 
+	on st_assemblies.model = log_processes.model 
+	where log_processes.process_code = 4 and st_assemblies.process_code = 3 
+	and date(log_processes.created_at) = '".$now."' 
+	group by date(log_processes.created_at)";
 
-		$effData = DB::select($query2);
-
-		$response = array(
-			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-		);
-		return Response::json($response);
-	}
-
-	public function fetchProcessAssyFL4ActualChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
-
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
-
-			union all
-
-			select model, 0 as plan, quantity as actual from log_processes where process_code = '5' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
-
-		$chartData = DB::select($query);
-
-		if(date('D')=='Fri'){
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
-				$deduction = 4800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
-				$deduction = 5400;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
-				$deduction = 5800;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 7500;
-			}
-			else{
-				$deduction = 0;
-			}
-		}
-		else{
-			if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
-				$deduction = 600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
-				$deduction = 3000;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
-				$deduction = 3600;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
-				$deduction = 4200;
-			}
-			elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
-				$deduction = 5700;
-			}
-			else{
-				$deduction = 0;			
-			}
-		}
-
-		$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
-		round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
-		(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as act_time 
-		from log_processes 
-		left join st_assemblies 
-		on st_assemblies.model = log_processes.model 
-		where log_processes.process_code = 5 and st_assemblies.process_code = 4 
-		and date(log_processes.created_at) = '".$now."' 
-		group by date(log_processes.created_at)";
-
-		$effData = DB::select($query2);
-
-		$response = array(
-			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-		);
-		return Response::json($response);
-	}
-
-	public function fetchProcessAssyFLDisplayActualChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
-
-		$query = "select due_date, sum(plan) as plan, sum(actual) as actual from
-		(
-			select due_date as due_date, quantity as plan, 0 as actual from stamp_schedules where due_date >= '" . $first . "' and due_date <= '" . $now . "' and model like 'YFL%'
-
-			union all
-
-			select date(created_at) as due_date, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) >= '" . $first . "' and date(created_at) <= '" . $now . "' and model like 'YFL%'
-		) as plan
-		group by due_date";
-
-		$planData = DB::select($query);
-
-
-		$query2 = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-			select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
-
-			union all
-
-			select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
-
-		$planTable = DB::select($query2);
-
-		$response = array(
-			'status' => true,
-			'planData' => $planData,
-			'planTable' => $planTable,
-		);
-		return Response::json($response);
-	}
-	public function fetchProcessAssyFL2StockChart(){
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
-		$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-
-		$inventory = StampInventory::where('origin_group_code', '=', '041')
-		->where('model', 'like', 'YFL%')
-		->where('process_code', '=', 2)
-		->select('model', db::raw('sum(quantity) as stock'))
-		->groupBy('model')
-		->get();
-
-		$query2 = "SELECT hasil.model,sum(hasil.plan) as plan,sum(hasil.quantity) as quantity from (
-		select model, 0 as plan, sum(quantity) as quantity from stamp_inventories where process_code='2'  GROUP BY model 
-		union all
-		select model, sum(plan) as plan, 0 as quantity from
-		(
-		select materials.model, sum(plan) as plan from
-		(
-		select material_number, quantity as plan
-		from production_schedules 
-		union all
-		select material_number, -(quantity) as plan
-		from flo_details
-		) as plan
-		left join materials on materials.material_number = plan.material_number
-		group by materials.model
-		union all
-		select model, -(quantity) as plan
-		from stamp_inventories
-		) as result
-		group by model
-		having quantity > 0
-	) as hasil GROUP BY hasil.model HAVING hasil.model like 'YFL%'";
-
-	$table = DB::select($query2);
+	$effData = DB::select($query2);
 
 	$response = array(
 		'status' => true,
-		'stockData' => $inventory,
-		'stockTable' => $table,
+		'chartData' => $chartData,
+		'effData' => $effData,
 	);
 	return Response::json($response);
+}
+
+public function fetchProcessAssyFL4ActualChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
+
+	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '5' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like 'YFL%'";
+
+	$chartData = DB::select($query);
+
+	if(date('D')=='Fri'){
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+			$deduction = 4800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+			$deduction = 5400;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+			$deduction = 5800;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 7500;
+		}
+		else{
+			$deduction = 0;
+		}
+	}
+	else{
+		if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+			$deduction = 600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+			$deduction = 3000;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+			$deduction = 3600;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+			$deduction = 4200;
+		}
+		elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+			$deduction = 5700;
+		}
+		else{
+			$deduction = 0;			
+		}
+	}
+
+	$query2 = "select date(log_processes.created_at) as due_date, sum(log_processes.quantity) as quantity, (select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as manpower, max(log_processes.created_at) as last_input,
+	round(sum(log_processes.quantity*st_assemblies.st)*60) as std_time,
+	(timestampdiff(second, '".date('Y-m-d 07:05:00')."', max(log_processes.created_at))-".$deduction.")*(select avg(manpower) from log_processes where log_processes.process_code = 4 and date(created_at) = '".$now."') as act_time 
+	from log_processes 
+	left join st_assemblies 
+	on st_assemblies.model = log_processes.model 
+	where log_processes.process_code = 5 and st_assemblies.process_code = 4 
+	and date(log_processes.created_at) = '".$now."' 
+	group by date(log_processes.created_at)";
+
+	$effData = DB::select($query2);
+
+	$response = array(
+		'status' => true,
+		'chartData' => $chartData,
+		'effData' => $effData,
+	);
+	return Response::json($response);
+}
+
+public function fetchProcessAssyFLDisplayActualChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
+
+	$query = "select due_date, sum(plan) as plan, sum(actual) as actual from
+	(
+	select due_date as due_date, quantity as plan, 0 as actual from stamp_schedules where due_date >= '" . $first . "' and due_date <= '" . $now . "' and model like 'YFL%'
+
+	union all
+
+	select date(created_at) as due_date, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) >= '" . $first . "' and date(created_at) <= '" . $now . "' and model like 'YFL%'
+	) as plan
+	group by due_date";
+
+	$planData = DB::select($query);
+
+
+	$query2 = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like 'YFL%'";
+
+	$planTable = DB::select($query2);
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+		'planTable' => $planTable,
+	);
+	return Response::json($response);
+}
+public function fetchProcessAssyFL2StockChart(){
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
+	$h4 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+
+	$inventory = StampInventory::where('origin_group_code', '=', '041')
+	->where('model', 'like', 'YFL%')
+	->where('process_code', '=', 2)
+	->select('model', db::raw('sum(quantity) as stock'))
+	->groupBy('model')
+	->get();
+
+	$query2 = "SELECT hasil.model,sum(hasil.plan) as plan,sum(hasil.quantity) as quantity from (
+	select model, 0 as plan, sum(quantity) as quantity from stamp_inventories where process_code='2'  GROUP BY model 
+	union all
+	select model, sum(plan) as plan, 0 as quantity from
+	(
+	select materials.model, sum(plan) as plan from
+	(
+	select material_number, quantity as plan
+	from production_schedules 
+	union all
+	select material_number, -(quantity) as plan
+	from flo_details
+	) as plan
+	left join materials on materials.material_number = plan.material_number
+	group by materials.model
+	union all
+	select model, -(quantity) as plan
+	from stamp_inventories
+	) as result
+	group by model
+	having quantity > 0
+) as hasil GROUP BY hasil.model HAVING hasil.model like 'YFL%'";
+
+$table = DB::select($query2);
+
+$response = array(
+	'status' => true,
+	'stockData' => $inventory,
+	'stockTable' => $table,
+);
+return Response::json($response);
 }
 
 public function fetchProcessAssyFL3StockChart(){
@@ -699,23 +711,23 @@ public function fetchProcessAssyFL3EfficiencyChart(){
 
 	$query = "select due_date, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 3 and st_assemblies.process_code = 4 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 3 and st_assemblies.process_code = 4 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 3
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 3
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 4
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 4
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date
@@ -723,23 +735,23 @@ public function fetchProcessAssyFL3EfficiencyChart(){
 
 	$query2 = "select due_date, model, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 3 and st_assemblies.process_code = 4 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 3 and st_assemblies.process_code = 4 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 3
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 3
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 4
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 4
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date, model
@@ -762,23 +774,23 @@ public function fetchProcessAssyFL4EfficiencyChart(){
 
 	$query = "select due_date, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 4 and st_assemblies.process_code = 5 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 4 and st_assemblies.process_code = 5 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 4
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 4
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 5
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 5
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date
@@ -786,23 +798,23 @@ public function fetchProcessAssyFL4EfficiencyChart(){
 
 	$query2 = "select due_date, model, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 4 and st_assemblies.process_code = 5 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 4 and st_assemblies.process_code = 5 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 4
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 4
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 5
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 5
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date, model
@@ -825,23 +837,23 @@ public function fetchProcessAssyFL2EfficiencyChart(){
 
 	$query = "select due_date, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 2 and st_assemblies.process_code = 3 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 2 and st_assemblies.process_code = 3 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 2
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 2
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 3
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 3
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date
@@ -849,23 +861,23 @@ public function fetchProcessAssyFL2EfficiencyChart(){
 
 	$query2 = "select due_date, model, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 2 and st_assemblies.process_code = 3 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 2 and st_assemblies.process_code = 3 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 2
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 2
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 3
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 3
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date, model
@@ -888,23 +900,23 @@ public function fetchProcessAssyFLDisplayEfficiencyChart(){
 
 	$query = "select due_date, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 1 and st_assemblies.process_code = 2 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 1 and st_assemblies.process_code = 2 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 1
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 1
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 2
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 2
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date
@@ -912,23 +924,23 @@ public function fetchProcessAssyFLDisplayEfficiencyChart(){
 
 	$query2 = "select due_date, model, sum(std_time) as std_time, sum(actual_time) as actual_time, sum(std_time)/sum(actual_time) as efficiency from
 	(
-		select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 1 and st_assemblies.process_code = 2 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
+	select date(log_processes.created_at) as due_date, log_processes.model, sum(log_processes.manpower)*st_assemblies.st as std_time, 0 as actual_time from log_processes left join st_assemblies on st_assemblies.model = log_processes.model where log_processes.process_code = 1 and st_assemblies.process_code = 2 group by log_processes.model, st_assemblies.st, date(log_processes.created_at)
 
-		union all
+	union all
 
-		select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
-		(
-			select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
-			(
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 1
+	select due_date, model, 0 as std_time, sum(actual_time) as actual_time from
+	(
+	select date(max(start_time)) as due_date, model, quantity*if(timestampdiff(minute, max(start_time), max(end_time))>480, 0, timestampdiff(minute, max(start_time), max(end_time))) as actual_time from
+	(
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, log_processes.created_at as start_time, '0000-00-00 00:00:00' as end_time from log_processes where log_processes.process_code = 1
 
-				union all
+	union all
 
-				select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 2
-			) as result1
-			group by serial_number, model, quantity
-		) as result2
-		group by due_date, model
+	select log_processes.serial_number, log_processes.model, log_processes.quantity, '0000-00-00 00:00:00' as start_time, log_processes.created_at as end_time from log_processes where log_processes.process_code = 2
+	) as result1
+	group by serial_number, model, quantity
+	) as result2
+	group by due_date, model
 	) as result3
 	where due_date >= '".$first."' and due_date <= '".$now."'
 	group by due_date, model
@@ -1120,20 +1132,36 @@ public function inputProcessAssyFL(Request $request){
 	try{
 		$id = Auth::id();
 
-		$log_process = new LogProcess([
-			'process_code' => $request->get('processCode'),
-			'serial_number' => $request->get('serialNumber'),
-			'model' => $stamp->model,
-			'manpower' => $request->get('manPower'),
-			'quantity' => 1,
-			'created_by' => $id
-		]);
+		// $log_process = new LogProcess([
+		// 	'process_code' => $request->get('processCode'),
+		// 	'serial_number' => $request->get('serialNumber'),
+		// 	'origin_group_code' => $request->get('originGroupCode'),
+		// 	'model' => $stamp->model,
+		// 	'manpower' => $request->get('manPower'),
+		// 	'quantity' => 1,
+		// 	'created_by' => $id
+		// ]);
+
+		$log_process = LogProcess::updateOrCreate(
+			[
+				'process_code' => $request->get('processCode'), 
+				'serial_number' => $request->get('serialNumber'),
+				'origin_group_code' => $request->get('originGroupCode')
+			],
+			[
+				'model' => $stamp->model,
+				'manpower' => $request->get('manPower'),
+				'quantity' => 1,
+				'created_by' => $id,
+				'created_at' => date('Y-m-d H:i:s')
+			]
+		);
 
 		$inventory = StampInventory::where('serial_number', '=', $request->get('serialNumber'))
-		->where('model', 'like', 'YFL%')
+		->where('origin_group_code', '=', '041')
 		->first();
 
-		$inventory->process_code = $request->get('processCode');
+		$inventory->status = null;
 
 		$inventory->save();
 		$log_process->save();
@@ -1160,11 +1188,11 @@ public function fetchStampPlan(){
 
 	$query = "select model, sum(plan) as plan, sum(actual) as actual from
 	(
-		select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
-		union all
+	union all
 
-		select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
 	) as plan
 	group by model
 	having model like 'YFL%'";
@@ -1520,28 +1548,28 @@ public function fetchwipflallchart(){
 
 	$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
 	(
-		select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
-		(
-			select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
+	select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
+	(
+	select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
 
-			union all
+	union all
 
-			select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
+	select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
 
-			union all
+	union all
 
-			select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
+	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
 
-			union all
+	union all
 
-			select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
-		) result1
-		left join materials on materials.material_number = result1.material_number
-		group by materials.model
+	select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
+	) result1
+	left join materials on materials.material_number = result1.material_number
+	group by materials.model
 
-		union all
+	union all
 
-		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories group by model
+	select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories group by model
 	) as result2
 	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 

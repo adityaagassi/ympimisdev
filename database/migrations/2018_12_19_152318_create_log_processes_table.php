@@ -18,6 +18,7 @@ class CreateLogProcessesTable extends Migration
             $table->string('process_code');
             $table->string('serial_number');
             $table->string('model')->nullable();
+            $table->string('origin_group_code')->nullable();
             $table->double('quantity')->default('1');
             $table->integer('created_by');
             $table->integer('manpower');
