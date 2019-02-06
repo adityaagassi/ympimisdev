@@ -1162,6 +1162,7 @@ public function inputProcessAssyFL(Request $request){
 		->first();
 
 		$inventory->status = null;
+		$inventory->process_code = $request->get('processCode');
 
 		$inventory->save();
 		$log_process->save();
