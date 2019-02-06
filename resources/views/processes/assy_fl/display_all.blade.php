@@ -309,7 +309,6 @@ function fetchTableStock(){
 		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
-				$('#tableStock').DataTable().destroy();
 				$('#tableHead').html("");
 				$('#tableFoot').html("");
 				$('#tableBody').html("");
@@ -397,35 +396,36 @@ function fetchTableStock(){
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);
 
-				$('#tableStock').DataTable({
-						// 'scrollX': true,
-						'responsive':true,
-						// 'dom': 'Bfrtip',
-						'paging': false,
-						'lengthChange': true,
-						'searching': false,
-						'ordering': false,
-						'order': [],
-						'info': false,
-						'autoWidth': true,
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"footerCallback": function (tfoot, data, start, end, display) {
-							var intVal = function ( i ) {
-								return typeof i === 'string' ?
-								i.replace(/[\$,]/g, '')*1 :
-								typeof i === 'number' ?
-								i : 0;
-							};
-							var api = this.api();
-							for(x = 1; x <= totalHead; x++){
-								var total = api.column(x).data().reduce(function (a, b) {
-									return intVal(a)+intVal(b);
-								}, 0)
-								$(api.column(x).footer()).html(total.toLocaleString());
-							}
-						}
-					});
+				// $('#tableStock').DataTable().destroy();
+				// $('#tableStock').DataTable({
+				// 		// 'scrollX': true,
+				// 		'responsive':true,
+				// 		// 'dom': 'Bfrtip',
+				// 		'paging': false,
+				// 		'lengthChange': true,
+				// 		'searching': false,
+				// 		'ordering': false,
+				// 		'order': [],
+				// 		'info': false,
+				// 		'autoWidth': true,
+				// 		"bJQueryUI": true,
+				// 		"bAutoWidth": false,
+				// 		"footerCallback": function (tfoot, data, start, end, display) {
+				// 			var intVal = function ( i ) {
+				// 				return typeof i === 'string' ?
+				// 				i.replace(/[\$,]/g, '')*1 :
+				// 				typeof i === 'number' ?
+				// 				i : 0;
+				// 			};
+				// 			var api = this.api();
+				// 			for(x = 1; x <= totalHead; x++){
+				// 				var total = api.column(x).data().reduce(function (a, b) {
+				// 					return intVal(a)+intVal(b);
+				// 				}, 0)
+				// 				$(api.column(x).footer()).html(total.toLocaleString());
+				// 			}
+				// 		}
+				// 	});
 				setTimeout(fetchTableStock, 1000);
 			}
 			else{
