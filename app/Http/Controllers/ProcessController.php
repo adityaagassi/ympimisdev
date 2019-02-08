@@ -831,13 +831,26 @@ class ProcessController extends Controller
 				$code_generator->index = $code_generator->index+1;
 
 				if ($request->get('category')=='fg'){
-					$stamp_inventory = new StampInventory([
-						'origin_group_code' => $request->get('originGroupCode'),
-						'model' => $request->get('model'),
-						'quantity' => 1,
-						'process_code' => $request->get('processCode'),
-						'serial_number' => $request->get('serialNumber')
-					]);
+					// $stamp_inventory = new StampInventory([
+					// 	'origin_group_code' => $request->get('originGroupCode'),
+					// 	'model' => $request->get('model'),
+					// 	'quantity' => 1,
+					// 	'process_code' => $request->get('processCode'),
+					// 	'serial_number' => $request->get('serialNumber')
+					// ]);
+
+					$stamp_inventory = StampInventory::updateOrCreate(
+						[
+							'serial_number' => $request->get('serialNumber'),
+							'origin_group_code' => $request->get('originGroupCode')
+						],
+						[
+							'process_code' => $request->get('processCode'), 
+							'model' => $request->get('model'),
+							'quantity' => 1
+						]
+					);
+
 					$stamp_inventory->save();
 				}
 
