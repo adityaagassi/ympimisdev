@@ -399,16 +399,16 @@ function fetchTableStock(){
 				$('#tableStock').DataTable().destroy();
 				$('#tableStock').DataTable({
 						// 'scrollX': true,
-						'responsive':true,
+						'responsive':false,
 						// 'dom': 'Bfrtip',
 						'paging': false,
-						'lengthChange': true,
+						'lengthChange': false,
 						'searching': false,
 						'ordering': false,
 						'order': [],
 						'info': false,
-						'autoWidth': true,
-						"bJQueryUI": true,
+						'autoWidth': false,
+						"bJQueryUI": false,
 						"bAutoWidth": false,
 						"footerCallback": function (tfoot, data, start, end, display) {
 							var intVal = function ( i ) {

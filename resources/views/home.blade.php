@@ -150,6 +150,9 @@
 
                     <span style="font-weight: bold; color: green;"><i class="fa fa-caret-right"></i> Shipment Control (出荷管理)</span>
 
+                    <a class="list-group-item" href="{{ url("/index/CheckSheet") }}" style="text-align: center;">
+                        <span class="fa fa-table"></span> Shipment Checklist<br><span class="text-purple">チェックシート記入</span>
+                    </a>
                     <a class="list-group-item" href="{{ url("/index/fg_container_departure") }}" style="text-align: center;">
                         <span class="fa fa-bar-chart"></span> Container Departure<br><span class="text-purple">コンテナー出発</span>
                     </a>

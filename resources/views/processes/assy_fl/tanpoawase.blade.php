@@ -256,7 +256,10 @@ table.table-bordered > tbody > tr > td{
 	}
 
 	function fillChartActual(){
-		$.get('{{ url("fetch/process_assy_fl_2/actualChart") }}', function(result, status, xhr){
+		var data = {
+			processCode:1
+		}
+		$.get('{{ url("fetch/process_assy_fl/actualChart") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);

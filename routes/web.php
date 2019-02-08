@@ -317,6 +317,25 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 });
 
+Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
+	Route::get('index/CheckSheet', 'CheckSheet@index');
+	Route::get('create/CheckSheet', 'CheckSheet@create');
+	Route::post('import/CheckSheet', 'CheckSheet@import');
+	Route::post('update/CheckSheet', 'CheckSheet@update');
+	Route::get('show/CheckSheet/{id}', 'CheckSheet@show');
+	Route::get('check/CheckSheet/{id}', 'CheckSheet@check');
+	Route::get('checkmarking/CheckSheet/{id}', 'CheckSheet@checkmarking');
+	Route::get('destroy/CheckSheet/{id}', 'CheckSheet@destroy');
+	Route::post('save/CheckSheet', 'CheckSheet@save');
+	Route::post('add/CheckSheet', 'CheckSheet@add');
+	Route::post('addDetail/CheckSheet', 'CheckSheet@addDetail');
+	Route::post('addDetail2/CheckSheet', 'CheckSheet@addDetail2');
+	Route::post('importDetail/CheckSheet', 'CheckSheet@importDetail');
+	Route::get('print/CheckSheet/{id}', 'CheckSheet@print_check');	
+	Route::get('printsurat/CheckSheet/{id}', 'CheckSheet@print_check_surat');	
+
+});
+
 Route::get('index/process_assy_fl', 'ProcessController@indexProcessAssyFL');
 Route::get('index/process_assy_fl_0', 'ProcessController@indexProcessAssyFL0');
 Route::get('index/process_assy_fl_1', 'ProcessController@indexProcessAssyFL1');
@@ -326,29 +345,17 @@ Route::get('index/process_assy_fl_4', 'ProcessController@indexProcessAssyFL4');
 Route::get('index/displayWipFl', 'ProcessController@indexDisplayWipFl');
 Route::get('index/repairFl', 'ProcessController@indexRepairFl');
 
-	// Route::post('input/process_assy_fl_3', 'ProcessController@inputProcessAssyFL3');
-	// Route::post('input/process_assy_fl_4', 'ProcessController@inputProcessAssyFL4');
-
-Route::get('fetch/process_assy_fl_2/stockChart', 'ProcessController@fetchProcessAssyFL2StockChart');
-Route::get('fetch/process_assy_fl_3/stockChart', 'ProcessController@fetchProcessAssyFL3StockChart');
-Route::get('fetch/process_assy_fl_4/stockChart', 'ProcessController@fetchProcessAssyFL4StockChart');
-Route::get('fetch/process_assy_fl_Display/stockChart', 'ProcessController@fetchProcessAssyFLDisplayStockChart');
 Route::get('fetch/wipflallstock', 'ProcessController@fetchwipflallstock');
 Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');
 Route::get('fetch/returnTableFl', 'ProcessController@fetchReturnTableFl');
 Route::get('fetch/logTableFl', 'ProcessController@fetchLogTableFl');
 
-
+Route::get('fetch/process_assy_fl/actualChart', 'ProcessController@fetchProcessAssyFLActualChart');
 Route::get('fetch/process_assy_fl_0/actualChart', 'ProcessController@fetchProcessAssyFL0ActualChart');
 Route::get('fetch/process_assy_fl_2/actualChart', 'ProcessController@fetchProcessAssyFL2ActualChart');
 Route::get('fetch/process_assy_fl_3/actualChart', 'ProcessController@fetchProcessAssyFL3ActualChart');
 Route::get('fetch/process_assy_fl_4/actualChart', 'ProcessController@fetchProcessAssyFL4ActualChart');
 Route::get('fetch/process_assy_fl_Display/actualChart', 'ProcessController@fetchProcessAssyFLDisplayActualChart');
-
-Route::get('fetch/process_assy_fl_2/efficiencyChart', 'ProcessController@fetchProcessAssyFL2EfficiencyChart');
-Route::get('fetch/process_assy_fl_3/efficiencyChart', 'ProcessController@fetchProcessAssyFL3EfficiencyChart');
-Route::get('fetch/process_assy_fl_4/efficiencyChart', 'ProcessController@fetchProcessAssyFL4EfficiencyChart');
-Route::get('fetch/process_assy_fl_Display/efficiencyChart', 'ProcessController@fetchProcessAssyFLDisplayEfficiencyChart');
 
 Route::get('stamp/fetchPlan', 'ProcessController@fetchStampPlan');
 Route::get('stamp/fetchSerialNumber', 'ProcessController@fetchSerialNumber');
