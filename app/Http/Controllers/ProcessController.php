@@ -803,14 +803,29 @@ class ProcessController extends Controller
 
 				$plc_counter->plc_counter = $data;
 
-				$log_process = new LogProcess([
-					'process_code' => $request->get('processCode'),
-					'serial_number' => $request->get('serialNumber'),
-					'model' => $request->get('model'),
-					'manpower' => $request->get('manPower'),
-					'quantity' => 1,
-					'created_by' => $id
-				]);
+				// $log_process = new LogProcess([
+				// 	'process_code' => $request->get('processCode'),
+				// 	'serial_number' => $request->get('serialNumber'),
+				// 	'model' => $request->get('model'),
+				// 	'manpower' => $request->get('manPower'),
+				// 	'quantity' => 1,
+				// 	'created_by' => $id
+				// ]);
+
+				$log_process = LogProcess::updateOrCreate(
+					[
+						'process_code' => $request->get('processCode'), 
+						'serial_number' => $request->get('serialNumber'),
+						'origin_group_code' => $request->get('originGroupCode')
+					],
+					[
+						'model' => $stamp->model,
+						'manpower' => $request->get('manPower'),
+						'quantity' => 1,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]
+				);
 
 				$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
 				$code_generator->index = $code_generator->index+1;
