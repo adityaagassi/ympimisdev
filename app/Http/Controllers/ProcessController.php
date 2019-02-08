@@ -819,7 +819,7 @@ class ProcessController extends Controller
 						'origin_group_code' => $request->get('originGroupCode')
 					],
 					[
-						'model' => $stamp->model,
+						'model' => $request->get('model'),
 						'manpower' => $request->get('manPower'),
 						'quantity' => 1,
 						'created_by' => $id,
