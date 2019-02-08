@@ -103,7 +103,7 @@ class PlanStamps extends Command
         union all
 
         select model, -(quantity) as plan
-        from stamp_inventories where status <> 'return'
+        from stamp_inventories where status is null
         ) as result
         group by model, due_date    
         having plan > 0 and model like 'YFL%' order by model asc";

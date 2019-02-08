@@ -145,7 +145,7 @@ class ProcessController extends Controller
 		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
 		left join
 		(
-		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories group by stamp_inventories.model, stamp_inventories.process_code
+		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.model, stamp_inventories.process_code
 		) as result2 
 		on result2.model = result1.model and result2.process_code = result1.process_code order by result1.model asc";
 
@@ -905,7 +905,7 @@ class ProcessController extends Controller
 		->make(true);
 	}
 
-	public function fetchwipflallchart(){
+	public function fetchwipflallchart(Request $request){
 
 		$first = date('Y-m-01');
 		$now = date('Y-m-d');
@@ -916,8 +916,8 @@ class ProcessController extends Controller
 		->where('materials.category', '=', 'FG');
 		$stock = DB::table('stamp_inventories');
 
-		$targetFL = $target->where('origin_group_code', '=', '041')->sum('production_schedules.quantity');
-		$stockFL = $stock->where('origin_group_code', '=', '041')->sum('stamp_inventories.quantity');
+		$targetFL = $target->where('origin_group_code', '=', $request->get('originGroupCode'))->sum('production_schedules.quantity');
+		$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->whereNull('status')->sum('stamp_inventories.quantity');
 
 		if($targetFL != 0){
 			$dayFL = floor($stockFL/$targetFL);
@@ -945,7 +945,7 @@ class ProcessController extends Controller
 			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
 		}
 
-		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories group by stamp_inventories.process_code";
+		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.process_code";
 
 		$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
 		(

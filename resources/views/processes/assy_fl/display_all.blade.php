@@ -102,7 +102,10 @@ table.table-bordered > tfoot > tr > th{
 	}
 
 	function fetchChartStock(){
-		$.get('{{ url("fetch/wipflallchart") }}', function(result, status, xhr){
+		var data = {
+			originGroupCode : '041'
+		}
+		$.get('{{ url("fetch/wipflallchart") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
