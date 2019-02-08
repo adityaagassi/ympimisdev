@@ -36,7 +36,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content">
 	<div class="row">
 		<div class="col-md-8">
-			<div id="container" style="width: 100%; height: 250; margin: 0 auto;"></div>
+			<div id="container" style="width: 100%; height: 300; margin: 0 auto;"></div>
 		</div>
 		<div class="col-md-4">
 			<div id="container2" style="width: 100%; margin: 0 auto;"></div>
