@@ -15,7 +15,6 @@ thead input {
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-
     <li>
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
@@ -224,17 +223,7 @@ thead input {
     $('#example1 tfoot tr').appendTo('#example1 thead');
 
   });
-  $(function () {
 
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
   function deleteConfirmation(url, name, id) {
     jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
     jQuery('#modalDeleteButton').attr("href", url+'/'+id);
