@@ -163,7 +163,7 @@ class MaterialController extends Controller
         'origin_groups' => $origin_groups,
         'hpls' => $hpls,
         'categories' => $categories,
-        'model' => $model,
+        // 'model' => $model,
       ))->with('page', 'Material');
         //
     }
