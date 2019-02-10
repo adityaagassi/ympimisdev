@@ -20,29 +20,6 @@ class ChoreiController extends Controller
 	}
 
 	public function fetch_production_bl_modal(Request $request){
-		// $blData = DB::table('shipment_schedules')
-		// ->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		// ->leftJoin('weekly_calendars', 'weekly_calendars.week_date', '=', 'shipment_schedules.bl_date')
-		// ->leftJoin(db::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual from flos group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-		// ->where('weekly_calendars.week_name', '=', $request->get('week'))
-		// ->where('materials.category', '=', 'FG')
-		// ->where('materials.hpl', '=', $request->get('hpl'));
-
-		// if($request->get('name') == 'Actual'){
-		// 	$blData = $blData->select('materials.material_number', 'materials.material_description', 
-		// 		db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity'))
-		// 	->groupBy('materials.material_number', 'materials.material_description')
-		// 	->having(db::raw('if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual))'), '>', 0)
-		// 	->get();
-		// }
-		// if($request->get('name') == 'Plan'){
-		// 	$blData = $blData->select('materials.material_number', 'materials.material_description', 
-		// 		db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity'))
-		// 	->groupBy('materials.material_number', 'materials.material_description')
-		// 	->having(db::raw('if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0))'), '>', 0)
-		// 	->get();
-		// }
-		
 		$last_date = DB::table('weekly_calendars')
 		->where('week_name', '=', $request->get('week'))
 		->where('fiscal_year', '=', 'FY195')
@@ -51,53 +28,53 @@ class ChoreiController extends Controller
 
 		$query1 = "select material_number, material_description, sum(quantity) as quantity from
 		(
-			select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
-			from shipment_schedules
-			left join materials on materials.material_number = shipment_schedules.material_number
-			left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-			left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-			on flos.shipment_schedule_id = shipment_schedules.id
-			where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
-			group by shipment_schedules.material_number, materials.material_description
-			having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0
 
-			union all
+		union all
 
-			select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
-			from shipment_schedules
-			left join materials on materials.material_number = shipment_schedules.material_number
-			left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-			left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-			on flos.shipment_schedule_id = shipment_schedules.id
-			where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
-			group by shipment_schedules.material_number, materials.material_description
-			having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) as quantity 
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
 		) as result1
 		group by material_number, material_description";
 
 		$query2 = "select material_number, material_description, sum(quantity) as quantity from
 		(
-			select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
-			from shipment_schedules
-			left join materials on materials.material_number = shipment_schedules.material_number
-			left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-			left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-			on flos.shipment_schedule_id = shipment_schedules.id
-			where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
-			group by shipment_schedules.material_number, materials.material_description
-			having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0
 
-			union all
+		union all
 
-			select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
-			from shipment_schedules
-			left join materials on materials.material_number = shipment_schedules.material_number
-			left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-			left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-			on flos.shipment_schedule_id = shipment_schedules.id
-			where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
-			group by shipment_schedules.material_number, materials.material_description
-			having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
+		select shipment_schedules.material_number, materials.material_description, if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) as quantity
+		from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = 'FY195'
+		group by shipment_schedules.material_number, materials.material_description
+		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
 		) as result1
 		group by material_number, material_description";
 
@@ -118,21 +95,21 @@ class ChoreiController extends Controller
 	public function fetch_production_accuracy_modal(Request $request){
 		$query = "select materials.material_number, materials.material_description, final.plus, final.minus from
 		(
-			select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
-			(
-				select material_number, sum(quantity) as plan, 0 as actual 
-				from production_schedules 
-				where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('now') ."'
-				group by material_number
+		select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
+		(
+		select material_number, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('now') ."'
+		group by material_number
 
-				union all
+		union all
 
-				select material_number, 0 as plan, sum(quantity) as actual
-				from flo_details
-				where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('now') ."'
-				group by material_number
-			) as result
-			group by result.material_number
+		select material_number, 0 as plan, sum(quantity) as actual
+		from flo_details
+		where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('now') ."'
+		group by material_number
+		) as result
+		group by result.material_number
 		) as final
 		left join materials on materials.material_number = final.material_number
 		where materials.category = 'FG' and hpl = '". $request->get('hpl') ."'";
@@ -151,34 +128,34 @@ class ChoreiController extends Controller
 			$query = "select final.material_number, materials.material_description, if(final.actual>final.plan, final.plan, final.actual) as quantity from
 
 			(
-				select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, sum(result.actual) as actual from
-				(
-					select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-					from production_schedules 
-					where due_date = '". $request->get('now') ."' 
-					group by material_number
+			select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, sum(result.actual) as actual from
+			(
+			select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+			from production_schedules 
+			where due_date = '". $request->get('now') ."' 
+			group by material_number
 
-					union all
+			union all
 
-					select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-					from flo_details 
-					where date(created_at) = '". $request->get('now') ."'  
-					group by material_number
+			select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+			from flo_details 
+			where date(created_at) = '". $request->get('now') ."'  
+			group by material_number
 
-					union all
+			union all
 
-					select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-					(
-						select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('last') ."' group by material_number
+			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+			(
+			select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('last') ."' group by material_number
 
-						union all
+			union all
 
-						select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('last') ."' group by material_number
-					) as debt
-					group by material_number
+			select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('last') ."' group by material_number
+			) as debt
+			group by material_number
 
-				) as result
-				group by result.material_number
+			) as result
+			group by result.material_number
 			) as final
 
 			left join materials on materials.material_number = final.material_number
@@ -188,34 +165,34 @@ class ChoreiController extends Controller
 			$query="select final.material_number, materials.material_description, if(final.actual>final.plan, 0, final.plan-final.actual) as quantity from
 
 			(
-				select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, sum(result.actual) as actual from
-				(
-					select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-					from production_schedules 
-					where due_date = '". $request->get('now') ."' 
-					group by material_number
+			select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, sum(result.actual) as actual from
+			(
+			select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+			from production_schedules 
+			where due_date = '". $request->get('now') ."' 
+			group by material_number
 
-					union all
+			union all
 
-					select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-					from flo_details 
-					where date(created_at) = '". $request->get('now') ."'  
-					group by material_number
+			select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+			from flo_details 
+			where date(created_at) = '". $request->get('now') ."'  
+			group by material_number
 
-					union all
+			union all
 
-					select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-					(
-						select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('last') ."' group by material_number
+			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+			(
+			select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $request->get('first') ."' and due_date <= '". $request->get('last') ."' group by material_number
 
-						union all
+			union all
 
-						select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('last') ."' group by material_number
-					) as debt
-					group by material_number
+			select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $request->get('first') ."' and date(created_at) <= '". $request->get('last') ."' group by material_number
+			) as debt
+			group by material_number
 
-				) as result
-				group by result.material_number
+			) as result
+			group by result.material_number
 			) as final
 
 			left join materials on materials.material_number = final.material_number
@@ -300,34 +277,34 @@ class ChoreiController extends Controller
 
 		$query = "select materials.hpl, materials.category, sum(final.plan)-sum(final.actual) as plan, sum(final.actual) AS actual from
 		(
-			select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, if(sum(result.actual)>if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), sum(result.actual)) as actual from
-			(
-				select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-				from production_schedules 
-				where due_date = '". $now ."' 
-				group by material_number
+		select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, if(sum(result.actual)>if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), sum(result.actual)) as actual from
+		(
+		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date = '". $now ."' 
+		group by material_number
 
-				union all
+		union all
 
-				select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-				from flo_details 
-				where date(created_at) = '". $now ."' 
-				group by material_number
+		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+		from flo_details 
+		where date(created_at) = '". $now ."' 
+		group by material_number
 
-				union all
+		union all
 
-				select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-				(
-					select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+		(
+		select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
 
-					union all
+		union all
 
-					select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-				) as debt
-				group by material_number
+		select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+		) as debt
+		group by material_number
 
-			) as result
-			group by result.material_number
+		) as result
+		group by result.material_number
 		) as final
 		
 		left join materials on materials.material_number = final.material_number
@@ -339,21 +316,21 @@ class ChoreiController extends Controller
 
 		$query2 = "select materials.hpl, sum(final.plus) as plus, sum(final.minus) as minus from
 		(
-			select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
-			(
-				select material_number, sum(quantity) as plan, 0 as actual 
-				from production_schedules 
-				where due_date >= '". $first ."' and due_date <= '". $now ."'
-				group by material_number
+		select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
+		(
+		select material_number, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date >= '". $first ."' and due_date <= '". $now ."'
+		group by material_number
 
-				union all
+		union all
 
-				select material_number, 0 as plan, sum(quantity) as actual
-				from flo_details
-				where date(created_at) >= '". $first ."' and date(created_at) <= '". $now ."'
-				group by material_number
-			) as result
-			group by result.material_number
+		select material_number, 0 as plan, sum(quantity) as actual
+		from flo_details
+		where date(created_at) >= '". $first ."' and date(created_at) <= '". $now ."'
+		group by material_number
+		) as result
+		group by result.material_number
 		) as final
 		left join materials on materials.material_number = final.material_number
 		where materials.category = 'FG'
@@ -362,53 +339,27 @@ class ChoreiController extends Controller
 
 		$chartResult2 = DB::select($query2);
 
-		// $query3 = "
-		// select hpl, sum(plan)-sum(actual) as plan, sum(actual) as actual, avg(prc1) as prc_actual, 1-avg(prc1) as prc_plan from
-		// (
-		// select material_number, hpl, category, sum(plan) as plan, coalesce(sum(actual), 0) as actual, coalesce(sum(actual), 0)/sum(plan) as prc1 from
-		// (
-		// select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
-		// left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-		// left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-		// on flos.shipment_schedule_id = shipment_schedules.id
-		// left join materials on materials.material_number = shipment_schedules.material_number
-		// where weekly_calendars.week_name = '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG'
-
-		// union all
-
-		// select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, flos.actual as actual from shipment_schedules 
-		// left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-		// left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-		// on flos.shipment_schedule_id = shipment_schedules.id
-		// left join materials on materials.material_number = shipment_schedules.material_number
-		// where weekly_calendars.week_name <> '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
-		// ) as result1
-		// group by material_number, hpl, category
-		// ) result2
-		// group by hpl
-		// order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'VENOVA', 'RC')";
-
 		$query3 = "
 		select hpl, sum(plan)-sum(actual) as plan, sum(actual) as actual, avg(prc1) as prc_actual, 1-avg(prc1) as prc_plan from
 		(
-			select material_number, hpl, category, plan, coalesce(actual, 0) as actual, coalesce(actual, 0)/plan as prc1 from
-			(
-				select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
-				left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-				left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-				on flos.shipment_schedule_id = shipment_schedules.id
-				left join materials on materials.material_number = shipment_schedules.material_number
-				where weekly_calendars.week_name = '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG'
+		select material_number, hpl, category, plan, coalesce(actual, 0) as actual, coalesce(actual, 0)/plan as prc1 from
+		(
+		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, if(flos.actual>shipment_schedules.quantity, shipment_schedules.quantity, flos.actual) as actual from shipment_schedules 
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where weekly_calendars.week_name = '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG'
 
-				union all
+		union all
 
-				select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, flos.actual as actual from shipment_schedules 
-				left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
-				left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
-				on flos.shipment_schedule_id = shipment_schedules.id
-				left join materials on materials.material_number = shipment_schedules.material_number
-				where weekly_calendars.week_name <> '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
-			) as result1
+		select shipment_schedules.id, shipment_schedules.material_number, materials.hpl, materials.category, shipment_schedules.quantity as plan, flos.actual as actual from shipment_schedules 
+		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
+		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
+		on flos.shipment_schedule_id = shipment_schedules.id
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where weekly_calendars.week_name <> '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
+		) as result1
 		) result2
 		group by hpl
 		order by field(hpl, 'FLFG', 'CLFG', 'ASFG', 'TSFG', 'PN', 'RC', 'VENOVA')";
@@ -421,7 +372,6 @@ class ChoreiController extends Controller
 			'chartResult2' => $chartResult2,
 			'chartResult3' => $chartResult3,
 			'week' => 'Week ' . substr($week2->week_name, 1),
-			// 'week2' => $week2->week_name,
 			'weekTitle' => 'Week ' . substr($week->week_name, 1),
 			'dateTitle' => date('d F Y', strtotime($date)),
 			'now' => $now,
