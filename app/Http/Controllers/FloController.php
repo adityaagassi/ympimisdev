@@ -331,7 +331,7 @@ class FloController extends Controller
 			foreach ($files as $file) 
 			{
 				$data = file_get_contents($file);
-				$code_generator = CodeGenerator::where('note','=','container')->first();
+				$code_generator = CodeGenerator::where('note','=','container_att')->first();
 				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
 				$photo_number = "B" . $number+1;
 				$ext = $file->getClientOriginalExtension();
@@ -354,7 +354,7 @@ class FloController extends Controller
 			foreach ($files as $file) 
 			{
 				$data = file_get_contents($file);
-				$code_generator = CodeGenerator::where('note','=','container')->first();
+				$code_generator = CodeGenerator::where('note','=','container_att')->first();
 				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
 				$photo_number = "P" . $number+1;
 				$ext = $file->getClientOriginalExtension();
@@ -377,7 +377,7 @@ class FloController extends Controller
 			foreach ($files as $file) 
 			{
 				$data = file_get_contents($file);
-				$code_generator = CodeGenerator::where('note','=','container')->first();
+				$code_generator = CodeGenerator::where('note','=','container_att')->first();
 				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
 				$photo_number = "A" . $number;
 				$ext = $file->getClientOriginalExtension();
