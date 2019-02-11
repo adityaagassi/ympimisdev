@@ -31,19 +31,8 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function index_fg_weekly_summary(){
-		$weeks = DB::table('weekly_calendars')->select('week_name')->distinct()->orderBy(db::raw('convert(mid(week_name,2), unsigned integer)'), 'asc')->get();
-		$years = DB::table('weekly_calendars')->select(db::raw('year(week_date) as year'))->distinct()->orderBy(db::raw('year(week_date)'), 'asc')->get();
-		$fiscalYears = DB::table('weekly_calendars')
-		->select('fiscal_year')
-		->distinct()
-		// ->orderBy(db::raw('convert(mid(week_name,2), unsigned integer)'), 'asc')
-		->get();
 
-		return view('finished_goods.weekly_summary', array(
-			'weeks' => $weeks,
-			'years' => $years,
-			'fiscalYears' => $fiscalYears,
-		))->with('page', 'FG Weekly Summary')->with('head', 'Finished Goods');
+		return view('finished_goods.weekly_summary')->with('page', 'FG Weekly Summary')->with('head', 'Finished Goods');
 	}
 
 	public function index_fg_monthly_summary(){
@@ -247,14 +236,6 @@ class FinishedGoodsController extends Controller
 
 	public function fetch_tb_monthly_summary(Request $request){
 		$period = date('Y-m', strtotime($request->get('period'))).'-01';
-		// $flos = db::table('flos')
-		// ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-		// ->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
-		// ->where('shipment_schedules.st_month', '=', $period)
-		// ->where('flos.bl_date', '>', 'shipment_schedules.bl_date')
-		// ->select('materials.material_number', 'materials.material_description', db::raw('sum(flos.actual) as actual'))
-		// ->groupBy('materials.material_number', 'materials.material_description')
-		// ->get();
 
 		$query = "select materials.material_number, materials.material_description, sum(if(flos.bl_date > shipment_schedules.bl_date, flos.actual, 0)) as actual from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id left join materials on materials.material_number = flos.material_number where shipment_schedules.st_month = '".$period."' group by materials.material_number, materials.material_description having actual > 0";
 
@@ -268,54 +249,41 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function fetch_fg_weekly_summary(Request $request){
-		$weekly_calendars = DB::table('weekly_calendars');
 
-		if(strlen($request->get('weekFrom')) > 0){
-			$weekFrom = substr($request->get('weekFrom'), 1);
-			$weekly_calendars = $weekly_calendars->where(db::raw('mid(week_name,2)'), '>=', $weekFrom);
+		$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+		$first = date('Y-m-01');
+
+		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+
+		if($request->get('datefrom') != "" && $request->get('dateto') != ""){
+			$year = "having week_start >= '" . $date_from . "' and week_start <= '" . $date_to . "'";
 		}
-		if(strlen($request->get('weekTo')) > 0){
-			$weekTo = substr($request->get('weekTo'), 1);
-			$weekly_calendars = $weekly_calendars->where(db::raw('mid(week_name,2)'), '<=', $weekTo);
-		}
-		if(strlen($request->get('year')) > 0){
-			$year = $request->get('year');
-			$weekly_calendars = $weekly_calendars->where(db::raw('year(week_date)'), '=', $year);
-		}
-		if(strlen($request->get('fiscalYear')) > 0){
-			$fiscalYear = $request->get('fiscalYear');
-			$weekly_calendars = $weekly_calendars->where('fiscal_year', '=', $fiscalYear);
-		}
-		if(strlen($request->get('weekFrom')) == 0 && strlen($request->get('weekTo')) == 0 && strlen($request->get('year'))  == 0 && strlen($request->get('fiscalYear')) == 0){
-			$month = date('Y-m');
-			$weekly_calendars->whereIn('week_name', db::table('weekly_calendars')->select('week_name')->distinct()->where(db::raw('DATE_FORMAT(weekly_calendars.week_date, "%Y-%m")'), '=', $month));
+		else{
+			$year = "having year = '" . date('Y') . "' and week_start >= '" . $first . "' and week_start <= '" . $last . "'";
 		}
 
-		$weekly_calendars->leftJoin('shipment_schedules', 'shipment_schedules.bl_date', '=', 'weekly_calendars.week_date')
-		->leftJoin(DB::raw('(select flos.shipment_schedule_id, sum(flos.actual) as actual, sum(if(flos.bl_date is null or flos.bl_date = "", 0, flos.actual)) as actual_shipment, sum(if(flos.bl_date > shipment_schedules.bl_date, flos.actual, 0)) as delay from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id group  by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-		->select('weekly_calendars.fiscal_year', 
-			db::raw('year(weekly_calendars.week_date) as year'), 
-			'weekly_calendars.week_name', 
-			db::raw('concat(date_format(min(weekly_calendars.week_date), "%d %b %Y"), " - ",date_format(max(weekly_calendars.week_date), "%d %b %Y")) as etd'), 
-			db::raw('format(sum(shipment_schedules.quantity),0) as plan'), 
-			db::raw('format(sum(flos.actual),0) as actual'), 
-			db::raw('format(sum(flos.actual)-sum(shipment_schedules.quantity),0) as diff'), 
-			db::raw('concat(round((sum(flos.actual)/sum(shipment_schedules.quantity))*100, 2),"%") as diff_percentage'), 
-			db::raw('format(sum(flos.actual_shipment),0) as actual_shipment'), 
-			db::raw('format(sum(flos.actual_shipment)-sum(shipment_schedules.quantity),0) as diff_shipment'), 
-			db::raw('concat(round((sum(flos.actual_shipment)/sum(shipment_schedules.quantity))*100, 2),"%") as diff_shipment_percentage'),
-			db::raw('format(sum(flos.delay),0) as delay'), 
-			db::raw('concat(round(((sum(shipment_schedules.quantity)-sum(flos.delay))/sum(shipment_schedules.quantity))*100, 2),"%") as delay_percentage'))
-		->groupBy('weekly_calendars.fiscal_year', 'weekly_calendars.week_name', db::raw('year(weekly_calendars.week_date)'))
-		// ->orderBy(db::raw('convert(mid(weekly_calendars.week_name,2), unsigned integer)'), 'asc')
-		// ->orderBy('weekly_calendars.week_date', 'asc')
-		->get();
+		$query = "select year, week_name, week_start, week_end, sum(plan) as plan, sum(actual_production) as actual_production, sum(diff_actual) as diff_actual, concat(round((sum(actual_production)/sum(plan))*100,2), '%') as prctg_actual, sum(actual_shipment) as actual_shipment, sum(diff_shipment) as diff_shipment, concat(round((sum(actual_shipment)/sum(plan))*100,2), '%') as prctg_shipment, sum(delay) as delay, concat(round(((sum(plan)-sum(delay))/sum(plan))*100,2), '%') as prctg_delay from
+		(
+		select year, week_name, week_start, bl_target as week_end, id, material_number, plan, sum(actual_production)as actual_production, sum(actual_production)-plan as diff_actual, sum(actual_shipment) as actual_shipment, sum(actual_shipment)-plan as diff_shipment, sum(delay) as delay from
+		(
+		select a.year, a.week_name, a.week_start, b.bl_actual, a.bl_target, b.id, b.material_number, b.quantity as plan, sum(b.actual) as actual_production, if(b.bl_actual is null, 0, sum(b.actual)) as actual_shipment, if(b.bl_actual > a.bl_target, sum(b.actual), 0) as delay from
+		(
+		(select year(week_date) as year, week_name, min(week_date) as week_start, max(week_date) as bl_target from weekly_calendars group by year(week_date), week_name) as a
 
-		// $response = array(
-		// 	'status' => true,
-		// 	'tableData' => $weekly_calendars->get(),
-		// );
-		// return Response::json($response); 
+		left join
+
+		(select year(shipment_schedules.bl_date) as year, concat('W', date_format(shipment_schedules.bl_date, '%U')+1) as week_name, shipment_schedules.id, shipment_schedules.material_number, shipment_schedules.quantity, flos.actual, shipment_schedules.bl_date as bl_plan, flos.bl_date as bl_actual from shipment_schedules left join flos on flos.shipment_schedule_id = shipment_schedules.id) as b on b.year = a.year and b.week_name = a.week_name
+		)
+		group by year, week_name, week_start, bl_target, id, bl_actual, material_number, quantity
+		) as c
+		group by year, week_name, week_start, bl_target, material_number, id, plan
+		) as d
+		group by year, week_name, week_start, week_end
+		" . $year . "
+		order by week_start asc";
+
+		$weekly_calendars = DB::select($query);
 		return DataTables::of($weekly_calendars)->make(true);
 	}
 

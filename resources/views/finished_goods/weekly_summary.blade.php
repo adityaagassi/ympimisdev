@@ -49,56 +49,33 @@ table.table-bordered > tfoot > tr > th{
 			<div class="box box-primary">
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
-					<div class="col-md-12 col-md-offset-2">
-						<div class="col-md-2">
+					<div class="col-md-12 col-md-offset-3">
+						<div class="col-md-3">
 							<div class="form-group">
-								<label>Week From</label>
-								<select class="form-control select2" name="weekFrom" id='weekFrom' data-placeholder="Select Week" style="width: 100%;">
-									<option></option>
-									@foreach($weeks as $week)
-									<option value="{{ $week->week_name }}">{{ $week->week_name }}</option>
-									@endforeach
-								</select>
+								<label>ETD From</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
+								</div>
 							</div>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-3">
 							<div class="form-group">
-								<label>Week To</label>
-								<select class="form-control select2" name="weekTo" id='weekTo' data-placeholder="Select Week" style="width: 100%;">
-									<option></option>
-									@foreach($weeks as $week)
-									<option value="{{ $week->week_name }}">{{ $week->week_name }}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="form-group">
-								<label>Year</label>
-								<select class="form-control select2" name="year" id='year' data-placeholder="Select Year" style="width: 100%;">
-									<option></option>
-									@foreach($years as $year)
-									<option value="{{ $year->year }}">{{ $year->year }}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div class="form-group">
-								<label>Fiscal Year</label>
-								<select class="form-control select2" name="fiscalYear" id='fiscalYear' data-placeholder="Select Year" style="width: 100%;">
-									<option></option>
-									@foreach($fiscalYears as $fiscalYear)
-									<option value="{{ $fiscalYear->fiscal_year }}">{{ $fiscalYear->fiscal_year }}</option>
-									@endforeach
-								</select>
+								<label>ETD To</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" id="dateto" name="dateto">
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-12 col-md-offset-3">
-						<div class="col-md-7">
+						<div class="col-md-6">
 							<div class="form-group pull-right">
-								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 								<button id="search" onClick="fillTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
 							</div>
 						</div>
@@ -108,10 +85,10 @@ table.table-bordered > tfoot > tr > th{
 							<table id="weeklySummaryTable" class="table table-bordered table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>FY</th>
 										<th>Year</th>
 										<th>Week</th>
-										<th>ETD (SUB)</th>
+										<th>ETD (SUB) from</th>
+										<th>ETD (SUB) to</th>
 										<th>Plan</th>
 										<th>Actual</th>
 										<th>Diff</th>
@@ -127,19 +104,19 @@ table.table-bordered > tfoot > tr > th{
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th></th>
-										<th></th>
-										<th></th>
 										<th>Total</th>
-										<th id="totalPlan"></th>
-										<th id="totalActual"></th>
-										<th id="totalDiff"></th>
-										<th id="avgDiffPercentage"></th>
-										<th id="totalActualShipment"></th>
-										<th id="totalDiffShipment"></th>
-										<th id="totalDiffShipmentPercentage"></th>
-										<th id="totalDelay"></th>
-										<th id="avgDelayPercentage"></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
 									</tr>
 								</tfoot>
 							</table>
@@ -173,6 +150,12 @@ table.table-bordered > tfoot > tr > th{
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		fillTable();
+		$('#datefrom').datepicker({
+			autoclose: true
+		});
+		$('#dateto').datepicker({
+			autoclose: true
+		});
 	});
 
 	function clearConfirmation(){
@@ -201,23 +184,13 @@ table.table-bordered > tfoot > tr > th{
 		$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 		$('#weeklySummaryTable').DataTable().clear();
 		$('#weeklySummaryTable').DataTable().destroy();
-		var weekFrom = $('#weekFrom').val();
-		var weekTo = $('#weekTo').val();
-		var year = $('#year').val();
-		var fiscalYear = $('#fiscalYear').val();
+		var datefrom = $('#datefrom').val();
+		var dateto = $('#dateto').val();
 		var data = {
-			weekFrom:weekFrom,
-			weekTo:weekTo,
-			year:year,
-			fiscalYear:fiscalYear,
+			datefrom:datefrom,
+			dateto:dateto,
 		}
-
-		// $.get('{{ url("fetch/fg_weekly_summary") }}', data, function(result, status, xhr){
-		// 	console.log(status);
-		// 	console.log(result);
-		// 	console.log(xhr);
-		// });
-
+		
 		$('#weeklySummaryTable').DataTable({
 			"scrollX": true,
 			'dom': 'Bfrtip',
@@ -227,12 +200,6 @@ table.table-bordered > tfoot > tr > th{
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
 			'buttons': {
-				// dom: {
-				// 	button: {
-				// 		tag:'button',
-				// 		className:''
-				// 	}
-				// },
 				buttons:[
 				{
 					extend: 'pageLength',
@@ -344,19 +311,19 @@ table.table-bordered > tfoot > tr > th{
 				}
 			}],
 			"columns": [
-			{ "data": "fiscal_year" },
 			{ "data": "year" },
 			{ "data": "week_name" },
-			{ "data": "etd" },
+			{ "data": "week_start" },
+			{ "data": "week_end" },
 			{ "data": "plan" },
-			{ "data": "actual" },
-			{ "data": "diff" },
-			{ "data": "diff_percentage", },
+			{ "data": "actual_production" },
+			{ "data": "diff_actual" },
+			{ "data": "prctg_actual", },
 			{ "data": "actual_shipment" },
 			{ "data": "diff_shipment" },
-			{ "data": "diff_shipment_percentage" },
+			{ "data": "prctg_shipment" },
 			{ "data": "delay" },
-			{ "data": "delay_percentage" },
+			{ "data": "prctg_delay" }
 			]
 		});
 }
