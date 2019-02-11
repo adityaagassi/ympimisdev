@@ -83,6 +83,7 @@ class FinishedGoodsController extends Controller
 		$shipment_schedules = $shipment_schedules->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
 		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->leftJoin(db::raw('(select shipment_schedule_id, sum(actual) as actual_fstk from flos where status in ("2", "3", "4") group by shipment_schedule_id) as fstk'), 'fstk.shipment_schedule_id', 'shipment_schedules.id')
 		->select(
 			db::raw('date_format(shipment_schedules.st_month, "%b-%Y") as st_month'), 
 			'shipment_schedules.id', 'shipment_schedules.sales_order', 
@@ -91,7 +92,9 @@ class FinishedGoodsController extends Controller
 			'materials.material_description', 
 			'shipment_schedules.quantity', 
 			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual)) as actual'), 
-			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual))-shipment_schedules.quantity as diff'),
+			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual))-shipment_schedules.quantity as diff'), 
+			db::raw('if(fstk.actual_fstk is null, 0, fstk.actual_fstk) as actual_fstk'), 
+			db::raw('if(fstk.actual_fstk is null, 0, fstk.actual_fstk)-shipment_schedules.quantity as diff_fstk'),
 			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'),
 			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y") as bl_date_plan')
 		)
@@ -104,7 +107,8 @@ class FinishedGoodsController extends Controller
 			'materials.material_description', 
 			'shipment_schedules.quantity', 
 			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'),
-			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y")')
+			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y")'),
+			'fstk.actual_fstk'
 		)
 		->get();
 

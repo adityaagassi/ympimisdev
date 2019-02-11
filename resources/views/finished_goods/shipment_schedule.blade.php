@@ -92,7 +92,9 @@ table.table-bordered > tfoot > tr > th{
 										<th style="width: 5%;">Material</th>
 										<th style="width: 40%;">Description</th>
 										<th style="width: 5%;">Plan</th>
-										<th style="width: 5%;">Actual</th>
+										<th style="width: 5%;">Act Prod.</th>
+										<th style="width: 5%;">Diff</th>
+										<th style="width: 5%;">Act Deliv.</th>
 										<th style="width: 5%;">Diff</th>
 										<th style="width: 10%;">Ship. Date</th>
 										<th style="width: 10%;">BL Date Plan</th>
@@ -112,6 +114,8 @@ table.table-bordered > tfoot > tr > th{
 										<th id="totalPlan"></th>
 										<th id="totalActual"></th>
 										<th id="totalDiff"></th>
+										<th></th>
+										<th></th>
 										<th></th>
 										<th></th>
 										{{-- <th></th> --}}
@@ -201,6 +205,8 @@ table.table-bordered > tfoot > tr > th{
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.actual +'</td>';
 						tableData += '<td>'+ value.diff +'</td>';
+						tableData += '<td>'+ value.actual_fstk +'</td>';
+						tableData += '<td>'+ value.diff_fstk +'</td>';
 						tableData += '<td>'+ value.st_date +'</td>';
 						tableData += '<td>'+ value.bl_date_plan +'</td>';
 						// tableData += '<td>'+ value.bl_date +'</td>';
@@ -266,19 +272,25 @@ table.table-bordered > tfoot > tr > th{
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(5).footer()).html(totalPlan.toLocaleString());
-							var api = this.api();
 							var totalPlan = api.column(6).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(6).footer()).html(totalPlan.toLocaleString());
-							var api = this.api();
 							var totalPlan = api.column(7).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(7).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(8).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(8).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(9).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(9).footer()).html(totalPlan.toLocaleString());
 						},
 						"columnDefs": [ {
-							"targets": 7,
+							"targets": [7, 9],
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
@@ -311,7 +323,7 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 
-	}
+}
 
 
 </script>
