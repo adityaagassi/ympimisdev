@@ -332,8 +332,8 @@ class FloController extends Controller
 			{
 				$data = file_get_contents($file);
 				$code_generator = CodeGenerator::where('note','=','container_att')->first();
-				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-				$photo_number = "B" . $number+1;
+				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
+				$photo_number = "B" . $number;
 				$ext = $file->getClientOriginalExtension();
 				$filepath = public_path() . "/uploads/containers/before/" . $photo_number . "." . $ext;
 				$attachment = new ContainerAttachment([
@@ -355,8 +355,8 @@ class FloController extends Controller
 			{
 				$data = file_get_contents($file);
 				$code_generator = CodeGenerator::where('note','=','container_att')->first();
-				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index);
-				$photo_number = "P" . $number+1;
+				$number = sprintf("%'.0" . $code_generator->length . "d\n", $code_generator->index)+1;
+				$photo_number = "P" . $number;
 				$ext = $file->getClientOriginalExtension();
 				$filepath = public_path() . "/uploads/containers/process/" . $photo_number . "." . $ext;
 				$attachment = new ContainerAttachment([
