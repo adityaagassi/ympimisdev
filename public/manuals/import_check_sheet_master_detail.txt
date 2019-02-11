@@ -1,0 +1,9 @@
+1	YCJ	1	1	1	sby1	jkt1	c1	p1	2019-01-01	2019-01-01	1	YCJ	1	gmc1	goods1	1-2	12	PLT	15	SET
+2	YMJ	2	2	2	sby2	jkt2	c2	p2	2019-01-02	2019-01-02	1	YCJ	1	gmc1	goods1	2-3	3	CTN	15	PCS
+3	JH	3	3	3	sby3	jk4	tr	p3	2019-01-03	2019-01-03	1	YCJ	1	gmc1	goods1	4-5	51	PLT	7	SET
+											2	YMJ	2	gmc2	goods2	5-6	84	CTN	5	PCS
+											2	YMJ	2	gmc2	goods2	7-8	79	PLT	45	SET
+											2	YMJ	2	gmc2	goods2	9-10	46	CTN	87	PCS
+											3	JH	3	gmc3	goods3	11-12	2	PLT	6	SET
+											3	JH	3	gmc3	goods3	13-14	6	CTN	8	PCS
+											3	JH	3	gmc3	goods3	15-16	8	PLT	47	SET

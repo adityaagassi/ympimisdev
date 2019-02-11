@@ -1,0 +1,9 @@
+YCJ	1	gmc1	goods1	1-2	3	CTN	15	PCS
+YCJ	1	gmc1	goods1	3-4	12	PLT	15	SET
+YCJ	1	gmc1	goods1	5-6	12	PLT	15	SET
+YMJ	2	gmc2	goods2	7-8	84	CTN	5	PCS
+YMJ	2	gmc2	goods2	9-10	79	PLT	45	SET
+YMJ	2	gmc2	goods2	11-12	46	CTN	87	PCS
+JH	3	gmc3	goods3	13-14	2	PLT	6	SET
+JH	3	gmc3	goods3	15-16	6	CTN	8	PCS
+JH	3	gmc3	goods3	17-18	8	PLT	47	SET
