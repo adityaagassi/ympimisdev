@@ -128,6 +128,13 @@
       <li class="header">Service Menu</li>
       @endif
 
+      
+       @if(in_array('S11', $navs))
+      @if(isset($page) && $page == "Check Sheet")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/CheckSheet") }}"><i class="fa fa-calendar-check-o"></i> <span>Check Sheet</span></a>
+      </li>
+      @endif
+
       @if(in_array('S1', $navs))
       @if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif
         <a href="{{ url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
