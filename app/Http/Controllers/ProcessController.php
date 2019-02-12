@@ -874,7 +874,8 @@ class ProcessController extends Controller
 					$response = array(
 						'status' => true,
 						'statusCode' => 'stamp',
-						'message' => 'Stamp success'
+						'message' => 'Stamp success',
+						'role' => 'Guest'
 					);
 					return Response::json($response);
 				}

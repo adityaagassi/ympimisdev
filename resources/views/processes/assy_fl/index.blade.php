@@ -18,11 +18,7 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-			@if(Auth::user()->role_code == "OP-SubAssy-FL")
 			<a href="{{ url("index/process_assy_fl_1") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp <b><i>IoT</i></b></a>
-			@else
-			<a href="{{ url("404") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp <b><i>IoT</i></b></a>
-			@endif
 			<a href="{{ url("index/process_assy_fl_0") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp-Kariawase</a>
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>

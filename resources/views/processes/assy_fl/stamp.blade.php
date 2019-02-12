@@ -92,7 +92,7 @@ table.table-bordered > tfoot > tr > th{
 							<center>
 								<span style="font-size: 24px;">Schedule:</span>
 							</center>
-							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped" style="width: 100%;">
+							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<th>Model</th>
 									<th>Plan</th>
@@ -130,7 +130,7 @@ table.table-bordered > tfoot > tr > th{
 							<center>
 								<span style="font-size: 24px;">Result:</span>
 							</center>
-							<table id="resultTable" name="resultTable" class="table table-bordered table-striped table-hover rowclick">
+							<table id="resultTable" name="resultTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<th style="width: 20%">Serial Number</th>
 									<th style="width: 25%">Model</th>
