@@ -308,13 +308,11 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('input/process_assy_fl', 'ProcessController@inputProcessAssyFL');
 	Route::post('scan/serial_number_return_fl', 'ProcessController@scanSerialNumberReturnFl');
 	Route::post('stamp/adjustSerial', 'ProcessController@adjustSerial');
-	Route::get('stamp/stamp', 'ProcessController@stamp');
 	Route::get('stamp/adjust', 'ProcessController@adjust');
 	Route::post('stamp/adjust', 'ProcessController@adjustUpdate');
 	Route::get('edit/stamp', 'ProcessController@editStamp');
 	Route::post('edit/stamp', 'ProcessController@updateStamp');
 	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
-	Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -335,6 +333,9 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('printsurat/CheckSheet/{id}', 'CheckSheet@print_check_surat');	
 
 });
+
+Route::get('stamp/stamp', 'ProcessController@stamp');
+Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 
 Route::get('index/process_assy_fl', 'ProcessController@indexProcessAssyFL');
 Route::get('index/process_assy_fl_0', 'ProcessController@indexProcessAssyFL0');
