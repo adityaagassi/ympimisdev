@@ -797,6 +797,7 @@ class ProcessController extends Controller
 			if($plc_counter->plc_counter <> $data){
 
 				if(Auth::user()->role_code == "OP-SubAssy-FL"){
+
 					$id = Auth::id();
 
 					$plc_counter->plc_counter = $data;
@@ -859,16 +860,24 @@ class ProcessController extends Controller
 						$printer->cut();
 						$printer->close();
 
-					}	
+					}
+
+					$response = array(
+						'status' => true,
+						'statusCode' => 'stamp',
+						'message' => 'Stamp success',
+						'data' => $plc_counter->plc_counter
+					);
+					return Response::json($response);
 				}
-				
-				$response = array(
-					'status' => true,
-					'statusCode' => 'stamp',
-					'message' => 'Stamp success',
-					'data' => $plc_counter->plc_counter
-				);
-				return Response::json($response);
+				else{
+					$response = array(
+						'status' => true,
+						'statusCode' => 'stamp',
+						'message' => 'Stamp success'
+					);
+					return Response::json($response);
+				}
 			}
 			else{
 				$response = array(
