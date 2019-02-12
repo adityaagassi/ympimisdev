@@ -185,7 +185,7 @@ table.table-bordered > tbody > tr > td{
 							backgroundColor: null
 						},
 						title: {
-							text: 'Month to Date of Production Result<br><span style="color:rgba(96,92,168);">過去一ヶ月間の生産結果</span>'
+							text: 'Daily Production Result<br><span style="color:rgba(96,92,168);">生産実績</span>'
 						},
 						exporting: { enabled: false },
 						xAxis: {
