@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+{{-- <link href="{{ url("css/jquery-ui.css") }}" rel="stylesheet"> --}}
 <style type="text/css">
 .picker {
 	text-align: center;
@@ -65,16 +66,32 @@ table.table-bordered > tfoot > tr > th{
 @stop
 @section('content')
 <section class="content" style="padding-top: 0">
-	<div class="row">
+	<div class="col-xs-10">
 		<div class="col-md-12 picker" id="weekResult">
 		</div>
 		<div class="col-md-12">
 		</div>
-		<div class="col-md-12 picker" id="dateResult">
+		<div class="col-md-12 picker" id="dateResult" style="margin: 1;">
 		</div>
 		<div class="col-md-12">
 			<br>
 		</div>
+	</div>
+	<div class="col-xs-2">
+		<div class="form-group">
+			<div class="input-group date">
+				<div class="input-group-addon bg-olive">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input type="text" class="form-control pull-right" id="datepicker" name="datepicker">
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-2">
+		<span class="text-red"><i class="fa fa-info-circle"></i> Select Other Date</span>
+		<button id="search" onClick="searchDate()" class="btn btn-sm pull-right bg-olive">Search</button>
+	</div>
+	<div class="row">
 		<input type="hidden" name="dateHidden" value="{{ date('Y-m-d') }}" id="dateHidden">
 		<div class="col-md-12">
 			<div class="nav-tabs-custom">
@@ -147,6 +164,7 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+{{-- <script src="{{ url("js/jquery-ui.js")}}"></script> --}}
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -155,7 +173,9 @@ table.table-bordered > tfoot > tr > th{
 	});
 
 	jQuery(document).ready(function() {
-		
+		$('#datepicker').datepicker({
+			autoclose: true
+		});
 		$('body').toggleClass("sidebar-collapse");
 		fillWeek();
 		fillDate();
@@ -189,6 +209,31 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 	});
+
+	function searchDate(){
+		$.date = function(dateObject) {
+			var d = new Date(dateObject);
+			var day = d.getDate();
+			var month = d.getMonth() + 1;
+			var year = d.getFullYear();
+			if (day < 10) {
+				day = "0" + day;
+			}
+			if (month < 10) {
+				month = "0" + month;
+			}
+			var date = year + "-" + month + "-" + day;
+
+			return date;
+		};
+
+
+		var date = $.date($('#datepicker').val());
+
+		if($('#datepicker').val() != 0){
+			fillChart(date);
+		}
+	}
 
 	function fillWeek(){
 		$.get('{{ url("fetch/daily_production_result_week") }}', function(result, status, xhr){
