@@ -1,6 +1,11 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
+thead input {
+	width: 100%;
+	padding: 3px;
+	box-sizing: border-box;
+}
 input {
 	line-height: 24px;
 }
@@ -46,7 +51,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box">
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
 					<div class="col-md-12 col-md-offset-3">
@@ -75,6 +80,14 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
+							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group" style="width: 100%;">
+									<option></option>
+									@foreach($origin_groups as $origin_group)
+									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+									@endforeach
+								</select>
+							</div>
 							<div class="form-group pull-right">
 								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 								<button id="search" onClick="fillTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</button>
@@ -180,9 +193,11 @@ table.table-bordered > tfoot > tr > th{
 	function fillTable(){
 		var periodTo = $('#periodTo').val();
 		var periodFrom = $('#periodFrom').val();
+		var originGroupCode = $('#origin_group').val();
 		var data = {
 			periodTo:periodTo,
 			periodFrom:periodFrom,
+			originGroupCode:originGroupCode,
 		}
 		$.get('{{ url("fetch/fg_shipment_schedule") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -300,7 +315,7 @@ table.table-bordered > tfoot > tr > th{
 									$(td).css('background-color', 'RGB(204,255,255)')
 								}
 							}
-						} ],
+						}],
 						'paging': true,
 						'lengthChange': true,
 						'searching': true,

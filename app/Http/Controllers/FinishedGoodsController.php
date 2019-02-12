@@ -57,12 +57,13 @@ class FinishedGoodsController extends Controller
 
 	public function index_fg_shipment_schedule(){
 		$periods = DB::table('shipment_schedules')->select('st_month')->distinct()->get();
+		$origin_groups = DB::table('origin_groups')->get();
 
 		return view('finished_goods.shipment_schedule', array(
 			'periods' => $periods,
+			'origin_groups' => $origin_groups,
 		))->with('page', 'FG Shipment Schedule')->with('head', 'Finished Goods');		
 	}
-
 
 	public function fetch_fg_shipment_schedule(Request $request){
 		$shipment_schedules = db::table('shipment_schedules');
@@ -86,7 +87,8 @@ class FinishedGoodsController extends Controller
 		->leftJoin(db::raw('(select shipment_schedule_id, sum(actual) as actual_fstk from flos where status in ("2", "3", "4") group by shipment_schedule_id) as fstk'), 'fstk.shipment_schedule_id', 'shipment_schedules.id')
 		->select(
 			db::raw('date_format(shipment_schedules.st_month, "%b-%Y") as st_month'), 
-			'shipment_schedules.id', 'shipment_schedules.sales_order', 
+			'shipment_schedules.id', 
+			'shipment_schedules.sales_order', 
 			'destinations.destination_shortname', 
 			'materials.material_number', 
 			'materials.material_description', 
@@ -97,8 +99,13 @@ class FinishedGoodsController extends Controller
 			db::raw('if(fstk.actual_fstk is null, 0, fstk.actual_fstk)-shipment_schedules.quantity as diff_fstk'),
 			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'),
 			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y") as bl_date_plan')
-		)
-		->groupBy(
+		);
+
+		if(strlen($request->get('originGroupCode')) > 0){
+			$shipment_schedules = $shipment_schedules->where('materials.origin_group_code', '=', $request->get('originGroupCode'));
+		}
+		
+		$shipment_schedules = $shipment_schedules->groupBy(
 			db::raw('date_format(shipment_schedules.st_month, "%b-%Y")'),
 			'shipment_schedules.id', 
 			'shipment_schedules.sales_order', 
