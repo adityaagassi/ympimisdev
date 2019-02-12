@@ -796,86 +796,72 @@ class ProcessController extends Controller
 
 			if($plc_counter->plc_counter <> $data){
 
-				$id = Auth::id();
+				if(Auth::user()->role_code == "OP-SubAssy-FL"){
+					$id = Auth::id();
 
-				$plc_counter->plc_counter = $data;
+					$plc_counter->plc_counter = $data;
 
-				// $log_process = new LogProcess([
-				// 	'process_code' => $request->get('processCode'),
-				// 	'serial_number' => $request->get('serialNumber'),
-				// 	'model' => $request->get('model'),
-				// 	'manpower' => $request->get('manPower'),
-				// 	'quantity' => 1,
-				// 	'created_by' => $id
-				// ]);
-
-				$log_process = LogProcess::updateOrCreate(
-					[
-						'process_code' => $request->get('processCode'), 
-						'serial_number' => $request->get('serialNumber'),
-						'origin_group_code' => $request->get('originGroupCode')
-					],
-					[
-						'model' => $request->get('model'),
-						'manpower' => $request->get('manPower'),
-						'quantity' => 1,
-						'created_by' => $id,
-						'created_at' => date('Y-m-d H:i:s')
-					]
-				);
-
-				$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
-				$code_generator->index = $code_generator->index+1;
-
-				if ($request->get('category')=='fg'){
-					// $stamp_inventory = new StampInventory([
-					// 	'origin_group_code' => $request->get('originGroupCode'),
-					// 	'model' => $request->get('model'),
-					// 	'quantity' => 1,
-					// 	'process_code' => $request->get('processCode'),
-					// 	'serial_number' => $request->get('serialNumber')
-					// ]);
-
-					$stamp_inventory = StampInventory::updateOrCreate(
+					$log_process = LogProcess::updateOrCreate(
 						[
+							'process_code' => $request->get('processCode'), 
 							'serial_number' => $request->get('serialNumber'),
 							'origin_group_code' => $request->get('originGroupCode')
 						],
 						[
-							'process_code' => $request->get('processCode'), 
 							'model' => $request->get('model'),
-							'quantity' => 1
+							'manpower' => $request->get('manPower'),
+							'quantity' => 1,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s')
 						]
 					);
 
-					$stamp_inventory->save();
+					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+					$code_generator->index = $code_generator->index+1;
+
+					if ($request->get('category')=='fg'){
+
+						$stamp_inventory = StampInventory::updateOrCreate(
+							[
+								'serial_number' => $request->get('serialNumber'),
+								'origin_group_code' => $request->get('originGroupCode')
+							],
+							[
+								'process_code' => $request->get('processCode'), 
+								'model' => $request->get('model'),
+								'quantity' => 1
+							]
+						);
+
+						$stamp_inventory->save();
+					}
+
+					$plc_counter->save();
+					$code_generator->save();
+					$log_process->save();
+
+					if ($request->get('category')=='fg'){
+						$printer_name = 'SUPERMAN';
+
+						$connector = new WindowsPrintConnector($printer_name);
+						$printer = new Printer($connector);
+
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setBarcodeWidth(2);
+						$printer->setBarcodeHeight(64);
+						$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
+						$printer->setTextSize(3, 1);
+						$printer->text($request->get('serialNumber')."\n");
+						$printer->feed(1);
+						$printer->text($request->get('model')."\n");
+						$printer->setTextSize(1, 1);
+						$printer->text(date("d-M-Y H:i:s")."\n");
+						$printer->cut();
+						$printer->close();
+
+					}	
 				}
-
-				$plc_counter->save();
-				$code_generator->save();
-				$log_process->save();
-
-				if ($request->get('category')=='fg'){
-					$printer_name = 'SUPERMAN';
-
-					$connector = new WindowsPrintConnector($printer_name);
-					$printer = new Printer($connector);
-
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setBarcodeWidth(2);
-					$printer->setBarcodeHeight(64);
-					$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
-				// $printer->qrCode($request->get('serialNumber'));
-					$printer->setTextSize(3, 1);
-					$printer->text($request->get('serialNumber')."\n");
-					$printer->feed(1);
-					$printer->text($request->get('model')."\n");
-					$printer->setTextSize(1, 1);
-					$printer->text(date("d-M-Y H:i:s")."\n");
-					$printer->cut();
-					$printer->close();
-
-				}
+				
 				$response = array(
 					'status' => true,
 					'statusCode' => 'stamp',

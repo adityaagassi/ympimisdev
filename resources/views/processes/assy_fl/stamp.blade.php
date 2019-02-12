@@ -76,6 +76,7 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-md-12">
 			<div class="box box-primary">
 				<div class="box-body">
+					<input type="hidden" value="{{ Auth::user()->role_code }}" id="role_code" />
 					<div class="row">
 						<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 							<p style="position: absolute; color: White; top: 45%; left: 35%;">
@@ -241,7 +242,8 @@ table.table-bordered > tfoot > tr > th{
 			$('.select2').select2()
 		});
 		
-		setTimeout(stamp, 500);
+		stamp();
+
 		$('body').toggleClass("sidebar-collapse");
 		fillPlan();
 		fillSerialNumber();
@@ -520,7 +522,7 @@ table.table-bordered > tfoot > tr > th{
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
-					setTimeout(stamp, 500);
+					setTimeout(stamp, 200);
 				}
 				else{
 					audio_error.play();
