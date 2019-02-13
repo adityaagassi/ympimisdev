@@ -1,4 +1,40 @@
 @extends('layouts.master')
+@section('stylesheets')
+<style type="text/css">
+thead input {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+thead>tr>th{
+  text-align:center;
+}
+tbody>tr>td{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table.table-bordered{
+  border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(211,211,211);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
+</style>
+@endsection
 @section('header')
 <section class="content-header">
   <h1>
@@ -30,8 +66,8 @@
             </div> --}}
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
+              <table id="example1" class="table table-bordered table-striped table-hover">
+                <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
                     <th>Shipment Condition Code</th>
                     <th>Shipment Condition Name</th>
@@ -63,6 +99,13 @@
                   </tr>
                   @endforeach
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
               </table>
             </div>
             <!-- /.box-body -->
@@ -98,19 +141,69 @@
 
     @section('scripts')
     <script>
-      $(function () {
-        $('#example1').DataTable({
-          "order": []
-        })
-        $('#example2').DataTable({
-          'paging'      : true,
-          'lengthChange': false,
-          'searching'   : false,
-          'ordering'    : true,
-          'info'        : true,
-          'autoWidth'   : false
-        })
-      })
+
+      jQuery(document).ready(function() {
+        $('#example1 tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+        } );
+        var table = $('#example1').DataTable({
+          "order": [],
+          'dom': 'Bfrtip',
+          'responsive': true,
+          'lengthMenu': [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+          'buttons': {
+            buttons:[
+            {
+              extend: 'pageLength',
+              className: 'btn btn-default',
+            },
+            {
+              extend: 'copy',
+              className: 'btn btn-success',
+              text: '<i class="fa fa-copy"></i> Copy',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-info',
+              text: '<i class="fa fa-file-excel-o"></i> Excel',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'print',
+              className: 'btn btn-warning',
+              text: '<i class="fa fa-print"></i> Print',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            ]
+          }
+        });
+
+        table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#example1 tfoot tr').appendTo('#example1 thead');
+      });
+
       function deleteConfirmation(url, name, id) {
         jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
         jQuery('#modalDeleteButton').attr("href", url+'/'+id);

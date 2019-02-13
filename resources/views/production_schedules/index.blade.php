@@ -6,6 +6,33 @@ thead input {
   padding: 3px;
   box-sizing: border-box;
 }
+thead>tr>th{
+  text-align:center;
+}
+tbody>tr>td{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table.table-bordered{
+  border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(211,211,211);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -15,7 +42,6 @@ thead input {
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-
     <li>
       <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger btn-sm" style="color:white">Delete {{ $page }}s</a>
       &nbsp;
@@ -49,8 +75,8 @@ thead input {
     <div class="col-xs-12">
       <div class="box">
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped">
-            <thead>
+          <table id="example1" class="table table-bordered table-striped table-hover">
+            <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>Material Number</th>
                 <th>Description</th>
@@ -290,15 +316,6 @@ thead input {
       autoclose: true
     });
     $('.select2').select2();
-
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    });
   })
   function deleteConfirmation(url, name, id) {
     jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");

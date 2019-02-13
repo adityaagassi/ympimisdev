@@ -6,6 +6,33 @@ thead input {
   padding: 3px;
   box-sizing: border-box;
 }
+thead>tr>th{
+  text-align:center;
+}
+tbody>tr>td{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table.table-bordered{
+  border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(211,211,211);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -35,8 +62,8 @@ thead input {
     <div class="col-xs-12">
       <div class="box">
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped">
-            <thead>
+          <table id="example1" class="table table-bordered table-striped table-hover">
+            <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>Container Code</th>
                 <th>Container Name</th>
@@ -48,7 +75,7 @@ thead input {
               @foreach($containers as $container)
               <tr>
                 <td style="width: 5%;">{{$container->container_code}}</td>
-                <td style="font-size: 14">{{$container->container_name}}</td>
+                <td>{{$container->container_name}}</td>
                 <td style="width: 10%;">{{ round($container->capacity,4)}}</td>
                 <td>
                   <center>
@@ -111,46 +138,46 @@ thead input {
       $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
     } );
     var table = $('#example1').DataTable({
-     "order": [],
-     'dom': 'Bfrtip',
-     'responsive': true,
-     'lengthMenu': [
-     [ 10, 25, 50, -1 ],
-     [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-     ],
-     'buttons': {
-      buttons:[
-      {
-        extend: 'pageLength',
-        className: 'btn btn-default',
-      },
-      {
-        extend: 'copy',
-        className: 'btn btn-success',
-        text: '<i class="fa fa-copy"></i> Copy',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'excel',
-        className: 'btn btn-info',
-        text: '<i class="fa fa-file-excel-o"></i> Excel',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'print',
-        className: 'btn btn-warning',
-        text: '<i class="fa fa-print"></i> Print',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      ]
-    }
-  });
+      "order": [],
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      }
+    });
 
     table.columns().every( function () {
       var that = this;
@@ -165,11 +192,8 @@ thead input {
     } );
 
     $('#example1 tfoot tr').appendTo('#example1 thead');
-
   });
-  $(function () {
-    
-  })
+  
   function deleteConfirmation(url, name, id) {
     jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
     jQuery('#modalDeleteButton').attr("href", url+'/'+id);

@@ -629,183 +629,173 @@ function fillFloTable(flo_number){
 		{ "data": "action", "sWidth": "4%" }
 		]
 	});
+}
 
-		// t.on('order.dt search.dt', function() {
-		// 	var rows = t.rows().count();
-		// 	t.column(0, {
-		// 		search: 'applied',
-		// 		order: 'applied'
-		// 	}).nodes().each(function(cell, i) {
-		// 		cell.innerHTML = rows--;
-		// 	});
-		// }).draw();
+function fillFloTableSettlement(){
+	var data = {
+		status : '1',
+		originGroup : ['041','042','043'],			
 	}
+	$('#flo_table tfoot th').each( function () {
+		var title = $(this).text();
+		$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+	});
+	var table = $('#flo_table').DataTable( {
+		'paging'      	: true,
+		'lengthChange'	: true,
+		'searching'   	: true,
+		'ordering'    	: true,
+		'order'       : [],
+		'info'       	: true,
+		'autoWidth'		: true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false,
+		"processing": true,
+		"serverSide": true,
+		"ajax": {
+			"type" : "post",
+			"url" : "{{ url("index/flo") }}",
+			"data" : data,
+		},
+		"columns": [
+		{ "data": "flo_number" },
+		{ "data": "destination_shortname" },
+		{ "data": "st_date" },
+		{ "data": "shipment_condition_name" },
+		{ "data": "material_number" },
+		{ "data": "material_description" },
+		{ "data": "actual" },
+		{ "data": "action" }
+		]
+	});
 
-	function fillFloTableSettlement(){
-		var data = {
-			status : '1',
-			originGroup : ['041','042','043'],			
-		}
-		$('#flo_table tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+	table.columns().every( function () {
+		var that = this;
+
+		$( 'input', this.footer() ).on( 'keyup change', function () {
+			if ( that.search() !== this.value ) {
+				that
+				.search( this.value )
+				.draw();
+			}
 		});
-		var table = $('#flo_table').DataTable( {
-			'paging'      	: true,
-			'lengthChange'	: true,
-			'searching'   	: true,
-			'ordering'    	: true,
-			'order'       : [],
-			'info'       	: true,
-			'autoWidth'		: true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "post",
-				"url" : "{{ url("index/flo") }}",
-				"data" : data,
-			},
-			"columns": [
-			{ "data": "flo_number" },
-			{ "data": "destination_shortname" },
-			{ "data": "st_date" },
-			{ "data": "shipment_condition_name" },
-			{ "data": "material_number" },
-			{ "data": "material_description" },
-			{ "data": "actual" },
-			{ "data": "action" }
-			]
-		});
+	});
 
-		table.columns().every( function () {
-			var that = this;
+	$('#flo_table tfoot tr').appendTo('#flo_table thead');
+}
 
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
+function deleteConfirmation(id){
+	var flo_number = $("#flo_number").val(); 
+	var data = {
+		id: id,
+		flo_number : flo_number
+	};
+	if(confirm("Are you sure you want to delete this data?")){
+		$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
 
-		$('#flo_table tfoot tr').appendTo('#flo_table thead');
-	}
-
-	function deleteConfirmation(id){
-		var flo_number = $("#flo_number").val(); 
-		var data = {
-			id: id,
-			flo_number : flo_number
-		};
-		if(confirm("Are you sure you want to delete this data?")){
-			$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-
-				if(xhr.status == 200){
-					if(result.status){
-						$('#flo_detail_table').DataTable().ajax.reload();
-						$("#serial_number").prop('disabled', true);
-						$("#material_number").prop('disabled', false);
-						$("#serial_number").val("");
-						$("#material_number").val("");
-						$("#material_number").focus();
-						openSuccessGritter('Success!', result.message);
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						audio_error.play();
-					}
+			if(xhr.status == 200){
+				if(result.status){
+					$('#flo_detail_table').DataTable().ajax.reload();
+					$("#serial_number").prop('disabled', true);
+					$("#material_number").prop('disabled', false);
+					$("#serial_number").val("");
+					$("#material_number").val("");
+					$("#material_number").focus();
+					openSuccessGritter('Success!', result.message);
 				}
 				else{
-					openErrorGritter('Error!', 'Disconnected from server');
+					openErrorGritter('Error!', result.message);
 					audio_error.play();
 				}
-			});
-		}
-		else{
-			return false;
-		}
+			}
+			else{
+				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
+			}
+		});
 	}
-
-	function doublecheck(){
-		if($('#role_code').val() == 'OP-Assy-SX'){
-			$("#material_number").prop('disabled', false);
-			$("#serial_number").prop('disabled', true);
-			$("#serial_number").val("");
-			$("#material_number").val("");
-			$("#material_number").focus();
-		}
-		else{
-			$("#serial_number").prop('disabled', true);
-			$("#material_number2").prop('disabled', false);
-			$("#material_number2").focus();
-		}
+	else{
+		return false;
 	}
+}
 
-	function cancelConfirmation(id){
-		var flo_number = $("#flo_number_settlement").val(); 
-		var data = {
-			id: id,
-			flo_number : flo_number,
-			status : '1',
-		};
-		if(confirm("Are you sure you want to cancel this settlement?")){
-			$.post('{{ url("cancel/flo_settlement") }}', data, function(result, status, xhr){
-				if(xhr.status == 200){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#flo_table').DataTable().ajax.reload();
-						$("#flo_number_settlement").val("");
-						$("#flo_number_settlement").focus();					
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						audio_error.play();
-					}
-				}
-				else{
-					openErrorGritter('Error!', 'Disconnected from server');
-					audio_error.play();
-				}
-			});
-		}
-		else{
-			return false;
-		}
-	}
-
-	function refresh(){
-		$("#flo_number_reprint").val("").change();
+function doublecheck(){
+	if($('#role_code').val() == 'OP-Assy-SX'){
+		$("#material_number").prop('disabled', false);
+		$("#serial_number").prop('disabled', true);
 		$("#serial_number").val("");
+		$("#material_number").val("");
+		$("#material_number").focus();
+	}
+	else{
+		$("#serial_number").prop('disabled', true);
+		$("#material_number2").prop('disabled', false);
+		$("#material_number2").focus();
+	}
+}
+
+function cancelConfirmation(id){
+	var flo_number = $("#flo_number_settlement").val(); 
+	var data = {
+		id: id,
+		flo_number : flo_number,
+		status : '1',
+	};
+	if(confirm("Are you sure you want to cancel this settlement?")){
+		$.post('{{ url("cancel/flo_settlement") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					$('#flo_table').DataTable().ajax.reload();
+					$("#flo_number_settlement").val("");
+					$("#flo_number_settlement").focus();					
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+				}
+			}
+			else{
+				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
+			}
+		});
+	}
+	else{
+		return false;
+	}
+}
+
+function refresh(){
+	$("#flo_number_reprint").val("").change();
+	$("#serial_number").val("");
+	$("#serial_number2").prop('disabled', true);
+	$("#material_number2").prop('disabled', true);
+	$("#serial_number").prop('disabled', true);
+	$("#flo_number").prop('disabled', true);
+	$("#material_number").val('');
+	$('#flo_number').val('');
+	$("#flo_number_settlement").val('');
+	$("#material_number").prop('disabled', false);
+	$("#material_number").focus();
+	if($('#role_code').val() == 'OP-Assy-SX'){
+		$("#serial_number2").hide();
+		$("#material_number2").hide();
+		$("#icon-serial2").hide();
+		$("#icon-material2").hide();
+		$("#icon-box2").hide();
+	}
+	else{
 		$("#serial_number2").prop('disabled', true);
 		$("#material_number2").prop('disabled', true);
-		$("#serial_number").prop('disabled', true);
-		$("#flo_number").prop('disabled', true);
-		$("#material_number").val('');
-		$('#flo_number').val('');
-		$("#flo_number_settlement").val('');
-		$("#material_number").prop('disabled', false);
-		$("#material_number").focus();
-		if($('#role_code').val() == 'OP-Assy-SX'){
-			$("#serial_number2").hide();
-			$("#material_number2").hide();
-			$("#icon-serial2").hide();
-			$("#icon-material2").hide();
-			$("#icon-box2").hide();
-		}
-		else{
-			$("#serial_number2").prop('disabled', true);
-			$("#material_number2").prop('disabled', true);
-			$("#serial_number2").val('');
-			$("#material_number2").val('');
-		}
+		$("#serial_number2").val('');
+		$("#material_number2").val('');
 	}
+}
 
 </script>
 @stop
