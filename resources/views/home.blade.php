@@ -188,7 +188,7 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Display (表示)</span>
                             <br>
-                            <a href="" target="blank">
+                            <a href="{{ url("/index/dp_production_result") }}" target="blank">
                                 <i class="fa fa-caret-right"></i> Daily Production Result<br>(日常生産実績)
                             </a>
                         </td>
