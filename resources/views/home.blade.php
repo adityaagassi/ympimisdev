@@ -33,16 +33,20 @@ table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
+.marquee {
+    height: 50px;
+    overflow: hidden;
+}
 </style>
 @stop
 @section('header')
-<section class="content-header" style="text-align: center; padding: 0; margin:0;">
-    <div class="col-md-12" style="padding-top: 0;">
+<section class="content-header" style="padding: 0; margin:0;">
+    <div class="marquee" data-duplicated='true' data-direction='up' style="text-align: center;">
         <span style="font-size: 22px;" class="text-purple"><span style="font-size:26px;"><b>M</b></span>anufactur<span style="font-size:27px;"><b>i</b></span>ng <span style="font-size:26px;"><b>R</b></span>ealtime <span style="font-size:26px;"><b>A</b></span>cquisition of <span style="font-size:26px;"><b>I</b></span>nformation</span>
-    </div>
-    <div class="col-md-12" style="padding-bottom: 0;">
+        <br>
         <b><span style="font-size: 26px;" class="text-purple">製 造 の リ ア ル タ イ ム 情 報</span></b>
-    </div>
+    </p>
+</div>
 </section>
 @endsection
 
@@ -200,3 +204,14 @@ table.table-bordered > tfoot > tr > th{
 </section>
 
 @stop
+@section('scripts')
+<script src="{{ url("js/jquery.marquee.min.js")}}"></script>
+<script>
+    jQuery(document).ready(function() {
+        $('.marquee').marquee({
+            direction: 'up'
+        });
+    });
+
+</script>
+@endsection

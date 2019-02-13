@@ -204,51 +204,51 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
   jQuery(document).ready(function() {
-    $('#example1 tfoot th').each( function () {
+    $('#example1 tfoot th').each(function(){
       var title = $(this).text();
       $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="4"/>' );
-    } );
+    });
     var table = $('#example1').DataTable({
-     "order": [],
-     'dom': 'Bfrtip',
-     'responsive': true,
-     'lengthMenu': [
-     [ 10, 25, 50, -1 ],
-     [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-     ],
-     'buttons': {
-      buttons:[
-      {
-        extend: 'pageLength',
-        className: 'btn btn-default',
-      },
-      {
-        extend: 'copy',
-        className: 'btn btn-success',
-        text: '<i class="fa fa-copy"></i> Copy',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'excel',
-        className: 'btn btn-info',
-        text: '<i class="fa fa-file-excel-o"></i> Excel',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      {
-        extend: 'print',
-        className: 'btn btn-warning',
-        text: '<i class="fa fa-print"></i> Print',
-        exportOptions: {
-          columns: ':not(.notexport)'
-        }
-      },
-      ]
-    }
-  });
+      "order": [],
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      }
+    });
 
     table.columns().every( function () {
       var that = this;
@@ -265,17 +265,7 @@ table.table-bordered > tfoot > tr > th{
     $('#example1 tfoot tr').appendTo('#example1 thead');
 
   });
-  $(function () {
-
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
+  
   function deleteConfirmation(url, name, id) {
     jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
     jQuery('#modalDeleteButton').attr("href", url+'/'+id);
