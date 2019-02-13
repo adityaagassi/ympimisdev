@@ -129,7 +129,7 @@
       @endif
 
       
-       @if(in_array('S11', $navs))
+      @if(in_array('S11', $navs))
       @if(isset($page) && $page == "Check Sheet")<li class="active">@else<li>@endif
         <a href="{{ url("/index/CheckSheet") }}"><i class="fa fa-calendar-check-o"></i> <span>Check Sheet</span></a>
       </li>
@@ -257,6 +257,9 @@
           </li>
           @if(isset($page) && $page == "FG Container Departure")<li class="active">@else<li>@endif
             <a href="{{ url("/index/fg_container_departure") }}"><i class="fa fa-line-chart"></i> Container Departure</a>
+          </li>
+          @if(isset($page) && $page == "FG Shipment Result")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/fg_shipment_result") }}"><i class="fa fa-line-chart"></i> Shipment Result</a>
           </li>
           @if(isset($page) && $page == "FG Shipment Schedule")<li class="active">@else<li>@endif
             <a href="{{ url("/index/fg_shipment_schedule") }}"><i class="fa fa-table"></i> Shipment Schedule Data</a>

@@ -1,6 +1,31 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
+thead>tr>th{
+	text-align:center;
+}
+tbody>tr>td{
+	text-align:center;
+}
+tfoot>tr>th{
+	text-align:center;
+}
+td:hover {
+	overflow: visible;
+}
+table.table-bordered{
+	border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+	border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+	border:1px solid rgb(211,211,211);
+}
+table.table-bordered > tfoot > tr > th{
+	border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
 </style>
 @stop
 
@@ -8,7 +33,6 @@
 <section class="content-header">
 	<h1>
 		Container Departure <span class="text-purple">コンテナー出発</span>
-		{{-- <small>By Each Location <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
@@ -81,21 +105,20 @@
 				</button>
 				<h4 class="modal-title"></h4>
 				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover">
-						<thead>
+					<table class="table table-hover table-striped table-bordered">
+						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="font-size: 14">Cont. ID</th>
-								<th style="font-size: 14">Dest.</th>
-								<th style="font-size: 14">Container No.</th>
-								<th style="font-size: 14">Ship. Date</th>
-								<th style="font-size: 14">Evidence Att.</th>
+								<th style="width:10%;">Cont. ID</th>
+								<th style="width:5%;">Dest.</th>
+								<th style="width:20%;">Container No.</th>
+								<th style="width:15%;">Ship. Date</th>
+								<th style="width:10%;">Evidence Att.</th>
 							</tr>
 						</thead>
 						<tbody id="tableBody">
 						</tbody>
 					</table>
 				</div>
-				{{-- <div class="modal-footer" id="modalFooter"></div> --}}
 			</div>
 		</div>
 	</div>
@@ -162,7 +185,6 @@
 					$('#boxTitle').html('<i class="fa fa-info-circle"></i><h4 class="box-title">Containeer Plan: <b>'+ result.total_plan + ' unit(s)</b> Container Departed: <b>'+ result.total_actual + ' unit(s)</b>');
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					var data = result.jsonData1;
-					// data = data.reverse()
 					var seriesData = [];
 					var xCategories = [];
 					var i, cat;

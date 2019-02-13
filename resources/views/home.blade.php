@@ -34,7 +34,7 @@ table.table-bordered > tfoot > tr > th{
 }
 #loading, #error { display: none; }
 .marquee {
-    height: 50px;
+    height: 35px;
     overflow: hidden;
 }
 </style>
@@ -45,8 +45,7 @@ table.table-bordered > tfoot > tr > th{
         <span style="font-size: 22px;" class="text-purple"><span style="font-size:26px;"><b>M</b></span>anufactur<span style="font-size:27px;"><b>i</b></span>ng <span style="font-size:26px;"><b>R</b></span>ealtime <span style="font-size:26px;"><b>A</b></span>cquisition of <span style="font-size:26px;"><b>I</b></span>nformation</span>
         <br>
         <b><span style="font-size: 26px;" class="text-purple">製 造 の リ ア ル タ イ ム 情 報</span></b>
-    </p>
-</div>
+    </div>
 </section>
 @endsection
 
@@ -107,7 +106,7 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">WIP Monitoring (仕掛品監視)</span>
                             <br>
-                            <a href="{{ url("/index/process_assy_fl") }}" target="blank">
+                            <a href="{{ url("/index/process_assy_fl") }}">
                                 <i class="fa fa-caret-right"></i> FL Subassy-Assembly<br>(フルート仮組~組立)
                             </a>
                         </td>
@@ -140,11 +139,11 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
-                            <a href="{{ url("/index/fg_production") }}" target="blank">
+                            <a href="{{ url("/index/fg_production") }}">
                                 <i class="fa fa-caret-right"></i> Production Result<br>(生産実績)
                             </a>
                             <br>
-                            <a href="{{ url("/index/fg_stock") }}" target="blank">
+                            <a href="{{ url("/index/fg_stock") }}">
                                 <i class="fa fa-caret-right"></i> Finished Goods Stock<br>(完成品在庫)
                             </a>
                         </td>
@@ -153,15 +152,19 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                             <br>
-                            <a href="{{ url("/index/fg_container_departure") }}" target="blank">
-                                <i class="fa fa-caret-right"></i> Container Departure<br>(コンテナー出発)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/fg_shipment_schedule") }}" target="blank">
+                            <a href="{{ url("/index/fg_shipment_schedule") }}">
                                 <i class="fa fa-caret-right"></i> Shipment Schedule Data<br>(出荷スケジュール)
                             </a>
                             <br>
-                            <a href="{{ url("/index/fg_traceability") }}" target="blank">
+                            <a href="{{ url("/index/fg_shipment_result") }}">
+                                <i class="fa fa-caret-right"></i> Shipment Result<br>(出荷結果)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/fg_container_departure") }}">
+                                <i class="fa fa-caret-right"></i> Container Departure<br>(コンテナー出発)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/fg_traceability") }}">
                                 <i class="fa fa-caret-right"></i> Traceability<br>(完成品追跡)
                             </a>
                         </td>
@@ -170,11 +173,11 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
                             <br>
-                            <a href="{{ url("/index/fg_weekly_summary") }}" target="blank">
+                            <a href="{{ url("/index/fg_weekly_summary") }}">
                                 <i class="fa fa-caret-right"></i> Weekly Summary<br>(週次まとめ)
                             </a>
                             <br>
-                            <a href="{{ url("/index/fg_monthly_summary") }}" target="blank">
+                            <a href="{{ url("/index/fg_monthly_summary") }}">
                                 <i class="fa fa-caret-right"></i> Monthly Summary<br>(月次まとめ)
                             </a>
                         </td>
@@ -183,7 +186,7 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Chorei (朝礼)</span>
                             <br>
-                            <a href="{{ url("/index/ch_daily_production_result") }}" target="blank">
+                            <a href="{{ url("/index/ch_daily_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Production Summary<br>(生産まとめ)
                             </a>
                         </td>
@@ -192,7 +195,7 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">Display (表示)</span>
                             <br>
-                            <a href="{{ url("/index/dp_production_result") }}" target="blank">
+                            <a href="{{ url("/index/dp_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Daily Production Result<br>(日常生産実績)
                             </a>
                         </td>
