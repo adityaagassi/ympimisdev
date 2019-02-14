@@ -27,21 +27,27 @@ table.table-bordered > thead > tr > th{
     padding:0;
 }
 table.table-bordered > tbody > tr > td{
-    border:1px solid rgb(211,211,211);
+    border:1px solid rgb(180,180,180);
+    font-size: 13px;
+    background-color: rgb(240,240,240);
 }
 table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
 .marquee {
-    height: 35px;
+    width: 100%;
     overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    height: 50px;
 }
 </style>
 @stop
 @section('header')
 <section class="content-header" style="padding: 0; margin:0;">
-    <div class="marquee" data-duplicated='true' data-direction='up' style="text-align: center;">
+    <div class="marquee">
         <span style="font-size: 22px;" class="text-purple"><span style="font-size:26px;"><b>M</b></span>anufactur<span style="font-size:27px;"><b>i</b></span>ng <span style="font-size:26px;"><b>R</b></span>ealtime <span style="font-size:26px;"><b>A</b></span>cquisition of <span style="font-size:26px;"><b>I</b></span>nformation</span>
         <br>
         <b><span style="font-size: 26px;" class="text-purple">製 造 の リ ア ル タ イ ム 情 報</span></b>
@@ -55,7 +61,7 @@ table.table-bordered > tfoot > tr > th{
     <div class="row">
         <div class="col-md-3">
             <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 18px;">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 16px;">
                     <tr>
                         <th>Production Support<br/>生産支援モニ</th>
                     </tr>
@@ -66,10 +72,10 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">HR Management (人材管理)</span>
                             <br>
                             <a href="http://172.17.128.4/myhris/home/presensi" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Attendance<br>(勤怠管理)
+                                <i class="fa fa-caret-right"></i> Manpower Attendance (勤怠管理)
                             </a><br>
                             <a href="http://172.17.128.4/myhris/home/karyawan_graph" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Database<br>(社員構成)
+                                <i class="fa fa-caret-right"></i> Manpower Database (社員構成)
                             </a>
                         </td>
                     </tr>
@@ -78,7 +84,7 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Plant Maintenance (工場保全管理)</span>
                             <br>
                             <a href="http://172.17.129.99/zed/dashboard/awal" target="blank">
-                                <i class="fa fa-caret-right"></i> Overall Equipment Efficiency<br>(稼働率)
+                                <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                             </a>
                         </td>
                     </tr>
@@ -107,7 +113,7 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">WIP Monitoring (仕掛品監視)</span>
                             <br>
                             <a href="{{ url("/index/process_assy_fl") }}">
-                                <i class="fa fa-caret-right"></i> FL Subassy-Assembly<br>(フルート仮組~組立)
+                                <i class="fa fa-caret-right"></i> FL Subassy-Assembly (フルート仮組~組立)
                             </a>
                         </td>
                     </tr>
@@ -140,11 +146,11 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_production") }}">
-                                <i class="fa fa-caret-right"></i> Production Result<br>(生産実績)
+                                <i class="fa fa-caret-right"></i> Production Result (生産実績)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_stock") }}">
-                                <i class="fa fa-caret-right"></i> Finished Goods Stock<br>(完成品在庫)
+                                <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
                             </a>
                         </td>
                     </tr>
@@ -153,19 +159,20 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_shipment_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Shipment Schedule Data<br>(出荷スケジュール)
+                                <i class="fa fa-caret-right"></i> Shipment Schedule Data
+                                <br>(出荷スケジュール)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_shipment_result") }}">
-                                <i class="fa fa-caret-right"></i> Shipment Result<br>(出荷結果)
+                                <i class="fa fa-caret-right"></i> Shipment Result (出荷結果)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_container_departure") }}">
-                                <i class="fa fa-caret-right"></i> Container Departure<br>(コンテナー出発)
+                                <i class="fa fa-caret-right"></i> Container Departure (コンテナー出発)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_traceability") }}">
-                                <i class="fa fa-caret-right"></i> Traceability<br>(完成品追跡)
+                                <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
                             </a>
                         </td>
                     </tr>
@@ -174,11 +181,11 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_weekly_summary") }}">
-                                <i class="fa fa-caret-right"></i> Weekly Summary<br>(週次まとめ)
+                                <i class="fa fa-caret-right"></i> Weekly Summary (週次まとめ)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_monthly_summary") }}">
-                                <i class="fa fa-caret-right"></i> Monthly Summary<br>(月次まとめ)
+                                <i class="fa fa-caret-right"></i> Monthly Summary (月次まとめ)
                             </a>
                         </td>
                     </tr>
@@ -187,7 +194,7 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Chorei (朝礼)</span>
                             <br>
                             <a href="{{ url("/index/ch_daily_production_result") }}">
-                                <i class="fa fa-caret-right"></i> Production Summary<br>(生産まとめ)
+                                <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                             </a>
                         </td>
                     </tr>
@@ -196,7 +203,7 @@ table.table-bordered > tfoot > tr > th{
                             <span style="font-weight: bold;">Display (表示)</span>
                             <br>
                             <a href="{{ url("/index/dp_production_result") }}">
-                                <i class="fa fa-caret-right"></i> Daily Production Result<br>(日常生産実績)
+                                <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
                             </a>
                         </td>
                     </tr>
@@ -212,7 +219,11 @@ table.table-bordered > tfoot > tr > th{
 <script>
     jQuery(document).ready(function() {
         $('.marquee').marquee({
-            direction: 'up'
+            duration: 4000,
+            gap: 1,
+            delayBeforeStart: 0,
+            direction: 'up',
+            duplicated: true
         });
     });
 

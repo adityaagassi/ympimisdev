@@ -34,6 +34,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		Shipment Result <span class="text-purple">出荷結果</span>
+		<small>Based on ETD YMPI <span class="text-purple">???</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
@@ -48,7 +49,7 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-body">
 					<div class="col-md-3 col-md-offset-3">
 						<div class="form-group">
-							<label>Ship. Date From</label>
+							<label>Export Date From</label>
 							<div class="input-group date">
 								<div class="input-group-addon" style="background-color: rgba(126,86,134,.7);">
 									<i class="fa fa-calendar"></i>
@@ -59,7 +60,7 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
-							<label>Ship. Date To</label>
+							<label>Export Date To</label>
 							<div class="input-group date">
 								<div class="input-group-addon" style="background-color: rgba(126,86,134,.7);">
 									<i class="fa fa-calendar"></i>
