@@ -21,6 +21,7 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
 	border:1px solid rgb(211,211,211);
+	padding: 0;
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid rgb(211,211,211);
@@ -44,9 +45,6 @@ table.table-bordered > tfoot > tr > th{
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box">
-				<div class="box-header with-border" id="boxTitle">
-					asdasd
-				</div>
 				<div class="box-body">
 					<div class="col-md-3 col-md-offset-3">
 						<div class="form-group">
@@ -88,27 +86,36 @@ table.table-bordered > tfoot > tr > th{
 	</div>
 </section>
 
-<div class="modal fade" id="modalContainerDeparture">
-	<div class="modal-dialog modal-md">
+<div class="modal fade" id="modalResult">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title"></h4>
+				<h4 class="modal-title" id="modalResultTitle"></h4>
 				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover table-striped table-bordered">
+					<table class="table table-hover table-bordered table-striped" id="tableModal">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width:10%;">Cont. ID</th>
-								<th style="width:5%;">Dest.</th>
-								<th style="width:20%;">Container No.</th>
-								<th style="width:15%;">Ship. Date</th>
-								<th style="width:10%;">Evidence Att.</th>
+								<th style="width: 8%;">Material</th>
+								<th style="width: 40%;">Description</th>
+								<th style="width: 8%;">Dest.</th>
+								<th style="width: 12%;">Plan</th>
+								<th style="width: 12%;">Actual</th>
+								<th style="width: 12%;">Diff</th>
 							</tr>
 						</thead>
-						<tbody id="tableBody">
+						<tbody id="modalResultBody">
 						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th>Total</th>
+							<th></th>
+							<th></th>
+							<th id="modalResultTotal1"></th>
+							<th id="modalResultTotal2"></th>
+							<th id="modalResultTotal3"></th>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -207,36 +214,34 @@ table.table-bordered > tfoot > tr > th{
 						}
 					}
 
-					var yAxisLabels = [0,25,50,75,110];
+					var yAxisLabels = [0,25,50,75,101];
 					Highcharts.chart('container', {
 						chart: {
 							type: 'column'
 						},
 						title: {
-							text: 'Column chart with negative values'
+							text: null
 						},
 						xAxis: {
 							categories: xCategories,
-							type: 'category'
+							type: 'category',
+							gridLineWidth: 5,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								// rotation: -40,
+								style: {
+									color: 'rgba(75, 30, 120)'
+									// fontWeight: 'bold'
+								}
+							}
 						},
 						yAxis: {
 							min: 0,
 							title: {
-								text: 'Total Container Departed (unit)'
+								enabled:false,
 							},
 							tickPositioner: function() {
 								return yAxisLabels;
-							},
-							stackLabels: {
-								style: {
-									color: 'black'
-								},
-								enabled: true,
-								formatter: function() {
-
-									return 'asdasd';
-
-								}
 							},
 							labels: {
 								enabled:false
@@ -248,28 +253,16 @@ table.table-bordered > tfoot > tr > th{
 						plotOptions: {
 							column:{
 								size: '95%',
-								borderWidth: 0,
-								events: {
-									legendItemClick: function () {
-										return false; 
-									}
-								},
-								animation:{
-									duration:0
-								},
-								dataLabels:{
-									enabled:true,
-									formatter: function() {
-										return this.y+'%';
-									}
-
-								}
+								borderWidth: 0
 							},
 							series:{
-								pointPadding: 0.98,
-								groupPadding: 0.98,
-								borderWidth: 0.98,
+								pointPadding: 0.96,
+								groupPadding: 0.96,
+								borderWidth: 0.96,
 								shadow: false,
+								color: 'rgba(126,86,134,.7)',
+								borderColor: '#303030',
+								cursor: 'pointer',
 								dataLabels: {
 									enabled: true,
 									rotation: -90,
@@ -280,10 +273,17 @@ table.table-bordered > tfoot > tr > th{
 									y: 10,
 									style: {
 										fontSize: '1vw',
-										color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+										color: 'black',
+										textOutline: false
+									}
+								},
+								point: {
+									events: {
+										click: function () {
+											fillModal(this.category, this.series.name);
+										}
 									}
 								}
-
 							}
 						},
 						tooltip: {
@@ -292,7 +292,7 @@ table.table-bordered > tfoot > tr > th{
 								this.series.name +': '+ this.y +'%';
 							}
 						},
-						series: seriesData,
+						series: seriesData
 					});
 				}
 				else{
@@ -302,6 +302,76 @@ table.table-bordered > tfoot > tr > th{
 			else{
 				alert('Disconnected from server');
 			}
+		});
+	}
+
+	function fillModal(date, hpl){
+		var data = {
+			date:date,
+			hpl:hpl
+		};
+		$.get('{{ url("fetch/tb_shipment_result") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					$('#tableModal').DataTable().destroy();
+					$('#modalResultTitle').html('');
+					$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+					$('#modalResultBody').html('');
+					var resultData = '';
+					var resultTotal1 = 0;
+					var resultTotal2 = 0;
+					var resultTotal3 = 0;
+					$.each(result.shipment_results, function(key, value) {
+						resultData += '<tr>';
+						resultData += '<td>'+ value.material_number +'</td>';
+						resultData += '<td>'+ value.material_description +'</td>';
+						resultData += '<td>'+ value.destination_shortname +'</td>';
+						resultData += '<td>'+ value.plan.toLocaleString() +'</td>';
+						resultData += '<td>'+ value.actual.toLocaleString() +'</td>';
+						resultData += '<td style="font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
+						resultData += '</tr>';
+						resultTotal1 += value.plan;
+						resultTotal2 += value.actual;
+						resultTotal3 += value.diff;
+					});
+					$('#modalResultBody').append(resultData);
+					$('#modalResultTotal1').html('');
+					$('#modalResultTotal1').append(resultTotal1.toLocaleString());
+					$('#modalResultTotal2').html('');
+					$('#modalResultTotal2').append(resultTotal2.toLocaleString());
+					$('#modalResultTotal3').html('');
+					$('#modalResultTotal3').append(resultTotal3.toLocaleString());
+					$('#tableModal').DataTable({
+						"paging": false,
+						'searching': false,
+						'order':[],
+						'info': false,
+						"columnDefs": [{
+							"targets": 5,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData <  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						}]
+					});
+					$('#modalResult').modal('show');
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				alert('Disconnected from server');
+			}
+
 		});
 	}
 </script>

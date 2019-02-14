@@ -57,7 +57,7 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-xs-4">
 			{{-- <div class="box box-widget"> --}}
 				{{-- <div class="box-body"> --}}
-					<table id="tableActual" class="table table-hover table-bordered" style="width: 100%;">
+					<table id="tableActual" class="table table-hover table-bordered">
 						{{-- <div class="scroll-container"> --}}
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -212,36 +212,35 @@ table.table-bordered > tfoot > tr > th{
 					$('#tableBody').html("");
 					var tableData = '';
 					$.each(result.tableData, function(key, value) {
-						var caret = '';
 						var diff = '';
 						diff = value.actual-(value.plan+(-value.debt));
-						if(value.plan+(-value.debt) == value.actual){
-							caret = '<span style="font-weight: bold;" class="text-green">&nbsp;'+ diff +'&nbsp;</span>';
-						}
-						if(value.plan+(-value.debt) > value.actual){
-							caret = '<span style="font-weight: bold;" class="text-red">&nbsp;'+ diff +'&nbsp;</span>';
-						}
-						if(value.plan+(-value.debt) < value.actual){
-							caret = '<span style="font-weight: bold;" class="text-yellow">&nbsp;+'+ diff +'&nbsp;</span>';
-						}
 						tableData += '<tr>';
 						tableData += '<td style="width: 40%">'+ value.model +'</td>';
 						tableData += '<td style="width: 15%">'+ value.debt +'</td>';
 						tableData += '<td style="width: 15%">'+ value.plan +'</td>';
 						tableData += '<td style="width: 15%">'+ value.actual +'</td>';
-						tableData += '<td style="width: 15%">'+ caret +'</td>';
+						tableData += '<td style="width: 15%">'+ diff +'</td>';
 						tableData += '</tr>';
 					});
 					$('#tableBody').append(tableData);
 					$('#tableActual').DataTable({
 						"scrollY": "440px",
-						// 	"scrollCollapse": true,
 						"paging": false,
-						// 	'lengthChange': false,
 						'searching': false,
-						'ordering': false,
-						'order': [],
+						'order':[[4, "asc"]],
 						'info': false,
+						"columnDefs": [{
+							"targets": 4,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData <  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						}]
 					});
 					var totalPlan = 0;
 					var totalActual = 0;

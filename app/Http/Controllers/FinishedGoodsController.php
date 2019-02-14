@@ -87,20 +87,8 @@ class FinishedGoodsController extends Controller
 		else{
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
 		}
-
-		// $query = "select a.st_date, round((actual_FL/plan_FL)*100, 2) as FL, round((actual_CL/plan_CL)*100, 2) as CL, round((actual_SX/plan_SX)*100, 2) as SX, round((actual_RC/plan_RC)*100, 2) as RC, round((actual_PN/plan_PN)*100, 2) as PN, round((actual_VN/plan_VN)*100, 2) as VN from
-		// (
-		// select shipment_schedules.st_date, sum(if(materials.origin_group_code = '041', flos.actual, 0)) as actual_FL, sum(if(materials.origin_group_code = '042', flos.actual, 0)) as actual_CL, sum(if(materials.origin_group_code = '043', flos.actual, 0)) as actual_SX, sum(if(materials.origin_group_code = '072', flos.actual, 0)) as actual_RC, sum(if(materials.origin_group_code = '073', flos.actual, 0)) as actual_PN, sum(if(materials.origin_group_code = '027', flos.actual, 0)) as actual_VN from flos 
-		// left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id 
-		// left join materials on materials.material_number = shipment_schedules.material_number
-		// where materials.category = 'FG'
-		// group by shipment_schedules.st_date
-		// ) as a
-		// left join (select shipment_schedules.st_date, sum(if(materials.origin_group_code = '041', shipment_schedules.quantity, 0)) as plan_FL, sum(if(materials.origin_group_code = '042', shipment_schedules.quantity, 0)) as plan_CL, sum(if(materials.origin_group_code = '043', shipment_schedules.quantity, 0)) as plan_SX, sum(if(materials.origin_group_code = '072', shipment_schedules.quantity, 0)) as plan_RC, sum(if(materials.origin_group_code = '073', shipment_schedules.quantity, 0)) as plan_PN, sum(if(materials.origin_group_code = '027', shipment_schedules.quantity, 0)) as plan_VN from shipment_schedules left join materials on materials.material_number = shipment_schedules.material_number where materials.category = 'FG' group by shipment_schedules.st_date) as plan on plan.st_date = a.st_date
-		// where a.st_date >= '" . $datefrom . "' and a.st_date <= '" . $dateto . "'
-		// ";
 		
-		$query = "select b.st_date, b.hpl, round((a.actual/b.plan)*100,1) as actual from
+		$query = "select date_format(b.st_date, '%d-%b-%y') as st_date, b.hpl, round((a.actual/b.plan)*100,1) as actual from
 		(
 		select shipment_schedules.st_date, materials.hpl, sum(flos.actual) as actual from flos 
 		left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id
@@ -112,10 +100,11 @@ class FinishedGoodsController extends Controller
 		(
 		select shipment_schedules.st_date, materials.hpl, sum(shipment_schedules.quantity) as plan from shipment_schedules
 		left join materials on materials.material_number = shipment_schedules.material_number
+		where materials.category = 'FG'
 		group by  shipment_schedules.st_date, materials.hpl
 		) as b on b.st_date = a.st_date and a.hpl = b.hpl
 		where b.st_date >= '" . $datefrom . "' and b.st_date <= '" . $dateto . "'
-		";
+		order by st_date asc, hpl desc";
 
 		$shipment_results = db::select($query);
 
@@ -125,6 +114,36 @@ class FinishedGoodsController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	public function fetch_tb_shipment_result(Request $request){
+		$st_date = date('Y-m-d', strtotime($request->get('date')));
+
+		$query = "
+		select a.material_number, a.material_description, a.destination_shortname, a.plan, b.actual, b.actual-a.plan as diff from
+		(
+		select shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname, sum(shipment_schedules.quantity) as plan from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join destinations on destinations.destination_code = shipment_schedules.destination_code
+		where materials.category = 'FG' and shipment_schedules.st_date = '" .$st_date . "' and materials.hpl = '" . $request->get('hpl') . "'
+		group by shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname
+		) as a
+		left join
+		(
+		select shipment_schedules.st_date, shipment_schedules.material_number, shipment_schedules.destination_code, sum(flos.actual) as actual from flos
+		left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id
+		group by shipment_schedules.st_date, shipment_schedules.material_number, shipment_schedules.destination_code
+		) as b 
+		on a.st_date = b.st_date and a.material_number = b.material_number and a.destination_code = b.destination_code
+		order by diff asc";
+
+		$shipment_results = DB::select($query);
+
+		$response = array(
+			'status' => true,
+			'shipment_results' => $shipment_results,
+		);
+		return Response::json($response);
+	} 
 
 	public function fetch_fg_shipment_schedule(Request $request){
 		$shipment_schedules = db::table('shipment_schedules');

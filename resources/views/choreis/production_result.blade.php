@@ -146,12 +146,12 @@ table.table-bordered > tfoot > tr > th{
 				</button>
 				<h4 class="modal-title" id="modalResultTitle"></h4>
 				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover table-bordered">
+					<table class="table table-hover table-bordered table-striped">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="font-size: 14">Material</th>
-								<th style="font-size: 14">Description</th>
-								<th style="font-size: 14">Quantity</th>
+								<th>Material</th>
+								<th>Description</th>
+								<th>Quantity</th>
 							</tr>
 						</thead>
 						<tbody id="modalResultBody">
