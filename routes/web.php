@@ -331,12 +331,15 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::post('add/CheckSheet', 'CheckSheet@add');
 	Route::post('addDetail/CheckSheet', 'CheckSheet@addDetail');
 	Route::post('addDetail2/CheckSheet', 'CheckSheet@addDetail2');
+	Route::post('nomor/CheckSheet', 'CheckSheet@nomor');
+	Route::post('bara/CheckSheet', 'CheckSheet@bara');
+	Route::post('edit/CheckSheet/{id}', 'CheckSheet@edit');
+	Route::post('marking/CheckSheet', 'CheckSheet@marking');
 	Route::post('importDetail/CheckSheet', 'CheckSheet@importDetail');
 	Route::get('print/CheckSheet/{id}', 'CheckSheet@print_check');	
 	Route::get('printsurat/CheckSheet/{id}', 'CheckSheet@print_check_surat');	
-
+	Route::get('delete/CheckSheet/{id}', 'CheckSheet@delete');
 });
-
 Route::get('stamp/stamp', 'ProcessController@stamp');
 Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
 
