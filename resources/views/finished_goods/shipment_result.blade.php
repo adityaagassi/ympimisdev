@@ -99,7 +99,7 @@ table.table-bordered > tfoot > tr > th{
 					<table class="table table-hover table-bordered table-striped" id="tableModal">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 8%;">Material</th>
+								<th style="width: 5%;">Material</th>
 								<th style="width: 40%;">Description</th>
 								<th style="width: 8%;">Dest.</th>
 								<th style="width: 12%;">Plan</th>
@@ -216,13 +216,16 @@ table.table-bordered > tfoot > tr > th{
 						}
 					}
 
-					var yAxisLabels = [0,25,50,75,101];
+					var yAxisLabels = [0,25,50,75,100,140];
 					Highcharts.chart('container', {
 						chart: {
 							type: 'column'
 						},
 						title: {
 							text: null
+						},
+						legend:{
+							enabled: false
 						},
 						xAxis: {
 							categories: xCategories,
@@ -232,7 +235,8 @@ table.table-bordered > tfoot > tr > th{
 							labels: {
 								// rotation: -40,
 								style: {
-									color: 'rgba(75, 30, 120)'
+									fontSize: '1vw',
+									color: 'rgba(75, 30, 120)',
 									// fontWeight: 'bold'
 								}
 							}
@@ -258,9 +262,10 @@ table.table-bordered > tfoot > tr > th{
 								borderWidth: 0
 							},
 							series:{
-								pointPadding: 0.96,
-								groupPadding: 0.96,
-								borderWidth: 0.96,
+								minPointLength: 2,
+								pointPadding: 0.95,
+								groupPadding: 0.95,
+								borderWidth: 0.95,
 								shadow: false,
 								color: 'rgba(126,86,134,.7)',
 								borderColor: '#303030',
@@ -268,13 +273,13 @@ table.table-bordered > tfoot > tr > th{
 								dataLabels: {
 									enabled: true,
 									rotation: -90,
-									align: 'right',
+									align: 'left',
 									formatter: function() {
-										return this.series.name +': '+ this.y +'%';
+										return this.series.name +' '+ this.y +'%';
 									},
-									y: 10,
+									y: -5,
 									style: {
-										fontSize: '14px',
+										fontSize: '1vw',
 										color: 'black',
 										textOutline: false,
 										fontWeight: null,
@@ -321,7 +326,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					$('#tableModal').DataTable().destroy();
 					$('#modalResultTitle').html('');
-					$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+					$('#modalResultTitle').html(hpl +' Export Date: '+ date);
 					$('#modalResultBody').html('');
 					var resultData = '';
 					var resultTotal1 = 0;
