@@ -128,6 +128,7 @@ table.table-bordered > tfoot > tr > th{
 
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/annotations.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -262,10 +263,11 @@ table.table-bordered > tfoot > tr > th{
 								borderWidth: 0
 							},
 							series:{
+								// ignoreHiddenSeries : false,
 								minPointLength: 2,
-								pointPadding: 0.95,
-								groupPadding: 0.95,
-								borderWidth: 0.95,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
 								shadow: false,
 								color: 'rgba(126,86,134,.7)',
 								borderColor: '#303030',

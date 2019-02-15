@@ -178,14 +178,14 @@ input[type=number] {
 							<table id="flo_table" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>FLO</th>
-										<th>Dest.</th>
-										<th>Ship. Date</th>
-										<th>By</th>
-										<th>Material</th>
-										<th>Description</th>
-										<th>Qty</th>
-										<th>Cancel</th>
+										<th style="width: 5%">FLO</th>
+										<th style="width: 10%">Dest.</th>
+										<th style="width: 10%">Ship. Date</th>
+										<th style="width: 5%">By</th>
+										<th style="width: 5%">Material</th>
+										<th style="width: 35%">Description</th>
+										<th style="width: 10%">Qty</th>
+										<th style="width: 5%">Cancel</th>
 									</tr>
 								</thead>
 								<tbody>
