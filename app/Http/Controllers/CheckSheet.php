@@ -309,9 +309,9 @@ class CheckSheet extends Controller
 
   public function import(Request $request)
   {
-    $masterid = MasterChecksheet::orderBy('id','desc')
-    ->first();
-    $masterid_fix = $masterid->id;
+    // $masterid = MasterChecksheet::orderBy('id','desc')
+    // ->first();
+    // $masterid_fix = $masterid->id;
     if($request->hasFile('check_sheet_import')){
             // st_assemblies::truncate();
 
@@ -348,7 +348,8 @@ class CheckSheet extends Controller
       ]);
       $Inspection->save();
       $master->save();
-
+      $code_generator->index = $code_generator->index+1;
+      $code_generator->save();
       foreach ($rows as $row)
       {
         if (strlen($row) > 0) {
@@ -368,8 +369,7 @@ class CheckSheet extends Controller
               'qty_set' => $row[8],
             ]);
             $detail->save();
-            $code_generator->index = $code_generator->index+1;
-            $code_generator->save();
+            
             
 
           }
