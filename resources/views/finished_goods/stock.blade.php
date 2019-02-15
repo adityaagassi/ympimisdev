@@ -26,6 +26,8 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
 	border:1px solid rgb(211,211,211);
+	margin:0;
+	padding:0;
 }
 table.table-bordered > tfoot > tr > th{
 	border:1px solid rgb(211,211,211);
@@ -203,6 +205,7 @@ table.table-bordered > tfoot > tr > th{
 					var table = $('#tableStock').DataTable({
 						'dom': 'Bfrtip',
 						'responsive': true,
+						"pageLength": 25,
 						'lengthMenu': [
 						[ 10, 25, 50, -1 ],
 						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
@@ -297,7 +300,7 @@ table.table-bordered > tfoot > tr > th{
 							colors: ['rgba(119, 152, 191, 0.80)', 'rgba(144, 238, 126, 0.80)', 'rgba(247, 163, 92, 0.80)'],
 							chart: {
 								renderTo: 'container',
-								type: 'column'
+								type: 'column',
 							},
 							title: {
 								text: 'Finished Goods Stock By Location Chart'

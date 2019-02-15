@@ -78,14 +78,14 @@ class FinishedGoodsController extends Controller
 			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
 		}
 		else{
-			$datefrom = date('Y-m-d', strtotime(Carbon::now()->startOfWeek()));
+			$datefrom = date('Y-m-d', strtotime(Carbon::now()->subDays(1)));
 		}
 
 		if($request->get('dateto') != ""){
 			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 		else{
-			$dateto = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
+			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(7)));
 		}
 		
 		$query = "select date_format(b.st_date, '%d-%b-%y') as st_date, b.hpl, round((a.actual/b.plan)*100,1) as actual from

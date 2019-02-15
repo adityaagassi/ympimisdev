@@ -139,6 +139,7 @@ table.table-bordered > tfoot > tr > th{
 	});
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#datefrom').datepicker({
 			autoclose: true
 		});
@@ -273,9 +274,10 @@ table.table-bordered > tfoot > tr > th{
 									},
 									y: 10,
 									style: {
-										fontSize: '1vw',
+										fontSize: '14px',
 										color: 'black',
-										textOutline: false
+										textOutline: false,
+										fontWeight: null,
 									}
 								},
 								point: {

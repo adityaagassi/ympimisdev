@@ -23,7 +23,7 @@ table.table-bordered{
 }
 table.table-bordered > thead > tr > th{
     border:1px solid black;
-    margin:0; 
+    margin:0;
     padding:0;
 }
 table.table-bordered > tbody > tr > td{
