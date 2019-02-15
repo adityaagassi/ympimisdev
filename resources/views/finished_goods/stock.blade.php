@@ -61,8 +61,6 @@ table.table-bordered > tfoot > tr > th{
 		</div>
 		<div class="col-md-12">
 			<div class="box">
-				<div class="box-header with-border" id="boxTitle">
-				</div>
 				<div class="box-body">
 					<table id="tableStock" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
