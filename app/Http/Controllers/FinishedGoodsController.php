@@ -67,7 +67,7 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function index_fg_shipment_result(){
-		return view('finished_goods.shipment_result')->with('page', 'FG Shipment Schedule')->with('head', 'Finished Goods');
+		return view('finished_goods.shipment_result')->with('page', 'FG Shipment Result')->with('head', 'Finished Goods');
 	}
 
 	public function fetch_fg_shipment_result(Request $request){
