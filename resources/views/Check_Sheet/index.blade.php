@@ -315,9 +315,9 @@ table.table-bordered > tfoot > tr > th{
           <label>PAYMENT</label>
           <select class="form-control select2" name="paymentE" id="paymentE"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
 
-            <option value="T/T REMITT">T/T REMITT</option>
-            <option value="D/P at Sight">D/P at Sight</option>
-            <option value="D/A 60 Days After BL Date">D/A 60 Days After BL Date</option>
+             <option value="T/T REMITTANCE">T/T REMITTANCE</option>
+            <option value="D/P AT SIGHT">D/P AT SIGHT</option>
+            <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
           </select>
           <label>SHIPPER</label>
           <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
