@@ -99,12 +99,12 @@ table.table-bordered > tfoot > tr > th{
 					<table class="table table-hover table-bordered table-striped" id="tableModal">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 5%;">Material</th>
-								<th style="width: 40%;">Description</th>
-								<th style="width: 8%;">Dest.</th>
-								<th style="width: 12%;">Plan</th>
-								<th style="width: 12%;">Actual</th>
-								<th style="width: 12%;">Diff</th>
+								<th>Material</th>
+								<th>Description</th>
+								<th>Dest.</th>
+								<th>Plan</th>
+								<th>Actual</th>
+								<th>Diff</th>
 							</tr>
 						</thead>
 						<tbody id="modalResultBody">
@@ -334,12 +334,12 @@ table.table-bordered > tfoot > tr > th{
 					var resultTotal3 = 0;
 					$.each(result.shipment_results, function(key, value) {
 						resultData += '<tr>';
-						resultData += '<td>'+ value.material_number +'</td>';
-						resultData += '<td>'+ value.material_description +'</td>';
-						resultData += '<td>'+ value.destination_shortname +'</td>';
-						resultData += '<td>'+ value.plan.toLocaleString() +'</td>';
-						resultData += '<td>'+ value.actual.toLocaleString() +'</td>';
-						resultData += '<td style="font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
+						resultData += '<td style="width: 10%">'+ value.material_number +'</td>';
+						resultData += '<td style="width: 40%">'+ value.material_description +'</td>';
+						resultData += '<td style="width: 5%">'+ value.destination_shortname +'</td>';
+						resultData += '<td style="width: 15%">'+ value.plan.toLocaleString() +'</td>';
+						resultData += '<td style="width: 15%">'+ value.actual.toLocaleString() +'</td>';
+						resultData += '<td style="width: 15%; font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
 						resultData += '</tr>';
 						resultTotal1 += value.plan;
 						resultTotal2 += value.actual;
@@ -356,6 +356,7 @@ table.table-bordered > tfoot > tr > th{
 						"paging": false,
 						'searching': false,
 						'order':[],
+						'responsive': true,
 						'info': false,
 						"columnDefs": [{
 							"targets": 5,
