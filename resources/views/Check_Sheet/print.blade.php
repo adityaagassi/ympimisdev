@@ -26,21 +26,21 @@
   <div class="col-xs-15">
     <BUTTON id="PRINT" onclick="printa();" style="display: block;" class="btn btn-primary btn-lg" style="color:white">PRINT</BUTTON>
     <DIV class="col-xs-14">
-      <TABLE width="99%">
+      <TABLE width="100%">
         <TR>
           <TD><B><H1>PT. YMPI</H1><B></TD>
             <TD>
               @php
               $p = 'images/aeo.png';
               @endphp
-              <img src="{{ url($p) }}" class="user-image pull-right" alt="7 Poin" align="middle" width="200">
+              <img src="{{ url($p) }}" class="user-image pull-right" alt="7 Poin" align="middle" width="100">
             </TD>
           </TR>
-        </TABLE>
+        </TABLE><br>
       </DIV >
 
       <div class="col-xs-15"> 
-        <table border="2" width="99%">
+        <table border="2" width="100%">
           <THEAD>
             <th colspan="7" style="border: 2px solid"><center>CONTAINER & CARGO CHECK SHEET</center></th>
           </THEAD>
@@ -90,19 +90,19 @@
     </div>
 
     <DIV class="col-xs-15">
-      <table border="2" width="99%" >
+      <table border="2" width="100%" >
         <thead>
           <tr>
             <th colspan="60" style="border: 2px solid"><center>CONDITION OF CARGO</center></th>
           </tr>
           <tr id="cargo">
-            <th style="border: 2px solid">DEST.</th>
-            <th style="border: 2px solid">INVOICE</th>
-            <th style="border: 2px solid">GMC</th>
-            <th style="border: 2px solid">DESCRIPTION OF GOODS</th>
-            <th style="border: 2px solid">MARKING NO.</th>
-            <th colspan="2" style="border: 2px solid">PACKAGE</th>
-            <th colspan="2" style="border: 2px solid">QUANTITY</th>
+            <th style="border: 2px solid" ><center> DEST.</center></th>
+            <th style="border: 2px solid"><center>INVOICE</center></th>
+            <th style="border: 2px solid"><center>GMC</center></th>
+            <th style="border: 2px solid" ><center>DESCRIPTION OF GOODS</center></th>
+            <th style="border: 2px solid"><center>MARKING NO.</center></th>
+            <th colspan="2" style="border: 2px solid"><center>PACKAGE</center></th>
+            <th colspan="2" style="border: 2px solid"><center>QUANTITY</center></th>
             <th style="border: 2px solid" hidden>1</th>
           </tr>
         </thead>
@@ -110,16 +110,16 @@
           @foreach($detail as $nomor => $detail)
           <input type="text" id="count" value="{{$loop->count}}" hidden></input>
           <TR id="cargo{{$nomor + 1}}">
-            <TD style="border-right: 2px solid; border-left: 2px solid" align="center">{{$detail->destination}}</TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid">{{$detail->invoice}}</TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid">{{$detail->gmc}}</TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid">{{$detail->goods}}</TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid"><center>{{$detail->marking}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->package_set}}"><center>{{$detail->package_qty}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid"><center>{{$detail->package_set}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->qty_set}}"><center>{{$detail->qty_qty}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid"><center>{{$detail->qty_set}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" hidden><center>{{$detail->confirm}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" align="center" width="3%"><center>{{$detail->destination}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center >{{$detail->invoice}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center >{{$detail->gmc}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" >{{$detail->goods}}</TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center>{{$detail->marking}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->package_set}}" align="center">{{$detail->package_qty}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" width="3%"><center>{{$detail->package_set}}</TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->qty_set}}" align="center">{{$detail->qty_qty}}</TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" width="3%"><center>{{$detail->qty_set}}</center></TD>
+            <TD style="border-right: 2px solid; border-left: 2px solid" hidden id="total{{$nomor + 1}}">{{$detail->confirm}}</TD>
           </TR>
           @endforeach
         </tbody>
@@ -130,6 +130,7 @@
             <th style="border-right: 2px solid; border-top: 2px solid"><center>PLT</center></th>
             <th style="border-left: 2px solid; border-top: 2px solid"><center><b id="sete"></center></b></th>
             <th style="border-right: 2px solid; border-top: 2px solid"><center>SET</center></th>
+            <th style="border-right: 2px solid; border-bottom: 2px solid; border-top: 2px solid"" colspan="31" rowspan="2"></th>
           </tr>
           <tr>
 
@@ -137,20 +138,22 @@
             <th style="border-right: 2px solid; border-bottom: 2px solid"><center>CTN</center></th>
             <th style="border-left: 2px solid; border-bottom: 2px solid"><center><b id="pcse"></center></b></th>
             <th style="border-right: 2px solid; border-bottom: 2px solid"><center>PCS</center></th>
+            
           </tr>
         </tfoot>
       </table>    
     </DIV>
 
     <div class="col-xs-15">
-      <table BORDER="2"  width="99%">
+      <table BORDER="2"  width="100%">
         <thead>
           <TR>
-            <th colspan="6" style="border: 2px solid"><CENTER><B>CONDITION OF CONTAINER</B></CENTER></th>
+            <th colspan="7" style="border: 2px solid"><CENTER><B>CONDITION OF CONTAINER</B></CENTER></th>
           </TR>
           <tr>
             <th style="border: 2px solid"> CONTAINER NO : {{$time->countainer_number}}</th>
             <th colspan="4" style="border: 2px solid"> SEAL NO : {{$time->seal_number}}</th>
+            <th  style="border: 2px solid"> NO POL : {{$time->no_pol}}</th>
             <th> INSPECTOR : @if($time->status == 1) 
               @if(isset($time->user3->name))
               <!--  {{$time->created_by}} - --> {{$time->user3->name}}
@@ -162,24 +165,25 @@
           <tr>
             <th style="border: 2px solid">Area of Inspection :</th>
             <th colspan="4" style="border: 2px solid"><center>Acceptable</center></th>
-            <th style="border: 2px solid">Remark / Keterangan</th>
+            <th colspan="2" style="border: 2px solid">Remark / Keterangan</th>
           </tr>
         </thead>
         <TBODY>
          @foreach($container as $nomor => $container)
          <TR>
-          <TD  >{{$container->area}}</TD>
-          <TD><CENTER><p id="g{{$nomor +1}}" > &#10004; <p></CENTER></TD>
-            <TD><CENTER>GOOD</CENTER></TD>
-            <TD ><CENTER><p id="ng{{$nomor +1}}" > &#10004; <p></CENTER></TD>
-              <TD><CENTER>NOT GOOD</CENTER></TD>
-              <td> <p id="text{{$nomor +1}}"></p></td>
+          <TD width="30%">{{$container->area}}</TD>
+          <TD width="3%" style="border-right: none"><CENTER><p id="g{{$nomor +1}}" ></p> {{-- <p id="gg{{$nomor +1}}" >&#91; &#45; &#93;</p> --}}</CENTER></TD>
+            <TD width="6%" style="border-left: none"><CENTER>GOOD</CENTER></TD>
+            <TD width="3%" style="border-right: none"><CENTER><p id="ng{{$nomor +1}}" >&#91; &#10004; &#93;</p> {{-- <p id="ngg{{$nomor +1}}" >&#91; &#45; &#93;</p> --}}</CENTER></TD>
+              <TD width="8%" style="border-left: none"><CENTER>NOT GOOD</CENTER></TD>
+              <td colspan="2"> <p id="text{{$nomor +1}}"></p></td>
+
             </TR>
             @endforeach
 
           </TBODY>
         </table>
-        <table width="99%" border="2">
+        <table width="100%" border="2">
           <thead>
             <th style="border:none">No Dok : YMPI/EXIM/FM/0008</th>
             <th style="border:none">Rev. : 00</th>
@@ -222,6 +226,8 @@
     <p id="remark8"hidden>{{$inspection->remark8}}</p>
     <p id="remark9"hidden>{{$inspection->remark9}}</p>
     @endforeach
+
+
   </body>
   </html>
   <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
@@ -231,6 +237,7 @@
       hidden();
       myFunction();
       myFunction2();
+      myFunction3();
       var plt = 0;
       var ctn = 0;
       var set = 0;
@@ -260,7 +267,7 @@
       var row = document.getElementById("cargo");
       row.style.border="solid";
       var nomor = 0;
-      for (i = 8; i < 58; i++) {
+      for (i = 8; i < 38; i++) {
         nomor++;
         var x = row.insertCell(i);
         x.innerHTML = nomor;
@@ -268,12 +275,35 @@
       }
     }
 
+    function myFunction3() {
+      var count = document.getElementById("count").value
+      var row = document.getElementById("cargo");
+      row.style.border="solid";
+      var nomor = "Total";
+        var x = row.insertCell(38);
+         x.innerHTML = "Total";
+        for (i = 1; i <= count; i++) {
+          var row = document.getElementById("cargo"+i);        
+          var x = row.insertCell(40);
+          var Cells = row.getElementsByTagName("td");
+          var total = document.getElementById("total"+i).innerHTML;
+          if (total == "0"){
+            x.style.textAlign = "center";
+            x.innerHTML = "&#10004;";
+          }else{
+            x.style.textAlign = "center";
+            x.innerHTML = total;
+          }        
+        }
+            
+    }
+
     function myFunction2() {  
       var count = document.getElementById("count").value;         
       var nomor = 1;
       for (var z = nomor; z <= count; z++) {
         var s = 1; 
-        for (i = 10; i < 60; i++) {
+        for (i = 10; i < 40; i++) {
           var row = document.getElementById("cargo"+z);        
           var x = row.insertCell(i);
           var Cells = row.getElementsByTagName("td");
@@ -286,16 +316,26 @@
 
     }
 
+   
+
     function hidden(){
       var a=0;
       for (i = 1; i<=9;i++){
         a++;
         var text = document.getElementById("inspec"+a).innerHTML;
-        if (text == "0"){
-          $("#g"+i).attr("hidden",true);
-        }else{
-          $("#ng"+i).attr("hidden",true);
+        if (text == 0){
+          document.getElementById("g"+i).innerHTML ="[ - ]";
+          document.getElementById("ng"+i).innerHTML ="[ "+"&#10004;"+" ]";
+          // $("#g"+i).text("[ - ]");
+          // $("#ng"+i).text("[ V ]");
+          
+        }else {
+          // $("#g"+i).text("[ V ]");
+          // $("#ng"+i).text("[ - ]");
+          document.getElementById("g"+i).innerHTML ="[ - ]";
+          document.getElementById("ng"+i).innerHTML ="[ "+"&#10004;"+" ]";
         }
+        
       }
     }
 

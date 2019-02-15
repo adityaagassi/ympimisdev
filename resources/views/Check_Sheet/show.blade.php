@@ -123,16 +123,16 @@ table.table-bordered > tfoot > tr > th{
 
     <div class="col-md-1 ">
      <a href="{{ url("print/CheckSheet/{$time->id}")}}" class="btn btn-primary btn-lg" style="color:white"><i class="fa fa-print"></i> Print {{ $page }}</a><br><br>
-     <a href="{{ url("printsurat/CheckSheet/{$time->id}")}}" class="btn btn-warning btn-lg" style="color:white"><i class="fa fa-print"></i> Print Surat Jalan</a><br><br>
+     <!-- <a href="{{ url("printsurat/CheckSheet/{$time->id}")}}" class="btn btn-warning btn-lg" style="color:white"><i class="fa fa-print"></i> Print Surat Jalan</a><br><br> -->
      <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-lg" style="color:white"><i class="fa fa-folder-open-o"></i> Upload {{ $page }}</a>
-    </div>
+    </div><BR>
 
      
 
   </div>
 
   <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs pull-left "style="background-color: rgba(126,86,134,.7);">
+    <ul class="nav nav-tabs pull-left ">
       <li class="active"><a href="#cargo" data-toggle="tab"><i class="fa fa-folder"></i><b> CONDITION OF CARGO</b></a></li>
       <li><a href="#container" data-toggle="tab"><i class="fa fa-folder"></i><b> CONDITION OF CONTAINER </b></a></li>
       <p id="id_checkSheet_master" hidden>{{$time->id_checkSheet}}</p>
@@ -149,7 +149,7 @@ table.table-bordered > tfoot > tr > th{
                   <th>DEST</th>
                   <th>INVOICE</th>
                   <th>GMC</th>
-                  <th>DESCRIPTION OF GOODS</th>
+                  <th>DESCRIPTION OF GOODS </th>
                   <th>MARKING NO.</th>
                   <th colspan="2">PACKAGE</th>
                   <th colspan="2">QUANTITY</th>
@@ -162,25 +162,31 @@ table.table-bordered > tfoot > tr > th{
                 <tr>
                  @foreach($detail as $nomor => $detail)
 
-                 <td>{{$detail->destination}}</td>
-                 <td>{{$detail->invoice}}</td>
-                 <td>{{$detail->gmc}}</td>
+                 <td width="5%">{{$detail->destination}}</td>
+                 <td width="8%">{{$detail->invoice}}</td>
+                 <td width="8%">{{$detail->gmc}}</td>
                  <td>{{$detail->goods}}</td>
-                 <td>{{$detail->marking}}</td>
-                 <td class="{{$detail->package_set}}">{{$detail->package_qty}}</td>
-                 <td>{{$detail->package_set}}</td>
-                 <td class="{{$detail->qty_set}}">{{$detail->qty_qty}}</td>
-                 <td>{{$detail->qty_set}} </td>
+                 <td width="2%">{{$detail->marking}}</td>
+                 <td class="{{$detail->package_set}}" width="5%">{{$detail->package_qty}}</td>
+                 <td width="2%">{{$detail->package_set}}</td>
+                 <td class="{{$detail->qty_set}}" width="5%">{{$detail->qty_qty}}</td>
+                 <td width="2%">{{$detail->qty_set}} </td>
                 
-                <td><p id="total{{$nomor + 1}}" >{{$detail->package_qty}}</p></td>
-                <td><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
-                <td><p id="diff{{$nomor + 1}}">{{$detail->diff}}</p></td>
+                <td width="2%"><p id="total{{$nomor + 1}}" >{{$detail->package_qty}}</p></td>
+                <td width="2%"><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
+                <td width="2%"><p id="diff{{$nomor + 1}}">{{$detail->diff}}</p></td>
                 @if( $detail->package_set == "-")
-                <td>
-                  <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> </td>
-                  @else
+                <td width="2%">
+                  @if( $detail->bara == "1" )
+                    <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span>
+                    <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span> 
+                    @elseif( $detail->bara == "0" )
+                    <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
+                    <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> 
+                    @endif
+                    @else
                 @if( $detail->diff == "0")
-                <td><span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
+                <td width="2%" ><span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
                   <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> </td>
                   @else
                   <td><span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span>
@@ -190,13 +196,14 @@ table.table-bordered > tfoot > tr > th{
                   </tr>
                   @endforeach
                 </tbody>
-                <tfoot>
+                <tfoot style="background-color: RGB(252, 248, 227);">
                   <tr>
                     <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
-                    <th><p id="plte"></p></th>
+                    <th ><p id="plte"></p></th>
                     <th>PLT</th>
                     <th><p id="sete"></p></th>
-                    <th>SET</th>
+                    <th >SET</th>
+                    <th colspan="4"></th>
                   </tr>
                   <tr>
 
@@ -204,6 +211,7 @@ table.table-bordered > tfoot > tr > th{
                     <th>CTN</th>
                     <th><p id="pcse"></p></th>
                     <th>PCS</th>
+                    <th colspan="4"></th>
                   </tr>
                 </tfoot>
               </table>
@@ -467,7 +475,8 @@ table.table-bordered > tfoot > tr > th{
 <script >
   
 jQuery(document).ready(function() {
-        $('body').toggleClass("sidebar-collapse");
+    $('body').toggleClass("sidebar-collapse");
+    
         $('#rows1').removeAttr('hidden');
         var count = document.getElementById("count").value;
         document.getElementById("rows1").rowSpan = count;
