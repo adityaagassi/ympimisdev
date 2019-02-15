@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsTableSeeder::class);
         $this->call(ProcessesTableSeeder::class);
         $this->call(LogProcessesTableSeeder::class);
+        $this->call(AreaInspectionsTableSeeder::class);
     }
 }
