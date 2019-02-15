@@ -119,7 +119,7 @@ class FinishedGoodsController extends Controller
 		$st_date = date('Y-m-d', strtotime($request->get('date')));
 
 		$query = "
-		select a.material_number, a.material_description, a.destination_shortname, a.plan, coalesce(b.actual,0) as actual, b.actual-a.plan as diff from
+		select a.material_number, a.material_description, a.destination_shortname, a.plan, coalesce(b.actual,0) as actual, coalesce(b.actual,0)-a.plan as diff from
 		(
 		select shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname, sum(shipment_schedules.quantity) as plan from shipment_schedules
 		left join materials on materials.material_number = shipment_schedules.material_number
