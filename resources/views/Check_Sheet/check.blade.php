@@ -175,7 +175,7 @@ tfoot input {
   <P class="pull-right"><br>
     <a href="{{ url("index/CheckSheet")}}">
       <button class="btn btn-warning btn-lg" style="color:white">
-        <i class="fa fa-backward"></i> Back</button> &nbsp;
+        <i class=" fa fa-backward "></i> Back</button> &nbsp;
       </a>
       <button class="btn btn-success btn-lg" style="color:white" onclick="save()">
         <i class="fa fa-save "></i> Save</button>&nbsp;&nbsp;&nbsp;
@@ -211,7 +211,13 @@ tfoot input {
                    <td width="5%">{{$detail->gmc}}</td>
                    <td>{{$detail->goods}}</td>
                    <td width="2%">{{$detail->marking}}</td>
-                   <td class="{{$detail->package_set}}" width="5%">{{$detail->package_qty}}</td>
+                   @if($detail->package_set =="PL")
+                   <td class="PLT" width="5%">{{$detail->package_qty}}</td>
+                   @elseif($detail->package_set =="C/T")
+                    <td class="CTN" width="5%">{{$detail->package_qty}}</td>
+                    @else
+                    <td class="{{$detail->package_qty}}" width="5%">{{$detail->package_qty}}</td>
+                   @endif
                    <td width="2%">{{$detail->package_set}}</td>
                    <td class="{{$detail->qty_set}}" width="5%">{{$detail->qty_qty}}</td>
                    <td width="2%">{{$detail->qty_set}} </td>
@@ -258,7 +264,7 @@ tfoot input {
                     <tr>
                       <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
                       <th><p id="plte"></p></th>
-                      <th>PLT</th>
+                      <th>PL</th>
                       <th><p id="sete"></p></th>
                       <th>SET</th>
                       <th colspan="6"></th>
@@ -266,9 +272,9 @@ tfoot input {
                     <tr>
 
                       <th><p id="ctne"></p></th>
-                      <th>CTN</th>
+                      <th>C/T</th>
                       <th><p id="pcse"></p></th>
-                      <th>PCS</th>
+                      <th>PC</th>
                       <th colspan="6"></th>
                     </tr>
                   </tfoot>
@@ -296,7 +302,7 @@ tfoot input {
                         <input type="text" id="count" value="{{$loop->count}}" hidden></input>
                         <td id="rows{{$nomor + 1}}" hidden>
                          @php
-                         $p = 'images/7poin.jpg';
+                         $p = 'images/7poin.png';
                          @endphp
                          <img src="{{ url($p) }}" class="user-image" alt="7 Poin" align="middle" width="300"></td>
                          <td height="100" ><br>{{$container->area}}<br>&nbsp;</td>
@@ -564,7 +570,7 @@ tfoot input {
                         });
                          $('#sete').html("" + set);
 
-                         $(".PCS").each(function() {
+                         $(".PC").each(function() {
                           pcs += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
                         });
                          $('#pcse').html("" + pcs);

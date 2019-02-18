@@ -168,7 +168,7 @@ table.table-bordered > tfoot > tr > th{
   <P class="pull-right"><br>
     <a href="{{ url("index/CheckSheet")}}">
       <button class="btn btn-warning btn-lg" style="color:white">
-        <i class="fa fa-backward"></i> Back</button> &nbsp;
+        <i class="fa fa-backward "></i> Back</button> &nbsp;
       </a>
       <button class="btn btn-success btn-lg" style="color:white" onclick="save()">
         <i class="fa fa-save "></i> Save</button>&nbsp;&nbsp;&nbsp;
@@ -206,7 +206,13 @@ table.table-bordered > tfoot > tr > th{
                    <td>{{$detail->gmc}}</td>
                    <td>{{$detail->goods}}</td>
                    <td ><p id="marking{{$nomor + 1}}">{{$detail->marking}}</p></td>
-                   <td class="{{$detail->package_set}}">{{$detail->package_qty}}</td>
+                   @if($detail->package_set =="PL")
+                   <td class="PLT" width="5%">{{$detail->package_qty}}</td>
+                   @elseif($detail->package_set =="C/T")
+                   <td class="CTN" width="5%">{{$detail->package_qty}}</td>
+                   @else
+                   <td class="{{$detail->package_qty}}" width="5%">{{$detail->package_qty}}</td>
+                   @endif
                    <td>{{$detail->package_set}}</td>
                    <td class="{{$detail->qty_set}}">{{$detail->qty_qty}}</td>
                    <td>{{$detail->qty_set}} </td>
@@ -236,9 +242,9 @@ table.table-bordered > tfoot > tr > th{
                   </td>
                   <td hidden><p id="arr{{$nomor + 1}}">{{$detail->markingcheck}}</p>
                   </td>
-                   @if( $detail->package_set == "-" )
+                  @if( $detail->package_set == "-" )
                   
-                    <td width="5%">
+                  <td width="5%">
                     @if( $detail->bara == "1" )
                     <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span>
                     <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span> 
@@ -256,395 +262,395 @@ table.table-bordered > tfoot > tr > th{
                       <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span> </td>
                       @endif
                       @endif
-                  </tr>
-                  @endforeach
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
-                    <th><p id="plte"></p></th>
-                    <th>PLT</th>
-                    <th><p id="sete"></p></th>
-                    <th>SET</th>
-                    <th colspan="6"></th>
-                  </tr>
-                  <tr>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & C/T</CENTER></th>                    
+                      <th><p id="plte"></p></th>
+                      <th>PL</th>
+                      <th><p id="sete"></p></th>
+                      <th>SET</th>
+                      <th colspan="6"></th>
+                    </tr>
+                    <tr>
 
-                    <th><p id="ctne"></p></th>
-                    <th>CTN</th>
-                    <th><p id="pcse"></p></th>
-                    <th>PCS</th>
-                    <th colspan="6"></th>
-                  </tr>
-                </tfoot>
-              </table>
+                      <th><p id="ctne"></p></th>
+                      <th>C/T</th>
+                      <th><p id="pcse"></p></th>
+                      <th>PC</th>
+                      <th colspan="6"></th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
+
           </div>
 
-        </div>
 
 
+          <div class="chart tab-pane" id="container" style="position: relative;">
 
-        <div class="chart tab-pane" id="container" style="position: relative;">
-
-          <div class="box-body">
-            <div class="col-xs-8">
-              <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                  <thead style="background-color: rgba(126,86,134,.7);">
-                    <tr>
-                      <th colspan="2">AREA OF INSPECTION</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach($container as $nomor => $container)
-                    <tr>
-                      <input type="text" id="count" value="{{$loop->count}}" hidden></input>
-                      <td id="rows{{$nomor + 1}}" hidden>
-                       @php
-                       $p = 'images/7poin.jpg';
-                       @endphp
-                       <img src="{{ url($p) }}" class="user-image" alt="7 Poin" align="middle" width="300"></td>
-                       <td height="100" ><br>{{$container->area}}<br>&nbsp;</td>
-                       @endforeach
-                     </tr>
-                   </tbody>
-                 </table>
+            <div class="box-body">
+              <div class="col-xs-8">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead style="background-color: rgba(126,86,134,.7);">
+                      <tr>
+                        <th colspan="2">AREA OF INSPECTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach($container as $nomor => $container)
+                      <tr>
+                        <input type="text" id="count" value="{{$loop->count}}" hidden></input>
+                        <td id="rows{{$nomor + 1}}" hidden>
+                         @php
+                         $p = 'images/7poin.png';
+                         @endphp
+                         <img src="{{ url($p) }}" class="user-image" alt="7 Poin" align="middle" width="300"></td>
+                         <td height="100" ><br>{{$container->area}}<br>&nbsp;</td>
+                         @endforeach
+                       </tr>
+                     </tbody>
+                   </table>
+                 </div>
                </div>
-             </div>
-             <div class="col-xs-4">
-              <div class="table-responsive">
-               <table class="table table-bordered table-striped">
-                 <thead style="background-color: rgba(126,86,134,.7);">
-                   <th>ACCEPTABLE</th>
-                   <th>REMARK</th>
-                 </thead>
-                 @foreach($inspection as $nomor => $inspection)
-                 <tr>
-                  <td height="100">
-                    @if ($inspection->inspection1 == 1)
-                    <button type="button" id="good1" class="btn btn-block btn-success btn-sm" onclick="good(1)" style="display: block;">GOOD</button>
-                    <button type="button" id="ng1" class="btn btn-block btn-danger btn-sm" onclick="ng(1)" style="display: none;">NOT GOOD</button>
-                    @else
-                    <button type="button" id="ng1" class="btn btn-block btn-danger btn-sm" onclick="ng(1)" style="display: block;">NOT GOOD</button>
-                    <button type="button" id="good1" class="btn btn-block btn-success btn-sm" onclick="good(1)" style="display: none;">GOOD</button>
-                    @endif
-                    <p id="inspection1" hidden></p></td>
-                    <td> 
-                      @if ($inspection->remark1 != '')
-                      <TEXTAREA id="remark1" onchange="addInspection2(1)">{{$inspection->remark1}}</TEXTAREA>
-                      @else
-                      <TEXTAREA id="remark1" onchange="addInspection2(1)"></TEXTAREA>
-                      @endif
-                    </td>
-                  </tr>
-
-                  <!-- 2 -->
-                  <tr>
+               <div class="col-xs-4">
+                <div class="table-responsive">
+                 <table class="table table-bordered table-striped">
+                   <thead style="background-color: rgba(126,86,134,.7);">
+                     <th>ACCEPTABLE</th>
+                     <th>REMARK</th>
+                   </thead>
+                   @foreach($inspection as $nomor => $inspection)
+                   <tr>
                     <td height="100">
-                      @if ($inspection->inspection2 == 1)
-                      <button type="button" id="good2" class="btn btn-block btn-success btn-sm" onclick="good(2)" style="display: block;">GOOD</button>
-                      <button type="button" id="ng2" class="btn btn-block btn-danger btn-sm" onclick="ng(2)" style="display: none;">NOT GOOD</button>
+                      @if ($inspection->inspection1 == 1)
+                      <button type="button" id="good1" class="btn btn-block btn-success btn-sm" onclick="good(1)" style="display: block;">GOOD</button>
+                      <button type="button" id="ng1" class="btn btn-block btn-danger btn-sm" onclick="ng(1)" style="display: none;">NOT GOOD</button>
                       @else
-                      <button type="button" id="ng2" class="btn btn-block btn-danger btn-sm" onclick="ng(2)" style="display: block;">NOT GOOD</button>
-                      <button type="button" id="good2" class="btn btn-block btn-success btn-sm" onclick="good(2)" style="display: none;">GOOD</button>
+                      <button type="button" id="ng1" class="btn btn-block btn-danger btn-sm" onclick="ng(1)" style="display: block;">NOT GOOD</button>
+                      <button type="button" id="good1" class="btn btn-block btn-success btn-sm" onclick="good(1)" style="display: none;">GOOD</button>
                       @endif
-                      <p id="inspection2" hidden></p></td>
+                      <p id="inspection1" hidden></p></td>
                       <td> 
-                        @if ($inspection->remark2 != '')
-                        <TEXTAREA id="remark2" onchange="addInspection2(2)">{{$inspection->remark2}}</TEXTAREA>
+                        @if ($inspection->remark1 != '')
+                        <TEXTAREA id="remark1" onchange="addInspection2(1)">{{$inspection->remark1}}</TEXTAREA>
                         @else
-                        <TEXTAREA id="remark2" onchange="addInspection2(2)"></TEXTAREA>
+                        <TEXTAREA id="remark1" onchange="addInspection2(1)"></TEXTAREA>
                         @endif
                       </td>
                     </tr>
 
-                    <!-- 3 -->
+                    <!-- 2 -->
                     <tr>
                       <td height="100">
-                        @if ($inspection->inspection3 == 1)
-                        <button type="button" id="good3" class="btn btn-block btn-success btn-sm" onclick="good(3)" style="display: block;">GOOD</button>
-                        <button type="button" id="ng3" class="btn btn-block btn-danger btn-sm" onclick="ng(3)" style="display: none;">NOT GOOD</button>
+                        @if ($inspection->inspection2 == 1)
+                        <button type="button" id="good2" class="btn btn-block btn-success btn-sm" onclick="good(2)" style="display: block;">GOOD</button>
+                        <button type="button" id="ng2" class="btn btn-block btn-danger btn-sm" onclick="ng(2)" style="display: none;">NOT GOOD</button>
                         @else
-                        <button type="button" id="ng3" class="btn btn-block btn-danger btn-sm" onclick="ng(3)" style="display: block;">NOT GOOD</button>
-                        <button type="button" id="good3" class="btn btn-block btn-success btn-sm" onclick="good(3)" style="display: none;">GOOD</button>
+                        <button type="button" id="ng2" class="btn btn-block btn-danger btn-sm" onclick="ng(2)" style="display: block;">NOT GOOD</button>
+                        <button type="button" id="good2" class="btn btn-block btn-success btn-sm" onclick="good(2)" style="display: none;">GOOD</button>
                         @endif
-                        <p id="inspection3" hidden></p></td>
+                        <p id="inspection2" hidden></p></td>
                         <td> 
-                          @if ($inspection->remark3 != '')
-                          <TEXTAREA id="remark3" onchange="addInspection2(3)">{{$inspection->remark3}}</TEXTAREA>
+                          @if ($inspection->remark2 != '')
+                          <TEXTAREA id="remark2" onchange="addInspection2(2)">{{$inspection->remark2}}</TEXTAREA>
                           @else
-                          <TEXTAREA id="remark3" onchange="addInspection2(3)"></TEXTAREA>
+                          <TEXTAREA id="remark2" onchange="addInspection2(2)"></TEXTAREA>
                           @endif
                         </td>
                       </tr>
 
-                      <!-- 4 -->
-
+                      <!-- 3 -->
                       <tr>
                         <td height="100">
-                          @if ($inspection->inspection4 == 1)
-                          <button type="button" id="good4" class="btn btn-block btn-success btn-sm" onclick="good(4)" style="display: block;">GOOD</button>
-                          <button type="button" id="ng4" class="btn btn-block btn-danger btn-sm" onclick="ng(4)" style="display: none;">NOT GOOD</button>
+                          @if ($inspection->inspection3 == 1)
+                          <button type="button" id="good3" class="btn btn-block btn-success btn-sm" onclick="good(3)" style="display: block;">GOOD</button>
+                          <button type="button" id="ng3" class="btn btn-block btn-danger btn-sm" onclick="ng(3)" style="display: none;">NOT GOOD</button>
                           @else
-                          <button type="button" id="ng4" class="btn btn-block btn-danger btn-sm" onclick="ng(4)" style="display: block;">NOT GOOD</button>
-                          <button type="button" id="good4" class="btn btn-block btn-success btn-sm" onclick="good(4)" style="display: none;">GOOD</button>
+                          <button type="button" id="ng3" class="btn btn-block btn-danger btn-sm" onclick="ng(3)" style="display: block;">NOT GOOD</button>
+                          <button type="button" id="good3" class="btn btn-block btn-success btn-sm" onclick="good(3)" style="display: none;">GOOD</button>
                           @endif
-                          <p id="inspection4" hidden></p></td>
+                          <p id="inspection3" hidden></p></td>
                           <td> 
-                            @if ($inspection->remark4 != '')
-                            <TEXTAREA id="remark4" onchange="addInspection2(4)">{{$inspection->remark4}}</TEXTAREA>
+                            @if ($inspection->remark3 != '')
+                            <TEXTAREA id="remark3" onchange="addInspection2(3)">{{$inspection->remark3}}</TEXTAREA>
                             @else
-                            <TEXTAREA id="remark4" onchange="addInspection2(4)"></TEXTAREA>
+                            <TEXTAREA id="remark3" onchange="addInspection2(3)"></TEXTAREA>
                             @endif
                           </td>
                         </tr>
 
-                        <!-- 5 -->
+                        <!-- 4 -->
+
                         <tr>
                           <td height="100">
-                            @if ($inspection->inspection5 == 1)
-                            <button type="button" id="good5" class="btn btn-block btn-success btn-sm" onclick="good(5)" style="display: block;">GOOD</button>
-                            <button type="button" id="ng5" class="btn btn-block btn-danger btn-sm" onclick="ng(5)" style="display: none;">NOT GOOD</button>
+                            @if ($inspection->inspection4 == 1)
+                            <button type="button" id="good4" class="btn btn-block btn-success btn-sm" onclick="good(4)" style="display: block;">GOOD</button>
+                            <button type="button" id="ng4" class="btn btn-block btn-danger btn-sm" onclick="ng(4)" style="display: none;">NOT GOOD</button>
                             @else
-                            <button type="button" id="ng5" class="btn btn-block btn-danger btn-sm" onclick="ng(5)" style="display: block;">NOT GOOD</button>
-                            <button type="button" id="good5" class="btn btn-block btn-success btn-sm" onclick="good(5)" style="display: none;">GOOD</button>
+                            <button type="button" id="ng4" class="btn btn-block btn-danger btn-sm" onclick="ng(4)" style="display: block;">NOT GOOD</button>
+                            <button type="button" id="good4" class="btn btn-block btn-success btn-sm" onclick="good(4)" style="display: none;">GOOD</button>
                             @endif
-                            <p id="inspection5" hidden></p></td>
+                            <p id="inspection4" hidden></p></td>
                             <td> 
-                              @if ($inspection->remark5 != '')
-                              <TEXTAREA id="remark5" onchange="addInspection2(5)">{{$inspection->remark5}}</TEXTAREA>
+                              @if ($inspection->remark4 != '')
+                              <TEXTAREA id="remark4" onchange="addInspection2(4)">{{$inspection->remark4}}</TEXTAREA>
                               @else
-                              <TEXTAREA id="remark5" onchange="addInspection2(5)"></TEXTAREA>
+                              <TEXTAREA id="remark4" onchange="addInspection2(4)"></TEXTAREA>
                               @endif
                             </td>
                           </tr>
 
-                          <!-- 6 -->
+                          <!-- 5 -->
                           <tr>
                             <td height="100">
-                              @if ($inspection->inspection6 == 1)
-                              <button type="button" id="good6" class="btn btn-block btn-success btn-sm" onclick="good(6)" style="display: block;">GOOD</button>
-                              <button type="button" id="ng6" class="btn btn-block btn-danger btn-sm" onclick="ng(6)" style="display: none;">NOT GOOD</button>
+                              @if ($inspection->inspection5 == 1)
+                              <button type="button" id="good5" class="btn btn-block btn-success btn-sm" onclick="good(5)" style="display: block;">GOOD</button>
+                              <button type="button" id="ng5" class="btn btn-block btn-danger btn-sm" onclick="ng(5)" style="display: none;">NOT GOOD</button>
                               @else
-                              <button type="button" id="ng6" class="btn btn-block btn-danger btn-sm" onclick="ng(6)" style="display: block;">NOT GOOD</button>
-                              <button type="button" id="good6" class="btn btn-block btn-success btn-sm" onclick="good(6)" style="display: none;">GOOD</button>
+                              <button type="button" id="ng5" class="btn btn-block btn-danger btn-sm" onclick="ng(5)" style="display: block;">NOT GOOD</button>
+                              <button type="button" id="good5" class="btn btn-block btn-success btn-sm" onclick="good(5)" style="display: none;">GOOD</button>
                               @endif
-                              <p id="inspection6" hidden></p></td>
+                              <p id="inspection5" hidden></p></td>
                               <td> 
-                                @if ($inspection->remark6 != '')
-                                <TEXTAREA id="remark6" onchange="addInspection2(6)">{{$inspection->remark6}}</TEXTAREA>
+                                @if ($inspection->remark5 != '')
+                                <TEXTAREA id="remark5" onchange="addInspection2(5)">{{$inspection->remark5}}</TEXTAREA>
                                 @else
-                                <TEXTAREA id="remark6" onchange="addInspection2(6)"></TEXTAREA>
+                                <TEXTAREA id="remark5" onchange="addInspection2(5)"></TEXTAREA>
                                 @endif
                               </td>
                             </tr>
 
-                            <!-- 7 -->
-
+                            <!-- 6 -->
                             <tr>
                               <td height="100">
-                                @if ($inspection->inspection7 == 1)
-                                <button type="button" id="good7" class="btn btn-block btn-success btn-sm" onclick="good(7)" style="display: block;">GOOD</button>
-                                <button type="button" id="ng7" class="btn btn-block btn-danger btn-sm" onclick="ng(7)" style="display: none;">NOT GOOD</button>
+                                @if ($inspection->inspection6 == 1)
+                                <button type="button" id="good6" class="btn btn-block btn-success btn-sm" onclick="good(6)" style="display: block;">GOOD</button>
+                                <button type="button" id="ng6" class="btn btn-block btn-danger btn-sm" onclick="ng(6)" style="display: none;">NOT GOOD</button>
                                 @else
-                                <button type="button" id="ng7" class="btn btn-block btn-danger btn-sm" onclick="ng(7)" style="display: block;">NOT GOOD</button>
-                                <button type="button" id="good7" class="btn btn-block btn-success btn-sm" onclick="good(7)" style="display: none;">GOOD</button>
+                                <button type="button" id="ng6" class="btn btn-block btn-danger btn-sm" onclick="ng(6)" style="display: block;">NOT GOOD</button>
+                                <button type="button" id="good6" class="btn btn-block btn-success btn-sm" onclick="good(6)" style="display: none;">GOOD</button>
                                 @endif
-                                <p id="inspection7" hidden></p></td>
+                                <p id="inspection6" hidden></p></td>
                                 <td> 
-                                  @if ($inspection->remark7 != '')
-                                  <TEXTAREA id="remark7" onchange="addInspection2(7)">{{$inspection->remark7}}</TEXTAREA>
+                                  @if ($inspection->remark6 != '')
+                                  <TEXTAREA id="remark6" onchange="addInspection2(6)">{{$inspection->remark6}}</TEXTAREA>
                                   @else
-                                  <TEXTAREA id="remark7" onchange="addInspection2(7)"></TEXTAREA>
+                                  <TEXTAREA id="remark6" onchange="addInspection2(6)"></TEXTAREA>
                                   @endif
                                 </td>
                               </tr>
 
-                              <!-- 8 -->
+                              <!-- 7 -->
+
                               <tr>
                                 <td height="100">
-                                  @if ($inspection->inspection8 == 1)
-                                  <button type="button" id="good8" class="btn btn-block btn-success btn-sm" onclick="good(8)" style="display: block;">GOOD</button>
-                                  <button type="button" id="ng8" class="btn btn-block btn-danger btn-sm" onclick="ng(8)" style="display: none;">NOT GOOD</button>
+                                  @if ($inspection->inspection7 == 1)
+                                  <button type="button" id="good7" class="btn btn-block btn-success btn-sm" onclick="good(7)" style="display: block;">GOOD</button>
+                                  <button type="button" id="ng7" class="btn btn-block btn-danger btn-sm" onclick="ng(7)" style="display: none;">NOT GOOD</button>
                                   @else
-                                  <button type="button" id="ng8" class="btn btn-block btn-danger btn-sm" onclick="ng(8)" style="display: block;">NOT GOOD</button>
-                                  <button type="button" id="good8" class="btn btn-block btn-success btn-sm" onclick="good(8)" style="display: none;">GOOD</button>
+                                  <button type="button" id="ng7" class="btn btn-block btn-danger btn-sm" onclick="ng(7)" style="display: block;">NOT GOOD</button>
+                                  <button type="button" id="good7" class="btn btn-block btn-success btn-sm" onclick="good(7)" style="display: none;">GOOD</button>
                                   @endif
-                                  <p id="inspection8" hidden></p></td>
+                                  <p id="inspection7" hidden></p></td>
                                   <td> 
-                                    @if ($inspection->remark8 != '')
-                                    <TEXTAREA id="remark8" onchange="addInspection2(8)">{{$inspection->remark8}}</TEXTAREA>
+                                    @if ($inspection->remark7 != '')
+                                    <TEXTAREA id="remark7" onchange="addInspection2(7)">{{$inspection->remark7}}</TEXTAREA>
                                     @else
-                                    <TEXTAREA id="remark8" onchange="addInspection2(8)"></TEXTAREA>
+                                    <TEXTAREA id="remark7" onchange="addInspection2(7)"></TEXTAREA>
                                     @endif
                                   </td>
                                 </tr>
 
-                                <!-- 9 -->
+                                <!-- 8 -->
                                 <tr>
                                   <td height="100">
-                                    @if ($inspection->inspection9 == 1)
-                                    <button type="button" id="good9" class="btn btn-block btn-success btn-sm" onclick="good(9)" style="display: block;">GOOD</button>
-                                    <button type="button" id="ng9" class="btn btn-block btn-danger btn-sm" onclick="ng(9)" style="display: none;">NOT GOOD</button>
+                                    @if ($inspection->inspection8 == 1)
+                                    <button type="button" id="good8" class="btn btn-block btn-success btn-sm" onclick="good(8)" style="display: block;">GOOD</button>
+                                    <button type="button" id="ng8" class="btn btn-block btn-danger btn-sm" onclick="ng(8)" style="display: none;">NOT GOOD</button>
                                     @else
-                                    <button type="button" id="ng9" class="btn btn-block btn-danger btn-sm" onclick="ng(9)" style="display: block;">NOT GOOD</button>
-                                    <button type="button" id="good9" class="btn btn-block btn-success btn-sm" onclick="good(9)" style="display: none;">GOOD</button>
+                                    <button type="button" id="ng8" class="btn btn-block btn-danger btn-sm" onclick="ng(8)" style="display: block;">NOT GOOD</button>
+                                    <button type="button" id="good8" class="btn btn-block btn-success btn-sm" onclick="good(8)" style="display: none;">GOOD</button>
                                     @endif
-                                    <p id="inspection9" hidden></p></td>
+                                    <p id="inspection8" hidden></p></td>
                                     <td> 
-                                      @if ($inspection->remark9 != '')
-                                      <TEXTAREA id="remark9" onchange="addInspection2(9)">{{$inspection->remark9}}</TEXTAREA>
+                                      @if ($inspection->remark8 != '')
+                                      <TEXTAREA id="remark8" onchange="addInspection2(8)">{{$inspection->remark8}}</TEXTAREA>
                                       @else
-                                      <TEXTAREA id="remark9" onchange="addInspection2(9)"></TEXTAREA>
+                                      <TEXTAREA id="remark8" onchange="addInspection2(8)"></TEXTAREA>
                                       @endif
                                     </td>
                                   </tr>
-                                  @endforeach
 
-                                </table>
+                                  <!-- 9 -->
+                                  <tr>
+                                    <td height="100">
+                                      @if ($inspection->inspection9 == 1)
+                                      <button type="button" id="good9" class="btn btn-block btn-success btn-sm" onclick="good(9)" style="display: block;">GOOD</button>
+                                      <button type="button" id="ng9" class="btn btn-block btn-danger btn-sm" onclick="ng(9)" style="display: none;">NOT GOOD</button>
+                                      @else
+                                      <button type="button" id="ng9" class="btn btn-block btn-danger btn-sm" onclick="ng(9)" style="display: block;">NOT GOOD</button>
+                                      <button type="button" id="good9" class="btn btn-block btn-success btn-sm" onclick="good(9)" style="display: none;">GOOD</button>
+                                      @endif
+                                      <p id="inspection9" hidden></p></td>
+                                      <td> 
+                                        @if ($inspection->remark9 != '')
+                                        <TEXTAREA id="remark9" onchange="addInspection2(9)">{{$inspection->remark9}}</TEXTAREA>
+                                        @else
+                                        <TEXTAREA id="remark9" onchange="addInspection2(9)"></TEXTAREA>
+                                        @endif
+                                      </td>
+                                    </tr>
+                                    @endforeach
+
+                                  </table>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
 
-                    <div class="modal modal-warning fade" id="ALERT">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title">Warning</h4>
-                            </div>
-                            <div class="modal-body">
-                              <p>Data Not Match</p>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
+                      <div class="modal modal-warning fade" id="ALERT">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Warning</h4>
+                              </div>
+                              <div class="modal-body">
+                                <p>Data Not Match</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
 
+                              </div>
                             </div>
+                            <!-- /.modal-content -->
                           </div>
-                          <!-- /.modal-content -->
+                          <!-- /.modal-dialog -->
                         </div>
-                        <!-- /.modal-dialog -->
                       </div>
                     </div>
                   </div>
+                  <!-- /.box-header -->
+
+                  <!-- /.box -->
+
                 </div>
-                <!-- /.box-header -->
+                <!-- /.col -->
 
-                <!-- /.box -->
+                <!-- Tabs within a box -->
 
-              </div>
-              <!-- /.col -->
+                @endsection
 
-              <!-- Tabs within a box -->
+                @section('scripts')
+                <script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
+                <script >
+                  var count = document.getElementById("count1").value;
+                  for (var i = 1; i <= count; i++) {
+                    this["datacheck"+i] = [];
+                    addMarking(i)
+                  }
 
-              @endsection
+                  jQuery(document).ready(function() {
+                    $('body').toggleClass("sidebar-collapse");
+                    tambahArr();
+                    $.ajaxSetup({
+                      headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                      }
+                    });
 
-              @section('scripts')
-              <script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
-              <script >
-                var count = document.getElementById("count1").value;
-                for (var i = 1; i <= count; i++) {
-                  this["datacheck"+i] = [];
-                  addMarking(i)
-                }
+                    $('.select2').select2({
+                      dropdownAutoWidth : true,
+                      width: '100%',
+                      minimumResultsForSearch: -1
+                    });
+                    $('#rows1').removeAttr('hidden');
+                    var count = document.getElementById("count").value;
+                    document.getElementById("rows1").rowSpan = count;
+                    var plt = 0;
+                    var ctn = 0;
+                    var set = 0;
+                    var pcs = 0;
+                    $(".PLT").each(function() {
+                      plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                    });
+                    $('#plte').html("" + plt);
 
-                jQuery(document).ready(function() {
-                  $('body').toggleClass("sidebar-collapse");
-                  tambahArr();
-                  $.ajaxSetup({
-                    headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
+                    $(".CTN").each(function() {
+                      ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                    });
+                    $('#ctne').html("" + ctn);
+
+                    $(".SET").each(function() {
+                      set += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                    });
+                    $('#sete').html("" + set);
+
+                    $(".PC").each(function() {
+                      pcs += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                    });
+                    $('#pcse').html("" + pcs);
                   });
 
-                  $('.select2').select2({
-                    dropdownAutoWidth : true,
-                    width: '100%',
-                    minimumResultsForSearch: -1
-                  });
-                  $('#rows1').removeAttr('hidden');
-                  var count = document.getElementById("count").value;
-                  document.getElementById("rows1").rowSpan = count;
-                      var plt = 0;
-                         var ctn = 0;
-                         var set = 0;
-                         var pcs = 0;
-                         $(".PLT").each(function() {
-                          plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-                        });
-                         $('#plte').html("" + plt);
-
-                         $(".CTN").each(function() {
-                          ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-                        });
-                         $('#ctne').html("" + ctn);
-
-                         $(".SET").each(function() {
-                          set += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-                        });
-                         $('#sete').html("" + set);
-
-                         $(".PCS").each(function() {
-                          pcs += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-                        });
-                         $('#pcse').html("" + pcs);
-                       });
 
 
+                  function hide(id){
+                   var a = id;
+                   var confirm =parseInt(document.getElementById("diff"+a).innerHTML);
+                   var y = document.getElementById("y"+a);
+                   var n = document.getElementById("n"+a);
+                   if (confirm == 0) {
+                    y.style.display = "block";
+                    n.style.display = "none";
+                  } else {
+                    y.style.display = "none";
+                    n.style.display = "block";
+                  }
 
-                function hide(id){
-                 var a = id;
-                 var confirm =parseInt(document.getElementById("diff"+a).innerHTML);
-                 var y = document.getElementById("y"+a);
-                 var n = document.getElementById("n"+a);
-                 if (confirm == 0) {
-                  y.style.display = "block";
-                  n.style.display = "none";
-                } else {
-                  y.style.display = "none";
-                  n.style.display = "block";
                 }
 
-              }
+
+                function addMarking(id){
+                  var a = id;
+                  var confirm =document.getElementById('marking'+a).innerHTML;
+                  var lowEnd = Number(confirm.split('-')[0]);
+                  var highEnd = Number(confirm.split('-')[1]);
+                  var list = [];
+                  var options = ['<option>Checked</option>'];
+                  var jum = document.getElementById("theSelectun"+a).length;  
 
 
-              function addMarking(id){
-                var a = id;
-                var confirm =document.getElementById('marking'+a).innerHTML;
-                var lowEnd = Number(confirm.split('-')[0]);
-                var highEnd = Number(confirm.split('-')[1]);
-                var list = [];
-                var options = ['<option>Checked</option>'];
-                var jum = document.getElementById("theSelectun"+a).length;  
+                  for (var i = lowEnd; i <= highEnd; i++) {
+                    list.push(i);
+                    options.push('<option id="checked', i, '" value="', i, '"  >',i, '</option>');
+                  }
 
+                  $("#theSelect"+a).html(options.join(''));
+                  $("#like"+a).attr("disabled", true);
 
-                for (var i = lowEnd; i <= highEnd; i++) {
-                  list.push(i);
-                  options.push('<option id="checked', i, '" value="', i, '"  >',i, '</option>');
-                }
-
-                $("#theSelect"+a).html(options.join(''));
-                $("#like"+a).attr("disabled", true);
-
-                var pecah = document.getElementById('arr'+a).innerHTML;
-                var arra = pecah.split(",");
-                for (var i = lowEnd; i <= highEnd; i++) {
-                  for (var z = 0; z <= (highEnd - lowEnd)+1 ; z++) {
-                    var option2 = document.getElementById("checked"+i).value;
-                    if (option2 == arra[z])  
-                    {
-                     var option3 = $("option[value='" + arra[z] + "']", '#theSelect'+a);
-                     option3.attr("disabled","disabled");
-                     $('#theSelectun'+a).append('<option value="'+arra[z]+'" >'+arra[z]+'</option>');
+                  var pecah = document.getElementById('arr'+a).innerHTML;
+                  var arra = pecah.split(",");
+                  for (var i = lowEnd; i <= highEnd; i++) {
+                    for (var z = 0; z <= (highEnd - lowEnd)+1 ; z++) {
+                      var option2 = document.getElementById("checked"+i).value;
+                      if (option2 == arra[z])  
+                      {
+                       var option3 = $("option[value='" + arra[z] + "']", '#theSelect'+a);
+                       option3.attr("disabled","disabled");
+                       $('#theSelectun'+a).append('<option value="'+arra[z]+'" >'+arra[z]+'</option>');
+                     }
                    }
                  }
-               }
 
 
   // document.getElementById("likes"+a).style.display="block";
@@ -697,7 +703,7 @@ function check(id,id_detail){
     dropdownAutoWidth : true,
     width: '100%',
     minimumResultsForSearch: -1
-   
+    
   });
 
   var abc = document.getElementById('arr'+a).innerHTML.split(",");
@@ -727,7 +733,7 @@ function check2(id,id_detail){
   // var options = ['<option disabled>Unchecked</option>'];
   var value = $('#theSelect'+a).val();
   var jum = document.getElementById("theSelectun"+a).length;  
- 
+  
   if (value === '') return;
 
   var option = $("option[value='" + value + "']", '#theSelect'+a);
@@ -827,7 +833,7 @@ function uncheck2(id,id_detail){
   $('#theSelectun'+a).find('[value="'+value+'"]').remove();
   $('#theSelect'+a).find('[value="'+value+'"]').removeAttr('disabled');
 
- 
+  
 
   $('#theSelect'+a)[0].selectedIndex = 0;
   $('#theSelectun'+a)[0].selectedIndex = 0;
@@ -984,102 +990,102 @@ function ng(id){
 
 function addInspection(){
   var id =document.getElementById("id_checkSheet_master").innerHTML;
-      
-      var data = {
+  
+  var data = {
 
-        id:id,
-      }
-      
-      $.post('{{ url("add/CheckSheet") }}', data, function(result, status, xhr){
-        console.log(status);
-        console.log(result);
-        console.log(xhr);
-      });
-    }
+    id:id,
+  }
+  
+  $.post('{{ url("add/CheckSheet") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+  });
+}
 
 
-    function addInspection2(id){
-      var a = id;
-      var text = document.getElementById("remark"+a).value;
-      var id =document.getElementById("id_checkSheet_master").innerHTML;
-      var remark = "remark"+a;
-      var data = {
-        remark:remark,
-        text:text,
-        id:id,
-      }
-      $.post('{{ url("addDetail2/CheckSheet") }}', data, function(result, status, xhr){
-        console.log(status);
-        console.log(result);
-        console.log(xhr);
-      });
-      
-    }
+function addInspection2(id){
+  var a = id;
+  var text = document.getElementById("remark"+a).value;
+  var id =document.getElementById("id_checkSheet_master").innerHTML;
+  var remark = "remark"+a;
+  var data = {
+    remark:remark,
+    text:text,
+    id:id,
+  }
+  $.post('{{ url("addDetail2/CheckSheet") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+  });
+  
+}
 
-    function nomor(id,nama){
-      var kolom = id;
-      var isi =nama;
-      var id =document.getElementById("id_checkSheet_master").innerHTML;
-      
-      var data = {
-        kolom:kolom,
-        isi:isi,
-        id:id,
-      }
-      $.post('{{ url("nomor/CheckSheet") }}', data, function(result, status, xhr){
-        console.log(status);
-        console.log(result);
-        console.log(xhr);
-      });
-      
-    }
+function nomor(id,nama){
+  var kolom = id;
+  var isi =nama;
+  var id =document.getElementById("id_checkSheet_master").innerHTML;
+  
+  var data = {
+    kolom:kolom,
+    isi:isi,
+    id:id,
+  }
+  $.post('{{ url("nomor/CheckSheet") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+  });
+  
+}
 
-    function masuk(isi,id){
+function masuk(isi,id){
 
-      var isi =isi;
-      var id =id;
-      var id_master =document.getElementById("id_checkSheet_master").innerHTML;
-      
-      var data = {
+  var isi =isi;
+  var id =id;
+  var id_master =document.getElementById("id_checkSheet_master").innerHTML;
+  
+  var data = {
 
-        isi:isi,
-        id:id,
-        id_master:id_master,
-      }
-      $.post('{{ url("bara/CheckSheet") }}', data, function(result, status, xhr){
-        console.log(status);
-        console.log(result);
-        console.log(xhr);
-      });
-      
-    }
-    function save(){
-      var count = document.getElementById("count1").value;
-      var ctn = 0;
-      var plt = 0;
-      $(".CTN").each(function() {
-        ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-      });
-      $(".PLT").each(function() {
-        plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
-      });
+    isi:isi,
+    id:id,
+    id_master:id_master,
+  }
+  $.post('{{ url("bara/CheckSheet") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+  });
+  
+}
+function save(){
+  var count = document.getElementById("count1").value;
+  var ctn = 0;
+  var plt = 0;
+  $(".CTN").each(function() {
+    ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+  });
+  $(".PLT").each(function() {
+    plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+  });
 
-      var jumlah = ctn + plt;
-      var semua = 0;
-      for (var i = 1; i <= count; i++) {
-        var idt= "confirm"+i;        
-        var a = document.getElementById("confirm"+i).innerHTML;
-        semua += parseInt(a);
-      }
-     
-      if(jumlah != semua){
+  var jumlah = ctn + plt;
+  var semua = 0;
+  for (var i = 1; i <= count; i++) {
+    var idt= "confirm"+i;        
+    var a = document.getElementById("confirm"+i).innerHTML;
+    semua += parseInt(a);
+  }
+  
+  if(jumlah != semua){
 
-        $('#ALERT').modal('show');
-      }else{
+    $('#ALERT').modal('show');
+  }else{
 
-        document.getElementById("kirim").submit(); 
-      }
-    }
+    document.getElementById("kirim").submit(); 
+  }
+}
 
-  </script>
-  @stop
+</script>
+@stop
