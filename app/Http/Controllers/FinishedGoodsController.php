@@ -88,7 +88,7 @@ class FinishedGoodsController extends Controller
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(5)));
 		}
 		
-		$query = "select date_format(b.st_date, '%d-%b-%y') as st_date, b.hpl, a.actual as act, b.plan as plan, round((a.actual/b.plan)*100,1) as actual from
+		$query = "select date_format(b.st_date, '%d-%b-%y') as st_date, b.hpl, a.actual as act, b.plan as plan, round((coalesce(a.actual,0)/b.plan)*100,1) as actual from
 		(
 		select shipment_schedules.st_date, materials.hpl, sum(flos.actual) as actual from flos 
 		left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id
