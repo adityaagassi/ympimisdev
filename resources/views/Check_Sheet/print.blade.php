@@ -324,16 +324,16 @@
         a++;
         var text = document.getElementById("inspec"+a).innerHTML;
         if (text == 0){
-          // document.getElementById("g"+i).innerHTML ="[ - ]";
-          // document.getElementById("ng"+i).innerHTML ="[ "+"&#10004;"+" ]";
-          $("#g"+i).text("[ - ]");
-          $("#ng"+i).text("[ V ]");
+          document.getElementById("g"+i).innerHTML ="[ - ]";
+          document.getElementById("ng"+i).innerHTML ="[ "+"&#10004;"+" ]";
+          // $("#g"+i).text("[ - ]");
+          // $("#ng"+i).text("[ V ]");
           
         }else {
-          $("#g"+i).text("[ V ]");
-          $("#ng"+i).text("[ - ]");
-          // document.getElementById("g"+i).innerHTML ="[ - ]";
-          // document.getElementById("ng"+i).innerHTML ="[ "+"&#10004;"+" ]";
+          // $("#g"+i).text("[ V ]");
+          // $("#ng"+i).text("[ - ]");
+          document.getElementById("g"+i).innerHTML ="[ "+"&#10004;"+" ]";
+          document.getElementById("ng"+i).innerHTML ="[ - ]";
         }
         
       }

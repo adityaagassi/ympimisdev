@@ -354,7 +354,7 @@ class CheckSheet extends Controller
       {
         if (strlen($row) > 0) {
           $row = explode("\t", $row);
-          if ($row[0] != ''){
+          if ($row[0] != '' && $row[0] !='CONSIGNEE & ADDRESS'){
               $detail = new DetailChecksheet([
               'id_checkSheet' =>$code_generator->prefix . $number1,
               'destination' => $row[0],
@@ -370,8 +370,6 @@ class CheckSheet extends Controller
             ]);
             $detail->save();
             
-            
-
           }
           
         }
