@@ -34,7 +34,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		Shipment Result <span class="text-purple">出荷結果</span>
-		<small>Based on ETD YMPI <span class="text-purple">???</span></small>
+		<small>Based on ETD YMPI <span class="text-purple">YMPIのETDベース</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
