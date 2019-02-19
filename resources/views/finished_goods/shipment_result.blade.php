@@ -78,7 +78,9 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<div id="container" style="width:100%; height:450px;"></div>
+							<center>
+								<div id="container" style="width:100%; height:450px;"></div>
+							</center>
 						</div>	
 					</div>
 				</div>

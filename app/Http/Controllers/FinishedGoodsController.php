@@ -88,7 +88,20 @@ class FinishedGoodsController extends Controller
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(5)));
 		}
 		
-		$query = "select date_format(b.st_date, '%d-%b-%y') as st_date, b.hpl, a.actual as act, b.plan as plan, round((coalesce(a.actual,0)/b.plan)*100,1) as actual from
+		$query = "select e.st_date, e.hpl, act, plan, actual from
+		(
+		select distinct materials.hpl, c.st_date from materials
+		left join
+		(
+		select shipment_schedules.st_date, materials.category from shipment_schedules left join materials on materials.material_number = shipment_schedules.material_number where shipment_schedules.st_date >= '" . $datefrom . "' and shipment_schedules.st_date <= '" . $dateto . "' group by shipment_schedules.st_date, materials.category
+		) as c 
+		on c.category = materials.category
+		where materials.category = 'FG'
+		) as e
+
+		left join
+		(
+		select b.st_date, b.hpl, a.actual as act, b.plan as plan, round((coalesce(a.actual,0)/b.plan)*100,1) as actual from
 		(
 		select shipment_schedules.st_date, materials.hpl, sum(flos.actual) as actual from flos 
 		left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id
@@ -104,7 +117,9 @@ class FinishedGoodsController extends Controller
 		group by  shipment_schedules.st_date, materials.hpl
 		) as b on b.st_date = a.st_date and a.hpl = b.hpl
 		where b.st_date >= '" . $datefrom . "' and b.st_date <= '" . $dateto . "'
-		order by st_date asc, hpl desc";
+		) as d
+		on d.st_date = e.st_date and d.hpl = e.hpl
+		order by e.st_date asc, e.hpl desc";
 
 		$shipment_results = db::select($query);
 
