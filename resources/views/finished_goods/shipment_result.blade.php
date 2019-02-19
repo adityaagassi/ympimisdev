@@ -80,8 +80,9 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12">
 							<center>
 								<div id="container" style="width:100%; height:450px;"></div>
+								<span class="text-red">*Blank = No Export Plan</span>
 							</center>
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>
@@ -129,7 +130,8 @@ table.table-bordered > tfoot > tr > th{
 @endsection
 
 @section('scripts')
-<script src="{{ url("js/highcharts.js")}}"></script>
+{{-- <script src="{{ url("js/highcharts.js")}}"></script> --}}
+<script src="{{ url("js/highstock.js")}}"></script>
 {{-- <script src="{{ url("js/annotations.js")}}"></script> --}}
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
@@ -219,6 +221,12 @@ table.table-bordered > tfoot > tr > th{
 						}
 					}
 
+					if(xCategories.length <= 5){
+						var scrollMax = xCategories.length-1;
+					}
+					else{
+						var scrollMax = 4;
+					}
 					var yAxisLabels = [0,25,50,75,100,140];
 					Highcharts.chart('container', {
 						chart: {
@@ -242,6 +250,21 @@ table.table-bordered > tfoot > tr > th{
 									color: 'rgba(75, 30, 120)',
 									// fontWeight: 'bold'
 								}
+							},
+							min: 0,
+							max:scrollMax,
+							scrollbar: {
+								enabled: true,
+								barBackgroundColor: 'rgba(126,86,134,.7)',
+								barBorderRadius: 7,
+								barBorderWidth: 0,
+								buttonBackgroundColor: 'rgba(126,86,134,.7)',
+								buttonBorderWidth: 0,
+								buttonBorderRadius: 7,
+								trackBackgroundColor: 'none',
+								trackBorderWidth: 1,
+								trackBorderRadius: 8,
+								trackBorderColor: 'rgba(126,86,134,.7)'
 							}
 						},
 						yAxis: {
