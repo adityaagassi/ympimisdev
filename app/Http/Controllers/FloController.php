@@ -26,6 +26,7 @@ use Storage;
 use Carbon\Carbon;
 use App\StampInventory;
 use App\LogProcess;
+use App\LogTransaction;
 
 class FloController extends Controller
 {
@@ -1049,7 +1050,6 @@ class FloController extends Controller
 		if($flo != null){
 
 			$flo->status = $status;
-			$flo->save();
 
 			if($request->get('status') == '2'){
 				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
@@ -1064,8 +1064,13 @@ class FloController extends Controller
 			if($request->get('status') == '3'){
 				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
 				$inventory->quantity = ($inventory->quantity+$flo->actual);
+				$flo->invoice_number = null;
+				$flo->container_id = null;
+				$flo->bl_date = null;
 				$inventory->save();
 			}
+
+			$flo->save();
 
 			$response = array(
 				'status' => true,
@@ -1256,6 +1261,38 @@ class FloController extends Controller
 		$flo_detail = FloDetail::find($request->get('id'));
 		$material = Material::where('material_number', '=', $flo_detail->material_number)->first();
 
+		$id = Auth::id();
+
+		if($flo_detail->completion != null){
+			$log_transaction = new LogTransaction([
+				'material_number' => $flo_detail->material_number,
+				'issue_plant' => '8190',
+				'issue_storage_location' => $material->issue_storage_location,
+				'receive_plant' => '8190',
+				'receive_storage_location' => $material->issue_storage_location,
+				'transaction_code' => 'MB1B',
+				'mvt' => '102',
+				'transaction_date' => date('Y-m-d H:i:s'),
+				'qty' => $flo_detail->quantity,
+				'created_by' => $id
+			]);
+		}
+
+		if($flo_detail->transfer != null){
+			$log_transaction = new LogTransaction([
+				'material_number' => $flo_detail->material_number,
+				'issue_plant' => '8190',
+				'issue_storage_location' => $material->issue_storage_location,
+				'receive_plant' => '8191',
+				'receive_storage_location' => 'FSTK',
+				'transaction_code' => 'MB1B',
+				'mvt' => '9P2',
+				'transaction_date' => date('Y-m-d H:i:s'),
+				'qty' => $flo_detail->quantity,
+				'created_by' => $id
+			]);
+		}
+
 		$flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();
 		if($flo != null){
 			if(($flo->actual-$flo_detail->quantity) <= 0){
@@ -1265,12 +1302,14 @@ class FloController extends Controller
 				$flo->actual = $flo->actual-$flo_detail->quantity;
 				$flo->save();
 			}
+			$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
+			$inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
+			$inventory->save();
+			$flo_detail->forceDelete();
 		}
-
-		$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
-		$inventory->quantity = ($inventory->quantity-$flo_detail->quantity);
-		$inventory->save();
-		$flo_detail->forceDelete();
+		else{
+			$flo_detail->forceDelete();
+		}
 
 		$response = array(
 			'status' => true,
