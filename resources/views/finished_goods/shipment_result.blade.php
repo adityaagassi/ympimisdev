@@ -365,7 +365,7 @@ table.table-bordered > tfoot > tr > th{
 						"columnDefs": [{
 							"targets": 5,
 							"createdCell": function (td, cellData, rowData, row, col) {
-								if ( cellData <  0 ) {
+								if ( cellData.substring(0,1) ==  "-" ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 								}
 								else
