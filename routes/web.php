@@ -47,6 +47,8 @@ Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
 	Route::get('index/tr_transfer', 'InventoryController@indexTransfer');
 	Route::get('fetch/tr_transfer', 'InventoryController@fetchTransfer');
 	Route::get('download/tr_transfer', 'InventoryController@downloadTransfer');
+
+	Route::get('index/tr_history', 'InventoryController@indexHistory');
 });
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){

@@ -58,6 +58,10 @@ class InventoryController extends Controller
         ))->with('page', 'Transfer Transaction')->with('head', 'Transaction');
     }
 
+    public function indexHistory(){
+        return view('inventories.indexHistory')->with('page', 'History Transaction')->with('head', 'Transaction');
+    }
+
     public function fetchCompletion(Request $request){
         $completions = db::table('flo_details')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
