@@ -367,6 +367,7 @@ class CheckSheet extends Controller
               'package_set' => $row[6],
               'qty_qty' => $row[7],
               'qty_set' => $row[8],
+              'created_by' => $id
             ]);
             $detail->save();
             
