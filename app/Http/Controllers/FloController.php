@@ -1268,14 +1268,13 @@ class FloController extends Controller
 				'material_number' => $flo_detail->material_number,
 				'issue_plant' => '8190',
 				'issue_storage_location' => $material->issue_storage_location,
-				'receive_plant' => '8190',
-				'receive_storage_location' => $material->issue_storage_location,
 				'transaction_code' => 'MB1B',
 				'mvt' => '102',
 				'transaction_date' => date('Y-m-d H:i:s'),
 				'qty' => $flo_detail->quantity,
 				'created_by' => $id
 			]);
+			$log_transaction->save();
 		}
 
 		if($flo_detail->transfer != null){
@@ -1291,6 +1290,7 @@ class FloController extends Controller
 				'qty' => $flo_detail->quantity,
 				'created_by' => $id
 			]);
+			$log_transaction->save();
 		}
 
 		$flo = Flo::where('flo_number', '=', $flo_detail->flo_number)->first();

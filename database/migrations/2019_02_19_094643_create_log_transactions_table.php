@@ -18,8 +18,8 @@ class CreateLogTransactionsTable extends Migration
             $table->string('material_number');
             $table->string('issue_plant');
             $table->string('issue_storage_location');
-            $table->string('receive_plant');
-            $table->string('receive_storage_location');
+            $table->string('receive_plant')->nullable();
+            $table->string('receive_storage_location')->nullable();
             $table->string('cost_center')->nullable();
             $table->string('gl_account')->nullable();
             $table->string('transaction_code');
