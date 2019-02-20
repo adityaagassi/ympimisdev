@@ -173,6 +173,7 @@ class MaedaoshiController extends Controller
 			$flo = DB::table('flos')
 			->leftJoin('shipment_schedules', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
 			->where('shipment_schedules.material_number', '=', $request->get('material'))
+			->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
 			->where('flos.status', '=', '0')
 			->where(DB::raw('flos.quantity-flos.actual'), '>', 0)
 			->first();
