@@ -187,12 +187,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-      try{
-
-        if(strlen($request->get('password'))>0 && strlen($request->get('password_confirmation')>0)){
-          if($request->get('password') == $request->get('password_confirmation')){
-            $user = User::find($id);
+      $user = User::find($id);
+      if($request->get('password') != "" || $request->get('password_confirmation') != ""){
+        if($request->get('password') == $request->get('password_confirmation')){
+          try{
             $user->name = $request->get('name');
             $user->username = $request->get('username');
             $user->email = $request->get('email');
@@ -201,13 +199,22 @@ class UserController extends Controller
             $user->save();
             return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
           }
-          else
-          {
-            return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'User');
+            }
           }
         }
-        elseif ($request->get('password')=='' && $request->get('password_confirmation')=='') {
-          $user = User::find($id);
+        else{
+          return back()->withErrors(['password' => ['Password confirmation is invalid.']])->with('page', 'User');          
+        }
+      }
+      else{
+        try{
           $user->name = $request->get('name');
           $user->username = $request->get('username');
           $user->email = $request->get('email');
@@ -215,21 +222,16 @@ class UserController extends Controller
           $user->save();
           return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
         }
-
-
-      }
-      catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            // self::delete($lid);
-          return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+        catch (QueryException $e){
+          $error_code = $e->errorInfo[1];
+          if($error_code == 1062){
+            return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+          }
+          else{
+            return back()->with('error', $e->getMessage())->with('page', 'User');
+          }
         }
-        else{
-          return back()->with('error', $e->getMessage())->with('page', 'User');
-        }
-
       }
-            //
     }
 
     /**
