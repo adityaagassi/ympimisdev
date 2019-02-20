@@ -16,6 +16,7 @@ use App\AreaInspection;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use File;
+use Response;
 
 class CheckSheet extends Controller
 {
@@ -594,5 +595,22 @@ class CheckSheet extends Controller
     return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been Deleted.')->with('page', 'Check Sheet');
   }
 
+public function persen($id){
+   
+
+    $ceksheet = DB::table('detail_checksheets')    
+    ->where('id_checkSheet', '=', $id);
+     
+    $total = $ceksheet->sum('detail_checksheets.package_qty');
+    $cek = $ceksheet->sum('detail_checksheets.confirm');
+   
+
+    $response = array(
+      'status' => true,
+     'total' => $total,
+      'cek' => $cek,
+    );
+    return Response::json($response);
+  }
 
 }
