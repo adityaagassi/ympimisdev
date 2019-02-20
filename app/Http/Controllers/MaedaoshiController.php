@@ -183,7 +183,7 @@ class MaedaoshiController extends Controller
 				->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
 				->leftJoin('material_volumes', 'shipment_schedules.material_number', '=', 'material_volumes.material_number')
 				->where('shipment_schedules.material_number', '=', $request->get('material'))
-				// ->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
+				->where('shipment_schedules.destination_code', '<>', 'Y1000YJ')
 				->orderBy('shipment_schedules.st_date', 'ASC')
 				->select(DB::raw('if(shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0)) > material_volumes.lot_flo, material_volumes.lot_flo, shipment_schedules.quantity-sum(if(flos.actual > 0, flos.actual, 0))) as flo_quantity', 'shipment_schedules.id'))
 				->groupBy('shipment_schedules.quantity', 'material_volumes.lot_flo', 'shipment_schedules.id')
