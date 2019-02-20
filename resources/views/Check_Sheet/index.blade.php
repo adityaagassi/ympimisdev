@@ -137,7 +137,7 @@ table.table-bordered > tfoot > tr > th{
             @if($time->status == 1)            
             <span data-toggle="tooltip"  class="badge bg-green"><i class="fa fa-fw fa-check"></i></span>
             @else
-            @if($time->destination != "XYMI")
+            @if($time->destination != "NINGBO")
             <a class="btn btn-warning btn-xs" href="{{url('check/CheckSheet', $time['id'])}}">Check</a>
             @else
             <a class="btn btn-warning btn-xs" href="{{url('checkmarking/CheckSheet', $time['id'])}}">Check</a>

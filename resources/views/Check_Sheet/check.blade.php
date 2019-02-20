@@ -172,110 +172,141 @@ tfoot input {
 
     <p id="id_checkSheet_master_id" hidden>{{$time->id}}</p>
   </ul>
-  <P class="pull-right"><br>
-    <a href="{{ url("index/CheckSheet")}}">
-      <button class="btn btn-warning btn-lg" style="color:white">
-        <i class=" fa fa-backward "></i> Back</button> &nbsp;
-      </a>
-      <button class="btn btn-success btn-lg" style="color:white" onclick="save()">
-        <i class="fa fa-save "></i> Save</button>&nbsp;&nbsp;&nbsp;
 
-      </P>
-      <div class="tab-content no-padding">
+  <div class="tab-content no-padding">
 
-        <div class="chart tab-pane active" id="cargo" style="position: relative; ">
-          <div class="box-body">
-            <div class="table-responsive">
-              <table class="table no-margin table-bordered table-striped">
-                <thead style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                    <th>DEST</th>
-                    <th>INVOICE</th>
-                    <th>GMC</th>
-                    <th>DESCRIPTION OF GOODS</th>
-                    <th>MARKING NO.</th>
-                    <th colspan="2">PACKAGE</th>
-                    <th colspan="2">QUANTITY</th>
-                    <th colspan="2">Check</th>
-                    <th>Total</th>
-                    <th>Confirm</th>
-                    <th colspan="2">Diff</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                   @foreach($detail as $nomor => $detail)
-                   <input type="text" id="countdetail" value="{{$loop->count}}" hidden></input>
-                   <td width="5%">{{$detail->destination}}</td>
-                   <td width="8%">{{$detail->invoice}}</td>
-                   <td width="5%">{{$detail->gmc}}</td>
-                   <td>{{$detail->goods}}</td>
-                   <td width="2%">{{$detail->marking}}</td>
-                   @if($detail->package_set =="PL")
-                   <td class="PLT" width="5%">{{$detail->package_qty}}</td>
-                   @elseif($detail->package_set =="C/T")
-                    <td class="CTN" width="5%">{{$detail->package_qty}}</td>
-                    @else
-                    <td class="{{$detail->package_qty}}" width="5%">{{$detail->package_qty}}</td>
+    <div class="chart tab-pane active" id="cargo" style="position: relative; ">
+      <div class="box-body">
+        <div class="row">
+          <div class="col-xs-4"></div>
+          <div class="col-xs-4">
+            <div class="input-group margin">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-info btn-lg"><i class="fa fa-search"></i></button>
+              </div>
+              <!-- /btn-group -->
+              <input type="text" class="form-control input-lg" name="myInput" id="myInput" onkeyup="cari()" placeholder="Search ...">
+            </div>
+          </div>
+          <div class="col-xs-4">
+           <P class="pull-right">
+            <a href="{{ url("index/CheckSheet")}}">
+              <button class="btn btn-warning btn-lg" style="color:white">
+                <i class=" fa fa-backward "></i> Back</button> &nbsp;
+              </a>
+              <button class="btn btn-success btn-lg" style="color:white" onclick="save()">
+                <i class="fa fa-save "></i> Save</button>&nbsp;&nbsp;&nbsp;
+
+              </P>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table no-margin table-bordered table-striped" id="tabel1">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th>DEST</th>
+                  <th>INVOICE</th>
+                  <th>GMC</th>
+                  <th>DESCRIPTION OF GOODS</th>
+                  <th>MARKING NO.</th>
+                  <th colspan="2">PACKAGE</th>
+                  <th colspan="2">QUANTITY</th>
+                  <th colspan="2">Check</th>
+                  <th>Total</th>
+                  <th>Confirm</th>
+                  <th colspan="3">Diff</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                 @foreach($detail as $nomor => $detail)
+                 <input type="text" id="countdetail" value="{{$loop->count}}" hidden></input>
+                 <td width="5%">{{$detail->destination}}</td>
+                 <td width="8%">{{$detail->invoice}}</td>
+                 <td width="5%">{{$detail->gmc}}</td>
+                 <td>{{$detail->goods}}</td>
+                 <td width="2%">{{$detail->marking}}</td>
+                 @if($detail->package_set =="PL")
+                 <td class="PLT" width="5%">{{$detail->package_qty}}</td>
+                 <td class="PLTT" hidden>{{$detail->confirm}}</td>
+                 @elseif($detail->package_set =="C/T")
+                 <td class="CTN" width="5%">{{$detail->package_qty}}</td>
+                 <td class="CTNT" hidden>{{$detail->confirm}}</td>
+                 @else
+                 <td class="{{$detail->package_qty}}" width="5%">{{$detail->package_qty}}</td>
+                 @endif
+                 <td width="2%">{{$detail->package_set}}</td>
+                 <td class="{{$detail->qty_set}}" width="5%">{{$detail->qty_qty}}</td>
+                 <td width="2%">{{$detail->qty_set}} </td>
+                 <td width="8%">
+                   @if( $detail->package_set == "-")
+                   <button class="btn btn-block btn-primary btn-sm" id="like{{$nomor + 1}}" onclick="okbara({{$nomor + 1}}); masuk('0','{{$detail->id}}');totalconfirm()" style="display: block;"> Check</button>
+                   @else
+                   <button class="btn btn-block btn-primary btn-sm" id="like{{$nomor + 1}}" onclick="add({{$nomor + 1}}); minusdata({{$nomor + 1}}); hide({{$nomor + 1}}); update({{$nomor + 1}},{{$detail->id}}); totalconfirm()" style="display: block;"> Check</button>
                    @endif
-                   <td width="2%">{{$detail->package_set}}</td>
-                   <td class="{{$detail->qty_set}}" width="5%">{{$detail->qty_qty}}</td>
-                   <td width="2%">{{$detail->qty_set}} </td>
-                   <td width="8%">
-                     @if( $detail->package_set == "-")
-                     <button class="btn btn-block btn-primary btn-sm" id="like{{$nomor + 1}}" onclick="okbara({{$nomor + 1}}); masuk('0','{{$detail->id}}')" style="display: block;"> Check</button>
-                     @else
-                     <button class="btn btn-block btn-primary btn-sm" id="like{{$nomor + 1}}" onclick="add({{$nomor + 1}}); minusdata({{$nomor + 1}}); hide({{$nomor + 1}}); update({{$nomor + 1}},{{$detail->id}});" style="display: block;"> Check</button>
-                     @endif
-                   </td>
-                   <td width="8%">
-                    @if( $detail->package_set == "-")
-                    <button class="btn btn-block btn-warning btn-sm" id="like{{$nomor + 1}}" onclick="ngbara({{$nomor + 1}});  masuk('1','{{$detail->id}}')" style="display: block;"> Uncheck</button>
-                    @else
-                    <button class="btn btn-block btn-warning btn-sm" id="like{{$nomor + 1}}" onclick="minus({{$nomor + 1}}); minusdata({{$nomor + 1}}); hide({{$nomor + 1}}); update({{$nomor + 1}},{{$detail->id}});" style="display: block;"> Uncheck</button>
-                    @endif
-                  </td>
-                  <td width="2%"><p id="total{{$nomor + 1}}" >{{$detail->package_qty}}</p></td>
-                  <td width="2%"><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
-                  <td width="5%"><p id="diff{{$nomor + 1}}">{{$detail->diff}}</p></td>
-                  @if( $detail->package_set == "-" )
-                  <td width="5%">
-                    @if( $detail->bara == "1" )
-                    <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span>
-                    <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span> 
-                    @elseif( $detail->bara == "0" )
-                    <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
-                    <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> 
-                    @endif
-                  </td>
+                 </td>
+                 <td width="8%">
+                  @if( $detail->package_set == "-")
+                  <button class="btn btn-block btn-warning btn-sm" id="like{{$nomor + 1}}" onclick="ngbara({{$nomor + 1}});  masuk('1','{{$detail->id}}');totalconfirm()" style="display: block;"> Uncheck</button>
                   @else
-                  @if( $detail->diff == "0" )
-                  <td width="5%"><span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
-                    <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> </td>
-                    @else
-                    <td width="5%"><span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span>
-                      <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span> </td>
-                      @endif
-                      @endif
-                    </tr>
-                    @endforeach
-                  </tbody>
-                  <tfoot style="background-color: RGB(252, 248, 227);">
-                    <tr>
-                      <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
-                      <th><p id="plte"></p></th>
-                      <th>PL</th>
-                      <th><p id="sete"></p></th>
-                      <th>SET</th>
-                      <th colspan="6"></th>
-                    </tr>
-                    <tr>
+                  <button class="btn btn-block btn-warning btn-sm" id="like{{$nomor + 1}}" onclick="minus({{$nomor + 1}}); minusdata({{$nomor + 1}}); hide({{$nomor + 1}}); update({{$nomor + 1}},{{$detail->id}}); totalconfirm();" style="display: block;"> Uncheck</button>
+                  @endif
+                </td>
+                <td width="2%"><p id="total{{$nomor + 1}}" >{{$detail->package_qty}}</p></td>
+                @if($detail->package_set =="PL")
+                <td width="2%" class="PLTTT"><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
+                @elseif($detail->package_set =="C/T")
+                <td width="2%" class="CTNTT"><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
+                @else
+                <td width="2%"><p id="inc{{$nomor + 1}}">{{$detail->confirm}}</p></td>
+                @endif
+                <td width="5%"><p id="diff{{$nomor + 1}}">{{$detail->diff}}</p></td>
+                @if( $detail->package_set == "-" )
+                <td width="5%">
+                  @if( $detail->bara == "1" )
+                  <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span>
+                  <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span> 
+                  @elseif( $detail->bara == "0" )
+                  <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
+                  <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> 
+                  @endif
+                </td>
+                @else
+                @if( $detail->diff == "0" )
+                <td width="5%"><span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw fa-check"></i></span>
+                  <span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw  fa-close"></i></span> </td>
+                  @else
+                  <td width="5%"><span data-toggle="tooltip"  class="badge bg-red" id="n{{$nomor + 1}}" style="display: block;"><i class="fa fa-fw  fa-close"></i></span>
+                    <span data-toggle="tooltip"  class="badge bg-green" id="y{{$nomor + 1}}" style="display: none;"><i class="fa fa-fw fa-check"></i></span> </td>
+                    @endif
+                    @endif
+                  </tr>
+                  @endforeach
+                </tbody>
+                <tfoot style="background-color: RGB(252, 248, 227);">
+                  <tr>
+                    <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
+                    <th><p id="plte"></p></th>
+                    <th>PL</th>
+                    <th><p id="sete"></p></th>
+                    <th>SET</th>
+                    <th colspan="2" rowspan="2">Confirm</th>
+                    <th>PL</th>
+                    <th><p id="pltet"></p></th>                   
+                    <th  rowspan="2">Diff</th>
+                    <th><p id="pltem"></p></th>   
+                  </tr>
+                  <tr>
 
-                      <th><p id="ctne"></p></th>
-                      <th>C/T</th>
-                      <th><p id="pcse"></p></th>
-                      <th>PC</th>
-                      <th colspan="6"></th>
+                    <th><p id="ctne"></p></th>
+                    <th>C/T</th>
+                    <th><p id="pcse"></p></th>
+                    <th>PC</th>
+                    <th>C/T</th>
+                    <th><p id="ctnet"></p></th>                    
+                    <th ><p id="ctntem"></th>
+
                     </tr>
                   </tfoot>
                 </table>
@@ -283,7 +314,7 @@ tfoot input {
             </div>
 
           </div>
-          
+
 
           <div class="chart tab-pane" id="container" style="position: relative;">
 
@@ -523,7 +554,7 @@ tfoot input {
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-outline pull-right" data-dismiss="modal">Close</button>
-                                
+
                               </div>
                             </div>
                             <!-- /.modal-content -->
@@ -555,6 +586,8 @@ tfoot input {
                          var ctn = 0;
                          var set = 0;
                          var pcs = 0;
+                         var pltt = 0;
+                         var ctnt = 0;
                          $(".PLT").each(function() {
                           plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
                         });
@@ -564,6 +597,21 @@ tfoot input {
                           ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
                         });
                          $('#ctne').html("" + ctn);
+
+                         $(".PLTT").each(function() {
+                          pltt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                        });
+                         $('#pltet').html("" + pltt);
+
+                         $(".CTNT").each(function() {
+                          ctnt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+                        });
+                         $('#ctnet').html("" + ctnt);
+
+                         var pltem = pltt-plt ;
+                         var ctntem =ctnt- ctn ;
+                         $('#pltem').html("" + pltem);
+                         $('#ctntem').html("" + ctntem);
 
                          $(".SET").each(function() {
                           set += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
@@ -575,6 +623,25 @@ tfoot input {
                         });
                          $('#pcse').html("" + pcs);
                        });
+
+                        function cari() {
+                          var input, filter, table, tr, td, i, txtValue;
+                          input = document.getElementById("myInput");
+                          filter = input.value.toUpperCase();
+                          table = document.getElementById("tabel1");
+                          tr = table.getElementsByTagName("tr");
+                          for (i = 0; i < tr.length; i++) {
+                            td = tr[i].getElementsByTagName("td")[3];
+                            if (td) {
+                              txtValue = td.textContent || td.innerText;
+                              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                              } else {
+                                tr[i].style.display = "none";
+                              }
+                            }       
+                          }
+                        }
 
                         function add(id){
 
@@ -803,9 +870,38 @@ tfoot input {
 
         $('#ALERT').modal('show');
       }else{
-        
+
         document.getElementById("kirim").submit(); 
       }
+    }
+
+    function totalconfirm(){
+      var pltt = 0;
+      var ctnt = 0;
+      var plt = 0;
+      var ctn = 0;
+      $(".PLTTT").each(function() {
+        pltt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+      });
+      $('#pltet').html("" + pltt);
+
+      $(".CTNTT").each(function() {
+        ctnt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+      });
+      $('#ctnet').html("" + ctnt);
+
+      $(".PLT").each(function() {
+        plt += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+      });
+
+      $(".CTN").each(function() {
+        ctn += parseFloat($(this).text().replace(/[^0-9\.-]+/g, ""));
+      });
+      var pltem = pltt-plt ;
+      var ctntem =ctnt- ctn ;
+      $('#pltem').html("" + pltem);
+      $('#ctntem').html("" + ctntem);
+      
     }
     
   </script>

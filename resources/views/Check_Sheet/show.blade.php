@@ -127,12 +127,23 @@ table.table-bordered > tfoot > tr > th{
  <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-lg" style="color:white"><i class="fa fa-folder-open-o"></i> Upload {{ $page }}</a>
 </div><BR>
 
-
-
 </div>
+
+  <div class="box box-solid">    
+  <div class="box-body">
+   {{-- <CENTER> <span class="progress-text" id="progress_text_delivery"></span></CENTER> --}}
+   {{-- <br> --}}
+    <div class="progress" style="height: 100px; margin: 0 auto">
+      <div class="progress-bar progress-bar-yellow progress-bar-striped active" id="progress_bar_delivery"></div>
+    </div>
+    {{-- <CENTER> <span class="progress-number" id="progress_number_delivery" style="font-weight:bold;"></span></CENTER> --}}
+  </div>
+</div>
+
 
 <div class="nav-tabs-custom">
   <ul class="nav nav-tabs pull-left ">
+    {{-- <li class="active"><a href="#persen" data-toggle="tab"><i class="fa fa-folder"></i><b> CHECKING RESULT</b></a></li> --}}
     <li class="active"><a href="#cargo" data-toggle="tab"><i class="fa fa-folder"></i><b> CONDITION OF CARGO</b></a></li>
     <li><a href="#container" data-toggle="tab"><i class="fa fa-folder"></i><b> CONDITION OF CONTAINER </b></a></li>
     <p id="id_checkSheet_master" hidden>{{$time->id_checkSheet}}</p>
@@ -140,7 +151,7 @@ table.table-bordered > tfoot > tr > th{
   </ul>
   <div class="tab-content no-padding">
 
-    <div class="chart tab-pane active" id="cargo" style="position: relative; ">
+    <div class="chart tab-pane active " id="cargo" style="position: relative; ">
       <div class="box-body">
         <div class="table-responsive">
           <table class="table no-margin table-bordered table-striped">
@@ -226,6 +237,17 @@ table.table-bordered > tfoot > tr > th{
 
         </div>
 
+       {{--  <div class="chart tab-pane active" id="persen" style="position: relative; ">
+          <div class="box-body">
+            <span class="progress-text" id="progress_text_delivery"></span>
+            <span class="progress-number" id="progress_number_delivery" style="font-weight:bold;"></span>
+            <div class="progress">
+              <div class="progress-bar progress-bar-green progress-bar-striped active" id="progress_bar_delivery"></div>
+            </div>
+          </div>
+
+        </div>
+        --}}
 
         <div class="chart tab-pane" id="container" style="position: relative;">
 
@@ -478,10 +500,18 @@ table.table-bordered > tfoot > tr > th{
                           @endsection
 
                           @section('scripts')
+                          <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+                          <script src="{{ url("js/buttons.flash.min.js")}}"></script>
+                          <script src="{{ url("js/jszip.min.js")}}"></script>
+                          {{-- <script src="{{ url("js/pdfmake.min.js")}}"></script> --}}
+                          <script src="{{ url("js/vfs_fonts.js")}}"></script>
+                          <script src="{{ url("js/buttons.html5.min.js")}}"></script>
+                          <script src="{{ url("js/buttons.print.min.js")}}"></script>
                           <script >
-                            
+
                             jQuery(document).ready(function() {
                               $('body').toggleClass("sidebar-collapse");
+                              persen();
                               
                               $('#rows1').removeAttr('hidden');
                               var count = document.getElementById("count").value;
@@ -512,5 +542,49 @@ table.table-bordered > tfoot > tr > th{
 
                               
                             });
+
+                            function persen(){
+                              var id =document.getElementById("id_checkSheet_master").innerHTML;
+                              
+                              $.get('{{ url("persen/CheckSheet/") }}'+"/"+id, function(result, status, xhr){
+                                console.log(status);
+                                console.log(result);
+                                console.log(xhr);
+                                if(xhr.status == 200){
+                                  if(result.status){
+
+                                    // $('#progress_text_delivery').html('Percentage of Checking Process');
+                                    // $('#progress_text_delivery').css('font-size', '50pt');
+
+                                    // $('#progress_number_delivery').html(result.cek.toLocaleString() + '/' + result.total.toLocaleString() + ' ');
+                                    var jumlah = result.cek.toLocaleString() + '/' + result.total.toLocaleString();
+                                    var persen = ((result.cek/result.total)*100).toFixed(2) + '%';
+                                    // $('#progress_number_delivery').css('font-size', '30pt');
+                                    $('#progress_bar_delivery').html(jumlah+'('+persen+')');
+                                    $('#progress_bar_delivery').css('width', (result.cek/result.total)*100 + '%');
+                                    $('#progress_bar_delivery').css('color', 'black');
+                                    $('#progress_bar_delivery').css('font-weight', 'bold');
+                                    $('#progress_bar_delivery').css('font-size', '50pt');
+                                    $('#progress_bar_delivery').css('line-height', '100px');
+
+                                    if(((result.cek/result.total)*100).toFixed(0) <= 30){
+                                      $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-yellow');
+                                    }else if(((result.cek/result.total)*100).toFixed(0) >= 31 && ((result.cek/result.total)*100).toFixed(0) <= 75){
+                                       $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-aqua');
+                                    }else{
+                                      $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-green');
+                                    }
+                                    
+
+                                  }
+                                  else{
+                                    alert('Attempt to receive data failed');
+                                  }
+                                }
+                                else{
+                                  alert('Disconnected from server');
+                                }
+                              });
+                            }
                           </script>
                           @stop
