@@ -1059,6 +1059,23 @@ class FloController extends Controller
 				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
 				$inventory->quantity = ($inventory->quantity+$flo->actual);
 				$inventory->save();
+
+				if($flo->transfer != null){
+					$log_transaction = new LogTransaction([
+						'material_number' => $flo_detail->material_number,
+						'issue_plant' => '8190',
+						'issue_storage_location' => $material->issue_storage_location,
+						'receive_plant' => '8191',
+						'receive_storage_location' => 'FSTK',
+						'transaction_code' => 'MB1B',
+						'mvt' => '9P2',
+						'transaction_date' => date('Y-m-d H:i:s'),
+						'qty' => $flo_detail->quantity,
+						'created_by' => $id
+					]);
+					$log_transaction->save();
+					$flo->transfer = null;
+				}
 			}
 
 			if($request->get('status') == '3'){
