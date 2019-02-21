@@ -3,22 +3,10 @@
 <head>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <style type="text/css">
-  @media print {
-    body {
-      background: 0000;
-      -ms-zoom: 1.665;
-    }
-    div.portrait, div.landscape {
-      margin: 100;
-      padding: 0;
-      border: none;
-      background: none;
-    }
-    div.landscape {
-      transform: rotate(270deg) translate(-276mm, 0);
-      transform-origin: 0 0;
-    }
-  }
+ 
+#isi{
+  font-size:10px;
+}
 </style>
 </head>
 <body>
@@ -106,7 +94,7 @@
             <th style="border: 2px solid" hidden>1</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="isi">
           @foreach($detail as $nomor => $detail)
           <input type="text" id="count" value="{{$loop->count}}" hidden></input>
           <TR id="cargo{{$nomor + 1}}">
@@ -278,6 +266,7 @@
       nomor++;
       var x = row.insertCell(i);
       x.innerHTML = nomor;
+      x.style.textAlign = "center";
 
     }
   }
@@ -315,7 +304,9 @@
         var x = row.insertCell(i);
         var Cells = row.getElementsByTagName("td");
         if (s <= Cells[9].innerText) 
-          x.innerHTML = "&#10004;";
+        x.innerHTML = "&#10004;";
+        x.style.width ="15pt";
+        x.style.textAlign = "center";
         s++;
       }
 
