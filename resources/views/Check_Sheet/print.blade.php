@@ -115,8 +115,8 @@ table tr.last td
           <input type="text" id="count" value="{{$loop->count}}" hidden></input>
           <TR id="cargo{{$nomor + 1}}">
             <TD style="border-right: 1px solid; border-left: 1px solid" align="center" width="3%"><center>{{$detail->destination}}</center></TD>
-            <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center >{{$detail->invoice}}</center></TD>
-            <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center >{{$detail->gmc}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="5%"><center >{{$detail->invoice}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="5%"><center >{{$detail->gmc}}</center></TD>
             <TD style="border-right: 1px solid; border-left: 1px solid" >{{$detail->goods}}</TD>
             <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center>{{$detail->marking}}</center></TD>
             @if($detail->package_set =="PL")
