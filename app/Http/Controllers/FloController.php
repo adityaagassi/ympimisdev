@@ -1062,15 +1062,15 @@ class FloController extends Controller
 
 				if($flo->transfer != null){
 					$log_transaction = new LogTransaction([
-						'material_number' => $flo_detail->material_number,
+						'material_number' => $flo->shipmentschedule->material_number,
 						'issue_plant' => '8190',
-						'issue_storage_location' => $material->issue_storage_location,
+						'issue_storage_location' => $flo->shipmentschedule->material->issue_storage_location,
 						'receive_plant' => '8191',
 						'receive_storage_location' => 'FSTK',
 						'transaction_code' => 'MB1B',
 						'mvt' => '9P2',
 						'transaction_date' => date('Y-m-d H:i:s'),
-						'qty' => $flo_detail->quantity,
+						'qty' => $flo->actual,
 						'created_by' => $id
 					]);
 					$log_transaction->save();
