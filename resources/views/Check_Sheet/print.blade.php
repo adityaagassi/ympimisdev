@@ -23,6 +23,10 @@ table tr.last td
 #isi{
   font-size:10px;
 }
+
+#foot{
+  font-size:12px;
+}
 </style>
 </head>
 <body>
@@ -179,7 +183,7 @@ table tr.last td
               <th colspan="2" style="border: 1px solid">Remark / Keterangan</th>
             </tr>
           </thead>
-          <TBODY>
+          <TBODY id="foot">
            @foreach($container as $nomor => $container)
            <TR>
             <TD width="30%">{{$container->area}}</TD>
