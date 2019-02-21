@@ -3,7 +3,23 @@
 <head>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <style type="text/css">
- 
+table
+{
+    border-collapse: separate ;
+}
+
+table td.last, table th.last 
+{
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+
+table tr.last td
+{
+    border-bottom: 1px solid black;
+}
+
+
 #isi{
   font-size:10px;
 }
@@ -28,9 +44,9 @@
       </DIV >
 
       <div class="col-xs-15"> 
-        <table border="2" width="100%">
+        <table border="1" width="100%">
           <THEAD>
-            <th colspan="7" style="border: 2px solid"><center>CONTAINER & CARGO CHECK SHEET</center></th>
+            <th colspan="7" style="border: 1px solid"><center>CONTAINER & CARGO CHECK SHEET</center></th>
           </THEAD>
           <tbody>
             <tr>
@@ -78,61 +94,61 @@
     </div>
 
     <DIV class="col-xs-15">
-      <table border="2" width="100%" >
+      <table border="1" width="100%" >
         <thead>
           <tr>
-            <th colspan="60" style="border: 2px solid"><center>CONDITION OF CARGO</center></th>
+            <th colspan="60" style="border: 1px solid"><center>CONDITION OF CARGO</center></th>
           </tr>
           <tr id="cargo">
-            <th style="border: 2px solid" ><center> DEST.</center></th>
-            <th style="border: 2px solid"><center>INVOICE</center></th>
-            <th style="border: 2px solid"><center>GMC</center></th>
-            <th style="border: 2px solid" ><center>DESCRIPTION OF GOODS</center></th>
-            <th style="border: 2px solid"><center>MARKING NO.</center></th>
-            <th colspan="2" style="border: 2px solid"><center>PACKAGE</center></th>
-            <th colspan="2" style="border: 2px solid"><center>QUANTITY</center></th>
-            <th style="border: 2px solid" hidden>1</th>
+            <th style="border: 1px solid" ><center> DEST.</center></th>
+            <th style="border: 1px solid"><center>INVOICE</center></th>
+            <th style="border: 1px solid"><center>GMC</center></th>
+            <th style="border: 1px solid" ><center>DESCRIPTION OF GOODS</center></th>
+            <th style="border: 1px solid"><center>MARKING NO.</center></th>
+            <th colspan="2" style="border: 1px solid"><center>PACKAGE</center></th>
+            <th colspan="2" style="border: 1px solid"><center>QUANTITY</center></th>
+            <th style="border: 1px solid" hidden>1</th>
           </tr>
         </thead>
         <tbody id="isi">
           @foreach($detail as $nomor => $detail)
           <input type="text" id="count" value="{{$loop->count}}" hidden></input>
           <TR id="cargo{{$nomor + 1}}">
-            <TD style="border-right: 2px solid; border-left: 2px solid" align="center" width="3%"><center>{{$detail->destination}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center >{{$detail->invoice}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center >{{$detail->gmc}}</center></TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" >{{$detail->goods}}</TD>
-            <TD style="border-right: 2px solid; border-left: 2px solid" width="7%"><center>{{$detail->marking}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" align="center" width="3%"><center>{{$detail->destination}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center >{{$detail->invoice}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center >{{$detail->gmc}}</center></TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" >{{$detail->goods}}</TD>
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="7%"><center>{{$detail->marking}}</center></TD>
             @if($detail->package_set =="PL")
-            <td class="PLT" width="5%" style="border-right: 2px solid; border-left: 2px solid"align="center" >{{$detail->package_qty}}</td>
+            <td class="PLT" width="5%" style="border-right: 1px solid; border-left: 1px solid"align="center" >{{$detail->package_qty}}</td>
             @elseif($detail->package_set =="C/T")
-            <td class="CTN" width="5%" style="border-right: 2px solid; border-left: 2px solid"align="center" >{{$detail->package_qty}}</td>
+            <td class="CTN" width="5%" style="border-right: 1px solid; border-left: 1px solid"align="center" >{{$detail->package_qty}}</td>
             @else
-            <td class="{{$detail->package_qty}}" width="5%" style="border-right: 2px solid; border-left: 2px solid" align="center">{{$detail->package_qty}}</td>
+            <td class="{{$detail->package_qty}}" width="5%" style="border-right: 1px solid; border-left: 1px solid" align="center">{{$detail->package_qty}}</td>
             @endif
-            {{-- <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->package_set}}" align="center">{{$detail->package_qty}}</center></TD> --}}
-            <TD style="border-right: 2px solid; border-left: 2px solid" width="3%"><center>{{$detail->package_set}}</TD>
-              <TD style="border-right: 2px solid; border-left: 2px solid" class="{{$detail->qty_set}}" align="center">{{$detail->qty_qty}}</TD>
-              <TD style="border-right: 2px solid; border-left: 2px solid" width="3%"><center>{{$detail->qty_set}}</center></TD>
-              <TD style="border-right: 2px solid; border-left: 2px solid" hidden id="total{{$nomor + 1}}">{{$detail->confirm}}</TD>
+            {{-- <TD style="border-right: 1px solid; border-left: 1px solid" class="{{$detail->package_set}}" align="center">{{$detail->package_qty}}</center></TD> --}}
+            <TD style="border-right: 1px solid; border-left: 1px solid" width="3%"><center>{{$detail->package_set}}</TD>
+              <TD style="border-right: 1px solid; border-left: 1px solid" class="{{$detail->qty_set}}" align="center">{{$detail->qty_qty}}</TD>
+              <TD style="border-right: 1px solid; border-left: 1px solid" width="3%"><center>{{$detail->qty_set}}</center></TD>
+              <TD style="border-right: 1px solid; border-left: 1px solid" hidden id="total{{$nomor + 1}}">{{$detail->confirm}}</TD>
             </TR>
             @endforeach
           </tbody>
           <tfoot>
             <tr>
-              <th colspan="5" rowspan="2" style="border: 2px solid;"> <CENTER>REMAIN PALLET & C/T</CENTER></th>                    
-              <th style="border-left: 2px solid; border-top: 2px solid"><center><b id="plte"></b></center></th>
-              <th style="border-right: 2px solid; border-top: 2px solid"><center>PLT</center></th>
-              <th style="border-left: 2px solid; border-top: 2px solid"><center><b id="sete"></center></b></th>
-              <th style="border-right: 2px solid; border-top: 2px solid"><center>SET</center></th>
-              <th style="border-right: 2px solid; border-bottom: 2px solid; border-top: 2px solid"" colspan="31" rowspan="2"></th>
+              <th colspan="5" rowspan="2" style="border: 1px solid;"> <CENTER>REMAIN PALLET & C/T</CENTER></th>                    
+              <th style="border-left: 1px solid; border-top: 1px solid"><center><b id="plte"></b></center></th>
+              <th style="border-right: 1px solid; border-top: 1px solid"><center>PLT</center></th>
+              <th style="border-left: 1px solid; border-top: 1px solid"><center><b id="sete"></center></b></th>
+              <th style="border-right: 1px solid; border-top: 1px solid"><center>SET</center></th>
+              <th style="border-right: 1px solid; border-bottom: 1px solid; border-top: 1px solid"" colspan="31" rowspan="2"></th>
             </tr>
             <tr>
 
-              <th style="border-left: 2px solid; border-bottom: 2px solid"><center><b id="ctne"></center></b></th>
-              <th style="border-right: 2px solid; border-bottom: 2px solid"><center>C/T</center></th>
-              <th style="border-left: 2px solid; border-bottom: 2px solid"><center><b id="pcse"></center></b></th>
-              <th style="border-right: 2px solid; border-bottom: 2px solid"><center>PC</center></th>
+              <th style="border-left: 1px solid; border-bottom: 1px solid"><center><b id="ctne"></center></b></th>
+              <th style="border-right: 1px solid; border-bottom: 1px solid"><center>C/T</center></th>
+              <th style="border-left: 1px solid; border-bottom: 1px solid"><center><b id="pcse"></center></b></th>
+              <th style="border-right: 1px solid; border-bottom: 1px solid"><center>PC</center></th>
 
             </tr>
           </tfoot>
@@ -140,15 +156,15 @@
       </DIV>
 
       <div class="col-xs-15">
-        <table BORDER="2"  width="100%">
+        <table BORDER="1"  width="100%">
           <thead>
             <TR>
-              <th colspan="7" style="border: 2px solid"><CENTER><B>CONDITION OF CONTAINER</B></CENTER></th>
+              <th colspan="7" style="border: 1px solid"><CENTER><B>CONDITION OF CONTAINER</B></CENTER></th>
             </TR>
             <tr>
-              <th style="border: 2px solid"> CONTAINER NO : {{$time->countainer_number}}</th>
-              <th colspan="4" style="border: 2px solid"> SEAL NO : {{$time->seal_number}}</th>
-              <th  style="border: 2px solid"> NO POL : {{$time->no_pol}}</th>
+              <th style="border: 1px solid"> CONTAINER NO : {{$time->countainer_number}}</th>
+              <th colspan="4" style="border: 1px solid"> SEAL NO : {{$time->seal_number}}</th>
+              <th  style="border: 1px solid"> NO POL : {{$time->no_pol}}</th>
               <th> INSPECTOR : @if($time->status == 1) 
                 @if(isset($time->user3->name))
                 <!--  {{$time->created_by}} - --> {{$time->user3->name}}
@@ -158,9 +174,9 @@
               @endif
             </tr>
             <tr>
-              <th style="border: 2px solid">Area of Inspection :</th>
-              <th colspan="4" style="border: 2px solid"><center>Acceptable</center></th>
-              <th colspan="2" style="border: 2px solid">Remark / Keterangan</th>
+              <th style="border: 1px solid">Area of Inspection :</th>
+              <th colspan="4" style="border: 1px solid"><center>Acceptable</center></th>
+              <th colspan="2" style="border: 1px solid">Remark / Keterangan</th>
             </tr>
           </thead>
           <TBODY>
@@ -178,7 +194,7 @@
 
         </TBODY>
       </table>
-      <table width="100%" border="2">
+      <table width="100%" border="1">
         <thead>
           <th style="border:none">No Dok : YMPI/EXIM/FM/0008</th>
           <th style="border:none">Rev. : 00</th>
