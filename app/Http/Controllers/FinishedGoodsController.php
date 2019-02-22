@@ -510,9 +510,9 @@ class FinishedGoodsController extends Controller
 		->where('st_month', '=', $st_month);
 
 		$total_plan = DB::table('shipment_schedules')->where('st_month', '=', $st_month)->sum('shipment_schedules.quantity');
-		$total_production = $shipment_schedule->sum('flos.actual');
-		$total_delivery = $shipment_schedule->where('flos.status', '>', 1)->sum('flos.actual');
-		$total_shipment = $shipment_schedule->where('flos.status', '>', 2)->sum('flos.actual');
+		$total_production = $shipment_schedule->where('flos.status', '<>', 'M')->sum('flos.actual');
+		$total_delivery = $shipment_schedule->whereIn('flos.status', ['2','3','4'])->sum('flos.actual');
+		$total_shipment = $shipment_schedule->whereIn('flos.status', ['3','4'])->sum('flos.actual');
 
 		$response = array(
 			'status' => true,
