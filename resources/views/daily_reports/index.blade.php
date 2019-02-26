@@ -339,6 +339,7 @@ table.table-bordered > tfoot > tr > th{
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
+			"pageLength": 25,
 			'buttons': {
 				buttons:[
 				{
