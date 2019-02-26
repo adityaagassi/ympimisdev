@@ -49,6 +49,7 @@ Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
 	Route::get('download/tr_transfer', 'InventoryController@downloadTransfer');
 
 	Route::get('index/tr_history', 'InventoryController@indexHistory');
+	Route::get('fetch/tr_history', 'InventoryController@fetchHistory');
 });
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
@@ -113,7 +114,11 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 
 
 Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
-	Route::get('index/container_attachment', 'ContainerScheduleController@indexContainerAttachment');
+	Route::get('index/daily_report', 'DailyReportController@index');
+	Route::post('create/daily_report', 'DailyReportController@create');
+	Route::get('fetch/daily_report', 'DailyReportController@fetchDailyReport');
+	Route::get('download/daily_report', 'DailyReportController@downloadDailyReport');
+	Route::get('fetch/daily_report_detail', 'DailyReportController@fetchDailyReportDetail');
 });
 
 Route::get('setting/user', 'UserController@index_setting');

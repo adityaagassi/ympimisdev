@@ -199,8 +199,6 @@ table.table-bordered > tfoot > tr > th{
 						openSuccessGritter('Success', data.message);
 					}
 				});
-
-
 			});
 		});
 

@@ -11,9 +11,6 @@
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -31,13 +28,11 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-ban"></i> Error!</h4>
     {{ session('error') }}
-  </div>   
+  </div>
   @endif
-  <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
 
     <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
     <form role="form" class="form-horizontal form-bordered" method="post" action="{{url('edit/batch_setting', $batch_setting->id)}}">
 
@@ -55,50 +50,49 @@
         <div class="form-group row" align="right">
           <label class="col-sm-4">Upload</label>
           <div class="col-sm-1">
-           <input id="toggle_lock" name="upload" data-toggle="toggle" data-on="ON" data-off="OFF" type="checkbox" value="1" {{ $batch_setting->upload == 1 ? 'checked' : '' }} >
-         </div>
-       </div>
-       <div class="form-group row" align="right">
-        <label class="col-sm-4">Download</label>
-        <div class="col-sm-1">
-          <input id="toggle_lock" name="download" data-toggle="toggle" data-on="ON" data-off="OFF" type="checkbox" value="1" {{ $batch_setting->download == 1 ? 'checked' : '' }}>
+            <input id="toggle_lock" name="upload" data-toggle="toggle" data-on="ON" data-off="OFF" type="checkbox" value="1" {{ $batch_setting->upload == 1 ? 'checked' : '' }} >
+          </div>
         </div>
-      </div>
-      <div class="form-group row" align="right">
-        <label class="col-sm-4">Remark</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="remark" placeholder="Enter Remark" value="{{$batch_setting->remark}}">
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Download</label>
+          <div class="col-sm-1">
+            <input id="toggle_lock" name="download" data-toggle="toggle" data-on="ON" data-off="OFF" type="checkbox" value="1" {{ $batch_setting->download == 1 ? 'checked' : '' }}>
+          </div>
         </div>
-      </div>
-      <div class="col-sm-4 col-sm-offset-6">
-        <div class="btn-group">
-          <a class="btn btn-danger" href="{{ url('index/batch_setting') }}">Cancel</a>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Remark</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="remark" placeholder="Enter Remark" value="{{$batch_setting->remark}}">
+          </div>
         </div>
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+        <div class="col-sm-4 col-sm-offset-6">
+          <div class="btn-group">
+            <a class="btn btn-danger" href="{{ url('index/batch_setting') }}">Cancel</a>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+          </div>
         </div>
       </div>
     </form>
   </div>
 
-</div>
 
-@endsection
+  @endsection
 
-@section('scripts')
-<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
-<script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
-<script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-  });
+  @section('scripts')
+  <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+  <script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
+  <script>
+    $(function () {
+      $('.select2').select2()
+    });
 
-  $('.timepicker').timepicker({
-    showInputs: false,
-    showMeridian: false,
-    defaultTime: '0:00',
-  });
-</script>
-@stop
+    $('.timepicker').timepicker({
+      showInputs: false,
+      showMeridian: false,
+      defaultTime: '0:00',
+    });
+  </script>
+  @stop
 
