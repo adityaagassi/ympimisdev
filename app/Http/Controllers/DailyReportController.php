@@ -44,7 +44,7 @@ class DailyReportController extends Controller
 
         $code_generator = CodeGenerator::where('note','=','report')->first();
         $number = sprintf("%'.0" . $code_generator->length . "d\n" , $code_generator->index);
-        $code = $number;
+        $code = $number+1;
         $number1 = sprintf("%'.0" . $code_generator->length . "d" , $code);
         $lop = $request->get('lop');
         try{

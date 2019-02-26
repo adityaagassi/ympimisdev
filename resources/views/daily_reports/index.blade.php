@@ -60,22 +60,23 @@ table.table-bordered > tfoot > tr > th{
 </section>
 @stop
 @section('content')
-@if (session('status'))
-<div class="alert alert-success alert-dismissible">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-	{{ session('status') }}
-</div>   
-@endif
-@if (session('error'))
-<div class="alert alert-danger alert-dismissible">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	<h4><i class="icon fa fa-ban"></i> Error!</h4>
-	{{ session('error') }}
-</div>   
-@endif
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	@if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>   
+	@endif
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box">
