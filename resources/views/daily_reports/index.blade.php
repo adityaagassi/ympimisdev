@@ -85,8 +85,9 @@ table.table-bordered > tfoot > tr > th{
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 5%;">Dept</th>
-								<th style="width: 15%;">PIC</th>
-								<th style="width: 30%;">Category</th>
+								<th style="width: 10%;">PIC</th>
+								<th style="width: 10%;">Category</th>
+								<th style="width: 10%;">Description</th>
 								<th style="width: 5%;">Location</th>
 								<th style="width: 8%;">Begin Date</th>
 								<th style="width: 8%;">Target Date</th>
@@ -99,6 +100,7 @@ table.table-bordered > tfoot > tr > th{
 						</tbody>
 						<tfoot>
 							<tr>
+								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -134,7 +136,6 @@ table.table-bordered > tfoot > tr > th{
 						</ul>
 					</div>
 					<div class="tab-content">
-
 						<div class="tab-pane active" id="tab_1">
 							<div class="row">
 								<div class="col-md-12">
@@ -205,7 +206,7 @@ table.table-bordered > tfoot > tr > th{
 										<input type="text" id="duration" name="duration1" class="form-control timepicker">
 									</div>
 									<div class="col-xs-2" style="padding:0;">
-										&nbsp;<button class="btn btn-danger" ><i class='fa fa-close'></i> </button> <button class="btn btn-success" onclick='tambah();'><i class='fa fa-plus' ></i></button>
+										<button class="btn btn-success" onclick='tambah();'><i class='fa fa-plus' ></i></button>
 									</div>	
 								</div>
 								<div id="tambah"></div>
@@ -263,7 +264,7 @@ table.table-bordered > tfoot > tr > th{
 		}
 	});
 	jQuery(document).ready(function() {
-		fillDailyReportTable();
+		// $('body').toggleClass("sidebar-collapse");
 		$('#datebegin').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
@@ -298,6 +299,7 @@ table.table-bordered > tfoot > tr > th{
 		$('.btnPrevious').click(function(){
 			$('.nav-tabs > .active').prev('li').find('a').trigger('click');
 		});
+		fillDailyReportTable();
 	});
 
 	function openModalCreate(){
@@ -329,17 +331,15 @@ table.table-bordered > tfoot > tr > th{
 	function fillDailyReportTable(){
 		$('#dailyReportTable tfoot th').each( function () {
 			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-		} );
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
 		var table = $('#dailyReportTable').DataTable({
-			"order": [],
 			'dom': 'Bfrtip',
 			'responsive': true,
 			'lengthMenu': [
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
-			"pageLength": 25,
 			'buttons': {
 				buttons:[
 				{
@@ -372,16 +372,27 @@ table.table-bordered > tfoot > tr > th{
 				},
 				]
 			},
+			'paging'        : true,
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
 			"processing": true,
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/daily_report") }}"
+				"url" : "{{ url("fetch/daily_report") }}",
 			},
 			"columns": [
 			{ "data": "role_code"},
 			{ "data": "name"},
 			{ "data": "category"},
+			{ "data": "description"},
 			{ "data": "location"},
 			{ "data": "begin_date"},
 			{ "data": "target_date"},
@@ -404,6 +415,8 @@ table.table-bordered > tfoot > tr > th{
 		});
 
 		$('#dailyReportTable tfoot tr').appendTo('#dailyReportTable thead');
+
+
 	}
 	
 	function detailReport(id){
