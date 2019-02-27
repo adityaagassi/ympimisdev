@@ -100,7 +100,7 @@ class DailyReportController extends Controller
         ->leftJoin(db::raw('(select report_code, count(file_name) as att from daily_report_attachments group by report_code) as daily_report_attachments'), 'daily_report_attachments.report_code', '=', 'daily_reports.report_code')
         ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att', db::raw('concat(round(time_to_sec(daily_reports.duration)/60, 0), " Min") as duration'))
         ->distinct()
-        ->orderBy('daily_reports.begin_date', 'desc')
+        ->orderByRaw('users.name asc, daily_reports.begin_date desc')
         ->get();
 
         return DataTables::of($daily_reports)
