@@ -98,7 +98,7 @@ class DailyReportController extends Controller
         $daily_reports = DailyReport::leftJoin('users', 'users.id', '=', 'daily_reports.created_by')
         ->leftJoin('roles', 'users.role_code', '=', 'roles.role_code')
         ->leftJoin(db::raw('(select report_code, count(file_name) as att from daily_report_attachments group by report_code) as daily_report_attachments'), 'daily_report_attachments.report_code', '=', 'daily_reports.report_code')
-        ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att')
+        ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att', 'daily_reports.duration')
         ->distinct()
         ->orderBy('daily_reports.begin_date', 'desc')
         ->get();

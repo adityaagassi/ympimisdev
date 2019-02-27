@@ -87,13 +87,14 @@ table.table-bordered > tfoot > tr > th{
 								<th style="width: 5%;">Dept</th>
 								<th style="width: 10%;">PIC</th>
 								<th style="width: 10%;">Category</th>
-								<th style="width: 10%;">Description</th>
+								<th style="width: 30%;">Description</th>
+								<th style="width: 8%;">Duration</th>
 								<th style="width: 5%;">Location</th>
 								<th style="width: 8%;">Begin Date</th>
 								<th style="width: 8%;">Target Date</th>
 								<th style="width: 8%;">Finished Date</th>
 								<th style="width: 10%;">Att</th>
-								<th style="width: 10%;">Act</th>
+								{{-- <th style="width: 10%;">Act</th> --}}
 							</tr>
 						</thead>
 						<tbody>
@@ -110,6 +111,7 @@ table.table-bordered > tfoot > tr > th{
 								<th></th>
 								<th></th>
 								<th></th>
+								{{-- <th></th> --}}
 							</tr>
 						</tfoot>
 					</table>
@@ -146,8 +148,8 @@ table.table-bordered > tfoot > tr > th{
 												<option></option>
 												<option value="Hardware">Hardware</option>
 												<option value="Networking">Networking</option>
-												<option value="Software Installation/Maintenance">Software Installation/Maintenance</option>
-												<option value="System Development/Maintenance">System Development/Maintenance</option>
+												<option value="Software Installation/Maintenance">Software</option>
+												<option value="System Development/Maintenance">System Dev</option>
 												<option value="Other">Other</option>
 											</select>
 										</div>
@@ -393,12 +395,13 @@ table.table-bordered > tfoot > tr > th{
 			{ "data": "name"},
 			{ "data": "category"},
 			{ "data": "description"},
+			{ "data": "duration"},
 			{ "data": "location"},
 			{ "data": "begin_date"},
 			{ "data": "target_date"},
 			{ "data": "finished_date"},
-			{ "data": "attach"},
-			{ "data": "action"}
+			{ "data": "attach"}
+			// { "data": "action"}
 			]
 		});
 
