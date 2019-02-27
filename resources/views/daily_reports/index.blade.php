@@ -148,8 +148,8 @@ table.table-bordered > tfoot > tr > th{
 												<option></option>
 												<option value="Hardware">Hardware</option>
 												<option value="Networking">Networking</option>
-												<option value="Software Installation/Maintenance">Software</option>
-												<option value="System Development/Maintenance">System Dev</option>
+												<option value="Software">Software</option>
+												<option value="System Dev">System Dev</option>
 												<option value="Other">Other</option>
 											</select>
 										</div>
