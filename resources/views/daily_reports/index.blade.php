@@ -155,7 +155,27 @@ table.table-bordered > tfoot > tr > th{
 										</div>
 										<div class="form-group">
 											<label>Location<span class="text-red">*</span></label>
-											<input type="text" class="form-control" id="location" name="location" placeholder="Enter Location" required>
+											<select class="form-control select2" style="width: 100%;" id="location" name="location" data-placeholder="Choose a Category..." required>
+												<option></option>
+												<option value='Office'>Office</option>
+												<option value='Assy'>Assy</option>
+												<option value='Body Process'>Body Process</option>
+												<option value='Buffing'>Buffing</option>
+												<option value='CL Body'>CL Body</option>
+												<option value='Lacquering'>Lacquering</option>
+												<option value='Meeting Room'>Meeting Room</option>
+												<option value='Part Process'>Part Process</option>
+												<option value='Pianica'>Pianica</option>
+												<option value='Plating'>Plating</option>
+												<option value='Recorder'>Recorder</option>
+												<option value='Sub Assy'>Sub Assy</option>
+												<option value='TR Room'>TR Room</option>
+												<option value='Venova'>Venova</option>
+												<option value='Warehouse'>Warehouse</option>
+												<option value='Welding'>Welding</option>
+												<option value='Other'>Other</option>
+
+											</select>
 										</div>
 										<div class="form-group">
 											<label>Attachment</label>
