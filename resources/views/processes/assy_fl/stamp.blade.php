@@ -119,9 +119,10 @@ table.table-bordered > tfoot > tr > th{
 								<span style="font-size: 24px">Model:</span><br>
 								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YFL" disabled>
 
-								<button type="button" style="width: 49%; margin-top: 5px;" class="btn btn-info" id="fg" onclick="category(id)"> FG</button>
-								<button type="button" style="width: 49%; margin-top: 5px;" class="btn btn-info" id="kd" onclick="category(id)"> KD</button>
-								<input type="hidden" class="form-control" value="fg" name="category" id="category"><br><br>
+								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> FG</button>
+								<INPUT type="TEXT" style="width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; " class="btn"   value="FG" name="category" id="category" readonly>
+								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="KD" onclick="category(id)"> KD</button>
+								{{-- <input type="hidden" class="form-control" value="fg" name="category" id="category"> --}}<br><br>
 								<div id="listModel">
 								</div>
 							</center>

@@ -109,7 +109,7 @@ class DailyReportController extends Controller
         })
         ->addColumn('attach', function($daily_reports){
             if($daily_reports->att > 0){
-                return '<a href="javascript:void(0)" id="' . $daily_reports->report_code . '" onClick="downloadAtt(id)" class="fa fa-paperclip"> ' . $daily_reports->att . ' Att</a>';
+                return '<a href="javascript:void(0)" id="' . $daily_reports->report_code . '" onClick="downloadAtt(id)" class="fa fa-paperclip"> ' . $daily_reports->att . '</a>';
             }
             else{
                 return '-';

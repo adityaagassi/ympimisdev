@@ -820,7 +820,7 @@ class ProcessController extends Controller
 					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
 					$code_generator->index = $code_generator->index+1;
 
-					if ($request->get('category')=='fg'){
+					if ($request->get('category')=='FG'){
 
 						$stamp_inventory = StampInventory::updateOrCreate(
 							[
@@ -841,7 +841,7 @@ class ProcessController extends Controller
 					$code_generator->save();
 					$log_process->save();
 
-					if ($request->get('category')=='fg'){
+					if ($request->get('category')=='FG'){
 						$printer_name = 'SUPERMAN';
 
 						$connector = new WindowsPrintConnector($printer_name);

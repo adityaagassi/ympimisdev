@@ -63,7 +63,7 @@ class FinishedGoodsController extends Controller
 		return view('finished_goods.shipment_schedule', array(
 			'periods' => $periods,
 			'origin_groups' => $origin_groups,
-		))->with('page', 'FG Shipment Result')->with('head', 'Finished Goods');		
+		))->with('page', 'FG Shipment Schedule')->with('head', 'Finished Goods');		
 	}
 
 	public function index_fg_shipment_result(){
