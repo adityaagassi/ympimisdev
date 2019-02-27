@@ -86,14 +86,14 @@ table.table-bordered > tfoot > tr > th{
 							<tr>
 								<th style="width: 5%;">Dept</th>
 								<th style="width: 10%;">PIC</th>
-								<th style="width: 10%;">Category</th>
-								<th style="width: 30%;">Description</th>
-								<th style="width: 8%;">Duration</th>
+								<th style="width: 8%;">Category</th>
+								<th style="width: 40%;">Description</th>
+								<th style="width: 5%;">Duration</th>
 								<th style="width: 5%;">Location</th>
 								<th style="width: 8%;">Begin Date</th>
 								<th style="width: 8%;">Target Date</th>
 								<th style="width: 8%;">Finished Date</th>
-								<th style="width: 10%;">Att</th>
+								<th style="width: 8%;">Att</th>
 								{{-- <th style="width: 10%;">Act</th> --}}
 							</tr>
 						</thead>
