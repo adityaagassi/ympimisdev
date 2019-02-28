@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\OriginGroup;
 use App\Inventory;
 use App\Material;
+use App\LogTransaction;
 use Response;
 use DataTables;
 use Illuminate\Database\QueryException;
@@ -27,6 +28,12 @@ class InventoryController extends Controller
         $this->transaction_status = [
             'Uploaded',
             'Not Uploaded',
+        ];
+        $this->mvt = [
+            '101',
+            '102',
+            '9P1',
+            '9P2',
         ];
     }
 
@@ -59,7 +66,54 @@ class InventoryController extends Controller
     }
 
     public function indexHistory(){
-        return view('inventories.indexHistory')->with('page', 'History Transaction')->with('head', 'Transaction');
+        $mvts = $this->mvt;
+        $origin_groups = OriginGroup::orderBy('origin_group_code', 'asc')->get();
+        return view('inventories.indexHistory', array(
+            'mvts' => $mvts,
+            'origin_groups' => $origin_groups,
+        ))->with('page', 'History Transaction')->with('head', 'Transaction');
+    }
+
+    public function fetchHistory(Request $request){
+        $log_transactions = LogTransaction::leftJoin('materials', 'materials.material_number', '=', 'log_transactions.material_number');
+
+        if(strlen($request->get('dateFrom')) > 0){
+            $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
+            $log_transactions = $log_transactions->where(DB::raw('DATE_FORMAT(log_transactions.transaction_date, "%Y-%m-%d")'), '>=', $date_from);
+        }
+
+        if(strlen($request->get('dateTo')) > 0){
+            $date_to = date('Y-m-d', strtotime($request->get('dateTo')));
+            $log_transactions = $log_transactions->where(DB::raw('DATE_FORMAT(log_transactions.transaction_date, "%Y-%m-%d")'), '<=', $date_to);
+        }
+
+        if($request->get('originGroup') != null){
+            $log_transactions = $log_transactions->whereIn('materials.origin_group_code', $request->get('originGroup'));
+        }
+
+        if($request->get('mvt') != null){
+            $log_transactions = $log_transactions->whereIn('log_transactions.mvt', $request->get('mvt'));
+        }
+
+        if(strlen($request->get('materialNumber')) > 0){
+            $material_number = explode(",", $request->get('materialNumber'));
+            $log_transactions = $log_transactions->whereIn('log_transactions.material_number', $material_number);
+        }
+
+        if(strlen($request->get('issueStorageLocation')) > 0){
+            $sloc = explode(",", $request->get('issueStorageLocation'));
+            $log_transactions = $log_transactions->whereIn('log_transactions.issue_storage_location', $sloc);
+        }
+
+        if(strlen($request->get('receiveStorageLocation')) > 0){
+            $toloc = explode(",", $request->get('receiveStorageLocation'));
+            $log_transactions = $log_transactions->whereIn('log_transactions.receive_storage_location', $toloc);
+        }
+
+        $log_transactions = $log_transactions->select('log_transactions.material_number', 'materials.material_description', 'log_transactions.issue_storage_location', db::raw('coalesce(log_transactions.receive_storage_location, "-") as receive_storage_location'), 'log_transactions.mvt', 'log_transactions.qty', 'log_transactions.transaction_date', 'log_transactions.created_at')
+        ->get();
+
+        return DataTables::of($log_transactions)->make(true);
     }
 
     public function fetchCompletion(Request $request){
