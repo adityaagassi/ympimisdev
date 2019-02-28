@@ -496,7 +496,7 @@ class CheckSheet extends Controller
     ->first();
     $a = $request->get('kolom');
     $Inspection->$a = $request->get('isi');
-    $Inspection->created_by = $id_user;
+    $Inspection->check_by = $id_user;
     $Inspection->save();
     $response = array(
       'status' => true,
