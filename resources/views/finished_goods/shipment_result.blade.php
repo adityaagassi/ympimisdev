@@ -277,7 +277,7 @@ table.table-bordered > tfoot > tr > th{
 							},
 							plotLines: [{
 								color: '#FF0000',
-								width: 3,
+								width: 2,
 								value: 100,
 								label: {
 									align:'right',
