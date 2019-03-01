@@ -327,10 +327,10 @@ class FinishedGoodsController extends Controller
 			$shipment_schedules = $shipment_schedules->where('st_month', '<=', $periodTo);
 		}
 
-		$shipment_schedules = $shipment_schedules->leftJoin(DB::raw('(select flos.shipment_schedule_id, sum(if(flos.bl_date > shipment_schedules.bl_date, flos.actual, 0)) as delay from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+		$shipment_schedules = $shipment_schedules->leftJoin(DB::raw('(select flos.shipment_schedule_id, sum(if(flos.bl_date > last_day(shipment_schedules.bl_date), flos.actual, 0)) as delay from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id group by flos.shipment_schedule_id) as flos'), 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
 		->select(db::raw('date_format(st_month, "%b-%Y") as period, sum(shipment_schedules.quantity) as total, sum(flos.delay) as bo, round(((sum(shipment_schedules.quantity)-sum(flos.delay))/sum(shipment_schedules.quantity))*100,2) as percentage'))
 		->groupBy(db::raw('date_format(st_month, "%b-%Y")'))
-		->orderBy(db::raw('date_format(st_month, "%b-%Y")'), 'desc')
+		->orderBy('st_month', 'desc')
 		->get();
 
 		$response = array(
@@ -343,7 +343,7 @@ class FinishedGoodsController extends Controller
 	public function fetch_tb_monthly_summary(Request $request){
 		$period = date('Y-m', strtotime($request->get('period'))).'-01';
 
-		$query = "select materials.material_number, materials.material_description, sum(if(flos.bl_date > shipment_schedules.bl_date, flos.actual, 0)) as actual from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id left join materials on materials.material_number = flos.material_number where shipment_schedules.st_month = '".$period."' group by materials.material_number, materials.material_description having actual > 0";
+		$query = "select materials.material_number, materials.material_description, sum(if(flos.bl_date > last_day(shipment_schedules.bl_date), flos.actual, 0)) as actual from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id left join materials on materials.material_number = flos.material_number where shipment_schedules.st_month = '".$period."' group by materials.material_number, materials.material_description having actual > 0";
 
 		$flos = db::select($query);
 
