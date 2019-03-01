@@ -36,7 +36,6 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		Monthly Summary <span class="text-purple">月次まとめ</span>
-		{{-- <small>Material stock details <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update"></ol>
 </section>
@@ -249,12 +248,6 @@ table.table-bordered > tfoot > tr > th{
 						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 						],
 						'buttons': {
-							// dom: {
-							// 	button: {
-							// 		tag:'button',
-							// 		className:''
-							// 	}
-							// },
 							buttons:[
 							{
 								extend: 'pageLength',
@@ -297,27 +290,6 @@ table.table-bordered > tfoot > tr > th{
 						"bJQueryUI": true,
 						"bAutoWidth": false,
 						"processing": true,
-						// "footerCallback": function (tfoot, data, start, end, display) {
-						// 	var intVal = function ( i ) {
-						// 		return typeof i === 'string' ?
-						// 		i.replace(/[\$%,]/g, '')*1 :
-						// 		typeof i === 'number' ?
-						// 		i : 0;
-						// 	};
-						// 	var api = this.api();
-						// 	var total = api.column(1).data().reduce(function (a, b) {
-						// 		return intVal(a)+intVal(b);
-						// 	}, 0)
-						// 	$(api.column(1).footer()).html(total.toLocaleString());
-						// 	var bo = api.column(2).data().reduce(function (a, b) {
-						// 		return intVal(a)+intVal(b);
-						// 	}, 0)
-						// 	$(api.column(2).footer()).html(bo.toLocaleString());
-						// 	var percentage = api.column(3).data().reduce(function (a, b) {
-						// 		return intVal(a)+intVal(b);
-						// 	}, 0)
-						// 	$(api.column(3).footer()).html((percentage/api.column(3).data().filter(function(value,index){return intVal(value)>0?true:false;}).count()).toFixed(2) + '%');
-						// },
 						"columnDefs": [ {
 							"targets": 2,
 							"createdCell": function (td, cellData, rowData, row, col) {
@@ -359,45 +331,45 @@ table.table-bordered > tfoot > tr > th{
 				alert('Disconnected from server');
 			}
 		});
-}
-
-function modalBackOrder(period){
-	var data = {
-		period:period,
 	}
 
-	$.get('{{ url("fetch/tb_monthly_summary") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
-		if(xhr.status == 200){
-			if(result.status){
-				$('#modalBackOrderTitle').html('');
-				$('#modalBackOrderTitle').html('Detail Backorder '+ period);
-				$('#modalBackOrderBody').html('');
-				var resultData = '';
-				var resultTotal = 0;
-				$.each(result.resultData, function(key, value) {
-					resultData += '<tr>';
-					resultData += '<td>'+ value.material_number +'</td>';
-					resultData += '<td>'+ value.material_description +'</td>';
-					resultData += '<td>'+ value.actual.toLocaleString() +'</td>';
-					resultData += '</tr>';
-					resultTotal += value.actual;
-				});
-				$('#modalBackOrderBody').append(resultData);
-				$('#modalBackOrderTotal').html('');
-				$('#modalBackOrderTotal').append(resultTotal.toLocaleString());
-				$('#modalBackOrder').modal('show');
+	function modalBackOrder(period){
+		var data = {
+			period:period,
+		}
+
+		$.get('{{ url("fetch/tb_monthly_summary") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					$('#modalBackOrderTitle').html('');
+					$('#modalBackOrderTitle').html('Detail Backorder '+ period);
+					$('#modalBackOrderBody').html('');
+					var resultData = '';
+					var resultTotal = 0;
+					$.each(result.resultData, function(key, value) {
+						resultData += '<tr>';
+						resultData += '<td>'+ value.material_number +'</td>';
+						resultData += '<td>'+ value.material_description +'</td>';
+						resultData += '<td>'+ value.actual.toLocaleString() +'</td>';
+						resultData += '</tr>';
+						resultTotal += value.actual;
+					});
+					$('#modalBackOrderBody').append(resultData);
+					$('#modalBackOrderTotal').html('');
+					$('#modalBackOrderTotal').append(resultTotal.toLocaleString());
+					$('#modalBackOrder').modal('show');
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
 			}
 			else{
-				alert('Attempt to retrieve data failed');
+				alert('Disconnected from server');
 			}
-		}
-		else{
-			alert('Disconnected from server');
-		}
-	});
-}
+		});
+	}
 </script>
 @endsection
