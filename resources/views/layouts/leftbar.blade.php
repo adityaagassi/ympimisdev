@@ -185,14 +185,14 @@
 
         @if(in_array('S9', $navs))
         @if(isset($page) && $page == "FLO Deletion")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/flo_view/deletion") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Deletion</span></a>
+          <a href="{{ url("/index/flo_view/deletion") }}"><i class="fa fa-ban"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Deletion</span></a>
         </li>
         @endif
 
         @if(in_array('S10', $navs))
         @if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
-           <i class="fa fa-tv"></i> <span>Assembly Process</span>
+           <i class="fa fa-tv"></i> <span>Stamp Process</span>
            <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -200,6 +200,12 @@
         <ul class="treeview-menu">
          @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
           <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
+        </li>
+        @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
+        </li>
+        @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
         </li>
       </ul>
     </li>
