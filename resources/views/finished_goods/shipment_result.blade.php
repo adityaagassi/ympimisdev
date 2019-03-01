@@ -276,7 +276,7 @@ table.table-bordered > tfoot > tr > th{
 								return yAxisLabels;
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FF0000',
 								width: 3,
 								value: 100,
 								label: {
@@ -285,7 +285,7 @@ table.table-bordered > tfoot > tr > th{
 									x:-7,
 									style: {
 										fontSize: '1vw',
-										color: '#00FF00',
+										color: '#FF0000',
 										fontWeight: 'bold'
 									}
 								}
