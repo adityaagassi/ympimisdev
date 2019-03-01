@@ -111,7 +111,7 @@ class UploadTransfers extends Command
                         'receive_storage_location' => 'FSTK',
                         'transaction_code' => 'MB1B',
                         'mvt' => '9P1',
-                        'transaction_date' => $flo_transfer->date,
+                        'transaction_date' => $date,
                         'qty' => $flo_transfer->qty,
                         'created_by' => 1
                     ]);
