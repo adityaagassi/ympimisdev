@@ -71,7 +71,7 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">HR Management (人材管理)</span>
                             <br>
-                            <a href="http://172.17.128.4/myhris/home/presensi" target="blank">
+                            <a href="http://172.17.128.4/myhris/home/presensi_graph" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Attendance (勤怠管理)
                             </a><br>
                             <a href="http://172.17.128.4/myhris/home/karyawan_graph" target="blank">
