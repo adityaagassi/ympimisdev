@@ -122,11 +122,12 @@ class ShipmentScheduleController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
             }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Shipment Schedule');
+            }
         }
-        //
     }
 
     /**
@@ -201,14 +202,12 @@ class ShipmentScheduleController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
             }
             else{
                 return back()->with('error', $e->getMessage())->with('page', 'Shipment Schedule');
             }
         }
-        //
     }
 
     /**
@@ -230,7 +229,7 @@ class ShipmentScheduleController extends Controller
 
     public function import(Request $request)
     {
-     if($request->hasFile('shipment_schedule')){
+       if($request->hasFile('shipment_schedule')){
 
         $id = Auth::id();
 

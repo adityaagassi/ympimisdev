@@ -82,10 +82,11 @@ class UserController extends Controller
       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
-            // self::delete($lid);
           return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
         }
-
+        else{
+          return back()->with('error', $e->getMessage())->with('page', 'User');
+        }
       }
 
     }

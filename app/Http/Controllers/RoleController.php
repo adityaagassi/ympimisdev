@@ -109,8 +109,10 @@ class RoleController extends Controller
             if($error_code == 1062){
                 return back()->with('error', 'Role code already exist.')->with('page', 'Destination');
             }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Destination');
+            }
         }
-        //
     }
 
     /**
@@ -213,6 +215,9 @@ class RoleController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
                 return back()->with('error', 'Role name already exist.')->with('page', 'Role');
+            }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Role');
             }
         }
     }

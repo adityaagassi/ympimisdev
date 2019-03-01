@@ -73,6 +73,9 @@ class NavigationController extends Controller
             if($error_code == 1062){
                 return back()->with('error', 'Navigation code already exist.')->with('page', 'Navigation');
             }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Navigation');
+            }
         }
     }
 
@@ -126,6 +129,9 @@ class NavigationController extends Controller
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
                 return back()->with('error', 'Navigation code already exist.')->with('page', 'Navigation');
+            }
+            else{
+                back()->with('error', $e->getMessage())->with('page', 'Navigation');
             }
         }
     }

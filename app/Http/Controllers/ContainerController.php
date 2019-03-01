@@ -72,12 +72,15 @@ class ContainerController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()
                 ->with('error', 'Container code or container name already exist.')
                 ->with('page', 'Container');
             }
-
+            else{
+                return back()
+                ->with('error', $e->getMessage())
+                ->with('page', 'Container');
+            }
         }
         //
     }
@@ -148,10 +151,14 @@ class ContainerController extends Controller
             ->with('error', 'Container code or container name already exist.')
             ->with('page', 'Container');
         }
-
+        else{
+            return back()
+            ->with('error', $e->getMessage())
+            ->with('page', 'Container');
+        }
     }  
         //
-    }
+}
 
     /**
      * Remove the specified resource from storage.

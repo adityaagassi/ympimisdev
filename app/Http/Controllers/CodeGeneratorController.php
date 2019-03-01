@@ -66,11 +66,12 @@ class CodeGeneratorController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Code generator with preferred note already exist.')->with('page', 'Code Generator');
             }
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Code Generator');
+            }
         }
-        //
     }
 
     /**
@@ -131,12 +132,12 @@ class CodeGeneratorController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Code generator note ready exist.')->with('page', 'Code Generator');
             }
-
-        } 
-        //
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Code Generator');
+            }
+        }
     }
 
     /**

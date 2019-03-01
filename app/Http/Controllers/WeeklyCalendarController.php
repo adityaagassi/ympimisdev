@@ -72,35 +72,37 @@ class WeeklyCalendarController extends Controller
         $id = Auth::id();
         try
         {
-            for ($i=0; $i < $datediff ; $i++) { 
+            for ($i=0; $i < $datediff ; $i++) {
 
-               $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
+                $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
 
-               $weekly_calendar = new WeeklyCalendar([
-                  'fiscal_year' => $request->get('fiscal_year'),
-                  'week_name' => $request->get('week_name'),
-                  'week_date' => $date_from,
-                  'created_by' => $id
-              ]);
-               $weekly_calendar->save();
-           }
+                $weekly_calendar = new WeeklyCalendar([
+                    'fiscal_year' => $request->get('fiscal_year'),
+                    'week_name' => $request->get('week_name'),
+                    'week_date' => $date_from,
+                    'created_by' => $id
+                ]);
+                $weekly_calendar->save();
+            }
 
-           return redirect('/index/weekly_calendar')
-           ->with('status', 'New weekly calendar has been created.')
-           ->with('page', 'Weekly Calendar');
-       }
-       catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            // self::delete($lid);
-            return back()
-            ->with('error', 'Weekly calendar for preferred fiscal year, week name and date already exist.')
+            return redirect('/index/weekly_calendar')
+            ->with('status', 'New weekly calendar has been created.')
             ->with('page', 'Weekly Calendar');
         }
-
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                return back()
+                ->with('error', 'Weekly calendar for preferred fiscal year, week name and date already exist.')
+                ->with('page', 'Weekly Calendar');
+            }
+            else{
+                return back()
+                ->with('error', $e->getMessage())
+                ->with('page', 'Weekly Calendar');
+            }
+        }
     }
-        //
-}
 
     /**
      * Display the specified resource.
@@ -181,7 +183,7 @@ class WeeklyCalendarController extends Controller
         $datediff = ((strtotime($dateTo)-strtotime($dateFrom))/86400)+1;
 
         $id = Auth::id();
-        
+
         try{
 
             $weekly_calendar = WeeklyCalendar::where('week_name', '=', $week_name)
@@ -191,32 +193,35 @@ class WeeklyCalendarController extends Controller
 
             for ($i=0; $i < $datediff ; $i++) { 
 
-               $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
+                $date_from = date('Y-m-d', strtotime($date_from.'+1 day'));
 
-               $weekly_calendar = new WeeklyCalendar([
-                  'fiscal_year' => $request->get('fiscal_year'),
-                  'week_name' => $request->get('week_name'),
-                  'week_date' => $date_from,
-                  'created_by' => $id
-              ]);
+                $weekly_calendar = new WeeklyCalendar([
+                    'fiscal_year' => $request->get('fiscal_year'),
+                    'week_name' => $request->get('week_name'),
+                    'week_date' => $date_from,
+                    'created_by' => $id
+                ]);
 
-               $weekly_calendar->save();
-           }
+                $weekly_calendar->save();
+            }
 
-           return redirect('/index/weekly_calendar')
-           ->with('status', 'Weekly calendar data has been edited.')
-           ->with('page', 'Weekly Calendar');
-       }
-       catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-            // self::delete($lid);
-            return back()
-            ->with('error', 'Weekly calendar for preferred fiscal year, week name and date already exist.')
+            return redirect('/index/weekly_calendar')
+            ->with('status', 'Weekly calendar data has been edited.')
             ->with('page', 'Weekly Calendar');
         }
-        //
-    }
+        catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+                return back()
+                ->with('error', 'Weekly calendar for preferred fiscal year, week name and date already exist.')
+                ->with('page', 'Weekly Calendar');
+            }
+            else{
+                return back()
+                ->with('error', $e->getMessage())
+                ->with('page', 'Weekly Calendar');
+            }
+        }
 }
 
     /**

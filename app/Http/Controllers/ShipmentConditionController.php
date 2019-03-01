@@ -67,12 +67,12 @@ class ShipmentConditionController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Shipment condition code or shipment condition name already exist.')->with('page', 'Shipment Condition');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Shipment Condition');
+            }
         }
-        //
     }
 
     /**
@@ -131,12 +131,12 @@ class ShipmentConditionController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Shipment condition code or shipment condition name already exist.')->with('page', 'Shipment Condition');
             }
-
-        } 
-        //
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Shipment Condition');
+            }
+        }
     }
 
     /**

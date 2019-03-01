@@ -79,12 +79,12 @@ class MaterialVolumeController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Material volume already exist.')->with('page', 'Material Volume');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Material Volume'); 
+            }
         }
-        //
     }
 
     /**
@@ -146,12 +146,12 @@ class MaterialVolumeController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Material volume already exist.')->with('page', 'Material Volume');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Material Volume');
+            }
         }
-        //
     }
 
     /**
@@ -178,43 +178,43 @@ class MaterialVolumeController extends Controller
     public function import(Request $request)
     {
         if($request->hasFile('material_volume')){
-                MaterialVolume::truncate();
+            MaterialVolume::truncate();
 
-                $id = Auth::id();
+            $id = Auth::id();
 
-                $file = $request->file('material_volume');
-                $data = file_get_contents($file);
+            $file = $request->file('material_volume');
+            $data = file_get_contents($file);
 
-                $rows = explode("\r\n", $data);
-                foreach ($rows as $row)
-                {
-                    if (strlen($row) > 0) {
-                        $row = explode("\t", $row);
-                        $material_volume = new MaterialVolume([
-                            'material_number' => $row[0],
-                            'category' => $row[1],
-                            'lot_completion' => $row[2],
-                            'lot_transfer' => $row[3],
-                            'lot_flo' => $row[4],
-                            'lot_row' => $row[5],
-                            'lot_pallet' => $row[6],
-                            'lot_carton' => $row[7],
-                            'length' => $row[8],
-                            'width' => $row[9],
-                            'height' => $row[10],
-                            'created_by' => $id,
-                        ]);
-
-                        $material_volume->save();
-                    }
-                }
-                return redirect('/index/material_volume')->with('status', 'New material volumes has been imported.')->with('page', 'Material Volume');
-
-            }
-            else
+            $rows = explode("\r\n", $data);
+            foreach ($rows as $row)
             {
-                return redirect('/index/material_volume')->with('error', 'Please select a file.')->with('page', 'Material Volume');
+                if (strlen($row) > 0) {
+                    $row = explode("\t", $row);
+                    $material_volume = new MaterialVolume([
+                        'material_number' => $row[0],
+                        'category' => $row[1],
+                        'lot_completion' => $row[2],
+                        'lot_transfer' => $row[3],
+                        'lot_flo' => $row[4],
+                        'lot_row' => $row[5],
+                        'lot_pallet' => $row[6],
+                        'lot_carton' => $row[7],
+                        'length' => $row[8],
+                        'width' => $row[9],
+                        'height' => $row[10],
+                        'created_by' => $id,
+                    ]);
+
+                    $material_volume->save();
+                }
             }
+            return redirect('/index/material_volume')->with('status', 'New material volumes has been imported.')->with('page', 'Material Volume');
+
+        }
+        else
+        {
+            return redirect('/index/material_volume')->with('error', 'Please select a file.')->with('page', 'Material Volume');
+        }
         //
     }
 }

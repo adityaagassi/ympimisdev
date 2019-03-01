@@ -66,10 +66,11 @@ class OriginGroupController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Origin group code or origin group name already exist.')->with('page', 'Origin Group');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Origin Group');
+            }
         }
         //
     }
@@ -130,10 +131,11 @@ class OriginGroupController extends Controller
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-            // self::delete($lid);
                 return back()->with('error', 'Origin group code or origin group name already exist.')->with('page', 'Origin Group');
             }
-
+            else{
+                return back()->with('error', $e->getMessage())->with('page', 'Origin Group');
+            }
         } 
         //
     }
