@@ -275,6 +275,21 @@ table.table-bordered > tfoot > tr > th{
 							tickPositioner: function() {
 								return yAxisLabels;
 							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 3,
+								value: 100,
+								label: {
+									align:'right',
+									text: '100%',
+									x:-7,
+									style: {
+										fontSize: '1vw',
+										color: '#00FF00',
+										fontWeight: 'bold'
+									}
+								}
+							}],
 							labels: {
 								enabled:false
 							}
@@ -338,77 +353,77 @@ table.table-bordered > tfoot > tr > th{
 				alert('Disconnected from server');
 			}
 		});
-	}
+}
 
-	function fillModal(date, hpl){
-		var data = {
-			date:date,
-			hpl:hpl
-		};
-		$.get('{{ url("fetch/tb_shipment_result") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$('#tableModal').DataTable().destroy();
-					$('#modalResultTitle').html('');
-					$('#modalResultTitle').html(hpl +' Export Date: '+ date);
-					$('#modalResultBody').html('');
-					var resultData = '';
-					var resultTotal1 = 0;
-					var resultTotal2 = 0;
-					var resultTotal3 = 0;
-					$.each(result.shipment_results, function(key, value) {
-						resultData += '<tr>';
-						resultData += '<td style="width: 10%">'+ value.material_number +'</td>';
-						resultData += '<td style="width: 40%">'+ value.material_description +'</td>';
-						resultData += '<td style="width: 5%">'+ value.destination_shortname +'</td>';
-						resultData += '<td style="width: 15%">'+ value.plan.toLocaleString() +'</td>';
-						resultData += '<td style="width: 15%">'+ value.actual.toLocaleString() +'</td>';
-						resultData += '<td style="width: 15%; font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
-						resultData += '</tr>';
-						resultTotal1 += value.plan;
-						resultTotal2 += value.actual;
-						resultTotal3 += value.diff;
-					});
-					$('#modalResultBody').append(resultData);
-					$('#modalResultTotal1').html('');
-					$('#modalResultTotal1').append(resultTotal1.toLocaleString());
-					$('#modalResultTotal2').html('');
-					$('#modalResultTotal2').append(resultTotal2.toLocaleString());
-					$('#modalResultTotal3').html('');
-					$('#modalResultTotal3').append(resultTotal3.toLocaleString());
-					$('#tableModal').DataTable({
-						"paging": false,
-						'searching': false,
-						'order':[],
-						'responsive': true,
-						'info': false,
-						"columnDefs": [{
-							"targets": 5,
-							"createdCell": function (td, cellData, rowData, row, col) {
-								if ( cellData.substring(0,1) ==  "-" ) {
-									$(td).css('background-color', 'RGB(255,204,255)')
-								}
-								else
-								{
-									$(td).css('background-color', 'RGB(204,255,255)')
-								}
+function fillModal(date, hpl){
+	var data = {
+		date:date,
+		hpl:hpl
+	};
+	$.get('{{ url("fetch/tb_shipment_result") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#tableModal').DataTable().destroy();
+				$('#modalResultTitle').html('');
+				$('#modalResultTitle').html(hpl +' Export Date: '+ date);
+				$('#modalResultBody').html('');
+				var resultData = '';
+				var resultTotal1 = 0;
+				var resultTotal2 = 0;
+				var resultTotal3 = 0;
+				$.each(result.shipment_results, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td style="width: 10%">'+ value.material_number +'</td>';
+					resultData += '<td style="width: 40%">'+ value.material_description +'</td>';
+					resultData += '<td style="width: 5%">'+ value.destination_shortname +'</td>';
+					resultData += '<td style="width: 15%">'+ value.plan.toLocaleString() +'</td>';
+					resultData += '<td style="width: 15%">'+ value.actual.toLocaleString() +'</td>';
+					resultData += '<td style="width: 15%; font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal1 += value.plan;
+					resultTotal2 += value.actual;
+					resultTotal3 += value.diff;
+				});
+				$('#modalResultBody').append(resultData);
+				$('#modalResultTotal1').html('');
+				$('#modalResultTotal1').append(resultTotal1.toLocaleString());
+				$('#modalResultTotal2').html('');
+				$('#modalResultTotal2').append(resultTotal2.toLocaleString());
+				$('#modalResultTotal3').html('');
+				$('#modalResultTotal3').append(resultTotal3.toLocaleString());
+				$('#tableModal').DataTable({
+					"paging": false,
+					'searching': false,
+					'order':[],
+					'responsive': true,
+					'info': false,
+					"columnDefs": [{
+						"targets": 5,
+						"createdCell": function (td, cellData, rowData, row, col) {
+							if ( cellData.substring(0,1) ==  "-" ) {
+								$(td).css('background-color', 'RGB(255,204,255)')
 							}
-						}]
-					});
-					$('#modalResult').modal('show');
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
+							else
+							{
+								$(td).css('background-color', 'RGB(204,255,255)')
+							}
+						}
+					}]
+				});
+				$('#modalResult').modal('show');
 			}
 			else{
-				alert('Disconnected from server');
+				alert('Attempt to retrieve data failed');
 			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
 
-		});
-	}
+	});
+}
 </script>
 @endsection
