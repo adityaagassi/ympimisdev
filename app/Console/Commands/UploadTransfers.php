@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Status;
 use App\FloDetail;
+use App\LogTransaction;
 use Illuminate\Support\Facades\DB;
 use File;
 use Illuminate\Support\Facades\Auth;
@@ -101,6 +102,21 @@ class UploadTransfers extends Command
 
             if($success){
                 $flo_details->update(['transfer' => $flofilename]);
+                foreach ($flo_transfers as $flo_transfer) {
+                    $log_transaction = new LogTransaction([
+                        'material_number' => $flo_transfer->material_number,
+                        'issue_plant' => '8190',
+                        'issue_storage_location' => $flo_transfer->issue_storage_location,
+                        'receive_plant' => '8191',
+                        'receive_storage_location' => 'FSTK',
+                        'transaction_code' => 'MB1B',
+                        'mvt' => '9P1',
+                        'transaction_date' => $flo_transfer->date,
+                        'qty' => $flo_transfer->qty,
+                        'created_by' => 1
+                    ]);
+                    $log_transaction->save();
+                }
             }
             else{
                 echo 'false';
