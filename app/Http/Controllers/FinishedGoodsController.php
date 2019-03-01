@@ -88,7 +88,7 @@ class FinishedGoodsController extends Controller
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(5)));
 		}
 		
-		$query = "select e.st_date, e.hpl, act, plan, actual from
+		$query = "select date_format(e.st_date, '%d-%b-%Y') as st_date, e.hpl, act, plan, actual from
 		(
 		select distinct materials.hpl, c.st_date from materials
 		left join

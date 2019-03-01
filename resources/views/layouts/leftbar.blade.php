@@ -286,8 +286,6 @@
 </li>
 @endif
 
-
-
 {{--       @if(in_array('R4', $navs))
       @if(isset($head) && $head == "Chorei")<li class="treeview active">@else<li class="treeview">@endif
         <a href="#">
