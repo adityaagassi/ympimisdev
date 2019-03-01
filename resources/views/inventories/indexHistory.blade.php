@@ -57,76 +57,85 @@ table.table-bordered > tfoot > tr > th{
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
-					<div class="col-md-4 col-md-offset-2">
-						<div class="form-group">
-							<label>Date From</label>
-							<div class="input-group date">
-								<div class="input-group-addon">
-									<i class="fa fa-calendar"></i>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Date From</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="dateFrom" name="dateFrom">
+									</div>
 								</div>
-								<input type="text" class="form-control pull-right" id="dateFrom" name="dateFrom">
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Date To</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="dateTo" name="dateTo">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Date To</label>
-							<div class="input-group date">
-								<div class="input-group-addon">
-									<i class="fa fa-calendar"></i>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Movement Type</label>
+									<select class="form-control select2" multiple="multiple" name="mvt" id="mvt" data-placeholder="Select Movement Type" style="width: 100%;">
+										<option></option>
+										@foreach($mvts as $mvt)
+										<option value="{{ $mvt }}">{{ $mvt }}</option>
+										@endforeach
+									</select>
 								</div>
-								<input type="text" class="form-control pull-right" id="dateTo" name="dateTo">
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Origin Group</label>
+									<select class="form-control select2" multiple="multiple" name="originGroup" id='originGroup' data-placeholder="Select Origin Group" style="width: 100%;">
+										<option></option>
+										@foreach($origin_groups as $origin_group)
+										<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+										@endforeach
+									</select>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4 col-md-offset-2">
-						<div class="form-group">
-							<label>Movement Type</label>
-							<select class="form-control select2" multiple="multiple" name="mvt" id="mvt" data-placeholder="Select Movement Type" style="width: 100%;">
-								<option></option>
-								@foreach($mvts as $mvt)
-								<option value="{{ $mvt }}">{{ $mvt }}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Origin Group</label>
-							<select class="form-control select2" multiple="multiple" name="originGroup" id='originGroup' data-placeholder="Select Origin Group" style="width: 100%;">
-								<option></option>
-								@foreach($origin_groups as $origin_group)
-								<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-					<div class="col-md-4 col-md-offset-2">
-						<div class="form-group">
-							<label class="control-label">Issue Storage Location</label>
-							<textarea id="issueStorageLocationArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
-							<input id="issueStorageLocationTags" type="text" placeholder="Material Number" class="form-control tags" name="issueStorageLocationTags" />
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="control-label">Receive Storage Location</label>
-							<textarea id="receiveStorageLocationArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
-							<input id="receiveStorageLocationTags" type="text" placeholder="Material Number" class="form-control tags" name="receiveStorageLocationTags" />
-						</div>
-					</div>
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-md-4 col-md-offset-2">
+
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label class="control-label">Issue Storage Location</label>
+									<textarea id="issueStorageLocationArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
+									<input id="issueStorageLocationTags" type="text" placeholder="Material Number" class="form-control tags" name="issueStorageLocationTags" />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label class="control-label">Receive Storage Location</label>
+									<textarea id="receiveStorageLocationArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
+									<input id="receiveStorageLocationTags" type="text" placeholder="Material Number" class="form-control tags" name="receiveStorageLocationTags" />
+								</div>
+							</div>
+							<div class="col-md-4">
 								<div class="form-group">
 									<label class="control-label">Material Number</label>
 									<textarea id="materialNumberArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
 									<input id="materialNumberTags" type="text" placeholder="Material Number" class="form-control tags" name="materialNumberTags" />
-								</div>
+								</div>	
 							</div>
-						</div>				
-					</div>			
-					<div class="col-md-4 col-md-offset-6">
+						</div>
+					</div>		
+					<div class="col-xs-12">
 						<div class="form-group pull-right">
 							<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 							<button id="search" onClick="fetchTable()" class="btn btn-primary">Search</button>
