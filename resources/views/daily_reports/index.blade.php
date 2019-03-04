@@ -94,6 +94,7 @@ table.table-bordered > tfoot > tr > th{
 								<th style="width: 8%;">Target Date</th>
 								<th style="width: 8%;">Finished Date</th>
 								<th style="width: 8%;">Att</th>
+								<th style="width: 8%;">Edit</th>
 								{{-- <th style="width: 10%;">Act</th> --}}
 							</tr>
 						</thead>
@@ -101,6 +102,7 @@ table.table-bordered > tfoot > tr > th{
 						</tbody>
 						<tfoot>
 							<tr>
+								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -155,7 +157,7 @@ table.table-bordered > tfoot > tr > th{
 										</div>
 										<div class="form-group">
 											<label>Location<span class="text-red">*</span></label>
-											<select class="form-control select2" style="width: 100%;" id="location" name="location" data-placeholder="Choose a Category..." required>
+											<select class="form-control select2" style="width: 100%;" id="location" name="location" data-placeholder="Choose a Location..." required>
 												<option></option>
 												<option value='Office'>Office</option>
 												<option value='Assy'>Assy</option>
@@ -174,7 +176,6 @@ table.table-bordered > tfoot > tr > th{
 												<option value='Warehouse'>Warehouse</option>
 												<option value='Welding'>Welding</option>
 												<option value='Other'>Other</option>
-
 											</select>
 										</div>
 										<div class="form-group">
@@ -225,7 +226,7 @@ table.table-bordered > tfoot > tr > th{
 										<input type="text" class="form-control" id="description1" name="description1" placeholder="Enter Description" required>
 									</div>
 									<div class="col-xs-2" style="padding:0;">
-										<input type="text" id="duration" name="duration1" class="form-control timepicker">
+										<input type="text" id="duration" name="duration1" class="form-control timepicker" value="01:00">
 									</div>
 									<div class="col-xs-2" style="padding:0;">
 										<button class="btn btn-success" onclick='tambah();'><i class='fa fa-plus' ></i></button>
@@ -247,27 +248,68 @@ table.table-bordered > tfoot > tr > th{
 	</div>
 </form>
 
-<div class="modal fade" id="modalDetail">
+<div class="modal fade in" id="modalEdit">
+	<form id ="importForm" name="importForm" method="post" action="{{ url('update/daily_report') }}">
+	<input type="hidden" value="{{csrf_token()}}" name="_token" />
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Edit Daily Report</h4>
+				<br>
 				<h4 class="modal-title" id="modalDetailTitle"></h4>
-				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover table-bordered table-striped" id="tableModal">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th style="width:90%;">Description</th>
-								<th style="width:10%;">Duration</th>
-							</tr>
-						</thead>
-						<tbody id="modalDetailBody">
-						</tbody>
-					</table>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-6">
+							<div class="form-group" id="modalDetailBodyEditHeader">
+								
+
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group" id="modalDetailBodyEditHeader2">
+
+							</div>
+						</div>
+					</div>
 				</div>
+
+				<div  id="modalDetailBodyEditHeader"></div>
+
+				<div  id="modalDetailBodyEdit"></div>
+				
 			</div>
+			<div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-warning">Update</button>
+              </div>
 		</div>
 	</div>
+</form>
 </div>
+<div class="modal modal-danger fade in" id="modaledit" >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Danger Modal</h4>
+              </div>
+              <div class="modal-body" id="modalDeleteBody">
+                <p>One fine body…</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+               <a id="a" name="modalDeleteButton" href="#" type="button" onclick="hapus(this.id)" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+           
+          </div>
+         
+        </div>
 
 @endsection
 @section('scripts')
@@ -304,7 +346,10 @@ table.table-bordered > tfoot > tr > th{
 			showMeridian: false,
 			defaultTime: '0:00',
 		});
-		$('.select2').select2();
+		$('.select2').select2({
+			dropdownAutoWidth : true,
+                    width: '100%',
+		});
 		$('.btnNext').click(function(){
 			var category = $('#category').val();
 			var location = $('#location').val();
@@ -324,144 +369,44 @@ table.table-bordered > tfoot > tr > th{
 		fillDailyReportTable();
 	});
 
-	function openModalCreate(){
-		$('#modalCreate').modal('show');
-	}
-
-	function downloadAtt(id){
+	function editReport(id){
 		var data = {
-			report_code:id
+			report_code : id
 		}
-		$.get('{{ url("download/daily_report") }}', data, function(result, status, xhr){
+		$.get('{{ url("edit/daily_report") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					document.location.href = (result.file_path);
-				}
-				else{
-					alert('Attempt to retrieve data failed')
-				}
-			}
-			else{
-				alert('Disconnected from server');
-			}
-		});
-	}
+					$('#modalDetailBodyEdit').html('');
+					$('#modalDetailBodyEditHeader').html('');
+					$('#modalDetailBodyEditHeader2').html('');
+					
+					$.each(result.daily_reportsHead, function(key, value) {
+						
+						$('#modalDetailBodyEditHeader').append('<input type="text" name="cat" id="cat" value="'+ value.category +'" hidden><input type="text" name="loc" id="loc" value="'+ value.location +'" hidden><input type="text" name="report_code" value="'+ value.report_code +'" hidden><label>Category<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="category123" name="category" data-placeholder="Choose a Category..." required>@foreach($cat as $cat)<option value="{{ $cat }}">{{ $cat }}</option> @endforeach</select></div><div class="form-group"><label>Location<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="location123" name="location" data-placeholder="Choose a Location..." required>>@foreach($loc as $loc)<option value="{{ $loc }}">{{ $loc }}</option>@endforeach</select></div><div class="form-group">').find('.select2').select2();
 
-	function fillDailyReportTable(){
-		$('#dailyReportTable tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-		});
-		var table = $('#dailyReportTable').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
-			},
-			'paging'        : true,
-			'lengthChange'  : true,
-			'searching'     : true,
-			'ordering'      : true,
-			'info'        : true,
-			'order'       : [],
-			'autoWidth'   : true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/daily_report") }}",
-			},
-			"columns": [
-			{ "data": "role_code"},
-			{ "data": "name"},
-			{ "data": "category"},
-			{ "data": "description"},
-			{ "data": "duration"},
-			{ "data": "location"},
-			{ "data": "begin_date"},
-			{ "data": "target_date"},
-			{ "data": "finished_date"},
-			{ "data": "attach"}
-			// { "data": "action"}
-			]
-		});
+						$('#modalDetailBodyEditHeader2').append('<label>Date Begin<span class="text-red">*</span></label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="datepicker form-control pull-right" id="datebegin" name="begindate" value="'+ value.begin_date +'"></div></div><div class="form-group"><label>Date Target<span class="text-red">*</span></label><div class="input-group date"><div class="input-group-addon" ><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="datetarget" name="targetdate" value="'+ value.target_date +'"></div></div><div class="form-group"><label>Date Finished</label><div class="input-group date"><div class="input-group-addon" ><i class="fa fa-calendar"></i></div><input type="text" class="datepicker form-control pull-right" id="datefinished" name="finisheddate" value="'+ value.finished_date +'">').find('.datepicker').datepicker({
+							autoclose: true,
+							format: 'yyyy-mm-dd',
+						});
 
-		table.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			} );
-		});
-
-		$('#dailyReportTable tfoot tr').appendTo('#dailyReportTable thead');
-
-
-	}
-	
-	function detailReport(id){
-		var data = {
-			report_code:id
-		}
-		$.get('{{ url("fetch/daily_report_detail") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$('#modalDetailBody').html('');
-					var detailData = '';
-					$.each(result.daily_reports, function(key, value) {
-						detailData += '<tr>';
-						detailData += '<td>'+ value.description +'</td>';
-						detailData += '<td>'+ value.duration +'</td>';
-						detailData += '</tr>';
 					});
-					$('#modalDetailBody').append(detailData);
-					$('#modalDetail').modal('show');
+					$.each(result.daily_reports, function(key, value) {
+						$('#modalDetailBodyEdit').append('<div class="col-md-12" style="margin-bottom : 5px" id="ibu'+ value.id +'"><div class="col-xs-8" style="padding:0;"><input type="text" name="report_id[]" value="'+ value.id +'" hidden><input type="text" class="form-control" id="description'+ value.id +'" name="description'+ value.id +'"  value="'+ value.description +'" required></div><div class="col-xs-2" style="padding:0;"><input type="text" name="duration'+ value.id +'" class="form-control timepicker" value="'+ value.duration +'" id="duration'+ value.id +'"></div><div class="col-xs-2" style="padding:0;"">&nbsp;<a href="javascript:void(0);" id="b'+ value.id +'" onclick="deleteConfirmation(\''+ value.description +'\','+value.id +');" class="btn btn-danger" data-toggle="modal" data-target="#modaledit"><i class="fa fa-close"></i> </a> </div></div>').find('.timepicker').timepicker({
+							showInputs: false,
+							showMeridian: false,
+
+						});
+					});
+
+					var cat = $('#cat').val();;
+					var loc = $('#loc').val();;
+					$("#category123").val(cat).trigger("change");
+					$("#location123").val(loc).trigger("change");
+					$('#modalEdit').modal('show');
+					
 				}
 				else{
 					alert('Attempt to retrieve data failed');
@@ -471,27 +416,194 @@ table.table-bordered > tfoot > tr > th{
 				alert('Disconnected from server');
 			}
 		});
+}
+
+function openModalCreate(){
+	$('#modalCreate').modal('show');
+}
+
+  function deleteConfirmation(name, id) {
+    jQuery('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
+    jQuery('[name=modalDeleteButton]').attr("id",id);
+  }
+
+
+function downloadAtt(id){
+	var data = {
+		report_code:id
 	}
+	$.get('{{ url("download/daily_report") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				document.location.href = (result.file_path);
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
 
-	function tambah() {
+function fillDailyReportTable(){
+	$('#dailyReportTable tfoot th').each( function () {
+		var title = $(this).text();
+		$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+	});
+	var table = $('#dailyReportTable').DataTable({
+		'dom': 'Bfrtip',
+		'responsive': true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'buttons': {
+			buttons:[
+			{
+				extend: 'pageLength',
+				className: 'btn btn-default',
+			},
+			{
+				extend: 'copy',
+				className: 'btn btn-success',
+				text: '<i class="fa fa-copy"></i> Copy',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			{
+				extend: 'excel',
+				className: 'btn btn-info',
+				text: '<i class="fa fa-file-excel-o"></i> Excel',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			{
+				extend: 'print',
+				className: 'btn btn-warning',
+				text: '<i class="fa fa-print"></i> Print',
+				exportOptions: {
+					columns: ':not(.notexport)'
+				}
+			},
+			]
+		},
+		'paging'        : true,
+		'lengthChange'  : true,
+		'searching'     : true,
+		'ordering'      : true,
+		'info'        : true,
+		'order'       : [],
+		'autoWidth'   : true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false,
+		"processing": true,
+		"serverSide": true,
+		"ajax": {
+			"type" : "get",
+			"url" : "{{ url("fetch/daily_report") }}",
+		},
+		"columns": [
+		{ "data": "role_code"},
+		{ "data": "name"},
+		{ "data": "category"},
+		{ "data": "description"},
+		{ "data": "duration"},
+		{ "data": "location"},
+		{ "data": "begin_date"},
+		{ "data": "target_date"},
+		{ "data": "finished_date"},
+		{ "data": "attach"},
+		{ "data": "action"}
+			// { "data": "action"}
+			]
+		});
 
-		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-8' style='padding:0;''><input type='text' class='form-control' id='description"+no+"' name='description"+no+"' placeholder='Enter Description' required></div><div class='col-xs-2' style='padding:0;''><input type='text' id='duration"+no+"' name='duration"+no+"' class='form-control timepicker'></div><div class='col-xs-2' style='padding:0;'>&nbsp;<button onclick='kurang(this);' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button onclick='tambah(); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+	table.columns().every( function () {
+		var that = this;
 
-		$("#tambah").append(divdata).find('.timepicker').timepicker({
-			showInputs: false,
-			showMeridian: false,
-			defaultTime: '0:00',
-		});;
-		document.getElementById("lop").value = no;
-		no+=1;
-		
+		$( 'input', this.footer() ).on( 'keyup change', function () {
+			if ( that.search() !== this.value ) {
+				that
+				.search( this.value )
+				.draw();
+			}
+		} );
+	});
+
+	$('#dailyReportTable tfoot tr').appendTo('#dailyReportTable thead');
+}
+
+function detailReport(id){
+	var data = {
+		report_code:id
 	}
+	$.get('{{ url("fetch/daily_report_detail") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				$('#modalDetailBody').html('');
+				var detailData = '';
+				$.each(result.daily_reports, function(key, value) {
+					detailData += '<tr>';
+					detailData += '<td>'+ value.description +'</td>';
+					detailData += '<td>'+ value.duration +'</td>';
+					detailData += '</tr>';
+				});
+				$('#modalDetailBody').append(detailData);
+				$('#modalDetail').modal('show');
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
 
-	function kurang(elem) {
-		var ids = $(elem).parent('div').parent('div').attr('id');
-		var oldid = ids;
-		$(elem).parent('div').parent('div').remove();
-		var newid = parseInt(ids) + 1;
+function tambah() {
+
+	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-8' style='padding:0;''><input type='text' class='form-control' id='description"+no+"' name='description"+no+"' placeholder='Enter Description' required></div><div class='col-xs-2' style='padding:0;''><input type='text' id='duration"+no+"' name='duration"+no+"' class='form-control timepicker'></div><div class='col-xs-2' style='padding:0;'>&nbsp;<button onclick='kurang(this);' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button onclick='tambah(); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+
+	$("#tambah").append(divdata).find('.timepicker').timepicker({
+		showInputs: false,
+		showMeridian: false,
+		defaultTime: '0:00',
+	});;
+	document.getElementById("lop").value = no;
+	no+=1;
+
+}
+
+function kurang(elem) {
+	var ids = $(elem).parent('div').parent('div').attr('id');
+	var oldid = ids;
+	$(elem).parent('div').parent('div').remove();
+	var newid = parseInt(ids) + 1;
+	jQuery("#"+newid).attr("id",oldid);
+	jQuery("#description"+newid).attr("name","description"+oldid);
+	jQuery("#duration"+newid).attr("name","duration"+oldid);
+
+	jQuery("#description"+newid).attr("id","description"+oldid);
+	jQuery("#duration"+newid).attr("id","duration"+oldid);
+
+	no-=1;
+	var a = no -1;
+
+	for (var i =  ids; i <= a; i++) {	
+		var newid = parseInt(i) + 1;
+		var oldid = newid - 1;
 		jQuery("#"+newid).attr("id",oldid);
 		jQuery("#description"+newid).attr("name","description"+oldid);
 		jQuery("#duration"+newid).attr("name","duration"+oldid);
@@ -499,24 +611,28 @@ table.table-bordered > tfoot > tr > th{
 		jQuery("#description"+newid).attr("id","description"+oldid);
 		jQuery("#duration"+newid).attr("id","duration"+oldid);
 
-		no-=1;
-		var a = no -1;
+			// alert(i)
+		}
 
-		for (var i =  ids; i <= a; i++) {	
-			var newid = parseInt(i) + 1;
-			var oldid = newid - 1;
-			jQuery("#"+newid).attr("id",oldid);
-			jQuery("#description"+newid).attr("name","description"+oldid);
-			jQuery("#duration"+newid).attr("name","duration"+oldid);
-
-			jQuery("#description"+newid).attr("id","description"+oldid);
-			jQuery("#duration"+newid).attr("id","duration"+oldid);
-
-		// alert(i)
+		document.getElementById("lop").value = a;
 	}
 
-	document.getElementById("lop").value = a;
-}
+	function hapus(id) {
+	var data = {
+        id:id,
+      }
+     
+      $.post('{{ url("delete/daily_report") }}', data, function(result, status, xhr){
+        console.log(status);
+        console.log(result);
+        console.log(xhr);
+      });
+      $('#modaledit').modal('hide');
+      
+      $('#ibu'+id).css("display","none");
+      // $('#description'+id).attr("name","description");
+    }
+	
 
 
 </script>

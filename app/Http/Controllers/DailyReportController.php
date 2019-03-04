@@ -21,6 +21,33 @@ class DailyReportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->cat = [
+            'Hardware',
+            'Networking',
+            'Software',
+            'System Dev',
+            'Other',
+        ];
+
+         $this->loc = [
+            'Office',
+            'Assy',
+            'Body Process',
+            'Buffing',
+            'CL Body',
+            'Lacquering',
+            'Meeting Room',
+            'Part Process',
+            'Pianica',
+            'Plating',
+            'Recorder',
+            'Sub Assy',
+            'TR Room',
+            'Venova',
+            'Warehouse',
+            'Welding',
+            'Other'
+        ];
     }
     /**
      * Display a listing of the resource.
@@ -29,7 +56,13 @@ class DailyReportController extends Controller
      */
     public function index()
     {
-        return view('daily_reports.index')->with('page', 'Daily Report');
+         $cat = $this->cat;
+         $loc = $this->loc;
+        return view('daily_reports.index', array(
+        'cat' => $cat,
+        'loc' => $loc,
+        
+      ))->with('page', 'Daily Report');
         //
     }
 
@@ -115,6 +148,9 @@ class DailyReportController extends Controller
                 return '-';
             }
         })
+        ->addColumn('action', function($daily_reports){
+            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editReport(id)" id="' . $daily_reports->report_code . '"><i class="fa fa-edit"></i></a>';
+        })
         ->rawColumns(['action' => 'action', 'attach' => 'attach'])
         ->make(true);
     }
@@ -154,6 +190,7 @@ class DailyReportController extends Controller
         return Response::json($response);
     }
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -173,7 +210,7 @@ class DailyReportController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -182,9 +219,16 @@ class DailyReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->get();
+        $daily_reportsHead = DailyReport::where('report_code', '=', $request->get('report_code'))->select('report_code','category','location','begin_date','finished_date','target_date')->distinct()->get();
+        $response = array(
+            'status' => true,
+            'daily_reports' => $daily_reports,
+            'daily_reportsHead' => $daily_reportsHead,
+        );
+        return Response::json($response);
     }
 
     /**
@@ -194,10 +238,38 @@ class DailyReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try{
+         $id_user = Auth::id();
+         $ids = $request->get('report_id');
+         foreach ($ids as $id) 
+         {
+            $description = "description".$id;
+            $duration = "duration".$id;
+            // $query="select * from daily_reports where id =".$id."";
+            $head = DailyReport::where('id','=', $id)
+            ->withTrashed()       
+            ->first();
+            // $head = DB::select($query);
+            $head->category = $request->get('category');
+            $head->location = $request->get('location');
+            $head->begin_date = $request->get('begindate');
+            $head->target_date = $request->get('targetdate');
+            $head->finished_date = $request->get('finisheddate');
+            $head->description = $request->get($description);
+            $head->duration = $request->get($duration);
+            $head->save();
+        }
+
+
+        return redirect('/index/daily_report')->with('status', 'Update daily report success')->with('page', 'Daily Report');
     }
+    catch (QueryException $e){
+        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+    }
+
+}
 
     /**
      * Remove the specified resource from storage.
@@ -205,8 +277,14 @@ class DailyReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Request $request)
     {
-        //
+       try{
+        $master = DailyReport::where('id','=' ,$request->get('id'))
+        ->delete();
+    }catch (QueryException $e){
+        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
     }
+
+}
 }

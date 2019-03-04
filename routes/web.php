@@ -116,9 +116,12 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 	Route::get('index/daily_report', 'DailyReportController@index');
 	Route::post('create/daily_report', 'DailyReportController@create');
+	Route::post('update/daily_report', 'DailyReportController@update');
+	Route::post('delete/daily_report', 'DailyReportController@delete');
 	Route::get('fetch/daily_report', 'DailyReportController@fetchDailyReport');
 	Route::get('download/daily_report', 'DailyReportController@downloadDailyReport');
 	Route::get('fetch/daily_report_detail', 'DailyReportController@fetchDailyReportDetail');
+	Route::get('edit/daily_report', 'DailyReportController@edit');
 });
 
 Route::get('setting/user', 'UserController@index_setting');
