@@ -217,7 +217,7 @@ class UserController extends Controller
       else{
         try{
           $user->name = ucwords($request->get('name'));
-          $user->username = strtolower($request->get('username';
+          $user->username = strtolower($request->get('username'));
           $user->email = $request->get('email');
           $user->role_code = $request->get('role_code');
           $user->save();
