@@ -63,8 +63,8 @@ class UserController extends Controller
         if($request->get('password') == $request->get('password_confirmation')){
           $id = Auth::id();
           $user = new User([
-            'name' => $request->get('name'),
-            'username' => $request->get('username'),
+            'name' => ucwords($request->get('name')),
+            'username' => strtolower($request->get('username')),
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
             'role_code' => $request->get('role_code'),
@@ -125,7 +125,7 @@ class UserController extends Controller
         if(strlen($request->get('oldPassword'))>0 && strlen($request->get('newPassword')>0) && strlen($request->get('confirmPassword')>0)){
           if($oldPassword == bcrypt($request->get('oldPassword'))){
             if($request->get('newPassword') == $request->get('confirmPassword')){
-              $user->name = $request->get('name');
+              $user->name = ucwords($request->get('name'));
               $user->email = $request->get('email');
               $user->password = bcrypt($request->get('newPassword'));
               $user->save();
@@ -140,7 +140,7 @@ class UserController extends Controller
           }
         }
         else{
-          $user->name = $request->get('name');
+          $user->name = ucwords($request->get('name'));
           $user->email = $request->get('email');
           $user->save();
           return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
@@ -192,8 +192,8 @@ class UserController extends Controller
       if($request->get('password') != "" || $request->get('password_confirmation') != ""){
         if($request->get('password') == $request->get('password_confirmation')){
           try{
-            $user->name = $request->get('name');
-            $user->username = $request->get('username');
+            $user->name = ucwords($request->get('name'));
+            $user->username = strtolower($request->get('username'));
             $user->email = $request->get('email');
             $user->password = bcrypt($request->get('password'));
             $user->role_code = $request->get('role_code');
@@ -216,8 +216,8 @@ class UserController extends Controller
       }
       else{
         try{
-          $user->name = $request->get('name');
-          $user->username = $request->get('username');
+          $user->name = ucwords($request->get('name'));
+          $user->username = strtolower($request->get('username';
           $user->email = $request->get('email');
           $user->role_code = $request->get('role_code');
           $user->save();
