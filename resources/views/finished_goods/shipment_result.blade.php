@@ -80,7 +80,8 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12">
 							<center>
 								<div id="container" style="width:100%; height:450px;"></div>
-								<span class="text-red">*Blank = No Export Plan</span>
+								<span class="text-red">Blank = No Export Plan</span><br>
+								<span class="text-red">ブランク = 輸出計画はありません</span><br>
 							</center>
 						</div>
 					</div>
@@ -246,7 +247,7 @@ table.table-bordered > tfoot > tr > th{
 							labels: {
 								// rotation: -40,
 								style: {
-									fontSize: '1vw',
+									fontSize: '30px',
 									color: 'rgba(75, 30, 120)',
 									// fontWeight: 'bold'
 								}
