@@ -58,14 +58,17 @@ class UploadTransfers extends Command
         ->whereNull('flo_details.transfer')
         ->where('flo_logs.created_at', '<=', $date);
 
+        $flo_details->update(['transfer' => $flofilename]);
+
         $flo_transfers = DB::table('flo_details')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-        ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
+        // ->leftJoin('flos', 'flos.flo_number', '=', 'flo_details.flo_number')
         ->leftJoin('flo_logs', 'flo_logs.flo_number', '=', 'flo_details.flo_number')
         ->where('flo_logs.status_code', '=', '2')
-        ->whereIn('flos.status', ['2','3','4'])
-        ->whereNull('flo_details.transfer')
-        ->where('flo_logs.created_at', '<=', $date)
+        // ->whereIn('flos.status', ['2','3','4'])
+        // ->whereNull('flo_details.transfer')
+        // ->where('flo_logs.created_at', '<=', $date)
+        ->where('flo_details.transfer', '=', $flofilename)
         ->select(
             'materials.issue_storage_location', 
             'flo_details.material_number',
@@ -101,7 +104,6 @@ class UploadTransfers extends Command
             $success = self::uploadFTP($flofilepath, $flofiledestination);
 
             if($success){
-                $flo_details->update(['transfer' => $flofilename]);
                 foreach ($flo_transfers as $flo_transfer) {
                     $log_transaction = new LogTransaction([
                         'material_number' => $flo_transfer->material_number,
@@ -119,11 +121,15 @@ class UploadTransfers extends Command
                 }
             }
             else{
-                echo 'false';
+                $flo_error = FloDetail::where('transfer', '=', $flofilename);
+                $flo_error->update(['transfer' => null]);
+                echo 'false1';
             }
         }
         else{
-            echo 'false';
+            $flo_error = FloDetail::where('transfer', '=', $flofilename);
+            $flo_error->update(['transfer' => null]);
+            echo 'false2';
         }
     }
 

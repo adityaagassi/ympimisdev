@@ -53,10 +53,12 @@ class UploadCompletions extends Command
         $flo_details = FloDetail::whereNull('flo_details.completion')
         ->where('flo_details.created_at', '<=', $date);
 
+        $flo_details->update(['completion' => $flofilename]);
+
         $flo_completions = DB::table('flo_details')
         ->leftJoin('materials', 'materials.material_number', '=', 'flo_details.material_number')
-        ->whereNull('flo_details.completion')
-        ->where('flo_details.created_at', '<=', $date)
+        // ->whereNull('flo_details.completion')
+        ->where('flo_details.completion', '=', $flofilename)
         ->select(
             DB::raw('if(flo_details.flo_number like "Maedaoshi%", "M", "F") as stats'),
             'materials.issue_storage_location', 
@@ -90,7 +92,6 @@ class UploadCompletions extends Command
             $success = self::uploadFTP($flofilepath, $flofiledestination);
 
             if($success){
-                $flo_details->update(['completion' => $flofilename]);
                 foreach ($flo_completions as $flo_completion) {
                     $log_transaction = new LogTransaction([
                         'material_number' => $flo_completion->material_number,
@@ -106,11 +107,15 @@ class UploadCompletions extends Command
                 }
             }
             else{
-                echo 'false';
+                $flo_error = FloDetail::where('completion', '=', $flofilename);
+                $flo_error->update(['completion' => null]);
+                echo 'false1';
             }
         }
         else{
-            echo 'false';
+            $flo_error = FloDetail::where('completion', '=', $flofilename);
+            $flo_error->update(['completion' => null]);
+            echo 'false2';
         }
     }
 
