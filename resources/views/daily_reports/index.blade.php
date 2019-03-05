@@ -229,7 +229,7 @@ table.table-bordered > tfoot > tr > th{
 										<input type="text" id="duration" name="duration1" class="form-control timepicker" value="01:00">
 									</div>
 									<div class="col-xs-2" style="padding:0;">
-										<button class="btn btn-success" onclick='tambah();'><i class='fa fa-plus' ></i></button>
+										<button class="btn btn-success" onclick='tambah("tambah","lop");'><i class='fa fa-plus' ></i></button>
 									</div>	
 								</div>
 								<div id="tambah"></div>
@@ -279,7 +279,11 @@ table.table-bordered > tfoot > tr > th{
 
 				<div  id="modalDetailBodyEditHeader"></div>
 
-				<div  id="modalDetailBodyEdit"></div>
+				<div  id="modalDetailBodyEdit"></div><br>
+				{{-- <center><button type="button" class="btn btn-success" onclick='tambah("tambah2","lop2");'><i class='fa fa-plus' ></i></button></center><br> --}}
+				<div id="tambah2">
+				<input type="text" name="lop2" id="lop2" value="1" hidden="">
+				</div>
 				
 			</div>
 			<div class="modal-footer">
@@ -394,7 +398,9 @@ table.table-bordered > tfoot > tr > th{
 
 					});
 					$.each(result.daily_reports, function(key, value) {
-						$('#modalDetailBodyEdit').append('<div class="col-md-12" style="margin-bottom : 5px" id="ibu'+ value.id +'"><div class="col-xs-8" style="padding:0;"><input type="text" name="report_id[]" value="'+ value.id +'" hidden><input type="text" class="form-control" id="description'+ value.id +'" name="description'+ value.id +'"  value="'+ value.description +'" required></div><div class="col-xs-2" style="padding:0;"><input type="text" name="duration'+ value.id +'" class="form-control timepicker" value="'+ value.duration +'" id="duration'+ value.id +'"></div><div class="col-xs-2" style="padding:0;"">&nbsp;<a href="javascript:void(0);" id="b'+ value.id +'" onclick="deleteConfirmation(\''+ value.description +'\','+value.id +');" class="btn btn-danger" data-toggle="modal" data-target="#modaledit"><i class="fa fa-close"></i> </a> </div></div>').find('.timepicker').timepicker({
+						var tambah2 = "tambah2";
+						var	lop2 = "lop2";
+						$('#modalDetailBodyEdit').append('<div class="col-md-12" style="margin-bottom : 5px" id="ibu'+ value.id +'"><div class="col-xs-8" style="padding:0;"><input type="text" name="report_id[]" value="'+ value.id +'" hidden><input type="text" class="form-control" id="description'+ value.id +'" name="description'+ value.id +'"  value="'+ value.description +'" required></div><div class="col-xs-2" style="padding:0;"><input type="text" name="duration'+ value.id +'" class="form-control timepicker" value="'+ value.duration +'" id="duration'+ value.id +'"></div><div class="col-xs-2" style="padding:0;"">&nbsp;<a href="javascript:void(0);" id="b'+ value.id +'" onclick="deleteConfirmation(\''+ value.description +'\','+value.id +');" class="btn btn-danger" data-toggle="modal" data-target="#modaledit"><i class="fa fa-close"></i> </a> <button type="button" class="btn btn-success" onclick="tambah(\''+ tambah2 +'\',\''+ lop2 +'\');"><i class="fa fa-plus" ></i></button></div></div>').find('.timepicker').timepicker({
 							showInputs: false,
 							showMeridian: false,
 
@@ -572,21 +578,31 @@ function detailReport(id){
 	});
 }
 
-function tambah() {
+function tambah(id,lop) {
+	var id = id;
 
-	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-8' style='padding:0;''><input type='text' class='form-control' id='description"+no+"' name='description"+no+"' placeholder='Enter Description' required></div><div class='col-xs-2' style='padding:0;''><input type='text' id='duration"+no+"' name='duration"+no+"' class='form-control timepicker'></div><div class='col-xs-2' style='padding:0;'>&nbsp;<button onclick='kurang(this);' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button onclick='tambah(); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+	var lop = "";
 
-	$("#tambah").append(divdata).find('.timepicker').timepicker({
+	if (id == "tambah"){
+		lop = "lop";
+	}else{
+		lop = "lop2";
+	}
+
+	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-8' style='padding:0;''><input type='text' class='form-control' id='description"+no+"' name='description"+no+"' placeholder='Enter Description' required></div><div class='col-xs-2' style='padding:0;''><input type='text' id='duration"+no+"' name='duration"+no+"' class='form-control timepicker'></div><div class='col-xs-2' style='padding:0;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+
+	$("#"+id).append(divdata).find('.timepicker').timepicker({
 		showInputs: false,
 		showMeridian: false,
 		defaultTime: '0:00',
 	});;
-	document.getElementById("lop").value = no;
+	document.getElementById(lop).value = no;
 	no+=1;
 
 }
 
-function kurang(elem) {
+function kurang(elem,lop) {
+	var lop = lop;
 	var ids = $(elem).parent('div').parent('div').attr('id');
 	var oldid = ids;
 	$(elem).parent('div').parent('div').remove();
@@ -614,7 +630,7 @@ function kurang(elem) {
 			// alert(i)
 		}
 
-		document.getElementById("lop").value = a;
+		document.getElementById(lop).value = a;
 	}
 
 	function hapus(id) {

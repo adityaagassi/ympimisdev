@@ -29,7 +29,7 @@ class DailyReportController extends Controller
             'Other',
         ];
 
-         $this->loc = [
+        $this->loc = [
             'Office',
             'Assy',
             'Body Process',
@@ -56,15 +56,15 @@ class DailyReportController extends Controller
      */
     public function index()
     {
-         $cat = $this->cat;
-         $loc = $this->loc;
-        return view('daily_reports.index', array(
+       $cat = $this->cat;
+       $loc = $this->loc;
+       return view('daily_reports.index', array(
         'cat' => $cat,
         'loc' => $loc,
         
-      ))->with('page', 'Daily Report');
+    ))->with('page', 'Daily Report');
         //
-    }
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -241,10 +241,11 @@ class DailyReportController extends Controller
     public function update(Request $request)
     {
         try{
-         $id_user = Auth::id();
-         $ids = $request->get('report_id');
-         foreach ($ids as $id) 
-         {
+           $id_user = Auth::id();
+           $ids = $request->get('report_id');
+           $lop = $request->get('lop2');
+           foreach ($ids as $id) 
+           {
             $description = "description".$id;
             $duration = "duration".$id;
             // $query="select * from daily_reports where id =".$id."";
@@ -262,14 +263,31 @@ class DailyReportController extends Controller
             $head->save();
         }
 
+        for ($i=2; $i <= $lop ; $i++) {
+            $description = "description".$i;
+            $duration = "duration".$i;
 
-        return redirect('/index/daily_report')->with('status', 'Update daily report success')->with('page', 'Daily Report');
-    }
-    catch (QueryException $e){
-        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
-    }
+            $data = new DailyReport([
+                'report_code' => $request->get('report_code'),
+                'category' => $request->get('category'),
+                'description' => $request->get($description),
+                'location' => $request->get('location'),
+                'duration' => $request->get($duration),
+                'begin_date' => $request->get('begindate'),
+                'target_date' => $request->get('targetdate'),
+                'finished_date' => $request->get('finisheddate'), 
+                'created_by' => $id_user
+            ]);
+            $data->save();
+        }
 
-}
+            return redirect('/index/daily_report')->with('status', 'Update daily report success')->with('page', 'Daily Report');
+        }
+        catch (QueryException $e){
+            return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+        }
+
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -279,7 +297,7 @@ class DailyReportController extends Controller
      */
     public function delete(Request $request)
     {
-       try{
+     try{
         $master = DailyReport::where('id','=' ,$request->get('id'))
         ->delete();
     }catch (QueryException $e){
