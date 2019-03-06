@@ -64,7 +64,7 @@ return [
 
         'mysql2' => [
             'driver' => 'mysql',
-            'host' => '172.17.128.18',
+            'host' => 'localhost',
             'port' => '3306',
             'database' => 'kitto',
             'username' => 'root',

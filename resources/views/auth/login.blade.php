@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>YMPI Information System</title>
@@ -14,9 +14,10 @@
   <link rel="stylesheet" href="{{ asset("fonts/SourceSansPro.css")}}">
 </head>
 <body class="hold-transition login-page">
-  <div class="login-logo" style="padding-top: 100px;">
-    <a href="#" style="font-size: 40px"><b>MI</b>RAI<br></a>
-    <div class="col-md-12" style="text-align: center;"><span style="font-size: 24px"><b>M</b>anufactur<b>i</b>ng <b>R</b>ealtime <b>A</b>cquisition of <b>I</b>nformation</div></span>
+  <div class="login-logo" style="padding-top: 100px; margin-bottom: 0px">
+    {{-- <a href="#" style="font-size: 40px"><b>MI</b>RAI<br></a>
+    <div class="col-md-12" style="text-align: center;"><span style="font-size: 24px"><b>M</b>anufactur<b>i</b>ng <b>R</b>ealtime <b>A</b>cquisition of <b>I</b>nformation</div></span> --}}
+    <img src="{{ url("images/logo_mirai.png")}}" height="250px">
   </div>
   <div class="login-box">
     <div class="login-box-body">
