@@ -108,6 +108,7 @@ class MaterialController extends Controller
           'material_description' => $request->get('material_description'),
           'base_unit' => $request->get('base_unit'),
           'issue_storage_location' => $request->get('issue_storage_location'),
+          'work_center' => $request->get('work_center'),
           'origin_group_code' => $request->get('origin_group_code'),
           'hpl' => $request->get('hpl'),
           'category' => $request->get('category'),
@@ -185,6 +186,7 @@ class MaterialController extends Controller
         $material->material_description = $request->get('material_description');
         $material->base_unit = $request->get('base_unit');
         $material->issue_storage_location = $request->get('issue_storage_location');
+        $material->work_center = $request->get('work_center');
         $material->origin_group_code = $request->get('origin_group_code');
         $material->hpl = $request->get('hpl');
         $material->category = $request->get('category');
@@ -246,10 +248,11 @@ class MaterialController extends Controller
                   'material_description' => $row[1],
                   'base_unit' => $row[2],
                   'issue_storage_location' => $row[3],
-                  'origin_group_code' => $row[4],
-                  'hpl' => $row[5],
-                  'category' => $row[6],
-                  'model' => $row[7],
+                  'work_center' => $row[4],
+                  'origin_group_code' => $row[5],
+                  'hpl' => $row[6],
+                  'category' => $row[7],
+                  'model' => $row[8],
                   'created_by' => $id,
                 ]);
 

@@ -63,6 +63,12 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-4">Work Center<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="work_center" placeholder="Enter Work Center" value="{{$material->work_center}}">
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="origin_group_code" style="width: 100%;" >
@@ -121,14 +127,12 @@
       </div>
     </form>
   </div>
-  
-</div>
 
-@endsection
+  @endsection
 
-@section('scripts')
-<script>
-  $(function () {
+  @section('scripts')
+  <script>
+    $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
 

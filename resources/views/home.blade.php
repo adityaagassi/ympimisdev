@@ -50,7 +50,11 @@ table.table-bordered > tfoot > tr > th{
     <div class="marquee">
         <span style="font-size: 22px;" class="text-purple"><span style="font-size:26px;"><b>M</b></span>anufactur<span style="font-size:27px;"><b>i</b></span>ng <span style="font-size:26px;"><b>R</b></span>ealtime <span style="font-size:26px;"><b>A</b></span>cquisition of <span style="font-size:26px;"><b>I</b></span>nformation</span>
         <br>
-        <b><span style="font-size: 26px;" class="text-purple">製 造 の リ ア ル タ イ ム 情 報</span></b>
+        <b><span style="font-size: 26px;" class="text-purple">
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="30px">
+            製 造 の リ ア ル タ イ ム 情 報
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="30px">
+        </span></b>
     </div>
 </section>
 @endsection

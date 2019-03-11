@@ -228,7 +228,7 @@ table.table-bordered > tfoot > tr > th{
 					else{
 						var scrollMax = 4;
 					}
-					var yAxisLabels = [0,25,50,75,100,140];
+					var yAxisLabels = [0,25,50,75,100,145];
 					Highcharts.chart('container', {
 						chart: {
 							type: 'column'

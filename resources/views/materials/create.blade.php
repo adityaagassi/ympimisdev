@@ -65,6 +65,12 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-4">Work Center<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="work_center" placeholder="Enter Work Center" required>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
           <div class="col-sm-4" align="left">
             <select class="form-control select2" name="origin_group_code" style="width: 100%;" data-placeholder="Choose an Origin Group..." required>

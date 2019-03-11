@@ -80,6 +80,7 @@ table.table-bordered > tfoot > tr > th{
                 <th>Description</th>
                 <th>BUn</th>
                 <th>SLoc</th>
+                <th>WC</th>
                 <th>Origin Group</th>
                 <th>HPL</th>
                 <th>Cat.</th>
@@ -94,16 +95,17 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$material->material_description}}</td>
                 <td style="width: 5%;">{{$material->base_unit}}</td>
                 <td style="width: 5%;">{{$material->issue_storage_location}}</td>
-                <td>
+                <td style="width: 5%;">{{$material->work_center}}</td>
+                <td style="width: 10%;">
                   @if(isset($material->origingroup->origin_group_name))
-                  {{$material->origin_group_code}} - {{$material->origingroup->origin_group_name}}
+                  {{$material->origin_group_code}}-{{$material->origingroup->origin_group_name}}
                   @else
-                  {{$material->origin_group_code}} - Not registered
+                  {{$material->origin_group_code}}-Not registered
                   @endif
                 </td>
                 <td style="width: 5%;">{{$material->hpl}}</td>
                 <td style="width: 5%;">{{$material->category}}</td>
-                <td>{{$material->model}}</td>
+                <td style="width: 5%;">{{$material->model}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/material', $material['id'])}}">View</a>
@@ -118,6 +120,7 @@ table.table-bordered > tfoot > tr > th{
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -162,7 +165,7 @@ table.table-bordered > tfoot > tr > th{
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
-          Format: [Material Number][Description][Uom][SLoc][Origin Group][HPL][Category]<br>
+          Format: [Material Number][Description][Uom][SLoc][WC][Origin Group][HPL][Category]<br>
           Sample: <a href="{{ url('download/manual/import_material.txt') }}">import_material.txt</a> Code: #Truncate
         </div>
         <div class="">
