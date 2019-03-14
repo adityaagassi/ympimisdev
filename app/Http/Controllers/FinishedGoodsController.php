@@ -369,7 +369,7 @@ class FinishedGoodsController extends Controller
 			$year = "having year = '" . date('Y') . "' and week_start >= '" . $first . "' and week_start <= '" . $last . "'";
 		}
 
-		$query = "select year, week_name, week_start, week_end, sum(plan) as plan, sum(actual_production) as actual_production, sum(diff_actual) as diff_actual, concat(round((sum(actual_production)/sum(plan))*100,2), '%') as prctg_actual, sum(actual_shipment) as actual_shipment, sum(diff_shipment) as diff_shipment, concat(round((sum(actual_shipment)/sum(plan))*100,2), '%') as prctg_shipment, sum(delay) as delay, concat(round(((sum(plan)-sum(delay))/sum(plan))*100,2), '%') as prctg_delay from
+		$query = "select year, week_name, week_start, week_end, sum(plan) as plan, sum(actual_production) as actual_production, sum(diff_actual) as diff_actual, concat(truncate((sum(actual_production)/sum(plan))*100,2), '%') as prctg_actual, sum(actual_shipment) as actual_shipment, sum(diff_shipment) as diff_shipment, concat(truncate((sum(actual_shipment)/sum(plan))*100,2), '%') as prctg_shipment, sum(delay) as delay, concat(round(((sum(plan)-sum(delay))/sum(plan))*100,2), '%') as prctg_delay from
 		(
 		select year, week_name, week_start, bl_target as week_end, id, material_number, plan, sum(actual_production)as actual_production, sum(actual_production)-plan as diff_actual, sum(actual_shipment) as actual_shipment, sum(actual_shipment)-plan as diff_shipment, sum(delay) as delay from
 		(
