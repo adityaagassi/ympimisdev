@@ -53,6 +53,12 @@
           </div>
         </div>
         <div class="form-group row" align="right">
+          <label class="col-sm-5">Work Center</label>
+          <div class="col-sm-5" align="left">
+            {{$material->work_center}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
           <label class="col-sm-5">Origin Group</label>
           <div class="col-sm-5" align="left">
             @if(isset($material->origingroup->origin_group_name))
