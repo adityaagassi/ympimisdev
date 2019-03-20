@@ -229,7 +229,9 @@ class ChoreiController extends Controller
 
 	public function fetch_daily_production_result_date(Request $request){
 
-		$dates = DB::table('weekly_calendars');
+		$year = date('Y');
+
+		$dates = DB::table('weekly_calendars')->where(db::raw('year(week_date)'), '=', $year);
 
 		if(strlen($request->get('week')) > 0){
 			$dates = $dates->where('week_name', '=', $request->get('week'));
