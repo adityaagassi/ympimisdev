@@ -31,12 +31,17 @@ Route::get('404', function() {
 Auth::routes();
 
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
+
+Route::get('/about_mis', 'HomeController@indexAboutMIS');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');
 	Route::get('fetch/dp_production_result', 'DisplayController@fetch_dp_production_result');
 	Route::get('index/wip_stock_assy', 'DisplayController@index_wip_stock_assy');
+
+	Route::get('index/dp_stockroom_stock', 'DisplayController@index_dp_stockroom_stock');
+	Route::get('fetch/dp_stockroom_stock', 'DisplayController@fetch_dp_stockroom_stock');
 });
 
 Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
@@ -327,6 +332,11 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('edit/stamp', 'ProcessController@updateStamp');
 	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
 });
+
+Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
+	Route::get('index/process_middle_incoming_lcq_sx', 'MiddleProcessController@indexProcessIncomingLcqSX');
+});
+Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

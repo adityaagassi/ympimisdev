@@ -27,6 +27,10 @@ class HomeController extends Controller
         return view('home')->with('page', 'Dashboard');
     }
 
+    public function indexAboutMIS(){
+        return view('about_mis.about_mis')->with('page', 'About MIS');
+    }
+
     public function download($reference_file){
         if (file_exists(public_path() . "/manuals/" . $reference_file)) {
             header("Content-Length: " . filesize(public_path() . "/manuals/" . $reference_file));

@@ -75,11 +75,11 @@ table.table-bordered > tfoot > tr > th{
                         <td>
                             <span style="font-weight: bold;">HR Management (人材管理)</span>
                             <br>
-                            <a href="http://172.17.128.4/myhris/home/presensi_graph" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Attendance (勤怠管理)
+                            <a href="http://172.17.128.4/myhris/management" target="blank">
+                                <i class="fa fa-caret-right"></i> Manpower Overtime (勤怠管理)
                             </a><br>
-                            <a href="http://172.17.128.4/myhris/home/karyawan_graph" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Database (社員構成)
+                            <a href="http://172.17.128.4/myhris/management_mp" target="blank">
+                                <i class="fa fa-caret-right"></i> Manpower Infromation (社員構成)
                             </a>
                         </td>
                     </tr>
@@ -118,6 +118,10 @@ table.table-bordered > tfoot > tr > th{
                             <br>
                             <a href="{{ url("/index/process_assy_fl") }}">
                                 <i class="fa fa-caret-right"></i> FL Subassy-Assembly (フルート仮組~組立)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/process_middle_sx") }}">
+                                <i class="fa fa-caret-right"></i> SX Buffing-Surface Treatmeny (??)
                             </a>
                         </td>
                     </tr>
