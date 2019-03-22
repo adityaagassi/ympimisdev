@@ -43,12 +43,6 @@
 		</div>
 		<div class="col-md-12">
 			<table id="tableStock" class="table table-bordered">
-				<thead id="tableHead">
-				</thead>
-				<tbody id="tableBody">
-				</tbody>
-				<tfoot id="tableFoot" style="background-color: RGB(252, 248, 227);">
-				</tfoot>
 			</table>
 		</div>
 	</div>
@@ -312,13 +306,25 @@ function fetchTableStock(){
 		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
+				$('#tableStock').html("");
 				$('#tableHead').html("");
 				$('#tableFoot').html("");
 				$('#tableBody').html("");
+				var tableStock = '';
 				var tableHead = '';
 				var tableFoot = '';
-				var totalFoot = '';
+				var tableBody = '';
+				var totalFoot = 0;
 				var heads = [];
+
+				tableStock += '<thead id="tableHead">';
+				tableStock += '</thead>';
+				tableStock += '<tbody id="tableBody">';
+				tableStock += '</tbody>';
+				tableStock += '<tfoot id="tableFoot" style="background-color: RGB(252, 248, 227);">';
+				tableStock += '</tfoot>';
+				$('#tableStock').append(tableStock);
+
 				tableHead += '<tr>';
 				tableFoot += '<tr>';
 				tableHead += '<th style="width:10%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Process/Model</th>';
@@ -334,8 +340,6 @@ function fetchTableStock(){
 				});
 				tableHead += '<th style="width:4.5%; background-color: rgba(126,86,134,.7); text-align: center; font-size: 18px;">Total</th>';
 				tableHead += '</tr>';
-
-				var tableBody = '';
 
 				tableHead += '<tr>';
 				tableHead += '<th style="width:10%; background-color: rgba(248,161,63,1); text-align: center; font-size: 18px;">Stock+1Day Plan</th>';
@@ -399,38 +403,38 @@ function fetchTableStock(){
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);
 
-				// $('#tableStock').DataTable().clear();
-				// $('#tableStock').DataTable().destroy();
-				// $('#tableStock').DataTable({
-				// 		// 'scrollX': true,
-				// 		'responsive':false,
-				// 		// 'dom': 'Bfrtip',
-				// 		'paging': false,
-				// 		'lengthChange': false,
-				// 		'searching': false,
-				// 		'ordering': false,
-				// 		'order': [],
-				// 		'info': false,
-				// 		'autoWidth': false,
-				// 		"bJQueryUI": false,
-				// 		"bAutoWidth": false,
-				// 		"footerCallback": function (tfoot, data, start, end, display) {
-				// 			var intVal = function ( i ) {
-				// 				return typeof i === 'string' ?
-				// 				i.replace(/[\$,]/g, '')*1 :
-				// 				typeof i === 'number' ?
-				// 				i : 0;
-				// 			};
-				// 			var api = this.api();
-				// 			for(x = 1; x <= totalHead; x++){
-				// 				var total = api.column(x).data().reduce(function (a, b) {
-				// 					return intVal(a)+intVal(b);
-				// 				}, 0)
-				// 				$(api.column(x).footer()).html(total.toLocaleString());
-				// 			}
-				// 		}
-				// 	});
-				// setTimeout(fetchTableStock, 1000);
+				$('#tableStock').DataTable().clear();
+				$('#tableStock').DataTable().destroy();
+				$('#tableStock').DataTable({
+						// 'scrollX': true,
+						'responsive':false,
+						// 'dom': 'Bfrtip',
+						'paging': false,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+						'autoWidth': false,
+						"bJQueryUI": false,
+						"bAutoWidth": false,
+						"footerCallback": function (tfoot, data, start, end, display) {
+							var intVal = function ( i ) {
+								return typeof i === 'string' ?
+								i.replace(/[\$,]/g, '')*1 :
+								typeof i === 'number' ?
+								i : 0;
+							};
+							var api = this.api();
+							for(x = 1; x <= totalHead; x++){
+								var total = api.column(x).data().reduce(function (a, b) {
+									return intVal(a)+intVal(b);
+								}, 0)
+								$(api.column(x).footer()).html(total.toLocaleString());
+							}
+						}
+					});
+				setTimeout(fetchTableStock, 1000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');
