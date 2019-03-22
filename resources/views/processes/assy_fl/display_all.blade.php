@@ -3,22 +3,22 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-	padding: 1px;
-}
-table.table-bordered{
-	border:1px solid black;
-	/*margin-top:20px;*/
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid black;
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid black;
-}
+	.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+		padding: 1px;
+	}
+	table.table-bordered{
+		border:1px solid black;
+		/*margin-top:20px;*/
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+	}
 </style>
 @stop
 @section('header')
@@ -399,37 +399,38 @@ function fetchTableStock(){
 				tableFoot += '</tr>';
 				$('#tableFoot').append(tableFoot);
 
-				$('#tableStock').DataTable().destroy();
-				$('#tableStock').DataTable({
-						// 'scrollX': true,
-						'responsive':false,
-						// 'dom': 'Bfrtip',
-						'paging': false,
-						'lengthChange': false,
-						'searching': false,
-						'ordering': false,
-						'order': [],
-						'info': false,
-						'autoWidth': false,
-						"bJQueryUI": false,
-						"bAutoWidth": false,
-						"footerCallback": function (tfoot, data, start, end, display) {
-							var intVal = function ( i ) {
-								return typeof i === 'string' ?
-								i.replace(/[\$,]/g, '')*1 :
-								typeof i === 'number' ?
-								i : 0;
-							};
-							var api = this.api();
-							for(x = 1; x <= totalHead; x++){
-								var total = api.column(x).data().reduce(function (a, b) {
-									return intVal(a)+intVal(b);
-								}, 0)
-								$(api.column(x).footer()).html(total.toLocaleString());
-							}
-						}
-					});
-				setTimeout(fetchTableStock, 1000);
+				// $('#tableStock').DataTable().clear();
+				// $('#tableStock').DataTable().destroy();
+				// $('#tableStock').DataTable({
+				// 		// 'scrollX': true,
+				// 		'responsive':false,
+				// 		// 'dom': 'Bfrtip',
+				// 		'paging': false,
+				// 		'lengthChange': false,
+				// 		'searching': false,
+				// 		'ordering': false,
+				// 		'order': [],
+				// 		'info': false,
+				// 		'autoWidth': false,
+				// 		"bJQueryUI": false,
+				// 		"bAutoWidth": false,
+				// 		"footerCallback": function (tfoot, data, start, end, display) {
+				// 			var intVal = function ( i ) {
+				// 				return typeof i === 'string' ?
+				// 				i.replace(/[\$,]/g, '')*1 :
+				// 				typeof i === 'number' ?
+				// 				i : 0;
+				// 			};
+				// 			var api = this.api();
+				// 			for(x = 1; x <= totalHead; x++){
+				// 				var total = api.column(x).data().reduce(function (a, b) {
+				// 					return intVal(a)+intVal(b);
+				// 				}, 0)
+				// 				$(api.column(x).footer()).html(total.toLocaleString());
+				// 			}
+				// 		}
+				// 	});
+				// setTimeout(fetchTableStock, 1000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');
