@@ -991,7 +991,7 @@ class ProcessController extends Controller
 
 		union all
 
-		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories group by model
+		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null group by model
 		) as result2
 		group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
