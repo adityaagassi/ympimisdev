@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use File;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -28,7 +30,15 @@ class HomeController extends Controller
     }
 
     public function indexAboutMIS(){
-        return view('about_mis.about_mis')->with('page', 'About MIS');
+        $projects = db::table('mis_investments')->orderby('start_date', 'asc')
+        ->leftJoin('mis_investment_details', 'mis_investments.project', '=', 'mis_investment_details.project')
+        ->select('mis_investments.project', 'mis_investments.description', 'mis_investments.start_date', 'mis_investments.finish_date', db::raw('coalesce(sum((mis_investment_details.qty*mis_investment_details.price)),0) as total_investment'))
+        ->groupBy('mis_investments.project', 'mis_investments.description', 'mis_investments.start_date', 'mis_investments.finish_date')
+        ->get();
+
+        return view('about_mis.about_mis', array(
+            'projects' => $projects,
+        ))->with('page', 'About MIS');
     }
 
     public function download($reference_file){
