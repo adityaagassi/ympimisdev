@@ -21,7 +21,7 @@
   @yield('stylesheets')
   <style></style>
 </head>
-<body class="hold-transition skin-purple fixed sidebar-mini">
+<body class="hold-transition skin-purple sidebar-mini">
   <div class="wrapper">
     @include('layouts.header')
     @include('layouts.leftbar')

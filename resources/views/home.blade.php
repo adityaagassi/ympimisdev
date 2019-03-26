@@ -1,48 +1,48 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead input {
-    width: 100%;
-    padding: 3px;
-    box-sizing: border-box;
-}
-thead>tr>th{
-    text-align:center;
-}
-tbody>tr>td{
-    text-align:center;
-}
-tfoot>tr>th{
-    text-align:center;
-}
-td:hover {
-    overflow: visible;
-}
-table.table-bordered{
-    border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-    border:1px solid black;
-    margin:0;
-    padding:0;
-}
-table.table-bordered > tbody > tr > td{
-    border:1px solid rgb(180,180,180);
-    font-size: 13px;
-    background-color: rgb(240,240,240);
-}
-table.table-bordered > tfoot > tr > th{
-    border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
-.marquee {
-    width: 100%;
-    overflow: hidden;
-    margin: 0px;
-    padding: 0px;
-    text-align: center;
-    height: 50px;
-}
+    thead input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+    thead>tr>th{
+        text-align:center;
+    }
+    tbody>tr>td{
+        text-align:center;
+    }
+    tfoot>tr>th{
+        text-align:center;
+    }
+    td:hover {
+        overflow: visible;
+    }
+    table.table-bordered{
+        border:1px solid black;
+    }
+    table.table-bordered > thead > tr > th{
+        border:1px solid black;
+        margin:0;
+        padding:0;
+    }
+    table.table-bordered > tbody > tr > td{
+        border:1px solid rgb(180,180,180);
+        font-size: 13px;
+        background-color: rgb(240,240,240);
+    }
+    table.table-bordered > tfoot > tr > th{
+        border:1px solid rgb(211,211,211);
+    }
+    #loading, #error { display: none; }
+    .marquee {
+        width: 100%;
+        overflow: hidden;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        height: 50px;
+    }
 </style>
 @stop
 @section('header')
@@ -80,6 +80,9 @@ table.table-bordered > tfoot > tr > th{
                             </a><br>
                             <a href="http://172.17.128.4/myhris/management_mp" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Infromation (社員構成)
+                            </a><br>
+                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="blank">
+                                <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
                             </a>
                         </td>
                     </tr>
