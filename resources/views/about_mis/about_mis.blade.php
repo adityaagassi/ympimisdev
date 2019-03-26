@@ -25,12 +25,12 @@
       border:1px solid black;
   }
   table.table-bordered > tbody > tr > td{
-      border:1px solid rgb(211,211,211);
-      padding-top: 0;
-      padding-bottom: 0;
+      border:1px solid rgb(144,144,144);
+      padding-top: 1;
+      padding-bottom: 1;
   }
   table.table-bordered > tfoot > tr > th{
-      border:1px solid rgb(211,211,211);
+      border:1px solid rgb(144,144,144);
   }
   #loading, #error { display: none; }
 </style>
