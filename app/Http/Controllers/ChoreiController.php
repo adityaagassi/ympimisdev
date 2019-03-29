@@ -277,6 +277,8 @@ class ChoreiController extends Controller
 			$last = date('Y-m-d', strtotime('yesterday', strtotime($date)));
 		}
 
+		$year = date('Y');
+
 		$query = "select materials.hpl, materials.category, sum(final.plan)-sum(final.actual) as plan, sum(final.actual) AS actual from
 		(
 		select result.material_number, if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)) as plan, if(sum(result.actual)>if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), if(sum(result.debt)+sum(result.plan)<0,0,sum(result.debt)+sum(result.plan)), sum(result.actual)) as actual from
@@ -351,7 +353,7 @@ class ChoreiController extends Controller
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
 		left join materials on materials.material_number = shipment_schedules.material_number
-		where weekly_calendars.week_name = '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG'
+		where weekly_calendars.week_name = '".$week->week_name."' and year(weekly_calendars.week_date) = '" . $year . "' and materials.category = 'FG'
 
 		union all
 
@@ -360,7 +362,7 @@ class ChoreiController extends Controller
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
 		left join materials on materials.material_number = shipment_schedules.material_number
-		where weekly_calendars.week_name <> '".$week->week_name."' and weekly_calendars.fiscal_year = 'FY195' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
+		where weekly_calendars.week_name <> '".$week->week_name."' and year(weekly_calendars.week_date) = '" . $year . "' and materials.category = 'FG' and weekly_calendars.week_date < '".$week_date."' and flos.actual < shipment_schedules.quantity
 		) as result1
 		) result2
 		group by hpl
