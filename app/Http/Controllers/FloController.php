@@ -1319,6 +1319,7 @@ class FloController extends Controller
 			}
 			else{
 				$flo->actual = $flo->actual-$flo_detail->quantity;
+				$flo->quantity = $flo->quantity-$flo_detail->quantity;
 				$flo->save();
 			}
 			$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
