@@ -909,6 +909,7 @@ class FloController extends Controller
 			);
 			return Response::json($response);
 		}
+
 		$flo = DB::table('flos')
 		->leftJoin('shipment_schedules', 'flos.shipment_schedule_id' , '=', 'shipment_schedules.id')
 		->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
@@ -917,84 +918,175 @@ class FloController extends Controller
 		->leftJoin('materials', 'shipment_schedules.material_number', '=', 'materials.material_number')
 		->where('flos.flo_number', '=', $request->get('flo_number_reprint'))
 		->whereNull('flos.bl_date')
-		->select('flos.flo_number', 'flos.quantity', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'shipment_schedules.material_number', 'materials.material_description')
+		->select('flos.flo_number', 'flos.quantity', 'flos.actual', 'destinations.destination_shortname', 'shipment_schedules.st_date', 'shipment_conditions.shipment_condition_name', 'shipment_schedules.material_number', 'materials.material_description', 'flos.status')
 		->first();
 
 		if($flo != null){
-			try {
+			if($flo->status == '0'){
+				try {
 
-				$connector = new WindowsPrintConnector($printer_name);
-				$printer = new Printer($connector);
+					$connector = new WindowsPrintConnector($printer_name);
+					$printer = new Printer($connector);
 
-				$printer->feed(2);
-				$printer->setUnderline(true);
-				$printer->text('FLO:');
-				$printer->setUnderline(false);
-				$printer->feed(1);
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->barcode($flo->flo_number, Printer::BARCODE_CODE39);
-				$printer->setTextSize(3, 1);
-				$printer->text($flo->flo_number."\n\n");
-				$printer->initialize();
+					$printer->feed(2);
+					$printer->setUnderline(true);
+					$printer->text('FLO:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->barcode($flo->flo_number, Printer::BARCODE_CODE39);
+					$printer->setTextSize(3, 1);
+					$printer->text($flo->flo_number."\n\n");
+					$printer->initialize();
 
-				$printer->setJustification(Printer::JUSTIFY_LEFT);
-				$printer->setUnderline(true);
-				$printer->text('Destination:');
-				$printer->setUnderline(false);
-				$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_LEFT);
+					$printer->setUnderline(true);
+					$printer->text('Destination:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
 
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(6, 3);
-				$printer->text(strtoupper($flo->destination_shortname."\n\n"));
-				$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(6, 3);
+					$printer->text(strtoupper($flo->destination_shortname."\n\n"));
+					$printer->initialize();
 
-				$printer->setUnderline(true);
-				$printer->text('Shipment Date:');
-				$printer->setUnderline(false);
-				$printer->feed(1);
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(4, 2);
-				$printer->text(date('d-M-Y', strtotime($flo->st_date))."\n\n");
-				$printer->initialize();
+					$printer->setUnderline(true);
+					$printer->text('Shipment Date:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(4, 2);
+					$printer->text(date('d-M-Y', strtotime($flo->st_date))."\n\n");
+					$printer->initialize();
 
-				$printer->setUnderline(true);
-				$printer->text('By:');
-				$printer->setUnderline(false);
-				$printer->feed(1);
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(4, 2);
-				$printer->text(strtoupper($flo->shipment_condition_name)."\n\n");
+					$printer->setUnderline(true);
+					$printer->text('By:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(4, 2);
+					$printer->text(strtoupper($flo->shipment_condition_name)."\n\n");
 
-				$printer->initialize();
-				$printer->setTextSize(2, 2);
-				$printer->text("   ".strtoupper($flo->material_number)."\n");
-				$printer->text("   ".strtoupper($flo->material_description)."\n");
+					$printer->initialize();
+					$printer->setTextSize(2, 2);
+					$printer->text("   ".strtoupper($flo->material_number)."\n");
+					$printer->text("   ".strtoupper($flo->material_description)."\n");
 
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->text("------------------------------------");
-				$printer->feed(1);
-				$printer->text("|Qty:             |Qty:            |");
-				$printer->feed(1);
-				$printer->text("|                 |                |");
-				$printer->feed(1);
-				$printer->text("|                 |                |");
-				$printer->feed(1);
-				$printer->text("|                 |                |");
-				$printer->feed(1);
-				$printer->text("|Production       |Logistic        |");
-				$printer->feed(1);
-				$printer->text("------------------------------------");
-				$printer->feed(2);
-				$printer->initialize();
-				$printer->text("Max Qty:".$flo->quantity."\n");
-				$printer->cut();
-				$printer->close();
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->text("------------------------------------");
+					$printer->feed(1);
+					$printer->text("|Qty:             |Qty:            |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|Production       |Logistic        |");
+					$printer->feed(1);
+					$printer->text("------------------------------------");
+					$printer->feed(2);
+					$printer->initialize();
+					$printer->text("Max Qty:".$flo->quantity."\n");
+					$printer->cut();
+					$printer->close();
 
-				return back()->with('status', 'FLO has been reprinted.')->with('page', 'FLO Band Instrument');
-			} 
-			catch(\Exception $e){
-				return back()->with("error", "Couldn't print to this printer " . $e->getMessage() . "\n");
+					return back()->with('status', 'FLO has been reprinted.')->with('page', 'FLO Band Instrument');
+				} 
+				catch(\Exception $e){
+					return back()->with("error", "Couldn't print to this printer " . $e->getMessage() . "\n");
+				}
+			}
+			else{
+
+				$flo_details = DB::table('flo_details')->where('flo_number', '=', $request->get('flo_number_reprint'))->select('serial_number')->get();
+
+				foreach ($flo_details as $flo_detail) {
+					if($flo_detail->serial_number<>''){
+						$lists[] = $flo_detail->serial_number;
+					}
+				}
+				$list = implode(', ', $lists);
+				
+				try {
+
+					$connector = new WindowsPrintConnector($printer_name);
+					$printer = new Printer($connector);
+
+					$printer->feed(2);
+					$printer->setUnderline(true);
+					$printer->text('FLO:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->barcode($flo->flo_number, Printer::BARCODE_CODE39);
+					$printer->setTextSize(3, 1);
+					$printer->text($flo->flo_number."\n\n");
+					$printer->initialize();
+
+					$printer->setJustification(Printer::JUSTIFY_LEFT);
+					$printer->setUnderline(true);
+					$printer->text('Destination:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(6, 3);
+					$printer->text(strtoupper($flo->destination_shortname."\n\n"));
+					$printer->initialize();
+
+					$printer->setUnderline(true);
+					$printer->text('Shipment Date:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(4, 2);
+					$printer->text(date('d-M-Y', strtotime($flo->st_date))."\n\n");
+					$printer->initialize();
+
+					$printer->setUnderline(true);
+					$printer->text('By:');
+					$printer->setUnderline(false);
+					$printer->feed(1);
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(4, 2);
+					$printer->text(strtoupper($flo->shipment_condition_name)."\n\n");
+
+					$printer->initialize();
+					$printer->setTextSize(2, 2);
+					$printer->text("   ".strtoupper($flo->material_number)."\n");
+					$printer->text("   ".strtoupper($flo->material_description)."\n");
+
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->text("------------------------------------");
+					$printer->feed(1);
+					$printer->text("|Qty:             |Qty:            |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|                 |                |");
+					$printer->feed(1);
+					$printer->text("|Production       |Logistic        |");
+					$printer->feed(1);
+					$printer->text("------------------------------------");
+					$printer->feed(2);
+					$printer->initialize();
+					$printer->text("Max Qty:".$flo->quantity."\n");
+					$printer->text("Actual Qty:".$flo->actual."\n");
+					$printer->text($list."\n");
+					$printer->cut();
+					$printer->close();
+
+					return back()->with('status', 'FLO has been reprinted.')->with('page', 'FLO Band Instrument');
+				} 
+				catch(\Exception $e){
+					return back()->with("error", "Couldn't print to this printer " . $e->getMessage() . "\n");
+				}
 			}
 		}
 		else{
@@ -1319,7 +1411,9 @@ class FloController extends Controller
 			}
 			else{
 				$flo->actual = $flo->actual-$flo_detail->quantity;
-				$flo->quantity = $flo->quantity-$flo_detail->quantity;
+				if($flo->status == '1'){
+					$flo->quantity = $flo->quantity-$flo_detail->quantity;
+				}
 				$flo->save();
 			}
 			$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo_detail->material_number, 'storage_location' => $material->issue_storage_location]);
