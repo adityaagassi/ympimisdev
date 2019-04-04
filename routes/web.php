@@ -42,6 +42,9 @@ Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 
 	Route::get('index/dp_stockroom_stock', 'DisplayController@index_dp_stockroom_stock');
 	Route::get('fetch/dp_stockroom_stock', 'DisplayController@fetch_dp_stockroom_stock');
+
+	Route::get('index/dp_fg_accuracy', 'DisplayController@index_dp_fg_accuracy');
+	Route::get('fetch/dp_fg_accuracy', 'DisplayController@fetch_dp_fg_accuracy');
 });
 
 Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
@@ -334,9 +337,13 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
-	Route::get('index/process_middle_incoming_lcq_sx', 'MiddleProcessController@indexProcessIncomingLcqSX');
+	Route::get('scan/middle_kensa', 'MiddleProcessController@ScanMiddleKensa');
+	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
+	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 });
+Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
+Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

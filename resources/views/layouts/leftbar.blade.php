@@ -350,12 +350,15 @@
       		</span>
       	</a>
       	<ul class="treeview-menu">
-      		@if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
-      			<a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Production Result</a>
-      		</li>
-          @if(isset($page) && $page == "Display Stockroom Stock")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/dp_stockroom_stock") }}"><i class="fa fa-line-chart"></i> Stockroom Stock</a>
+          @if(isset($page) && $page == "Display Finished Goods Accuracy")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/dp_fg_accuracy") }}"><i class="fa fa-line-chart"></i> FG Accuracy</a>
           </li>
+          @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
+           <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> FG Production Result</a>
+         </li>
+          {{-- @if(isset($page) && $page == "Display Stockroom Stock")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/dp_stockroom_stock") }}"><i class="fa fa-line-chart"></i> Stockroom Stock</a>
+          </li> --}}
         </ul>
       </li>
       @endif
