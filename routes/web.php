@@ -16,9 +16,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-Route::get('trial/perolehan', 'TrialController@trial_perolehan');
-Route::get('index/censor', 'TrialController@indexCensor');
-Route::get('trial/censor', 'TrialController@trialCensor');
+Route::get('/tes', function () {
+	// return view('visitors.index');
+});
 
 Route::get('/', function () {
 	return view('auth.login');
@@ -34,6 +34,10 @@ Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' 
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
+
+//Vistor Controll
+Route::get('visitor_index', 'VisitorController@index');
+Route::get('visitor_registration', 'VisitorController@registration');
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');

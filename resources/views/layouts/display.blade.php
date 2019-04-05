@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MIS Development</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <title>YMPI 情報システム</title>
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
@@ -25,15 +26,14 @@
       <nav class="navbar navbar-static-top">
         <div class="container">
           <div class="navbar-header">
-            <a href="/index2.html" class="navbar-brand"><b>Admin</b>LTE</a>
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-              <i class="fa fa-bars"></i>
-            </button>
+            <a href="{{ url("/home") }}" class="logo">
+              <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
+            </a>
           </div>
         </div>
       </nav>
     </header>
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="background-color: rgb(62,78,99);">
       <div class="container">
         <section class="content-header">
          @yield('header')

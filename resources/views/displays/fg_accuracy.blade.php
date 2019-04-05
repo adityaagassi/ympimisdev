@@ -27,12 +27,13 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
+
 </style>
 @endsection
 @section('header')
 <section class="content-header">
 	<h1>
-		Finished Goods Accuracy <span class="text-purple"> ????</span>
+		Finished Goods Accuracy <span class="text-purple"> FG週次出荷</span>
 		{{-- <small>By Shipment Schedule <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update">
@@ -65,6 +66,22 @@
 		fillChart();
 	});
 
+	var interval;
+	var statusx = "idle";
+
+	$(document).on('mousemove keyup keypress',function(){
+		clearTimeout(interval);
+		settimeout();
+		statusx = "active";
+	})
+
+	function settimeout(){
+		interval=setTimeout(function(){
+			statusx = "idle";
+			fillChart()
+		},10000)
+	}
+
 	function addZero(i) {
 		if (i < 10) {
 			i = "0" + i;
@@ -91,6 +108,7 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+					$('#last_update').html('<b><span style="font-size: 14px;">Last Updated: '+ getActualFullDate() +'</span></b>');
 					var data = result.accuracyBI;
 					var dataMinus = [];
 					var dataPlus = [];
@@ -102,12 +120,9 @@
 
 					window.chart = Highcharts.stockChart('container1', {
 						chart:{
-							type: 'spline',
-							backgroundColor: null,
-							borderColor: 'rgb(100,100,100)',
-							borderRadius: 10,
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
 							borderWidth: 2,
-							type: 'line'
 						},
 						rangeSelector: {
 							selected: 0
@@ -146,6 +161,7 @@
 						},
 						xAxis:{
 							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
 						},
 						plotOptions: {
 							series: {
@@ -161,12 +177,12 @@
 							name: 'Plus',
 							data: dataPlus,
 							color: '#0000FF',
-							width: 1
+							lineWidth: 1
 						},{
 							name: 'Minus',
 							data: dataMinus,
 							color: '#FF0000',
-							width: 1
+							lineWidth: 1
 						}],
 						responsive: {
 							rules: [{
@@ -188,6 +204,7 @@
 						xAxis: 1,
 						yAxis: 1,
 						type: "line",
+						lineWidth: 1,
 						color: "#FF0000",
 						enableMouseTracking: false,
 						isInternal: true,
@@ -206,12 +223,9 @@
 
 					window.chart2 = Highcharts.stockChart('container2', {
 						chart:{
-							type: 'spline',
-							backgroundColor: null,
-							borderColor: 'rgb(100,100,100)',
-							borderRadius: 10,
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
 							borderWidth: 2,
-							type: 'line'
 						},
 						rangeSelector: {
 							selected: 0
@@ -250,6 +264,7 @@
 						},
 						xAxis:{
 							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
 						},
 						plotOptions: {
 							series: {
@@ -265,12 +280,12 @@
 							name: 'Plus',
 							data: dataPlus2,
 							color: '#0000FF',
-							width: 1
+							lineWidth: 1
 						},{
 							name: 'Minus',
 							data: dataMinus2,
 							color: '#FF0000',
-							width: 1
+							lineWidth: 1
 						}],
 						responsive: {
 							rules: [{
@@ -293,16 +308,21 @@
 						yAxis: 1,
 						type: "line",
 						color: "#FF0000",
+						lineWidth: 1,
 						enableMouseTracking: false,
 						isInternal: true,
 						data : dataMinus2,
 						showInLegend:false
 					});
 
+					if(statusx == "idle"){
+						setTimeout(fillChart(), 1000);
+					}
 				}
 				else{
 					alert('Attempt to retrieve data failed');
 				}
+
 			}
 			else{
 				alert('Disconnected from server');

@@ -216,6 +216,10 @@
                             <a href="{{ url("/index/dp_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
                             </a>
+                            <br>
+                            <a href="{{ url("/index/dp_fg_accuracy") }}">
+                                <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
+                            </a>
                         </td>
                     </tr>
                 </tbody>

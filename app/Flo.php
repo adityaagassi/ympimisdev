@@ -27,5 +27,4 @@ class Flo extends Model
     {
         return $this->belongsTo('App\Status', 'status', 'status_code')->withTrashed();
     }
-
 }
