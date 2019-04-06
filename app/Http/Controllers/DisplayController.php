@@ -25,6 +25,50 @@ class DisplayController extends Controller
 		return view('displays.fg_accuracy')->with('page', 'Display FG Accuracy')->with('head', 'Display');		
 	}
 
+	public function fetch_dp_fg_accuracy_detail(Request $request){
+		$first = date('Y-m-d', strtotime(Carbon::parse('first day of '. date('F Y', strtotime($request->get('date'))))));
+
+		$hpl = '';
+		if(substr($request->get('category'),0,2) == 'BI'){
+			$hpl = "'CLFG', 'ASFG', 'TSFG', 'FLFG'";
+			$title = date('l, d F Y', strtotime($request->get('date'))) . ' - Accuracy Detail of Band Instruments';
+		}
+		if(substr($request->get('category'),0,2) == 'EI'){
+			$hpl = "'RC', 'PN', 'VENOVA'";
+			$title = date('l, d F Y', strtotime($request->get('date'))) . ' Accuracy Detail of Educational Instruments';
+		}
+
+		$query = "select materials.material_number, materials.material_description, final.plus+final.minus as qty from
+		(
+		select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
+		(
+		select material_number, sum(quantity) as plan, 0 as actual 
+		from production_schedules 
+		where due_date >= '". $first ."' and due_date <= '". $request->get('date') ."'
+		group by material_number
+
+		union all
+
+		select material_number, 0 as plan, sum(quantity) as actual
+		from flo_details
+		where date(created_at) >= '". $first ."' and date(created_at) <= '". $request->get('date') ."'
+		group by material_number
+		) as result
+		group by result.material_number
+		) as final
+		left join materials on materials.material_number = final.material_number
+		where materials.category = 'FG' and materials.hpl in (" . $hpl . ") and final.plus+final.minus <> 0 order by qty desc";
+
+		$accuracyDetail = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'accuracyDetail' => $accuracyDetail,
+			'title' => $title,
+		);
+		return Response::json($response);
+	}
+
 	public function fetch_dp_fg_accuracy(){
 		$now = date('Y-m-d');
 		$queryAccuracyBI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from
