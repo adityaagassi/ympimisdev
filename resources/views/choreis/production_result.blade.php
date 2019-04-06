@@ -138,7 +138,7 @@
 </section>
 
 <div class="modal fade" id="modalResult">
-	<div class="modal-dialog modal-sm">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -857,7 +857,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalBL(this.category , this.series.name, result.weekTitle);
+											modalBL(this.category , this.series.name, result.weekTitle, result.now);
 										}
 									}
 								},
@@ -966,7 +966,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalBL(this.category , this.series.name, result.weekTitle);
+											modalBL(this.category , this.series.name, result.weekTitle, result.now);
 										}
 									}
 								},
@@ -1095,11 +1095,12 @@ function modalAccuracy(hpl, name, now, first, last){
 	});
 }
 
-function modalBL(hpl, name, week){
+function modalBL(hpl, name, week, date){
 	var data = {
 		hpl:hpl,
 		name:name,
 		week:'W'+week.substring(5),
+		date:date,
 	}
 	$.get('{{ url("fetch/production_bl_modal") }}', data, function(result, status, xhr){
 		console.log(status);

@@ -20,10 +20,10 @@ class ChoreiController extends Controller
 	}
 
 	public function fetch_production_bl_modal(Request $request){
-		$year = date('Y');
+		$year = date('Y', strtotime($request->get('date')));
 		$last_date = DB::table('weekly_calendars')
 		->where('week_name', '=', $request->get('week'))
-		->where('fiscal_year', '=', $year)
+		->where(db::raw('year(weekly_calendars.week_date)'), '=', $year)
 		->select(db::raw('min(week_date) as week_date'))
 		->first();
 
@@ -35,7 +35,7 @@ class ChoreiController extends Controller
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
-		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = '" . $year . "'
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
 		group by shipment_schedules.material_number, materials.material_description
 		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0
 
@@ -47,7 +47,7 @@ class ChoreiController extends Controller
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
-		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = '" . $year . "'
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
 		group by shipment_schedules.material_number, materials.material_description
 		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
 		) as result1
@@ -61,7 +61,7 @@ class ChoreiController extends Controller
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
-		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = '" . $year . "'
+		where weekly_calendars.week_name = '".$request->get('week')."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
 		group by shipment_schedules.material_number, materials.material_description
 		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0
 
@@ -73,7 +73,7 @@ class ChoreiController extends Controller
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
-		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and weekly_calendars.fiscal_year = '" . $year . "'
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
 		group by shipment_schedules.material_number, materials.material_description
 		having if(sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0) < 0, 0, sum(shipment_schedules.quantity)-coalesce(sum(flos.actual), 0)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
 		) as result1
@@ -255,6 +255,7 @@ class ChoreiController extends Controller
 
 	public function fetch_daily_production_result(Request $request){
 		if(strlen($request->get('date')) > 0){
+			$year = date('Y', strtotime($request->get('date')));
 			$date = date('Y-m-d', strtotime($request->get('date')));
 			$week_date = date('Y-m-d', strtotime($date. '+ 3 day'));
 			$now = date('Y-m-d', strtotime($date));
@@ -263,6 +264,7 @@ class ChoreiController extends Controller
 			$week2 = DB::table('weekly_calendars')->where('week_date', '=', $date)->first();
 		}
 		else{
+			$year = date('Y');
 			$date = date('Y-m-d');
 			$now = date('Y-m-d');
 			$week_date = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
@@ -278,7 +280,7 @@ class ChoreiController extends Controller
 			$last = date('Y-m-d', strtotime('yesterday', strtotime($date)));
 		}
 
-		$year = date('Y');
+		
 
 		$query = "select materials.hpl, materials.category, sum(final.plan)-sum(final.actual) as plan, sum(final.actual) AS actual from
 		(
