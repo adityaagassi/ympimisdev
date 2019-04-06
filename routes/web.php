@@ -49,6 +49,7 @@ Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 
 	Route::get('index/dp_fg_accuracy', 'DisplayController@index_dp_fg_accuracy');
 	Route::get('fetch/dp_fg_accuracy', 'DisplayController@fetch_dp_fg_accuracy');
+	Route::get('fetch/dp_fg_accuracy_detail', 'DisplayController@fetch_dp_fg_accuracy_detail');
 });
 
 Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
