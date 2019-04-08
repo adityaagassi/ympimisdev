@@ -518,7 +518,8 @@ class FloController extends Controller
 			if($maedaoshi_check != ""){
 				$response = array(
 					'status' => false,
-					'message' => "This item is maedaoshi, please use menu after maedaoshi."
+					'message' => "This item is maedaoshi, please use menu after maedaoshi.",
+					'TES' => $maedaoshi_check
 				);
 				return Response::json($response);
 			}
@@ -549,7 +550,7 @@ class FloController extends Controller
 				->first();
 			}
 			else{
-				if($request->get('ymj') == 'true' || Auth::user()->role_code == "OP-Assy-FL"){
+				if($request->get('ymj') == 'true'){
 					$shipment_schedule = DB::table('shipment_schedules')
 					->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
 					->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
