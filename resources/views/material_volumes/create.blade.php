@@ -119,7 +119,7 @@
           <label class="col-sm-4">Length<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="length" placeholder="Enter Length" required>
+              <input step=".01" min="0" type="number" class="form-control" name="length" placeholder="Enter Length" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>
@@ -128,7 +128,7 @@
           <label class="col-sm-4">Width<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="width" placeholder="Enter Width" required>
+              <input step=".01" min="0" type="number" class="form-control" name="width" placeholder="Enter Width" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>
@@ -137,7 +137,7 @@
           <label class="col-sm-4">Height<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="height" placeholder="Enter Height" required>
+              <input step=".01" min="0" type="number" class="form-control" name="height" placeholder="Enter Height" required>
               <span class="input-group-addon">meter(s)</span>
             </div>
           </div>

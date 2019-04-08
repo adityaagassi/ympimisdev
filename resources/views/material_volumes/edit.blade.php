@@ -124,7 +124,7 @@
           <label class="col-sm-4">Length<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
+              <input step=".01" min="0" type="number" class="form-control" name="length" placeholder="Enter Length" value="{{$material_volume->length}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -133,7 +133,7 @@
           <label class="col-sm-4">Width<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
+              <input step=".01" min="0" type="number" class="form-control" name="width" placeholder="Enter Width" value="{{$material_volume->width}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
@@ -142,7 +142,7 @@
           <label class="col-sm-4">Height<span class="text-red">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input min="0" type="number" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
+              <input step=".01" min="0" type="number" class="form-control" name="height" placeholder="Enter Height" value="{{$material_volume->height}}" required>
               <span class="input-group-addon">m</span>
             </div>
           </div>
