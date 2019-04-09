@@ -44,8 +44,8 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="container1" style="width: 100%; height: 370px; padding: 0;"></div>
-			<div id="container2" style="width: 100%; height: 370px; padding: 0; margin-top: 15px;"></div>
+			<div id="container1" style="width: 100%; height: 420px; padding: 0;"></div>
+			<div id="container2" style="width: 100%; height: 420px; padding: 0; margin-top: 15px;"></div>
 		</div>
 	</div>
 </section>
