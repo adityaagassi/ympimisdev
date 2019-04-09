@@ -47,9 +47,8 @@ class ChoreiController extends Controller
 		left join weekly_calendars on weekly_calendars.week_date = shipment_schedules.bl_date
 		left join (select shipment_schedule_id, sum(actual) as actual from flos group by shipment_schedule_id) as flos 
 		on flos.shipment_schedule_id = shipment_schedules.id
-		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "'
+		where weekly_calendars.week_date < '".$last_date->week_date."' and materials.category = 'FG' and materials.hpl = '".$request->get('hpl')."' and year(weekly_calendars.week_date) = '" . $year . "' and flos.actual < shipment_schedules.quantity
 		group by shipment_schedules.material_number, materials.material_description
-		having if(sum(shipment_schedules.quantity)<sum(flos.actual), sum(shipment_schedules.quantity), sum(flos.actual)) > 0 and sum(flos.actual) < sum(shipment_schedules.quantity)
 		) as result1
 		group by material_number, material_description";
 
@@ -89,6 +88,7 @@ class ChoreiController extends Controller
 		$response = array(
 			'status' => true,
 			'blData' => $blData,
+			'tes' => $last_date,
 		);
 		return Response::json($response);
 	}
