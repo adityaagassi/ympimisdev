@@ -535,7 +535,7 @@ class FloController extends Controller
 		}
 
 		if($request->get('flo_number') == ""){
-			if($request->get('type') == 'pd'){
+			if($request->get('type') == 'pd' || Auth::user()->role_code == "OP-Assy-FL"){
 				$shipment_schedule = DB::table('shipment_schedules')
 				->leftJoin('flos', 'shipment_schedules.id' , '=', 'flos.shipment_schedule_id')
 				->leftJoin('shipment_conditions', 'shipment_schedules.shipment_condition_code', '=', 'shipment_conditions.shipment_condition_code')
