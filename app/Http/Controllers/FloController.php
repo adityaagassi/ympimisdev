@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use App\StampInventory;
 use App\LogProcess;
 use App\LogTransaction;
+use App\ErrorLog;
 
 class FloController extends Controller
 {
@@ -606,7 +607,7 @@ class FloController extends Controller
 					'quantity' => $actual,
 					'created_by' => $id
 				]);
-				$flo_detail->save();
+				// $flo_detail->save();
 
 				$flo = new Flo([
 					'flo_number' => $flo_number,
@@ -616,11 +617,17 @@ class FloController extends Controller
 					'actual' => $actual,
 					'created_by' => $id
 				]);
-				$flo->save();
+				// $flo->save();
 
 				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
 				$inventory->quantity = ($inventory->quantity+$actual);
-				$inventory->save();
+				// $inventory->save();
+
+				DB::transaction(function() use ($flo_detail, $inventory, $flo){
+					$flo_detail->save();
+					$flo->save();
+					$inventory->save();
+				});
 
 				$flo_log = FloLog::updateOrCreate(
 					['flo_number' => $flo_number, 'status_code' => '0'],
@@ -779,6 +786,11 @@ class FloController extends Controller
 				return Response::json($response);
 			}
 			catch(\Exception $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
 				$response = array(
 					'status' => false,
 					'message' => "Couldn't print to this printer " . $e->getMessage() . "\n.",
@@ -788,6 +800,15 @@ class FloController extends Controller
 		}
 		else{
 			try{
+
+				$flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
+				$flo->actual = $flo->actual+$actual;
+				// $flo->save();
+
+				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
+				$inventory->quantity = ($inventory->quantity+$actual);
+				// $inventory->save();
+
 				$flo_detail = new FloDetail([
 					'serial_number' =>  $serial_number,
 					'material_number' => $request->get('material_number'),
@@ -796,20 +817,8 @@ class FloController extends Controller
 					'quantity' => $actual,
 					'created_by' => $id
 				]);
-				$flo_detail->save();
+				// $flo_detail->save();
 
-				$flo = Flo::where('flo_number', '=', $request->get('flo_number'))->first();
-				$flo->actual = $flo->actual+$actual;
-				$flo->save();
-
-				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $material->material_number, 'storage_location' => $material->issue_storage_location]);
-				$inventory->quantity = ($inventory->quantity+$actual);
-				$inventory->save();
-
-				if($request->get('type') == 'pd'){
-					$code_generator_pd->index = $code_generator_pd->index+1;
-					$code_generator_pd->save();
-				}
 
 				// $log_process = LogProcess::firstOrNew([
 				// 	'process_code' => '5',
@@ -821,6 +830,12 @@ class FloController extends Controller
 				// 	'created_by' => $id
 				// ]);
 				// $log_process->save();
+				
+				DB::transaction(function() use ($flo_detail, $inventory, $flo){
+					$flo_detail->save();
+					$inventory->save();
+					$flo->save();
+				});
 
 				if($material->origin_group_code == '041'){
 					$log_process = LogProcess::updateOrCreate(
@@ -845,7 +860,12 @@ class FloController extends Controller
 						$inventory_stamp->forceDelete();
 					}
 				}
-				
+
+				if($request->get('type') == 'pd'){
+					$code_generator_pd->index = $code_generator_pd->index+1;
+					$code_generator_pd->save();
+				}
+
 				$response = array(
 					'status' => true,
 					'message' => 'FLO fulfillment success.',
@@ -863,6 +883,11 @@ class FloController extends Controller
 					return Response::json($response);
 				}
 				else{
+					$error_log = new ErrorLog([
+						'error_message' => $e->getMessage(),
+						'created_by' => $id
+					]);
+					$error_log->save();
 					$response = array(
 						'status' => false,
 						'message' => $e->getMessage(),
@@ -1009,7 +1034,7 @@ class FloController extends Controller
 					}
 				}
 				$list = implode(', ', $lists);
-				
+
 				try {
 
 					$connector = new WindowsPrintConnector($printer_name);
@@ -1134,7 +1159,7 @@ class FloController extends Controller
 
 	public function cancel_flo_settlement(Request $request)
 	{
-		
+
 		$id = Auth::id();
 		$status = $request->get('status')-1;
 		$flo = Flo::where('id', '=', $request->get('id'))
@@ -1146,13 +1171,13 @@ class FloController extends Controller
 			$flo->status = $status;
 
 			if($request->get('status') == '2'){
-				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
-				$inventory->quantity = ($inventory->quantity-$flo->actual);
-				$inventory->save();
+				$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+				$inventoryFSTK->quantity = ($inventoryFSTK->quantity-$flo->actual);
+				$inventoryFSTK->save();
 
-				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
-				$inventory->quantity = ($inventory->quantity+$flo->actual);
-				$inventory->save();
+				$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
+				$inventoryWIP->quantity = ($inventoryWIP->quantity+$flo->actual);
+				$inventoryWIP->save();
 
 				// if($flo->transfer != null){
 				// 	$log_transaction = new LogTransaction([
@@ -1226,13 +1251,13 @@ class FloController extends Controller
 			$flo->save();
 
 			if($request->get('status') == '2'){
-				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
-				$inventory->quantity = ($inventory->quantity+$flo->actual);
-				$inventory->save();
+				$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+				$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$flo->actual);
+				$inventoryFSTK->save();
 
-				$inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
-				$inventory->quantity = ($inventory->quantity-$flo->actual);
-				$inventory->save();
+				$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
+				$inventoryWIP->quantity = ($inventoryWIP->quantity-$flo->actual);
+				$inventoryWIP->save();
 			}
 
 			if($request->get('status') == '3'){
