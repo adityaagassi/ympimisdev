@@ -1,32 +1,32 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-	padding: 0;
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+		padding: 0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -157,6 +157,22 @@ table.table-bordered > tfoot > tr > th{
 
 		fillChart();
 	});
+
+	var interval;
+	var statusx = "idle";
+
+	$(document).on('mousemove keyup keypress',function(){
+		clearTimeout(interval);
+		settimeout();
+		statusx = "active";
+	})
+
+	function settimeout(){
+		interval=setTimeout(function(){
+			statusx = "idle";
+			fillChart()
+		},60000)
+	}
 
 	function addZero(i) {
 		if (i < 10) {
@@ -301,9 +317,10 @@ table.table-bordered > tfoot > tr > th{
 						plotOptions: {
 							column:{
 								size: '95%',
-								borderWidth: 0
+								borderWidth: 0							
 							},
 							series:{
+								animation: false,
 								// ignoreHiddenSeries : false,
 								minPointLength: 2,
 								pointPadding: 0.93,
@@ -345,6 +362,10 @@ table.table-bordered > tfoot > tr > th{
 						},
 						series: seriesData
 					});
+
+					if(statusx == "idle"){
+						setTimeout(fillChart(), 1000);
+					}
 				}
 				else{
 					alert('Attempt to retrieve data failed');
