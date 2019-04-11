@@ -15,7 +15,6 @@ class ProcessesTableSeeder extends Seeder
     		[
     			'process_code' => '1',
     			'process_name' => 'stamp',
-                'st' => 2,
                 'remark' => 'YFL',
     			'created_by' => '1',
     			'created_at' => date('Y-m-d H:i:s'),
