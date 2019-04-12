@@ -91,7 +91,7 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
-[<script>
+<script>
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -250,4 +250,4 @@ table.table-bordered > tfoot > tr > th{
 		});
 	}
 </script>
-@endsection]
+@endsection

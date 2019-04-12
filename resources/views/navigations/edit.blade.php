@@ -56,16 +56,15 @@
         </div>
       </form>
     </div>
-    
   </div>
+</section>
+@endsection
 
-  @endsection
-
-  @section('scripts')
-  <script>
-    $(function () {
-      $('.select2').select2()
-    })
-  </script>
-  @stop
+@section('scripts')
+<script>
+  $(function () {
+    $('.select2').select2()
+  })
+</script>
+@stop
 

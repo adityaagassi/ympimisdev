@@ -10,7 +10,7 @@ class Flo extends Model
 	use SoftDeletes;
     //
     protected $fillable = [
-        'flo_number', 'invoice_number', 'container_number', 'bl_date', 'shipment_schedule_id', 'material_number', 'quantity', 'actual', 'status', 'created_by'
+        'flo_number', 'invoice_number', 'container_id', 'bl_date', 'shipment_schedule_id', 'material_number', 'quantity', 'actual', 'status', 'created_by'
     ];
     
     public function user()

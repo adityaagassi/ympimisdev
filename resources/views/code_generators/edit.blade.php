@@ -75,20 +75,21 @@
       </div>
     </form>
   </div>
-  
+</section>
 
-  @endsection
 
-  @section('scripts')
-  <script>
-    $(function () {
+@endsection
+
+@section('scripts')
+<script>
+  $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
 
   })
-    $(document).on("wheel", "input[type=number]", function (e) {
-      $(this).blur();
-    })
-  </script>
-  @stop
+  $(document).on("wheel", "input[type=number]", function (e) {
+    $(this).blur();
+  })
+</script>
+@stop
 

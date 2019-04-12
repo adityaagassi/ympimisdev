@@ -90,47 +90,30 @@
             </div>
           </div>
         </div>
-
-{{-- 
-        <div class="col-sm-12">
-          @foreach($navigations as $navigation)
-          <div class="col-sm-3">
-            @if(in_array($navigation->navigation_code, $permissions))
-            <label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}" checked>
-              {{ $navigation->navigation_name }}</label>
-              @else
-              <label><input type="checkbox" name="navigation_code[]" class="minimal-red" value="{{ $navigation->navigation_code }}">
-                {{ $navigation->navigation_name }}</label>
-                @endif
-              </div>
-              @endforeach
-            </div> --}}
-
-
-            <div class="col-sm-4 col-sm-offset-6">
-              <div class="btn-group">
-                <a class="btn btn-danger" href="{{ url('index/role') }}">Cancel</a>
-              </div>
-              <div class="btn-group">
-                <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
-              </div>
-            </div>
+        <div class="col-sm-4 col-sm-offset-6">
+          <div class="btn-group">
+            <a class="btn btn-danger" href="{{ url('index/role') }}">Cancel</a>
           </div>
-        </form>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+          </div>
+        </div>
       </div>
+    </form>
+  </div>
+</section>
+@endsection
 
-      @endsection
+@section('scripts')
+<script>
+  $(function () {
+    $('.select2').select2()
+  })
 
-      @section('scripts')
-      <script>
-        $(function () {
-          $('.select2').select2()
-        })
-
-        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-          checkboxClass: 'icheckbox_minimal-red',
-          radioClass   : 'iradio_minimal-red'
-        })
-      </script>
-      @stop
+  $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+    checkboxClass: 'icheckbox_minimal-red',
+    radioClass   : 'iradio_minimal-red'
+  })
+</script>
+@stop
 

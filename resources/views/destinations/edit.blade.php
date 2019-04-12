@@ -67,14 +67,14 @@
         </div>
       </form>
     </div>
-    
   </div>
+</section>
 
-  @endsection
+@endsection
 
-  @section('scripts')
-  <script>
-    $(function () {
+@section('scripts')
+<script>
+  $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
 
