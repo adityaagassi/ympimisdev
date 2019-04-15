@@ -81,7 +81,7 @@
                               <th>Description</th>
                               <th>Start</th>
                               <th>Finish</th>
-                              <th>Total Investment</th>
+                              <th>Total Investment (USD)</th>
                               <th>Details</th>
                          </tr>
                     </thead>
@@ -123,8 +123,8 @@
                                         <th>Code</th>
                                         <th>Description</th>
                                         <th>Qty</th>
-                                        <th>Price</th>
-                                        <th>Amount</th>
+                                        <th>Price (USD)</th>
+                                        <th>Amount (USD)</th>
                                    </tr>
                               </thead>
                               <tbody id="tableDetailBody">
@@ -180,9 +180,9 @@
                               detailData += '<td style="width: 15%;">' + value.type + '</td>';
                               detailData += '<td style="width: 5%;">' + value.item_code + '</td>';
                               detailData += '<td style="width: 35%;">' + value.description + '</td>';
-                              detailData += '<td style="width: 10%;">' + value.qty + '</td>';
+                              detailData += '<td style="width: 5%;">' + value.qty + '</td>';
                               detailData += '<td style="width: 15%;">' + value.price.toLocaleString() + '</td>';
-                              detailData += '<td style="width: 15%;">' + (value.price*value.qty).toLocaleString() + '</td>';
+                              detailData += '<td style="width: 20%;">' + (value.price*value.qty).toLocaleString() + '</td>';
                               detailData += '</tr>';
                          });
                          $('#tableDetailBody').html('');
