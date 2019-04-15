@@ -28,16 +28,6 @@ class DisplayController extends Controller
 	public function fetch_dp_fg_accuracy_detail(Request $request){
 		$first = date('Y-m-d', strtotime(Carbon::parse('first day of '. date('F Y', strtotime($request->get('date'))))));
 
-		$hpl = '';
-		if(substr($request->get('category'),0,2) == 'BI'){
-			$hpl = "'CLFG', 'ASFG', 'TSFG', 'FLFG'";
-			$title = date('l, d F Y', strtotime($request->get('date'))) . ' - Accuracy Detail of Band Instruments';
-		}
-		if(substr($request->get('category'),0,2) == 'EI'){
-			$hpl = "'RC', 'PN', 'VENOVA'";
-			$title = date('l, d F Y', strtotime($request->get('date'))) . ' Accuracy Detail of Educational Instruments';
-		}
-
 		$query = "select materials.material_number, materials.material_description, final.plus+final.minus as qty from
 		(
 		select result.material_number, if(sum(result.actual)-sum(result.plan)>0,sum(result.actual)-sum(result.plan),0) as plus, if(sum(result.actual)-sum(result.plan)<0,sum(result.actual)-sum(result.plan),0) as minus from
@@ -57,7 +47,7 @@ class DisplayController extends Controller
 		group by result.material_number
 		) as final
 		left join materials on materials.material_number = final.material_number
-		where materials.category = 'FG' and materials.hpl in (" . $hpl . ") and final.plus+final.minus <> 0 order by qty desc";
+		where materials.category = 'FG' and materials.hpl in (" . $request->get('category') . ") and final.plus+final.minus <> 0 order by qty desc";
 
 		$accuracyDetail = db::select($query);
 
@@ -71,25 +61,81 @@ class DisplayController extends Controller
 
 	public function fetch_dp_fg_accuracy(){
 		$now = date('Y-m-d');
-		$queryAccuracyBI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from
+		// $queryAccuracyBI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from
+		// (
+		// select f.week_name, f.week_date, f.material_number, f.material_mon, f.plan, f.actual, f.plan_acc, f.actual_acc, if(f.actual_acc-f.plan_acc < 0, f.actual_acc-f.plan_acc, 0) as minus, if(f.actual_acc-f.plan_acc < 0, 0, f.actual_acc-f.plan_acc) as plus from
+		// (
+		// select e.week_name, e.week_date, e.material_number, e.material_mon, e.plan, e.actual, 
+		// (@plan:=if(@material = e.material_mon COLLATE utf8mb4_general_ci, @plan+e.plan, if(@material:=e.material_mon COLLATE utf8mb4_general_ci, e.plan, e.plan))) as plan_acc, 
+		// (@actual:=if(@material2 = e.material_mon COLLATE utf8mb4_general_ci, @actual+e.actual, if(@material2:=e.material_mon COLLATE utf8mb4_general_ci, e.actual, e.actual))) as actual_acc from 
+		// (
+		// select c.week_name, c.week_date, b.material_number, concat(date_format(c.week_date, '%Y%m'), b.material_number) as material_mon, coalesce(production_schedules.quantity, 0) as plan, coalesce(d.actual,0) as actual from
+		// (select weekly_calendars.week_name, weekly_calendars.week_date from weekly_calendars where weekly_calendars.week_date >= '2019-01-01' and weekly_calendars.week_date <= '" . $now  . "') as c 
+		// cross join
+		// (
+		// select materials.material_number from materials where materials.category = 'FG' and materials.hpl in ('CLFG', 'ASFG', 'TSFG', 'FLFG')
+		// ) as b
+		// left join
+		// production_schedules on production_schedules.material_number = b.material_number and production_schedules.due_date = c.week_date
+		// left join
+		// (select material_number, date(created_at) as due_date, sum(quantity) as actual from flo_details where date(created_at) >= '2019-01-01' and date(created_at) <= '" . $now  . "' group by material_number, date(created_at)) as d on d.material_number = b.material_number and d.due_date = c.week_date
+		// order by b.material_number asc, c.week_date asc limit 999999999999999
+		// ) as e
+		// cross join
+		// (select @material := -1, @plan := 0) as params
+		// cross join
+		// (select @material2 := -1, @actual := 0) as params2
+		// ) as f
+		// ) as g
+		// group by g.week_name, g.week_date order by g.week_date asc";
+
+		// $queryAccuracyEI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from
+		// (
+		// select f.week_name, f.week_date, f.material_number, f.material_mon, f.plan, f.actual, f.plan_acc, f.actual_acc, if(f.actual_acc-f.plan_acc < 0, f.actual_acc-f.plan_acc, 0) as minus, if(f.actual_acc-f.plan_acc < 0, 0, f.actual_acc-f.plan_acc) as plus from
+		// (
+		// select e.week_name, e.week_date, e.material_number, e.material_mon, e.plan, e.actual, 
+		// (@plan:=if(@material = e.material_mon COLLATE utf8mb4_general_ci, @plan+e.plan, if(@material:=e.material_mon COLLATE utf8mb4_general_ci, e.plan, e.plan))) as plan_acc, 
+		// (@actual:=if(@material2 = e.material_mon COLLATE utf8mb4_general_ci, @actual+e.actual, if(@material2:=e.material_mon COLLATE utf8mb4_general_ci, e.actual, e.actual))) as actual_acc from 
+		// (
+		// select c.week_name, c.week_date, b.material_number, concat(date_format(c.week_date, '%Y%m'), b.material_number) as material_mon, coalesce(production_schedules.quantity, 0) as plan, coalesce(d.actual,0) as actual from
+		// (select weekly_calendars.week_name, weekly_calendars.week_date from weekly_calendars where weekly_calendars.week_date >= '2019-01-01' and weekly_calendars.week_date <= '" . $now  . "') as c 
+		// cross join
+		// (
+		// select materials.material_number from materials where materials.category = 'FG' and materials.hpl in ('RC', 'PN', 'VENOVA')
+		// ) as b
+		// left join
+		// production_schedules on production_schedules.material_number = b.material_number and production_schedules.due_date = c.week_date
+		// left join
+		// (select material_number, date(created_at) as due_date, sum(quantity) as actual from flo_details where date(created_at) >= '2019-01-01' and date(created_at) <= '" . $now  . "' group by material_number, date(created_at)) as d on d.material_number = b.material_number and d.due_date = c.week_date
+		// order by b.material_number asc, c.week_date asc limit 999999999999999
+		// ) as e
+		// cross join
+		// (select @material := -1, @plan := 0) as params
+		// cross join
+		// (select @material2 := -1, @actual := 0) as params2
+		// ) as f
+		// ) as g
+		// group by g.week_name, g.week_date order by g.week_date asc";
+
+		$queryAccuracy = "select g.week_name, g.week_date, g.hpl, sum(g.minus) as minus, sum(g.plus) as plus from
 		(
-		select f.week_name, f.week_date, f.material_number, f.material_mon, f.plan, f.actual, f.plan_acc, f.actual_acc, if(f.actual_acc-f.plan_acc < 0, f.actual_acc-f.plan_acc, 0) as minus, if(f.actual_acc-f.plan_acc < 0, 0, f.actual_acc-f.plan_acc) as plus from
+		select f.week_name, f.week_date, f.material_number, f.hpl, f.material_mon, f.plan, f.actual, f.plan_acc, f.actual_acc, if(f.actual_acc-f.plan_acc < 0, f.actual_acc-f.plan_acc, 0) as minus, if(f.actual_acc-f.plan_acc < 0, 0, f.actual_acc-f.plan_acc) as plus from
 		(
-		select e.week_name, e.week_date, e.material_number, e.material_mon, e.plan, e.actual, 
+		select e.week_name, e.week_date, e.material_number, e.hpl, e.material_mon, e.plan, e.actual, 
 		(@plan:=if(@material = e.material_mon COLLATE utf8mb4_general_ci, @plan+e.plan, if(@material:=e.material_mon COLLATE utf8mb4_general_ci, e.plan, e.plan))) as plan_acc, 
 		(@actual:=if(@material2 = e.material_mon COLLATE utf8mb4_general_ci, @actual+e.actual, if(@material2:=e.material_mon COLLATE utf8mb4_general_ci, e.actual, e.actual))) as actual_acc from 
 		(
-		select c.week_name, c.week_date, b.material_number, concat(date_format(c.week_date, '%Y%m'), b.material_number) as material_mon, coalesce(production_schedules.quantity, 0) as plan, coalesce(d.actual,0) as actual from
+		select c.week_name, c.week_date, b.material_number, b.hpl, concat(date_format(c.week_date, '%Y%m'), b.material_number, b.hpl) as material_mon, coalesce(production_schedules.quantity, 0) as plan, coalesce(d.actual,0) as actual from
 		(select weekly_calendars.week_name, weekly_calendars.week_date from weekly_calendars where weekly_calendars.week_date >= '2019-01-01' and weekly_calendars.week_date <= '" . $now  . "') as c 
 		cross join
 		(
-		select materials.material_number from materials where materials.category = 'FG' and materials.hpl in ('CLFG', 'ASFG', 'TSFG', 'FLFG')
+		select materials.material_number, materials.hpl from materials where materials.category = 'FG'
 		) as b
 		left join
 		production_schedules on production_schedules.material_number = b.material_number and production_schedules.due_date = c.week_date
 		left join
 		(select material_number, date(created_at) as due_date, sum(quantity) as actual from flo_details where date(created_at) >= '2019-01-01' and date(created_at) <= '" . $now  . "' group by material_number, date(created_at)) as d on d.material_number = b.material_number and d.due_date = c.week_date
-		order by b.material_number asc, c.week_date asc limit 999999999999999
+		order by b.material_number asc, c.week_date asc limit 99999999999
 		) as e
 		cross join
 		(select @material := -1, @plan := 0) as params
@@ -97,43 +143,17 @@ class DisplayController extends Controller
 		(select @material2 := -1, @actual := 0) as params2
 		) as f
 		) as g
-		group by g.week_name, g.week_date order by g.week_date asc";
+		group by g.week_name, g.week_date, g.hpl order by g.week_date asc";
 
-		$queryAccuracyEI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from
-		(
-		select f.week_name, f.week_date, f.material_number, f.material_mon, f.plan, f.actual, f.plan_acc, f.actual_acc, if(f.actual_acc-f.plan_acc < 0, f.actual_acc-f.plan_acc, 0) as minus, if(f.actual_acc-f.plan_acc < 0, 0, f.actual_acc-f.plan_acc) as plus from
-		(
-		select e.week_name, e.week_date, e.material_number, e.material_mon, e.plan, e.actual, 
-		(@plan:=if(@material = e.material_mon COLLATE utf8mb4_general_ci, @plan+e.plan, if(@material:=e.material_mon COLLATE utf8mb4_general_ci, e.plan, e.plan))) as plan_acc, 
-		(@actual:=if(@material2 = e.material_mon COLLATE utf8mb4_general_ci, @actual+e.actual, if(@material2:=e.material_mon COLLATE utf8mb4_general_ci, e.actual, e.actual))) as actual_acc from 
-		(
-		select c.week_name, c.week_date, b.material_number, concat(date_format(c.week_date, '%Y%m'), b.material_number) as material_mon, coalesce(production_schedules.quantity, 0) as plan, coalesce(d.actual,0) as actual from
-		(select weekly_calendars.week_name, weekly_calendars.week_date from weekly_calendars where weekly_calendars.week_date >= '2019-01-01' and weekly_calendars.week_date <= '" . $now  . "') as c 
-		cross join
-		(
-		select materials.material_number from materials where materials.category = 'FG' and materials.hpl in ('RC', 'PN', 'VENOVA')
-		) as b
-		left join
-		production_schedules on production_schedules.material_number = b.material_number and production_schedules.due_date = c.week_date
-		left join
-		(select material_number, date(created_at) as due_date, sum(quantity) as actual from flo_details where date(created_at) >= '2019-01-01' and date(created_at) <= '" . $now  . "' group by material_number, date(created_at)) as d on d.material_number = b.material_number and d.due_date = c.week_date
-		order by b.material_number asc, c.week_date asc limit 999999999999999
-		) as e
-		cross join
-		(select @material := -1, @plan := 0) as params
-		cross join
-		(select @material2 := -1, @actual := 0) as params2
-		) as f
-		) as g
-		group by g.week_name, g.week_date order by g.week_date asc";
-
-		$accuracyBI = db::select($queryAccuracyBI);
-		$accuracyEI = db::select($queryAccuracyEI);
+		$accuracy = db::select($queryAccuracy);
+		// $accuracyBI = db::select($queryAccuracyBI);
+		// $accuracyEI = db::select($queryAccuracyEI);
 
 		$response = array(
 			'status' => true,
-			'accuracyBI' => $accuracyBI,
-			'accuracyEI' => $accuracyEI,
+			'accuracy' => $accuracy,
+			// 'accuracyBI' => $accuracyBI,
+			// 'accuracyEI' => $accuracyEI,
 		);
 		return Response::json($response);
 	}

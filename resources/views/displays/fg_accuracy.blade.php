@@ -43,9 +43,16 @@
 @section('content')
 <section class="content">
 	<div class="row">
-		<div class="col-xs-12">
-			<div id="container1" style="width: 100%; height: 440px; padding: 0;"></div>
-			<div id="container2" style="width: 100%; height: 440px; padding: 0; margin-top: 15px;"></div>
+		<div class="col-xs-6">
+			<div id="container1" style="width: 100%; height: 350px; padding: 0;"></div>
+			<div id="container2" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
+			<div id="container3" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
+			<div id="container4" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
+		</div>
+		<div class="col-xs-6">
+			<div id="container5" style="width: 100%; height: 350px; padding: 0;"></div>
+			<div id="container6" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
+			<div id="container7" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
 		</div>
 	</div>
 </section>
@@ -59,7 +66,7 @@
 				</button>
 				<h4 class="modal-title" id="modalDetailTitle" style="text-align: center;"></h4>
 				<div class="modal-body table-responsive no-padding">
-					<div id="container3" style="width: 100%; height: 100%; position: abosulte;"></div>
+					<div id="container8" style="width: 100%; height: 100%; position: abosulte;"></div>
 				</div>
 			</div>
 		</div>
@@ -138,7 +145,7 @@
 						xSeries.push(data[i].qty);
 					}
 
-					Highcharts.chart('container3', {
+					Highcharts.chart('container8', {
 						chart: {
 							type: 'bar',
 							height: 75+'%'
@@ -246,13 +253,51 @@
 				if(result.status){
 					
 					$('#last_update').html('<b><span style="font-size: 14px;">Last Updated: '+ getActualFullDate() +'</span></b>');
-					var data = result.accuracyBI;
-					var dataMinus = [];
-					var dataPlus = [];
+					var data = result.accuracy;
+					var dataMinusFL = [];
+					var dataPlusFL = [];
+					var dataMinusCL = [];
+					var dataPlusCL = [];
+					var dataMinusAS = [];
+					var dataPlusAS = [];
+					var dataMinusTS = [];
+					var dataPlusTS = [];
+					var dataMinusPN = [];
+					var dataPlusPN = [];
+					var dataMinusRC = [];
+					var dataPlusRC = [];
+					var dataMinusVN = [];
+					var dataPlusVN = [];
 
 					for (var i = 0; i < data.length; i++) {
-						dataMinus.push([Date.parse(data[i].week_date), data[i].minus]);
-						dataPlus.push([Date.parse(data[i].week_date), data[i].plus]);
+						if(data[i].hpl == 'FLFG'){
+							dataMinusFL.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusFL.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'CLFG'){
+							dataMinusCL.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusCL.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'ASFG'){
+							dataMinusAS.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusAS.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'TSFG'){
+							dataMinusTS.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusTS.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'PN'){
+							dataMinusPN.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusPN.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'RC'){
+							dataMinusRC.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusRC.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
+						if(data[i].hpl == 'VENOVA'){
+							dataMinusVN.push([Date.parse(data[i].week_date), data[i].minus]);
+							dataPlusVN.push([Date.parse(data[i].week_date), data[i].plus]);
+						}
 					}
 
 					window.chart = Highcharts.stockChart('container1', {
@@ -267,10 +312,13 @@
 						scrollbar:{
 							enabled:false
 						},
+						navigator:{
+							enabled:false
+						},
 						title: {
-							text: 'Band Instruments',
+							text: 'Flute Finished Goods',
 							style: {
-								fontSize: '30px',
+								fontSize: '20px',
 								fontWeight: 'bold'
 							}
 						},
@@ -283,7 +331,7 @@
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
 							},
 							title: {
-								text: 'Band Instruments'
+								text: 'Flute Finished Goods'
 							},
 							plotLines: [{
 								color: '#00FF00',
@@ -310,7 +358,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalDetail($.date(this.category), this.series.name);
+											modalDetail($.date(this.category), 'FLFG');
 										}
 									}
 								}
@@ -320,13 +368,13 @@
 							enabled: false
 						},
 						series: [{
-							name: 'BI Plus',
-							data: dataPlus,
+							name: 'FLFG Plus',
+							data: dataPlusFL,
 							color: '#0000FF',
 							lineWidth: 1
 						},{
-							name: 'BI Minus',
-							data: dataMinus,
+							name: 'FLFG Minus',
+							data: dataMinusFL,
 							color: '#FF0000',
 							lineWidth: 1
 						}],
@@ -346,26 +394,17 @@
 						}
 					});
 
-					window.chart.addSeries({
-						xAxis: 1,
-						yAxis: 1,
-						type: "line",
-						lineWidth: 1,
-						color: "#FF0000",
-						enableMouseTracking: false,
-						isInternal: true,
-						data : dataMinus,
-						showInLegend:false
-					});
-
-					var data2 = result.accuracyEI;
-					var dataMinus2 = [];
-					var dataPlus2 = [];
-
-					for (var i = 0; i < data2.length; i++) {
-						dataMinus2.push([Date.parse(data2[i].week_date), data2[i].minus]);
-						dataPlus2.push([Date.parse(data2[i].week_date), data2[i].plus]);
-					}
+					// window.chart.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusFL,
+					// 	showInLegend:false
+					// });
 
 					window.chart2 = Highcharts.stockChart('container2', {
 						chart:{
@@ -379,10 +418,13 @@
 						scrollbar:{
 							enabled:false
 						},
+						navigator:{
+							enabled:false
+						},
 						title: {
-							text: 'Educational Instruments',
+							text: 'Clarinet Finished Goods',
 							style: {
-								fontSize: '30px',
+								fontSize: '20px',
 								fontWeight: 'bold'
 							}
 						},
@@ -395,12 +437,13 @@
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
 							},
 							title: {
-								text: 'Educational Instruments'
+								text: 'Clarinet Finished Goods'
 							},
 							plotLines: [{
 								color: '#00FF00',
 								width: 2,
-								value: 0
+								value: 0,
+								dashStyles: 'longdashdot'
 							}]
 						},
 						legend: {
@@ -421,7 +464,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalDetail($.date(this.category), this.series.name);
+											modalDetail($.date(this.category), 'CLFG');
 										}
 									}
 								}
@@ -431,13 +474,13 @@
 							enabled: false
 						},
 						series: [{
-							name: 'EI Plus',
-							data: dataPlus2,
+							name: 'CLFG Plus',
+							data: dataPlusCL,
 							color: '#0000FF',
 							lineWidth: 1
 						},{
-							name: 'EI Minus',
-							data: dataMinus2,
+							name: 'CLFG Minus',
+							data: dataMinusCL,
 							color: '#FF0000',
 							lineWidth: 1
 						}],
@@ -457,17 +500,548 @@
 						}
 					});
 
-					window.chart2.addSeries({
-						xAxis: 1,
-						yAxis: 1,
-						type: "line",
-						color: "#FF0000",
-						lineWidth: 1,
-						enableMouseTracking: false,
-						isInternal: true,
-						data : dataMinus2,
-						showInLegend:false
+					// window.chart2.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusCL,
+					// 	showInLegend:false
+					// });
+
+					window.chart3 = Highcharts.stockChart('container3', {
+						chart:{
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
+							borderWidth: 2,
+						},
+						rangeSelector: {
+							selected: 0
+						},
+						scrollbar:{
+							enabled:false
+						},
+						navigator:{
+							enabled:false
+						},
+						title: {
+							text: 'Alto Saxophone Finished Goods',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							tickPositioner: function () {
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+							},
+							title: {
+								text: 'Alto Saxophone Finished Goods'
+							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											modalDetail($.date(this.category), 'ASFG');
+										}
+									}
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'ASFG Plus',
+							data: dataPlusAS,
+							color: '#0000FF',
+							lineWidth: 1
+						},{
+							name: 'ASFG Minus',
+							data: dataMinusAS,
+							color: '#FF0000',
+							lineWidth: 1
+						}],
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+									}
+								}
+							}]
+						}
 					});
+
+					// window.chart3.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusAS,
+					// 	showInLegend:false
+					// });
+
+					window.chart4 = Highcharts.stockChart('container4', {
+						chart:{
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
+							borderWidth: 2,
+						},
+						rangeSelector: {
+							selected: 0
+						},
+						scrollbar:{
+							enabled:false
+						},
+						navigator:{
+							enabled:false
+						},
+						title: {
+							text: 'Tenor Saxophone Finished Goods',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							tickPositioner: function () {
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+							},
+							title: {
+								text: 'Tenor Saxophone Finished Goods'
+							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											modalDetail($.date(this.category), 'TSFG');
+										}
+									}
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'TSFG Plus',
+							data: dataPlusTS,
+							color: '#0000FF',
+							lineWidth: 1
+						},{
+							name: 'TSFG Minus',
+							data: dataMinusTS,
+							color: '#FF0000',
+							lineWidth: 1
+						}],
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+									}
+								}
+							}]
+						}
+					});
+
+					// window.chart4.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusTS,
+					// 	showInLegend:false
+					// });
+
+					window.chart5 = Highcharts.stockChart('container5', {
+						chart:{
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
+							borderWidth: 2,
+						},
+						rangeSelector: {
+							selected: 0
+						},
+						scrollbar:{
+							enabled:false
+						},
+						navigator:{
+							enabled:false
+						},
+						title: {
+							text: 'Pianica Finished Goods',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							tickPositioner: function () {
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+							},
+							title: {
+								text: 'Pianica Finished Goods'
+							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											modalDetail($.date(this.category), 'PN');
+										}
+									}
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'PN Plus',
+							data: dataPlusPN,
+							color: '#0000FF',
+							lineWidth: 1
+						},{
+							name: 'PN Minus',
+							data: dataMinusPN,
+							color: '#FF0000',
+							lineWidth: 1
+						}],
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+									}
+								}
+							}]
+						}
+					});
+
+					// window.chart5.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusPN,
+					// 	showInLegend:false
+					// });
+
+					window.chart6 = Highcharts.stockChart('container6', {
+						chart:{
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
+							borderWidth: 2,
+						},
+						rangeSelector: {
+							selected: 0
+						},
+						scrollbar:{
+							enabled:false
+						},
+						navigator:{
+							enabled:false
+						},
+						title: {
+							text: 'Recorder Finished Goods',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							tickPositioner: function () {
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+							},
+							title: {
+								text: 'Recorder Finished Goods'
+							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											modalDetail($.date(this.category), 'RC');
+										}
+									}
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'RC Plus',
+							data: dataPlusRC,
+							color: '#0000FF',
+							lineWidth: 1
+						},{
+							name: 'RC Minus',
+							data: dataMinusRC,
+							color: '#FF0000',
+							lineWidth: 1
+						}],
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+									}
+								}
+							}]
+						}
+					});
+
+					// window.chart6.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusRC,
+					// 	showInLegend:false
+					// });
+					
+					window.chart7 = Highcharts.stockChart('container7', {
+						chart:{
+							borderColor: 'rgb(200,200,200)',
+							borderRadius: 5,
+							borderWidth: 2,
+						},
+						rangeSelector: {
+							selected: 0
+						},
+						scrollbar:{
+							enabled:false
+						},
+						navigator:{
+							enabled:false
+						},
+						title: {
+							text: 'Venova Finished Goods',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							tickPositioner: function () {
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+							},
+							title: {
+								text: 'Venova Finished Goods'
+							},
+							plotLines: [{
+								color: '#00FF00',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											modalDetail($.date(this.category), 'Venova');
+										}
+									}
+								}
+							}
+						},
+						credits: {
+							enabled: false
+						},
+						series: [{
+							name: 'VN Plus',
+							data: dataPlusVN,
+							color: '#0000FF',
+							lineWidth: 1
+						},{
+							name: 'VN Minus',
+							data: dataMinusVN,
+							color: '#FF0000',
+							lineWidth: 1
+						}],
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
+									}
+								}
+							}]
+						}
+					});
+
+					// window.chart7.addSeries({
+					// 	xAxis: 1,
+					// 	yAxis: 1,
+					// 	type: "line",
+					// 	lineWidth: 1,
+					// 	color: "#FF0000",
+					// 	enableMouseTracking: false,
+					// 	isInternal: true,
+					// 	data : dataMinusVN,
+					// 	showInLegend:false
+					// });
+
 
 					if(statusx == "idle"){
 						setTimeout(fillChart(), 1000);
