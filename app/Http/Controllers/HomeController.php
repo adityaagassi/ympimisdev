@@ -35,6 +35,7 @@ class HomeController extends Controller
         ->leftJoin('mis_investment_details', 'mis_investments.project', '=', 'mis_investment_details.project')
         ->select('mis_investments.project', 'mis_investments.description', 'mis_investments.start_date', db::raw('if(mis_investments.finish_date is null or mis_investments.finish_date = "0000-00-00", "On Going", mis_investments.finish_date) as finish_date'), db::raw('coalesce(sum((mis_investment_details.qty*mis_investment_details.price)),0) as total_investment'))
         ->groupBy('mis_investments.project', 'mis_investments.description', 'mis_investments.start_date', 'mis_investments.finish_date')
+        ->orderBy('mis_investments.start_date', 'desc')
         ->get();
 
         return view('about_mis.about_mis', array(
