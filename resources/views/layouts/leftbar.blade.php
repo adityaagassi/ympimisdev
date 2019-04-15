@@ -237,13 +237,13 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        @if(isset($page) && $page == "Process Middle CL")<li class="active">@else<li>@endif
+        @if(isset($page) && $page == "Middle Process CL")<li class="active">@else<li>@endif
           <a href="{{ url("/index/process_middle_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
         </li>
-        @if(isset($page) && $page == "Process Middle FL")<li class="active">@else<li>@endif
+        @if(isset($page) && $page == "Middle Process FL")<li class="active">@else<li>@endif
           <a href="{{ url("/index/process_middle_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
         </li>
-        @if(isset($page) && $page == "Process Middle SX")<li class="active">@else<li>@endif
+        @if(isset($page) && $page == "Middle Process SX")<li class="active">@else<li>@endif
           <a href="{{ url("/index/process_middle_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
         </li>
       </ul>
