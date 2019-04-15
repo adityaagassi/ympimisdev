@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use File;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Response;
 
 class HomeController extends Controller
 {
@@ -41,6 +42,16 @@ class HomeController extends Controller
         ))->with('page', 'About MIS');
     }
 
+    public function fetch_mis_investment(Request $request){
+        $project_details = db::table('mis_investment_details')->where('project', '=', $request->get('project'))->get();
+
+        $response = array(
+            'status' => true,
+            'project_details' => $project_details
+        );
+        return Response::json($response);
+    }
+    
     public function download($reference_file){
         if (file_exists(public_path() . "/manuals/" . $reference_file)) {
             header("Content-Length: " . filesize(public_path() . "/manuals/" . $reference_file));
