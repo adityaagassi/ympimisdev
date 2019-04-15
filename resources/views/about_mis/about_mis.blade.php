@@ -200,12 +200,12 @@
                     },
                     ]
                },
+               "order": [[ 2, "desc" ]],
                'paging'        : true,
                'lengthChange'  : true,
                'searching'     : true,
                'ordering'      : true,
                'info'        : true,
-               'order'       : [],
                'autoWidth'   : true,
                "sPaginationType": "full_numbers",
                "bJQueryUI": true
