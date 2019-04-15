@@ -160,6 +160,58 @@
           }
      });
 
+     jQuery(document).ready(function() {
+          var table2 = $('#projectTable').DataTable({
+               'dom': 'Bfrtip',
+               'responsive': true,
+               'lengthMenu': [
+               [ 10, 25, 50, -1 ],
+               [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+               ],
+               'buttons': {
+                    buttons:[
+                    {
+                         extend: 'pageLength',
+                         className: 'btn btn-default',
+                    },
+                    {
+                         extend: 'copy',
+                         className: 'btn btn-success',
+                         text: '<i class="fa fa-copy"></i> Copy',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    {
+                         extend: 'excel',
+                         className: 'btn btn-info',
+                         text: '<i class="fa fa-file-excel-o"></i> Excel',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    {
+                         extend: 'print',
+                         className: 'btn btn-warning',
+                         text: '<i class="fa fa-print"></i> Print',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    ]
+               },
+               'paging'        : true,
+               'lengthChange'  : true,
+               'searching'     : true,
+               'ordering'      : true,
+               'info'        : true,
+               'order'       : [],
+               'autoWidth'   : true,
+               "sPaginationType": "full_numbers",
+               "bJQueryUI": true
+          });
+     });
+
      function modalDetail(project){
           var data = {
                project:project
