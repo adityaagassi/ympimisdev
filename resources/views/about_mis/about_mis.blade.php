@@ -92,7 +92,7 @@
                               <td>{{$project->description}}</td>
                               <td>{{$project->start_date}}</td>
                               <td>{{$project->finish_date}}</td>
-                              <td>{{$project->total_investment}}</td>
+                              <td>{{number_format($project->total_investment, 2)}}</td>
                               <td>
                                    <a href="javascript:void(0)" onclick="modalDetail('{{ $project->project }}');" class="btn btn-info btn-xs">Details</a>
                               </td>
