@@ -33,6 +33,7 @@ Auth::routes();
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
+Route::get('/fetch/mis_investment', 'HomeController@fetch_mis_investment');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
 
 //Vistor Controll
@@ -349,6 +350,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
+Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
