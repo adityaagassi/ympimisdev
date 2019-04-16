@@ -85,7 +85,7 @@ class FinishedGoodsController extends Controller
 			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 		else{
-			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(5)));
+			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
 		}
 		
 		$query = "select date_format(e.st_date, '%d-%b-%Y') as st_date, e.hpl, act, plan, actual from
