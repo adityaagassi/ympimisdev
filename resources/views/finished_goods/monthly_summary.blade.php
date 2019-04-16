@@ -118,8 +118,8 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="modalBackOrderTitle"></h4>
-				<div class="modal-body table-responsive table-bordered table-striped no-padding">
-					<table class="table table-hover">
+				<div class="modal-body table-responsive no-padding">
+					<table class="table table-hover table-bordered table-striped">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th>SO</th>
