@@ -147,10 +147,12 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		$('#datefrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#dateto').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#datefrom').val("");
 		$('#dateto').val("");

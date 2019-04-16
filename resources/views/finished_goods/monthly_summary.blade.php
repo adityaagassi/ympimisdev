@@ -1,34 +1,34 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-input {
-	line-height: 24px;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	input {
+		line-height: 24px;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -122,6 +122,10 @@ table.table-bordered > tfoot > tr > th{
 					<table class="table table-hover">
 						<thead>
 							<tr>
+								<th style="font-size: 14">SO</th>
+								<th style="font-size: 14">ST Date</th>
+								<th style="font-size: 14">BL Plan</th>
+								<th style="font-size: 14">BL Actual</th>
 								<th style="font-size: 14">Material</th>
 								<th style="font-size: 14">Description</th>
 								<th style="font-size: 14">Quantity</th>
@@ -131,6 +135,10 @@ table.table-bordered > tfoot > tr > th{
 						</tbody>
 						<tfoot style="background-color: RGB(252, 248, 227);">
 							<th>Total</th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
 							<th></th>
 							<th id="modalBackOrderTotal"></th>
 						</tfoot>
@@ -351,6 +359,10 @@ table.table-bordered > tfoot > tr > th{
 					var resultTotal = 0;
 					$.each(result.resultData, function(key, value) {
 						resultData += '<tr>';
+						resultData += '<td>'+ value.sales_order +'</td>';
+						resultData += '<td>'+ value.st_date +'</td>';
+						resultData += '<td>'+ value.bl_plan +'</td>';
+						resultData += '<td>'+ value.bl_actual +'</td>';
 						resultData += '<td>'+ value.material_number +'</td>';
 						resultData += '<td>'+ value.material_description +'</td>';
 						resultData += '<td>'+ value.actual.toLocaleString() +'</td>';

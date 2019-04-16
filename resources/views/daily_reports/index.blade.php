@@ -336,6 +336,7 @@
 		$('#datebegin').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
+			todayHighlight: true
 		});
 		$('#datetarget').datepicker({
 			autoclose: true,

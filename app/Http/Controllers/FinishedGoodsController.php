@@ -343,7 +343,7 @@ class FinishedGoodsController extends Controller
 	public function fetch_tb_monthly_summary(Request $request){
 		$period = date('Y-m', strtotime($request->get('period'))).'-01';
 
-		$query = "select materials.material_number, materials.material_description, sum(if(flos.bl_date > last_day(shipment_schedules.bl_date), flos.actual, 0)) as actual from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id left join materials on materials.material_number = flos.material_number where shipment_schedules.st_month = '".$period."' group by materials.material_number, materials.material_description having actual > 0";
+		$query = "select shipment_schedules.sales_order, shipment_schedules.st_date, shipment_schedules.bl_date as bl_plan, flos.bl_date as bl_actual, materials.material_number, materials.material_description, sum(if(flos.bl_date > last_day(shipment_schedules.bl_date), flos.actual, 0)) as actual from flos left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id left join materials on materials.material_number = flos.material_number where shipment_schedules.st_month = '".$period."' group by materials.material_number, materials.material_description, shipment_schedules.sales_order, shipment_schedules.st_date, shipment_schedules.bl_date, flos.bl_date having actual > 0";
 
 		$flos = db::select($query);
 

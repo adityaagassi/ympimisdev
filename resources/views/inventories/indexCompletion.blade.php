@@ -177,10 +177,12 @@ table.table-bordered > tfoot > tr > th{
 
 	jQuery(document).ready(function() {
 		$('#dateFrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#dateTo').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		jQuery('.tags').tagsInput({ width: 'auto' });
 		$('.select2').select2();

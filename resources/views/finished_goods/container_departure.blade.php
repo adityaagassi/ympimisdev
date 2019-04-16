@@ -140,10 +140,12 @@ table.table-bordered > tfoot > tr > th{
 
 	jQuery(document).ready(function() {
 		$('#datefrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#dateto').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#datefrom').val("");
 		$('#dateto').val("");

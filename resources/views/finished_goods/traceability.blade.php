@@ -204,22 +204,28 @@ table.table-bordered > tfoot > tr > th{
 <script>
 	jQuery(document).ready(function() {
 		$('#prodFrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#prodTo').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#shipFrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#shipTo').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#blFrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#blTo').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('.select2').select2();
 	});

@@ -183,7 +183,8 @@
 
 	jQuery(document).ready(function() {
 		$('#datepicker').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('body').toggleClass("sidebar-collapse");
 		fillWeek();
