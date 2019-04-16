@@ -111,7 +111,7 @@
 </section>
 
 <div class="modal fade" id="modalBackOrder">
-	<div class="modal-dialog modal-md">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -120,15 +120,15 @@
 				<h4 class="modal-title" id="modalBackOrderTitle"></h4>
 				<div class="modal-body table-responsive no-padding">
 					<table class="table table-hover">
-						<thead>
+						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="font-size: 14">SO</th>
-								<th style="font-size: 14">ST Date</th>
-								<th style="font-size: 14">BL Plan</th>
-								<th style="font-size: 14">BL Actual</th>
-								<th style="font-size: 14">Material</th>
-								<th style="font-size: 14">Description</th>
-								<th style="font-size: 14">Quantity</th>
+								<th>SO</th>
+								<th>ST Date</th>
+								<th>BL Plan</th>
+								<th>BL Actual</th>
+								<th>Material</th>
+								<th>Description</th>
+								<th>Quantity</th>
 							</tr>
 						</thead>
 						<tbody id="modalBackOrderBody">
