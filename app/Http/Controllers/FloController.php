@@ -1253,17 +1253,17 @@ class FloController extends Controller
 			$flo->save();
 
 			if($request->get('status') == '2'){
-				$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+				$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->material_number, 'storage_location' => 'FSTK']);
 				$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$flo->actual);
 				$inventoryFSTK->save();
 
-				$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => $flo->shipmentschedule->material->issue_storage_location]);
+				$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $flo->material_number, 'storage_location' => $flo->material->issue_storage_location]);
 				$inventoryWIP->quantity = ($inventoryWIP->quantity-$flo->actual);
 				$inventoryWIP->save();
 			}
 
 			if($request->get('status') == '3'){
-				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->shipmentschedule->material_number, 'storage_location' => 'FSTK']);
+				$inventory = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $flo->material_number, 'storage_location' => 'FSTK']);
 				$inventory->quantity = ($inventory->quantity-$flo->actual);
 				$inventory->save();
 			}
