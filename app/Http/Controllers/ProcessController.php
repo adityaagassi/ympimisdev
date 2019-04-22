@@ -841,26 +841,25 @@ class ProcessController extends Controller
 					$code_generator->save();
 					$log_process->save();
 
-					if ($request->get('category')=='FG'){
-						$printer_name = 'SUPERMAN';
+					// if ($request->get('category')=='FG'){
+					$printer_name = 'SUPERMAN';
 
-						$connector = new WindowsPrintConnector($printer_name);
-						$printer = new Printer($connector);
+					$connector = new WindowsPrintConnector($printer_name);
+					$printer = new Printer($connector);
 
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setBarcodeWidth(2);
-						$printer->setBarcodeHeight(64);
-						$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
-						$printer->setTextSize(3, 1);
-						$printer->text($request->get('serialNumber')."\n");
-						$printer->feed(1);
-						$printer->text($request->get('model')."\n");
-						$printer->setTextSize(1, 1);
-						$printer->text(date("d-M-Y H:i:s")."\n");
-						$printer->cut();
-						$printer->close();
-
-					}
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setBarcodeWidth(2);
+					$printer->setBarcodeHeight(64);
+					$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
+					$printer->setTextSize(3, 1);
+					$printer->text($request->get('serialNumber')."\n");
+					$printer->feed(1);
+					$printer->text($request->get('model')."\n");
+					$printer->setTextSize(1, 1);
+					$printer->text(date("d-M-Y H:i:s")."\n");
+					$printer->cut();
+					$printer->close();
+					// }
 
 					$response = array(
 						'status' => true,
