@@ -51,7 +51,6 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
-	#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -145,8 +144,10 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="modalResultTitle"></h4>
-				<div class="modal-body table-responsive no-padding">
-					<table class="table table-hover table-bordered table-striped">
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+					<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i></center>
+					<table class="table table-hover table-bordered table-striped" id="tableResult">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th>Material</th>
@@ -167,6 +168,8 @@
 		</div>
 	</div>
 </div>
+
+
 
 @endsection
 @section('scripts')
@@ -1003,6 +1006,11 @@
 }
 
 function modalResult(hpl, name, now, first, last){
+	$('#modalResult').modal('show');
+	$('#loading').show();
+	$('#modalResultTitle').hide();
+	$('#tableResult').hide();
+
 	var data = {
 		hpl:hpl,
 		name:name,
@@ -1032,7 +1040,10 @@ function modalResult(hpl, name, now, first, last){
 				$('#modalResultBody').append(resultData);
 				$('#modalResultTotal').html('');
 				$('#modalResultTotal').append(resultTotal.toLocaleString());
-				$('#modalResult').modal('show');
+
+				$('#loading').hide();
+				$('#modalResultTitle').show();
+				$('#tableResult').show();
 			}
 			else{
 				alert('Attempt to retrieve data failed');

@@ -26,7 +26,6 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
-	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -99,7 +98,10 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="modalResultTitle"></h4>
-				<div class="modal-body table-responsive no-padding">
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+					</center>
 					<table class="table table-hover table-bordered table-striped" id="tableModal">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
@@ -380,6 +382,10 @@
 }
 
 function fillModal(date, hpl){
+	$('#modalResult').modal('show');
+	$('#loading').show();
+	$('#modalResultTitle').hide();
+	$('#tableModal').hide();
 	var data = {
 		date:date,
 		hpl:hpl
@@ -437,7 +443,9 @@ function fillModal(date, hpl){
 						}
 					}]
 				});
-				$('#modalResult').modal('show');
+				$('#loading').hide();
+				$('#modalResultTitle').show();
+				$('#tableModal').show();
 			}
 			else{
 				alert('Attempt to retrieve data failed');

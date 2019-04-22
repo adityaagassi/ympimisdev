@@ -65,8 +65,11 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="modalDetailTitle" style="text-align: center;"></h4>
-				<div class="modal-body table-responsive no-padding">
-					<div id="container8" style="width: 100%; height: 100%; position: abosulte;"></div>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+						<div id="container8" style="width: 100%; height: 100%; position: abosulte;"></div>
+					</center>
 				</div>
 			</div>
 		</div>
@@ -125,6 +128,10 @@
 	}
 
 	function modalDetail(date, category){
+		$('#loading').show();
+		$('#container8').hide();
+		$('#modalDetailTitle').hide();
+		$('#modalDetail').modal('show');
 		var data = {
 			date:date,
 			category:category
@@ -214,7 +221,11 @@
 						}]
 					});
 
-					$('#modalDetail').modal('show');
+
+					$('#loading').hide();
+					$('#container8').show();
+					$('#modalDetailTitle').show();
+
 				}
 				else{
 					alert('Attempt to retrieve data failed');
