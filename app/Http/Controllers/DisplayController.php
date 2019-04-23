@@ -47,14 +47,14 @@ class DisplayController extends Controller
 		group by result.material_number
 		) as final
 		left join materials on materials.material_number = final.material_number
-		where materials.category = 'FG' and materials.hpl in (" . $request->get('category') . ") and final.plus+final.minus <> 0 order by qty desc";
+		where materials.category = 'FG' and materials.hpl in ('" . $request->get('category') . "') and final.plus+final.minus <> 0 order by qty desc";
 
 		$accuracyDetail = db::select($query);
 
 		$response = array(
 			'status' => true,
 			'accuracyDetail' => $accuracyDetail,
-			'title' => $title,
+			'title' => 'Details of '. $request->get('category'),
 		);
 		return Response::json($response);
 	}

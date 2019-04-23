@@ -341,10 +341,12 @@
 		$('#datetarget').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
+			todayHighlight: true
 		});
 		$('#datefinished').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
+			todayHighlight: true
 		});
 		$('.timepicker').timepicker({
 			showInputs: false,
