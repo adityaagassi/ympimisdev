@@ -288,6 +288,12 @@
 </li>
 @endif
 
+@if(in_array('R7', $navs))
+@if(isset($page) && $page == "Overtime Confirmation")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/overtime_confirmation") }}"><i class="fa fa-tv"></i> <span>Overtime Confirmation</span></a>
+</li>
+@endif
+
 @if(in_array('R3', $navs))
 @if(isset($head) && $head == "Finished Goods")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">

@@ -57,11 +57,11 @@ class ContainerController extends Controller
 
             $id = Auth::id();
             $container = new Container([
-              'container_code' => $request->get('container_code'),
-              'container_name' => $request->get('container_name'),
-              'capacity' => $request->get('capacity'),
-              'created_by' => $id
-          ]);
+                'container_code' => $request->get('container_code'),
+                'container_name' => $request->get('container_name'),
+                'capacity' => $request->get('capacity'),
+                'created_by' => $id
+            ]);
 
             $container->save();
             return redirect('/index/container')
@@ -130,7 +130,7 @@ class ContainerController extends Controller
      */
     public function update(Request $request, $id)
     {   
-     try{
+       try{
 
         $container = Container::find($id);
         $container->container_code = $request->get('container_code');

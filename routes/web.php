@@ -66,6 +66,13 @@ Route::group(['nav' => 'R6', 'middleware' => 'permission'], function(){
 	Route::get('fetch/tr_history', 'InventoryController@fetchHistory');
 });
 
+Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
+	Route::get('index/overtime_confirmation', 'OvertimeController@indexOvertimeConfirmation');
+	Route::get('fetch/overtime_confirmation', 'OvertimeController@fetchOvertimeConfirmation');
+	Route::post('confirm/overtime_confirmation', 'OvertimeController@confirmOvertimeConfirmation');
+	Route::post('edit/overtime_confirmation', 'OvertimeController@editOvertimeConfirmation');
+});
+
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
 	Route::get('fetch/fg_production', 'FinishedGoodsController@fetch_fg_production');
