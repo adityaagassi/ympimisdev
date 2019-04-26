@@ -141,32 +141,34 @@ class MaedaoshiController extends Controller
 	public function scan_maedaoshi_material(Request $request){
 		
 		$material = DB::table('materials')
+		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'materials.material_number')
 		->where('materials.material_number', '=', $request->get('material'))
+		->where('material_volumes.material_number', '=', $request->get('material'))
 		->first();
 
-		$first = date('Y-m-01');
-		$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+		// $first = date('Y-m-01');
+		// $last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
 
-		$query = "select material_number, sum(plan) as plan, sum(actual) as actual from
-		(
-		select material_number, quantity as plan, 0 as actual from production_schedules where due_date >= '".$first."' and due_date <= '".$last."'
+		// $query = "select material_number, sum(plan) as plan, sum(actual) as actual from
+		// (
+		// select material_number, quantity as plan, 0 as actual from production_schedules where due_date >= '".$first."' and due_date <= '".$last."'
 
-		union all
+		// union all
 
-		select material_number, 0 as plan, quantity as actual from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."'
-		) as result
-		group by result.material_number
-		having plan <= actual and material_number = '".$request->get('material')."'";
+		// select material_number, 0 as plan, quantity as actual from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."'
+		// ) as result
+		// group by result.material_number
+		// having plan <= actual and material_number = '".$request->get('material')."'";
 
-		$productionPlan = DB::select($query);
+		// $productionPlan = DB::select($query);
 
-		if(!empty($productionPlan)){
-			$response = array(
-				'status' => false,
-				'message' => 'There is no production schedule for material '. $request->get('material') .'.',
-			);
-			return Response::json($response);
-		}
+		// if(!empty($productionPlan)){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'There is no production schedule for material '. $request->get('material') .'.',
+		// 	);
+		// 	return Response::json($response);
+		// }
 
 		if($material != null){
 
@@ -257,7 +259,7 @@ class MaedaoshiController extends Controller
 		else{
 			$response = array(
 				'status' => false,
-				'message' => 'Material '. $request->get('material') .' is invalid.',
+				'message' => 'Material '. $request->get('material') .' is not registered.',
 			);
 			return Response::json($response);
 		}		
