@@ -404,6 +404,19 @@ class FloController extends Controller
 	}
 
 	public function scan_material_number(Request $request){
+
+		$maedaoshi_check = FLoDetail::where('flo_number', '=', 'Maedaoshi' . $request->get('material_number'))
+		->where('actual', '>', 0)
+		->first();
+
+		if($maedaoshi_check != ""){
+			$response = array(
+				'status' => false,
+				'message' => "There is maedaoshi items, please use menu after maedaoshi."
+			);
+			return Response::json($response);
+		}
+
 		if($request->get('ymj') == 'true'){
 			$flo = DB::table('flos')
 			->leftJoin('shipment_schedules', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
@@ -464,6 +477,7 @@ class FloController extends Controller
 			}
 
 			if($shipment_schedule != null){
+
 				$response = array(
 					'status' => true,
 					'message' => 'Shipment schedule available',
@@ -512,20 +526,6 @@ class FloController extends Controller
 			}
 			$number_pd = sprintf("%'.0" . $code_generator_pd->length . "d\n", $code_generator_pd->index);
 			$serial_number = $code_generator_pd->prefix . $number_pd+1;
-		}
-
-		if($request->get('type') == 'pd'){
-			$maedaoshi_check = FLoDetail::where('material_number', '=', $request->get('material_number'))
-			->where('flo_number', 'like', 'Maedaoshi%')
-			->first();
-			if($maedaoshi_check != ""){
-				$response = array(
-					'status' => false,
-					'message' => "This item is maedaoshi, please use menu after maedaoshi.",
-					'TES' => $maedaoshi_check
-				);
-				return Response::json($response);
-			}
 		}
 
 		$material_number = $request->get('material_number');
