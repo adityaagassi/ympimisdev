@@ -405,14 +405,14 @@ class FloController extends Controller
 
 	public function scan_material_number(Request $request){
 
-		$maedaoshi_check = FLoDetail::where('flo_number', '=', 'Maedaoshi' . $request->get('material_number'))
+		$maedaoshi_check = FLo::where('flo_number', '=', 'Maedaoshi' . $request->get('material_number'))
 		->where('actual', '>', 0)
 		->first();
 
 		if($maedaoshi_check != ""){
 			$response = array(
 				'status' => false,
-				'message' => "There is maedaoshi items, please use menu after maedaoshi."
+				'message' => "There is maedaoshi items, please use menu after maedaoshi if shipment schedule available."
 			);
 			return Response::json($response);
 		}
