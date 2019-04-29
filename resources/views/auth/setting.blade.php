@@ -22,15 +22,14 @@
   </div>   
   @endif
   @if (session('status'))
-  <div class="alert alert-danger alert-dismissible">
+  <div class="alert alert-success alert-dismissible">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
-    {{ session('error') }}
+    <h4><i class="icon fa-thumbs-o-up"></i> Success!</h4>
+    {{ session('status') }}
   </div>   
   @endif
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
-
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
@@ -80,14 +79,14 @@
     </form>
   </div>
 
-@endsection
+  @endsection
 
-@section('scripts')
-<script>
-  $(function () {
-    $('.select2').select2()
+  @section('scripts')
+  <script>
+    $(function () {
+      $('.select2').select2()
 
-  })
-</script>
-@stop
+    })
+  </script>
+  @stop
 

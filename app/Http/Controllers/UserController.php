@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Database\QueryException;
 use App\Role;
+use Hash;
 
 
 class UserController extends Controller
@@ -119,40 +120,39 @@ class UserController extends Controller
     }
 
     public function setting(Request $request){
-      $oldPassword = Auth::user()->password;
       try{
         $user = User::find(Auth::id());
         if(strlen($request->get('oldPassword'))>0 && strlen($request->get('newPassword')>0) && strlen($request->get('confirmPassword')>0)){
-          if($oldPassword == bcrypt($request->get('oldPassword'))){
+          if(Hash::check($request->get('oldPassword'), Auth::user()->password)){
             if($request->get('newPassword') == $request->get('confirmPassword')){
               $user->name = ucwords($request->get('name'));
               $user->email = $request->get('email');
               $user->password = bcrypt($request->get('newPassword'));
               $user->save();
-              return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+              return redirect('/setting/user')->with('status', 'User data has been edited.')->with('page', 'Setting');
             }
             else{
-              return back()->with('error', 'Password confirmation did not match.')->with('page', 'User');
+              return redirect('/setting/user')->with('error', 'Password confirmation did not match.')->with('page', 'Setting');
             }
           }
           else{
-            return back()->with('error', 'Old Password did not match.')->with('page', 'User');
+            return redirect('/setting/user')->with('error', 'Old Password did not match.')->with('page', 'Setting');
           }
         }
         else{
           $user->name = ucwords($request->get('name'));
           $user->email = $request->get('email');
           $user->save();
-          return redirect('/index/user')->with('status', 'User data has been edited.')->with('page', 'User');
+          return redirect('/setting/user')->with('status', 'User data has been edited.')->with('page', 'User');
         }
       }
       catch (QueryException $e){
         $error_code = $e->errorInfo[1];
         if($error_code == 1062){
-          return back()->with('error', 'Username or e-mail already exist.')->with('page', 'User');
+          return redirect('/setting/user')->with('error', 'Username or e-mail already exist.')->with('page', 'User');
         }
         else{
-          return back()->with('error', $e->getMessage())->with('page', 'User');
+          return redirect('/setting/user')->with('error', $e->getMessage().'asdasdsa')->with('page', 'User');
         }
 
       }
