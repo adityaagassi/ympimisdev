@@ -65,6 +65,7 @@
                 <th>OT Date</th>
                 <th>NIK</th>
                 <th>Name</th>
+                <th>Section</th>
                 <th>In</th>
                 <th>Out</th>
                 <th>OT Plan</th>
@@ -93,10 +94,12 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
               </tr>
             </tfoot>
           </table>
-          {{-- <button class="btn btn-success" onclick="confirm_all()">Confirm Selected</button> --}}
+          <br>
+          <button class="btn btn-success btn-lg btn-block" onclick="confirm_all()" style="font-size: 25px"><i class="fa fa-check"></i> Confirm</button>
         </div>
       </div>
     </div>
@@ -106,7 +109,6 @@
    <div class="modal-dialog">
     <div class="modal-content">
      <div class="modal-header">
-      <h4 style="float: right; " id="modal-title"></h4> 
       <h4 class="modal-title"><b>Edit Overtime Hour(s)</b></h4>
     </div>
     <div class="modal-body">
@@ -232,30 +234,23 @@
           exportOptions: {
             columns: ':not(.notexport)'
           }
-        },
-        {
-          className: 'tes',
-          text: '<i class="fa fa-check"></i> Confirm',
-          action: function ( e, dt, node, config ) {
-            confirm_all();
-          }
         }
         ]
       },
       "columnDefs": [ {
-        "targets": [6, 7],
+        "targets": [7, 8],
         "createdCell": function (td, cellData, rowData, row, col) {
           $(td).css('background-color', 'RGB(204,255,255,0.50)')
         }
       },
       {
-        "targets": [8, 9],
+        "targets": [9, 10],
         "createdCell": function (td, cellData, rowData, row, col) {
           $(td).css('background-color', 'RGB(255,255,204,0.50)')
         }
       },
       {
-        "targets": [11],
+        "targets": [12],
         "createdCell": function (td, cellData, rowData, row, col) {
           $(td).css('background-color', 'RGB(255,204,255,0.50)')
         }
@@ -270,7 +265,7 @@
       "sPaginationType": "full_numbers",
       "bJQueryUI": true,
       "bAutoWidth": false,
-      // "processing": true,
+      "processing": true,
       // "serverSide": true,
       "ajax": {
         "type" : "get",
@@ -278,9 +273,10 @@
       },
       "columns": [
       { "data": "id"},
-      { "data": "tanggal" },
+      { "data": "tanggal", "width": "7%" },
       { "data": "nik" },
       { "data": "name", "width": "35%"},
+      { "data": "section" },
       { "data": "masuk" },
       { "data": "keluar" },
       { "data": "plan_ot" },
@@ -482,7 +478,7 @@
       title: title,
       text: message,
       class_name: 'growl-success',
-      image: '{{ url("images/ok.png") }}',
+      image: '{{ url("images/image-screen.png") }}',
       sticky: false,
       time: '2000'
     });
@@ -492,7 +488,8 @@
     use24hours: true,
     showInputs: false,
     showMeridian: false,
-    minuteStep: 30
+    minuteStep: 30,
+    defaultTime: '00:00'
   })
 
 </script>

@@ -24,7 +24,7 @@ class OvertimeController extends Controller
 
 		$username = Auth::user()->username;
 		$date = date('Y-m');
-		// $username = "A97070033";
+		// $username = "D00040458";
 
 		$dep = db::connection('mysql3')->table('karyawan')
 		->leftJoin('posisi', 'posisi.nik', '=', 'karyawan.nik')
@@ -32,7 +32,7 @@ class OvertimeController extends Controller
 		->select('id_dep')
 		->first();
 
-		$queryConfirmation = "select b.id, a.tanggal, a.nik, a.nama_karyawan as name, a.masuk, a.keluar, b.plan_ot, a.jam as act_log, a.jam-b.plan_ot as diff, a.section, b.hari from
+		$queryConfirmation = "select b.id, date_format(a.tanggal,'%d-%b-%y') as tanggal, a.nik, a.nama_karyawan as name, a.masuk, a.keluar, b.plan_ot, a.jam as act_log, a.jam-b.plan_ot as diff, a.section, b.hari from
 		( SELECT
 		over.tanggal,
 		over.nik,
@@ -71,7 +71,7 @@ class OvertimeController extends Controller
 		over_time_member.nik 
 		) AS b ON a.nik = b.nik 
 		AND a.tanggal = b.tanggal
-		where b.id IS NOT NULL";
+		where b.id IS NOT NULL order by a.tanggal asc, a.nik asc";
 
 		$overtimes = db::connection('mysql3')->select($queryConfirmation);
 
@@ -84,9 +84,11 @@ class OvertimeController extends Controller
 			return '<input type="radio" id="ot_log_radio" name="confirm+' . $overtimes->nik . '+' . $overtimes->tanggal . '+'.$overtimes->id . '+'.$overtimes->hari .'" value="'.$overtimes->act_log.'">';
 		})
 		->addColumn('edit', function($overtimes){
-			$tanggal = date('l, d M Y',strtotime($overtimes->tanggal));
+			$tanggal = date('l, d F Y',strtotime($overtimes->tanggal));
+			$tgl2 = date('Y-m-d',strtotime($overtimes->tanggal));
 			$nama = str_replace("'","",$overtimes->name);
-			return '<input type="button" class="btn btn-warning btn-sm" id="edit+' . $overtimes->nik . '+' .$overtimes->id . '+'.$overtimes->plan_ot .'+'.$overtimes->act_log .'" onclick="editModal(this.id, \'' . $overtimes->masuk . '\', \'' . $overtimes->keluar . '\', \'' . $nama . '\', \'' . $overtimes->diff . '\', \'' . $tanggal . '\', \'' . $overtimes->tanggal . '\', \'' . $overtimes->hari . '\')" value="Edit">';
+			return '<input type="button" class="btn btn-warning btn-sm" id="edit+' . $overtimes->nik . '+' .$overtimes->id . '+'.$overtimes->plan_ot .'+'.$overtimes->act_log .'" onclick="editModal(this.id, \'' . $overtimes->masuk . '\', \'' . $overtimes->keluar . '\', \'' . $nama . '\', \'' . $overtimes->diff . '\', \'' . $tanggal . '\', \'' . $tgl2 . '\', \'' . $overtimes->hari . '\')" value="Edit">
+			<input type="button" class="btn btn-danger btn-sm" id="delete1" onclick="alert(\'deleted\')" value="Delete">';
 		})
 		->rawColumns(['ot_log' => 'ot', 'ot_plan' => 'log', 'edit' => 'edit'])
 		->make(true);
