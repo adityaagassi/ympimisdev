@@ -25,7 +25,7 @@
       <form method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-          <input autocomplete="off" type="text" class="form-control" placeholder="Username" id="username" name="username" value="{{ old('username') }}" required autofocus>
+          <input autocomplete="off" type="text" class="form-control" placeholder="Username (NIK)" id="username" name="username" value="{{ old('username') }}" required autofocus>
           <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
