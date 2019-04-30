@@ -190,7 +190,6 @@ class OvertimeController extends Controller
 	}
 
 	public function deleteOvertimeConfirmation(Request $request){
-		return false;
 		$over_time_member = DB::connection('mysql3')->table('over_time_member')
 		->where('over_time_member.id_ot', '=', $request->get('id_ot'))
 		->count();
