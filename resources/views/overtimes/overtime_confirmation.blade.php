@@ -105,7 +105,6 @@
                                    </tr>
                               </tfoot>
                          </table>
-                         <br>
                          <button class="btn btn-success btn-lg btn-block" onclick="confirm_all()" style="font-size: 25px"><i class="fa fa-check"></i> Confirm</button>
                     </div>
                </div>
