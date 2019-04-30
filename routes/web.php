@@ -71,6 +71,7 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::get('fetch/overtime_confirmation', 'OvertimeController@fetchOvertimeConfirmation');
 	Route::post('confirm/overtime_confirmation', 'OvertimeController@confirmOvertimeConfirmation');
 	Route::post('edit/overtime_confirmation', 'OvertimeController@editOvertimeConfirmation');
+	Route::post('delete/overtime_confirmation', 'OvertimeController@deleteOvertimeConfirmation');
 });
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
@@ -132,7 +133,6 @@ Route::group(['nav' => 'A6', 'middleware' => 'permission'], function(){
 	Route::post('edit/user/{id}', 'UserController@update');
 	Route::get('show/user/{id}', 'UserController@show');
 });
-
 
 Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 	Route::get('index/daily_report', 'DailyReportController@index');

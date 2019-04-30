@@ -38,6 +38,7 @@
           color: #FFFFFF !important;
           font-weight: bold !important;
      }
+     #loading{ display: none; }
 </style>
 @endsection
 @section('header')
@@ -58,6 +59,12 @@
           <div class="col-xs-12">
                <div class="box">
                     <div class="box-body">
+
+                         <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+                              <p style="position: absolute; color: White; top: 45%; left: 35%;">
+                                   <span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
+                              </p>
+                         </div>
                          <table id="overtimeConfirmationTable" class="table table-bordered table-striped table-hover">
                               <thead style="background-color: rgba(126,86,134,.7);">
                                    <tr>
@@ -339,46 +346,49 @@ function delete_ot(){
      }
 }
 
-function confirmation(id, jam, nama) {
-     var str = id.split("+");
-     if (str[0] = 'ot_log')
-          var txt = "Are you sure to confirm "+nama+" , with Actual Check Log "+jam+" hour(s) ?";
-     else
-          var txt = "Are you sure to confirm "+nama+" , with Plan OT "+jam+" hour(s) ?";
+// function confirmation(id, jam, nama) {
+//      $("#pError").html('<span style="font-size: 40px"><i class="fa fa-unlink"></i> '+ result.message +'</span>');
+//      $("#error").show();
+//      var str = id.split("+");
+//      if (str[0] = 'ot_log')
+//           var txt = "Are you sure to confirm "+nama+" , with Actual Check Log "+jam+" hour(s) ?";
+//      else
+//           var txt = "Are you sure to confirm "+nama+" , with Plan OT "+jam+" hour(s) ?";
 
-     if(confirm(txt)){
+//      if(confirm(txt)){
 
-          var data = {
-               tanggal : str[2],
-               nik : str[1],
-               id_ot : str[3],
-               jam : jam,
-               hari : str[4]
-          }
-          $.post('{{ url("confirm/overtime_confirmation") }}', data, function(result, status, xhr){
-               console.log(status);
-               console.log(result);
-               console.log(xhr);
-               if(xhr.status == 200){
-                    if(result.status){
-                         openSuccessGritter('Success', result.message);
-                         $('#overtimeConfirmationTable').DataTable().ajax.reload();
-                    }
-                    else{
-                         audio_error.play();
-                         openErrorGritter('Error', result.message);
-                    }
-               }
-               else{
-                    audio_error.play();
-                    alert('Disconnected from server');
-               }
-          });
-     }
-}
+//           var data = {
+//                tanggal : str[2],
+//                nik : str[1],
+//                id_ot : str[3],
+//                jam : jam,
+//                hari : str[4]
+//           }
+//           $.post('{{ url("confirm/overtime_confirmation") }}', data, function(result, status, xhr){
+//                console.log(status);
+//                console.log(result);
+//                console.log(xhr);
+//                if(xhr.status == 200){
+//                     if(result.status){
+//                          openSuccessGritter('Success', result.message);
+//                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
+//                     }
+//                     else{
+//                          audio_error.play();
+//                          openErrorGritter('Error', result.message);
+//                     }
+//                }
+//                else{
+//                     audio_error.play();
+//                     alert('Disconnected from server');
+//                }
+//           });
+//      }
+// }
 
 function confirm_all() {
      if(confirm("Are you sure you want to confirm data?")){
+          $("#loading").show();
           var datas = [];
 
           $("input[type=radio]:checked").each(function() {
@@ -407,15 +417,18 @@ function confirm_all() {
                console.log(xhr);
                if(xhr.status == 200){
                     if(result.status){
+                         $("#loading").hide();
                          openSuccessGritter('Success', result.message);
                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
                     }
                     else{
+                         $("#loading").hide();
                          audio_error.play();
                          openErrorGritter('Error', result.message);
                     }
                }
                else{
+                    $("#loading").hide();
                     audio_error.play();
                     alert('Disconnected from server');
                }
