@@ -138,38 +138,6 @@ class OvertimeController extends Controller
 			'message' => "Overtime Confirmed",
 		);
 		return Response::json($response);
-
-		// $tgl = $request->get('tanggal');
-		// $nik = $request->get('nik');
-		// $id_ot = $request->get('id_ot');
-		// $jam = $request->get('jam');
-		// $hari = $request->get('hari');
-
-		// try{
-		// 	$over_time_member = DB::connection('mysql3')->table('over_time_member')
-		// 	->where('over_time_member.id_ot', '=', $id_ot)
-		// 	->where('over_time_member.nik', '=', $nik)
-		// 	->update([
-		// 		'over_time_member.status' => 1,
-		// 		'over_time_member.final' => $jam
-		// 	]);
-
-		// 	$tes = DB::connection('mysql3')->select('CALL masukDataOverSPLAktual("'.$nik.'","'.$tgl.'", "'.$hari.'", "'.$jam.'")');
-
-		// 	$response = array(
-		// 		'status' => true,
-		// 		'message' => 'Overtime Confirmed',
-		// 		'data' => $tes
-		// 	);
-		// 	return Response::json($response);
-		// }
-		// catch(\Exception $e){
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'message' => $e->getMessage(),
-		// 	);
-		// 	return Response::json($response);
-		// }
 	}
 
 	public function editOvertimeConfirmation(Request $request)
@@ -216,6 +184,32 @@ class OvertimeController extends Controller
 		$response = array(
 			'status' => true,
 			'message' => "Overtime Changed",
+		);
+		return Response::json($response);
+	}
+
+	public function deleteOvertimeConfirmation(Request $request){
+		$over_time_member = DB::connection('mysql3')->table('over_time_member')
+		->where('over_time_member.id_ot', '=', $request->get('id_ot'))
+		->count();
+
+		if($over_time_member == 1){
+			$over_time = DB::connection('mysql3')->table('over_time')
+			->where('over_time.id', '=', $request->get('id_ot'))
+			->update([
+				'deleted_at' => date('Y-m-d'),
+				'nik_delete' => Auth::user()->username
+			]);			
+		}
+
+		$over_time_member = DB::connection('mysql3')->table('over_time_member')
+		->where('over_time_member.id_ot', '=', $request->get('id_ot'))
+		->where('over_time_member.nik', '=', $request->get('nik'))
+		->delete();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Overtime deleted',
 		);
 		return Response::json($response);
 	}
