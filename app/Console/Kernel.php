@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\UploadCompletions::class,
         Commands\UploadTransfers::class,
         Commands\PlanStamps::class,
+        Commands\Leaves::class,
     ];
 
     /**
@@ -42,6 +43,8 @@ class Kernel extends ConsoleKernel
                 $schedule->command('plan:stamps')->dailyAt(date('H:i', strtotime($batch_plan_stamp->batch_time)));
             }
         }
+
+        $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
     }
 
     /**
