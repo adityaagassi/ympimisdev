@@ -106,7 +106,7 @@ class OvertimeController extends Controller
 		}
 
 		foreach ($datas as $data) {
-			$tgl = $data[1];
+			$tgl = date('Y-m-d', strtotime($data[1]));
 			$nik = $data[0];
 			$id_ot = $data[2];
 			$jam = $data[3];
@@ -144,7 +144,7 @@ class OvertimeController extends Controller
 	{
 		$jam = $request->get('jam');
 		$nik = $request->get('nik');
-		$tgl = $request->get('tgl');
+		$tgl = date('Y-m-d', strtotime($request->get('tgl')));
 		$status = $request->get('hari');
 
 		try{
