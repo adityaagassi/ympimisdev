@@ -160,6 +160,7 @@ class OvertimeController extends Controller
 				->insert([
 					'nik' => $nik,
 					'tgl' => $tgl,
+					'jam' => $jam,
 					'status' => $status,
 					'status_final' => 0,
 				]);
