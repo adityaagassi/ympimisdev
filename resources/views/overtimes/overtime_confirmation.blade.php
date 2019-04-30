@@ -109,7 +109,7 @@
           <div class="modal-dialog">
                <div class="modal-content">
                     <div class="modal-header">
-                         <h4 class="modal-title"><b>Edit Overtime Hour(s)</b></h4>
+                         <h4 class="modal-title"><b>Edit Overtime Hour(s)</b><input type="text" id="id_ot" class="pull-right" style="text-align: center; width: 100px;" disabled></h4>
                     </div>
                     <div class="modal-body">
                          <div class="row">
@@ -117,7 +117,6 @@
                                    <div class="row">
                                         <div class="col-md-4" style="padding-right: 0;">
                                              <label>Tanggal</label><input type="text" id="tgl" class="form-control" disabled>
-                                             <input type="hidden" id="id_ot">
                                              <input type="hidden" id="tgl2">
                                              <input type="hidden" id="hari">
                                         </div>
@@ -321,13 +320,16 @@ function delete_ot(){
                console.log(xhr);
                if(xhr.status == 200){
                     if(result.status){
-
+                         openSuccessGritter('Success', result.message);
+                         $('#overtimeConfirmationTable').DataTable().ajax.reload();                         
                     }
                     else{
+                         audio_error.play();
                          openErrorGritter('Error!', result.message);
                     }
                }
                else{
+                    audio_error.play();
                     alert("Disconnected from server");
                }
           });
@@ -363,10 +365,12 @@ function confirmation(id, jam, nama) {
                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
                     }
                     else{
+                         audio_error.play();
                          openErrorGritter('Error', result.message);
                     }
                }
                else{
+                    audio_error.play();
                     alert('Disconnected from server');
                }
           });
@@ -407,10 +411,12 @@ function confirm_all() {
                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
                     }
                     else{
+                         audio_error.play();
                          openErrorGritter('Error', result.message);
                     }
                }
                else{
+                    audio_error.play();
                     alert('Disconnected from server');
                }
 
@@ -449,10 +455,12 @@ function edit_ot() {
                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
                     }
                     else{
+                         audio_error.play();
                          openErrorGritter('Error', result.message);
                     }
                }
                else{
+                    audio_error.play();
                     alert('Disconnected from server');
                }
 
