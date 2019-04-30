@@ -167,7 +167,7 @@
                     </div>
                     <div class="modal-footer">
                          <button type="button" class="btn btn-primary pull-right" onclick="edit_ot()">Confirm</button>
-                         {{-- <button type="button" class="btn btn-danger pull-right" onclick="delete_ot()" style="margin-right: 5px;">Delete</button> --}}
+                         <button type="button" class="btn btn-danger pull-right" onclick="delete_ot()" style="margin-right: 5px;">Delete</button>
                          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                     </div>
                </div>
@@ -328,7 +328,8 @@ function delete_ot(){
                if(xhr.status == 200){
                     if(result.status){
                          openSuccessGritter('Success', result.message);
-                         $('#overtimeConfirmationTable').DataTable().ajax.reload();                         
+                         $('#overtimeConfirmationTable').DataTable().ajax.reload();
+                         $("#editModal").modal("hide");
                     }
                     else{
                          audio_error.play();
@@ -499,6 +500,9 @@ function editModal(id, masuk, keluar, nama, diff, tanggal, tgl2, id_ot) {
      var jam_act = str[4];
      var hari = str[5];
 
+     var second = jam_act * 60 * 60;
+     var jam = secondsTimeSpanToHMS(second);
+
      $("#editModal").modal("show");
      $("#tgl").val(tanggal);
      $("#tgl2").val(tgl2);
@@ -511,6 +515,16 @@ function editModal(id, masuk, keluar, nama, diff, tanggal, tgl2, id_ot) {
      $("#ot-spl").val(jam_plan);
      $("#diff").val(diff);
      $("#id_ot").val(id_ot);
+     $("#ot-final").val(jam);
+}
+
+
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600); //Get whole hours
+    s -= h*3600;
+    var m = Math.floor(s/60); //Get remaining minutes
+    s -= m*60;
+    return h+":"+(m < 10 ? '0'+m : m); //zero padding on minutes and seconds
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -542,7 +556,8 @@ $('.timepicker').timepicker({
      showInputs: false,
      showMeridian: false,
      minuteStep: 30,
-     defaultTime: '00:00'
+     defaultTime: '00:00',
+     timeFormat: 'h:mm'
 })
 
 </script>
