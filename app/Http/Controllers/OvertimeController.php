@@ -23,6 +23,8 @@ class OvertimeController extends Controller
 	public function fetchOvertimeConfirmation(){
 
 		$username = Auth::user()->username;
+		$role = Auth::user()->role_code;
+
 		$date = date('Y-m');
 		// $username = "D00040458";
 
@@ -31,6 +33,12 @@ class OvertimeController extends Controller
 		->where('karyawan.nik', '=', $username)
 		->select('id_dep')
 		->first();
+
+		if ($role == 'HR-SPL'){
+			$where = '';
+		} else {
+			$where = "and posisi.id_dep = '" . $dep->id_dep . "'";
+		}
 
 		$queryConfirmation = "select b.id, date_format(a.tanggal,'%d-%b-%y') as tanggal, a.nik, a.nama_karyawan as name, a.masuk, a.keluar, b.plan_ot, a.jam as act_log, a.jam-b.plan_ot as diff, a.section, b.hari from
 		( SELECT
@@ -48,7 +56,7 @@ class OvertimeController extends Controller
 		left join section on section.id = posisi.id_sec
 		left join presensi on presensi.nik = over.nik and presensi.tanggal = over.tanggal
 		WHERE
-		status_final = 0 and posisi.id_dep = '" . $dep->id_dep . "'
+		status_final = 0 ". $where ."
 		) AS a
 		LEFT JOIN (
 		SELECT
