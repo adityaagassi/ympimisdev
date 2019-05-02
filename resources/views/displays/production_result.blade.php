@@ -1,32 +1,32 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-	margin:0; 
-	padding:0;
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+		margin:0; 
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
 </style>
 @endsection
 @section('header')
@@ -45,14 +45,14 @@ table.table-bordered > tfoot > tr > th{
 			<div id="container" style="width:100%; height:550px;"></div>
 		</div>
 		<div class="col-xs-4">
-			<select class="form-control select2" name="hpl" id='hpl' data-placeholder="HPL" style="width: 74%;">
+			<select class="form-control select2" name="hpl" id='hpl' data-placeholder="HPL" style="width: 100%;">
 				<option value="all">All</option>
 				@foreach($origin_groups as $origin_group)
 				<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_name }}</option>
 				@endforeach
 			</select>
-			<button id="search" onClick="fillChart()" class="btn btn-primary" style="width: 24%;"><span class="fa fa-search"></span></button>
-			<br><br>
+			{{-- <button id="search" onClick="fillChart()" class="btn btn-primary" style="width: 24%;"><span class="fa fa-search"></span></button>
+			<br> --}}<br>
 		</div>
 		<div class="col-xs-4">
 			{{-- <div class="box box-widget"> --}}
@@ -136,14 +136,14 @@ table.table-bordered > tfoot > tr > th{
 			if(xhr.status == 200){
 				if(result.status){
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
-					var data = result.chartData;
+					var data = result.tableData;
 					var xAxis = []
 					, planCount = []
 					, actualCount = []
 
 					for (i = 0; i < data.length; i++) {
 						xAxis.push(data[i].model);
-						planCount.push(data[i].plan);
+						planCount.push(data[i].plan+Math.abs(data[i].debt));
 						actualCount.push(data[i].actual);
 					}
 
@@ -244,8 +244,8 @@ table.table-bordered > tfoot > tr > th{
 					});
 					var totalPlan = 0;
 					var totalActual = 0;
-					$.each(result.chartData, function(key, value) {
-						totalPlan += value.plan;
+					$.each(result.tableData, function(key, value) {
+						totalPlan += value.plan+Math.abs(value.debt);
 						totalActual += value.actual;
 					});
 
