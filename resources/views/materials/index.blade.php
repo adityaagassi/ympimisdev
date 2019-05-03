@@ -1,38 +1,38 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -53,14 +53,13 @@ table.table-bordered > tfoot > tr > th{
 
 
 @section('content')
-
 <section class="content">
   @if (session('status'))
   <div class="alert alert-success alert-dismissible">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
     {{ session('status') }}
-  </div>   
+  </div>
   @endif
   @if (session('error'))
   <div class="alert alert-danger alert-dismissible">
@@ -80,7 +79,8 @@ table.table-bordered > tfoot > tr > th{
                 <th>Description</th>
                 <th>BUn</th>
                 <th>SLoc</th>
-                <th>WC</th>
+                <th>MRPC</th>
+                <th>ValCl</th>
                 <th>Origin Group</th>
                 <th>HPL</th>
                 <th>Cat.</th>
@@ -95,7 +95,8 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$material->material_description}}</td>
                 <td style="width: 5%;">{{$material->base_unit}}</td>
                 <td style="width: 5%;">{{$material->issue_storage_location}}</td>
-                <td style="width: 5%;">{{$material->work_center}}</td>
+                <td style="width: 5%;">{{$material->mrpc}}</td>
+                <td style="width: 5%;">{{$material->valcl}}</td>
                 <td style="width: 10%;">
                   @if(isset($material->origingroup->origin_group_name))
                   {{$material->origin_group_code}}-{{$material->origingroup->origin_group_name}}
@@ -106,7 +107,7 @@ table.table-bordered > tfoot > tr > th{
                 <td style="width: 5%;">{{$material->hpl}}</td>
                 <td style="width: 5%;">{{$material->category}}</td>
                 <td style="width: 5%;">{{$material->model}}</td>
-                <td>
+                <td style="width: 15%;">
                   <center>
                     <a class="btn btn-info btn-xs" href="{{url('show/material', $material['id'])}}">View</a>
                     <a href="{{url('edit/material', $material['id'])}}" class="btn btn-warning btn-xs">Edit</a>
@@ -120,6 +121,7 @@ table.table-bordered > tfoot > tr > th{
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

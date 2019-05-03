@@ -65,9 +65,20 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Work Center<span class="text-red">*</span></label>
+          <label class="col-sm-4">MRPC<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="work_center" placeholder="Enter Work Center" required>
+            <input type="text" class="form-control" name="mrpc" placeholder="MRPC" required>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Valuation Class<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="valcl" style="width: 100%;" data-placeholder="Choose a Valuation Class..." required>
+              <option value=""></option>
+              @foreach($valcls as $valcl)
+              <option value="{{ $valcl }}">{{ $valcl }}</option>
+              @endforeach
+            </select>
           </div>
         </div>
         <div class="form-group row" align="right">

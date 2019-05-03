@@ -63,9 +63,23 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Work Center<span class="text-red">*</span></label>
+          <label class="col-sm-4">MRPC<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="work_center" placeholder="Enter Work Center" value="{{$material->work_center}}">
+            <input type="text" class="form-control" name="mrpc" placeholder="Enter MRPC" value="{{$material->mrpc}}">
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Valuation Class<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="valcl" style="width: 100%;" data-placeholder="Choose a Valuation Class..." required>
+              @foreach($valcls as $valcl)
+              @if($material->valcl == $valcl)
+              <option value="{{ $valcl }}" selected>{{ $valcl }}</option>
+              @else
+              <option value="{{ $valcl }}">{{ $valcl }}</option>
+              @endif
+              @endforeach
+            </select>
           </div>
         </div>
         <div class="form-group row" align="right">

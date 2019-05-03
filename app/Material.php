@@ -10,7 +10,7 @@ class Material extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'material_number', 'material_description', 'base_unit', 'issue_storage_location', 'work_center', 'origin_group_code', 'hpl', 'category', 'model', 'created_by'
+		'material_number', 'material_description', 'base_unit', 'issue_storage_location', 'mrpc', 'valcl', 'origin_group_code', 'hpl', 'category', 'model', 'created_by'
 	];
 
 	public function user()

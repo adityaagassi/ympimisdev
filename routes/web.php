@@ -74,6 +74,10 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::post('delete/overtime_confirmation', 'OvertimeController@deleteOvertimeConfirmation');
 });
 
+Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
+	Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
+});
+
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
 	Route::get('fetch/fg_production', 'FinishedGoodsController@fetch_fg_production');
@@ -250,7 +254,7 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::post('create/production_schedule', 'ProductionScheduleController@store');
 	Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
 	Route::get('delete/production_schedule', 'ProductionScheduleController@delete');
-	// Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
+	Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
 	Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
 	Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
