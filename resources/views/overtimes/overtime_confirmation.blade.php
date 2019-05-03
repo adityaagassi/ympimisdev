@@ -292,9 +292,17 @@
                { "data": "log", "width": "1%" },
                { "data": "diff" },
                { "data": "act_log" },
-               { "data": "edit" }
-               ]
-          });
+               { "data": "edit" }],
+               "rowCallback": function( row, data, index ) {
+                    var allData = this.api().column(2).data().toArray();
+                    var allData1 = this.api().column(1).data().toArray();
+                    if ((allData.indexOf(data['nik']) != allData.lastIndexOf(data['nik']))  && 
+                      (allData1.indexOf(data['tanggal']) != allData1.lastIndexOf(data['tanggal']))) {
+                         $('td:eq(2)', row).css('background-color', 'Red');
+                         $('td:eq(1)', row).css('background-color', 'Red');
+             }
+        }
+   });
 
           $('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
 
