@@ -296,30 +296,32 @@
                "rowCallback": function( row, data, index ) {
                     var allData = this.api().column(2).data().toArray();
                     var allData1 = this.api().column(1).data().toArray();
-                    if ((allData.indexOf(data['nik']) != allData.lastIndexOf(data['nik']))  && 
-                      (allData1.indexOf(data['tanggal']) != allData1.lastIndexOf(data['tanggal']))) {
+                    var cek = allData.indexOf(data['nik'])+allData.indexOf(data['tanggal']);
+                    var cek1 = allData1.indexOf(data['nik'])+allData1.indexOf(data['tanggal']);
+
+                    if (cek != cek1) {
                          $('td:eq(2)', row).css('background-color', 'RGBA(255,0,0,0.4)');
                          $('td:eq(1)', row).css('background-color', 'RGBA(255,0,0,0.4)');
-             }
-        }
-   });
-
-          $('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
-
-          table.columns().every( function () {
-               var that = this;
-
-               $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                         that
-                         .search( this.value )
-                         .draw();
                     }
-               } );
-          } );
+               }
+          });
 
-          $('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
-     });
+$('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
+
+table.columns().every( function () {
+     var that = this;
+
+     $( 'input', this.footer() ).on( 'keyup change', function () {
+          if ( that.search() !== this.value ) {
+               that
+               .search( this.value )
+               .draw();
+          }
+     } );
+} );
+
+$('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
+});
 
 function delete_ot(){
      var id_ot = $("#id_ot").val();
@@ -528,11 +530,11 @@ function editModal(id, masuk, keluar, nama, diff, tanggal, tgl2, id_ot) {
 
 
 function secondsTimeSpanToHMS(s) {
-    var h = Math.floor(s/3600); //Get whole hours
-    s -= h*3600;
-    var m = Math.floor(s/60); //Get remaining minutes
-    s -= m*60;
-    return h+":"+(m < 10 ? '0'+m : m); //zero padding on minutes and seconds
+var h = Math.floor(s/3600); //Get whole hours
+s -= h*3600;
+var m = Math.floor(s/60); //Get remaining minutes
+s -= m*60;
+return h+":"+(m < 10 ? '0'+m : m); //zero padding on minutes and seconds
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
