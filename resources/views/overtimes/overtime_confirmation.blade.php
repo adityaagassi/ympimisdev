@@ -298,8 +298,8 @@
                     var allData1 = this.api().column(1).data().toArray();
                     if ((allData.indexOf(data['nik']) != allData.lastIndexOf(data['nik']))  && 
                       (allData1.indexOf(data['tanggal']) != allData1.lastIndexOf(data['tanggal']))) {
-                         $('td:eq(2)', row).css('background-color', 'Red');
-                         $('td:eq(1)', row).css('background-color', 'Red');
+                         $('td:eq(2)', row).css('background-color', 'RGBA(255,0,0,0.4)');
+                         $('td:eq(1)', row).css('background-color', 'RGBA(255,0,0,0.4)');
              }
         }
    });
