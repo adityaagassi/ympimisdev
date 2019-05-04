@@ -410,8 +410,11 @@ class MaedaoshiController extends Controller
 					elseif(Auth::user()->role_code == "OP-Assy-SX"){
 						$printer_name = 'FLO Printer 103';
 					}
-					elseif(Auth::user()->role_code == "OP-Assy-PN"){
+					elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn"){
 						$printer_name = 'FLO Printer 104';
+					}
+					elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn-2"){
+						$printer_name = 'FLO Printer 105';
 					}
 					elseif(Auth::user()->role_code == "OP-Assy-RC"){
 						$printer_name = 'FLO Printer RC';
@@ -576,8 +579,11 @@ class MaedaoshiController extends Controller
 		elseif(Auth::user()->role_code == "OP-Assy-SX"){
 			$printer_name = 'FLO Printer 103';
 		}
-		elseif(Auth::user()->role_code == "OP-Assy-PN"){
+		elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn"){
 			$printer_name = 'FLO Printer 104';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn-2"){
+			$printer_name = 'FLO Printer 105';
 		}
 		elseif(Auth::user()->role_code == "OP-Assy-RC"){
 			$printer_name = 'FLO Printer RC';
@@ -842,8 +848,11 @@ class MaedaoshiController extends Controller
 		elseif(Auth::user()->role_code == "OP-Assy-SX"){
 			$printer_name = 'FLO Printer 103';
 		}
-		elseif(Auth::user()->role_code == "OP-Assy-PN"){
+		elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn"){
 			$printer_name = 'FLO Printer 104';
+		}
+		elseif(Auth::user()->role_code == "OP-Assy-PN" && Auth::user()->username == "assy-pn-2"){
+			$printer_name = 'FLO Printer 105';
 		}
 		elseif(Auth::user()->role_code == "OP-Assy-RC"){
 			$printer_name = 'FLO Printer RC';
