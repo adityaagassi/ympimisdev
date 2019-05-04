@@ -171,9 +171,7 @@
                          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                     </div>
                </div>
-               <!-- /.modal-content -->
           </div>
-          <!-- /.modal-dialog -->
      </div>
 
 </section>
@@ -243,85 +241,73 @@
                               columns: ':not(.notexport)'
                          }
                     }
-                    ]
-               },
-               "columnDefs": [ {
-                    "targets": [7, 8],
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                         $(td).css('background-color', 'RGB(204,255,255,0.50)')
+                    ]},
+                    "columnDefs": [ {
+                         "targets": [7, 8],
+                         "createdCell": function (td, cellData, rowData, row, col) {
+                              $(td).css('background-color', 'RGB(204,255,255,0.50)')
+                         }
+                    },
+                    {
+                         "targets": [9, 10],
+                         "createdCell": function (td, cellData, rowData, row, col) {
+                              $(td).css('background-color', 'RGB(255,255,204,0.50)')
+                         }
+                    },
+                    {
+                         "targets": [12],
+                         "createdCell": function (td, cellData, rowData, row, col) {
+                              $(td).css('background-color', 'RGB(255,204,255,0.50)')
+                         }
+                    }],
+                    'paging': true,
+                    'lengthChange': true,
+                    'searching': true,
+                    'ordering': false,
+                    'order': [],
+                    'info': true,
+                    'autoWidth': true,
+                    "sPaginationType": "full_numbers",
+                    "bJQueryUI": true,
+                    "bAutoWidth": false,
+                    "processing": true,
+                    "ajax": {
+                         "type" : "get",
+                         "url" : "{{ url("fetch/overtime_confirmation") }}"
+                    },
+                    "columns": [
+                    { "data": "id"},
+                    { "data": "tanggal", "width": "7%" },
+                    { "data": "nik" },
+                    { "data": "name", "width": "35%"},
+                    { "data": "section" },
+                    { "data": "masuk" },
+                    { "data": "keluar" },
+                    { "data": "plan_ot" },
+                    { "data": "ot", "width": "1%" },
+                    { "data": "act_log" },
+                    { "data": "log", "width": "1%" },
+                    { "data": "diff" },
+                    { "data": "act_log" },
+                    { "data": "edit" }]
+               });
+
+          $('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
+
+          table.columns().every( function () {
+               var that = this;
+
+               $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                         that
+                         .search( this.value )
+                         .draw();
                     }
-               },
-               {
-                    "targets": [9, 10],
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                         $(td).css('background-color', 'RGB(255,255,204,0.50)')
-                    }
-               },
-               {
-                    "targets": [12],
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                         $(td).css('background-color', 'RGB(255,204,255,0.50)')
-                    }
-               }],
-               'paging': true,
-               'lengthChange': true,
-               'searching': true,
-               'ordering': false,
-               'order': [],
-               'info': true,
-               'autoWidth': true,
-               "sPaginationType": "full_numbers",
-               "bJQueryUI": true,
-               "bAutoWidth": false,
-               "processing": true,
-               "ajax": {
-                    "type" : "get",
-                    "url" : "{{ url("fetch/overtime_confirmation") }}"
-               },
-               "columns": [
-               { "data": "id"},
-               { "data": "tanggal", "width": "7%" },
-               { "data": "nik" },
-               { "data": "name", "width": "35%"},
-               { "data": "section" },
-               { "data": "masuk" },
-               { "data": "keluar" },
-               { "data": "plan_ot" },
-               { "data": "ot", "width": "1%" },
-               { "data": "act_log" },
-               { "data": "log", "width": "1%" },
-               { "data": "diff" },
-               { "data": "act_log" },
-               { "data": "edit" }],
-               "rowCallback": function( row, data, index ) {
-                    var allData = this.api().column(2).data().toArray();
-                    var allData1 = this.api().column(1).data().toArray();
-                    var cek = allData.indexOf(data['nik'])+allData.indexOf(data['tanggal']);
-                    var cek1 = allData1.indexOf(data['nik'])+allData1.indexOf(data['tanggal']);
+               } );
+          } );
 
-                    if (cek != cek1) {
-                         $('td:eq(2)', row).css('background-color', 'RGBA(255,0,0,0.4)');
-                         $('td:eq(1)', row).css('background-color', 'RGBA(255,0,0,0.4)');
-                    }
-               }
-          });
-
-$('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
-
-table.columns().every( function () {
-     var that = this;
-
-     $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-               that
-               .search( this.value )
-               .draw();
-          }
-     } );
-} );
-
-$('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
-});
+          $('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
+     });
 
 function delete_ot(){
      var id_ot = $("#id_ot").val();
@@ -356,46 +342,6 @@ function delete_ot(){
           return false;
      }
 }
-
-// function confirmation(id, jam, nama) {
-//      $("#pError").html('<span style="font-size: 40px"><i class="fa fa-unlink"></i> '+ result.message +'</span>');
-//      $("#error").show();
-//      var str = id.split("+");
-//      if (str[0] = 'ot_log')
-//           var txt = "Are you sure to confirm "+nama+" , with Actual Check Log "+jam+" hour(s) ?";
-//      else
-//           var txt = "Are you sure to confirm "+nama+" , with Plan OT "+jam+" hour(s) ?";
-
-//      if(confirm(txt)){
-
-//           var data = {
-//                tanggal : str[2],
-//                nik : str[1],
-//                id_ot : str[3],
-//                jam : jam,
-//                hari : str[4]
-//           }
-//           $.post('{{ url("confirm/overtime_confirmation") }}', data, function(result, status, xhr){
-//                console.log(status);
-//                console.log(result);
-//                console.log(xhr);
-//                if(xhr.status == 200){
-//                     if(result.status){
-//                          openSuccessGritter('Success', result.message);
-//                          $('#overtimeConfirmationTable').DataTable().ajax.reload();
-//                     }
-//                     else{
-//                          audio_error.play();
-//                          openErrorGritter('Error', result.message);
-//                     }
-//                }
-//                else{
-//                     audio_error.play();
-//                     alert('Disconnected from server');
-//                }
-//           });
-//      }
-// }
 
 function confirm_all() {
      if(confirm("Are you sure you want to confirm data?")){
@@ -530,11 +476,11 @@ function editModal(id, masuk, keluar, nama, diff, tanggal, tgl2, id_ot) {
 
 
 function secondsTimeSpanToHMS(s) {
-var h = Math.floor(s/3600); //Get whole hours
-s -= h*3600;
-var m = Math.floor(s/60); //Get remaining minutes
-s -= m*60;
-return h+":"+(m < 10 ? '0'+m : m); //zero padding on minutes and seconds
+     var h = Math.floor(s/3600);
+     s -= h*3600;
+     var m = Math.floor(s/60);
+     s -= m*60;
+     return h+":"+(m < 10 ? '0'+m : m);
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -545,9 +491,9 @@ function openErrorGritter(title, message) {
           text: message,
           class_name: 'growl-danger',
           image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '2000'
-     });
+     sticky: false,
+     time: '2000'
+});
 }
 
 function openSuccessGritter(title, message){
@@ -556,9 +502,9 @@ function openSuccessGritter(title, message){
           text: message,
           class_name: 'growl-success',
           image: '{{ url("images/image-screen.png") }}',
-          sticky: false,
-          time: '2000'
-     });
+     sticky: false,
+     time: '2000'
+});
 }
 
 $('.timepicker').timepicker({
