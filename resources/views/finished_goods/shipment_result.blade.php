@@ -160,23 +160,26 @@
 		$('#dateto').val("");
 
 		fillChart();
+		setInterval(function(){
+			fillChart();
+		}, 10000);
 	});
 
-	var interval;
-	var statusx = "idle";
+	// var interval;
+	// var statusx = "idle";
 
-	$(document).on('mousemove keyup keypress',function(){
-		clearTimeout(interval);
-		settimeout();
-		statusx = "active";
-	})
+	// $(document).on('mousemove keyup keypress',function(){
+	// 	clearTimeout(interval);
+	// 	settimeout();
+	// 	statusx = "active";
+	// })
 
-	function settimeout(){
-		interval=setTimeout(function(){
-			statusx = "idle";
-			fillChart()
-		},60000)
-	}
+	// function settimeout(){
+	// 	interval=setTimeout(function(){
+	// 		statusx = "idle";
+	// 		fillChart()
+	// 	},60000)
+	// }
 
 	function addZero(i) {
 		if (i < 10) {
@@ -367,9 +370,9 @@
 						series: seriesData
 					});
 
-					if(statusx == "idle"){
-						setTimeout(fillChart(), 1000);
-					}
+					// if(statusx == "idle"){
+					// 	setTimeout(fillChart(), 1000);
+					// }
 				}
 				else{
 					alert('Attempt to retrieve data failed');
