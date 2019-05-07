@@ -3,8 +3,10 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
-	input {
-		line-height: 24px;
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
 	}
 	thead>tr>th{
 		text-align:center;
@@ -56,7 +58,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Detail Filters<span class="text-purple"> フィルター詳細</span></span></h3>
+					<h3 class="box-title">Detail Filters<span class="text-purple"> フィルター詳細</span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">

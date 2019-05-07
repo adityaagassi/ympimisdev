@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AbsenceCategory extends Model
+class Country extends Model
 {
 	use SoftDeletes;
 
 	protected $fillable = [
-		'absence_code', 'absence_name', 'deduction', 'ration', 'remark', 'created_by'
+		'country_code', 'country_name', 'created_by'
 	];
 
 	public function user()

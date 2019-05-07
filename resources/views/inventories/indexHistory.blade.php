@@ -3,36 +3,36 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
-input {
-	line-height: 24px;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-	padding-top: 0;
-	padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	input {
+		line-height: 24px;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -40,7 +40,6 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		Upload History <span class="text-purple">????</span>
-		{{-- <small>Material stock details <span class="text-purple">????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

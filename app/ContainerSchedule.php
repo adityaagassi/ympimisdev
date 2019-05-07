@@ -33,5 +33,4 @@ class ContainerSchedule extends Model
 	{
 		return $this->belongsTo('App\ContainerAttachment', 'container_id', 'container_id')->withTrashed();
 	}
-    //
 }
