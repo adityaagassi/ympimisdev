@@ -17,7 +17,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	// return view('visitors.index');
+	return view('purchase_orders.purchase_order_pdf');
 });
 
 Route::get('/', function () {
@@ -74,7 +74,7 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::post('delete/overtime_confirmation', 'OvertimeController@deleteOvertimeConfirmation');
 });
 
-Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
 	Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 });
 
@@ -358,6 +358,20 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 });
+
+Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
+	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
+	Route::get('fetch/purchase_order/po_list', 'PurchaseOrderController@fetchPoList');
+	Route::post('import/purchase_order/po_list', 'PurchaseOrderController@importPoList');
+	Route::get('index/purchase_order/po_create', 'PurchaseOrderController@indexPoCreate');
+	Route::post('generate/purchase_order/po_create', 'PurchaseOrderController@generatePoCreate');
+});
+
+Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
+	Route::get('index/overtime/overtime_form', 'OvertimeController@indexOvertimeForm');
+	Route::get('create/overtime/overtime_form', 'OvertimeController@createOvertimeForm');
+});
+
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
