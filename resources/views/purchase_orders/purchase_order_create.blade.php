@@ -104,6 +104,7 @@
                <div class="box box-solid">
                     <div class="box-header">
                          <h3 class="box-title">By Imported File<span class="text-purple"> japanese</span></h3>
+                         Sample: <a href="{{ url('download/manual/import_po.txt') }}">import_po.txt</a> Code: #truncate
                     </div>
                     <div class="box-body">
                          <form id="form_generate_po" method="post" action="upload" enctype="multipart/form-data">

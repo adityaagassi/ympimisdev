@@ -234,6 +234,7 @@
                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Import Purchase Order List</h4>
+                    Sample: <a href="{{ url('download/manual/import_po_list.txt') }}">import_po_list.txt</a> Code: #updateOrCreate
                </div>
                <form id="formImportPoList" method="post" action="{{url('import/purchase_order/po_list')}}" enctype="multipart/form-data">
                     <input type="hidden" value="{{csrf_token()}}" name="_token"/>
