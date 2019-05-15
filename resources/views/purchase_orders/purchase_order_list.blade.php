@@ -311,7 +311,7 @@
      });
 
      jQuery(document).ready(function() {
-          $('body').toggleClass("sidebar-collapse");
+          // $('body').toggleClass("sidebar-collapse");
           $('.tags').tagsInput({ width: 'auto' });
           $('#docNoTags').hide();
           $('#docNoTags_tagsinput').hide();

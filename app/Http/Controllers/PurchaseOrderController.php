@@ -67,6 +67,16 @@ class PurchaseOrderController extends Controller
 
 	public function generatePoRevise(Request $request){
 		$orderNos = explode(",", $request->get('orderNo'));
+		foreach ($orderNos as $orderNo) {
+			$check = PurchaseOrder::where('order_no', '=', $orderNo)->first();
+			if($check == null){
+				$response = array(
+					'status' => false,
+					'message' => 'Order code not found.'
+				);
+				return Response::json($response);
+			}
+		}
 
 		if(strlen($request->get('delivDate')) > 0 && strlen($request->get('orderNo')) > 0 && strlen($request->get('shipmentCondition')) >0){
 
@@ -672,16 +682,16 @@ class PurchaseOrderController extends Controller
 									'purchdoc' => $row[11],
 									'item' => sprintf("%'.0" . 5 . "d", trim($row[12], ' ')),
 									'acctassigcat' => $row[13],
-									'order_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[14]))),
-									'deliv_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[15]))),
+									'order_date' => date('Y-m-d', strtotime($row[14])),
+									'deliv_date' => date('Y-m-d', strtotime($row[15])),
 									'order_qty' => str_replace('"','',str_replace(',','',$row[16])),
 									'deliv_qty' => str_replace('"','',str_replace(',','',$row[17])),
 									'base_unit_of_measure' => $row[18],
 									'price' => str_replace('"','',str_replace(',','',$row[19])),
 									'curr' => $row[20],
 									'order_no' => $row[21],
-									'reply_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[22]))),
-									'create_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[23]))),
+									'reply_date' => date('Y-m-d', strtotime($row[22])),
+									'create_date' => date('Y-m-d', strtotime($row[23])),
 									'delay' => $row[24],
 									'reply_qty' => str_replace('"','',str_replace(',','',$row[25])),
 									'comment' => $row[26],
