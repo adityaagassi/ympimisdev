@@ -201,6 +201,9 @@
 		$(function() {
 			$(document).keydown(function(e) {
 				switch(e.which) {
+					case 48:
+					location.reload(true);
+					break;
 					case 49:
 					$("#tab_header_1").click()
 					break;
