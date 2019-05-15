@@ -749,7 +749,7 @@ class PurchaseOrderController extends Controller
 			(select distinct purchdoc, order_no from purchase_orders) as a left join po_list_files on po_list_files.order_no = a.order_no group by a.purchdoc) as po_file'), 'po_file.purchdoc', '=', 'po_lists.purchdoc')
 		->select('po_lists.id', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.material', 'po_lists.description', 'po_lists.order_date', 'po_lists.deliv_date', 'po_lists.order_qty', 'po_lists.price', 'po_lists.curr', 'po_file.att');
 
-		if(strlen($request->get('pgr')) != null){
+		if($request->get('pgr') != null){
 			$po_lists = $po_lists->whereIn('po_lists.pgr', $request->get('pgr'));
 		}
 
