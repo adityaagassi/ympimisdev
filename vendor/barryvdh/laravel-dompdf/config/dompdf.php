@@ -227,6 +227,7 @@ return array(
          *
          * @var bool
          */
+        // "DOMPDF_ENABLE_PHP" => true,
         "enable_remote" => true,
 
         /**

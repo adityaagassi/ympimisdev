@@ -221,18 +221,21 @@
             </span>
           </a>
           <ul class="treeview-menu">
+            @if(isset($page) && $page == "Purchase Order Archive")<li class="active">@else<li>@endif
+              <a href="{{ url("/index/purchase_order/po_archive") }}"><i class="fa fa-list-alt"></i> Archives</a>
+            </li>
             @if(isset($page) && $page == "Purchase Order List")<li class="active">@else<li>@endif
               <a href="{{ url("/index/purchase_order/po_list") }}"><i class="fa fa-list-alt"></i> Purchase Order List</a>
             </li>
             @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
               <a href="#"><i class="fa fa-print"></i> Purchase Order Create
                 <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
               <ul class="treeview-menu">
                 <li><a href="{{ url("index/purchase_order/po_create") }}"><i class="fa fa-circle-o"></i> Create Purchase Order</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i> Reprint Purchase Order</a></li>
+                <li><a href="{{ url("index/purchase_order/po_revise") }}"><i class="fa fa-circle-o"></i> Revise Purchase Order</a></li>
               </ul>
             </li>
           </ul>

@@ -53,9 +53,15 @@
           </div>
         </div>
         <div class="form-group row" align="right">
-          <label class="col-sm-5">Work Center</label>
+          <label class="col-sm-5">MRPC</label>
           <div class="col-sm-5" align="left">
-            {{$material->work_center}}
+            {{$material->mrpc}}
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-5">Valuation Class</label>
+          <div class="col-sm-5" align="left">
+            {{$material->valcl}}
           </div>
         </div>
         <div class="form-group row" align="right">

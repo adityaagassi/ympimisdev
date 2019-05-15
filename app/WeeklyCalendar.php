@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WeeklyCalendar extends Model
 {
-    use SoftDeletes;
+	use SoftDeletes;
     //
 	protected $fillable = [
-		'fiscal_year', 'week_name', 'week_date', 'created_by'
+		'fiscal_year', 'week_name', 'week_date', 'date_code', 'created_by'
 	];
 
 	public function user()

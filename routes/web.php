@@ -20,6 +20,10 @@ Route::get('/tes', function () {
 	return view('purchase_orders.purchase_order_pdf');
 });
 
+Route::get('/tes2', function () {
+	return view('purchase_orders.tes');
+});
+
 Route::get('/', function () {
 	return view('auth.login');
 });
@@ -365,11 +369,20 @@ Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::post('import/purchase_order/po_list', 'PurchaseOrderController@importPoList');
 	Route::get('index/purchase_order/po_create', 'PurchaseOrderController@indexPoCreate');
 	Route::post('generate/purchase_order/po_create', 'PurchaseOrderController@generatePoCreate');
+	Route::post('generate/purchase_order/po_create2', 'PurchaseOrderController@generatePoCreate2');
+	Route::get('fetch/purchase_order/download_po', 'PurchaseOrderController@fetchDownloadPo');
+	Route::get('download/purchase_order/download_po', 'PurchaseOrderController@downloadPo');
+	Route::get('index/purchase_order/po_archive', 'PurchaseOrderController@indexPoArchive');
+	Route::get('index/purchase_order/po_revise', 'PurchaseOrderController@indexPoRevise');
+	Route::post('generate/purchase_order/po_revise', 'PurchaseOrderController@generatePoRevise');
+	Route::post('generate/purchase_order/po_revise2', 'PurchaseOrderController@generatePoRevise2');
 });
 
 Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::get('index/overtime/overtime_form', 'OvertimeController@indexOvertimeForm');
 	Route::get('create/overtime/overtime_form', 'OvertimeController@createOvertimeForm');
+	Route::get('select/overtime/division_hierarchy', 'OvertimeController@selectDivisionHierarchy');
+	Route::get('fetch/overtime/employee', 'OvertimeController@fetchEmployee');
 });
 
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');

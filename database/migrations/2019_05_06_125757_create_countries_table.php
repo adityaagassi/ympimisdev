@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWeeklyCalendarsTable extends Migration
+class CreateCountriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateWeeklyCalendarsTable extends Migration
      */
     public function up()
     {
-        Schema::create('weekly_calendars', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('fiscal_year');
-            $table->string('week_name');
-            $table->date('week_date');
-            $table->string('date_code');
+            $table->string('country_code')->unique();
+            $table->text('country_name');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
-            $table->unique(['fiscal_year', 'week_name', 'week_date'], 'weekly_calendar_unique');
         });
     }
 
@@ -33,6 +30,6 @@ class CreateWeeklyCalendarsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weekly_calendars');
+        Schema::dropIfExists('countries');
     }
 }
