@@ -43,18 +43,47 @@
 @section('content')
 <section class="content">
 	<div class="row">
-		<div class="col-xs-6">
-			<div id="container1" style="width: 100%; height: 350px; padding: 0;"></div>
-			<div id="container2" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
-			<div id="container3" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
-			<div id="container4" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
-		</div>
-		<div class="col-xs-6">
-			<div id="container5" style="width: 100%; height: 350px; padding: 0;"></div>
-			<div id="container6" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
-			<div id="container7" style="width: 100%; height: 350px; padding: 0; margin-top: 15px;"></div>
-		</div>
+		<div class="col-xs-12">
+			<div id="container1" style="width: 100%; height: 350px; padding: 0;"></div>			
 	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container2" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container3" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container4" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container5" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container6" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div><br>
+
+<div class="row">
+		<div class="col-xs-12">
+			<div id="container7" style="width: 100%; height: 350px; padding: 0;"></div>			
+	</div>
+</div>
+
 </section>
 
 <div class="modal fade" id="modalDetail">
