@@ -28,14 +28,14 @@ class PurchaseOrderController extends Controller
 
 	public function indexPoList(){
 		$pgrs = $this->pgr;
-		return view('purchase_orders.purchase_order_list', array(
+		return view('purchase_orders.list', array(
 			'pgrs' => $pgrs,
 		))->with('page', 'Purchase Order List')->with('head', 'Purchase Order');
 	}
 
 	public function indexPoArchive(){
 		$pgrs = $this->pgr;
-		return view('purchase_orders.purchase_order_archive', array(
+		return view('purchase_orders.archive', array(
 			'pgrs' => $pgrs,
 		))->with('page', 'Purchase Order Archive')->with('head', 'Purchase Order');
 	}
@@ -50,7 +50,7 @@ class PurchaseOrderController extends Controller
 		}
 		$pgrs = $this->pgr;
 		$shipment_conditions = db::table('shipment_conditions')->orderBy('shipment_condition_code', 'asc')->get();
-		return view('purchase_orders.purchase_order_create', array(
+		return view('purchase_orders.create', array(
 			'pgrs' => $pgrs,
 			'shipment_conditions' => $shipment_conditions,
 		))->with('page', 'Purchase Order Create')->with('head', 'Purchase Order');
@@ -332,6 +332,90 @@ class PurchaseOrderController extends Controller
 			]);
 		}
 	}
+
+	public function generatePoRevise3(Request $request){
+		$orderNos = explode(",", $request->get('orderNo'));
+		foreach ($orderNos as $orderNo) {
+			$check = PurchaseOrder::where('order_no', '=', $orderNo)->first();
+			if($check == null){
+				$response = array(
+					'status' => false,
+					'message' => 'Order code not found.'
+				);
+				return Response::json($response);
+			}
+		}
+
+		if(strlen($request->get('delivDate')) > 0 && strlen($request->get('orderNo')) > 0 && strlen($request->get('shipmentCondition')) >0){
+
+			$id = Auth::id();
+			$shipment_condition = db::table('shipment_conditions')->where('shipment_conditions.shipment_condition_code', '=', $request->get('shipmentCondition'))->first();
+			$purchase_orders = db::table('purchase_orders')->whereIn('purchase_orders.order_no', $orderNos)
+			->leftJoin('po_lists', function($join){
+				$join->on('po_lists.purchdoc', '=', 'purchase_orders.purchdoc');
+				$join->on('po_lists.item', '=', 'purchase_orders.item');
+			})
+			->update([
+				'purchase_orders.order_qty' => db::raw('po_lists.order_qty'),
+				'purchase_orders.price' => db::raw('po_lists.price'),
+				'purchase_orders.amount' => db::raw('po_lists.order_qty*po_lists.price'),
+				'purchase_orders.sc' => $shipment_condition->shipment_condition_code,
+				'purchase_orders.sc_name' => $shipment_condition->shipment_condition_name,
+				'purchase_orders.rev_no' => db::raw('purchase_orders.rev_no+1'),
+				'purchase_orders.rev_date' => date('Y-m-d'),
+				'purchase_orders.deliv_date' => date('Y-m-d', strtotime($request->get('delivDate'))),
+				'purchase_orders.updated_at' => date('Y-m-d H:i:s'),
+			]);
+
+			$paths = array();
+			foreach ($orderNos as $orderNo) {
+				$purchase_orders = PurchaseOrder::where('order_no', '=', $orderNo)
+				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', db::raw('sum(price) as price'), db::raw('sum(amount) as amount'))
+				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure')
+				->get();
+				$total_amount = PurchaseOrder::where('order_no', '=', $orderNo)->sum('amount');
+
+				$pdf = \App::make('dompdf.wrapper');
+				$pdf->getDomPDF()->set_option("enable_php", true);
+				$pdf->setPaper('A4', 'potrait');
+				$pdf->loadView('purchase_orders.purchase_order_pdf', array(
+					'purchase_orders' => $purchase_orders,
+				));
+				$pdf->save(public_path() . "/purchase_orders/" . $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf");
+
+
+				$path = "purchase_orders/" . $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf";
+				array_push($paths, 
+					[
+						"download" => asset($path),
+						"filename" => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf"
+					]);
+
+				if($pdf){
+					$po_file = new PolistFile([
+						'order_no' => $orderNo,
+						'file_name' => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . '.pdf',
+						'created_by' => $id
+					]);
+					$po_file->save();
+				}
+			}
+			$response = array(
+				'status' => true,
+				'message' => 'Purchase order(s) revised.',
+				'file_paths' => $paths,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'All parameters must be filled.',
+			);
+			return Response::json($response);
+		}
+	}
+
 
 	public function generatePoCreate(Request $request){
 		$purchdoc = explode(",", $request->get('purchdoc'));
@@ -650,6 +734,145 @@ class PurchaseOrderController extends Controller
 				'status' => false,
 				'message' => 'Please select a file to generate.',
 			]);
+		}
+	}
+
+	public function generatePoCreate3(Request $request){
+		$purchdoc = explode(",", $request->get('purchdoc'));
+
+		$po_list_check = PoList::whereIn('purchdoc', $purchdoc)->where('remark', '=', 'converted')->first();
+
+		if($po_list_check != null){
+			$response = array(
+				'status' => false,
+				'message' => 'Purchase doc. ' . $po_list_check->purchdoc . ' already converted.',
+			);
+			return Response::json($response);
+		}
+
+		if(strlen($request->get('delivDate')) > 0 && strlen($request->get('purchdoc')) > 0 && strlen($request->get('shipmentCondition')) >0){
+			$id = Auth::id();
+
+			$po_lists = db::table('po_lists')->whereIn('po_lists.purchdoc', $purchdoc)
+			->leftJoin('vendors', 'vendors.vendor', '=', 'po_lists.vendor')
+			->leftJoin('mrps', 'mrps.mrp', '=', 'po_lists.pgr')
+			->leftJoin('countries', 'countries.country_code', '=', 'vendors.cty')
+			->leftJoin('payment_terms', 'vendors.tpay', '=', 'payment_terms.payment_code')
+			->select('po_lists.purchdoc', 'po_lists.pgr', db::raw('mrps.name as pgr_name'), 'po_lists.vendor', db::raw('vendors.name as vendor_name'), 'vendors.street', 'vendors.city', 'vendors.postl_code', 'countries.country_name', 'vendors.salesperson', 'vendors.tpay', 'payment_terms.payment_name', 'vendors.telephone_1', 'vendors.fax_number', 'vendors.incot', 'vendors.crcy', 'po_lists.item', 'po_lists.material', 'po_lists.description', 'po_lists.order_qty', 'po_lists.base_unit_of_measure', 'po_lists.price', db::raw('round(po_lists.price*po_lists.order_qty, 2) as amount'))
+			->orderBy('po_lists.vendor', 'asc')->orderBy('po_lists.purchdoc', 'asc')->orderBy('po_lists.item', 'asc')
+			->get();
+
+			$shipment_condition = db::table('shipment_conditions')->where('shipment_conditions.shipment_condition_code', '=', $request->get('shipmentCondition'))->first();
+
+			$vendors = array();
+			$orders = array();
+
+			foreach ($po_lists as $po_list) {
+				if(!in_array($po_list->vendor, $vendors)){
+					array_push($vendors, $po_list->vendor);
+					$code_generator = CodeGenerator::where('note', '=', 'PO')->first();
+					$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+					$order_no = $po_list->vendors . '-' . $code_generator->prefix . $number;
+					array_push($orders, $order_no);
+					$code_generator->index = $code_generator->index+1;
+					$code_generator->save();
+				}
+				$data = [
+					'purchdoc' => $po_list->purchdoc,
+					'order_no' => $order_no,
+					'order_date' => date('Y-m-d'),
+					'pgr' => $po_list->pgr,
+					'pgr_name' => $po_list->pgr_name,
+					'rev_no' => 0,
+					'vendor' => $po_list->vendor,
+					'name' => $po_list->vendor_name,
+					'street' => $po_list->street,
+					'city' => $po_list->city,
+					'postl_code' => $po_list->postl_code,
+					'cty' => $po_list->country_name,
+					'salesperson' => $po_list->salesperson,
+					'sc' => $shipment_condition->shipment_condition_code,
+					'sc_name' => $shipment_condition->shipment_condition_name,
+					'tpay' => $po_list->tpay,
+					'tpay_name' => $po_list->payment_name,
+					'telephone' => $po_list->telephone_1,
+					'fax_number' => $po_list->fax_number,
+					'incot' => $po_list->incot,
+					'curr' => $po_list->crcy,
+					'item' => $po_list->item,
+					'material' => $po_list->material,
+					'description' => $po_list->description,
+					'deliv_date' => date('Y-m-d', strtotime($request->get('delivDate'))),
+					'order_qty' => $po_list->order_qty,
+					'base_unit_of_measure' => $po_list->base_unit_of_measure,
+					'price' => $po_list->price,
+					'amount' => $po_list->amount,
+					'created_by' => $id,
+				];
+				try{
+					$purchase_order = new PurchaseOrder($data);
+					$purchase_order->save();	
+				}
+				catch(\Exception $e){
+					return response()->json([
+						'status' => false,
+						'message' => $e->getMessage(),
+					]);
+				}
+			}
+
+			$paths = array();
+			foreach ($orders as $order) {
+				//will be edited for summary PO
+				$purchase_orders = PurchaseOrder::where('order_no', '=', $order)
+				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', db::raw('sum(price) as price'), db::raw('sum(amount) as amount'))
+				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure')
+				->get();
+				$total_amount = PurchaseOrder::where('order_no', '=', $order)->sum('amount');
+
+				$pdf = \App::make('dompdf.wrapper');
+				$pdf->getDomPDF()->set_option("enable_php", true);
+				$pdf->setPaper('A4', 'potrait');
+				$pdf->loadView('purchase_orders.purchase_order_pdf', array(
+					'purchase_orders' => $purchase_orders,
+				));
+				$pdf->save(public_path() . "/purchase_orders/" . $order . ".pdf");
+
+
+				$path = "purchase_orders/" . $order . ".pdf";
+				array_push($paths, 
+					[
+						"download" => asset($path),
+						"filename" => $order . ".pdf"
+					]);
+
+				if($pdf){
+					$po_file = new PolistFile([
+						'order_no' => $order,
+						'file_name' => $order . '.pdf',
+						'created_by' => $id
+					]);
+					$po_file->save();
+				}
+			}
+
+			$po_list = PoList::whereIn('purchdoc', $purchdoc)->update([
+				'remark' => 'converted',
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Purchase order(s) created.',
+				'file_paths' => $paths,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'All parameters must be filled.',
+			);
+			return Response::json($response);
 		}
 	}
 

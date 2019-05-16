@@ -265,13 +265,13 @@
           <td style="width: 3%">{{ $no }}</td>
           <td style="width: 8%">{{ (int)$purchase_order->purchdoc }}</td>
           <td style="width: 5%">{{ nl2br(str_replace(',', ' ', $purchase_order->item)) }}</td>
-          <td style="width: 12%">{{ $purchase_order->material }}</td>
+          <td style="width: 10%">{{ $purchase_order->material }}</td>
           <td style="width: 32%">{{ trim($purchase_order->description, '"') }}</td>
           <td style="width: 10%">{{ date('d.m.Y', strtotime($purchase_order->deliv_date)) }}</td>
           <td style="text-align: right; width: 8%;">{{ number_format($purchase_order->order_qty, 2) }}</td>
           <td style="width: 3%">{{ $purchase_order->base_unit_of_measure }}</td>
-          <td style="text-align: right; width: 10%;">{{ number_format($purchase_order->price, 5) }}</td>
-          <td style="text-align: right; width: 9%;">{{ number_format($purchase_order->amount, 2) }}</td>
+          <td style="text-align: right; width: 11%;">{{ number_format($purchase_order->price, 5) }}</td>
+          <td style="text-align: right; width: 10%;">{{ number_format($purchase_order->amount, 2) }}</td>
         </tr>
         <?php $no++; ?>
         @endforeach
@@ -279,7 +279,7 @@
     </table>
   </main>
 
-  <div style="position: absolute; bottom: -5px;">
+  <div style="position: absolute; bottom: -10px;">
     <table style="width: 100%; font-family: courier; font-size:9px; border-collapse: collapse; padding-bottom: 10px;">
       <tbody>
         <tr>
