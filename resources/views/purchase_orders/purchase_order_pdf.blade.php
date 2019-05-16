@@ -67,18 +67,18 @@
       <tbody>
         <tr>
           <td style="width:11%">Order Code</td>
-          <td>{{ $purchase_orders[0]->order_no }}</td>
+          <td>{{ $purchase_orders[0]->order_no != "" ? $purchase_orders[0]->order_no != null ? $purchase_orders[0]->order_no : '-' : '-' }}</td>
           <td style="width:13%">Revision No.</td>
-          <td>{{ $purchase_orders[0]->rev_no != null ? $purchase_orders[0]->rev_no : '0' }}</td>
+          <td>{{ $purchase_orders[0]->rev_no != "" ? $purchase_orders[0]->rev_no != null ? $purchase_orders[0]->rev_no : '-' : '-' }}</td>
           <td style="border-top:0; border-bottom: 0;" width="5px">&nbsp;</td>
           <td style="width:9%">Doc No.</td>
           <td></td>
         </tr>
         <tr>
           <td>Order Date</td>
-          <td>{{ date('d.m.Y', strtotime($purchase_orders[0]->order_date)) }}</td>
+          <td>{{ $purchase_orders[0]->order_date != "" ? $purchase_orders[0]->order_date != null ? date('d.m.Y', strtotime($purchase_orders[0]->order_date)) : '00.00.0000' : '00.00.0000' }}</td>
           <td>Revision Date</td>
-          <td>{{ $purchase_orders[0]->rev_date != null ? date('d.m.Y', strtotime($purchase_orders[0]->rev_date)) : '00.00.0000' }}</td>
+          <td>{{ $purchase_orders[0]->rev_date != "" ? $purchase_orders[0]->rev_date != null ? date('d.m.Y', strtotime($purchase_orders[0]->rev_date)) : '00.00.0000' : '00.00.0000' }}</td>
           <td style="border-top:0; border-bottom: 0;" width="5px">&nbsp;</td>
           <td style="width:9%">Page</td>
           <td>
@@ -100,7 +100,7 @@
         </tr>
         <tr>
           <td style="width:11%">Buyer</td>
-          <td colspan="3">{{ $purchase_orders[0]->pgr . ' ' . $purchase_orders[0]->pgr_name }}</td>
+          <td colspan="3">{{ $purchase_orders[0]->pgr != "" ? $purchase_orders[0]->pgr != null ? $purchase_orders[0]->pgr . ' ' . $purchase_orders[0]->pgr_name : '-' : '-' }}</td>
           <td colspan="3" style="border-top:0; border-bottom: 0; border-right: 0;"></td>
         </tr>
       </tbody>
@@ -115,22 +115,22 @@
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td style="padding-left: 5px">{{ $purchase_orders[0]->vendor != null ? $purchase_orders[0]->vendor : '-' }}</td>
+          <td style="padding-left: 5px">{{ $purchase_orders[0]->vendor != "" ? $purchase_orders[0]->vendor != null ? $purchase_orders[0]->vendor : '-' : '-' }}</td>
         </tr>
         <tr>
-          <td style="padding-left: 5px">{{ $purchase_orders[0]->name != null ? $purchase_orders[0]->name : '-' }}</td>
+          <td style="padding-left: 5px">{{ $purchase_orders[0]->name != "" ? $purchase_orders[0]->name != null ? $purchase_orders[0]->name : '-' : '-' }}</td>
         </tr>
         <tr>
-          <td style="padding-left: 5px; height: 30px;" valign="top">{{ $purchase_orders[0]->street != null ? $purchase_orders[0]->street : '-' }}</td>
+          <td style="padding-left: 5px; height: 30px;" valign="top">{{ $purchase_orders[0]->street != "" ? $purchase_orders[0]->street != null ? $purchase_orders[0]->street : '-' : '-' }}</td>
         </tr>
         <tr>
-          <td style="text-align: right; padding-right: 100px;">{{ $purchase_orders[0]->city != null ? $purchase_orders[0]->city : '-' }}</td>
+          <td style="text-align: right; padding-right: 100px;">{{ $purchase_orders[0]->city != "" ? $purchase_orders[0]->city != null ? $purchase_orders[0]->city : '-' : '-' }}</td>
         </tr>
         <tr>
-          <td style="text-align: right; padding-right: 100px;">{{ $purchase_orders[0]->postl_code != null ? $purchase_orders[0]->postl_code : '-' }}</td>
+          <td style="text-align: right; padding-right: 100px;">{{ $purchase_orders[0]->postl_code != "" ? $purchase_orders[0]->postl_code != null ? $purchase_orders[0]->postl_code : '-' : '-' }}</td>
         </tr>
         <tr>
-          <td style="padding-left: 5px">{{ $purchase_orders[0]->cty != null ? $purchase_orders[0]->cty : '-' }}</td>
+          <td style="padding-left: 5px">{{ $purchase_orders[0]->cty != "" ? $purchase_orders[0]->cty != null ? $purchase_orders[0]->cty : '-' : '-' }}</td>
         </tr>
       </tbody>
     </table>
@@ -183,23 +183,23 @@
       <tbody>
         <tr>
           <td style="width:12%; border-top: 1px solid black;">Confirmed to</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->salesperson != null ? $purchase_orders[0]->salesperson : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->salesperson != '' ? $purchase_orders[0]->salesperson != null ? $purchase_orders[0]->salesperson : '-' : '-' }}</td>
           <td style="width:12%; border-top: 1px solid black;">Phone No.</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->telephone != null ? $purchase_orders[0]->telephone : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->telephone != '' ? $purchase_orders[0]->telephone != null ? $purchase_orders[0]->telephone : '-' : '-' }}</td>
           <td style="width:7.5%; border-top: 1px solid black;">Fax No.</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->fax_no != null ? $purchase_orders[0]->fax_no : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->fax_no != '' ? $purchase_orders[0]->fax_no != null ? $purchase_orders[0]->fax_no : '-' : '-' }}</td>
         </tr>
         <tr>
           <td style="width:12%; border-top: 1px solid black;">Transportation</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->sc_name != null ? $purchase_orders[0]->sc_name : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->sc_name != '' ? $purchase_orders[0]->sc_name != null ? $purchase_orders[0]->sc_name : '-' : '-' }}</td>
           <td style="width:12%; border-top: 1px solid black;">Delivery terms</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->incot != null ? $purchase_orders[0]->incot : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->incot != '' ? $purchase_orders[0]->incot != null ? $purchase_orders[0]->incot : '-' : '-' }}</td>
           <td style="width:7.5%; border-top: 1px solid black;">Currency</td>
-          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->curr != null ? $purchase_orders[0]->curr : '-' }}</td>
+          <td style="border-top: 1px solid black;">: {{ $purchase_orders[0]->curr != '' ? $purchase_orders[0]->curr != null ? $purchase_orders[0]->curr : '-' : '-' }}</td>
         </tr>
         <tr>
           <td style="width:12%; border-top: 1px solid black; border-bottom: 1px solid black;">Payment terms</td>
-          <td colspan="5" style="border-top: 1px solid black; border-bottom: 1px solid black;">: {{ $purchase_orders[0]->tpay_name != null ? $purchase_orders[0]->tpay_name : '-' }}</td>
+          <td colspan="5" style="border-top: 1px solid black; border-bottom: 1px solid black;">: {{ $purchase_orders[0]->tpay_name != '' ? $purchase_orders[0]->tpay_name != null ? $purchase_orders[0]->tpay_name : '-' : '-' }}</td>
         </tr>
       </tbody>
     </table>
