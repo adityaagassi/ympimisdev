@@ -764,11 +764,11 @@ class PurchaseOrderController extends Controller
 		}
 
 		if(strlen($request->get('status')) == 0){
-			$po_lists = $po_lists->where('po_file.att', '=', 0);
+			$po_lists = $po_lists->where('po_file.remark', '=', null);
 		}
 
 		if(strlen($request->get('status')) == 1){
-			$po_lists = $po_lists->where('po_file.att', '>', 0);
+			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){

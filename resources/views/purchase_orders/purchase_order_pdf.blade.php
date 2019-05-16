@@ -207,10 +207,11 @@
 
   <footer>
     <table style="width: 100%; font-family: courier; font-size:9px; border-collapse: collapse; padding-bottom: 10px;">
-      <body>
+      <tbody>
         <tr>
           <td colspan="3" style="text-align: right; font-size: 14px; border-top: 1px dashed black;">
-            Total Amount : {{ number_format($total_amount, 2) }}
+            {{-- Total Amount : {{ number_format($total_amount, 2) }} --}}
+            <br>
             <br>
             <br>
             <br>
@@ -278,9 +279,17 @@
     </table>
   </main>
 
-  {{-- <div style="position: absolute; bottom: 5px; background-color: green">
-    <right>asds</right>
-  </div> --}}
+  <div style="position: absolute; bottom: -5px;">
+    <table style="width: 100%; font-family: courier; font-size:9px; border-collapse: collapse; padding-bottom: 10px;">
+      <tbody>
+        <tr>
+          <td colspan="3" style="text-align: right; font-size: 14px;">
+            Total Amount : {{ number_format($total_amount, 2) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </body>
 </html>
