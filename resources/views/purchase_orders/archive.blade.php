@@ -221,10 +221,60 @@
                { "data": "purchdoc" },
                { "data": "order_no" },
                { "data": "filename" },
-               { "data": "created_by" },
+               { "data": "username" },
                { "data": "created_at" },
                ]
           });
+     }
+
+     function downloadPo(id){
+          var file_name = id;
+          var data = {
+               file_name:file_name
+          }
+
+          $.get('{{ url("download/purchase_order/download_po") }}', data, function(result, status, xhr){
+               console.log(status);
+               console.log(result);
+               console.log(xhr);
+               if(xhr.status == 200){
+                    if(result.status){
+                         download_files(result.file_paths);
+                    }
+                    else{
+                         audio_error.play();
+                         openErrorGritter('Error!', result.message);
+                    }
+               }
+               else{
+                    alert('Disconnected from server');
+               }
+          });
+     }
+
+     function download_files(files) {
+          function download_next(i) {
+               if (i >= files.length) {
+                    return;
+               }
+               var a = document.createElement('a');
+               a.href = files[i].download;
+               a.target = '_parent';
+               if ('download' in a) {
+                    a.download = files[i].filename;
+               }
+               (document.body || document.documentElement).appendChild(a);
+               if (a.click) {
+                    a.click();
+               } else {
+                    $(a).click();
+               }
+               a.parentNode.removeChild(a);
+               setTimeout(function() {
+                    download_next(i + 1);
+               }, 500);
+          }
+          download_next(0);
      }
 
      function openErrorGritter(title, message) {

@@ -959,12 +959,23 @@ class PurchaseOrderController extends Controller
 	public function downloadPo(Request $request){
 		$filenames = $request->get('file_name');
 		$paths = array();
-		foreach ($filenames as $filename) {
-			$path = "purchase_orders/" . $filename;
+
+		if(is_array($filenames)){
+			foreach ($filenames as $filename) {
+				$path = "purchase_orders/" . $filename;
+				array_push($paths, 
+					[
+						"download" => asset($path),
+						"filename" => $filename
+					]);
+			}
+		}
+		else{
+			$path = "purchase_orders/" . $filenames;
 			array_push($paths, 
 				[
 					"download" => asset($path),
-					"filename" => $filename
+					"filename" => $filenames
 				]);
 		}
 
@@ -978,7 +989,8 @@ class PurchaseOrderController extends Controller
 	public function fetchPoArchive(Request $request){
 		$po_files = db::table('po_list_files')
 		->leftJoin(db::raw('(select distinct purchdoc, order_no from purchase_orders) as po'), 'po.order_no', '=', 'po_list_files.order_no')
-		->select('po.purchdoc', 'po_list_files.order_no', 'po_list_files.file_name', 'po_list_files.created_by', 'po_list_files.created_at');
+		->leftJoin('users', 'users.id', '=', 'po_list_files.created_by')
+		->select('po.purchdoc', 'po_list_files.order_no', 'po_list_files.file_name', db::raw('upper(users.username) as username'), 'po_list_files.created_at');
 
 		if(strlen($request->get('createdfrom')) > 0){
 			$createdfrom = date('Y-m-d', strtotime($request->get('createdfrom')));

@@ -24,7 +24,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::orderBy('id', 'ASC')
-        ->where('role_code', '<>', 'S')
+        // ->where('role_code', '<>', 'S')
         ->get();
 
         return view('roles.index', array(

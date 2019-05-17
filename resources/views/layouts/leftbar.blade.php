@@ -141,6 +141,12 @@
         </li>
         @endif
 
+        @if(in_array('M16', $navs))
+        @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
+          <a href="{{ url("index/MasterKaryawan") }}"><i class="fa fa-group"></i> <span>Master Employee</span></a>
+        </li>
+        @endif
+
         @if(in_array('S0', $navs))
         <li class="header">Service Menu</li>
         @endif
@@ -212,6 +218,17 @@
         </li>
         @endif
 
+        @if(in_array('S15', $navs))
+        @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i> <span>Promotion</span></a>
+        </li>
+        @endif
+        @if(in_array('S16', $navs))
+        @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i> <span>Mutation</span></a>
+        </li>
+        @endif
+
         @if(in_array('S13', $navs))
         @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
@@ -230,7 +247,7 @@
             @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
               <a href="#"><i class="fa fa-print"></i> Purchase Order Create
                 <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
+                  <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
               <ul class="treeview-menu">
@@ -335,6 +352,25 @@
 </li>
 @if(isset($page) && $page == "History Transaction")<li class="active">@else<li>@endif
   <a href="{{ url("/index/tr_history") }}"><i class="fa fa-table"></i> Transaction History</a>
+</li>
+</ul>
+</li>
+@endif
+
+@if(in_array('R9', $navs))
+@if(isset($head) && $head == "Overtime Report")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-users"></i> <span>Overtimes</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/report/overtime_control") }}"><i class="fa fa-line-chart"></i> Overtime Control</a>
+</li>
+@if(isset($page) && $page == "Overtime Report")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/report/overtime_report") }}"><i class="fa fa-table"></i> Overtime Report</a>
 </li>
 </ul>
 </li>
