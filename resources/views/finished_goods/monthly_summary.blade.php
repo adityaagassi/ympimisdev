@@ -248,7 +248,6 @@
 					$('#totalBO').append(totalBO.toLocaleString());
 					$('#avgPercentage').append((totalPercentage/divider).toFixed(2)+'%');
 					$('#monthlySummaryTable').DataTable({
-						"scrollX": true,
 						'dom': 'Bfrtip',
 						'responsive':true,
 						'lengthMenu': [

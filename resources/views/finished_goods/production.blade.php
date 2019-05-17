@@ -1,39 +1,39 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td{
-	overflow:hidden;
-	text-overflow: ellipsis;
-}
-table {
-	table-layout:fixed;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-	/*margin-top:20px;*/
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	table {
+		table-layout:fixed;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+		/*margin-top:20px;*/
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -80,16 +80,16 @@ table.table-bordered > tfoot > tr > th{
 			<table id="productionTable" class="table table-bordered table-striped table-hover">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="font-size: 14">Period</th>
-						<th style="font-size: 14">Sales Order</th>
-						<th style="font-size: 14">Material</th>
-						<th style="font-size: 14">Description</th>
-						<th style="font-size: 14">Dest</th>
-						<th style="font-size: 14">Plan</th>
-						<th style="font-size: 14">Actual</th>
-						<th style="font-size: 14">Diff</th>
-						<th style="font-size: 14">Ship. Date</th>
-						<th style="font-size: 14">B/L Date</th>
+						<th>Period</th>
+						<th>Sales Order</th>
+						<th>Material</th>
+						<th>Description</th>
+						<th>Dest</th>
+						<th>Plan</th>
+						<th>Actual</th>
+						<th>Diff</th>
+						<th>Ship. Date</th>
+						<th>B/L Date</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -202,25 +202,18 @@ table.table-bordered > tfoot > tr > th{
 			id:id,
 		}
 		$('#productionTable').DataTable({
-			'scrollX': true,
-			'responsive':true,
 			'dom': 'Bfrtip',
+			'responsive': true,
 			'lengthMenu': [
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
+			"pageLength": 25,
 			'buttons': {
-				// dom: {
-				// 	button: {
-				// 		tag:'button',
-				// 		className:''
-				// 	}
-				// },
 				buttons:[
 				{
 					extend: 'pageLength',
 					className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
 				},
 				{
 					extend: 'copy',
@@ -245,7 +238,7 @@ table.table-bordered > tfoot > tr > th{
 					exportOptions: {
 						columns: ':not(.notexport)'
 					}
-				},
+				}
 				]
 			},
 			'paging': true,
@@ -258,6 +251,8 @@ table.table-bordered > tfoot > tr > th{
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
 			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
 			"footerCallback": function (tfoot, data, start, end, display) {
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?

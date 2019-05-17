@@ -286,6 +286,22 @@ Route::group(['nav' => 'M9', 'middleware' => 'permission'], function(){
 	Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');
 });
 
+Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
+	Route::get('index/MasterEmp', 'EmployeeController@index');
+	Route::get('fetch/masteremp', 'EmployeeController@fetchMasterEmp');	
+	Route::get('fetch/masterempdetail', 'EmployeeController@fetchdetail');
+	Route::post('create/empCreate', 'EmployeeController@empCreate');
+	Route::post('update/empCreate', 'EmployeeController@updateEmpData');
+	Route::get('index/MasterKaryawan', 'EmployeeController@index');
+
+	//insert
+	Route::get('index/insertEmp', 'EmployeeController@insertEmp');
+	Route::get('index/updateEmp/{nik}', 'EmployeeController@updateEmp');
+
+	//import
+	Route::post('import/importEmp', 'EmployeeController@importEmp');
+});
+
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
 	Route::get('create/code_generator', 'CodeGeneratorController@create');
@@ -386,6 +402,18 @@ Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::get('create/overtime/overtime_form', 'OvertimeController@createOvertimeForm');
 	Route::get('select/overtime/division_hierarchy', 'OvertimeController@selectDivisionHierarchy');
 	Route::get('fetch/overtime/employee', 'OvertimeController@fetchEmployee');
+});
+
+Route::group(['nav' => 'S15', 'middleware' => 'permission'], function(){
+	Route::get('index/promotion', 'EmployeeController@indexPromotion');
+	Route::get('fetch/promotion', 'EmployeeController@fetchPromotion');
+	Route::get('change/promotion', 'EmployeeController@changePromotion');
+});
+
+Route::group(['nav' => 'S16', 'middleware' => 'permission'], function(){
+	Route::get('index/mutation', 'EmployeeController@indexMutation');
+	Route::get('fetch/mutation', 'EmployeeController@fetchMutation');
+	Route::get('change/mutation', 'EmployeeController@changeMutation');
 });
 
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');

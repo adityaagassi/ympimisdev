@@ -1,39 +1,39 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead input {
-	width: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-}
-input {
-	line-height: 24px;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	input {
+		line-height: 24px;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -99,18 +99,18 @@ table.table-bordered > tfoot > tr > th{
 							<table id="shipmentScheduleTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 3%;">Period</th>
-										<th style="width: 3%;">Sales Order</th>
-										<th style="width: 5%;">Destination</th>
+										<th style="width: 1%;">Period</th>
+										<th style="width: 1%;">Sales Order</th>
+										<th style="width: 1%;">Destination</th>
 										<th style="width: 5%;">Material</th>
-										<th style="width: 40%;">Description</th>
-										<th style="width: 5%;">Plan</th>
-										<th style="width: 5%;">Act Prod.</th>
-										<th style="width: 5%;">Diff</th>
-										<th style="width: 5%;">Act Deliv.</th>
-										<th style="width: 5%;">Diff</th>
-										<th style="width: 10%;">Ship. Date</th>
-										<th style="width: 10%;">BL Date Plan</th>
+										<th style="width: 30%;">Description</th>
+										<th style="width: 1%;">Plan</th>
+										<th style="width: 1%;">Act Prod.</th>
+										<th style="width: 1%;">Diff</th>
+										<th style="width: 1%;">Act Deliv.</th>
+										<th style="width: 1%;">Diff</th>
+										<th style="width: 15%;">Ship. Date</th>
+										<th style="width: 15%;">BL Date Plan</th>
 										{{-- <th>BL Date Actual</th> --}}
 										{{-- <th style="width: 5%">Container ID</th> --}}
 									</tr>
@@ -231,19 +231,13 @@ table.table-bordered > tfoot > tr > th{
 					$('#tableBody').append(tableData);
 					$('#shipmentScheduleTable').DataTable({
 						'dom': 'Bfrtip',
-						"scrollX": true,
-						'responsive':true,
+						'responsive': true,
 						'lengthMenu': [
 						[ 10, 25, 50, -1 ],
 						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 						],
+						"pageLength": 25,
 						'buttons': {
-							// dom: {
-							// 	button: {
-							// 		tag:'button',
-							// 		className:''
-							// 	}
-							// },
 							buttons:[
 							{
 								extend: 'pageLength',
@@ -272,9 +266,19 @@ table.table-bordered > tfoot > tr > th{
 								exportOptions: {
 									columns: ':not(.notexport)'
 								}
-							},
+							}
 							]
 						},
+						'paging': true,
+						'lengthChange': true,
+						'searching': true,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
 						"footerCallback": function (tfoot, data, start, end, display) {
 							var intVal = function ( i ) {
 								return typeof i === 'string' ?
@@ -315,18 +319,7 @@ table.table-bordered > tfoot > tr > th{
 									$(td).css('background-color', 'RGB(204,255,255)')
 								}
 							}
-						}],
-						'paging': true,
-						'lengthChange': true,
-						'searching': true,
-						'ordering': true,
-						'order': [],
-						'info': true,
-						'autoWidth': true,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"processing": true
+						}]
 					});
 				}
 				else{
