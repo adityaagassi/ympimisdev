@@ -973,7 +973,31 @@ class PurchaseOrderController extends Controller
 			'file_paths' => $paths,
 		);
 		return Response::json($response);
+	}
 
+	public function fetchPoArchive(Request $request){
+		$po_files = db::table('po_list_files')
+		->leftJoin(db::raw('(select distinct purchdoc, order_no from purchase_orders) as po'), 'po.order_no', '=', 'po_list_files.order_no')
+		->select('po.purchdoc', 'po_list_files.order_no', 'po_list_files.file_name', 'po_list_files.created_by', 'po_list_files.created_at');
+
+		if(strlen($request->get('createdfrom')) > 0){
+			$createdfrom = date('Y-m-d', strtotime($request->get('createdfrom')));
+			$po_files = $po_files->where(db::raw('date_format(po_list_files.created_at, "%Y-%m-%d")'), '>=', $createdfrom);
+		}
+
+		if(strlen($request->get('createdto')) > 0){
+			$createdto = date('Y-m-d', strtotime($request->get('createdto')));
+			$po_files = $po_files->where(db::raw('date_format(po_list_files.created_at, "%Y-%m-%d")'), '<=', $createdto);		
+		}
+
+		$po_files = $po_files->get();
+
+		return DataTables::of($po_files)
+		->addColumn('filename', function($po_files){
+			return '<a href="javascript:void(0)" data-toggle="modal" onClick="downloadPo(id)" id="' . $po_files->file_name . '">' . $po_files->file_name . '</a>';
+		})
+		->rawColumns(['filename' => 'filename'])
+		->make(true);
 	}
 
 	public function fetchPoList(Request $request){

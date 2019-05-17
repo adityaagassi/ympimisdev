@@ -374,6 +374,7 @@ Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order/download_po', 'PurchaseOrderController@fetchDownloadPo');
 	Route::get('download/purchase_order/download_po', 'PurchaseOrderController@downloadPo');
 	Route::get('index/purchase_order/po_archive', 'PurchaseOrderController@indexPoArchive');
+	Route::get('fetch/purchase_order/po_archive', 'PurchaseOrderController@fetchPoArchive');
 	Route::get('index/purchase_order/po_revise', 'PurchaseOrderController@indexPoRevise');
 	Route::post('generate/purchase_order/po_revise', 'PurchaseOrderController@generatePoRevise');
 	Route::post('generate/purchase_order/po_revise2', 'PurchaseOrderController@generatePoRevise2');
