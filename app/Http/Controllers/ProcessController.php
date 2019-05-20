@@ -142,7 +142,7 @@ class ProcessController extends Controller
 		$query = "
 		select result1.model, result1.process_code, result1.process_name, if(result2.quantity is null, 0, result2.quantity) as quantity from
 		(
-		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5') as result1
+		select distinct model, processes.process_code, processes.process_name from materials left join processes on processes.remark = CONCAT('YFL',materials.origin_group_code) where processes.remark = 'YFL041' and processes.process_code <> '5' and materials.category = 'FG') as result1
 		left join
 		(
 		select stamp_inventories.model, stamp_inventories.process_code, sum(stamp_inventories.quantity) as quantity from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.model, stamp_inventories.process_code
