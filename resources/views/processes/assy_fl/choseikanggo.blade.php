@@ -3,39 +3,39 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-	padding: 1px;
-}
-table.table-bordered{
-	border:1px solid black;
-	margin-top:20px;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid black;
-}
-.outer .chart-container {
-	width: 100%;
-	float: right;
-	height: 250px;
-}
-.highcharts-yaxis-grid .highcharts-grid-line {
-	display: none;
-}
-
-@media (max-width: 100%) {
-	.outer {
-		width: 100%;
-		height: 400px;
+	.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+		padding: 1px;
+	}
+	table.table-bordered{
+		border:1px solid black;
+		margin-top:20px;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
 	}
 	.outer .chart-container {
 		width: 100%;
 		float: right;
-		/*margin: 0 auto;*/
+		height: 250px;
 	}
-}
+	.highcharts-yaxis-grid .highcharts-grid-line {
+		display: none;
+	}
+
+	@media (max-width: 100%) {
+		.outer {
+			width: 100%;
+			height: 400px;
+		}
+		.outer .chart-container {
+			width: 100%;
+			float: right;
+			/*margin: 0 auto;*/
+		}
+	}
 </style>
 @stop
 @section('header')
@@ -107,7 +107,7 @@ table.table-bordered > tbody > tr > td{
 								</thead>
 								<tbody>
 									<tr>
-										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="targetEff">118%</td>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="targetEff">100%</td>
 										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actManpower">-</td>
 									</tr>
 								</tbody>
@@ -115,24 +115,26 @@ table.table-bordered > tbody > tr > td{
 							<table class="table table-bordered" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average STD Time Per Set</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average STD Time</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average ACT Time</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
 										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="stdTime">00:00:00</td>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actTime">00:00:00</td>
 									</tr>
 								</tbody>
 							</table>
 							<table class="table table-bordered" style="width: 100%;">
 								<thead>
 									<tr>
-										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Average ACT Time Per Set</th>
+										<th style="width:50%; background-color: null; text-align: center; color: black; font-size: 20px;">Chosei Total Stock</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actTime">00:00:00</td>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="totalStock">0</td>
 									</tr>
 								</tbody>
 							</table>
@@ -409,12 +411,12 @@ table.table-bordered > tbody > tr > td{
 						yAxis: {
 							stops: [
 							[0, '#FF0000'],
-							[113/200, '#FF0000'],
-							[114/200, '#FFD700'],
-							[115/200, '#FFD700'],
-							[116/200, '#FFD700'],
-							[117/200, '#FFD700'],
-							[118/200, '#55BF3B']
+							[90/200, '#FF0000'],
+							[92/200, '#FFD700'],
+							[94/200, '#FFD700'],
+							[96/200, '#FFD700'],
+							[98/200, '#FFD700'],
+							[100/200, '#55BF3B']
 							],
 							lineWidth: 0,
 							minorTickInterval: null,
@@ -473,6 +475,7 @@ table.table-bordered > tbody > tr > td{
 					$('#actTime').html("<center>"+secondsTimeSpanToHMS(act_time_set)+"</center>");
 					$('#stdTime').html("<center>"+secondsTimeSpanToHMS(std_time_set)+"</center>");
 					$('#actManpower').html("<center>"+Math.round(actmanpower,2)+"</center>");
+					$('#totalStock').html("<center>"+ result.totalStock +" Set(s)</center>");
 
 					Highcharts.chart('container2', Highcharts.merge(gaugeOptions, {
 						yAxis: {
@@ -481,7 +484,6 @@ table.table-bordered > tbody > tr > td{
 							title: {
 								text: 'Efficiency',
 								y:-100
-								// enabled:false
 							}
 						},
 						credits: {

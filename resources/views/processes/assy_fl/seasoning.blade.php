@@ -107,7 +107,7 @@ table.table-bordered > tbody > tr > td{
 								</thead>
 								<tbody>
 									<tr>
-										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="targetEff">118%</td>
+										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="targetEff">100%</td>
 										<td style="background-color: rgb(126,86,134); text-align: center; color: #FFD700; font-size: 3vw;" id="actManpower">-</td>
 									</tr>
 								</tbody>
@@ -408,12 +408,12 @@ table.table-bordered > tbody > tr > td{
 						yAxis: {
 							stops: [
 							[0, '#FF0000'],
-							[113/200, '#FF0000'],
-							[114/200, '#FFD700'],
-							[115/200, '#FFD700'],
-							[116/200, '#FFD700'],
-							[117/200, '#FFD700'],
-							[118/200, '#55BF3B']
+							[90/200, '#FF0000'],
+							[92/200, '#FFD700'],
+							[94/200, '#FFD700'],
+							[96/200, '#FFD700'],
+							[98/200, '#FFD700'],
+							[100/200, '#55BF3B']
 							],
 							lineWidth: 0,
 							minorTickInterval: null,
