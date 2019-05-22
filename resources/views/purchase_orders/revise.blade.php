@@ -69,8 +69,8 @@
                               <div class="col-xs-6">
                                    <div class="form-group">
                                         <label class="control-label">Order Code</label><span class="text-red">*</span>
-                                        <textarea id="reviseOrderNo2Area" class="form-control" rows="3"></textarea>
-                                        <input id="reviseOrderNo2Tags" type="text" class="form-control tags"/>
+                                        <textarea id="reviseOrderNoArea" class="form-control" rows="3"></textarea>
+                                        <input id="reviseOrderNoTags" type="text" class="form-control tags"/>
                                    </div>
                               </div>
                               <div class="col-xs-6">
@@ -123,8 +123,8 @@
                               <div class="col-xs-6">
                                    <div class="form-group">
                                         <label class="control-label">Order Code</label><span class="text-red">*</span>
-                                        <textarea id="reviseOrderNoArea" class="form-control" rows="3"></textarea>
-                                        <input id="reviseOrderNoTags" type="text" class="form-control tags"/>
+                                        <textarea id="reviseOrderNo2Area" class="form-control" rows="3"></textarea>
+                                        <input id="reviseOrderNo2Tags" type="text" class="form-control tags"/>
                                    </div>
                               </div>
                               <div class="col-xs-6">
@@ -335,6 +335,13 @@
                     return false;
                }
           });
+
+          $('#reviseOrderNo2Area').keydown(function(event) {
+               if (event.keyCode == 13) {
+                    convertReviseOrderNo2ToTags();
+                    return false;
+               }
+          });
      }
 
      function convertReviseOrderNoToTags() {
@@ -351,6 +358,24 @@
                     $('#reviseOrderNoTags').hide();
                     $('#reviseOrderNoTags_tagsinput').show();
                     $('#reviseOrderNoArea').hide();
+               }
+          }
+     }
+
+     function convertReviseOrderNo2ToTags() {
+          var data = $('#reviseOrderNoArea').val();
+          if (data.length > 0) {
+               var rows = data.split('\n');
+               if (rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                         var barcode = rows[i].trim();
+                         if (barcode.length > 0) {
+                              $('#reviseOrderNo2Tags').addTag(barcode);
+                         }
+                    }
+                    $('#reviseOrderNo2Tags').hide();
+                    $('#reviseOrderNo2Tags_tagsinput').show();
+                    $('#reviseOrderNo2Area').hide();
                }
           }
      }
