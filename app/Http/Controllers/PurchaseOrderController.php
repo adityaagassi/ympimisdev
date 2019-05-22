@@ -416,7 +416,6 @@ class PurchaseOrderController extends Controller
 		}
 	}
 
-
 	public function generatePoCreate(Request $request){
 		$purchdoc = explode(",", $request->get('purchdoc'));
 

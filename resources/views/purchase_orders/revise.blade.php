@@ -80,12 +80,12 @@
                                              <div class="input-group-addon">
                                                   <i class="fa fa-calendar"></i>
                                              </div>
-                                             <input type="text" class="form-control pull-right" id="createDelivDate2">
+                                             <input type="text" class="form-control pull-right" id="createDelivDate">
                                         </div>
                                    </div>
                                    <div class="form-group">
                                         <label>Shipment Condition</label><span class="text-red">*</span>
-                                        <select id="shipment_condition2" class="form-control select2" style="width: 100%;" data-placeholder="Select a Shipment Condition">
+                                        <select id="shipment_condition" class="form-control select2" style="width: 100%;" data-placeholder="Select a Shipment Condition">
                                              <option></option>
                                              @foreach($shipment_conditions as $shipment_condition)
                                              <option value="{{ $shipment_condition->shipment_condition_code }}">{{ $shipment_condition->shipment_condition_code }} - {{ $shipment_condition->shipment_condition_name }}</option>
@@ -94,7 +94,7 @@
                                    </div>
                               </div>
                               <div class="col-xs-12">
-                                   <button id="generatePo1" onClick="generatePo3()" class="btn btn-primary pull-right"><i class="fa fa-download"></i> Revise PO</button>
+                                   <button id="generatePo1" onClick="generatePo1()" class="btn btn-primary pull-right"><i class="fa fa-download"></i> Revise PO</button>
                               </div>
                          </div>
                     </div>
@@ -134,12 +134,12 @@
                                              <div class="input-group-addon">
                                                   <i class="fa fa-calendar"></i>
                                              </div>
-                                             <input type="text" class="form-control pull-right" id="createDelivDate">
+                                             <input type="text" class="form-control pull-right" id="createDelivDate2">
                                         </div>
                                    </div>
                                    <div class="form-group">
                                         <label>Shipment Condition</label><span class="text-red">*</span>
-                                        <select id="shipment_condition" class="form-control select2" style="width: 100%;" data-placeholder="Select a Shipment Condition">
+                                        <select id="shipment_condition2" class="form-control select2" style="width: 100%;" data-placeholder="Select a Shipment Condition">
                                              <option></option>
                                              @foreach($shipment_conditions as $shipment_condition)
                                              <option value="{{ $shipment_condition->shipment_condition_code }}">{{ $shipment_condition->shipment_condition_code }} - {{ $shipment_condition->shipment_condition_name }}</option>
@@ -148,7 +148,7 @@
                                    </div>
                               </div>
                               <div class="col-xs-12">
-                                   <button id="generatePo1" onClick="generatePo1()" class="btn btn-primary pull-right"><i class="fa fa-download"></i> Revise PO</button>
+                                   <button id="generatePo1" onClick="generatePo3()" class="btn btn-primary pull-right"><i class="fa fa-download"></i> Revise PO</button>
                               </div>
                          </div>
                     </div>
