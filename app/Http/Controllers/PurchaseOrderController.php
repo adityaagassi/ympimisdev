@@ -505,8 +505,8 @@ class PurchaseOrderController extends Controller
 			foreach ($orders as $order) {
 				//will be edited for summary PO
 				$purchase_orders = PurchaseOrder::where('order_no', '=', $order)
-				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', db::raw('sum(price) as price'), db::raw('sum(amount) as amount'))
-				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure')
+				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', 'price', db::raw('sum(amount) as amount'))
+				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure', 'price')
 				->get();
 				$total_amount = PurchaseOrder::where('order_no', '=', $order)->sum('amount');
 
@@ -685,8 +685,8 @@ class PurchaseOrderController extends Controller
 			foreach ($orders as $order) {
 				//will be edited for summary PO
 				$purchase_orders = PurchaseOrder::where('order_no', '=', $order)
-				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', db::raw('sum(price) as price'), db::raw('sum(amount) as amount'))
-				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure')
+				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', 'price', db::raw('sum(amount) as amount'))
+				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure', 'price')
 				->get();
 				$total_amount = PurchaseOrder::where('order_no', '=', $order)->sum('amount');
 
@@ -824,8 +824,8 @@ class PurchaseOrderController extends Controller
 			foreach ($orders as $order) {
 				//will be edited for summary PO
 				$purchase_orders = PurchaseOrder::where('order_no', '=', $order)
-				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', db::raw('sum(price) as price'), db::raw('sum(amount) as amount'))
-				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure')
+				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', 'price', db::raw('sum(amount) as amount'))
+				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure', 'price')
 				->get();
 				$total_amount = PurchaseOrder::where('order_no', '=', $order)->sum('amount');
 
