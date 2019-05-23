@@ -79,7 +79,18 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
+	Route::get('index/report/gender', 'EmployeeController@indexReportGender');
+	Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 	Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
+});
+
+Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
+	Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
+	Route::get('index/report/overtime_report', 'OvertimeController@indexOvertimeReport');
+	Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
+	Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
+	Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
+	
 });
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
@@ -377,6 +388,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle_kensa', 'MiddleProcessController@ScanMiddleKensa');
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
+	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
 });
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
@@ -420,6 +432,7 @@ Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMidd
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
+Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
