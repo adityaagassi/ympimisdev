@@ -10,7 +10,7 @@ class StampSchedule extends Model
 	use SoftDeletes;
     //
 	protected $fillable = [
-		'model', 'due_date', 'quantity', 'created_by'
+		'model', 'due_date', 'quantity', 'created_by', 'remark'
 	];
 
 	public function user()

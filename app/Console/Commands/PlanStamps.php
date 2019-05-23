@@ -135,6 +135,7 @@ class PlanStamps extends Command
                 'model' => $model,
                 'due_date' => $due_date,
                 'quantity' => $quantity,
+                'remark' => 'stamp_fl',
                 'created_by' => 1
             ]);
             $stamp_schedules->save();
