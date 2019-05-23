@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStampSchedulesTable extends Migration
+class CreateOvertimePurposesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateStampSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('stamp_schedules', function (Blueprint $table) {
+        Schema::create('overtime_purposes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('model');
-            $table->string('due_date');
-            $table->double('quantity');
-            $table->string('remark');
+            $table->string('purpose')
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
@@ -32,6 +29,6 @@ class CreateStampSchedulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stamp_schedules');
+        Schema::dropIfExists('overtime_purposes');
     }
 }
