@@ -316,43 +316,46 @@
       </span>
     </a>
     <ul class="treeview-menu">
-     @if(isset($page) && $page == "Leave Control")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/report/leave_control") }}"><i class="fa fa-line-chart"></i> Leave Control</a>
-    </li>
-  </ul>
-</li>
-@endif
+      @if(isset($page) && $page == "Manpower by Gender")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/gender") }}"><i class="fa fa-line-chart"></i> Manpower by Gender</a>
+      </li>
+      @if(isset($page) && $page == "Leave Control")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/leave_control") }}"><i class="fa fa-line-chart"></i> Leave Control</a>
+      </li>
+    </ul>
+  </li>
+  @endif
 
-@if(in_array('R1', $navs))
-@if(isset($page) && $page == "FLO Detail")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
-</li>
-@endif
+  @if(in_array('R1', $navs))
+  @if(isset($page) && $page == "FLO Detail")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+  </li>
+  @endif
 
-@if(in_array('R2', $navs))
-@if(isset($page) && $page == "Location Stock")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/inventory") }}"><i class="fa fa-cubes"></i> <span>Location Stock</span></a>
-</li>
-@endif
+  @if(in_array('R2', $navs))
+  @if(isset($page) && $page == "Location Stock")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/inventory") }}"><i class="fa fa-cubes"></i> <span>Location Stock</span></a>
+  </li>
+  @endif
 
-@if(in_array('R6', $navs))
-@if(isset($head) && $head == "Transaction")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-   <i class="fa fa-tv"></i> <span>Transaction</span>
-   <span class="pull-right-container">
-    <i class="fa fa-angle-left pull-right"></i>
-  </span>
-</a>
-<ul class="treeview-menu">
- @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i> Completion</a>
-</li>
-@if(isset($page) && $page == "Transfer Transaction")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i> Transfer</a>
-</li>
-@if(isset($page) && $page == "History Transaction")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/tr_history") }}"><i class="fa fa-table"></i> Transaction History</a>
-</li>
+  @if(in_array('R6', $navs))
+  @if(isset($head) && $head == "Transaction")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+     <i class="fa fa-tv"></i> <span>Transaction</span>
+     <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+   @if(isset($page) && $page == "Completion Transaction")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/tr_completion") }}"><i class="fa fa-table"></i> Completion</a>
+  </li>
+  @if(isset($page) && $page == "Transfer Transaction")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/tr_transfer") }}"><i class="fa fa-table"></i> Transfer</a>
+  </li>
+  @if(isset($page) && $page == "History Transaction")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/tr_history") }}"><i class="fa fa-table"></i> Transaction History</a>
+  </li>
 </ul>
 </li>
 @endif
