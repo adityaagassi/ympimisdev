@@ -75,6 +75,8 @@
                                         <th>Section</th>
                                         <th>In</th>
                                         <th>Out</th>
+                                        <th>OT Start</th>
+                                        <th>OT End</th>
                                         <th>OT Plan</th>
                                         <th>#</th>
                                         <th>OT Log</th>
@@ -88,6 +90,8 @@
                               </tbody>
                               <tfoot>
                                    <tr>
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -243,19 +247,19 @@
                     }
                     ]},
                     "columnDefs": [ {
-                         "targets": [7, 8],
+                         "targets": [9, 10],
                          "createdCell": function (td, cellData, rowData, row, col) {
                               $(td).css('background-color', 'RGB(204,255,255,0.50)')
                          }
                     },
                     {
-                         "targets": [9, 10],
+                         "targets": [11, 12],
                          "createdCell": function (td, cellData, rowData, row, col) {
                               $(td).css('background-color', 'RGB(255,255,204,0.50)')
                          }
                     },
                     {
-                         "targets": [12],
+                         "targets": [14 ],
                          "createdCell": function (td, cellData, rowData, row, col) {
                               $(td).css('background-color', 'RGB(255,204,255,0.50)')
                          }
@@ -279,10 +283,12 @@
                     { "data": "id"},
                     { "data": "tanggal", "width": "7%" },
                     { "data": "nik" },
-                    { "data": "name", "width": "35%"},
+                    { "data": "name", "width": "30%"},
                     { "data": "section" },
                     { "data": "masuk" },
                     { "data": "keluar" },
+                    { "data": "dari" },
+                    { "data": "sampai" },
                     { "data": "plan_ot" },
                     { "data": "ot", "width": "1%" },
                     { "data": "act_log" },
