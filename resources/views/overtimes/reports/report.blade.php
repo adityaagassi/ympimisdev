@@ -294,9 +294,6 @@ table.table-bordered > tfoot > tr > th{
        },
        legend: {
          enabled: true,
-         itemStyle: {
-          fontSize: '15px'
-        }
       },
       exporting : {
        enabled : true,
@@ -309,40 +306,23 @@ table.table-bordered > tfoot > tr > th{
      },
      title: {
       text: 'Overtime <br><span style="font-size:12pt">'+title+'</span>',
-      style: {
-        fontSize: '30px'
-      }
     },
     xAxis: {
       categories: cat,
       labels: {
         rotation: -60,
-        style: {
-          fontSize: '20px'
-        }
       }
     },
     yAxis: {
       min:0,
       title: {
         text: 'Number of Employee',
-        style: {
-          fontSize: '20px'
-        }
-      },
-      labels: {
-        style: {
-          fontSize: '15px'
-        }
       }
     },
     plotOptions: {
       line: {
         dataLabels: {
           enabled: true,
-          style: {
-            fontSize: '15px'
-          }
         },
         enableMouseTracking: true
       },

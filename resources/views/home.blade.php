@@ -97,6 +97,26 @@
                     </tr>
                 </tbody>
             </table>
+
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 16px;">
+                    <tr>
+                        <th>Total Meeting<br/>Jepang</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Total Meeting (jepang)</span>
+                            <br>
+                            <a href="{{ url("/index/report/gender") }}">
+                                <i class="fa fa-caret-right"></i> Total Manpower (jepang)
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="col-md-3">
             <table class="table table-bordered">

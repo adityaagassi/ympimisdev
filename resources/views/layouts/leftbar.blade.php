@@ -229,6 +229,12 @@
         </li>
         @endif
 
+        @if(in_array('S17', $navs))
+        @if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
+        </li>
+        @endif
+
         @if(in_array('S13', $navs))
         @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
