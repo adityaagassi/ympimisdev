@@ -184,10 +184,10 @@ class DisplayController extends Controller
 
 	public function fetch_dp_production_result(Request $request){
 		if($request->get('hpl') == 'all'){
-			$hpl = "where materials.category = 'FG'";
+			$hpl = "where materials.hpl = 'FLFG'";
 		}
 		else{
-			$hpl = "where materials.category = 'FG' and materials.origin_group_code = '". $request->get('hpl') ."'";
+			$hpl = "where materials.hpl = 'FLFG' and materials.origin_group_code = '". $request->get('hpl') ."'";
 		}
 
 		$first = date('Y-m-01');
