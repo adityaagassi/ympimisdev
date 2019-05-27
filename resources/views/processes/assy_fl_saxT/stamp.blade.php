@@ -40,17 +40,20 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Stamp Flute<span class="text-purple"> フルートの刻印</span>
+		Stamp Saxophone<span class="text-purple"> フルートの刻印</span>
 		<small>Serial Number <span class="text-purple"> 通し番号</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-warning btn-sm" style="color:white"><i class="fa fa-television "></i>&nbsp;Display</a>
+			{{-- <a href="{{ url("/index/displayWipFl") }}" class="btn btn-warning btn-sm" style="color:white"><i class="fa fa-television "></i>&nbsp;Display</a>
 			<button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
 				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
 			</button>
+			<button onclick="stamp();" class="btn btn-info btn-sm" >
+				<i class="fa fa-print"></i>&nbsp;&nbsp;STAMP
+			</button> --}}
 			<a href="javascript:void(0)" onclick="adjust()" class="btn btn-danger btn-sm" style="color:white"><i class="fa fa-edit "></i>&nbsp;Adjust Serial</a>
-			<a href="{{ url("/stamp/resumes") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
+			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
 		</li>
 	</ol>
 </section>
@@ -88,26 +91,45 @@ table.table-bordered > tfoot > tr > th{
 								
 							</p>
 						</div>
-						<div class="col-xs-4">
+						
+
+						<div class="col-xs-2">
 							<center>
-								<span style="font-size: 24px;">Schedule:</span>
+								<span style="font-size: 20px;">Total Production Alto:</span>
+							</center>
+							<table id="planTable2" name="planTable2" class="table table-bordered table-hover table-striped">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<th>Model</th>
+									<th>Production</th>
+								
+								</thead>
+								<tbody id="planTableBody2">
+								</tbody>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<th>Total</th>
+									<th></th>
+									
+								</tfoot>
+							</table>
+						</div>
+						<div class="col-xs-2">
+							<center>
+								<span style="font-size: 20px;">Total Production Tenor:</span>
 							</center>
 							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<th>Model</th>
-									<th>Plan</th>
-									<th>Act</th>
-									<th>Diff</th>
+									<th>Production</th>
+								
 								</thead>
 								<tbody id="planTableBody">
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<th>Total</th>
 									<th></th>
-									<th></th>
-									<th></th>
+									
 								</tfoot>
-							</table>
+							</table>							
 						</div>
 						<div class="col-xs-3">
 							<center>
@@ -117,14 +139,17 @@ table.table-bordered > tfoot > tr > th{
 								<input type="button" style="width: 49%; margin-top: 5px;" class="btn btn-danger" value="MINUS" id="minus" onclick="adjustSerial(id)">
 								<input type="button" style="width: 49%; margin-top: 5px;" class="btn btn-danger" value="PLUS" id="plus" onclick="adjustSerial(id)">
 								<span style="font-size: 24px">Model:</span><br>
-								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YFL" disabled>
+								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YTS" disabled>
 
 								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> FG</button>
-								<INPUT type="TEXT" style="width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; " class="btn"   value="FG" name="category" id="category" readonly>
+								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px;" class="btn"   value="FG" name="category" id="category" readonly>
 								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="KD" onclick="category(id)"> KD</button>
-								{{-- <input type="hidden" class="form-control" value="fg" name="category" id="category"> --}}<br><br>
+								<br><br>
+								<div id="listModel2">
+								</div><br>
 								<div id="listModel">
 								</div>
+							
 							</center>
 						</div>
 						<div class="col-xs-5">
@@ -144,6 +169,7 @@ table.table-bordered > tfoot > tr > th{
 								</tfoot>
 							</table>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -242,13 +268,15 @@ table.table-bordered > tfoot > tr > th{
 		$(function () {
 			$('.select2').select2()
 		});
-		
+		// setInterval(fillSerialNumber, 5000);
 		stamp();
 
 		$('body').toggleClass("sidebar-collapse");
+		fillPlan2()
 		fillPlan();
 		fillSerialNumber();
 		fillResult();
+		
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -258,7 +286,7 @@ table.table-bordered > tfoot > tr > th{
 	}
 
 	function fillPlan(){
-		$.get('{{ url("stamp/fetchPlan") }}'+'/YFL', function(result, status, xhr){
+		$.get('{{ url("stamp/fetchPlan") }}'+'/YTS', function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
@@ -270,9 +298,9 @@ table.table-bordered > tfoot > tr > th{
 					$.each(result.planData, function(key, value) {
 						planData += '<tr>';
 						planData += '<td>'+ value.model +'</td>';
-						planData += '<td>'+ value.plan +'</td>';
+						
 						planData += '<td>'+ value.actual +'</td>';
-						planData += '<td>'+ (value.actual-value.plan) +'</td>';
+						
 						planData += '</tr>';
 					});
 					$('#planTableBody').append(planData);
@@ -296,23 +324,87 @@ table.table-bordered > tfoot > tr > th{
 								i : 0;
 							};
 							var api = this.api();
+							
 							var total_diff = api.column(1).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(1).footer()).html(total_diff.toLocaleString());
-
-							var total_actual = api.column(2).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(2).footer()).html(total_actual.toLocaleString());
-
-							var total_plan = api.column(3).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(3).footer()).html(total_plan.toLocaleString());
+							
 						},
 						"columnDefs": [ {
-							"targets": 3,
+							"targets": 1,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData <  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						}]
+					});
+				}
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from server');
+			}
+		});
+	}
+
+	function fillPlan2(){
+		$.get('{{ url("stamp/fetchPlan") }}'+'/YAS', function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status = 200){
+				if(result.status){
+					$('#planTable2').DataTable().destroy();
+					$('#planTableBody2').html("");
+					var planData = '';
+					$.each(result.planData, function(key, value) {
+						planData += '<tr>';
+						planData += '<td>'+ value.model +'</td>';
+						
+						planData += '<td>'+ value.actual +'</td>';
+						
+						planData += '</tr>';
+					});
+					$('#planTableBody2').append(planData);
+					$('#listModel2').html("");
+					$.unique(result.model.map(function (d) {
+						$('#listModel2').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
+					}));
+					$('#planTable2').DataTable({
+						'paging': false,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"footerCallback": function (tfoot, data, start, end, display) {
+							var intVal = function ( i ) {
+								return typeof i === 'string' ?
+								i.replace(/[\$,]/g, '')*1 :
+								typeof i === 'number' ?
+								i : 0;
+							};
+							var api = this.api();
+							
+							var total_diff = api.column(1).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(1).footer()).html(total_diff.toLocaleString());
+							
+						},
+						"columnDefs": [ {
+							"targets": 1,
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
@@ -338,7 +430,7 @@ table.table-bordered > tfoot > tr > th{
 	}
 
 	function fillSerialNumber(){
-		var originGroupCode = '041';
+		var originGroupCode = '043';
 		var data = {
 			originGroupCode:originGroupCode,
 		}
@@ -369,7 +461,7 @@ table.table-bordered > tfoot > tr > th{
 
 	function adjust(){
 		var data = {
-			originGroupCode:'041'
+			originGroupCode:'043'
 		}
 		$.get('{{ url("stamp/adjust") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -399,7 +491,7 @@ table.table-bordered > tfoot > tr > th{
 		var data = {
 			prefix:prefix,
 			lastIndex:lastIndex,
-			originGroupCode:'041'
+			originGroupCode:'043'
 		}
 		$.post('{{ url("stamp/adjust") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -428,7 +520,7 @@ table.table-bordered > tfoot > tr > th{
 	function adjustSerial(id){
 		var data ={
 			adjust:id,
-			originGroupCode:'041'
+			originGroupCode:'043'
 		}
 		$.post('{{ url("stamp/adjustSerial") }}', data, function(result, status, xhr){
 			console.log(status);
@@ -450,7 +542,7 @@ table.table-bordered > tfoot > tr > th{
 	}
 
 	function fillResult(){
-		$.get('{{ url("stamp/fetchResult") }}'+'/YFL', function(result, status, xhr){
+		$.get('{{ url("stamp/fetchResult") }}'+'/YTS', function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
@@ -496,11 +588,13 @@ table.table-bordered > tfoot > tr > th{
 		});
 	}
 
+	
+
 	function stamp(){
 		var model = $('#model').val();
 		var category = $('#category').val();
 		var serialNumber = $('#nextCounter').val();
-		var originGroupCode = '041';
+		var originGroupCode = '043';
 		var processCode = '1';
 		var manPower = '27';
 		var data = {
@@ -518,7 +612,9 @@ table.table-bordered > tfoot > tr > th{
 			if(xhr.status == 200){
 				if(result.status){
 					if(result.statusCode == 'stamp'){
+						
 						fillResult();
+						fillPlan2();
 						fillPlan();
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
@@ -571,7 +667,7 @@ table.table-bordered > tfoot > tr > th{
 		var data = {
 			id:id,
 			model:model,
-			originGroupCode:'041',
+			originGroupCode:'043',
 			processCode:'1',
 		}
 		if(confirm("Are you sure you want to delete this data?")){
@@ -587,7 +683,9 @@ table.table-bordered > tfoot > tr > th{
 						$('#editModal').modal('hide');
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
+						
 						fillPlan();
+						fillPlan2();
 					}
 					else{
 						audio_error.play();
@@ -608,7 +706,7 @@ table.table-bordered > tfoot > tr > th{
 		var data = {
 			id:id,
 			model:model,
-			originGroupCode:'041',
+			originGroupCode:'043',
 			processCode:'1',
 		}
 		$.post('{{ url("edit/stamp") }}', data, function(result, status, xhr){
@@ -623,7 +721,9 @@ table.table-bordered > tfoot > tr > th{
 					$('#editModal').modal('hide');
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
+					
 					fillPlan();
+					fillPlan2();
 				}
 				else{
 					audio_error.play();

@@ -351,31 +351,31 @@ class ProcessController extends Controller
 	}
 
 
-	public function fetchStampPlan(){
+	// public function fetchStampPlan(){
 
-		$now = date('Y-m-d');
+	// 	$now = date('Y-m-d');
 
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
-		(
-		select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+	// 	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	// 	(
+	// 	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
-		union all
+	// 	union all
 
-		select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
-		) as plan
-		group by model
-		having model like 'YFL%'";
+	// 	select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
+	// 	) as plan
+	// 	group by model
+	// 	having model like 'YFL%'";
 
-		$planData = DB::select($query);
-		$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()->get();
+	// 	$planData = DB::select($query);
+	// 	$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()->get();
 
-		$response = array(
-			'status' => true,
-			'planData' => $planData,
-			'model' => $materials,
-		);
-		return Response::json($response);
-	}
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'planData' => $planData,
+	// 		'model' => $materials,
+	// 	);
+	// 	return Response::json($response);
+	// }
 
 	public function fetchSerialNumber(Request $request){
 		$code_generator = DB::table('code_generators')->where('note', '=', $request->get('originGroupCode'))->first();
@@ -393,21 +393,21 @@ class ProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchResult(){
-		$now = date('Y-m-d');
-		$log_processes = db::table('log_processes')
-		->where('process_code', '=', '1')
-		->where('model', 'like', 'YFL%')
-		->where(db::raw('date(created_at)'), '=', $now)
-		->orderBy('created_at', 'desc')
-		->get();
+	// public function fetchResult(){
+	// 	$now = date('Y-m-d');
+	// 	$log_processes = db::table('log_processes')
+	// 	->where('process_code', '=', '1')
+	// 	->where('model', 'like', 'YFL%')
+	// 	->where(db::raw('date(created_at)'), '=', $now)
+	// 	->orderBy('created_at', 'desc')
+	// 	->get();
 
-		$response = array(
-			'status' => true,
-			'resultData' => $log_processes,
-		);
-		return Response::json($response);
-	}
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'resultData' => $log_processes,
+	// 	);
+	// 	return Response::json($response);
+	// }
 
 	public function adjust(Request $request){
 		$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
@@ -560,221 +560,1178 @@ class ProcessController extends Controller
 
 	public function stamp(Request $request){
 		try{
-			$plc = new ActMLEasyIf(0);
+if ($request->get('originGroupCode') =='041') {//flute
+	$plc = new ActMLEasyIf(0);
+	$datas = $plc->read_data('D0', 16);
+	$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
+		}else if ($request->get('originGroupCode') =='042') {//clarinet
+			$plc = new ActMLEasyIf(3);
 			$datas = $plc->read_data('D0', 16);
-			$data = $datas[0];
-			$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();
+			$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
+		}else if ($request->get('originGroupCode') =='043') {//sax
+			$plc = new ActMLEasyIf(2);
+			$datas = $plc->read_data('D0', 16);
+			$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
+		}
+		$data = $datas[0];
 
-			if($plc_counter->plc_counter <> $data){
+		if($plc_counter->plc_counter <> $data){
 
-				if(Auth::user()->role_code == "OP-SubAssy-FL"){
+			if(Auth::user()->role_code == "OP-SubAssy-FL"){
 
-					$id = Auth::id();
+				$id = Auth::id();
 
-					$plc_counter->plc_counter = $data;
+				$plc_counter->plc_counter = $data;
 
-					$log_process = LogProcess::updateOrCreate(
+				$log_process = LogProcess::updateOrCreate(
+					[
+						'process_code' => $request->get('processCode'), 
+						'serial_number' => $request->get('serialNumber'),
+						'origin_group_code' => $request->get('originGroupCode')
+					],
+					[
+						'model' => $request->get('model'),
+						'manpower' => $request->get('manPower'),
+						'quantity' => 1,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]
+				);
+
+				$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+				$code_generator->index = $code_generator->index+1;
+
+				if ($request->get('category')=='FG'){
+
+					$stamp_inventory = StampInventory::updateOrCreate(
 						[
-							'process_code' => $request->get('processCode'), 
 							'serial_number' => $request->get('serialNumber'),
 							'origin_group_code' => $request->get('originGroupCode')
 						],
 						[
+							'process_code' => $request->get('processCode'), 
 							'model' => $request->get('model'),
-							'manpower' => $request->get('manPower'),
-							'quantity' => 1,
-							'created_by' => $id,
-							'created_at' => date('Y-m-d H:i:s')
+							'quantity' => 1
 						]
 					);
 
-					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
-					$code_generator->index = $code_generator->index+1;
+					$stamp_inventory->save();
+				}
 
-					if ($request->get('category')=='FG'){
-
-						$stamp_inventory = StampInventory::updateOrCreate(
-							[
-								'serial_number' => $request->get('serialNumber'),
-								'origin_group_code' => $request->get('originGroupCode')
-							],
-							[
-								'process_code' => $request->get('processCode'), 
-								'model' => $request->get('model'),
-								'quantity' => 1
-							]
-						);
-
-						$stamp_inventory->save();
-					}
-
-					$plc_counter->save();
-					$code_generator->save();
-					$log_process->save();
+				$plc_counter->save();
+				$code_generator->save();
+				$log_process->save();
 
 					// if ($request->get('category')=='FG'){
-					$printer_name = 'SUPERMAN';
+				$printer_name = 'SUPERMAN';
 
-					$connector = new WindowsPrintConnector($printer_name);
-					$printer = new Printer($connector);
+				$connector = new WindowsPrintConnector($printer_name);
+				$printer = new Printer($connector);
 
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setBarcodeWidth(2);
-					$printer->setBarcodeHeight(64);
-					$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
-					$printer->setTextSize(3, 1);
-					$printer->text($request->get('serialNumber')."\n");
-					$printer->feed(1);
-					$printer->text($request->get('model')."\n");
-					$printer->setTextSize(1, 1);
-					$printer->text(date("d-M-Y H:i:s")."\n");
-					$printer->cut();
-					$printer->close();
+				$printer->setJustification(Printer::JUSTIFY_CENTER);
+				$printer->setBarcodeWidth(2);
+				$printer->setBarcodeHeight(64);
+				$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
+				$printer->setTextSize(3, 1);
+				$printer->text($request->get('serialNumber')."\n");
+				$printer->feed(1);
+				$printer->text($request->get('model')."\n");
+				$printer->setTextSize(1, 1);
+				$printer->text(date("d-M-Y H:i:s")."\n");
+				$printer->cut();
+				$printer->close();
 					// }
 
-					$response = array(
-						'status' => true,
-						'statusCode' => 'stamp',
-						'message' => 'Stamp success',
-						'data' => $plc_counter->plc_counter
-					);
-					return Response::json($response);
-				}
-				else{
-					$response = array(
-						'status' => true,
-						'statusCode' => 'stamp',
-						'message' => 'Stamp success',
-						'role' => 'Guest'
-					);
-					return Response::json($response);
-				}
-			}
-			else{
 				$response = array(
 					'status' => true,
-					'statusCode' => 'noStamp',
+					'statusCode' => 'stamp',
+					'message' => 'Stamp success',
+					'data' => $plc_counter->plc_counter
 				);
 				return Response::json($response);
 			}
+			else if(Auth::user()->role_code == "OP-Body-CL"){
+
+				$id = Auth::id();
+
+				$plc_counter->plc_counter = $data;
+
+				$log_process = LogProcess::updateOrCreate(
+					[
+						'process_code' => $request->get('processCode'), 
+						'serial_number' => $request->get('serialNumber'),
+						'origin_group_code' => $request->get('originGroupCode')
+					],
+					[
+						'model' => $request->get('model'),
+						'manpower' => $request->get('manPower'),
+						'quantity' => 1,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]
+				);
+
+				$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+				$code_generator->index = $code_generator->index+1;
+
+				if ($request->get('category')=='FG'){
+
+					$stamp_inventory = StampInventory::updateOrCreate(
+						[
+							'serial_number' => $request->get('serialNumber'),
+							'origin_group_code' => $request->get('originGroupCode')
+						],
+						[
+							'process_code' => $request->get('processCode'), 
+							'model' => $request->get('model'),
+							'quantity' => 1
+						]
+					);
+
+					$stamp_inventory->save();
+				}
+
+				$plc_counter->save();
+				$code_generator->save();
+				$log_process->save();
+
+				if ($request->get('category')=='FG'){
+						//print
+
+				}
+
+				$response = array(
+					'status' => true,
+					'statusCode' => 'stamp',
+					'message' => 'Stamp success',
+					'data' => $plc_counter->plc_counter
+				);
+				return Response::json($response);
+
+			}else if(Auth::user()->role_code == "OP-Handatsuke-SX"){
+
+				$id = Auth::id();
+
+				$plc_counter->plc_counter = $data;
+
+				$log_process = LogProcess::updateOrCreate(
+					[
+						'process_code' => $request->get('processCode'), 
+						'serial_number' => $request->get('serialNumber'),
+						'origin_group_code' => $request->get('originGroupCode')
+					],
+					[
+						'model' => $request->get('model'),
+						'manpower' => $request->get('manPower'),
+						'quantity' => 1,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s')
+					]
+				);
+
+				$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+				$code_generator->index = $code_generator->index+1;
+
+				if ($request->get('category')=='FG'){
+
+					$stamp_inventory = StampInventory::updateOrCreate(
+						[
+							'serial_number' => $request->get('serialNumber'),
+							'origin_group_code' => $request->get('originGroupCode')
+						],
+						[
+							'process_code' => $request->get('processCode'), 
+							'model' => $request->get('model'),
+							'quantity' => 1
+						]
+					);
+
+					$stamp_inventory->save();
+				}
+
+				$plc_counter->save();
+				$code_generator->save();
+				$log_process->save();
+
+				if ($request->get('category')=='FG'){
+						//print
+
+				}
+
+				$response = array(
+					'status' => true,
+					'statusCode' => 'stamp',
+					'message' => 'Stamp success',
+					'data' => $plc_counter->plc_counter
+				);
+				return Response::json($response);
+
+			}
+			// else{
+			// 	$response = array(
+			// 		'status' => true,
+			// 		'statusCode' => 'stamp',
+			// 		'message' => 'Stamp success',
+			// 		'role' => 'Guest'
+			// 	);
+			// 	return Response::json($response);
+			// }
 		}
-		catch (\Exception $e){
+		else{
 			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
+				'status' => true,
+				'statusCode' => 'noStamp',
 			);
 			return Response::json($response);
 		}
 	}
-
-	public function filter_stamp_detail(Request $request){
-		$flo_detailsTable = DB::table('log_processes')
-		->leftJoin('processes', 'processes.process_code', '=', 'log_processes.process_code')
-		->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','processes.process_name', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
-
-		if(strlen($request->get('datefrom')) > 0){
-			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-			$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
-		}
-
-		if(strlen($request->get('code')) > 0){
-			$code = $request->get('code');
-			$flo_detailsTable = $flo_detailsTable->where('log_processes.process_code','=', $code );
-		}
-
-		if(strlen($request->get('dateto')) > 0){
-			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
-			$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '<=', $date_to);
-		}
-
-		$stamp_detail = $flo_detailsTable->orderBy('log_processes.created_at', 'desc')->get();
-
-		return DataTables::of($stamp_detail)
-		->addColumn('action', function($stamp_detail){
-			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
-		})
-		->make(true);
-	}
-
-	public function fetchwipflallchart(Request $request){
-
-		$first = date('Y-m-01');
-		$now = date('Y-m-d');
-
-		$target = DB::table('production_schedules')
-		->leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
-		->where('production_schedules.due_date', '=', $now)
-		->where('materials.category', '=', 'FG');
-		$stock = DB::table('stamp_inventories');
-
-		$targetFL = $target->where('origin_group_code', '=', $request->get('originGroupCode'))->sum('production_schedules.quantity');
-		$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->whereNull('status')->sum('stamp_inventories.quantity');
-
-		if($targetFL != 0){
-			$dayFL = floor($stockFL/$targetFL);
-			$addFL = ($stockFL/$targetFL)-$dayFL;
-		}
-		else{
-			$dayFL = 2;
-			$addFL = 1;
-		}
-
-		$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
-
-		$currStock = round($stockFL/$targetFL,1);
-
-		if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
-			$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
-			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
-		}
-		elseif(date('D')=='Sun'){
-			$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
-			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
-		}
-		else{
-			$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
-			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
-		}
-
-		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.process_code";
-
-		$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
-		(
-		select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
-		(
-		select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
-
-		union all
-
-		select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
-
-		union all
-
-		select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
-
-		union all
-
-		select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
-		) result1
-		left join materials on materials.material_number = result1.material_number
-		group by materials.model
-
-		union all
-
-		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null group by model
-		) as result2
-		group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
-
-		$stockData = DB::select($query);
-		$efficiencyData = DB::select($query2);
-
+	catch (\Exception $e){
 		$response = array(
-			'status' => true,
-			'efficiencyData' => $efficiencyData,
-			'stockData' => $stockData,
-			'currStock' => $currStock,
+			'status' => false,
+			'message' => $e->getMessage(),
 		);
 		return Response::json($response);
 	}
+}
+
+public function filter_stamp_detail(Request $request){
+	$flo_detailsTable = DB::table('log_processes')
+	->leftJoin('processes', 'processes.process_code', '=', 'log_processes.process_code')
+	->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','processes.process_name', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
+
+	if(strlen($request->get('datefrom')) > 0){
+		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
+	}
+
+	if(strlen($request->get('code')) > 0){
+		$code = $request->get('code');
+		$flo_detailsTable = $flo_detailsTable->where('log_processes.process_code','=', $code );
+	}
+
+	if(strlen($request->get('dateto')) > 0){
+		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '<=', $date_to);
+	}
+
+	$stamp_detail = $flo_detailsTable->orderBy('log_processes.created_at', 'desc')->get();
+
+	return DataTables::of($stamp_detail)
+	->addColumn('action', function($stamp_detail){
+		return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+	})
+	->make(true);
+}
+
+public function fetchwipflallchart(Request $request){
+
+	$first = date('Y-m-01');
+	$now = date('Y-m-d');
+
+	$target = DB::table('production_schedules')
+	->leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
+	->where('production_schedules.due_date', '=', $now)
+	->where('materials.category', '=', 'FG');
+	$stock = DB::table('stamp_inventories');
+
+	$targetFL = $target->where('origin_group_code', '=', $request->get('originGroupCode'))->sum('production_schedules.quantity');
+	$stockFL = $stock->where('origin_group_code', '=', $request->get('originGroupCode'))->whereNull('status')->sum('stamp_inventories.quantity');
+
+	if($targetFL != 0){
+		$dayFL = floor($stockFL/$targetFL);
+		$addFL = ($stockFL/$targetFL)-$dayFL;
+	}
+	else{
+		$dayFL = 2;
+		$addFL = 1;
+	}
+
+	$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+
+	$currStock = round($stockFL/$targetFL,1);
+
+	if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+3)));
+	}
+	elseif(date('D')=='Sun'){
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
+	}
+	else{
+		$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL)));
+		$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
+	}
+
+	$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null group by stamp_inventories.process_code";
+
+	$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
+	(
+	select materials.model, sum(plan) as plan, 0 as stock, sum(max_plan) as max_plan from
+	(
+	select material_number, sum(quantity) as plan, 0 as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$hFL."' group by material_number
+
+	union all
+
+	select material_number, round(sum(quantity)*".$addFL.") as plan, 0 as max_plan from production_schedules where due_date = '".$aFL."' group by material_number
+
+	union all
+
+	select material_number, 0 as plan, sum(quantity) as max_plan from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
+
+	union all
+
+	select material_number, -(sum(quantity)) as plan, -(sum(quantity)) as max_plan from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$aFL."' group by material_number
+	) result1
+	left join materials on materials.material_number = result1.material_number
+	group by materials.model
+
+	union all
+
+	select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null group by model
+	) as result2
+	group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
+
+	$stockData = DB::select($query);
+	$efficiencyData = DB::select($query2);
+
+	$response = array(
+		'status' => true,
+		'efficiencyData' => $efficiencyData,
+		'stockData' => $stockData,
+		'currStock' => $currStock,
+	);
+	return Response::json($response);
+}
+
+	//tambah ali stamp sax and cl
+
+public function indexProcessAssyFLCla1(){
+		//$now = date('Y-m-d',strtotime('-4 days'));
+
+	$model2 = StampInventory::where('origin_group_code','=','042')->orderBy('created_at', 'desc')
+	->get();
+	return view('processes.assy_fl_cla.stamp',array(
+		'model2' => $model2,
+	))
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function indexProcessAssyFLSaxT1(){
+		//$now = date('Y-m-d',strtotime('-4 days'));
+
+	$model2 = StampInventory::where('origin_group_code','=','043')->orderBy('created_at', 'desc')
+	->get();
+	return view('processes.assy_fl_saxT.stamp',array(
+		'model2' => $model2,
+	))
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+
+public function indexProcessStampSX(){
+	return view('processes.assy_fl_saxT.index')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function indexProcessStampCl(){
+	return view('processes.assy_fl_cla.index')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function indexResumesCL(){
+
+
+	return view('processes.assy_fl_cla.resumes')
+	->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
+}
+
+public function indexResumesSX(){
+
+
+	return view('processes.assy_fl_saxT.resumes')
+	->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
+}
+
+
+public function fetchStampPlan($id){
+	$id_all = $id."%";
+
+	$now = date('Y-m-d');
+
+	$query = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like '".$id_all."'";
+
+
+	$query3 = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like '".$id_all."'";
+
+
+
+	$query2 = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '1' and date(created_at) = '" . $now . "'
+	) as plan
+	WHERE MODEL in ('INDONESIA','CHINA')
+	group by model
+	";
+
+
+
+
+	if ($id =="YAS") {
+		$materials = DB::table('materials')->where('model', 'like', 'YAS%')->where('issue_storage_location', '=', 'sx21')->where('hpl', '=', 'ASBODY')
+		->where('category', '=', 'wip')->select('model')->distinct()->get();
+	}
+
+	if ($id =="YTS") {
+		$materials = DB::table('materials')->where('model', 'like', 'YTS%')->where('issue_storage_location', '=', 'sx21')->where('hpl', '=', 'TSBODY')
+		->where('category', '=', 'wip')->select('model')->distinct()->get();
+	}
+
+	if($id =="YCL"){
+		$planData = DB::select($query2);
+	}else{
+		$planData = DB::select($query);
+	}
+
+	if ($id =="YFL") {
+		$materials = DB::table('materials')->where('model', 'like', $id_all)->select('model')->distinct()->get();
+	}
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+		'model' => $materials,
+
+	);
+	return Response::json($response);
+}
+
+
+public function fetchResult($id){
+	$id_all = $id."%";
+	$now = date('Y-m-d');
+	if($id =="YCL"){
+		$query="SELECT * FROM log_processes WHERE model IN ('INDONESIA','CHINA') ORDER BY created_at desc";
+		$log_processes = db::select($query);
+
+	}elseif($id =="YTS"){
+		$query="SELECT * FROM (
+		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1' 
+		UNION ALL
+		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1'
+	) A ORDER BY created_at DESC";
+	$log_processes = db::select($query);
+}elseif($id =="YTS2"){
+	$query="SELECT * FROM (
+	SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' 
+	UNION ALL
+	SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='2'
+) A ORDER BY created_at DESC";
+$log_processes = db::select($query);
+}elseif($id =="YTS3"){
+	$query="SELECT * FROM (
+	SELECT * FROM stamp_inventories WHERE model LIKE 'YTS%' and process_code ='3' 
+	UNION ALL
+	SELECT * FROM stamp_inventories WHERE model LIKE 'YAS%'  and process_code ='3'
+) A ORDER BY created_at DESC";
+$log_processes = db::select($query);
+}else{
+	$log_processes = db::table('log_processes')
+	->where('process_code', '=', '1')
+	->where('model', 'like', $id_all)
+	->where(db::raw('date(created_at)'), '=', $now)
+	->orderBy('created_at', 'desc')
+	->get();
+}
+$response = array(
+	'status' => true,
+	'resultData' => $log_processes,
+);
+return Response::json($response);
+}
+
+
+
+
+// print saxophone
+
+public function getsnsax(Request $request)
+{
+	$sn = StampInventory::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->select('model', 'serial_number')
+	->first();
+
+	$sn2 = StampInventory::where('process_code', '=', '2')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->select('model', 'serial_number')
+	->first();
+
+
+	if ($sn != null) {
+		$response = array(
+			'status' => true,
+			'message' => '1',
+			'model' => $sn->model,
+			'sn' => $sn->serial_number,
+		);
+		return Response::json($response);
+	}elseif ($sn2 != null) {
+		$response = array(
+			'status' => true,
+			'message' => '2',
+			'model' => $sn2->model,
+			'sn' => $sn2->serial_number,
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false,
+			'message' => 'Serial Number not registered',
+		);
+		return Response::json($response);
+	}
+}
+
+public function print_sax(Request $request){
+	$stamp = LogProcess::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->first();
+
+	$stamp2 = LogProcess::where('process_code', '=', '2')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->first();
+
+
+	try{
+		$id = Auth::id();
+		if ($request->get('status') =="update") {
+			if ($stamp != null) {
+				$model = $stamp->model;
+			}else{
+				$model = $stamp2->model;
+			}
+			
+
+			$log_process = LogProcess::updateOrCreate(
+				[
+					'process_code' => '2', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin')
+				],
+				[
+					'process_code' => '2', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin'),
+					'model' => $model,
+					'quantity' => 1,
+					'created_by' => $id,
+					'created_at' => date('Y-m-d H:i:s')
+				]
+			);
+
+			$inventory = StampInventory::where('process_code', '=', $request->get('code'))
+			->where('origin_group_code','=' ,$request->get('origin'))
+			->where('serial_number','=' ,$request->get('sn'))
+			->first();
+
+			$inventory2 = StampInventory::where('process_code', '=', '2')
+			->where('origin_group_code','=' ,$request->get('origin'))
+			->where('serial_number','=' ,$request->get('sn'))
+			->first();
+
+			if ($inventory != null) {
+				$inventory->status = null;
+				$inventory->process_code = '2';
+				$inventory->save();
+			} elseif ($inventory2 != null) {
+				$inventory2->status = null;
+				$inventory2->process_code = '2';
+				$inventory2->save();
+			}
+
+			
+
+			
+			$log_process->save();
+
+			$printer_name = 'Barcode Printer Sax';
+
+			$connector = new WindowsPrintConnector($printer_name);
+			$printer = new Printer($connector);
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setBarcodeWidth(2);
+			$printer->setBarcodeHeight(64);
+			$printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
+				// $printer->qrCode($request->get('sn'));
+			$printer->setTextSize(3, 1);
+			$printer->text($request->get('sn')."\n");
+			$printer->feed(1);
+			$printer->text($model."\n");
+			$printer->setTextSize(1, 1);
+			$printer->text(date("d-M-Y H:i:s")."\n");
+			$printer->cut();
+			$printer->close();
+
+		}else{
+			$invent = new StampInventory([
+				'process_code' => '2', 
+				'serial_number' => $request->get('sn'),
+				'origin_group_code' => $request->get('origin'),
+				'model' => $request->get('snmodel'),
+				'quantity' => 1,
+				'created_by' => $id,
+				'created_at' => date('Y-m-d H:i:s')
+			]);
+
+			$log = new LogProcess([
+				'process_code' => '2', 
+				'serial_number' => $request->get('sn'),
+				'origin_group_code' => $request->get('origin'),
+				'model' => $request->get('snmodel'),
+				'quantity' => 1,
+				'created_by' => $id,
+				'created_at' => date('Y-m-d H:i:s')
+			]);
+			$invent->save();
+			$log->save();
+
+			$printer_name = 'Barcode Printer Sax';
+
+			$connector = new WindowsPrintConnector($printer_name);
+			$printer = new Printer($connector);
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setBarcodeWidth(2);
+			$printer->setBarcodeHeight(64);
+			$printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
+				// $printer->qrCode($request->get('sn'));
+			$printer->setTextSize(3, 1);
+			$printer->text($request->get('sn')."\n");
+			$printer->feed(1);
+			$printer->text($request->get('snmodel')."\n");
+			$printer->setTextSize(1, 1);
+			$printer->text(date("d-M-Y H:i:s")."\n");
+			$printer->cut();
+			$printer->close();
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Print success',
+		);
+		return Response::json($response);
+	}
+	catch (QueryException $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+public function fetchStampPlansax2($id){
+
+	$id_all = $id."%";
+
+	$now = date('Y-m-d');	
+
+	$query3 = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '2' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like '".$id_all."'";
+
+	$planData = DB::select($query3);
+
+	if ($id =="YAS") {
+		$materials = DB::table('materials')->where('model', 'like', 'YAS%')->where('issue_storage_location', '=', 'sx21')->where('hpl', '=', 'ASBODY')
+		->where('category', '=', 'wip')->select('model')->distinct()->get();
+	}
+
+	if ($id =="YTS") {
+		$materials = DB::table('materials')->where('model', 'like', 'YTS%')->where('issue_storage_location', '=', 'sx21')->where('hpl', '=', 'TSBODY')
+		->where('category', '=', 'wip')->select('model')->distinct()->get();
+	}
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+		'model' => $materials,
+
+	);
+	return Response::json($response);
+}
+
+public function reprint_stamp2(Request $request)
+{
+	$model = db::table('stamp_inventories')	
+	->where('serial_number', '=', $request->get('stamp_number_reprint'))
+	->select ('model')
+	->first();
+
+	if ($request->get('stamp_number_reprint') != null){
+		try {
+			$code_generator = CodeGenerator::where('note', '=', '043')->first();
+			$code_generator->index = $code_generator->index+1;
+			$code_generator->save();
+
+			$printer_name = 'Barcode Printer Sax';
+
+			$connector = new WindowsPrintConnector($printer_name);
+			$printer = new Printer($connector);
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setBarcodeWidth(2);
+			$printer->setBarcodeHeight(64);
+			$printer->barcode($request->get('stamp_number_reprint'), Printer::BARCODE_CODE39);
+			// $printer->qrCode($request->get('serialNumber'));
+			$printer->setTextSize(3, 1);
+			$printer->text($request->get('stamp_number_reprint')."\n");
+			$printer->feed(1);
+			$printer->text($model->model."\n");
+			$printer->setTextSize(1, 1);
+			$printer->text(date("d-M-Y H:i:s")."\n");
+			$printer->cut();
+			$printer->close();
+
+			return back()->with('status', 'Stamp has been reprinted.')->with('page', 'Assembly Process');
+		}
+		catch(\Exception $e){
+			return back()->with("error", "Couldn't print to this printer " . $e->getMessage() . "\n");
+		}
+	}
+	else{
+		return back()->with('error', 'Serial number '. $request->get('stamp_number_reprint') . ' not found.');
+	}
+}
+
+
+// end print saxophone
+
+// print saxophone label
+public function indexProcessAssyFLSaxT2(){
+	$model2 = StampInventory::where('origin_group_code','=','043')->orderBy('created_at', 'desc')
+	->get();
+	return view('processes.assy_fl_saxT.print',array(
+		'model2' => $model2,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function indexProcessAssyFLSaxT3(){
+	$model2 = StampInventory::where('origin_group_code','=','043')->orderBy('created_at', 'desc')
+	->get();
+	return view('processes.assy_fl_saxT.print_label',array(
+		'model2' => $model2,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function fetchStampPlansax3($id){
+	
+	$id_all = $id."%";
+
+	$now = date('Y-m-d');	
+
+	$query3 = "select model, sum(plan) as plan, sum(actual) as actual from
+	(
+	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+
+	union all
+
+	select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
+	) as plan
+	group by model
+	having model like '".$id_all."'";
+
+	$planData = DB::select($query3);
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+
+	);
+	return Response::json($response);
+}
+
+public function getModel(Request $request)
+{
+	if ($request->get('log')==3) {
+		$query ="select material_number,material_description,remark from materials
+		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
+		WHERE stamp_hierarchies.model in ( SELECT model from log_processes WHERE serial_number='".$request->get('sn')."' )
+		";
+	}else{
+		$query ="select material_number,material_description,remark from materials
+		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
+		WHERE stamp_hierarchies.model in ( SELECT model from stamp_inventories WHERE serial_number='".$request->get('sn')."' )
+		";	
+	}
+
+	$planData = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+
+	);
+	return Response::json($response);
+}
+
+public function getsnsax2(Request $request)
+{
+	$sn = StampInventory::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+	$sn2 = StampInventory::where('process_code', '=', '3')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+
+	if ($sn != null) {
+		$response = array(
+			'status' => true,
+			'message' => '1',
+			'model' => $sn->model,
+			'sn' => $sn->serial_number,
+		);
+		return Response::json($response);
+	}
+	elseif ($sn2 != null) {
+		$response = array(
+			'status' => true,
+			'message' => '2',
+			'model' => $sn2->model,
+			'sn' => $sn2->serial_number,
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false,
+			'message' => 'Serial Number not registered',
+		);
+		return Response::json($response);
+	}
+}
+
+public function print_sax2(Request $request){
+	$stamp = LogProcess::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->first();
+
+	$stamp2 = LogProcess::where('process_code', '=', '3')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->first();
+
+
+	try{
+		$id = Auth::id();
+		if ($request->get('status') =="update") {
+			if ($stamp != null) {
+				$model = $stamp->model;
+			}else{
+				$model = $stamp2->model;
+			}
+			
+			$log_process = LogProcess::updateOrCreate(
+				[
+					'process_code' => '3', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin')
+				],
+				[
+					'process_code' => '3', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin'),
+					'status' => $request->get('jpn'),
+					'model' => $model,
+					'quantity' => 1,
+					'created_by' => $id,
+					'created_at' => date('Y-m-d H:i:s')
+				]
+			);
+
+			$inventory = StampInventory::where('process_code', '=', $request->get('code'))
+			->where('origin_group_code','=' ,$request->get('origin'))
+			->where('serial_number','=' ,$request->get('sn'))
+			->first();
+
+			$inventory2 = StampInventory::where('process_code', '=', '3')
+			->where('origin_group_code','=' ,$request->get('origin'))
+			->where('serial_number','=' ,$request->get('sn'))
+			->first();
+
+			if ($inventory != null) {
+				$inventory->status = null;
+				$inventory->process_code = '3';
+				$inventory->model = $request->get('snmodel');
+				$inventory->status =  $request->get('jpn');
+				$inventory->save();
+			} elseif ($inventory2 != null) {
+				$inventory2->status = null;
+				$inventory2->process_code = '3';
+				$inventory2->model = $request->get('snmodel');
+				$inventory->status =  $request->get('jpn');
+				$inventory2->save();
+			}
+			
+			$log_process->save();
+
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Print success',
+		);
+		return Response::json($response);
+	}
+	catch (QueryException $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+
+public function label_besar($id,$gmc,$remark){
+
+	$date = date('Y-m-d');
+	if ($remark =="J") {
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="NJ"){
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="JR") {
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="NJR"){
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}elseif ($remark =="JRB") {
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="NJRB"){
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	$barcode = DB::select($query);
+	
+	return view('processes.assy_fl_saxT.print_label_besar',array(
+		'barcode' => $barcode,
+		'remark' => $remark,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function label_kecil($id,$remark){
+	$date = date('Y-m-d');
+	if ($remark =="RP") {
+		$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+		INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		WHERE a.serial_number='".$id."'";
+	}else{
+		$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+		INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		WHERE a.serial_number='".$id."'";
+	}
+	$barcode = DB::select($query);
+	
+	return view('processes.assy_fl_saxT.print_label_kecil',array(
+		'barcode' => $barcode,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function label_des($id){
+	
+	$query ="select model from stamp_inventories where process_code ='3' and serial_number='".$id."'";
+	$barcode = DB::select($query);
+	
+	return view('processes.assy_fl_saxT.print_label_description',array(
+		'barcode' => $barcode,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function editStampLabel(Request $request){
+	$stamp = StampInventory::find($request->get('id'));
+
+	$response = array(
+		'status' => true,
+		'stamp' => $stamp,
+	);
+	return Response::json($response);
+}
+
+public function updateStampLabel(Request $request){
+	$stamp = StampInventory::where('serial_number',$request->get('id'))->get()->first();	
+
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $stamp->serial_number)
+	->where('stamp_inventories.model', '=', $stamp->model)
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+	$stamp_inventory->update(['model' => $request->get('model')]);
+	
+
+	$response = array(
+		'status' => true,
+		'message' => 'Update Success',
+	);
+	return Response::json($response);
+}
+
+public function getModelReprintAll(Request $request)
+{
+	$query ="SELECT material_number,serial_number,status from materials 
+	LEFT JOIN stamp_inventories 
+	on materials.material_description = stamp_inventories.model
+	where serial_number ='".$request->get('sn')."'";
+
+	$reprint = DB::select($query);
+	$response = array(
+		'status' => true,
+		'reprint' => $reprint,
+	);
+	return Response::json($response);
+}
+
+// print saxophone label
+
+public function filter_stamp_detail_cl(Request $request){
+	$flo_detailsTable = DB::table('log_processes')
+	
+	->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','log_processes.process_code', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
+
+	if(strlen($request->get('datefrom')) > 0){
+		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
+	}
+
+
+	if(strlen($request->get('dateto')) > 0){
+		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '<=', $date_to);
+	}
+
+	$stamp_detail = $flo_detailsTable->orderBy('log_processes.created_at', 'desc')->where('origin_group_code','=','042')->get();
+
+	return DataTables::of($stamp_detail)
+	->addColumn('action', function($stamp_detail){
+		return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+	})
+	->make(true);
+}
+
+public function filter_stamp_detail_sx(Request $request){
+	$flo_detailsTable = DB::table('log_processes')
+	
+	->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','log_processes.process_code', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
+
+	if(strlen($request->get('datefrom')) > 0){
+		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
+	}
+
+
+	if(strlen($request->get('dateto')) > 0){
+		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '<=', $date_to);
+	}
+
+	$stamp_detail = $flo_detailsTable->orderBy('log_processes.created_at', 'desc')->where('origin_group_code','=','043')->get();
+
+	return DataTables::of($stamp_detail)
+	->addColumn('action', function($stamp_detail){
+		return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+	})
+	->make(true);
+}
+	//end tambah ali
 
 }
