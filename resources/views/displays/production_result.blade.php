@@ -142,9 +142,11 @@
 					, actualCount = []
 
 					for (i = 0; i < data.length; i++) {
-						xAxis.push(data[i].model);
-						planCount.push(data[i].plan+Math.abs(data[i].debt));
-						actualCount.push(data[i].actual);
+						if(data[i].plan-data[i].debt > 0){
+							xAxis.push(data[i].model);
+							planCount.push(data[i].plan-data[i].debt);
+							actualCount.push(data[i].actual);							
+						}
 					}
 
 					Highcharts.chart('container', {
@@ -156,7 +158,6 @@
 						title: {
 							text: 'Month to Date of Production Result<br><span style="color:rgba(96,92,168);">過去一ヶ月間の生産結果</span>'
 						},
-
 						xAxis: {
 							tickInterval:  1,
 							overflow: true,
@@ -245,7 +246,7 @@
 					var totalPlan = 0;
 					var totalActual = 0;
 					$.each(result.tableData, function(key, value) {
-						totalPlan += value.plan+Math.abs(value.debt);
+						totalPlan += value.plan-value.debt;
 						totalActual += value.actual;
 					});
 
