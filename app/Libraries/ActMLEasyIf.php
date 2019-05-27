@@ -6,8 +6,8 @@ use Exception;
 class ActMLEasyIf {
     const NO_ERROR = 0;
     private $com = FALSE;
-    function __construct($stn) {
-        $com = new \COM('ActMulti.ActMLEasyIF');
+   function __construct($stn) {
+        $com = new \COM('ActUtlType.ActMLUtlType');
         $com->ActLogicalStationNumber = new \VARIANT(intval($stn));
         $err = $com->Open();
         if ($err != ActMLEasyIf::NO_ERROR) {
