@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\User;
 use App\PresenceLog;
 use App\Division;
@@ -19,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\Employee;
-use App\EmployementLog;
+use App\EmploymentLog;
 use App\OrganizationStructure;
 use File;
 use DataTables;
@@ -49,6 +48,11 @@ class EmployeeController extends Controller
 // master emp
   public function index(){
     return view('employees.master.index')->with('page', 'Master Employee');
+  }
+
+  public function indexTotalMeeting()
+  {
+    return view('employees.report.total_meeting')->with('page', 'Total Meeting');
   }
 
   public function updateEmp($id){
@@ -513,25 +517,25 @@ public function indexReportGender()
 public function fetchReportGender()
 {
   $tgl = date('Y-m-d');
-  $fiskal = "select fiskal from kalender_fy WHERE tanggal = '".$tgl."'";
+  $fiskal = "select fiscal_year from weekly_calendars WHERE week_date = '".$tgl."'";
 
-  $get_fiskal = db::connection('mysql3')->select($fiskal);
+  $get_fiskal = db::select($fiskal);
 
-  $gender = "select mon, jk, count(if(if(date_format(a.tanggalMasuk, '%Y-%m') < mon, 1, 0 ) - if(date_format(a.tanggalKeluar, '%Y-%m') < mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
+  $gender = "select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
   (
-  select distinct fiskal, date_format(tanggal, '%Y-%m') as mon
-  from kalender_fy
+  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
+  from weekly_calendars
   ) as b
   join
   (
-  select '".$get_fiskal[0]->fiskal."' as fy, tanggalKeluar, tanggalMasuk, nik, jk
-  from karyawan
+  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, hire_date, employee_id, gender
+  from employees
   ) as a
-  on a.fy = b.fiskal
+  on a.fy = b.fiscal_year
   where mon <= date_format('".$tgl."','%Y-%m-%d') 
-  group by mon, jk";
+  group by mon, gender";
 
-  $get_manpower = db::connection('mysql3')->select($gender);
+  $get_manpower = db::select($gender);
 
   $response = array(
     'status' => true,
@@ -541,7 +545,56 @@ public function fetchReportGender()
   return Response::json($response); 
 }
 
+
+public function fetchReportStatus()
+{
+  $tanggal = date('Y-m');
+
+  $fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
+
+  $fy = db::select($fiskal);
+
+
+  $statusS = "select count(c.employee_id) as emp, status, mon from
+  (select * from 
+  (
+  select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+  cross join (
+  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+  ) m
+  where hire_month <= mon and (mon < end_month OR end_month is null)
+  ) as b
+  left join
+  (
+  select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from employment_logs 
+  WHERE id IN (
+  SELECT MAX(id)
+  FROM employment_logs
+  GROUP BY employment_logs.employee_id, date_format(employment_logs.valid_from, '%Y-%m')
+  )
+  ) as c on b.employee_id = c.employee_id
+  where mon_from <= mon and mon_to >= mon
+  group by mon, status";
+
+  $get_manpower_status = db::select($statusS);
+
+  $response = array(
+    'status' => true,
+    'manpower_by_status_stack' => $get_manpower_status,
+  );
+
+  return Response::json($response); 
+}
+
+
 // --------------------- End Total Meeting Report ---------------------
 
+
+// --------------------- Start Employement ---------------------
+public function indexEmployment()
+{
+  return view('employees.master.indexEmployment')->with('page', 'Employement');
+}
+// --------------------- End Employement -----------------------
 
 }

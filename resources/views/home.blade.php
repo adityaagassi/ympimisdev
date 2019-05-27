@@ -110,7 +110,7 @@
                         <td>
                             <span style="font-weight: bold;">Total Meeting (jepang)</span>
                             <br>
-                            <a href="{{ url("/index/report/gender") }}">
+                            <a href="{{ url("index/report/total_meeting") }}">
                                 <i class="fa fa-caret-right"></i> Total Manpower (jepang)
                             </a>
                         </td>

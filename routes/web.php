@@ -87,12 +87,15 @@ Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 	Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
-	Route::get('index/report/overtime_report', 'OvertimeController@indexOvertimeReport');
 	Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 	Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
-	Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
-	
 });
+
+Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
+Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
+Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
+Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
+
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -495,6 +498,42 @@ Route::post('stamp/stamp_detail', 'ProcessController@filter_stamp_detail');
 Route::get('stamp/resumes', 'ProcessController@indexResumes');
 Route::get('stamp/log', 'ProcessController@indexLog');
 // });
+
+
+
+//tambah ali Saxophone & clarinet
+Route::get('stamp/fetchResult/{id}', 'ProcessController@fetchResult');
+Route::get('stamp/fetchPlan/{id}', 'ProcessController@fetchStampPlan');
+
+Route::get('index/label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar');
+Route::get('index/label_kecil/{id}/{remark}', 'ProcessController@label_kecil');
+Route::get('index/label_des/{id}', 'ProcessController@label_des');
+Route::get('index/get_sn', 'ProcessController@getsnsax');
+Route::get('index/get_sn2', 'ProcessController@getsnsax2');
+Route::get('index/process_stamp_cl_1', 'ProcessController@indexProcessAssyFLCla1');
+// Route::get('index/process_assy_fl_saxA_1', 'ProcessController@indexProcessAssyFLSaxA1');
+Route::get('index/process_stamp_sx_1', 'ProcessController@indexProcessAssyFLSaxT1');
+Route::get('index/process_stamp_sx_2', 'ProcessController@indexProcessAssyFLSaxT2');
+Route::get('index/process_stamp_sx_3', 'ProcessController@indexProcessAssyFLSaxT3');
+Route::post('index/print_sax', 'ProcessController@print_sax');
+Route::post('index/print_sax2', 'ProcessController@print_sax2');
+Route::get('stamp/fetchStampPlansax2/{id}', 'ProcessController@fetchStampPlansax2');
+Route::get('stamp/fetchStampPlansax3/{id}', 'ProcessController@fetchStampPlansax3');
+Route::post('reprint/stamp2', 'ProcessController@reprint_stamp2');
+Route::get('index/getModel', 'ProcessController@getModel');
+Route::get('edit/stampLabel', 'ProcessController@editStampLabel');
+Route::post('edit/stampLabel', 'ProcessController@updateStampLabel');
+Route::get('index/reprintLabel', 'ProcessController@getModelReprint');
+Route::get('index/getdatareprintAll', 'ProcessController@getModelReprintAll');
+
+Route::get('index/process_stamp_cl', 'ProcessController@indexProcessStampCl');
+Route::get('index/process_stamp_sx', 'ProcessController@indexProcessStampSX');
+Route::get('stamp/resumes_cl', 'ProcessController@indexResumesCl');
+Route::post('stamp/stamp_detail_cl', 'ProcessController@filter_stamp_detail_cl');
+Route::get('stamp/resumes_sx', 'ProcessController@indexResumesSX');
+Route::post('stamp/stamp_detail_sx', 'ProcessController@filter_stamp_detail_sx');
+
+//end tambah ali
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');

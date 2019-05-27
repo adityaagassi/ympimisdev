@@ -28,6 +28,7 @@ class CreateOvertimeDetailsTable extends Migration
             $table->double('final_hour');
             $table->double('final_overtime');
             $table->string('status');
+            $table->string('ot_status');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();

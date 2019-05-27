@@ -57,19 +57,30 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-body">
+					<div class="col-md-2 pull-right">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border-color: green">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" id="bulan" onchange="createTable()" placeholder="Select date" style="border-color: green" value="{{date('Y-m')}}">
+						</div>
+					</div>
+					<br>
+					<br>
+
 					<table class="table table-hover table-bordered" style="width: 100%" id="overtime_double">
-						<thead>
+						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th>Overtime ID</th>
+								<th>OT ID</th>
 								<th>Date</th>
 								<th>Employee ID</th>
 								<th>Name</th>
 								<th>Section</th>
 								<th>Sub Section</th>
 								<th>OT Start</th>
-								<th>OT OT End</th>
+								<th>OT End</th>
 								<th>OT Hour</th>
-								<th>Stat</th>
+								<th>Status</th>
 								<th>Action</th>	
 							</tr>
 						</thead>
@@ -108,58 +119,31 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
+	var table = $('#overtime_double').DataTable();
+
 	jQuery(document).ready(function() {
 		createTable();
 	});
 
 	function createTable(){
+		table.destroy();
+		var bulan = $("#bulan").val();
 		$('#overtime_double tfoot th').each( function () {
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
 		});
-		var table = $('#overtime_double').DataTable({
-			'dom': 'Bfrtip',
+		table = $('#overtime_double').DataTable({
+			'dom': 'rtip',
 			'responsive': true,
 			'lengthMenu': [
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
-			},
 			'paging'        : true,
 			'lengthChange'  : true,
 			'searching'     : true,
-			'ordering'      : true,
+			'ordering'      : false,
 			'info'        : true,
 			'order'       : [],
 			'autoWidth'   : true,
@@ -168,19 +152,20 @@
 			"bAutoWidth": false,
 			"processing": true,
 			"ajax": {
-				"type" : "get",
+				"type" : "post",
 				"url" : "{{ url("fetch/double") }}",
+				"data" : {'bulan': bulan}
 			},
 			"columns": [
 			{ "data": "id_ot"},
-			{ "data": "tanggal"},
+			{ "data": "tanggal" ,"width": "10%"},
 			{ "data": "nik"},
-			{ "data": "namaKaryawan"},
+			{ "data": "namaKaryawan", "width": "30%"},
 			{ "data": "section"},
 			{ "data": "sub_sec"},
 			{ "data": "dari"},
 			{ "data": "sampai"},
-			{ "data": "jam"},
+			{ "data": "jam", "width": "1%" },
 			{ "data": "stat"},
 			{ "data": "action"}
 			]
@@ -204,7 +189,28 @@
 	function delete_emp(id) {
 		var str = id.split("+");
 		if(confirm('Are you sure want to delete employee id \''+str[1]+'\' from Overtime \''+str[0]+'\' ?')){
-			alert('delete');
+
+			var data = {
+				id_ot: str[0],
+				nik: str[1]
+			}
+
+			$.post('{{ url("delete/overtime_confirmation") }}', data, function(result, status, xhr){
+				if(xhr.status == 200){
+					if(result.status){
+						openSuccessGritter('Success', result.message);
+						$('#overtime_double').DataTable().ajax.reload();
+					}
+					else {
+						audio_error.play();
+						openErrorGritter('Error!', result.message);
+					}
+				}
+				else{
+					audio_error.play();
+					alert("Disconnected from server");
+				}
+			});
 		}
 	}
 
@@ -232,7 +238,9 @@
 
 	$('.datepicker').datepicker({
 		autoclose: true,
-		format: 'yyyy-mm-dd',
+		format: "yyyy-mm",
+		viewMode: "months", 
+		minViewMode: "months",
 		todayHighlight: true
 	});
 

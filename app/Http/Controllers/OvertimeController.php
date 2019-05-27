@@ -11,6 +11,7 @@ use DataTables;
 use App\BreakTime;
 use App\Overtime;
 use App\OvertimeDetail;
+use App\OrganizationStructure;
 use App\CodeGenerator;
 use PDF;
 use Dompdf\Dompdf;
@@ -21,6 +22,7 @@ class OvertimeController extends Controller
 	public function __construct(){
 		$this->middleware('auth');
 		$this->transport = [
+			'-',
 			'Bangil',
 			'Pasuruan',
 		];
@@ -76,7 +78,7 @@ class OvertimeController extends Controller
 		$shifts = $this->shift;
 
 		$purposes = db::table('overtime_purposes')->get();
-		$sections = db::table('sections')->get();
+		$sections = db::table('organization_structures')->where('remark','=','section')->get();
 
 		return view('overtimes.overtime_forms.create', array(
 			'ot_id' => $ot_id,
@@ -89,7 +91,9 @@ class OvertimeController extends Controller
 	}
 
 	public function selectDivisionHierarchy(Request $request){
-		$hierarchies = db::table('division_hierarchies')->where('parent', '=', $request->get('parent'))->get();
+		$hierarchies = db::table('organization_structures')
+		->where([['remark', '=', $request->get('remark')],['parent_name','=',$request->get('parent')]])
+		->get();
 		$response = array(
 			'status' => true,
 			'hierarchies' => $hierarchies,
@@ -124,6 +128,87 @@ class OvertimeController extends Controller
 		$response = array(
 			'status' => true,
 			'break' => $break,
+		);
+		return Response::json($response);
+	}
+
+	public function saveOvertimeHead(Request $request)
+	{
+		$ot_id = $request->get('ot_id');
+
+		$org = db::select("select dep.child_code as department, divs.child_code as division from 
+			(SELECT  parent_name, child_code FROM `organization_structures` where remark='section') sec
+			join (SELECT  parent_name, child_code, status FROM `organization_structures` where remark='department') dep
+			on sec.parent_name = dep.status
+			join (SELECT child_code, status FROM `organization_structures` where remark='division') divs
+			on divs.status = dep.parent_name
+			where sec.child_code = 'secretary admin'");
+
+		$section = $request->get('section');
+		$sub_section = $request->get('sub_section');
+		$group = $request->get('group');
+		$ot_date = date('Y-m-d',strtotime($request->get('ot_date')));
+		$ot_day = $request->get('ot_day');
+
+
+		$overtime = new Overtime([
+			'overtime_id' => $ot_id,
+			'overtime_date' => $ot_date,
+			'day_status' => $ot_day,
+			'division' => $org[0]->division,
+			'department' => $org[0]->department,
+			'section' => $section,
+			'subsection' => $sub_section,
+			'group' => $group,
+			'created_by' => 1
+		]);
+		$overtime->save();	
+
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
+	}
+
+	public function saveOvertimeDetail(Request $request)
+	{
+		$ot_id = $request->get('ot_id');
+		$emp_ids = $request->get('emp_ids');
+		$ot_starts = $request->get('ot_starts');
+		$ot_ends = $request->get('ot_ends');
+		$ot_hours = $request->get('ot_hours');
+		$ot_transports = $request->get('ot_transports');
+		$ot_foods = $request->get('ot_foods');
+		$ot_efoods = $request->get('ot_efoods');
+		$ot_porposes = $request->get('ot_porposes');
+		$ot_remarks = $request->get('ot_remarks');
+		$ot_statuses = $request->get('ot_statuses');
+
+		for ($i=0; $i < sizeof($emp_ids); $i++) { 
+			$overtime_detail = new OvertimeDetail([
+				'overtime_id' => $ot_id,
+				'employee_id' => $emp_ids[$i],
+				'cost_center' => '1',
+				'food' => $ot_foods[$i],
+				'ext_food' => $ot_efoods[$i],
+				'transport' => $ot_transports[$i],
+				'start_time' => $ot_starts[$i],
+				'end_time' => $ot_ends[$i],
+				'porpose' => $ot_porposes[$i],
+				'remark' => $ot_remarks[$i],
+				'final_hour' => $ot_hours[$i],
+				'final_overtime' => '0',
+				'status' => '0',
+				'ot_status' => $ot_statuses[$i],
+				'created_by' => 1
+			]);
+			$overtime_detail->save();
+		}		
+
+
+		$response = array(
+			'status' => true,
 		);
 		return Response::json($response);
 	}
@@ -586,12 +671,52 @@ class OvertimeController extends Controller
 
 	$report2 = db::select($report);
 
+
+	// ----------  Chart Overtime By Dep ----------
+
+	$tanggal = date('Y-m');
+
+	$fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
+
+	$fy = db::select($fiskal);
+
+
+	$ot_by_dep = "
+	select em.mon ,em.department, IFNULL(sum(ovr.final),0) ot_hour from
+	(
+	select emp.*, bagian.department from 
+	(select employee_id, mon from 
+	(
+	select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+	cross join (
+	select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+	) m
+	where hire_month <= mon and (mon < end_month OR end_month is null)
+	) emp
+	left join (
+	SELECT id, employee_id, department, date_format(valid_from, '%Y-%m') as mon_from, coalesce(date_format(valid_to, '%Y-%m'), date_format(DATE_ADD(now(), INTERVAL 1 MONTH),'%Y-%m')) as mon_to FROM mutation_logs
+	WHERE id IN (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id, DATE_FORMAT(valid_from,'%Y-%m'))
+	) bagian on emp.employee_id = bagian.employee_id and emp.mon >= bagian.mon_from and emp.mon < mon_to
+	where department is not null
+	) as em
+	left join (
+	select nik, date_format(tanggal,'%Y-%m') as mon, sum(final) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
+	where deleted_at is null and om.`status` = 1 and DATE_FORMAT(tanggal,'%Y-%m') in (
+	select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')
+	)
+	group by date_format(tanggal,'%Y-%m'), nik
+	) ovr on em.employee_id = ovr.nik and em.mon = ovr.mon
+	group by department, em.mon";
+
+	$report_by_dep = db::select($ot_by_dep);
+
 	$response = array(
 		'status' => true,
-		'report' => $report2
+		'report' => $report2,
+		'report_by_dep' => $report_by_dep
 	);
-	return Response::json($response);
 
+	return Response::json($response);
 }
 
 public function overtimeReportDetail(Request $request)
@@ -717,10 +842,25 @@ public function indexOvertimeDouble()
 	return view('overtimes.overtime_double')->with('page', 'overtimeDouble');
 }
 
-public function fetchDoubleSPL()
+public function fetchDoubleSPL(Request $request)
 {
-	$bulan = date('Y-m');
-	$double = "select ov.id_ot, ov.tanggal, ov.nik, namaKaryawan, section.nama as section, sub_section.nama as sub_sec, dari, sampai, jam, IF(ov.status = 1,'confirmed','not yet confirmed') as stat from
+	$bulan = $request->get('bulan');
+
+	$username = Auth::user()->username;
+	$role = Auth::user()->role_code;
+
+	$dep = db::connection('mysql3')->table('karyawan')
+	->leftJoin('posisi', 'posisi.nik', '=', 'karyawan.nik')
+	->where('karyawan.nik', '=', $username)
+	->select('id_dep')
+	->first();
+
+	if ($role == 'HR-SPL' || $role == 'S'){
+		$where = '';
+	} else {
+		$where = "where posisi.id_dep = '" . $dep->id_dep . "'";
+	}
+	$double = "select ov.id_ot, date_format(ov.tanggal,'%d %M %Y') as tanggal, ov.nik, namaKaryawan, section.nama as section, sub_section.nama as sub_sec, dari, sampai, jam, IF(ov.status = 1,'confirmed','not yet confirmed') as stat from
 	( select id_ot, tanggal, nik, dari, sampai, jam, status from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and date_format(tanggal,'%Y-%m') = '".$bulan."' and nik is not null
 	order by tanggal asc, nik asc
 	) as ov join
@@ -732,6 +872,7 @@ public function fetchDoubleSPL()
 	left join posisi on posisi.nik = ov.nik
 	join section on section.id = posisi.id_sec
 	join sub_section on sub_section.id = posisi.id_sub_sec
+	".$where."
 	order by ov.tanggal asc, a.nik asc";
 
 	$get_double = db::connection('mysql3')->select($double);
@@ -739,7 +880,6 @@ public function fetchDoubleSPL()
 	return DataTables::of($get_double)
 	->addColumn('action', function($get_double){
 		return '<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="delete_emp(this.id)" id="'.$get_double->id_ot.'+'.$get_double->nik.'"><i class="fa fa-trash"></i> Delete</a>';
-		
 	})
 	->rawColumns(['action' => 'action'])
 	->make(true);

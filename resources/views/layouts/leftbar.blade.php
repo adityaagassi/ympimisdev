@@ -275,14 +275,17 @@
         </a>
         <ul class="treeview-menu">
           @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/process_assy_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
-          </li>
+          <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
+        </li>
+        
           @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
             <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
           </li>
-          @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/process_assy_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
-          </li>
+          
+          
+        @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
+        </li>
         </ul>
       </li>
       @endif
@@ -377,9 +380,6 @@
 <ul class="treeview-menu">
  @if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/overtime_control") }}"><i class="fa fa-line-chart"></i> Overtime Control</a>
-</li>
-@if(isset($page) && $page == "Overtime Report")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/report/overtime_report") }}"><i class="fa fa-table"></i> Overtime Report</a>
 </li>
 </ul>
 </li>
