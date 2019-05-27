@@ -771,7 +771,7 @@ class PurchaseOrderController extends Controller
 					array_push($vendors, $po_list->vendor);
 					$code_generator = CodeGenerator::where('note', '=', 'PO')->first();
 					$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
-					$order_no = $po_list->vendors . '-' . $code_generator->prefix . $number;
+					$order_no = $po_list->vendor . '-' . $code_generator->prefix . $number;
 					array_push($orders, $order_no);
 					$code_generator->index = $code_generator->index+1;
 					$code_generator->save();
