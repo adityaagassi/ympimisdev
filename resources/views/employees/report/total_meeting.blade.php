@@ -58,7 +58,7 @@ table.table-bordered > tfoot > tr > th{
      <div class="col-md-12">
       <div class="row">
        <div class="col-md-12">
-        <div id="status_stacked_chart" style="width: 100%; height: 550px;"></div>   
+        <div id="status_stacked_chart" style="width: 100%; height: 500px;"></div>   
       </div>
     </div>
   </div>
@@ -112,18 +112,45 @@ table.table-bordered > tfoot > tr > th{
      <div class="col-md-12">
       <div class="col-md-2 pull-right">
         <div class="input-group date">
-          <div class="input-group-addon bg-green" style="border-color: green">
+          <div class="input-group-addon bg-green" style="border-color: #00a65a">
             <i class="fa fa-calendar"></i>
           </div>
-          <input type="text" class="form-control datepicker" id="date2" onchange="drawChart()" placeholder="Select date" style="border-color: green">
+          <input type="text" class="form-control datepicker" id="date2" onchange="drawChart()" placeholder="Select Month" style="border-color: #00a65a">
         </div>
       </div>
-      <div id="over" style="width: 100%; margin: 0px auto; height: 550px;"></div>
+      <div id="over" style="width: 100%; height: 550px;"></div>
+      <br>
+      <br>
     </div>
   </div>
 </div>
 </div>
 </div>
+
+
+<div class="box">
+  <div class="box-body">
+   <div class="col-md-12">
+    <div class="row">
+     <div class="col-md-12">
+      <small style="font-size: 15px; color: #88898c"><i class="fa fa-history"></i> Last updated : <?php echo date('d M Y') ?> </small>
+      <div class="col-md-2 pull-right">
+        <div class="input-group date">
+          <div class="input-group-addon bg-green" style="border-color: #00a65a">
+            <i class="fa fa-calendar"></i>
+          </div>
+          <input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+        </div>
+      </div>
+      <div id="over_control" style="width: 100%; height: 550px;"></div>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
 
 
 </div>
@@ -266,39 +293,60 @@ table.table-bordered > tfoot > tr > th{
               text: 'Total Manpower by Gender <br> Fiscal 196'
             },
             xAxis: {
-              categories: xCategories
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                text: 'Total Manpower'
-              }
-            },
-            tooltip: {
-              useHTML: true
-            },
-            credits: {
-              enabled: false
-            },
-            plotOptions: {
-              column: {
-                dataLabels: {
-                  enabled: true,
-                  crop: false,
-                  overflow: 'none'
+              categories: xCategories,
+              labels: {
+                style: {
+                  fontSize: '17px'
                 }
               }
             },
-            series: [{
-              name: 'Male',
-              data: seriesLaki
+            legend: {
+              enabled:true,
+              itemStyle: {
+               fontSize:'15px'
+             },
+           },
+           yAxis: {
+            min: 0,
+            title: {
+              text: 'Total Manpower',
+              style: {
+                fontSize: '17px'
+              }
+            }
+          },
+          tooltip: {
+            useHTML: true
+          },
+          credits: {
+            enabled: false
+          },
+          plotOptions: {
+            column: {
+              dataLabels: {
+                enabled: true,
+                crop: false,
+                overflow: 'none',
+                style: {
+                  fontSize: '12px'
+                }
+              },
+              borderWidth: 0
+            },
+            series: {
+              minPointLength: 3
+            }
+          },
+          series: [{
+            name: 'Male',
+            data: seriesLaki
 
-            }, {
-              name: 'Female',
-              data: seriesPerempuan
+          }, {
+            name: 'Female',
+            data: seriesPerempuan
 
-            }]
-          });
+          }]
+        });
 
         }
         else{
@@ -354,8 +402,6 @@ table.table-bordered > tfoot > tr > th{
             MP = 0;
           }
 
-          console.log(maxMP);
-
           Highcharts.chart('status_stacked_chart', {
             chart: {
               type: 'column'
@@ -364,7 +410,12 @@ table.table-bordered > tfoot > tr > th{
               text: 'Total Manpower'
             },
             xAxis: {
-              categories: xCategories
+              categories: xCategories,
+              labels: {
+                style: {
+                  fontSize: '17px'
+                }
+              }
             },
             tooltip: {
               useHTML: true
@@ -372,59 +423,73 @@ table.table-bordered > tfoot > tr > th{
             yAxis: {
               min: 0,
               title: {
-                text: 'Total Manpower'
+                text: 'Total Manpower',
+                style: {
+                  fontSize: '17px'
+                }
               },
               stackLabels: {
                 enabled: true,
                 style: {
                   fontWeight: 'bold',
-                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
+                  fontSize: '15px'
                 }
               }
             },
             legend: {
-              enabled:true
-            },
-            tooltip: {
-              headerFormat: '<b>{point.x}</b><br/>',
-              pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-            },
-            plotOptions: {
-              column: {
-                stacking: 'normal',
-                dataLabels: {
-                  enabled: true,
-                  color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+              enabled:true,
+              itemStyle: {
+               fontSize:'15px'
+             },
+           },
+           tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+          },
+          plotOptions: {
+            column: {
+              stacking: 'normal',
+              dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                style: {
+                  fontSize: '12px'
                 }
-              }
+              },
+              borderWidth: 0
             },
-            credits:{
-              enabled:false
-            },
-            series: [{
-              name: 'Kontrak 1',
-              data: seriesPKWTT1
-
-            }, {
-              name: 'Kontrak 2',
-              data: seriesPKWTT2
-
-            }, {
-              name: 'Percobaan',
-              data: seriesPercobaan
-
-            }, {
-              name: 'Tetap',
-              data: seriesPKWT
-            },
-            {
-              name: 'Trendline',
-              type: 'line',
-              data: maxMP,
-              color: '#f21a25'
+            series: {
+              minPointLength: 5
             }
-            ]
-          });
+          },
+          credits:{
+            enabled:false
+          },
+          series: [{
+            name: 'Kontrak 1',
+            data: seriesPKWTT1
+
+          }, {
+            name: 'Kontrak 2',
+            data: seriesPKWTT2
+
+          }, {
+            name: 'Percobaan',
+            data: seriesPercobaan
+
+          }, {
+            name: 'Tetap',
+            data: seriesPKWT
+          },
+          {
+            name: 'Trendline',
+            type: 'line',
+            data: maxMP,
+            color: '#f21a25'
+          }
+          ]
+        });
 
           //  ------------- CHART STATUS NOT STACKED ---------------
 
@@ -436,47 +501,64 @@ table.table-bordered > tfoot > tr > th{
               text: 'Total Manpower by Status'
             },
             xAxis: {
-              categories: xCategories
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                text: 'Total Manpower'
-              }
-            },
-            tooltip: {
-              useHTML: true
-            },
-            credits:{
-              enabled:false
-            },
-            plotOptions: {
-              column: {
-                pointPadding: 0.2,
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: true
+              categories: xCategories,
+              labels: {
+                style: {
+                  fontSize: '17px'
                 }
               }
             },
-            series: [{
-              name: 'Kontrak 1',
-              data: seriesPKWTT1
+            legend: {
+              enabled:true,
+              itemStyle: {
+               fontSize:'15px'
+             },
+           },
+           yAxis: {
+            min: 0,
+            title: {
+              text: 'Total Manpower',
+              style: {
+                fontSize: '17px'
+              }
+            }
+          },
+          tooltip: {
+            useHTML: true
+          },
+          credits:{
+            enabled:false
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0,
+              dataLabels: {
+                enabled: true
+              }
+            },
+            series: {
+              minPointLength: 5
+            }
+          },
+          series: [{
+            name: 'Kontrak 1',
+            data: seriesPKWTT1
 
-            }, {
-              name: 'Kontrak 2',
-              data: seriesPKWTT2
+          }, {
+            name: 'Kontrak 2',
+            data: seriesPKWTT2
 
-            }, {
-              name: 'Percobaan',
-              data: seriesPercobaan
+          }, {
+            name: 'Percobaan',
+            data: seriesPercobaan
 
-            }, {
-              name: 'Tetap',
-              data: seriesPKWT
+          }, {
+            name: 'Tetap',
+            data: seriesPKWT
 
-            }]
-          });
+          }]
+        });
         }
       }
     });
@@ -497,7 +579,7 @@ function drawChart() {
  $.get('{{ url("fetch/overtime_report") }}', data, function(result) {
 
    for (i = 0; i < result.report.length; i++){
-     cat.push(result.report[i].code);
+     cat.push(result.report[i].department);
      tiga_jam.push(parseInt(result.report[i].tiga_jam));
      per_minggu.push(parseInt(result.report[i].emptblas_jam));
      per_bulan.push(parseInt(result.report[i].tiga_patblas_jam));
@@ -544,7 +626,7 @@ function drawChart() {
     labels: {
       rotation: -60,
       style: {
-        fontSize: '20px'
+        fontSize: '17px'
       }
     }
   },
@@ -553,7 +635,7 @@ function drawChart() {
     title: {
       text: 'Total Manpower',
       style: {
-        fontSize: '20px'
+        fontSize: '17px'
       }
     },
     labels: {
@@ -660,9 +742,9 @@ series: [{
       currSeries = currSeries[0];
     }
     var index = currSeries.data.length;
-    currSeries.data[index] = result.report_by_dep[i].ot_hour;
+    currSeries.data[index] = result.report_by_dep[i].avg;
   } else {
-   seriesData[0] = {name: result.report_by_dep[i].department, data: [intVal(result.report_by_dep[i].ot_hour)]}
+   seriesData[0] = {name: result.report_by_dep[i].department, data: [intVal(result.report_by_dep[i].avg)]}
  }
 }
 
@@ -675,23 +757,35 @@ Highcharts.chart('over_by_dep', {
     text: 'Overtime by Department'
   },
   xAxis: {
-    categories: xCategories
+    categories: xCategories,
+    labels: {
+      style: {
+        fontSize: '17px'
+      }
+    }
   },
   yAxis: {
     min: 0,
     title: {
-      text: 'Total Overtime (hour)'
+      text: 'Total Overtime (hour)',
+      style: {
+        fontSize: '17px'
+      }
     },
     stackLabels: {
       enabled: true,
       style: {
         fontWeight: 'bold',
-        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
+        fontSize: '15px'
       }
     }
   },
   legend: {
-    enabled: true
+    enabled: true,
+    itemStyle: {
+      fontSize: '15px'
+    }
   },
   tooltip: {
     enabled:true
@@ -704,11 +798,144 @@ Highcharts.chart('over_by_dep', {
       stacking: 'normal',
       dataLabels: {
         enabled: true,
-        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-      }
+        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+        style: {
+          fontSize: '12px'
+        }
+      },
+      borderWidth: 0
+    },
+    series: {
+      minPointLength: 5
     }
   },
   series: seriesData
+});
+
+
+// -------------- CHART OVERTIME REPORT CONTROL ----------------------
+
+var xCategories2 = [];
+var seriesDataBudget = [];
+var seriesDataAktual = [];
+var budgetHarian = [];
+var ctg;
+
+for(var i = 0; i < result.report_control.length; i++){
+  ctg = result.report_control[i].name;
+  seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
+  seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
+  budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
+  if(xCategories.indexOf(ctg) === -1){
+   xCategories[xCategories.length] = ctg;
+ }
+}
+
+Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+  return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+};
+
+Highcharts.chart('over_control', {
+  chart: {
+    spacingTop: 10,
+    type: 'column'
+  },
+  title: {
+    text: '<span style="font-size: 30pt;">Overtime</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
+    useHTML: true
+  },
+  credits:{
+    enabled:false
+  },
+  legend: {
+    itemStyle: {
+      color: '#000000',
+      fontWeight: 'bold',
+      fontSize: '20px'
+    }
+  },
+  yAxis: {
+    tickInterval: 10,
+    min:0,
+    allowDecimals: false,
+    title: {
+      text: 'Amount of Overtime (hours)'
+    }
+  },
+  xAxis: {
+    labels: {
+      style: {
+        color: 'rgba(75, 30, 120)',
+        fontSize: '12px',
+        fontWeight: 'bold'
+      }
+    },
+    categories: xCategories
+  },
+  tooltip: {
+    formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+      this.point.y + ' ' + this.series.name.toLowerCase();
+    }
+  },
+  plotOptions: {
+    column: {
+      pointPadding: 0.93,
+      cursor: 'pointer',
+      point: {
+        events: {
+          click: function () {
+            modalTampil(this.category, result.report_control[0].tanggal);
+          }
+        }
+      },
+      minPointLength: 3,
+      dataLabels: {
+        allowOverlap: true,
+        enabled: true,
+        y: -25,
+        style: {
+          color: 'black',
+          fontSize: '13px',
+          textOutline: false,
+          fontWeight: 'bold',
+        },
+        rotation: -90
+      },
+      pointWidth: 15,
+      pointPadding: 0,
+      borderWidth: 0,
+      groupPadding: 0.1,
+      animation: false,
+      opacity: 0.2
+    },
+    scatter : {
+      dataLabels: {
+        enabled: false
+      },
+      animation: false
+    }
+  },
+  series: [{
+    name: 'Budget Accumulative',
+    data: seriesDataBudget,
+    color: "#f76111"
+  }, {
+    name: 'Actual Accumulative',
+    data: seriesDataAktual,
+    color: "#7300ab"
+  },
+  {
+    name: 'Day Budget',
+    marker: {
+      symbol: 'c-rect',
+      lineWidth:4,
+      lineColor: '#02ff17',
+      radius: 10,
+    },
+    type: 'scatter',
+    data: budgetHarian
+  }]
 });
 });
 }
