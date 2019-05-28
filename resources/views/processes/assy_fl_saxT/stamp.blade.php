@@ -141,9 +141,9 @@ table.table-bordered > tfoot > tr > th{
 								<span style="font-size: 24px">Model:</span><br>
 								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YTS" disabled>
 
-								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> FG</button>
+								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> INDONESIA</button>
 								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px;" class="btn"   value="FG" name="category" id="category" readonly>
-								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="KD" onclick="category(id)"> KD</button>
+								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="KD" onclick="category(id)"> CHINA</button>
 								<br><br>
 								<div id="listModel2">
 								</div><br>

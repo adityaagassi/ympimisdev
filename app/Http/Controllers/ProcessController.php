@@ -1609,24 +1609,28 @@ public function label_besar($id,$gmc,$remark){
 }
 
 public function label_kecil($id,$remark){
+	$sn = $id;
 	$date = date('Y-m-d');
-	if ($remark =="RP") {
-		$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
-		INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		WHERE a.serial_number='".$id."'";
-	}else{
-		$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
-		INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		WHERE a.serial_number='".$id."'";
-	}
+	// if ($remark =="RP") {
+	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+	// 	INNER JOIN (
+	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+	// 	WHERE a.serial_number='".$id."'";
+	// }else{
+	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+	// 	INNER JOIN (
+	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+	// 	WHERE a.serial_number='".$id."'";
+	// }
+
+	$query = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
 	$barcode = DB::select($query);
 	
 	return view('processes.assy_fl_saxT.print_label_kecil',array(
 		'barcode' => $barcode,
+		'sn' => $sn
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
