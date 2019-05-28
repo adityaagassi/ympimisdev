@@ -831,7 +831,7 @@ class ProcessController extends Controller
 		$target = DB::table('production_schedules')
 		->leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
 		->where('production_schedules.due_date', '=', $now)
-		->where('materials.category', '=', 'FG');
+		->where('materials.category', '=', 'FG')
 		->where('materials.hpl', '=', 'FLFG');
 		$stock = DB::table('stamp_inventories');
 
