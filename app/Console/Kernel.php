@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\UploadTransfers::class,
         Commands\PlanStamps::class,
         Commands\Leaves::class,
+        Commands\SendEmailShipments::class,
     ];
 
     /**
@@ -45,6 +46,8 @@ class Kernel extends ConsoleKernel
         }
 
         $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
+
+        $schedule->command('email:shipment')->dailyAt('05:00');
     }
 
     /**
