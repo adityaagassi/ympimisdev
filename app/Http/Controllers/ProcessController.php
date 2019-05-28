@@ -864,7 +864,7 @@ class ProcessController extends Controller
 			$aFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+1)));
 		}
 
-		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null and stamp_inventories.origin_group_code group by stamp_inventories.process_code";
+		$query = "select stamp_inventories.process_code, sum(stamp_inventories.quantity) as qty from stamp_inventories where stamp_inventories.status is null and stamp_inventories.origin_group_code = '041' group by stamp_inventories.process_code";
 
 		$query2 = "select model, sum(plan) as plan, sum(stock) as stock, sum(max_plan) as max_plan from
 		(
