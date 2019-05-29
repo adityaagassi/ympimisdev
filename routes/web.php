@@ -434,7 +434,7 @@ Route::group(['nav' => 'S16', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S17', 'middleware' => 'permission'], function(){
 	Route::get('index/double', 'OvertimeController@indexOvertimeDouble');
-	Route::get('fetch/double', 'OvertimeController@fetchDoubleSPL');
+	Route::post('fetch/double', 'OvertimeController@fetchDoubleSPL');
 });
 
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');

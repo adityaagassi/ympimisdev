@@ -261,7 +261,8 @@ class OvertimeController extends Controller
 		WHERE
 		over_time_member.nik IS NOT NULL 
 		AND deleted_at IS NULL 
-		AND over_time_member.STATUS = 0 
+		AND over_time_member.STATUS = 0
+		AND over_time_member.jam_aktual = 0
 		GROUP BY
 		over_time.id,
 		over_time.tanggal,
@@ -390,23 +391,13 @@ class OvertimeController extends Controller
 	}
 
 	public function deleteOvertimeConfirmation(Request $request){
-		$over_time_member = DB::connection('mysql3')->table('over_time_member')
-		->where('over_time_member.id_ot', '=', $request->get('id_ot'))
-		->count();
 
-		if($over_time_member == 1){
-			$over_time = DB::connection('mysql3')->table('over_time')
-			->where('over_time.id', '=', $request->get('id_ot'))
-			->update([
-				'deleted_at' => date('Y-m-d'),
-				'nik_delete' => Auth::user()->username
-			]);			
-		}
-
-		$over_time_member = DB::connection('mysql3')->table('over_time_member')
+		$over_time = DB::connection('mysql3')->table('over_time_member')
 		->where('over_time_member.id_ot', '=', $request->get('id_ot'))
 		->where('over_time_member.nik', '=', $request->get('nik'))
-		->delete();
+		->update([
+			'jam_aktual' => 1
+		]);
 
 		$response = array(
 			'status' => true,
@@ -880,7 +871,7 @@ public function fetchDoubleSPL(Request $request)
 	( select id_ot, tanggal, nik, dari, sampai, jam, status from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and date_format(tanggal,'%Y-%m') = '".$bulan."' and nik is not null
 	order by tanggal asc, nik asc
 	) as ov join
-	( select nik, tanggal from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and date_format(tanggal,'%Y-%m') = '".$bulan."' and nik is not null
+	( select nik, tanggal from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and date_format(tanggal,'%Y-%m') = '".$bulan."' and nik is not null and jam_aktual = 0
 	group by tanggal, nik
 	having count(nik) > 1
 	) a on ov.nik = a.nik and ov.tanggal = a.tanggal
