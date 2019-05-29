@@ -97,6 +97,19 @@ table.table-bordered > tfoot > tr > th{
    <div class="col-md-12">
     <div class="row">
      <div class="col-md-12">
+      <div id="serikat_chart" style="width: 100%; height: 550px;"></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+<div class="box">
+  <div class="box-body">
+   <div class="col-md-12">
+    <div class="row">
+     <div class="col-md-12">
       <div id="over_by_dep" style="width: 100%; height: 550px;"></div>
     </div>
   </div>
@@ -149,6 +162,42 @@ table.table-bordered > tfoot > tr > th{
   </div>
 </div>
 </div>
+</div>
+
+
+<div class="box box-solid">
+  <div class="box-body">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-4">
+            <div class="description-block border-right" style="color: #f76111">
+              <h5 class="description-header" style="font-size: 60px;">
+                <span class="description-percentage" id="tot_budget"></span>
+              </h5>      
+              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span >???</span></span>   
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="description-block border-right" style="color: #7300ab" >
+              <h5 class="description-header" style="font-size: 60px; ">
+                <span class="description-percentage" id="tot_act"></span>
+              </h5>      
+              <span class="description-text" style="font-size: 35px;">Total Actual<br><span >総実績</span></span>   
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="description-block border-right text-green" id="diff_text">
+              <h5 class="description-header" style="font-size: 60px;">
+                <span class="description-percentage" id="tot_diff"></span>
+              </h5>      
+              <span class="description-text" style="font-size: 35px;">Difference<br><span >差異</span></span>   
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -218,9 +267,12 @@ table.table-bordered > tfoot > tr > th{
   month[11] = "December";
 
   $(function () {
+    Highcharts.setOptions({
+      colors: ['#8fafc4','#336a86', '#293132', '#88d958', '#ff410d', '#b95436', '#6fb98f', '#cb58e8', '#ea2a4a', '#ffba00', '#1c8704', '#f3cc6f', '#2971e5','#c89d0f', '#ffccab']
+    });
     drawChartGender();
     drawChartStatusStacked();
-    // drawChartStatus();
+    drawChartSerikat();
     drawChart();
   })
 
@@ -393,7 +445,6 @@ table.table-bordered > tfoot > tr > th{
             if(xCategories.indexOf(cat2) === -1){
               xCategories[xCategories.length] = cat2;
             }
-
           }
 
           for (var i = 0; i < xCategories.length; i++) {
@@ -564,6 +615,106 @@ table.table-bordered > tfoot > tr > th{
     });
 }
 
+function drawChartSerikat() {
+  $.get('{{ url("fetch/report/serikat") }}', function(result, status, xhr){
+    if(xhr.status == 200){
+
+      if(result.status){
+        var xCategories = [];
+        var seriesData = [];
+        var cat, cat2;
+
+        for(var i = 0; i < result.manpower_by_serikat.length; i++){
+          cat = result.manpower_by_serikat[i].mon;
+
+          var date = new Date(cat+'-01');
+
+          cat2 = month[date.getMonth()]+" "+date.getFullYear();
+
+          if(xCategories.indexOf(cat2) === -1){
+            xCategories[xCategories.length] = cat2;
+          }
+        }
+
+
+        for(i = 0; i < result.manpower_by_serikat.length; i++){
+          if(seriesData){
+           var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.manpower_by_serikat[i].union;});
+           if(currSeries.length === 0){
+            seriesData[seriesData.length] = currSeries = {name: result.manpower_by_serikat[i].union, data: []};
+          } else {
+            currSeries = currSeries[0];
+          }
+          var index = currSeries.data.length;
+          currSeries.data[index] = result.manpower_by_serikat[i].emp_tot;
+        } else {
+         seriesData[0] = {name: result.manpower_by_serikat[i].union, data: [intVal(result.manpower_by_serikat[i].emp_tot)]}
+       }
+     }
+
+     Highcharts.chart('serikat_chart', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Total Manpower by Labor Union <br> Fiscal 196'
+      },
+      xAxis: {
+        categories: xCategories,
+        labels: {
+          style: {
+            fontSize: '17px'
+          }
+        }
+      },
+      legend: {
+        enabled:true,
+        itemStyle: {
+         fontSize:'15px'
+       },
+     },
+     yAxis: {
+      min: 0,
+      title: {
+        text: 'Total Manpower',
+        style: {
+          fontSize: '17px'
+        }
+      }
+    },
+    tooltip: {
+      useHTML: true
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        dataLabels: {
+          enabled: true,
+          crop: false,
+          overflow: 'none',
+          style: {
+            fontSize: '12px'
+          }
+        },
+        borderWidth: 0
+      },
+      series: {
+        minPointLength: 3
+      }
+    },
+    series: seriesData
+  });
+
+   }
+   else{
+    alert('Attempt to retrieve data failed');
+  }
+}
+})
+}
+
 function drawChart() {
   var tanggal = $('#date2').val();
   var cat = new Array();
@@ -598,117 +749,95 @@ function drawChart() {
 
    $('#over').highcharts({
      chart: {
-       type: 'line'
-     },
-     legend: {
-       enabled: true,
-       itemStyle: {
-        fontSize: '15px'
-      }
+      type: 'column'     
     },
-    exporting : {
-     enabled : true,
-     buttons: {
-       contextButton: {
-         align: 'right',
-         x: -25
-       }
-     }
-   },
-   title: {
-    text: 'Overtime <br><span style="font-size:12pt">'+title+'</span>',
-    style: {
-      fontSize: '30px'
+    legend: {
+     enabled: true,
+     itemStyle: {
+      fontSize: '15px'
     }
   },
-  xAxis: {
-    categories: cat,
-    labels: {
-      rotation: -60,
-      style: {
-        fontSize: '17px'
-      }
-    }
-  },
-  yAxis: {
-    min:0,
-    title: {
-      text: 'Total Manpower',
-      style: {
-        fontSize: '17px'
-      }
-    },
-    labels: {
-      style: {
-        fontSize: '15px'
-      }
-    }
-  },
-  plotOptions: {
-    line: {
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '15px'
-        }
-      },
-      enableMouseTracking: true
-    },
-    series: {
-     cursor: 'pointer',
-     point: {
-       events: {
-         click: function(e) {  
-           show2(tgl, this.category, this.series.name);
-         }
-       }
+  exporting : {
+   enabled : true,
+   buttons: {
+     contextButton: {
+       align: 'right',
+       x: -25
      }
    }
  },
- credits: {
+ title: {
+  text: 'Overtime <br><span style="font-size:12pt">'+title+'</span>',
+  style: {
+    fontSize: '30px'
+  }
+},
+xAxis: {
+  categories: cat,
+  labels: {
+    rotation: -60,
+    style: {
+      fontSize: '17px'
+    }
+  }
+},
+yAxis: {
+  min:0,
+  title: {
+    text: 'Total Manpower',
+    style: {
+      fontSize: '17px'
+    }
+  },
+  labels: {
+    style: {
+      fontSize: '15px'
+    }
+  }
+},
+plotOptions: {
+  column: {
+    dataLabels: {
+      enabled: true,
+      color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+      style: {
+        fontSize: '12px'
+      }
+    },
+    borderWidth: 0
+  },
+  series: {
+   cursor: 'pointer',
+   minPointLength: 5,
+   point: {
+     events: {
+       click: function(e) {  
+         show2(tgl, this.category, this.series.name);
+       }
+     }
+   }
+ }
+},
+credits: {
   enabled: false
 },
 series: [{
   name: '3 hour(s) / day',
   color: '#2598db',
-  shadow: {
-    color: '#2598db',
-    width: 7,
-    offsetX: 0,
-    offsetY: 0
-  },
   data: tiga_jam
 }, {
   name: '14 hour(s) / week',
   color: '#f78a1d',
-  shadow: {
-    color: '#f78a1d',
-    width: 7,
-    offsetX: 0,
-    offsetY: 0
-  },
   data: per_minggu
 },
 {
   name: '3 & 14 hour(s) / week',
   color: '#f90031',
-  shadow: {
-    color: '#f90031',
-    width: 7,
-    offsetX: 0,
-    offsetY: 0
-  },
   data: per_bulan
 },
 {
   name: '56 hour(s) / month',
   color: '#d756f7',
-  shadow: {
-    color: '#d756f7',
-    width: 7,
-    offsetX: 0,
-    offsetY: 0
-  },
   data: manam_bulan
 }]
 
@@ -784,7 +913,7 @@ Highcharts.chart('over_by_dep', {
   legend: {
     enabled: true,
     itemStyle: {
-      fontSize: '15px'
+      fontSize: '12px'
     }
   },
   tooltip: {
@@ -819,16 +948,42 @@ var xCategories2 = [];
 var seriesDataBudget = [];
 var seriesDataAktual = [];
 var budgetHarian = [];
-var ctg;
+var ctg, tot_act = 0;
+var tot_day_budget = 0, tot_diff;
 
 for(var i = 0; i < result.report_control.length; i++){
   ctg = result.report_control[i].name;
+  tot_act += result.report_control[i].act;
+  tot_day_budget += result.report_control[i].jam_harian;
+
   seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
   seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
   budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
   if(xCategories.indexOf(ctg) === -1){
    xCategories[xCategories.length] = ctg;
  }
+}
+
+tot_diff = tot_day_budget - tot_act;
+
+tot_day_budget = Math.round(tot_day_budget * 100) / 100;
+tot_act = Math.round(tot_act * 100) / 100;
+tot_diff = Math.round(tot_diff * 100) / 100;
+
+var tot_day_budget2 = tot_day_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+$("#tot_budget").text(tot_day_budget2);
+$("#tot_act").text(tot_act2);
+
+if (tot_diff > 0) {
+  $('#diff_text').removeClass('text-red').addClass('text-green');
+  $("#tot_diff").html(tot_diff2);
+}
+else {
+  $('#diff_text').removeClass('text-green').addClass('text-red');
+  $("#tot_diff").html(tot_diff2);
 }
 
 Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
@@ -841,7 +996,7 @@ Highcharts.chart('over_control', {
     type: 'column'
   },
   title: {
-    text: '<span style="font-size: 30pt;">Overtime</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
+    text: '<span style="font-size: 18pt;">Overtime Control</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
     useHTML: true
   },
   credits:{
@@ -926,7 +1081,7 @@ Highcharts.chart('over_control', {
     color: "#7300ab"
   },
   {
-    name: 'Day Budget',
+    name: 'Forecast Production',
     marker: {
       symbol: 'c-rect',
       lineWidth:4,
@@ -940,7 +1095,7 @@ Highcharts.chart('over_control', {
 });
 }
 
-function show2(tgl, code, ctg) {
+function show2(tgl, department, ctg) {
   tabel = $('#example3').DataTable();
   tabel.destroy();
 
@@ -948,7 +1103,7 @@ function show2(tgl, code, ctg) {
 
   var data = {
     tanggal : tgl,
-    code : code,
+    department : department,
     category: ctg
   }
 
@@ -957,7 +1112,7 @@ function show2(tgl, code, ctg) {
     $("#head").html('Overtime of More than '+result.head);
     $.each(result.datas, function(key, value) {
      $("#details").append(
-      "<tr><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.code+"</td><td>"+value.avg+"</td></tr>"
+      "<tr><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.group+"</td><td>"+value.avg+"</td></tr>"
       );
    })
   })
