@@ -730,11 +730,11 @@ public function overtimeReportDetail(Request $request)
 {
 	$tgl = date('Y-m' ,strtotime($request->get('tanggal')));
 	$ctg = $request->get('category');
-	$code = $request->get('code');
+	$department = $request->get('department');
 	$query = "";
 
 	if($ctg == '3 hour(s) / day'){
-		$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, code from
+		$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, `group` from
 		(select d.nik, round(avg(jam),2) as avg from
 		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -745,17 +745,13 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, department, section, code from 
-		(
 		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
 		group by employee_id,`group`, department, section
-		) employee
-		left join total_meeting_codes on employee.`group` = total_meeting_codes.group_name
-		) position on position.employee_id = s.nik
-		where code = "'.$code.'"';
+		) employee on employee.employee_id = s.nik
+		where department = "'.$department.'"';
 	}
 	if($ctg == '14 hour(s) / week'){
-		$query = 'SELECT s.nik, avg(jam) as avg, code, name, section, department from
+		$query = 'SELECT s.nik, avg(jam) as avg, name, section, department, `group` from
 		(select nik, sum(jam) jam, week_name from
 		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -765,18 +761,14 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, department, section, code from 
-		(
 		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
 		group by employee_id,`group`, department, section
-		) employee
-		left join total_meeting_codes on employee.`group` = total_meeting_codes.group_name
-		) position on position.employee_id = s.nik
-		where jam > 14 and code = "'.$code.'"
-		group by s.nik, code, name, section, department';
+		) employee on employee.employee_id = s.nik
+		where jam > 14 and department = "'.$department.'"
+		group by s.nik, name, section, department,`group`';
 	}
 	if($ctg == '3 & 14 hour(s) / week'){
-		$query = 'select c.nik, name, code, department, section, c.avg from ( select z.nik, x.avg from 
+		$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
 		( select d.nik, round(avg(jam),2) as avg from
 		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -800,17 +792,13 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = c.nik
 		left join
 		(
-		select employee_id, code, department, section from 
-		(
 		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
 		group by employee_id,`group`, department, section
-		) employee
-		left join total_meeting_codes on employee.`group` = total_meeting_codes.group_name
-		) karyawan on karyawan.employee_id = c.nik
-		where code = "'.$code.'"';
+		) employee on employee.employee_id = c.nik
+		where department = "'.$department.'"';
 	}
 	if($ctg == '56 hour(s) / month'){
-		$query = 'select semua.nik, employees.name, department, section, code, avg from
+		$query = 'select semua.nik, employees.name, department, section, `group`, avg from
 		(select c.nik, c.jam as avg from
 		(select d.nik, sum(jam) as jam from
 		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
@@ -822,14 +810,10 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = semua.nik
 		left join
 		(
-		select employee_id, code, department, section from 
-		(
 		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
 		group by employee_id,`group`, department, section
-		) employee
-		left join total_meeting_codes on employee.`group` = total_meeting_codes.group_name
-		) karyawan on karyawan.employee_id = semua.nik
-		where code = "'.$code.'"';
+		) employee on employee.employee_id = semua.nik
+		where department = "'.$department.'"';
 	}
 
 	$ftm = db::select($query);

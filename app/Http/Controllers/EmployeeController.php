@@ -546,6 +546,51 @@ public function fetchReportGender()
 }
 
 
+public function reportSerikat()
+{
+  $tanggal = date('Y-m');
+
+  $fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
+
+  $fy = db::select($fiskal);
+
+
+  $get_union = "select count(employee_id) as emp_tot, `union`, mon from
+  ( select emp.employee_id, IFNULL(`union`,'NON UNION') `union`, mon, IFNULL(mon_from,mon) mon_from, IFNULL(mon_to,mon) mon_to from
+  (select * from 
+  (
+  select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+  cross join (
+  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+  ) m
+  where hire_month <= mon and (mon < end_month OR end_month is null)
+  ) as emp
+  left join
+  (
+  select id, labor_union_logs.employee_id, labor_union_logs.`union`, date_format(labor_union_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(labor_union_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from labor_union_logs 
+  WHERE id IN (
+  SELECT MAX(id)
+  FROM labor_union_logs
+  GROUP BY labor_union_logs.employee_id, date_format(labor_union_logs.valid_from, '%Y-%m')
+  )
+  ) uni on emp.employee_id = uni.employee_id
+  ) semua
+  where mon_from <= mon and mon_to >= mon
+  group by mon, `union`
+  order by mon asc, `union` desc";
+
+  $union = db::select($get_union);
+
+  $response = array(
+    'status' => true,
+    'manpower_by_serikat' => $union,
+  );
+
+  return Response::json($response); 
+
+}
+
+
 public function fetchReportStatus()
 {
   $tanggal = date('Y-m');

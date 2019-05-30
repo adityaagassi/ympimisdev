@@ -95,6 +95,7 @@ Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting')
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
 Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
+Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
