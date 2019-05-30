@@ -95,23 +95,12 @@
                             </a>
                         </td>
                     </tr>
-                </tbody>
-            </table>
-
-
-            <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 16px;">
-                    <tr>
-                        <th>Total Meeting<br/>Jepang</th>
-                    </tr>
-                </thead>
-                <tbody>
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Total Meeting (jepang)</span>
                             <br>
-                            <a href="{{ url("index/report/total_meeting") }}">
-                                <i class="fa fa-caret-right"></i> Total Manpower (jepang)
+                            <a href="{{ url("index/report/total_meeting") }}" target="blank">
+                                <i class="fa fa-caret-right"></i> Manpower Information (稼働率)
                             </a>
                         </td>
                     </tr>
