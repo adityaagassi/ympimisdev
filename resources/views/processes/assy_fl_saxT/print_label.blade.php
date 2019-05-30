@@ -1,4 +1,4 @@
-@extends('layouts.master')
+﻿@extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -752,11 +752,14 @@
 	function updateStamp(){
 		var id = $('#serialNumberText').val();
 		var model = $('#modelText').val();
+		var jpn = $("#japan2").val();
+		alert(jpn);
 		var data = {
 			id:id,
 			model:model,
 			originGroupCode:'043',
 			processCode:'2',
+			jpn:jpn,
 		}
 		$.post('{{ url("edit/stampLabel") }}', data, function(result, status, xhr){
 			console.log(status);
