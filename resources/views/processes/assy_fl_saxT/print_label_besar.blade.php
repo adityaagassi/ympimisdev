@@ -28,6 +28,7 @@
 		.bawah {
 			font-size: 12pt;
 			font-family: 'arial';
+			font-weight: bold;
 		}
 
 	</style>
@@ -82,7 +83,7 @@ include(app_path() . '\barcode\barcode.php');
 	</tr>
 	<tr>
 		<td></td>
-		<td colspan="2"><BR><BR><BR>
+		<td colspan="2"><BR><BR><BR><BR><BR>
 			@php
 			$p = 'images/QC_BAR.jpg';
 			@endphp
@@ -110,8 +111,20 @@ include(app_path() . '\barcode\barcode.php');
 		gmc();
 		day();
 		// window.print();
-		printWindow(window, 'Label Besar');
-		// window.close();
+		//var sn = $('#codesn').val();
+  		//var rem = $('#rem').val();
+  		//if (rem =="JR" || rem =="NJR") {
+  		//	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
+  		//}else if(rem =="J" || rem =="NJ"){
+  		//	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
+  		//}else{
+  			// alert("asas")
+  		//}
+  		
+		//window.close();
+
+		 defineCustomPaperSize();
+		 printWindow(window, 'Label Besar');
 
 		
 	});
@@ -152,7 +165,7 @@ include(app_path() . '\barcode\barcode.php');
 		var url2 ="/barcode.php?f=svg&s=upc-a&th=15&ts=12&w=300&h=105&pv=20&ph=0";
 		var code ="&d="+upc;
 		var janfix = url1.replace("/public","");
-		if (upc !="0") {
+		if (upc !="-") {
 			$("#upc").attr("src",janfix+url2+code);
 		}else{
 			$("#upc").attr("src",janfix+url2+code);
@@ -172,10 +185,39 @@ include(app_path() . '\barcode\barcode.php');
 
 // default print settings
 var printSettings = {
-	"printSilent": true
-
-	, "printerName" : "Microsoft XPS Document Writer" 
+	"printSilent": true,
+	"shrinkToFit": true,
+	"unwriteableMarginLeft": 0,
+	"unwriteableMarginRight": 0,
+	"unwriteableMarginTop": 0,
+	"unwriteableMarginBottom": 0,
+	"edgeLeft": 0,
+	"edgeRight": 0,
+	"edgeTop": 0,
+	"edgeBottom": 0,
+	"marginLeft": 2,
+	"marginRight": 0,
+	"marginTop": 0,
+	"marginBottom": 0,
+	"scaling": 1,
+	"title": "",
+	"docURL": "",
+	"headerStrLeft": "",
+	"headerStrCenter": "",
+	"headerStrRight": "",
+	"footerStrLeft": "",
+	"footerStrCenter": "",
+	"footerStrRight": "",
+	 "printerName" : "SATO LM408e" 
 };
+
+
+function defineCustomPaperSize() {
+  console.log("Define custom paper size", false);
+  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 101.6, 152.4, jsPrintSetup.kPaperSizeInches);
+  // w, h
+  console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
+}
 
 function printWindow(win, what) {
   // jsPrintSetup messages  
@@ -261,5 +303,6 @@ function checkJobInfo(what, win, jobId) {
 	console.log("Can't find jobInfo for jobId:"+jobId, true);
 }
 }
+
 
 </script>

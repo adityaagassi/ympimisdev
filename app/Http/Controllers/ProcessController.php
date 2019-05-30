@@ -1661,7 +1661,9 @@ public function updateStampLabel(Request $request){
 	->where('stamp_inventories.model', '=', $stamp->model)
 	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-	$stamp_inventory->update(['model' => $request->get('model')]);
+	$stamp_inventory->update([
+		'status' => $request->get('jpn'),
+		'model' => $request->get('model')]);
 	
 
 	$response = array(
