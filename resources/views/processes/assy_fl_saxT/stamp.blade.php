@@ -53,7 +53,7 @@ table.table-bordered > tfoot > tr > th{
 				<i class="fa fa-print"></i>&nbsp;&nbsp;STAMP
 			</button> --}}
 			<a href="javascript:void(0)" onclick="adjust()" class="btn btn-danger btn-sm" style="color:white"><i class="fa fa-edit "></i>&nbsp;Adjust Serial</a>
-			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
+			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
 		</li>
 	</ol>
 </section>

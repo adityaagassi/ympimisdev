@@ -103,16 +103,7 @@ class ProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function indexResumes(){
 
-		$code = Process::orderBy('process_code', 'asc')
-		->get();
-		return view('processes.assy_fl.resumes',array(
-			'code' => $code,
-		))
-
-		->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-	}
 
 	public function indexDisplay(){
 		return view('processes.assy_fl.display', array(
@@ -945,12 +936,6 @@ class ProcessController extends Controller
 		->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
 	}
 
-	public function indexResumesSX(){
-
-
-		return view('processes.assy_fl_saxT.resumes')
-		->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
-	}
 
 
 	public function fetchStampPlan($id){
@@ -1715,6 +1700,30 @@ public function filter_stamp_detail_cl(Request $request){
 	->make(true);
 }
 
+
+
+public function indexResumesSX(){
+
+	$code = Process::where('remark','=','043')->orderBy('process_code', 'asc')
+	->get();
+
+
+	return view('processes.assy_fl_saxT.resumes',array(
+		'code' => $code,
+	))->with('page', 'Process Assy CL')->with('head', 'Assembly Process');
+}
+
+public function indexResumes(){
+
+	$code = Process::where('remark','=','YFL041')->orderBy('process_code', 'asc')
+	->get();
+	return view('processes.assy_fl.resumes',array(
+		'code' => $code,
+	))
+
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
 public function filter_stamp_detail_sx(Request $request){
 	$flo_detailsTable = DB::table('log_processes')
 	
@@ -1725,6 +1734,10 @@ public function filter_stamp_detail_sx(Request $request){
 		$flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(log_processes.created_at, "%Y-%m-%d")'), '>=', $date_from);
 	}
 
+	if(strlen($request->get('code')) > 0){
+		$code = $request->get('code');
+		$flo_detailsTable = $flo_detailsTable->where('log_processes.process_code','=', $code );
+	}
 
 	if(strlen($request->get('dateto')) > 0){
 		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
@@ -1738,6 +1751,74 @@ public function filter_stamp_detail_sx(Request $request){
 		return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
 	})
 	->make(true);
+}
+
+public function fetch_plan_labelsax(Request $request){
+	
+	$hpl = "where materials.category = 'FG' and materials.origin_group_code = '043'";		
+	$first = date('Y-m-01');
+	if(date('Y-m-d') != date('Y-m-01')){
+		$last = date('Y-m-d', strtotime(Carbon::yesterday()));
+	}
+	else{
+		$last = date('Y-m-d');
+	}
+	$now = date('Y-m-d');
+
+	if($first != $now){
+		$debt = "union all
+
+		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+		(
+		select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+
+		union all
+
+		select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+		) as debt
+		group by material_number";
+	}
+	else{
+		$debt= "";
+	}
+	
+
+	$query = " select a.model, a.debt,a.plan,COALESCE(b.act,0) as actual  from (
+	select result.material_number, materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+	(
+	select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+	from production_schedules 
+	where due_date = '". $now ."' 
+	group by material_number
+
+	union all
+
+	select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+	from flo_details 
+	where date(created_at) = '". $now ."'  
+	group by material_number
+
+	".$debt."
+
+	) as result
+	left join materials on materials.material_number = result.material_number
+	". $hpl ."
+	group by result.material_number, materials.material_description
+	having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0 ) a
+	
+	LEFT JOIN (
+	select model, count(MODEL)AS act from stamp_inventories where process_code='3' AND origin_group_code='043' GROUP BY model) b
+	on a.model = b.model";
+
+	$tableData = DB::select($query);
+
+
+	$response = array(
+		'status' => true,
+		'tableData' => $tableData,
+		
+	);
+	return Response::json($response);
 }
 	//end tambah ali
 

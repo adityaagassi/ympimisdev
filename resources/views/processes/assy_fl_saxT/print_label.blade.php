@@ -48,7 +48,7 @@
 			<button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
 				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
 			</button>
-			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Stamp Record</a>
+			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
 		</li>
 	</ol>
 </section>
@@ -88,7 +88,7 @@
 						</div>
 						
 
-						<div class="col-xs-2">
+				{{-- 		<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Alto:</span>
 							</center>
@@ -106,8 +106,8 @@
 									
 								</tfoot>
 							</table>
-						</div>
-						<div class="col-xs-2">
+						</div> --}}
+				{{-- 		<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Tenor:</span>
 							</center>
@@ -121,6 +121,31 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<th>Total</th>
+									<th></th>
+									
+								</tfoot>
+							</table>							
+						</div> --}}
+						
+						<div class="col-xs-4">
+							<center>
+								<span style="font-size: 20px;">Total Production :</span>
+							</center>
+							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<th>Model</th>
+									<th>Debt</th>
+									<th>Plan</th>
+									<th>Actual</th>
+									<th>Diff</th>
+								</thead>
+								<tbody id="planTableBody">
+								</tbody>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<th>Total</th>
+									<th></th>
+									<th></th>
+									<th></th>
 									<th></th>
 									
 								</tfoot>
@@ -305,8 +330,9 @@
 
 
 				$('body').toggleClass("sidebar-collapse");
-				fillPlan2();
-				fillPlan();
+				fillPlan3();
+				// fillPlan2();
+				// fillPlan();
 				fillResult();
 
 			});
@@ -315,6 +341,76 @@
 
 			function insert(num){
 				document.form.textview.value = document.form.textview.value+num;
+			}
+
+			function fillPlan3(){
+				$.get('{{ url("fetch/fetch_plan_labelsax") }}', function(result, status, xhr){
+					console.log(status);
+					console.log(result);
+					console.log(xhr);
+					if(xhr.status = 200){
+						if(result.status){
+							$('#planTable').DataTable().destroy();
+							$('#planTableBody').html("");
+							var tableData = '';
+							$.each(result.tableData, function(key, value) {
+								var diff = '';
+								diff = value.actual-(value.plan+(-value.debt));
+								tableData += '<tr>';
+								tableData += '<td style="width: 40%">'+ value.model +'</td>';
+								tableData += '<td style="width: 15%">'+ value.debt +'</td>';
+								tableData += '<td style="width: 15%">'+ value.plan +'</td>';
+								tableData += '<td style="width: 15%">'+ value.actual +'</td>';
+								tableData += '<td style="width: 15%">'+ diff +'</td>';
+								tableData += '</tr>';
+							});
+							$('#planTableBody').append(tableData);
+							$('#planTable').DataTable({
+								
+								"paging": false,
+								'searching': false,
+								'order':[[4, "asc"]],
+								'info': false,
+								"footerCallback": function (tfoot, data, start, end, display) {
+									var intVal = function ( i ) {
+										return typeof i === 'string' ?
+										i.replace(/[\$,]/g, '')*1 :
+										typeof i === 'number' ?
+										i : 0;
+									};
+									var api = this.api();
+
+									var total_diff = api.column(3).data().reduce(function (a, b) {
+										return intVal(a)+intVal(b);
+									}, 0)
+									$(api.column(3).footer()).html(total_diff.toLocaleString());
+
+								},
+								"columnDefs": [{
+									"targets": 4,
+									"createdCell": function (td, cellData, rowData, row, col) {
+										if ( cellData <  0 ) {
+											$(td).css('background-color', 'RGB(255,204,255)')
+										}
+										else
+										{
+											$(td).css('background-color', 'RGB(204,255,255)')
+										}
+									}
+								}]
+							});
+
+						}
+						else{
+							audio_error.play();
+							alert('Attempt to retrieve data failed');
+						}
+					}
+					else{
+						audio_error.play();
+						alert('Disconnected from server');
+					}
+				});
 			}
 
 			function fillPlan(){

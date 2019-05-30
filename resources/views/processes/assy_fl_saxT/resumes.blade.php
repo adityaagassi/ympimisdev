@@ -33,7 +33,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Stamp Record Saxophone<span class="text-purple">刻印記録</span>
+		Record Saxophone<span class="text-purple">刻印記録</span>
 		<small>Details <span class="text-purple">詳細</span></small>
 	</h1>
 	<ol class="breadcrumb">
@@ -47,7 +47,7 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Stamp Record Filters <span class="text-purple">Stamp Record フィルター</span></h3>
+					<h3 class="box-title">Record Filters <span class="text-purple">Record フィルター</span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
@@ -78,14 +78,14 @@ table.table-bordered > tfoot > tr > th{
 					
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
-							{{-- <div class="form-group">
+							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Process Code" name="code" id="code" style="width: 100%;">
 									<option value="">All</option>
 									@foreach($code as $code) 
 									<option value="{{ $code->process_code }}">{{ $code->process_code }} - {{ $code->process_name }}</option>
 									@endforeach
 								</select>
-							</div> --}}
+							</div>
 							<div class="form-group pull-right">
 								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 								<button id="search" onClick="fillFloDetail()" class="btn btn-primary">Search</button>
