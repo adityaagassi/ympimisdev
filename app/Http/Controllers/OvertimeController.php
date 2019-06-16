@@ -774,10 +774,10 @@ public function overtimeReportDetail(Request $request)
 		
 
 		$lebih_detail = 'select d.nik, jam, null week_name, keperluan, tanggal from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, keperluan from ftm.over_time
+		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, group_concat(keperluan) as keperluan from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
 		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
-		group by nik, tanggal, hari, keperluan) d 
+		group by nik, tanggal, hari) d 
 		where jam > 3';
 
 		$detail = db::select($lebih_detail);
