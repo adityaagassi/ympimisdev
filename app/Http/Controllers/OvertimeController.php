@@ -773,12 +773,14 @@ public function overtimeReportDetail(Request $request)
 		where department = "'.$department.'"';
 		
 
-		$lebih_detail = 'select d.nik, jam, null week_name, tanggal from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
+		$lebih_detail = 'select d.nik, jam, null week_name, keperluan, tanggal from
+		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, keperluan from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
 		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
-		group by nik, tanggal, hari) d 
+		group by nik, tanggal, hari, keperluan) d 
 		where jam > 3';
+
+		$detail = db::select($lebih_detail);
 	}
 	if($ctg == '14 hour(s) / week'){
 		$query = 'SELECT s.nik, avg(jam) as avg, name, section, department, `group` from
@@ -797,16 +799,18 @@ public function overtimeReportDetail(Request $request)
 		where jam > 14 and department = "'.$department.'"
 		group by s.nik, name, section, department,`group`';
 
+		$detail = '';
 
-		$lebih_detail = 'SELECT s.nik, jam, week_name, tanggal from
-		(select nik, sum(jam) jam, week_name, tanggal from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
-		group by nik, tanggal, hari) m
-		group by nik, week_name) s
-		where jam > 14
-		group by s.nik, week_name';
+
+		// $lebih_detail = 'SELECT s.nik, jam, week_name, tanggal from
+		// (select nik, sum(jam) jam, week_name, tanggal from
+		// (select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+		// left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+		// where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		// group by nik, tanggal, hari) m
+		// group by nik, week_name) s
+		// where jam > 14
+		// group by s.nik, week_name';
 	}
 	if($ctg == '3 & 14 hour(s) / week'){
 		$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
@@ -837,6 +841,8 @@ public function overtimeReportDetail(Request $request)
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = c.nik
 		where department = "'.$department.'"';
+
+		$detail = '';
 	}
 	if($ctg == '56 hour(s) / month'){
 		$query = 'select semua.nik, employees.name, department, section, `group`, avg from
@@ -855,10 +861,11 @@ public function overtimeReportDetail(Request $request)
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = semua.nik
 		where department = "'.$department.'"';
+
+		$detail = '';
 	}
 
 	$ftm = db::select($query);
-	$detail = db::select($lebih_detail);
 
 	$response = array(
 		'status' => true,

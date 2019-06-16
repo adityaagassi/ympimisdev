@@ -223,7 +223,7 @@ table.table-bordered > tfoot > tr > th{
                   <th>Section</th>
                   <th>Kode</th>
                   <th>Avg (jam)</th>
-                  {{-- <th width="5%">Action</th> --}}
+                  <th width="5%">Action</th>
                 </tr>
               </thead>
               <tbody id="details">
@@ -930,7 +930,7 @@ plotOptions: {
    minPointLength: 5,
    point: {
      events: {
-       click: function(e) {  
+       click: function(e) {
          show2(tgl, this.category, this.series.name);
        }
      }
@@ -1141,32 +1141,43 @@ function show2(tgl, department, ctg) {
     $("#details").empty();
     $("#head").html('Overtime of More than '+result.head);
     $.each(result.datas, function(key, value) {
-     $("#details").append(
+
+     if(result.head == '3 hour(s) / day')
+     {
+      button = "<td><button id='expand"+value.nik+"' class='btn btn-primary btn-xs' onclick='expand(this)'>expand</button>"+
+      "<button id='collapse"+value.nik+"' class='btn btn-primary btn-xs' onclick='collapse(this,\""+value.nik+"\")' style='display:none'>collapse</button></td>";
+    }
+    else {
+      button = "<td></td>";
+    }
+    
+    $("#details").append(
       "<tr id='"+value.nik+"'><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.group+"</td><td>"+value.avg+"</td>"+
-      // "<td><button id='expand"+value.nik+"' class='btn btn-primary btn-xs' onclick='expand(this)'>expand</button>"+
-      // "<button id='collapse"+value.nik+"' class='btn btn-primary btn-xs' onclick='collapse(this,\""+value.nik+"\")' style='display:none'>collapse</button>"+
-      // "</td>"
+      button
       +"</tr>"
       );
-   });
+  });
 
-    // $.each(result.detail, function(key, value) {
-    //   detail['nik'].push(value.nik);
-    //   detail['jam'].push(value.jam);
-    //   detail['week_name'].push(value.week_name);
-    //   detail['tanggal'].push(value.tanggal);
-    // })
+    detail = result.detail;
+    console.log(detail);
 
-    // console.log(detail);
   })
 }
 
 function expand(element) {
-  $(element).hide();
   var tr_id =  $(element).closest('tr').attr('id');
-  $('#'+tr_id).after('<tr id="col'+tr_id+'"><td colspan="7"><table style="margin: 5px 0 5px 0" width="80%" align="center">'+
-    '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; 01 May 2019</td><td width="30%">Lembur Pagi, lembur sore</td><td width="10%">2 Jam</td></tr>'+
-    '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; 01 May 2019</td><td width="30%">Lembur Pagi, lembur sore</td><td width="10%">2 Jam</td></tr>'+
+  console.log(tr_id);
+  var isi = '';
+  for (var i = 0; i < detail.length; i++) {
+    if(detail[i].nik == tr_id) {
+      var tmp = '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; '+detail[i].tanggal+'</td><td width="30%">'+detail[i].keperluan+'</td><td width="10%">'+detail[i].jam+' Jam</td></tr>';
+
+      isi = isi+tmp;
+    }
+  }
+  
+  $(element).hide();
+  $('#'+tr_id).after('<tr id="col'+tr_id+'"><td colspan="7"><table style="margin: 5px 0 5px 0" width="80%" align="center">'+isi+
     '</table></td></tr>');
   $('#collapse'+tr_id).show();
 }
