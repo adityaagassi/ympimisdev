@@ -33,7 +33,7 @@ class SendEmail extends Mailable
     public function build()
     {
         if($this->remark == 'shipment'){
-            return $this->from('ympimis@gmail.com')->subject('Test MIS Scheduled Mails')->view('mails.shipment');
+            return $this->from('ympimis@gmail.com')->subject('MIS Shipment Reminder')->view('mails.shipment');
         }
     }
 }
