@@ -12,6 +12,7 @@
 |
 */
 
+
 if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
@@ -96,6 +97,8 @@ Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
 Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
 Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
+Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
+Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
@@ -443,6 +446,10 @@ Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddl
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
 Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
+
+//tambah ali barel
+Route::get('index/mesin', 'MiddleProcessController@indexProcessMesin');
+//end tambah ali barel
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
