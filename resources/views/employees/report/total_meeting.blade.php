@@ -128,7 +128,7 @@ table.table-bordered > tfoot > tr > th{
           <div class="input-group-addon bg-green" style="border-color: #00a65a">
             <i class="fa fa-calendar"></i>
           </div>
-          <input type="text" class="form-control datepicker" id="date2" onchange="drawChart()" placeholder="Select Month" style="border-color: #00a65a">
+          <input type="text" class="form-control datepicker" id="date2" onchange="drawChartOvertimeOver()" placeholder="Select Month" style="border-color: #00a65a">
         </div>
       </div>
       <div id="over" style="width: 100%; height: 550px;"></div>
@@ -152,7 +152,7 @@ table.table-bordered > tfoot > tr > th{
           <div class="input-group-addon bg-green" style="border-color: #00a65a">
             <i class="fa fa-calendar"></i>
           </div>
-          <input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+          <input type="text" class="form-control datepicker" id="tgl" onchange="drawChartOvertimeControl()" placeholder="Select Date" style="border-color: #00a65a">
         </div>
       </div>
       <div id="over_control" style="width: 100%; height: 550px;"></div>
@@ -223,6 +223,7 @@ table.table-bordered > tfoot > tr > th{
                   <th>Section</th>
                   <th>Kode</th>
                   <th>Avg (jam)</th>
+                  {{-- <th width="5%">Action</th> --}}
                 </tr>
               </thead>
               <tbody id="details">
@@ -251,7 +252,7 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
-
+  var detail = new Array();
   var month = new Array();
   month[0] = "January";
   month[1] = "February";
@@ -274,6 +275,8 @@ table.table-bordered > tfoot > tr > th{
     drawChartStatusStacked();
     drawChartSerikat();
     drawChart();
+    drawChartOvertimeOver();
+    drawChartOvertimeControl();
   })
 
 
@@ -419,7 +422,7 @@ table.table-bordered > tfoot > tr > th{
           var seriesPKWT = [];
           var seriesPKWTT1 = [];
           var seriesPKWTT2 = [];
-          var seriesPercobaan = [];
+          // var seriesPercobaan = [];
           var maxMP = [];
           var cat, cat2, MP = 0;
 
@@ -439,8 +442,8 @@ table.table-bordered > tfoot > tr > th{
             else if(result.manpower_by_status_stack[i].status == 'PKWTT2')
               seriesPKWTT2.push(result.manpower_by_status_stack[i].emp);
 
-            else if(result.manpower_by_status_stack[i].status == 'Percobaan')
-              seriesPercobaan.push(result.manpower_by_status_stack[i].emp);
+            // else if(result.manpower_by_status_stack[i].status == 'Percobaan')
+            //   seriesPercobaan.push(result.manpower_by_status_stack[i].emp);
 
             if(xCategories.indexOf(cat2) === -1){
               xCategories[xCategories.length] = cat2;
@@ -448,7 +451,7 @@ table.table-bordered > tfoot > tr > th{
           }
 
           for (var i = 0; i < xCategories.length; i++) {
-            MP = MP + seriesPKWT[i] + seriesPKWTT1[i] + seriesPKWTT2[i] + seriesPercobaan[i];
+            MP = MP + seriesPKWT[i] + seriesPKWTT1[i] + seriesPKWTT2[i];
             maxMP.push(MP);
             MP = 0;
           }
@@ -484,7 +487,8 @@ table.table-bordered > tfoot > tr > th{
                 style: {
                   fontWeight: 'bold',
                   color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
-                  fontSize: '15px'
+                  fontSize: '15px',
+                  textOutline: 0
                 }
               }
             },
@@ -505,7 +509,8 @@ table.table-bordered > tfoot > tr > th{
                 enabled: true,
                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
                 style: {
-                  fontSize: '12px'
+                  fontSize: '12px',
+                  textOutline: 0
                 }
               },
               borderWidth: 0
@@ -518,19 +523,15 @@ table.table-bordered > tfoot > tr > th{
             enabled:false
           },
           series: [{
-            name: 'Kontrak 1',
+            name: 'Contract 1',
             data: seriesPKWTT1
 
           }, {
-            name: 'Kontrak 2',
+            name: 'Contract 2',
             data: seriesPKWTT2
 
           }, {
-            name: 'Percobaan',
-            data: seriesPercobaan
-
-          }, {
-            name: 'Tetap',
+            name: 'Permanent',
             data: seriesPKWT
           },
           {
@@ -585,7 +586,8 @@ table.table-bordered > tfoot > tr > th{
               pointPadding: 0.2,
               borderWidth: 0,
               dataLabels: {
-                enabled: true
+                enabled: true,
+                textOutline: 0
               }
             },
             series: {
@@ -593,19 +595,15 @@ table.table-bordered > tfoot > tr > th{
             }
           },
           series: [{
-            name: 'Kontrak 1',
+            name: 'Contract 1',
             data: seriesPKWTT1
 
           }, {
-            name: 'Kontrak 2',
+            name: 'Contract 2',
             data: seriesPKWTT2
 
           }, {
-            name: 'Percobaan',
-            data: seriesPercobaan
-
-          }, {
-            name: 'Tetap',
+            name: 'Permanent',
             data: seriesPKWT
 
           }]
@@ -639,16 +637,16 @@ function drawChartSerikat() {
 
         for(i = 0; i < result.manpower_by_serikat.length; i++){
           if(seriesData){
-           var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.manpower_by_serikat[i].union;});
+           var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.manpower_by_serikat[i].serikat;});
            if(currSeries.length === 0){
-            seriesData[seriesData.length] = currSeries = {name: result.manpower_by_serikat[i].union, data: []};
+            seriesData[seriesData.length] = currSeries = {name: result.manpower_by_serikat[i].serikat, data: []};
           } else {
             currSeries = currSeries[0];
           }
           var index = currSeries.data.length;
           currSeries.data[index] = result.manpower_by_serikat[i].emp_tot;
         } else {
-         seriesData[0] = {name: result.manpower_by_serikat[i].union, data: [intVal(result.manpower_by_serikat[i].emp_tot)]}
+         seriesData[0] = {name: result.manpower_by_serikat[i].serikat, data: [intVal(result.manpower_by_serikat[i].emp_tot)]}
        }
      }
 
@@ -695,7 +693,8 @@ function drawChartSerikat() {
           crop: false,
           overflow: 'none',
           style: {
-            fontSize: '12px'
+            fontSize: '12px',
+            textOutline: 0
           }
         },
         borderWidth: 0
@@ -716,6 +715,124 @@ function drawChartSerikat() {
 }
 
 function drawChart() {
+  $.get('{{ url("fetch/overtime_report") }}', function(result) {
+   // ------------  Chart Overtime by Department
+   var categories;
+   var xCategories = [];
+   var xTotal = [];
+   var seriesData = [];
+   var cats, total = 0;
+
+   for (i = 0; i < result.report_by_dep.length; i++){
+    total += result.report_by_dep[i].avg;
+    categories = result.report_by_dep[i].mon;
+
+    var date = new Date(categories+'-01');
+
+    cats = month[date.getMonth()]+" "+date.getFullYear();
+
+    if(xCategories.indexOf(cats) === -1){
+      xTotal[xTotal.length] = 0;
+      xCategories[xCategories.length] = cats;
+    }
+  }
+
+  for(i = 0; i < result.report_by_dep.length; i++){
+    if(seriesData){
+     var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.report_by_dep[i].department;});
+     if(currSeries.length === 0){
+      seriesData[seriesData.length] = currSeries = {name: result.report_by_dep[i].department, data: []};
+    } else {
+      currSeries = currSeries[0];
+    }
+    var index = currSeries.data.length;
+    currSeries.data[index] = result.report_by_dep[i].avg;
+  } else {
+   seriesData[0] = {name: result.report_by_dep[i].department, data: [intVal(result.report_by_dep[i].avg)]}
+ }
+}
+
+for (var i = 0; i < seriesData.length; i++) {
+  for (var z = 0; z < seriesData[i].data.length; z++) {
+    xTotal[z] = xTotal[z] + seriesData[i].data[z];
+  }
+}
+
+for (var i = 0; i < xTotal.length; i++) {
+  xTotal[i] = Math.round((xTotal[i] / seriesData.length) * 100) / 100;
+}
+
+Highcharts.chart('over_by_dep', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Overtime Every Person Every Department Every Month'
+  },
+  xAxis: {
+    categories: xCategories,
+    labels: {
+      style: {
+        fontSize: '17px'
+      }
+    }
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Overtime (hour)',
+      style: {
+        fontSize: '17px'
+      }
+    },
+    stackLabels: {
+      enabled: true,
+      style: {
+        fontWeight: 'bold',
+        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
+        fontSize: '15px',
+        textOutline: 0
+      },
+      formatter: function() {
+        return Math.round(this.total / seriesData.length * 100) / 100;
+      }
+    }
+  },
+  legend: {
+    enabled: true,
+    itemStyle: {
+      fontSize: '12px'
+    }
+  },
+  tooltip: {
+    enabled:true
+  },
+  credits:{
+    enabled: false
+  },
+  plotOptions: {
+    column: {
+      stacking: 'normal',
+      dataLabels: {
+        enabled: true,
+        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+        style: {
+          fontSize: '12px',
+          textOutline: 0
+        }
+      },
+      borderWidth: 0
+    },
+    series: {
+      minPointLength: 5
+    }
+  },
+  series: seriesData
+});
+});
+}
+
+function drawChartOvertimeOver() {
   var tanggal = $('#date2').val();
   var cat = new Array();
   var tiga_jam = new Array();
@@ -727,7 +844,7 @@ function drawChart() {
    tanggal:tanggal
  }
 
- $.get('{{ url("fetch/overtime_report") }}', data, function(result) {
+ $.get('{{ url("fetch/overtime_report_over") }}', data, function(result) {
 
    for (i = 0; i < result.report.length; i++){
      cat.push(result.report[i].department);
@@ -744,10 +861,10 @@ function drawChart() {
    title = month[date.getMonth()]+" "+date.getFullYear();
 
 
-   // ------ Chart Overtime over 3 hour -----------
+    // ------ Chart Overtime over 3 hour -----------
 
 
-   $('#over').highcharts({
+    $('#over').highcharts({
      chart: {
       type: 'column'     
     },
@@ -791,7 +908,8 @@ yAxis: {
   },
   labels: {
     style: {
-      fontSize: '15px'
+      fontSize: '15px',
+      textOutline: 0
     }
   }
 },
@@ -799,9 +917,10 @@ plotOptions: {
   column: {
     dataLabels: {
       enabled: true,
-      color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+      color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
       style: {
-        fontSize: '12px'
+        fontSize: '12px',
+        textOutline: 0
       }
     },
     borderWidth: 0
@@ -842,256 +961,167 @@ series: [{
 }]
 
 });
+  });
+}
 
-   // ------------  Chart Overtime by Department
+function drawChartOvertimeControl() {
+  var tanggal = $('#tgl').val();
 
-   var categories;
-   var xCategories = [];
-   var seriesData = [];
-   var cats;
+  var data = {
+    tgl:tanggal
+  }
+  $.get('{{ url("fetch/report/overtime_report_control") }}', data, function(result) {
 
-   for (i = 0; i < result.report_by_dep.length; i++){
-    categories = result.report_by_dep[i].mon;
+    // -------------- CHART OVERTIME REPORT CONTROL ----------------------
 
-    var date = new Date(categories+'-01');
+    var xCategories2 = [];
+    var seriesDataBudget = [];
+    var seriesDataAktual = [];
+    var budgetHarian = [];
+    var ctg, tot_act = 0;
+    var tot_day_budget = 0, tot_diff;
 
-    cats = month[date.getMonth()]+" "+date.getFullYear();
+    for(var i = 0; i < result.report_control.length; i++){
+      ctg = result.report_control[i].name;
+      tot_act += result.report_control[i].act;
+      tot_day_budget += result.report_control[i].jam_harian;
 
-    if(xCategories.indexOf(cats) === -1){
-      xCategories[xCategories.length] = cats;
-    }
+      seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
+      seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
+      budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
+      if(xCategories2.indexOf(ctg) === -1){
+       xCategories2[xCategories2.length] = ctg;
+     }
+   }
+
+   tot_diff = tot_day_budget - tot_act;
+
+   tot_day_budget = Math.round(tot_day_budget * 100) / 100;
+   tot_act = Math.round(tot_act * 100) / 100;
+   tot_diff = Math.round(tot_diff * 100) / 100;
+
+   var tot_day_budget2 = tot_day_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+   var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+   var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+   $("#tot_budget").text(tot_day_budget2);
+   $("#tot_act").text(tot_act2);
+
+   if (tot_diff > 0) {
+    $('#diff_text').removeClass('text-red').addClass('text-green');
+    $("#tot_diff").html(tot_diff2);
+  }
+  else {
+    $('#diff_text').removeClass('text-green').addClass('text-red');
+    $("#tot_diff").html(tot_diff2);
   }
 
-  for(i = 0; i < result.report_by_dep.length; i++){
-    if(seriesData){
-     var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.report_by_dep[i].department;});
-     if(currSeries.length === 0){
-      seriesData[seriesData.length] = currSeries = {name: result.report_by_dep[i].department, data: []};
-    } else {
-      currSeries = currSeries[0];
-    }
-    var index = currSeries.data.length;
-    currSeries.data[index] = result.report_by_dep[i].avg;
-  } else {
-   seriesData[0] = {name: result.report_by_dep[i].department, data: [intVal(result.report_by_dep[i].avg)]}
- }
-}
+  Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+    return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+  };
 
-
-Highcharts.chart('over_by_dep', {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'Overtime by Department'
-  },
-  xAxis: {
-    categories: xCategories,
-    labels: {
-      style: {
-        fontSize: '17px'
-      }
-    }
-  },
-  yAxis: {
-    min: 0,
-    title: {
-      text: 'Total Overtime (hour)',
-      style: {
-        fontSize: '17px'
-      }
+  Highcharts.chart('over_control', {
+    chart: {
+      spacingTop: 10,
+      type: 'column'
     },
-    stackLabels: {
-      enabled: true,
-      style: {
+    title: {
+      text: '<span style="font-size: 18pt;">Overtime Control</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
+      useHTML: true
+    },
+    credits:{
+      enabled:false
+    },
+    legend: {
+      itemStyle: {
+        color: '#000000',
         fontWeight: 'bold',
-        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
-        fontSize: '15px'
+        fontSize: '20px'
       }
-    }
-  },
-  legend: {
-    enabled: true,
-    itemStyle: {
-      fontSize: '12px'
-    }
-  },
-  tooltip: {
-    enabled:true
-  },
-  credits:{
-    enabled: false
-  },
-  plotOptions: {
-    column: {
-      stacking: 'normal',
-      dataLabels: {
-        enabled: true,
-        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+    },
+    yAxis: {
+      tickInterval: 10,
+      min:0,
+      allowDecimals: false,
+      title: {
+        text: 'Amount of Overtime (hours)'
+      }
+    },
+    xAxis: {
+      labels: {
         style: {
-          fontSize: '12px'
+          color: 'rgba(75, 30, 120)',
+          fontSize: '12px',
+          fontWeight: 'bold'
         }
       },
-      borderWidth: 0
+      categories: xCategories2
     },
-    series: {
-      minPointLength: 5
-    }
-  },
-  series: seriesData
-});
-
-
-// -------------- CHART OVERTIME REPORT CONTROL ----------------------
-
-var xCategories2 = [];
-var seriesDataBudget = [];
-var seriesDataAktual = [];
-var budgetHarian = [];
-var ctg, tot_act = 0;
-var tot_day_budget = 0, tot_diff;
-
-for(var i = 0; i < result.report_control.length; i++){
-  ctg = result.report_control[i].name;
-  tot_act += result.report_control[i].act;
-  tot_day_budget += result.report_control[i].jam_harian;
-
-  seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
-  seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
-  budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
-  if(xCategories.indexOf(ctg) === -1){
-   xCategories[xCategories.length] = ctg;
- }
-}
-
-tot_diff = tot_day_budget - tot_act;
-
-tot_day_budget = Math.round(tot_day_budget * 100) / 100;
-tot_act = Math.round(tot_act * 100) / 100;
-tot_diff = Math.round(tot_diff * 100) / 100;
-
-var tot_day_budget2 = tot_day_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-
-$("#tot_budget").text(tot_day_budget2);
-$("#tot_act").text(tot_act2);
-
-if (tot_diff > 0) {
-  $('#diff_text').removeClass('text-red').addClass('text-green');
-  $("#tot_diff").html(tot_diff2);
-}
-else {
-  $('#diff_text').removeClass('text-green').addClass('text-red');
-  $("#tot_diff").html(tot_diff2);
-}
-
-Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-  return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
-};
-
-Highcharts.chart('over_control', {
-  chart: {
-    spacingTop: 10,
-    type: 'column'
-  },
-  title: {
-    text: '<span style="font-size: 18pt;">Overtime Control</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
-    useHTML: true
-  },
-  credits:{
-    enabled:false
-  },
-  legend: {
-    itemStyle: {
-      color: '#000000',
-      fontWeight: 'bold',
-      fontSize: '20px'
-    }
-  },
-  yAxis: {
-    tickInterval: 10,
-    min:0,
-    allowDecimals: false,
-    title: {
-      text: 'Amount of Overtime (hours)'
-    }
-  },
-  xAxis: {
-    labels: {
-      style: {
-        color: 'rgba(75, 30, 120)',
-        fontSize: '12px',
-        fontWeight: 'bold'
+    tooltip: {
+      formatter: function () {
+        return '<b>' + this.series.name + '</b><br/>' +
+        this.point.y + ' ' + this.series.name.toLowerCase();
       }
     },
-    categories: xCategories
-  },
-  tooltip: {
-    formatter: function () {
-      return '<b>' + this.series.name + '</b><br/>' +
-      this.point.y + ' ' + this.series.name.toLowerCase();
-    }
-  },
-  plotOptions: {
-    column: {
-      pointPadding: 0.93,
-      cursor: 'pointer',
-      point: {
-        events: {
-          click: function () {
-            modalTampil(this.category, result.report_control[0].tanggal);
+    plotOptions: {
+      column: {
+        pointPadding: 0.93,
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function () {
+              modalTampil(this.category, result.report_control[0].tanggal);
+            }
           }
-        }
-      },
-      minPointLength: 3,
-      dataLabels: {
-        allowOverlap: true,
-        enabled: true,
-        y: -25,
-        style: {
-          color: 'black',
-          fontSize: '13px',
-          textOutline: false,
-          fontWeight: 'bold',
         },
-        rotation: -90
+        minPointLength: 3,
+        dataLabels: {
+          allowOverlap: true,
+          enabled: true,
+          y: -25,
+          style: {
+            color: 'black',
+            fontSize: '13px',
+            textOutline: false,
+            fontWeight: 'bold',
+          },
+          rotation: -90
+        },
+        pointWidth: 15,
+        pointPadding: 0,
+        borderWidth: 0,
+        groupPadding: 0.1,
+        animation: false,
+        opacity: 0.2
       },
-      pointWidth: 15,
-      pointPadding: 0,
-      borderWidth: 0,
-      groupPadding: 0.1,
-      animation: false,
-      opacity: 0.2
+      scatter : {
+        dataLabels: {
+          enabled: false
+        },
+        animation: false
+      }
     },
-    scatter : {
-      dataLabels: {
-        enabled: false
+    series: [{
+      name: 'Budget Accumulative',
+      data: seriesDataBudget,
+      color: "#f76111"
+    }, {
+      name: 'Actual Accumulative',
+      data: seriesDataAktual,
+      color: "#7300ab"
+    },
+    {
+      name: 'Forecast Production',
+      marker: {
+        symbol: 'c-rect',
+        lineWidth:4,
+        lineColor: '#02ff17',
+        radius: 10,
       },
-      animation: false
-    }
-  },
-  series: [{
-    name: 'Budget Accumulative',
-    data: seriesDataBudget,
-    color: "#f76111"
-  }, {
-    name: 'Actual Accumulative',
-    data: seriesDataAktual,
-    color: "#7300ab"
-  },
-  {
-    name: 'Forecast Production',
-    marker: {
-      symbol: 'c-rect',
-      lineWidth:4,
-      lineColor: '#02ff17',
-      radius: 10,
-    },
-    type: 'scatter',
-    data: budgetHarian
-  }]
-});
+      type: 'scatter',
+      data: budgetHarian
+    }]
+  });
 });
 }
 
@@ -1112,17 +1142,54 @@ function show2(tgl, department, ctg) {
     $("#head").html('Overtime of More than '+result.head);
     $.each(result.datas, function(key, value) {
      $("#details").append(
-      "<tr><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.group+"</td><td>"+value.avg+"</td></tr>"
+      "<tr id='"+value.nik+"'><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.group+"</td><td>"+value.avg+"</td>"+
+      // "<td><button id='expand"+value.nik+"' class='btn btn-primary btn-xs' onclick='expand(this)'>expand</button>"+
+      // "<button id='collapse"+value.nik+"' class='btn btn-primary btn-xs' onclick='collapse(this,\""+value.nik+"\")' style='display:none'>collapse</button>"+
+      // "</td>"
+      +"</tr>"
       );
-   })
+   });
+
+    // $.each(result.detail, function(key, value) {
+    //   detail['nik'].push(value.nik);
+    //   detail['jam'].push(value.jam);
+    //   detail['week_name'].push(value.week_name);
+    //   detail['tanggal'].push(value.tanggal);
+    // })
+
+    // console.log(detail);
   })
 }
 
-$('.datepicker').datepicker({
+function expand(element) {
+  $(element).hide();
+  var tr_id =  $(element).closest('tr').attr('id');
+  $('#'+tr_id).after('<tr id="col'+tr_id+'"><td colspan="7"><table style="margin: 5px 0 5px 0" width="80%" align="center">'+
+    '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; 01 May 2019</td><td width="30%">Lembur Pagi, lembur sore</td><td width="10%">2 Jam</td></tr>'+
+    '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; 01 May 2019</td><td width="30%">Lembur Pagi, lembur sore</td><td width="10%">2 Jam</td></tr>'+
+    '</table></td></tr>');
+  $('#collapse'+tr_id).show();
+}
+
+function collapse(element, nik) {
+  $(element).hide();
+  var tr_id =  $(element).closest('tr').attr('id');
+  $("#col"+tr_id).remove();
+  $('#expand'+nik).show();
+}
+
+$('#date2').datepicker({
   autoclose: true,
   format: "mm-yyyy",
   viewMode: "months", 
   minViewMode: "months"
+});
+
+$('#tgl').datepicker({
+  <?php $tgl_max = date('d-m-Y') ?>
+  autoclose: true,
+  format: "dd-mm-yyyy",
+  endDate: '<?php echo $tgl_max ?>',
 });
 
 </script>

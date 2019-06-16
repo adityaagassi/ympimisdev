@@ -44,10 +44,18 @@ class EmployeeController extends Controller
       'Tk',
     ];
 
+    $this->status = [
+      'Percobaan',
+      'PKWTT1',
+      'PKWTT2',
+      'PKWT'
+    ];
+
   }
 // master emp
   public function index(){
-    return view('employees.master.index')->with('page', 'Master Employee');
+    return view('employees.master.index',array(
+      'status' => $this->status ))->with('page', 'Master Employee');
   }
 
   public function indexTotalMeeting()
@@ -65,165 +73,182 @@ class EmployeeController extends Controller
   }
 
   public function insertEmp(){
-   $dev = Division::orderBy('id', 'asc')->get();
-   $dep = Department::orderBy('id', 'asc')->get();
-   $sec = Section::orderBy('id', 'asc')->get();
-   $sub = SubSection::orderBy('id', 'asc')->get();
-   $grup = Group::orderBy('id', 'asc')->get();
-   $grade = Grade::orderBy('id', 'asc')->get();
-   $position = Position::orderBy('id', 'asc')->get();
+    $dev = OrganizationStructure::where('status','LIKE','DIV%')->get();
+    $dep = OrganizationStructure::where('status','LIKE','DEP%')->get();
+    $sec = OrganizationStructure::where('status','LIKE','SEC%')->get();
+    $sub = OrganizationStructure::where('status','LIKE','SSC%')->get();
+    $grup = OrganizationStructure::where('status','LIKE','GRP%')->get();
+    $grade = Grade::orderBy('id', 'asc')->get();
+    $position = Position::orderBy('id', 'asc')->get();
+    $cc = CostCenter::get();
 
-   return view('employees.master.insertEmp', array(
-    'dev' => $dev,
-    'dep' => $dep,
-    'sec' => $sec,
-    'sub' => $sub,
-    'grup' => $grup,
-    'grade' => $grade,
-    'position' => $position, ))->with('page', 'Master Employee');
- }
+    return view('employees.master.insertEmp', array(
+      'dev' => $dev,
+      'dep' => $dep,
+      'sec' => $sec,
+      'sub' => $sub,
+      'grup' => $grup,
+      'grade' => $grade,
+      'cc' => $cc,
+      'position' => $position, 
+      'keluarga' => $this->keluarga ))->with('page', 'Master Employee');
+  }
 
- public function fetchMasterEmp(){
-  $emp = "select employees.employee_id,name,division, department,DATE_FORMAT(hire_date,' %d %b %Y') hire_date,end_date from employees
-  LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id ORDER BY employees.remark asc";
-  $masteremp = DB::select($emp);
+  public function fetchMasterEmp(){
+    $emp = "select employees.employee_id,name,division, department,DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
+    LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
+    left join (
+    select employee_id, status from employment_logs 
+    WHERE id IN (
+    SELECT MAX(id)
+    FROM employment_logs
+    GROUP BY employment_logs.employee_id
+    )
+    ) stat on stat.employee_id = employees.employee_id
+    ORDER BY employees.remark asc";
+    $masteremp = DB::select($emp);
 
-  return DataTables::of($masteremp)
-  ->addColumn('action', function($masteremp){
-    return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
-    <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>
-    <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Upgrade" onclick="modalUpgrade()"><i class="fa fa-arrow-up"></i></button>';
-  })
+    return DataTables::of($masteremp)
+    ->addColumn('action', function($masteremp){
 
-  
-
-  ->rawColumns(['action' => 'action'])
-  ->make(true);
-}
-
-public function fetchdetail(Request $request){
-
-  $detail ="select  employees.avatar,employees.direct_superior,employees.birth_place, DATE_FORMAT(employees.birth_date,' %d %b %Y') birth_date,employees.gender,employees.address,employees.family_id, DATE_FORMAT(employees.hire_date,' %d %b %Y') hire_date,employees.remark,employees.phone,employees.account,employees.card_id,employees.npwp,employees.bpjstk,employees.jp,employees.bpjskes,mutation_logs.division,mutation_logs.department,mutation_logs.section,mutation_logs.sub_section,mutation_logs.group,promotion_logs.grade_code,promotion_logs.position,promotion_logs.grade_name from employees
-  LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id 
-  LEFT JOIN promotion_logs on  employees.employee_id = promotion_logs.employee_id
-  where mutation_logs.valid_to is null
-  and employees.employee_id ='".$request->get('nik')."'
-  ORDER BY employees.remark asc";
-
-  $detail2 = DB::select($detail);
-  $response = array(
-    'status' => true,
-    'detail' => $detail2,
-  );
-  return Response::json($response);
-}
-
-
-public function empCreate(Request $request)
-{
-  $id = Auth::id();
-
-
-  try{    
-
-
-    if($request->hasFile('foto')){
-      $files = $request->file('foto');
-      foreach ($files as $file) 
-      {
-        $number= $request->get('nik');
-        $data = file_get_contents($file);
-        $photo_number = $number . $file->getClientOriginalName() ;
-        $ext = $file->getClientOriginalExtension();
-        $filepath = public_path() . "/uploads/employee_avatar/" . $photo_number;
-
-        $emp = new Employee([
-          'employee_id' => $request->get('nik'),
-          'name' => $request->get('nama'),
-          'gender' => $request->get('jk'),
-          'family_id' => $request->get('statusK'),
-          'birth_place' => $request->get('tmptL'),
-          'birth_date' => $request->get('tglL'),
-          'address' => $request->get('alamat'),
-          'phone' => $request->get('hp'),
-          'card_id' => $request->get('ktp'), 
-          'account' => $request->get('no_rek'),  
-          'bpjstk' => $request->get('bpjstk'), 
-          'jp' => $request->get('jp'), 
-          'bpjskes' => $request->get('bpjskes'), 
-          'npwp' => $request->get('npwp'),                 
-          'direct_superior' => $request->get('leader'), 
-          'hire_date' => $request->get('tglM'), 
-          'avatar' => "/uploads/employee_avatar/".$photo_number, 
-          'remark' => $request->get('pin'), 
-          'created_by' => $id
-        ]);
-
-        $emp->save();
-        File::put($filepath, $data);
+      if ($masteremp->status != 'PKWT') {
+        return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
+        <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>
+        <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Upgrade" onclick="modalUpgrade(\''.$masteremp->employee_id.'\', \''.$masteremp->name.'\',\''.$masteremp->status.'\')"><i class="fa fa-arrow-up"></i></button>';
       }
-    }else{
-     $emp = new Employee([
+      else {
+        return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
+        <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>';
+      }
+    })
+
+
+
+    ->rawColumns(['action' => 'action'])
+    ->make(true);
+  }
+
+  public function fetchdetail(Request $request){
+
+    $detail ="select  employees.avatar,employees.direct_superior,employees.birth_place, DATE_FORMAT(employees.birth_date,' %d %b %Y') birth_date,employees.gender,employees.address,employees.family_id, DATE_FORMAT(employees.hire_date,' %d %b %Y') hire_date,employees.remark,employees.phone,employees.account,employees.card_id,employees.npwp,employees.bpjstk,employees.jp,employees.bpjskes,mutation_logs.division,mutation_logs.department,mutation_logs.section,mutation_logs.sub_section,mutation_logs.group,promotion_logs.grade_code,promotion_logs.position,promotion_logs.grade_name from employees
+    LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id 
+    LEFT JOIN promotion_logs on  employees.employee_id = promotion_logs.employee_id
+    where mutation_logs.valid_to is null
+    and employees.employee_id ='".$request->get('nik')."'
+    ORDER BY employees.remark asc";
+
+    $detail2 = DB::select($detail);
+    $response = array(
+      'status' => true,
+      'detail' => $detail2,
+    );
+    return Response::json($response);
+  }
+
+
+  public function empCreate(Request $request)
+  {
+    $id = Auth::id();
+
+    try{    
+
+      if($request->hasFile('foto')){
+        $files = $request->file('foto');
+        foreach ($files as $file) 
+        {
+          $number= $request->get('nik');
+          $data = file_get_contents($file);
+          $photo_number = $number . $file->getClientOriginalName() ;
+          $ext = $file->getClientOriginalExtension();
+          $filepath = public_path() . "/uploads/employee_avatar/" . $photo_number;
+
+          $emp = new Employee([
+            'employee_id' => $request->get('nik'),
+            'name' => $request->get('nama'),
+            'gender' => $request->get('jk'),
+            'family_id' => $request->get('statusK'),
+            'birth_place' => $request->get('tmptL'),
+            'birth_date' => $request->get('tglL'),
+            'address' => $request->get('alamat'),
+            'phone' => $request->get('hp'),
+            'card_id' => $request->get('ktp'), 
+            'account' => $request->get('no_rek'),  
+            'bpjstk' => $request->get('bpjstk'), 
+            'jp' => $request->get('jp'), 
+            'bpjskes' => $request->get('bpjskes'), 
+            'npwp' => $request->get('npwp'),                 
+            'direct_superior' => $request->get('leader'), 
+            'hire_date' => $request->get('tglM'), 
+            'avatar' => "/uploads/employee_avatar/".$photo_number, 
+            'remark' => $request->get('pin'), 
+            'created_by' => $id
+          ]);
+
+          $emp->save();
+          File::put($filepath, $data);
+        }
+      }else{
+       $emp = new Employee([
+        'employee_id' => $request->get('nik'),
+        'name' => $request->get('nama'),
+        'gender' => $request->get('jk'),
+        'family_id' => $request->get('statusK'),
+        'birth_place' => $request->get('tmptL'),
+        'birth_date' => $request->get('tglL'),
+        'address' => $request->get('alamat'),
+        'phone' => $request->get('hp'),
+        'card_id' => $request->get('ktp'), 
+        'account' => $request->get('no_rek'),  
+        'bpjstk' => $request->get('bpjstk'), 
+        'jp' => $request->get('jp'), 
+        'bpjskes' => $request->get('bpjskes'), 
+        'npwp' => $request->get('npwp'),                 
+        'direct_superior' => $request->get('leader'), 
+        'hire_date' => $request->get('tglM'), 
+        'remark' => $request->get('pin'), 
+        'created_by' => $id
+      ]);
+
+       $emp->save();
+     }
+
+       // --------------- Promotion Log insert
+
+     $date = date('Y-m-d');
+     $grade1 = $request->get('grade');
+     $grade2 = explode("#", $grade1);
+     $grade = new PromotionLog([
       'employee_id' => $request->get('nik'),
-      'name' => $request->get('nama'),
-      'gender' => $request->get('jk'),
-      'family_id' => $request->get('statusK'),
-      'birth_place' => $request->get('tmptL'),
-      'birth_date' => $request->get('tglL'),
-      'address' => $request->get('alamat'),
-      'phone' => $request->get('hp'),
-      'card_id' => $request->get('ktp'), 
-      'account' => $request->get('no_rek'),  
-      'bpjstk' => $request->get('bpjstk'), 
-      'jp' => $request->get('jp'), 
-      'bpjskes' => $request->get('bpjskes'), 
-      'npwp' => $request->get('npwp'),                 
-      'direct_superior' => $request->get('leader'), 
-      'hire_date' => $request->get('tglM'), 
-                    // 'avatar' => "/uploads/employee_avatar/".$photo_number, 
-      'remark' => $request->get('pin'), 
+      'grade_code' => $grade2[0],
+      'grade_name' => $grade2[1],
+      'position' => $request->get('jabatan'),
+      'valid_from' => $date,
       'created_by' => $id
+
     ]);
 
-     $emp->save();
+     $grade->save();
+
+        // --------------- Mutation Log insert
+     $jabatan = new Mutationlog ([
+       'employee_id' => $request->get('nik'), 
+       'cost_center' => $request->get('cs'),
+       'division' => $request->get('devisi'), 
+       'department' => $request->get('departemen'), 
+       'section' => $request->get('section'), 
+       'sub_section' => $request->get('subsection'), 
+       'group' => $request->get('group'), 
+       'valid_from' => $date,
+       'created_by' => $id
+     ]);
+
+     $jabatan->save();
+
+     return redirect('/index/insertEmp')->with('status', 'Input Employee success')->with('page', 'Master Employee');
    }
-
-       // grade
-   $date = date('Y-m-d');
-   $grade1 = $request->get('grade');
-   $grade2 = explode("#", $grade1);
-   $grade = new PromotionLog([
-    'employee_id' => $request->get('nik'),
-    'grade_code' => $grade2[0],
-    'grade_name' => $grade2[1],
-    'position' => $request->get('jabatan'),
-    'valid_from' => $date,
-    'created_by' => $id
-
-  ]);
-
-   $grade->save();
-
-        //jabatan
-   $jabatan = new Mutationlog ([
-     'employee_id' => $request->get('nik'), 
-     // 'cost_center' => $request->get('nik'),   // COBA
-     'division' => $request->get('devisi'), 
-     'department' => $request->get('departemen'), 
-     'section' => $request->get('section'), 
-     'sub_section' => $request->get('subsection'), 
-     'group' => $request->get('group'), 
-     'valid_from' => $date,
-     'created_by' => $id
-   ]);
-
-   $jabatan->save();
-
-   return redirect('/index/insertEmp')->with('status', 'Input Employee success')->with('page', 'Master Employee');
- }
- catch (QueryException $e){
-  return redirect('/index/insertEmp')->with('error', $e->getMessage())->with('page', 'Master Employee');
-}
+   catch (QueryException $e){
+    return redirect('/index/insertEmp')->with('error', $e->getMessage())->with('page', 'Master Employee');
+  }
 }
 
 public function updateEmpData(Request $request)
@@ -287,7 +312,6 @@ public function updateEmpData(Request $request)
     $emp->npwp = $request->get('npwp');                 
     $emp->direct_superior = $request->get('leader');
     $emp->hire_date = $request->get('tglM'); 
-      // $emp->avatar = "/uploads/employee_avatar/".$photo_number; 
     $emp->remark = $request->get('pin');
     $emp->created_by = $id;
     $emp->save();   
@@ -448,16 +472,11 @@ public function fetchMutation(Request $request)
   ->take(1)
   ->get();
 
-  $devision = OrganizationStructure::where('status','LIKE','DIV%')
-  ->get();
-  $department = OrganizationStructure::where('status','LIKE','DEP%')
-  ->get();
-  $section = OrganizationStructure::where('status','LIKE','SEC%')
-  ->get();
-  $sub_section = OrganizationStructure::where('status','LIKE','SSC%')
-  ->get();
-  $group = OrganizationStructure::where('status','LIKE','GRP%')
-  ->get();
+  $devision = OrganizationStructure::where('status','LIKE','DIV%')->get();
+  $department = OrganizationStructure::where('status','LIKE','DEP%')->get();
+  $section = OrganizationStructure::where('status','LIKE','SEC%')->get();
+  $sub_section = OrganizationStructure::where('status','LIKE','SSC%')->get();
+  $group = OrganizationStructure::where('status','LIKE','GRP%')->get();
   $cc = CostCenter::get();
   
   $response = array(
@@ -546,51 +565,6 @@ public function fetchReportGender()
 }
 
 
-public function reportSerikat()
-{
-  $tanggal = date('Y-m');
-
-  $fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
-
-  $fy = db::select($fiskal);
-
-
-  $get_union = "select count(employee_id) as emp_tot, `union`, mon from
-  ( select emp.employee_id, IFNULL(`union`,'NON UNION') `union`, mon, IFNULL(mon_from,mon) mon_from, IFNULL(mon_to,mon) mon_to from
-  (select * from 
-  (
-  select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
-  cross join (
-  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
-  ) m
-  where hire_month <= mon and (mon < end_month OR end_month is null)
-  ) as emp
-  left join
-  (
-  select id, labor_union_logs.employee_id, labor_union_logs.`union`, date_format(labor_union_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(labor_union_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from labor_union_logs 
-  WHERE id IN (
-  SELECT MAX(id)
-  FROM labor_union_logs
-  GROUP BY labor_union_logs.employee_id, date_format(labor_union_logs.valid_from, '%Y-%m')
-  )
-  ) uni on emp.employee_id = uni.employee_id
-  ) semua
-  where mon_from <= mon and mon_to >= mon
-  group by mon, `union`
-  order by mon asc, `union` desc";
-
-  $union = db::select($get_union);
-
-  $response = array(
-    'status' => true,
-    'manpower_by_serikat' => $union,
-  );
-
-  return Response::json($response); 
-
-}
-
-
 public function fetchReportStatus()
 {
   $tanggal = date('Y-m');
@@ -631,6 +605,58 @@ public function fetchReportStatus()
   return Response::json($response); 
 }
 
+public function reportSerikat()
+{
+  $tanggal = date('Y-m');
+
+  $fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
+
+  $fy = db::select($fiskal);
+
+
+  $get_union = "select count(employee_id) as emp_tot, serikat, mon from
+( select emp.employee_id, COALESCE(serikat,'NON UNION') serikat, mon, COALESCE(mon_from,mon) mon_from, COALESCE(mon_to,mon) mon_to from
+  (select * from 
+  (
+  select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+  cross join (
+  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+  ) m
+  where hire_month <= mon and (mon < end_month OR end_month is null)
+  ) as emp
+  join
+  (
+  select id, labor_union_logs.employee_id, labor_union_logs.`union` as serikat, date_format(labor_union_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(labor_union_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from labor_union_logs 
+  WHERE id IN (
+  SELECT MAX(id)
+  FROM labor_union_logs
+  GROUP BY labor_union_logs.employee_id, date_format(labor_union_logs.valid_from, '%Y-%m')
+  )
+  ) uni on emp.employee_id = uni.employee_id
+  ) semua
+  where mon_from <= mon and mon_to >= mon
+  group by mon, serikat
+  union all
+    select count(employee_id) as emp_tot, 'NON UNION' as serikat, mon from 
+    (
+    select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+    cross join (
+    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+    ) m
+    where hire_month <= mon and (mon < end_month OR end_month is null) and employee_id not in (select employee_id from labor_union_logs)
+    group by mon
+  order by mon asc, serikat desc";
+
+  $union = db::select($get_union);
+
+  $response = array(
+    'status' => true,
+    'manpower_by_serikat' => $union,
+  );
+
+  return Response::json($response); 
+
+}
 
 // --------------------- End Total Meeting Report ---------------------
 
