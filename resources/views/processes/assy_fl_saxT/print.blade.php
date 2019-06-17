@@ -553,6 +553,7 @@
 		var	status = status;
 		var sn = $("#sn").val();
 		var snmodel = $("#snmodel").val();
+		$('#modelmoddal').val('');
 		// alert(status);
 		var data ={
 			sn:sn,
@@ -579,6 +580,7 @@
 					$('#btnprint').prop('disabled',true);
 					$('#btnprintmodal').prop('disabled',true);
 					$('#btnprint2').prop('disabled',true);
+					
 				}
 				else{
 					audio_error.play();

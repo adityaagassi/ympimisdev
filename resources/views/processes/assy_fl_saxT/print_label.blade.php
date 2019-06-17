@@ -634,7 +634,11 @@
 								// 	planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
 								// }else {
 								// 	planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
-								// }						
+								// }
+
+								else {
+									planData += '<button type="button" class="btn btn-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'()\')">'+value.material_description+'<br>'+'</button>';	
+								}						
 							});
 							$('#listModel3').append(planData);	
 						}
@@ -670,11 +674,16 @@
 						$.each(result.planData, function(key, value) {
 								if (value.remark=="J") {
 								planData += '<button type="button" class="btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
-							}else if(value.remark=="S"){
-								planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
-							}else {
-								planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
-							}						
+							}
+							// else if(value.remark=="S"){
+							// 	planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
+							// }else {
+							// 	planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
+							// }	
+
+							else {
+									planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
+								}					
 						});						
 						$('#listModel').append(planData);
 						$('#listModel2').append('<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print(\'update\');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button><button id="btnprint2"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;display: none;" class="btn btn-info" onclick="print(\'reupdate\');" disabled><i class="fa fa-print"></i>&nbsp;Reprint</button>');
