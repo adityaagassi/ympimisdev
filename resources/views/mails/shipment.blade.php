@@ -8,7 +8,7 @@
 	<div style="width: 700px;">
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Informasi Kekurangan Ekspor ETD YMPI per {{ date('d M Y H:i:s') }}</p>
+			<p style="font-size: 18px;">Informasi Kekurangan Ekspor ETD YMPI (Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			<p style="font-weight: bold;">Shipment Date: {{ date('l, d F Y', strtotime($data[0]->st_date)) }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;">
