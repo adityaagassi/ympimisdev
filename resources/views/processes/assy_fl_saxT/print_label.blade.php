@@ -88,7 +88,7 @@
 						</div>
 						
 
-				{{-- 		<div class="col-xs-2">
+						<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Alto:</span>
 							</center>
@@ -106,8 +106,8 @@
 									
 								</tfoot>
 							</table>
-						</div> --}}
-				{{-- 		<div class="col-xs-2">
+						</div>
+						<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Tenor:</span>
 							</center>
@@ -125,9 +125,9 @@
 									
 								</tfoot>
 							</table>							
-						</div> --}}
+						</div>
 						
-						<div class="col-xs-4">
+						{{-- <div class="col-xs-4">
 							<center>
 								<span style="font-size: 20px;">Total Production :</span>
 							</center>
@@ -150,7 +150,7 @@
 									
 								</tfoot>
 							</table>							
-						</div>
+						</div> --}}
 						<div class="col-xs-3">
 							<center>
 								<span style="font-size: 24px">Last Print:</span><br>
@@ -330,9 +330,9 @@
 
 
 				$('body').toggleClass("sidebar-collapse");
-				fillPlan3();
-				// fillPlan2();
-				// fillPlan();
+				// fillPlan3();
+				 fillPlan2();
+				 fillPlan();
 				fillResult();
 
 			});
@@ -627,10 +627,12 @@
 							$('#listModel3').html("");
 							var planData = '';
 							$.each(result.planData, function(key, value) {
-								if (value.remark=="J") {
+									if (value.remark=="J") {
 									planData += '<button type="button" class="btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
-								}else{
-									planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'&nbsp;\')">'+value.material_description+'</button>';	
+								}else if(value.remark=="S") {
+									planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
+								}else {
+									planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
 								}						
 							});
 							$('#listModel3').append(planData);	
@@ -665,10 +667,12 @@
 						$('#listModel2').html("");
 						var planData = '';
 						$.each(result.planData, function(key, value) {
-							if (value.remark=="J") {
+								if (value.remark=="J") {
 								planData += '<button type="button" class="btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
-							}else{
-								planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'&nbsp;\')">'+value.material_description+'</button>';	
+							}else if(value.remark=="S"){
+								planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
+							}else {
+								planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
 							}						
 						});						
 						$('#listModel').append(planData);
