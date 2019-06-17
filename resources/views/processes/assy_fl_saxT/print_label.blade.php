@@ -629,11 +629,12 @@
 							$.each(result.planData, function(key, value) {
 									if (value.remark=="J") {
 									planData += '<button type="button" class="btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
-								}else if(value.remark=="S") {
-									planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
-								}else {
-									planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
-								}						
+								}
+								// else if(value.remark=="S") {
+								// 	planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Silver)\')">'+value.material_description+'<br>Silver'+'</button>';	
+								// }else {
+								// 	planData += '<button type="button" class="btn btn-warning btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'(Lacquering)\')">'+value.material_description+'<br>Lacquering'+'</button>';	
+								// }						
 							});
 							$('#listModel3').append(planData);	
 						}
