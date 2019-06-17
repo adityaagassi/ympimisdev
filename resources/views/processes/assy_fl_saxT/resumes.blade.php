@@ -223,17 +223,22 @@ table.table-bordered > tfoot > tr > th{
 				]
 			},
 			"footerCallback": function (tfoot, data, start, end, display) {
+				var api = this.api();
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?
 					i.replace(/[\$%,]/g, '')*1 :
 					typeof i === 'number' ?
 					i : 0;
 				};
-				var api = this.api();
+				
 				var totalPlan = api.column(3).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
 				}, 0)
-				$(api.column(3).footer()).html(totalPlan.toLocaleString());
+
+				var totalPlan2 = api.column(3, { page: 'current'}).data().reduce(function (a, b) {
+					return intVal(a)+intVal(b);
+				}, 0)
+				$(api.column(3).footer()).html(totalPlan2.toLocaleString());
 			},
 			'paging': true,
 			'lengthChange': true,
