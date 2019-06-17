@@ -54,14 +54,14 @@ include(app_path() . '\barcode\barcode.php');
 	<input type="text" name="codegmc" id="codegmc" value="{{$barcode->finished}}" hidden="">
 	<input type="text" name="codejan" id="codejan" value="{{$barcode->janean}}" hidden="">
 	<input type="text" name="codeupc" id="codeupc" value="{{$barcode->upc}}" hidden="">
-	{{-- <input type="text" name="codeday" id="codeday" value="{{$barcode->date_code}}" hidden=""> --}}
+	{{-- <input type="text" name="codeday" id="codeday" value="{{$barcode->date_code}}" hidden=""> a--}}
 	<input type="text" name="codej" id="codej" value="{{$barcode->remark}}" hidden="">
 	@endforeach
 
 	@foreach($date2 as $nomor => $date2)
 		<input type="text" name="codeday" id="codeday" value="{{$date2->date_code}}" hidden="">
 		@endforeach
-		
+
 	<tr>
 		<td colspan="3"><p class="product">Product Name :</p></td>
 	</tr>

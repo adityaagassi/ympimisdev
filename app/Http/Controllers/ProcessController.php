@@ -1594,6 +1594,7 @@ public function label_besar($id,$gmc,$remark){
 	return view('processes.assy_fl_saxT.print_label_besar',array(
 		'barcode' => $barcode,
 		'date2' => $date2,
+		// ad
 		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
