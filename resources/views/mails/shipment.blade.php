@@ -7,7 +7,8 @@
 <body>
 	<div style="width: 700px;">
 		<center>
-			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br><p style="font-size: 18px; font-weight: bold;">E-mail otomatis informasi kekurangan ekspor H-2 ETD YMPI<br>Shipment Date: {{ date('l, d M Y', strtotime($data[0]->st_date)) }}</p>
+			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br><p style="font-size: 18px; font-weight: bold;">Informasi Kekurangan Ekspor ETD YMPI per {{ date('d M Y H:i:s') }}<br>Shipment Date: {{ date('l, d M Y', strtotime($data[0]->st_date)) }}</p>
+			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
@@ -36,7 +37,6 @@
 					@endforeach
 				</tbody>
 			</table>
-			This is an automatic notification. Please do not reply to this address.
 		</center>
 	</div>
 </body>
