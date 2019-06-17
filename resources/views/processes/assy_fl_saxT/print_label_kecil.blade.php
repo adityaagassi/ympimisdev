@@ -108,7 +108,7 @@
 		$("#128").attr("src",janfix+url2+code);
 		var day	=$('#codeday').val();
 		$('#day').text(day);
-		$('#serial').text(sn);
+		$('#serial').text(sn.toUpperCase());
 	}
 
 		// default print settings
