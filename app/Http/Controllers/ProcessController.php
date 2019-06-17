@@ -1586,9 +1586,14 @@ public function label_besar($id,$gmc,$remark){
 	}
 
 	$barcode = DB::select($query);
+
+	$date = date('Y-m-d');
+	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
+	$date2 = DB::select($querydate);
 	
 	return view('processes.assy_fl_saxT.print_label_besar',array(
 		'barcode' => $barcode,
+		'date2' => $date2,
 		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
