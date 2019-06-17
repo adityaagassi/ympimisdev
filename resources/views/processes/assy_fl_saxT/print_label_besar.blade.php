@@ -161,7 +161,7 @@ include(app_path() . '\barcode\barcode.php');
 		if (jan !="-") {
 			$("#JAN").attr("src",janfix+url2+code);
 		}else{
-			$("#JAN").attr("src","");
+			$("#JAN").attr("src",janfix+url2+code);
 			$("#JAN").css({"visibility":"hidden"});
 		}
 	}
