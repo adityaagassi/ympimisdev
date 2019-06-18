@@ -1108,7 +1108,7 @@ public function print_sax(Request $request){
 	->where('serial_number','=' ,$request->get('sn'))
 	->first();
 
-	$stamp2 = LogProcess::where('process_code', '=', '2')
+	$stamp2 = LogProcess::where('process_code', '=', '1')
 	->where('origin_group_code','=' ,$request->get('origin'))
 	->where('serial_number','=' ,$request->get('sn'))
 	->first();
