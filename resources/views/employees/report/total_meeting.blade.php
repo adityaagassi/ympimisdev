@@ -331,9 +331,9 @@ table.table-bordered > tfoot > tr > th{
             cat2 = month[date.getMonth()]+" "+date.getFullYear();
 
             if(result.manpower_by_gender[i].gender == 'L')
-              seriesLaki.push(result.manpower_by_gender[i].tot_karyawan);
+              seriesLaki.push(parseInt(result.manpower_by_gender[i].tot_karyawan));
             else
-              seriesPerempuan.push(result.manpower_by_gender[i].tot_karyawan);
+              seriesPerempuan.push(parseInt(result.manpower_by_gender[i].tot_karyawan));
 
             if(xCategories.indexOf(cat2) === -1){
               xCategories[xCategories.length] = cat2;
@@ -422,7 +422,7 @@ table.table-bordered > tfoot > tr > th{
           var seriesPKWT = [];
           var seriesPKWTT1 = [];
           var seriesPKWTT2 = [];
-          // var seriesPercobaan = [];
+          var seriesOutsource = [];
           var maxMP = [];
           var cat, cat2, MP = 0;
 
@@ -442,6 +442,9 @@ table.table-bordered > tfoot > tr > th{
             else if(result.manpower_by_status_stack[i].status == 'PKWTT2')
               seriesPKWTT2.push(result.manpower_by_status_stack[i].emp);
 
+            else if(result.manpower_by_status_stack[i].status == 'OUTSOURCES')
+              seriesOutsource.push(result.manpower_by_status_stack[i].emp);
+
             // else if(result.manpower_by_status_stack[i].status == 'Percobaan')
             //   seriesPercobaan.push(result.manpower_by_status_stack[i].emp);
 
@@ -451,7 +454,7 @@ table.table-bordered > tfoot > tr > th{
           }
 
           for (var i = 0; i < xCategories.length; i++) {
-            MP = MP + seriesPKWT[i] + seriesPKWTT1[i] + seriesPKWTT2[i];
+            MP = MP + seriesPKWT[i] + seriesPKWTT1[i] + seriesPKWTT2[i] + seriesOutsource[i];
             maxMP.push(MP);
             MP = 0;
           }
@@ -523,6 +526,11 @@ table.table-bordered > tfoot > tr > th{
             enabled:false
           },
           series: [{
+            name: 'OutSources',
+            data: seriesOutsource
+
+          },
+          {
             name: 'Contract 1',
             data: seriesPKWTT1
 
@@ -594,7 +602,12 @@ table.table-bordered > tfoot > tr > th{
               minPointLength: 5
             }
           },
-          series: [{
+          series: [
+          {
+            name: 'OutSources',
+            data: seriesOutsource
+
+          }, {
             name: 'Contract 1',
             data: seriesPKWTT1
 

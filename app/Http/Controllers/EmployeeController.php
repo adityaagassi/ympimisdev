@@ -540,7 +540,8 @@ public function fetchReportGender()
 
   $get_fiskal = db::select($fiskal);
 
-  $gender = "select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
+  $gender = "select mon, gender, sum(tot_karyawan) as tot_karyawan from
+(select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
   (
   select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
   from weekly_calendars
@@ -552,6 +553,21 @@ public function fetchReportGender()
   ) as a
   on a.fy = b.fiscal_year
   where mon <= date_format('".$tgl."','%Y-%m-%d') 
+  group by mon, gender
+  union all
+  select mon, gender, count(if(if(date_format(a.entry_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
+  (
+  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
+  from weekly_calendars
+  ) as b
+  join
+  (
+  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, entry_date, nik, gender
+  from outsources
+  ) as a
+  on a.fy = b.fiscal_year
+  where mon <= date_format('".$tgl."','%Y-%m-%d') 
+  group by mon, gender) semua
   group by mon, gender";
 
   $get_manpower = db::select($gender);
@@ -593,7 +609,16 @@ public function fetchReportStatus()
   )
   ) as c on b.employee_id = c.employee_id
   where mon_from <= mon and mon_to >= mon
-  group by mon, status";
+  group by mon, status
+    union all
+  select count(name) as emp, 'OUTSOURCES' as status, mon from 
+  (
+  select name, date_format(entry_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from outsources
+  cross join (
+  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+  ) m
+  where hire_month <= mon and (mon < end_month OR end_month is null)
+  group by mon";
 
   $get_manpower_status = db::select($statusS);
 
