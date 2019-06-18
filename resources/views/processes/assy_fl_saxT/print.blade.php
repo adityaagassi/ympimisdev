@@ -136,7 +136,7 @@
 								<input id="sn" type="text" style="font-weight: bold;  width: 100%; text-align: center; font-size: 4vw"  onkeyup="getserial()">
 								<input id="snmodel" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="Not Found" disabled>
 								<span style="font-size: 24px">Print</span><br>
-								<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print('new');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
+								<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
 								<button id="btnprint2"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;display: none;" class="btn btn-info" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;Reprint</button>
 								<button id="btnprintmodal"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw; display: none;" class="btn btn-warning" onclick="modalshow();" disabled>Show Model</button>
 
@@ -551,7 +551,7 @@
 	function print(status){	
 		$("#modela").modal('hide');
 		var	status = status;
-		var sn = $("#sn").val();
+		var sn = $("#sn").val().toUpperCase();
 		var snmodel = $("#snmodel").val();
 		$('#modelmoddal').val('');
 		// alert(status);
