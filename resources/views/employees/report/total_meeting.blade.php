@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    Total Meeting <span class="text-purple"> jepang </span>
+    Total Meeting <span class="text-purple"> トータルミーティング </span>
   </h1>
   <ol class="breadcrumb">
   </ol>
@@ -175,7 +175,7 @@ table.table-bordered > tfoot > tr > th{
               <h5 class="description-header" style="font-size: 60px;">
                 <span class="description-percentage" id="tot_budget"></span>
               </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span >???</span></span>   
+              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span >フォーキャスト累計</span></span>   
             </div>
           </div>
           <div class="col-md-4">

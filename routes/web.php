@@ -87,11 +87,12 @@ Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
-	Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
-	Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
-	Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
 });
 
+Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
+Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
+Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
+Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
@@ -397,6 +398,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
+	Route::post('scan/middle/racking', 'MiddleProcessController@scanMiddleRacking');
 });
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
@@ -446,10 +448,7 @@ Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddl
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
 Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
-
-//tambah ali barel
-Route::get('index/mesin', 'MiddleProcessController@indexProcessMesin');
-//end tambah ali barel
+Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

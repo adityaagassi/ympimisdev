@@ -97,10 +97,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Total Meeting (jepang)</span>
+                            <span style="font-weight: bold;">Total Meeting (トータルミーティング)</span>
                             <br>
                             <a href="{{ url("index/report/total_meeting") }}" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Information (稼働率)
+                                <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
                             </a>
                         </td>
                     </tr>
