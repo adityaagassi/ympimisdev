@@ -1117,7 +1117,7 @@ public function print_sax(Request $request){
 	try{
 		$id = Auth::id();
 		if ($request->get('status') =="update") {
-			if ($stamp != null) {
+			if ($stamp->model != null) {
 				$model = $stamp->model;
 			}else{
 				$model = $stamp2->model;
