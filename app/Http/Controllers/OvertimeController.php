@@ -559,8 +559,8 @@ class OvertimeController extends Controller
 		where department is not null
 		) as em
 		left join (
-		select nik, date_format(tanggal,'%Y-%m') as mon, sum(final) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
-		where deleted_at is null and om.`status` = 1 and DATE_FORMAT(tanggal,'%Y-%m') in (
+		select nik, date_format(tanggal,'%Y-%m') as mon, sum(if(status = 0,om.jam,om.final)) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
+		where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%Y-%m') in (
 		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')
 		)
 		group by date_format(tanggal,'%Y-%m'), nik
