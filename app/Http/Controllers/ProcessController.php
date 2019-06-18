@@ -1108,7 +1108,7 @@ public function print_sax(Request $request){
 	->where('serial_number','=' ,$request->get('sn'))
 	->first();
 
-	$stamp2 = LogProcess::where('process_code', '=', '1')
+	$stamp2 = LogProcess::where('process_code', '=', '2')
 	->where('origin_group_code','=' ,$request->get('origin'))
 	->where('serial_number','=' ,$request->get('sn'))
 	->first();
@@ -1117,7 +1117,7 @@ public function print_sax(Request $request){
 	try{
 		$id = Auth::id();
 		if ($request->get('status') =="update") {
-			if ($stamp->model != null) {
+			if ($stamp != null) {
 				$model = $stamp->model;
 			}else{
 				$model = $stamp2->model;
