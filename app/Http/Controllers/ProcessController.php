@@ -1101,6 +1101,7 @@ public function getsnsax(Request $request)
 	}
 }
 
+
 public function print_sax(Request $request){
 	$stamp = LogProcess::where('process_code', '=', $request->get('code'))
 	->where('origin_group_code','=' ,$request->get('origin'))
@@ -1349,16 +1350,18 @@ public function fetchStampPlansax3($id){
 
 	$now = date('Y-m-d');	
 
-	$query3 = "select model, sum(plan) as plan, sum(actual) as actual from
-	(
-	select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+	// $query3 = "select model, sum(plan) as plan, sum(actual) as actual from
+	// (
+	// select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
 
-	union all
+	// union all
 
-	select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
-	) as plan
-	group by model
-	having model like '".$id_all."'";
+	// select model, 0 as plan, quantity as actual from log_processes where process_code = '3' and date(created_at) = '" . $now . "'
+	// ) as plan
+	// group by model
+	// having model like '".$id_all."'";
+
+	$query3 ="select model, COUNT(model) as actual from stamp_inventories where process_code='3' and origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
 
 	$planData = DB::select($query3);
 
@@ -1594,7 +1597,7 @@ public function label_besar($id,$gmc,$remark){
 	return view('processes.assy_fl_saxT.print_label_besar',array(
 		'barcode' => $barcode,
 		'date2' => $date2,
-		// ad
+
 		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
@@ -1813,7 +1816,7 @@ public function fetch_plan_labelsax(Request $request){
 	having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0 ) a
 	
 	LEFT JOIN (
-	select model, count(MODEL)AS act from stamp_inventories where process_code='3' AND origin_group_code='043' GROUP BY model) b
+	select model, count(MODEL)AS act from stamp_inventories where process_code='3' AND origin_group_code='043' and  date(updated_at) = '". $now ."' GROUP BY model) b
 	on a.model = b.model";
 
 	$tableData = DB::select($query);
