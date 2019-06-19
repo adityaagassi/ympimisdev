@@ -171,7 +171,7 @@ table.table-bordered > tfoot > tr > th{
       <div class="row">
         <div class="col-md-12">
           <div class="col-md-4">
-            <div class="description-block border-right" style="color: #f76111">
+            <div class="description-block border-right" style="color: #02ff17">
               <h5 class="description-header" style="font-size: 60px;">
                 <span class="description-percentage" id="tot_budget"></span>
               </h5>      
@@ -832,7 +832,7 @@ Highcharts.chart('over_by_dep', {
         textOutline: 0
       },
       formatter: function() {
-        // return '3';
+        return seriesData[15].data;
       }
     }
   },
