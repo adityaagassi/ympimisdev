@@ -733,8 +733,10 @@ function drawChart() {
    var categories;
    var xCategories = [];
    var xTotal = [];
+   var xOTHour = [];
+   var xKar = [];
    var seriesData = [];
-   var cats, total = 0;
+   var cats, total = 0, kar, ot = 0;
 
    for (i = 0; i < result.report_by_dep.length; i++){
     total += result.report_by_dep[i].avg;
@@ -745,7 +747,6 @@ function drawChart() {
     cats = month[date.getMonth()]+" "+date.getFullYear();
 
     if(xCategories.indexOf(cats) === -1){
-      xTotal[xTotal.length] = 0;
       xCategories[xCategories.length] = cats;
     }
   }
@@ -765,15 +766,39 @@ function drawChart() {
  }
 }
 
-for (var i = 0; i < seriesData.length; i++) {
-  for (var z = 0; z < seriesData[i].data.length; z++) {
-    xTotal[z] = xTotal[z] + seriesData[i].data[z];
-  }
-}
+var map = result.report_by_dep.reduce(function(map, invoice) {
+  var name = invoice.mon
+  var price = +invoice.ot_hour
+  map[name] = (map[name] || 0) + price
+  return map
+}, {})
 
-for (var i = 0; i < xTotal.length; i++) {
-  xTotal[i] = Math.round((xTotal[i] / seriesData.length) * 100) / 100;
-}
+xOTHour = map;
+
+// console.log(xOTHour);
+
+var map2 = result.report_by_dep.reduce(function(map2, invoice) {
+  var name2 = invoice.mon
+  var price = +invoice.kar
+  map2[name2] = (map2[name2] || 0) + price
+  return map2
+}, {})
+
+xKar = map2;
+
+// console.log(xKar);
+
+$.each(xOTHour, function(key, value) {
+  var hasil = xOTHour[key] / xKar[key];
+  xTotal.push(Math.round(hasil * 100) / 100);
+});
+
+console.log(xTotal);
+
+seriesData.push({name: 'avg', data: xTotal, visible: false})
+
+console.log(seriesData);
+
 
 Highcharts.chart('over_by_dep', {
   chart: {
@@ -807,7 +832,7 @@ Highcharts.chart('over_by_dep', {
         textOutline: 0
       },
       formatter: function() {
-        return Math.round(this.total / seriesData.length * 100) / 100;
+        // return '3';
       }
     }
   },
