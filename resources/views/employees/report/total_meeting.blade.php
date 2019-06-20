@@ -34,6 +34,15 @@ table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
+
+.loading {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 </style>
 @endsection
 @section('header')
@@ -58,7 +67,15 @@ table.table-bordered > tfoot > tr > th{
      <div class="col-md-12">
       <div class="row">
        <div class="col-md-12">
-        <div id="status_stacked_chart" style="width: 100%; height: 500px;"></div>   
+        <div id="wait" class="loading">
+          <div>
+            <center>
+              <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+              <h2 style="margin: 0px">Loading . . .</h2>
+            </center>
+          </div>
+        </div>
+        <div id="status_stacked_chart" style="width: 100%; height: 500px;"></div>
       </div>
     </div>
   </div>
@@ -71,6 +88,14 @@ table.table-bordered > tfoot > tr > th{
    <div class="col-md-12">
     <div class="row">
      <div class="col-md-12">
+      <div id="wait2" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
+        </div>
+      </div>
       <div id="status_chart" style="width: 100%; height: 550px;"></div>
     </div>
   </div>
@@ -84,6 +109,14 @@ table.table-bordered > tfoot > tr > th{
    <div class="col-md-12">
     <div class="row">
      <div class="col-md-12">
+      <div id="wait3" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
+        </div>
+      </div>
       <div id="gender_chart" style="width: 100%; height: 550px;"></div>
     </div>
   </div>
@@ -97,6 +130,14 @@ table.table-bordered > tfoot > tr > th{
    <div class="col-md-12">
     <div class="row">
      <div class="col-md-12">
+      <div id="wait4" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
+        </div>
+      </div>
       <div id="serikat_chart" style="width: 100%; height: 550px;"></div>
     </div>
   </div>
@@ -110,6 +151,14 @@ table.table-bordered > tfoot > tr > th{
    <div class="col-md-12">
     <div class="row">
      <div class="col-md-12">
+      <div id="wait5" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
+        </div>
+      </div>
       <div id="over_by_dep" style="width: 100%; height: 550px;"></div>
     </div>
   </div>
@@ -129,6 +178,14 @@ table.table-bordered > tfoot > tr > th{
             <i class="fa fa-calendar"></i>
           </div>
           <input type="text" class="form-control datepicker" id="date2" onchange="drawChartOvertimeOver()" placeholder="Select Month" style="border-color: #00a65a">
+        </div>
+      </div>
+      <div id="wait6" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
         </div>
       </div>
       <div id="over" style="width: 100%; height: 550px;"></div>
@@ -153,6 +210,14 @@ table.table-bordered > tfoot > tr > th{
             <i class="fa fa-calendar"></i>
           </div>
           <input type="text" class="form-control datepicker" id="tgl" onchange="drawChartOvertimeControl()" placeholder="Select Date" style="border-color: #00a65a">
+        </div>
+      </div>
+      <div id="wait7" class="loading">
+        <div>
+          <center>
+            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
+            <h2 style="margin: 0px">Loading . . .</h2>
+          </center>
         </div>
       </div>
       <div id="over_control" style="width: 100%; height: 550px;"></div>
@@ -214,7 +279,7 @@ table.table-bordered > tfoot > tr > th{
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-bordered table-striped table-hover" style="width: 100%;"> 
+            <table class="table table-bordered table-striped table-hover" style="width: 100%;">
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
                   <th>NIK</th>
@@ -314,7 +379,9 @@ table.table-bordered > tfoot > tr > th{
   }
 
   function drawChartGender(){
+    $("#wait3").show();
     $.get('{{ url("fetch/report/gender") }}', function(result, status, xhr){
+      $("#wait3").hide();
       if(xhr.status == 200){
 
         if(result.status){
@@ -412,9 +479,12 @@ table.table-bordered > tfoot > tr > th{
   }
 
   function drawChartStatusStacked() {
+    $('#wait').show();
+    $('#wait2').show();
     $.get('{{ url("fetch/report/status1") }}', function(result, status, xhr){
       if(xhr.status == 200){
         if(result.status){
+          $('#wait').hide();
 
           //  ------------- CHART STATUS STACKED ---------------
 
@@ -433,13 +503,14 @@ table.table-bordered > tfoot > tr > th{
 
             cat2 = month[date.getMonth()]+" "+date.getFullYear();
 
-            if(result.manpower_by_status_stack[i].status == 'PKWT')
+            if(result.manpower_by_status_stack[i].status == 'Tetap' || 
+              result.manpower_by_status_stack[i].status == 'Percobaan')
               seriesPKWT.push(result.manpower_by_status_stack[i].emp);
 
-            else if(result.manpower_by_status_stack[i].status == 'PKWTT1')
+            else if(result.manpower_by_status_stack[i].status == 'Kontrak 1')
               seriesPKWTT1.push(result.manpower_by_status_stack[i].emp);
 
-            else if(result.manpower_by_status_stack[i].status == 'PKWTT2')
+            else if(result.manpower_by_status_stack[i].status == 'Kontrak 2')
               seriesPKWTT2.push(result.manpower_by_status_stack[i].emp);
 
             else if(result.manpower_by_status_stack[i].status == 'OUTSOURCES')
@@ -553,6 +624,8 @@ table.table-bordered > tfoot > tr > th{
 
           //  ------------- CHART STATUS NOT STACKED ---------------
 
+          $('#wait2').hide();
+
           Highcharts.chart('status_chart', {
             chart: {
               type: 'column'
@@ -627,7 +700,9 @@ table.table-bordered > tfoot > tr > th{
 }
 
 function drawChartSerikat() {
+  $("#wait4").show();
   $.get('{{ url("fetch/report/serikat") }}', function(result, status, xhr){
+    $("#wait4").hide();
     if(xhr.status == 200){
 
       if(result.status){
@@ -728,7 +803,9 @@ function drawChartSerikat() {
 }
 
 function drawChart() {
+  $("#wait5").show();
   $.get('{{ url("fetch/overtime_report") }}', function(result) {
+    $("#wait5").hide();
    // ------------  Chart Overtime by Department
    var categories;
    var xCategories = [];
@@ -832,7 +909,7 @@ Highcharts.chart('over_by_dep', {
         textOutline: 0
       },
       formatter: function() {
-        return seriesData[15].data;
+        // return seriesData[15].data;
       }
     }
   },
@@ -882,21 +959,27 @@ function drawChartOvertimeOver() {
    tanggal:tanggal
  }
 
+ $("#over").css("visibility","hidden");
+ $("#wait6").show();
+
  $.get('{{ url("fetch/overtime_report_over") }}', data, function(result) {
 
-   for (i = 0; i < result.report.length; i++){
-     cat.push(result.report[i].department);
-     tiga_jam.push(parseInt(result.report[i].tiga_jam));
-     per_minggu.push(parseInt(result.report[i].emptblas_jam));
-     per_bulan.push(parseInt(result.report[i].tiga_patblas_jam));
-     manam_bulan.push(parseInt(result.report[i].limanam_jam));
-   }
+  $("#wait6").hide();
+  $("#over").css("visibility","visible");
 
-   tgl = result.report[0].month_name;
+  for (i = 0; i < result.report.length; i++){
+   cat.push(result.report[i].department);
+   tiga_jam.push(parseInt(result.report[i].tiga_jam));
+   per_minggu.push(parseInt(result.report[i].emptblas_jam));
+   per_bulan.push(parseInt(result.report[i].tiga_patblas_jam));
+   manam_bulan.push(parseInt(result.report[i].limanam_jam));
+ }
 
-   var date = new Date(tgl+'-01');
+ tgl = result.report[0].month_name;
 
-   title = month[date.getMonth()]+" "+date.getFullYear();
+ var date = new Date(tgl+'-01');
+
+ title = month[date.getMonth()]+" "+date.getFullYear();
 
 
     // ------ Chart Overtime over 3 hour -----------
@@ -1008,7 +1091,13 @@ function drawChartOvertimeControl() {
   var data = {
     tgl:tanggal
   }
+
+  // $("#over_control").css("visibility","hidden");
+  $("#wait7").show();
   $.get('{{ url("fetch/report/overtime_report_control") }}', data, function(result) {
+
+    $("#wait7").hide();
+    // $("#over_control").css("visibility","visible");
 
     // -------------- CHART OVERTIME REPORT CONTROL ----------------------
 
@@ -1175,6 +1264,9 @@ function show2(tgl, department, ctg) {
     category: ctg
   }
 
+  $("#details").empty();
+
+  $("#details").append('<tr><td colspan="7">Loading . . .</td></tr>');
   $.get('{{ url("fetch/overtime_report_detail") }}', data, function(result){
     $("#details").empty();
     $("#head").html('Overtime of More than '+result.head);
