@@ -80,7 +80,7 @@
 	<div class="col-md-12">
 		<div class="nav-tabs-custom">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#activity" data-toggle="tab" id="tab1"><i class="fa fa-user"></i>  Employee Data</a></li>
+				<li class="active"><a href="#activity" data-toggle="tab" id="tab1"><i class="fa fa-user"></i>  Insert New Employee</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -92,74 +92,66 @@
 
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="nik">NIK</label>
-									<input type="text" name="nik" id="nik" class="form-control" required>
+									<label for="nik">Employee ID<span class="text-red">*</span></label>
+									<input type="text" name="nik" id="nik" class="form-control" placeholder="Input Employee ID (NIK)" required>
 								</div>
 
 								<div class="form-group">
-									<label for="nama">Nama</label>
-									<input type="text" name="nama" id="nama" class="form-control" required>
+									<label for="nama">Employee Name<span class="text-red">*</span></label>
+									<input type="text" name="nama" id="nama" class="form-control" placeholder="Input Employee Name" required>
 								</div>
 
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="tmptL">Tempat Lahir</label>
-											<input type="text" name="tmptL" id="tmptL" class="form-control">
+											<label for="tmptL">Place of Birth</label>
+											<input type="text" name="tmptL" id="tmptL" placeholder="Input place of birth" class="form-control">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="tglL">Tanggal Lahir</label>
-											<input type="text" name="tglL" id="tglL" class="form-control datepicker">
+											<label for="tglL">Date of Birth</label>
+											<input type="text" name="tglL" id="tglL" class="form-control datepicker" placeholder="Select date of birth">
 										</div>
 									</div>
 								</div>
 
 								<div class="row">
-									<div class="col-md-12"><label>Jenis Kelamin</label></div>
+									<div class="col-md-12"><label>Gender</label></div>
 									<div class="form-group">
-										<div class="col-md-6">
-											<div class="radio">
-												<label><input type="radio" name="jk" id="laki" value="L" checked>Laki - laki</label>
-											</div>
+										<div class="col-md-6">											
+											<br>
+											<label><input type="radio" class="minimal" id="laki" name="jk" value="L" checked> <i class="fa fa-male"></i>  Male</label>
 										</div>
 										<div class="col-md-6">
-											<div class="radio">
-												<label><input type="radio" name="jk" id="perempuan" value="P">Perempuan</label>
-											</div>
+											<br>
+											<label><input type="radio" class="minimal" id="perempuan" name="jk" value="P"> <i class="fa fa-female"></i> Female</label>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="ktp">Nomor KTP</label>
-									<input type="text" name="ktp" id="ktp" class="form-control">
+									<label for="ktp">Identity Number</label>
+									<input type="text" name="ktp" id="ktp" class="form-control" placeholder="Input Identity Number (KTP)">
 								</div>
 
 								<div class="form-group">
-									<label for="Alamat">Alamat</label>
-									<input type="text" name="alamat" id="alamat" class="form-control">
+									<label for="Alamat">Address</label>
+									<input type="text" name="alamat" id="alamat" class="form-control" placeholder="Input Domicile Address">
 								</div>
 
 								<div class="form-group">
-									<label for="statusK">Status Keluarga</label>
+									<label for="statusK">Family Status</label>
 									<select id="statusK" class="form-control select2" name="statusK">
-										<option value="0">0</option>
-										<option value="K0">K0</option>
-										<option value="K1">K1</option>
-										<option value="K2">K2</option>
-										<option value="K3">K3</option>
-										<option value="Pk1">Pk1</option>
-										<option value="Pk2">Pk2</option>
-										<option value="Pk3">Pk3</option>
-										<option value="Tk">Tk</option>
+										@foreach($keluarga as $k)
+										<option value="{{ $k }}">{{ $k }}</option>
+										@endforeach
 									</select>
 								</div>
 
 								<div class="form-group">
-									<label for="foto">Foto</label>
+									<label for="foto">Photo</label>
 									<input type="file" name="foto[]" id="foto"  multiple="">
 								</div>
 
@@ -174,21 +166,21 @@
 						<div class="box-body">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="devisi">Devisi</label>
+									<label for="devisi">Division<span class="text-red">*</span></label>
 									<select id="devisi" name="devisi" class="form-control select2" >
 										<option value="" disabled selected>Select Devisi</option>
 										@foreach($dev as $nomor => $dev)
-										<option value="{{ $dev->name }}" > {{$dev->name}}</option>
+										<option value="{{ $dev->child_code }}" > {{$dev->child_code}}</option>
 										@endforeach
 									</select>
 								</div>
 
 								<div class="form-group">
-									<label for="departemen">Departemen</label>
+									<label for="departemen">Department<span class="text-red">*</span></label>
 									<select id="departemen" name="departemen" class="form-control select2">
-										<option value="" disabled selected>Select Departemen</option>
+										<option value="" disabled selected>Select Department</option>
 										@foreach($dep as $nomor => $dep)
-										<option value="{{ $dep->name }}" > {{$dep->name}}</option>
+										<option value="{{ $dep->child_code }}" > {{$dep->child_code}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -198,17 +190,17 @@
 									<select id="section" name="section" class="form-control select2" >
 										<option value="" disabled selected>Select Section</option>
 										@foreach($sec as $nomor => $sec)
-										<option value="{{ $sec->name }}" > {{$sec->name}}</option>
+										<option value="{{ $sec->child_code }}" > {{$sec->child_code}}</option>
 										@endforeach
 									</select>
 								</div>
 
 								<div class="form-group">
-									<label for="subsection">Sub-Section</label>
+									<label for="subsection">Sub Section</label>
 									<select id="subsection" name="subsection" class="form-control select2" >
-										<option value="" disabled selected>Select Sub-Section</option>
+										<option value="" disabled selected>Select Sub Section</option>
 										@foreach($sub as $nomor => $sub)
-										<option value="{{ $sub->name }}" > {{$sub->name}}</option>
+										<option value="{{ $sub->child_code }}" > {{$sub->child_code}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -218,7 +210,7 @@
 									<select id="group" class="form-control select2" name="group">
 										<option value="" disabled selected>Select Group</option>
 										@foreach($grup as $nomor => $grup)
-										<option value="{{ $grup->name }}" > {{$grup->name}}</option>
+										<option value="{{ $grup->child_code }}" > {{$grup->child_code}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -228,9 +220,9 @@
 							<div class="col-md-6">
 
 								<div class="form-group">
-									<label for="grade">Grade</label>
+									<label for="grade">Grade<span class="text-red">*</span></label>
 									<select id="grade" class="form-control select2" name="grade" required>
-										<option value="" disabled selected>Select Kode Grade</option>
+										<option value="" disabled selected>Select Grade</option>
 										@foreach($grade as $nomor => $grade)
 										<option value="{{$grade->grade_code}}#{{$grade->grade_name}}" >[ {{$grade->grade_code}} ] - {{$grade->grade_name}}</option>
 										@endforeach
@@ -238,7 +230,7 @@
 								</div>
 
 								<div class="form-group">
-									<label for="jabatan">Jabatan</label>
+									<label for="jabatan">Position<span class="text-red">*</span></label>
 									<select id="jabatan" class="form-control select2" name="jabatan" required>
 										@foreach($position as $nomor => $position)
 										<option value="{{ $position->position }}" > {{$position->position}}</option>
@@ -259,8 +251,8 @@
 								</div>
 
 								<div class="form-group">
-									<label for="leader">Leader NIK</label>
-									<input type="text" name="leader" id="leader" class="form-control">
+									<label for="leader">Leader Employee ID</label>
+									<input type="text" name="leader" id="leader" class="form-control" placeholder="Input Leader ID (NIK)">
 								</div>
 
 							</div>
@@ -273,7 +265,7 @@
 					<div class="tab-pane" id="kerja">
 						<div class="box-body">
 							<div class="col-md-6">
-						{{-- 		<div class="form-group">
+								<div class="form-group">
 									<label for="statusKar">Status Karyawan</label>
 									<select id="statusKar" class="form-control select2" name="statusKar">
 										<option value="Kontrak 1">Kontrak 1</option>
@@ -281,24 +273,28 @@
 										<option value="Percobaan">Percobaan</option>
 										<option value="Tetap">Tetap</option>
 									</select>
-								</div> --}}
+								</div>
 
 								<div class="form-group">
 									<label for="pin">Pin</label>
-									<input type="text" id="pin" class="form-control" name="pin">
+									<input type="text" id="pin" class="form-control" name="pin" placeholder="Input Pin">
 								</div>
 
 							</div>
 
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="tglM">Tanggal Masuk</label>
-									<input type="text" id="tglM" class="form-control datepicker" placeholder="Select date" name="tglM" required>
+									<label for="tglM">Hire Date<span class="text-red">*</span></label>
+									<input type="text" id="tglM" class="form-control datepicker" placeholder="Select hire date" name="tglM" required>
 								</div>
 
 								<div class="form-group">
-									<label for="cs">Cost Center</label>
-									<input type="text" id="cs" class="form-control" name="cs" required>
+									<label for="cs">Cost Center<span class="text-red">*</span></label>
+									<select id="cs" class="form-control select2" name="cs" required>
+										@foreach($cc as $nomor => $cc)
+										<option value="{{ $cc->cost_center }}" > {{$cc->cost_center}}</option>
+										@endforeach
+									</select>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -312,40 +308,40 @@
 						<div class="box-body">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="hp">Nomor HP</label>
-									<input type="text" id="hp" class="form-control" name="hp">
+									<label for="hp">Mobile Phone Number</label>
+									<input type="text" id="hp" class="form-control" name="hp" placeholder="Input Phone Number">
 								</div>
 
 								<div class="form-group">
-									<label for="bpjstk">Nomor BPJS TK</label>
-									<input type="text" id="bpjstk" class="form-control" name="bpjstk">
+									<label for="bpjstk">BPJS TK Number</label>
+									<input type="text" id="bpjstk" class="form-control" name="bpjstk" placeholder="Input BPJS Ketenagakerjaan">
 								</div>
 
 								<div class="form-group">
-									<label for="bpjskes">Nomor BPJS KES</label>
-									<input type="text" id="bpjskes" class="form-control" name="bpjskes">
+									<label for="bpjskes">BPJS KES Number</label>
+									<input type="text" id="bpjskes" class="form-control" name="bpjskes" placeholder="Input BPJS Kesehatan">
 								</div>
 
 							</div>
 
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="no_rek">Nomor Rekening</label>
-									<input type="text" id="no_rek" class="form-control" name="no_rek">
+									<label for="no_rek">Account Number</label>
+									<input type="text" id="no_rek" class="form-control" name="no_rek" placeholder="Input Account Number (Rekening)">
 								</div>
 
 								<div class="form-group">
-									<label for="npwp">Nomor NPWP</label>
-									<input type="text" id="npwp" class="form-control" name="npwp">
+									<label for="npwp">NPWP Number</label>
+									<input type="text" id="npwp" class="form-control" name="npwp" placeholder="Input NPWP Number">
 								</div>
 
 								<div class="form-group">
-									<label for="jp">Nomor JP</label>
-									<input type="text" id="jp" class="form-control" name="jp">
+									<label for="jp">JP Number</label>
+									<input type="text" id="jp" class="form-control" name="jp" placeholder="Input JP Number">
 								</div>
 							</div>
 							<div class="col-md-12">
-								<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Simpan <i class="fa fa-check"></i></button>
+								<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Save <i class="fa fa-check"></i></button>
 							</div>
 						</div>
 					</div>
@@ -383,10 +379,9 @@
 		
 	});
 
-	
-
-
-
+	$('input[type="radio"].minimal').iCheck({
+		radioClass   : 'iradio_minimal-blue'
+	})
 
 </script>
 @endsection

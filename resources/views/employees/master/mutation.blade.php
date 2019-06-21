@@ -126,7 +126,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Valid To<span class="text-red">*</span></label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control datepicker" id="valid_to" required="">
+										<input type="text" class="form-control" id="valid_to" required="" readonly="">
 									</div>
 								</div>
 							</div>
@@ -186,7 +186,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Valid From<span class="text-red">*</span></label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control datepicker" required="" id="valid_from">
+										<input type="text" class="form-control datepicker" required="" id="valid_from" onchange="valid_change()">
 									</div>
 								</div>
 
@@ -234,6 +234,11 @@
 		$('.select2').select2();	
 	});
 
+	function pad (str, max) {
+		str = str.toString();
+		return str.length < max ? pad("0" + str, max) : str;
+	}
+
 	$('#emp_id').keypress(function(event){
 
 		var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -247,6 +252,13 @@
 			}
 		}
 	});
+
+	function valid_change() {
+		var valid_from = $('#valid_from').val();
+		var valid_to = new Date(valid_from);
+		valid_to.setDate(valid_to.getDate() - 1);
+		$('#valid_to').val(valid_to.getFullYear()+"-"+pad(valid_to.getMonth() + 1, 2)+"-"+pad(valid_to.getDate(), 2));
+	}
 
 	function get_mutation_by_id() {
 		var emp_id = $('#emp_id').val();

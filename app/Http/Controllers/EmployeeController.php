@@ -158,9 +158,9 @@ class EmployeeController extends Controller
         {
           $number= $request->get('nik');
           $data = file_get_contents($file);
-          $photo_number = $number . $file->getClientOriginalName() ;
           $ext = $file->getClientOriginalExtension();
-          $filepath = public_path() . "/uploads/employee_avatar/" . $photo_number;
+          $photo_number = $number.".".$ext;
+          $filepath = public_path() . "/uploads/employee_photos/" . $photo_number;
 
           $emp = new Employee([
             'employee_id' => $request->get('nik'),
@@ -173,13 +173,13 @@ class EmployeeController extends Controller
             'phone' => $request->get('hp'),
             'card_id' => $request->get('ktp'), 
             'account' => $request->get('no_rek'),  
-            'bpjstk' => $request->get('bpjstk'), 
+            'bpjstk' => $request->get('bpjstk'),
             'jp' => $request->get('jp'), 
             'bpjskes' => $request->get('bpjskes'), 
             'npwp' => $request->get('npwp'),                 
             'direct_superior' => $request->get('leader'), 
             'hire_date' => $request->get('tglM'), 
-            'avatar' => "/uploads/employee_avatar/".$photo_number, 
+            'avatar' => $photo_number, 
             'remark' => $request->get('pin'), 
             'created_by' => $id
           ]);
@@ -244,10 +244,21 @@ class EmployeeController extends Controller
 
      $jabatan->save();
 
+     // --------------- Employment Log insert
+
+     $emp = new EmploymentLog ([
+       'employee_id' => $request->get('nik'), 
+       'status' => $request->get('statusKar'),
+       'valid_from' => $date,
+       'created_by' => $id
+     ]);
+
+     $emp->save();
+
      return redirect('/index/insertEmp')->with('status', 'Input Employee success')->with('page', 'Master Employee');
    }
    catch (QueryException $e){
-    return redirect('/index/insertEmp')->with('error', $e->getMessage())->with('page', 'Master Employee');
+    return redirect('/index/insertEmp')->with('error', "Employee already exists")->with('page', 'Master Employee');
   }
 }
 
@@ -267,9 +278,14 @@ public function updateEmpData(Request $request)
     {
       $number= $request->get('nik');
       $data = file_get_contents($file);
-      $photo_number = $number . $file->getClientOriginalName() ;
       $ext = $file->getClientOriginalExtension();
-      $filepath = public_path() . "/uploads/employee_avatar/" . $photo_number;
+      $photo_number = $number.".".$ext;
+      $filepath = public_path() . "/uploads/employee_photos/" . $photo_number;
+
+      $files = glob(public_path() . "/uploads/employee_photos/" .$number.".*");
+      foreach ($files as $file) {
+        unlink($file);
+      }
 
       $emp->employee_id = $request->get('nik');
       $emp->name = $request->get('nama');
@@ -287,7 +303,7 @@ public function updateEmpData(Request $request)
       $emp->npwp = $request->get('npwp');                 
       $emp->direct_superior = $request->get('leader');
       $emp->hire_date = $request->get('tglM');
-      $emp->avatar = "/uploads/employee_avatar/".$photo_number; 
+      $emp->avatar = $photo_number; 
       $emp->remark = $request->get('pin');
       $emp->created_by = $id;        
 
@@ -541,7 +557,7 @@ public function fetchReportGender()
   $get_fiskal = db::select($fiskal);
 
   $gender = "select mon, gender, sum(tot_karyawan) as tot_karyawan from
-(select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
+  (select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
   (
   select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
   from weekly_calendars
@@ -610,7 +626,7 @@ public function fetchReportStatus()
   ) as c on b.employee_id = c.employee_id
   where mon_from <= mon and mon_to >= mon
   group by mon, status
-    union all
+  union all
   select count(name) as emp, 'OUTSOURCES' as status, mon from 
   (
   select name, date_format(entry_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from outsources
@@ -640,7 +656,7 @@ public function reportSerikat()
 
 
   $get_union = "select count(employee_id) as emp_tot, serikat, mon from
-( select emp.employee_id, COALESCE(serikat,'NON UNION') serikat, mon, COALESCE(mon_from,mon) mon_from, COALESCE(mon_to,mon) mon_to from
+  ( select emp.employee_id, COALESCE(serikat,'NON UNION') serikat, mon, COALESCE(mon_from,mon) mon_from, COALESCE(mon_to,mon) mon_to from
   (select * from 
   (
   select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
@@ -662,14 +678,14 @@ public function reportSerikat()
   where mon_from <= mon and mon_to >= mon
   group by mon, serikat
   union all
-    select count(employee_id) as emp_tot, 'NON UNION' as serikat, mon from 
-    (
-    select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
-    cross join (
-    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
-    ) m
-    where hire_month <= mon and (mon < end_month OR end_month is null) and employee_id not in (select employee_id from labor_union_logs)
-    group by mon
+  select count(employee_id) as emp_tot, 'NON UNION' as serikat, mon from 
+  (
+  select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+  cross join (
+  select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+  ) m
+  where hire_month <= mon and (mon < end_month OR end_month is null) and employee_id not in (select employee_id from labor_union_logs)
+  group by mon
   order by mon asc, serikat desc";
 
   $union = db::select($get_union);

@@ -80,7 +80,7 @@
 	<div class="col-md-12">
 		<div class="nav-tabs-custom">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#activity" data-toggle="tab" id="tab1"><i class="fa fa-user"></i>  Employee Data</a></li>
+				<li class="active"><a href="#activity" data-toggle="tab" id="tab1"><i class="fa fa-user"></i>  Update Employee Data</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -92,33 +92,33 @@
 
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="nik">NIK</label>
+									<label for="nik">Employee ID</label>
 									<input type="hidden" name="nik2" id="nik2" class="form-control" hidden value="{{$emp->employee_id}}">
 									<input type="text" name="nik" id="nik" class="form-control" required value="{{$emp->employee_id}}">
 								</div>
 
 								<div class="form-group">
-									<label for="nama">Nama</label>
+									<label for="nama">Employee Name</label>
 									<input type="text" name="nama" id="nama" class="form-control" required value="{{$emp->name}}">
 								</div>
 
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="tmptL">Tempat Lahir</label>
+											<label for="tmptL">Place of Birth</label>
 											<input type="text" name="tmptL" id="tmptL" class="form-control" value="{{$emp->birth_place}}">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="tglL">Tanggal Lahir</label>
+											<label for="tglL">Date of Birth</label>
 											<input type="text" name="tglL" id="tglL" class="form-control datepicker" value="{{$emp->birth_date}}">
 										</div>
 									</div>
 								</div>
 
 								<div class="row">
-									<div class="col-md-12"><label>Jenis Kelamin</label></div>
+									<div class="col-md-12"><label>Gender</label></div>
 									<div class="form-group">
 										<div class="col-md-6">
 											<div class="radio">
@@ -144,17 +144,17 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label for="ktp">Nomor KTP</label>
+										<label for="ktp">Identity Number</label>
 										<input type="text" name="ktp" id="ktp" class="form-control" value="{{$emp->card_id}}">
 									</div>
 
 									<div class="form-group">
-										<label for="Alamat">Alamat</label>
+										<label for="Alamat">Address</label>
 										<input type="text" name="alamat" id="alamat" class="form-control" value="{{$emp->address}}">
 									</div>
 
 									<div class="form-group">
-										<label for="statusK">Status Keluarga</label>
+										<label for="statusK">Family Status</label>
 										<select id="statusK" class="form-control select2" name="statusK">
 											@foreach($keluarga as $keluarga)
 											@if($keluarga == $emp->family_id)
@@ -168,7 +168,7 @@
 								</div>
 
 								<div class="form-group">
-									<label for="foto">Foto</label>
+									<label for="foto">Photo</label>
 									<input type="file" name="foto[]" id="foto"  multiple="">
 								</div>
 
@@ -201,7 +201,7 @@
 
 								<div class="col-md-6">
 									<div class="form-group">
-										<label for="tglM">Tanggal Masuk</label>
+										<label for="tglM">Hire Date</label>
 										<input type="text" id="tglM" class="form-control datepicker" placeholder="Select date" name="tglM" required value="{{$emp->hire_date}}">
 									</div>
 
@@ -217,17 +217,17 @@
 							<div class="box-body">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label for="hp">Nomor HP</label>
+										<label for="hp">Mobile Phone Number</label>
 										<input type="text" id="hp" class="form-control" name="hp" value="{{$emp->phone}}">
 									</div>
 
 									<div class="form-group">
-										<label for="bpjstk">Nomor BPJS TK</label>
+										<label for="bpjstk">BPJS TK Number</label>
 										<input type="text" id="bpjstk" class="form-control" name="bpjstk" value="{{$emp->bpjstk}}">
 									</div>
 
 									<div class="form-group">
-										<label for="bpjskes">Nomor BPJS KES</label>
+										<label for="bpjskes">BPJS KES Number</label>
 										<input type="text" id="bpjskes" class="form-control" name="bpjskes" value="{{$emp->bpjskes}}">
 									</div>
 
@@ -235,23 +235,23 @@
 
 								<div class="col-md-6">
 									<div class="form-group">
-										<label for="no_rek">Nomor Rekening</label>
+										<label for="no_rek">Account Number</label>
 										<input type="text" id="no_rek" class="form-control" name="no_rek" value="{{$emp->account}}">
 									</div>
 
 									<div class="form-group">
-										<label for="npwp">Nomor NPWP</label>
+										<label for="npwp">NPWP Number</label>
 										<input type="text" id="npwp" class="form-control" name="npwp" value="{{$emp->npwp}}">
 									</div>
 
 									<div class="form-group">
-										<label for="jp">Nomor JP</label>
+										<label for="jp">JP Number</label>
 										<input type="text" id="jp" class="form-control" name="jp" value="{{$emp->jp}}">
 									</div>
 								</div>
 								@endforeach
 								<div class="col-md-12">
-									<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Simpan <i class="fa fa-check"></i></button>
+									<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Save <i class="fa fa-check"></i></button>
 								</div>
 							</div>
 						</div>

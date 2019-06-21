@@ -37,6 +37,28 @@
 	.disabledTab{
 		pointer-events: none;
 	}
+
+	.thumbnail {
+		position: relative;
+		width: 200px;
+		height: 200px;
+		overflow: hidden;
+		border: none;
+	}
+	.thumbnail img {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		height: 100%;
+		width: auto;
+		-webkit-transform: translate(-50%,-50%);
+		-ms-transform: translate(-50%,-50%);
+		transform: translate(-50%,-50%);
+	}
+	.thumbnail img.portrait {
+		width: 100%;
+		height: auto;
+	}
 </style>
 @stop
 @section('header')
@@ -86,7 +108,7 @@
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="form-group">
 							<label for="nik">Import Presence</label>
-							<input type="file" name="import" class="form-control" required><br>
+							<input type="file" name="import" required><br>
 							<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Import <i class="fa fa-check"></i></button>
 						</div>	
 					</form>
@@ -105,11 +127,11 @@
 						<table id="masteremp" class="table table-bordered table-striped table-hover">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th>Employee ID</th>
-									<th>Name</th>
+									<th width="12%">Employee ID</th>
+									<th width="25%">Name</th>
 									<th>Division</th>
 									<th>Department</th>
-									<th>Entry Date</th>
+									<th width="10%">Entry Date</th>
 									<th>Action</th>								
 								</tr>
 							</thead>
@@ -147,7 +169,9 @@
 										<div class="box box-primary">
 											<div class="box-body box-profile">
 
-												<img class="profile-user-img img-responsive img-circle" id="foto" alt="User profile picture" src="">
+												<div class="thumbnail">
+													<img class="profile-user-img img-responsive img-circle" id="foto" alt="User profile picture" src="">
+												</div>
 
 												<h3 class="profile-username text-center" id="nama"></h3>
 
@@ -303,27 +327,76 @@
 					</div>
 					<!-- /.modal-content -->
 				</div>
-			</section>
+			</div>
+
+			<div class="modal fade" id="modalUpgrade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							Update Status
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="text-right" id="employee_id" style="font-size: 18pt">emp_id</div>
+								</div>
+								<div class="col-md-6">
+									<div class="text-left" id="name" style="font-size: 18pt">nama</div>
+								</div>
+							</div>
+
+							<br>
+							<br>
+
+							<div class="row">
+								<div class="col-md-5">
+									{{-- <div class="pull-right">
+										<input type="text" id="status_old" class="form-control" readonly>
+									</div>
+									--}}
+									<div class="text-right" style="font-size: 15pt" id="stat">status</div>
+								</div>
+
+								<div class="col-md-2">
+									<div class="text-center" style="font-size: 15pt"><i class="fa fa-arrow-right"></i></div>
+								</div>
+
+								<div class="col-lg-4">
+									<select id="statusK" class="form-control select2" name="statusK">
+										@foreach($status as $stat)
+										<option value="{{ $stat }}">{{ $stat }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-success">Update</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
 
 
-			@endsection
-			@section('scripts')
-			<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
-			<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-			<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-			<script src="{{ url("js/jszip.min.js")}}"></script>
-			<script src="{{ url("js/vfs_fonts.js")}}"></script>
-			<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-			<script src="{{ url("js/buttons.print.min.js")}}"></script>
-			<script>
+		@endsection
+		@section('scripts')
+		<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+		<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+		<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+		<script src="{{ url("js/jszip.min.js")}}"></script>
+		<script src="{{ url("js/vfs_fonts.js")}}"></script>
+		<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+		<script src="{{ url("js/buttons.print.min.js")}}"></script>
+		<script>
 
-				$.ajaxSetup({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					}
-				});
-				jQuery(document).ready(function() {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			jQuery(document).ready(function() {
 		// $('body').toggleClass("sidebar-collapse");
 		$('#datebegin').datepicker({
 			autoclose: true,
@@ -334,107 +407,104 @@
 		fillmasteremp();
 	});
 
-
-
-
-				function fillmasteremp(){
-					$('#masteremp tfoot th').each( function () {
-						var title = $(this).text();
-						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-					});
-					var table = $('#masteremp').DataTable({
-						'dom': 'Bfrtip',
-						'responsive': true,
-						'lengthMenu': [
-						[ 10, 25, 50, -1 ],
-						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-						],
-						'buttons': {
-							buttons:[
-							{
-								extend: 'pageLength',
-								className: 'btn btn-default',
-							},
-							{
-								extend: 'copy',
-								className: 'btn btn-success',
-								text: '<i class="fa fa-copy"></i> Copy',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							},
-							{
-								extend: 'excel',
-								className: 'btn btn-info',
-								text: '<i class="fa fa-file-excel-o"></i> Excel',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							},
-							{
-								extend: 'print',
-								className: 'btn btn-warning',
-								text: '<i class="fa fa-print"></i> Print',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							},
-							]
+			function fillmasteremp(){
+				$('#masteremp tfoot th').each( function () {
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				});
+				var table = $('#masteremp').DataTable({
+					'dom': 'Bfrtip',
+					'responsive': true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
 						},
-						'paging'        : true,
-						'lengthChange'  : true,
-						'searching'     : true,
-						'ordering'      : true,
-						'info'        : true,
-						'order'       : [],
-						'autoWidth'   : true,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"processing": true,
-						"serverSide": true,
-						"ajax": {
-							"type" : "get",
-							"url" : "{{ url("fetch/masteremp") }}",
-						},
-						"columns": [
-						{ "data": "employee_id"},
-						{ "data": "name"},
-						{ "data": "division"},
-						{ "data": "department"},
-						{ "data": "hire_date"},
-						{ "data": "action"}
-						]
-					});
-
-					table.columns().every( function () {
-						var that = this;
-
-						$( 'input', this.footer() ).on( 'keyup change', function () {
-							if ( that.search() !== this.value ) {
-								that
-								.search( this.value )
-								.draw();
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
 							}
-						} );
-					});
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging'        : true,
+					'lengthChange'  : true,
+					'searching'     : true,
+					'ordering'      : true,
+					'info'        : true,
+					'order'       : [],
+					'autoWidth'   : true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true,
+					"serverSide": true,
+					"ajax": {
+						"type" : "get",
+						"url" : "{{ url("fetch/masteremp") }}",
+					},
+					"columns": [
+					{ "data": "employee_id"},
+					{ "data": "name"},
+					{ "data": "division"},
+					{ "data": "department"},
+					{ "data": "hire_date"},
+					{ "data": "action"}
+					]
+				});
 
-					$('#masteremp tfoot tr').appendTo('#masteremp thead');
+				table.columns().every( function () {
+					var that = this;
+
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					} );
+				});
+
+				$('#masteremp tfoot tr').appendTo('#masteremp thead');
+			}
+
+			function detail(nik) {
+				var link = $(location).attr('href'); 
+
+				var data = {
+					nik:nik
 				}
-
-				function detail(nik) {
-					var link = $(location).attr('href'); 
-					var res = link.replace("index/MasterKaryawan", "");
-
-					var data = {
-						nik:nik
-					}
-					$.get('{{ url("fetch/masterempdetail") }}', data, function(result, status, xhr){
+				$.get('{{ url("fetch/masterempdetail") }}', data, function(result, status, xhr){
 						// console.log(status);
 						// console.log(result);
 						// console.log(xhr);
 						if(xhr.status == 200){
 							if(result.status){
+								var path = "{{asset('uploads/employee_photos')}}";
 								$('#tempatLahir').text(result.detail[0].birth_place);
 								$('#tanggalLahir').text(result.detail[0].birth_date);
 								$('#jk').text(result.detail[0].gender);
@@ -457,7 +527,7 @@
 								$('#grade').text(result.detail[0].grade_code+" - "+result.detail[0].grade_name);
 								$('#jabatan').text(result.detail[0].position);
 								$('#atasan').text(result.detail[0].direct_superior);
-								$("#foto").attr("src",(res+result.detail[0].avatar));	
+								$("#foto").attr("src",path+"/"+result.detail[0].avatar);	
 								$('#myModal').modal('show');
 
 
@@ -471,8 +541,13 @@
 							alert('Disconnected from server');
 						}
 					});
-				}
+			}
 
-
-			</script>
-			@endsection
+			function modalUpgrade(emp_id, name, status) {
+				$('#employee_id').text(emp_id);
+				$('#name').text(name);
+				$('#stat').text(status);
+				$('#modalUpgrade').modal('show');
+			}
+		</script>
+		@endsection

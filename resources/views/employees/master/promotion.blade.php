@@ -94,7 +94,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Valid To<span class="text-red">*</span></label>
 									<div class="col-sm-6">
-										<input type="text" id="valid_to" class="form-control datepicker">
+										<input type="text" id="valid_to" class="form-control" required="" readonly="">
 									</div>
 								</div>
 							</div>
@@ -118,7 +118,8 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Valid From<span class="text-red">*</span></label>
 									<div class="col-sm-6">
-										<input type="text" id="valid_from" class="form-control datepicker">
+										<input type="text" id="valid_from" class="form-control datepicker"
+										onchange="valid_change()">
 									</div>
 								</div>
 								<br>
@@ -154,8 +155,13 @@
 	});
 	jQuery(document).ready(function() {
 		// $('body').toggleClass("sidebar-collapse");
-		$('.select2').select2();		
+		$('.select2').select2();
 	});
+
+	function pad (str, max) {
+		str = str.toString();
+		return str.length < max ? pad("0" + str, max) : str;
+	}
 
 	$('#emp_id').keypress(function(event){
 
@@ -170,6 +176,13 @@
 			}
 		}
 	});
+
+	function valid_change() {
+		var valid_from = $('#valid_from').val();
+		var valid_to = new Date(valid_from);
+		valid_to.setDate(valid_to.getDate() - 1);
+		$('#valid_to').val(valid_to.getFullYear()+"-"+pad(valid_to.getMonth() + 1, 2)+"-"+pad(valid_to.getDate(), 2))
+	}
 
 	function get_position_by_id() {
 		var emp_id = $('#emp_id').val();
