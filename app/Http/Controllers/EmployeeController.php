@@ -111,7 +111,7 @@ class EmployeeController extends Controller
     return DataTables::of($masteremp)
     ->addColumn('action', function($masteremp){
 
-      if ($masteremp->status != 'PKWT') {
+      if ($masteremp->status != 'Tetap') {
         return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
         <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>
         <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Upgrade" onclick="modalUpgrade(\''.$masteremp->employee_id.'\', \''.$masteremp->name.'\',\''.$masteremp->status.'\')"><i class="fa fa-arrow-up"></i></button>';
