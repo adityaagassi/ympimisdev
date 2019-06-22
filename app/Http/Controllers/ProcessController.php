@@ -832,15 +832,15 @@ class ProcessController extends Controller
 		if($targetFL != 0){
 			$dayFL = floor($stockFL/$targetFL);
 			$addFL = ($stockFL/$targetFL)-$dayFL;
+			$currStock = round($stockFL/$targetFL,1);
 		}
 		else{
 			$dayFL = 2;
 			$addFL = 1;
+			$currStock = round($stockFL/1,1);
 		}
 
 		$last = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
-
-		$currStock = round($stockFL/$targetFL,1);
 
 		if(date('D')=='Fri' || date('D')=='Wed' || date('D')=='Thu' || date('D')=='Sat'){
 			$hFL = date('Y-m-d', strtotime(carbon::now()->addDays($dayFL+2)));
@@ -880,7 +880,7 @@ class ProcessController extends Controller
 
 		union all
 
-		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null 
+		select model, 0 as plan, sum(quantity) as stock, 0 as max_plan from stamp_inventories where status is null and model like 'YFL%' group by model
 		) as result2
 		group by model having model like 'YFL%' and plan > 0 or stock > 0 order by model asc";
 
