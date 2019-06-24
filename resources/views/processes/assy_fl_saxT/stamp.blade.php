@@ -40,8 +40,8 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Stamp Saxophone<span class="text-purple"> フルートの刻印</span>
-		<small>Serial Number <span class="text-purple"> 通し番号</span></small>
+		Stamp Saxophone<span class="text-purple"> サックススタンプ</span>
+		<small>Serial Number <span class="text-purple">製番</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		<li>

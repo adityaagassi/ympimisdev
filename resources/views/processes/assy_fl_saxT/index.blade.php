@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Saxophone Subassy-Assembly WIP<span class="text-purple"> FL仮組・組立の仕掛品</span>
+		Saxophone Subassy-Assembly WIP<span class="text-purple"> サックス仮組　～　仕掛品組み立て</span>
 		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
 	</h1>
 </section>

@@ -40,8 +40,8 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Print Label Saxophone<span class="text-purple"> フルートの刻印</span>
-		<small>Serial Number <span class="text-purple"> 通し番号</span></small>
+		Print Label Saxophone<span class="text-purple"> サックスラベル印刷 </span>
+		<small>Serial Number <span class="text-purple"> 製番</span></small>
 	</h1>
 	<ol class="breadcrumb">
 		<li>
