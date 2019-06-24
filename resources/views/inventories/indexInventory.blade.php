@@ -241,7 +241,6 @@
 		}
 		$('#inventoryTable').DataTable({
 			'dom': 'Bfrtip',
-			"scrollX": true,
 			'lengthMenu': [
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
@@ -302,22 +301,21 @@
 				$(api.column(5).footer()).html(total_diff.toLocaleString());
 			},
 			"processing": true,
-				// "serverSide": true,
-				"ajax": {
-					"type" : "post",
-					"url" : "{{ url("fetch/inventory") }}",
-					"data" : data,
-				},
-				"columns": [
-				{ "data": "plant" },
-				{ "data": "origin_group_name" },
-				{ "data": "material_number" },
-				{ "data": "material_description" },
-				{ "data": "storage_location" },
-				{ "data": "quantity" },
-				{ "data": "updated_at" }
-				]
-			});
+			"ajax": {
+				"type" : "post",
+				"url" : "{{ url("fetch/inventory") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "plant" },
+			{ "data": "origin_group_name" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "storage_location" },
+			{ "data": "quantity" },
+			{ "data": "updated_at" }
+			]
+		});
 	}
 
 </script>

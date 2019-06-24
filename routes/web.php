@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	return view('mails.shipment');
+	return view('processes.middle.barrel_board_X');
 });
 Route::post('trial/tes', 'TrialController@tes');
 
@@ -398,7 +398,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
-	Route::post('scan/middle/racking', 'MiddleProcessController@scanMiddleRacking');
+	Route::post('scan/middle/barrel', 'MiddleProcessController@scanMiddleBarrel');
 });
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
@@ -448,7 +448,12 @@ Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddl
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
 Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
+Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBarrelMachine');
 Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
+Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
+Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
+Route::get('fetch/middle/get_barrel_machine_key', 'MiddleProcessController@fetchProcessBarrelMachineContent');
+Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
