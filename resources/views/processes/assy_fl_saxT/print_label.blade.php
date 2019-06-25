@@ -87,7 +87,7 @@
 							</p>
 						</div>
 						
-
+{{-- 
 						<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Alto:</span>
@@ -106,8 +106,8 @@
 									
 								</tfoot>
 							</table>
-						</div>
-						<div class="col-xs-2">
+						</div> --}}
+						{{-- <div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Tenor:</span>
 							</center>
@@ -125,32 +125,30 @@
 									
 								</tfoot>
 							</table>							
-						</div>
+						</div> --}}
 						
-						{{-- <div class="col-xs-4">
+						<div class="col-xs-4">
 							<center>
 								<span style="font-size: 20px;">Total Production :</span>
 							</center>
 							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<th>Model</th>
-									<th>Debt</th>
 									<th>Plan</th>
 									<th>Actual</th>
 									<th>Diff</th>
 								</thead>
 								<tbody id="planTableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
+								<tfoot>
 									<th>Total</th>
 									<th></th>
 									<th></th>
-									<th></th>
-									<th></th>
+									<th></th>						
 									
 								</tfoot>
 							</table>							
-						</div> --}}
+						</div>
 						<div class="col-xs-3">
 							<center>
 								<span style="font-size: 24px">Last Print:</span><br>
@@ -330,9 +328,9 @@
 
 
 				$('body').toggleClass("sidebar-collapse");
-				// fillPlan3();
-				 fillPlan2();
-				 fillPlan();
+				fillPlan3();
+				 // fillPlan2();
+				 // fillPlan();
 				fillResult();
 
 			});
@@ -355,13 +353,12 @@
 							var tableData = '';
 							$.each(result.tableData, function(key, value) {
 								var diff = '';
-								diff = value.actual-(value.plan+(-value.debt));
+								diff = value.act-(value.plan-(value.debt));
 								tableData += '<tr>';
-								tableData += '<td style="width: 40%">'+ value.model +'</td>';
-								tableData += '<td style="width: 15%">'+ value.debt +'</td>';
-								tableData += '<td style="width: 15%">'+ value.plan +'</td>';
-								tableData += '<td style="width: 15%">'+ value.actual +'</td>';
-								tableData += '<td style="width: 15%">'+ diff +'</td>';
+								tableData += '<td style="width: 49%">'+ value.model +'</td>';			
+								tableData += '<td style="width: 12%">'+ (value.plan-(value.debt)) +'</td>';
+								tableData += '<td style="width: 12%">'+ value.act +'</td>';
+								tableData += '<td style="width: 12%">'+ diff +'</td>';
 								tableData += '</tr>';
 							});
 							$('#planTableBody').append(tableData);
@@ -369,7 +366,7 @@
 								
 								"paging": false,
 								'searching': false,
-								'order':[[4, "asc"]],
+								'order':[[1, "asc"]],
 								'info': false,
 								"footerCallback": function (tfoot, data, start, end, display) {
 									var intVal = function ( i ) {
@@ -380,6 +377,18 @@
 									};
 									var api = this.api();
 
+									var total_plan = api.column(1).data().reduce(function (a, b) {
+										return intVal(a)+intVal(b);
+									}, 0)
+									$(api.column(1).footer()).html(total_plan.toLocaleString());
+
+									var total_act = api.column(2).data().reduce(function (a, b) {
+										return intVal(a)+intVal(b);
+									}, 0)
+									$(api.column(2).footer()).html(total_act.toLocaleString());
+
+
+
 									var total_diff = api.column(3).data().reduce(function (a, b) {
 										return intVal(a)+intVal(b);
 									}, 0)
@@ -387,9 +396,9 @@
 
 								},
 								"columnDefs": [{
-									"targets": 4,
+									"targets": 3,
 									"createdCell": function (td, cellData, rowData, row, col) {
-										if ( cellData <  0 ) {
+										if ( cellData <  3 ) {
 											$(td).css('background-color', 'RGB(255,204,255)')
 										}
 										else

@@ -1792,7 +1792,9 @@ public function fetch_plan_labelsax(Request $request){
 	}
 	
 
-	$query = " select a.model, a.debt,a.plan,COALESCE(b.act,0) as actual  from (
+	$query = " SELECT a.model,a.debt,a.plan, COALESCE(b.act1,0) as act  from (
+
+	select a.model, a.debt,a.plan,COALESCE(b.act,0) as actual  from (
 	select result.material_number, materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
 	(
 	select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
@@ -1817,7 +1819,14 @@ public function fetch_plan_labelsax(Request $request){
 	
 	LEFT JOIN (
 	select model, count(MODEL)AS act from stamp_inventories where process_code='3' AND origin_group_code='043' and  date(updated_at) = '". $now ."' GROUP BY model) b
-	on a.model = b.model";
+	on a.model = b.model 
+	)
+				as a
+	LEFT JOIN (
+	SELECT COUNT(quantity) as act1, model from stamp_inventories where process_code='3' and origin_group_code='043' and DATE_FORMAT(updated_at,'%Y-%m-%d') = '". $now ."' GROUP BY model
+	) b on a.model = b.model ORDER BY a.model asc
+
+	";
 
 	$tableData = DB::select($query);
 
