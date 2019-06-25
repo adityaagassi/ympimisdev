@@ -544,7 +544,7 @@ Route::get('stamp/resumes_cl', 'ProcessController@indexResumesCl');
 Route::post('stamp/stamp_detail_cl', 'ProcessController@filter_stamp_detail_cl');
 Route::get('stamp/resumes_sx', 'ProcessController@indexResumesSX');
 Route::post('stamp/stamp_detail_sx', 'ProcessController@filter_stamp_detail_sx');
-Route::get('fetch/fetch_plan_labelsax', 'ProcessController@fetch_plan_labelsax');
+Route::get('fetch/fetch_plan_labelsax/{id}', 'ProcessController@fetch_plan_labelsax');
 
 //end tambah ali
 

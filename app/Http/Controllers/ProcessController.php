@@ -1762,7 +1762,9 @@ public function filter_stamp_detail_sx(Request $request){
 	->make(true);
 }
 
-public function fetch_plan_labelsax(Request $request){
+public function fetch_plan_labelsax($id){
+
+	$id_all = $id."%";
 	
 	$hpl = "where materials.category = 'FG' and materials.origin_group_code = '043'";		
 	$first = date('Y-m-01');
@@ -1823,8 +1825,8 @@ public function fetch_plan_labelsax(Request $request){
 	)
 				as a
 	LEFT JOIN (
-	SELECT COUNT(quantity) as act1, model from stamp_inventories where process_code='3' and origin_group_code='043' and DATE_FORMAT(updated_at,'%Y-%m-%d') = '". $now ."' GROUP BY model
-	) b on a.model = b.model ORDER BY a.model asc
+	SELECT COUNT(quantity) as act1, model from stamp_inventories where process_code='3' and origin_group_code='043' and DATE_FORMAT(updated_at,'%Y-%m-%d') = '". $now ."' and model like '".$id_all."'  GROUP BY model
+	) b on a.model = b.model where a.model like '".$id_all."' ORDER BY a.model asc
 
 	";
 
