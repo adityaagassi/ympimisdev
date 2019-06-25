@@ -792,8 +792,9 @@
 						$("#snmodel").val('');
 						$('#sn').focus();
 						fillResult();
-						fillPlan();
-						fillPlan2();
+						// fillPlan();
+						// fillPlan2();
+						fillPlan3();
 						$('#btnprint').prop('disabled',true);
 						$('#btnprintmodal').prop('disabled',true);
 						$('#btnprint2').prop('disabled',true);
@@ -893,8 +894,10 @@
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
 					
-					fillPlan();
-					fillPlan2();
+					// fillPlan();
+					// fillPlan2();
+
+					fillPlan3();
 				}
 				else{
 					audio_error.play();
@@ -931,8 +934,9 @@
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
 						
-						fillPlan();
-						fillPlan2();
+						// fillPlan();
+						// fillPlan2();
+						fillPlan3();
 					}
 					else{
 						audio_error.play();
