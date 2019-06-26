@@ -7,6 +7,7 @@
 	}
 	tbody>tr>td{
 		text-align:center;
+		padding: 0;
 	}
 	tfoot>tr>th{
 		text-align:center;
@@ -375,10 +376,10 @@
 								var diff = '';
 								diff = value.act-(value.plan-(value.debt));
 								tableData += '<tr>';
-								tableData += '<td style="width: 49%">'+ value.model +'</td>';			
-								tableData += '<td style="width: 12%">'+ (value.plan-(value.debt)) +'</td>';
-								tableData += '<td style="width: 12%">'+ value.act +'</td>';
-								tableData += '<td style="width: 12%">'+ diff +'</td>';
+								tableData += '<td style="width: 49% ; padding: 0;">'+ value.model +'</td>';			
+								tableData += '<td style="width: 12% ; padding: 0;">'+ (value.plan-(value.debt)) +'</td>';
+								tableData += '<td style="width: 12% ; padding: 0;">'+ value.act +'</td>';
+								tableData += '<td style="width: 12% ; padding: 0;">'+ diff +'</td>';
 								tableData += '</tr>';
 							});
 							$('#planTableBody').append(tableData);
@@ -457,10 +458,10 @@
 								var diff = '';
 								diff = value.act-(value.plan-(value.debt));
 								tableData += '<tr>';
-								tableData += '<td style="width: 49%">'+ value.model +'</td>';			
-								tableData += '<td style="width: 12%">'+ (value.plan-(value.debt)) +'</td>';
-								tableData += '<td style="width: 12%">'+ value.act +'</td>';
-								tableData += '<td style="width: 12%">'+ diff +'</td>';
+								tableData += '<td style="width: 49%  ; padding: 0;">'+ value.model +'</td>';			
+								tableData += '<td style="width: 12%  ; padding: 0;">'+ (value.plan-(value.debt)) +'</td>';
+								tableData += '<td style="width: 12%  ; padding: 0;">'+ value.act +'</td>';
+								tableData += '<td style="width: 12%  ; padding: 0;">'+ diff +'</td>';
 								tableData += '</tr>';
 							});
 							$('#planTableBody2').append(tableData);
