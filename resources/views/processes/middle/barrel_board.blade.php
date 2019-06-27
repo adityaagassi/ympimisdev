@@ -64,31 +64,52 @@
 					<i class="glyphicon glyphicon-qrcode"></i>
 				</div>
 			</div>
-		</div>
-		<div class="col-xs-8" style="margin-top: 5px;">
 			<input type="hidden" id="mrpc" value="{{ $mrpc }}">
 			<input type="hidden" id="hpl" value="{{ $hpl }}">
-			<table id="ququeTable" class="table table-bordered table-striped" width="100%">
-				<thead style="background-color: rgba(126,86,134,.7);">
+			<center><p style="margin: 10px 0 0 0; font-size: 20px">20 Juni 2019</p></center>
+		</div>
+		<div class="col-xs-4" style="margin-top: 5px;">
+			<center style="font-size: 20px; margin: 2px">Laquering (LCQ)</center>
+			<table id="lcq" class="table table-bordered table-striped" width="100%">
+				<thead style="background-color: rgba(126,86,134,.7); font-size: 18px">
 					<tr>
-						<th style="width: 1%;">No</th>
-						<th style="width: 10%;">Key C</th>
-						<th style="width: 10%;">Key D</th>
-						<th style="width: 10%;">Key E</th>
-						<th style="width: 10%;">Key F</th>
-						<th style="width: 10%;">Key G</th>
-						<th style="width: 10%;">Key H</th>
-						<th style="width: 10%;">Key J</th>
-						<th style="width: 20%;">Created At</th>
+						<th style="width: 10%;">Model</th>
+						<th style="width: 10%;">Key</th>
+						<th style="width: 10%;">Set</th>
+						<th style="width: 10%;">Reset</th>
 					</tr>
 				</thead>
-				<tbody id="tableBody" style="font-size: 18px;  font-weight: bold; padding:0;">
+				<tbody id="tb_lcq" style="font-size: 16px;  font-weight: bold; padding:0;">
 				</tbody>
+				<tfoot style="font-size: 18px; background-color: #ddd">
+					<tr>
+						<th colspan="2">Total</th>
+						<th id="total_set">0</th>
+						<th id="total_reset">0</th>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
-
-		<div class="col-xs-4">
-			asd
+		`
+		<div class="col-xs-4" style="margin-top: 5px;">
+			<center style="font-size: 20px; margin: 2px">Plating (PLT)</center>
+			<table id="plt" class="table table-bordered table-striped" width="100%">
+				<thead style="background-color: rgba(126,86,134,.7); font-size: 18px">
+					<tr>
+						<th style="width: 10%;">Model</th>
+						<th style="width: 10%;">Key</th>
+						<th style="width: 10%;">Qty</th>
+					</tr>
+				</thead>
+				<tbody id="tb_plt" style="font-size: 16px;  font-weight: bold; padding:0;">
+				</tbody>
+				<tfoot style="font-size: 18px; background-color: #ddd">
+					<tr>
+						<th colspan="2">Total</th>
+						<th id="total_plt">0</th>
+					</tr>
+				</tfoot>
+			</table>
 			
 		</div>
 	</div>
@@ -121,6 +142,8 @@
 				}
 			}
 		});
+		get_barrel_board();
+		setInterval(get_barrel_board, 10000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -150,6 +173,34 @@
 				$("#qr").val("");
 				$("#qr").focus();
 			}
+		});
+	}
+
+	function get_barrel_board() {
+		$('#tb_plt').empty();
+		$('#tb_lcq').empty();
+		$.get('{{ url("fetch/middle/barrel_board") }}', function(result, status, xhr){
+			var set = 0, reset = 0, plt = 0;
+			var tb_plt = "";
+			var tb_lcq = "";
+			$.each(result.barrel_board, function(index, value) {
+				if (value.plt != 0 ) {
+					tb_plt += "<tr><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.plt+"</td></tr>";
+
+					plt += parseInt(value.plt);
+				} else {
+					tb_lcq += "<tr><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.set+"</td><td>"+value.reset+"</td></tr>";
+
+					set += parseInt(value.set);
+					reset += parseInt(value.reset);
+				}
+
+				$("#total_set").text(set);
+				$("#total_reset").text(reset);
+				$("#total_plt").text(plt);
+			});
+			$("#tb_plt").append(tb_plt);
+			$("#tb_lcq").append(tb_lcq);
 		});
 	}
 

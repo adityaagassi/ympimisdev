@@ -55,6 +55,7 @@
 		<input type="hidden" id="hpl" value="{{ $hpl }}">
 		<input type="hidden" id="mrpc" value="{{ $mrpc }}">
 		<input type="hidden" id="surface" value="{{ $surface }}">
+		<input type="hidden" id="code">
 		<div class="col-xs-12">
 			<table id="tableMachine" class="table table-bordered table-striped" style="background-color: rgb(204,255,255);">
 				<thead>
@@ -90,7 +91,7 @@
 				<span id="machine" style="font-weight: bold; font-size: 24px; color: red;"></span>
 				<span style="font-weight: bold; font-size: 20px;">Material Picked: </span>
 				<span id="picked" style="font-weight: bold; font-size: 24px; color: red;"></span>
-				<span style="font-weight: bold; font-size: 16px; color: red;">/</span>
+				<span style="font-weight: bold; font-size: 16px; color: red;">of</span>
 				<span id="total" style="font-weight: bold; font-size: 16px; color: red;"></span>
 			</center>
 			<button class="btn btn-primary" style="width: 100%; font-size: 22px; margin-bottom: 30px;" onclick="printJob()"><i class="fa fa-print"></i> PRINT</button>
@@ -113,7 +114,8 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		fillTable();
-		setInterval(headCreate, 1000);
+		// headCreate();
+		// setInterval(headCreate, 1000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -150,10 +152,11 @@
 	}
 
 	function printJob(){
-
-		if ($("#machine").text() == "") {
-			openErrorGritter('Error', 'No Machine Selected');
-			return false;
+		if($('#code').val() == 'BARREL'){
+			if ($("#machine").text() == "") {
+				openErrorGritter('Error', 'No Machine Selected');
+				return false;
+			}
 		}
 
 		if($('input[type=checkbox]:checked').length !== $('input[type=checkbox]').length){
@@ -167,8 +170,7 @@
 
 			var data = {
 				tag : d,
-				// mrpc : $('#mrpc').val(),
-				// hpl : $('#hpl').val(),
+				code : $('#code').val(),
 				surface : $('#surface').val(),
 				no_machine : $('#machine').text(),
 			}
@@ -197,7 +199,6 @@
 					fillTable();
 				}
 			});
-
 		}
 	}
 
@@ -212,62 +213,81 @@
 		$.get('{{ url("fetch/middle/barrel") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
-					var arr = result.queues;
-					var tag = [];
+					$('#code').val(result.code);
 					var jig_arr = [];
-					var jig_baru = [];
-
-					for (var i = 0; i < 8; i++) {
-						var first_arr = [];
-						var tot_spring = 0;
-						var springs = 0;
-						$.each(arr, function(index, value) {
-							if($.inArray(value.tag, tag) == -1){
-								if(first_arr.length == 0){
-									first_arr.push([value.hpl, value.spring]);
-								}
-								if(value.hpl == first_arr[0][0] && value.spring == first_arr[0][1]){
-									tot_spring += value.lot;
-									if(tot_spring <= 4){
-										jig_arr.push([value.hpl, value.spring, value.key, value.surface, value.tag, value.lot, value.model, value.material_child, value.material_description]);
-										springs += value.lot;
-										tag.push(value.tag);
+					var arr = result.queues;
+					if(result.code == 'BARREL'){
+						var tag = [];
+						var jig = 1;
+						for (var i = 0; i < 8; i++) {
+							var first_arr = [];
+							var tot_spring = 0;
+							var springs = 0;
+							$.each(arr, function(index, value) {
+								if(value.spring !== 'FLANEL'){
+									if($.inArray(value.tag, tag) == -1){
+										if(first_arr.length == 0){
+											first_arr.push([value.hpl, value.spring]);
+										}
+										if(value.hpl == first_arr[0][0] && value.spring == first_arr[0][1]){
+											tot_spring += value.lot;
+											if(tot_spring <= 4){
+												jig_arr.push([value.hpl, value.spring, value.key, value.surface, value.tag, value.lot, value.model, value.material_child, value.material_description, jig]);
+												springs += value.lot;
+												tag.push(value.tag);
+											}
+										}
 									}
 								}
+							});
+							jig +=1;
+						}
 
-								if (springs > 3) {
-									jig_baru.push();
-								}
-
+						$('#tableJobBody').html('');
+						var tableJobBody = "";
+						for (var z = 0; z < jig_arr.length; z++) {
+							tableJobBody += '<tr>';
+							tableJobBody += '<td>'+jig_arr[z][9]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][2]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][6]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][3]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][7]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][8]+'</td>';
+							tableJobBody += '<td><input type="checkbox" id="'+jig_arr[z][4]+'" name="'+jig_arr[z][9]+'" onclick="count_picked(this)" checked></center></td>';
+							tableJobBody += '</tr>';
+						}
+						$('#tableJobBody').append(tableJobBody);
+						$('#total').html(jig_arr.length);
+						$('#picked').html(jig_arr.length);
+						total = jig_arr.length;	
+					}
+					else{
+						$.each(arr, function(index, value) {
+							if(value.spring == 'FLANEL'){
+								jig_arr.push([value.hpl, value.spring, value.key, value.surface, value.tag, value.lot, value.model, value.material_child, value.material_description]);
+							}
+							else{
+								return false;
 							}
 						});
-					}
-
-					console.log(jig_arr);
-					return false;
-
-					var jig = 1;
-					var tmp = 0;
-
-					$('#tableJobBody').html('');
-					var tableJobBody = "";
-					for (var z = 0; z < jig_arr.length; z++) {
-						tmp += jig_arr[z][5];
-						if(tmp >= 4) {jig++; tmp = 0;}
-						tableJobBody += '<tr>';
-						tableJobBody += '<td>'+jig+'</td>';
-						tableJobBody += '<td>'+jig_arr[z][2]+'</td>';
-						tableJobBody += '<td>'+jig_arr[z][6]+'</td>';
-						tableJobBody += '<td>'+jig_arr[z][3]+'</td>';
-						tableJobBody += '<td>'+jig_arr[z][7]+'</td>';
-						tableJobBody += '<td>'+jig_arr[z][8]+'</td>';
-						tableJobBody += '<td><input type="checkbox" id="'+jig_arr[z][4]+'" name="'+jig+'" onclick="count_picked(this)" checked></center></td>';
-						tableJobBody += '</tr>';
-					}
-					$('#tableJobBody').append(tableJobBody);
-					$('#total').html(jig_arr.length);
-					$('#picked').html(jig_arr.length);
-					total = jig_arr.length;
+						$('#tableJobBody').html('');
+						var tableJobBody = "";
+						for (var z = 0; z < jig_arr.length; z++) {
+							tableJobBody += '<tr>';
+							tableJobBody += '<td>'+jig_arr[z][1]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][2]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][6]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][3]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][7]+'</td>';
+							tableJobBody += '<td>'+jig_arr[z][8]+'</td>';
+							tableJobBody += '<td><input type="checkbox" id="'+jig_arr[z][4]+'" name="'+jig_arr[z][1]+'" onclick="count_picked(this)" checked></center></td>';
+							tableJobBody += '</tr>';
+						}
+						$('#tableJobBody').append(tableJobBody);
+						$('#total').html(jig_arr.length);
+						$('#picked').html(jig_arr.length);
+						total = jig_arr.length;
+					}					
 				}
 				else{
 					audio_error.play();

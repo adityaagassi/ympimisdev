@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BarrelLog extends Model
+class TagMaterial extends Model
 {
 	use SoftDeletes;
 
 	protected $fillable = [
-		'machine', 'tag', 'material', 'qty', 'status', 'started_at', 'remark', 'created_by'
+		'tag', 'material_number', 'quantity', 'op_prod', 'location', 'remark', 'created_by'
 	];
 
 	public function user()

@@ -10,7 +10,7 @@ class BarrelMachineLog extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'machine', 'status', 'duration', 'remark', 'created_by'
+		'machine', 'status', 'started_at', 'remark', 'created_by'
 	];
 
 	public function user()

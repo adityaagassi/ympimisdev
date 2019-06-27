@@ -266,11 +266,6 @@
 							</tr>
 						</thead>
 						<tbody id="queue2">
-							<tr>
-								<td>asdds</td>
-								<td>ddd</td>
-								<td>3</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -285,11 +280,6 @@
 							</tr>
 						</thead>
 						<tbody id="queue3">
-							<tr>
-								<td>asdds</td>
-								<td>ddd</td>
-								<td>1</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -304,11 +294,6 @@
 							</tr>
 						</thead>
 						<tbody id="queue4">
-							<tr>
-								<td>asdds</td>
-								<td>ddd</td>
-								<td>9</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -323,11 +308,6 @@
 							</tr>
 						</thead>
 						<tbody id="queue5">
-							<tr>
-								<td>asdds</td>
-								<td>ddd</td>
-								<td>7</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -342,11 +322,6 @@
 							</tr>
 						</thead>
 						<tbody id="queue6">
-							<tr>
-								<td>asdds</td>
-								<td>ddd</td>
-								<td>3</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -374,8 +349,8 @@
 			keys.push($(this).text());
 		});
 		
-		// setInterval(getBarrelMachine, 1000);
-		getBarrelMachine();
+		setInterval(getBarrelMachine, 1000);
+		// getBarrelMachine();
 		// setInterval(getMachineStatus, 1000);
 	});
 
