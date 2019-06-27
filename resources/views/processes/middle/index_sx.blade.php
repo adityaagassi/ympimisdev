@@ -18,7 +18,7 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/process_middle_barrel", "barrel-as") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Racking</a>
+			<a href="{{ url("index/process_middle_barrel", "barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Racking</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_kensa", "incoming-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check</a>
 			<a href="{{ url("index/process_middle_kensa", "incoming-lcq2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check (After Treatment)</a>
@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/middle/barrel_board/barrel-as") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Barrel Board</a>
+			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Barrel Board</a>
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Machine Activity</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">

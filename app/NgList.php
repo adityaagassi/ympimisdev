@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Barrel extends Model
+class NgList extends Model
 {
 	use SoftDeletes;
 
 	protected $fillable = [
-		'machine', 'jig', 'tag', 'material_number', 'qty', 'status', 'finish_racking', 'remark', 'created_by', 'key'
+		'ng_name', 'location', 'remark', 'created_by'
 	];
 
 	public function user()

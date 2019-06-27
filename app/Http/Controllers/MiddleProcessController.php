@@ -42,10 +42,10 @@ class MiddleProcessController extends Controller
 
 	public function indexProcessBarrelBoard($id){
 
-		if($id == 'barrel-as'){
-			$title = 'Alto Saxophone Barrel Board';
+		if($id == 'barrel-sx'){
+			$title = 'Saxophone Barrel Board';
 			$mprc = 'S51';
-			$hpl = 'ASKEY';
+			$hpl = 'ASKEY,TSKEY';
 		}
 		
 		return view('processes.middle.barrel_board', array(
@@ -56,16 +56,18 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexProcessMiddleBarrel($id){
-		if($id == 'barrel-as'){
-			$title = 'Alto Saxophone Tumbling-Barrel';
+		if($id == 'barrel-sx'){
+			$title = 'Saxophone Tumbling-Barrel';
 			$mprc = 'S51';
-			$hpl = 'ASKEY';
+			$hpl = 'ASKEY,TSKEY';
+			$surface = 'LCQ';
 		}
 
 		return view('processes.middle.barrel', array(
 			'title' => $title,
 			'mrpc' => $mprc,
 			'hpl' => $hpl,
+			'surface' => $surface,
 		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 	}
 
@@ -119,50 +121,65 @@ class MiddleProcessController extends Controller
 	public function fetchMiddleBarrel(Request $request){
 		$queues = db::table('barrel_queues')
 		->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		->leftJoin('barrel_jigs', function($join)
+		{
+			$join->on('barrel_jigs.key', '=', 'materials.key');
+			$join->on('barrel_jigs.hpl','=', 'materials.hpl');
+		})
 		->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
 		->where('materials.category', '=', 'WIP')
-		->where('materials.hpl', '=', $request->get('hpl'))
 		->where('materials.mrpc', '=', $request->get('mrpc'))
-		->select('materials.model', 'materials.key', 'materials.surface', 'barrel_queues.created_at', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.tag')
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->select('barrel_queues.tag', 'barrel_queues.created_at', 'materials.model', 'materials.hpl', 'materials.material_number', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_jigs.spring', 'bom_components.material_child', 'bom_components.material_description', 'barrel_jigs.lot')
 		->orderBy('barrel_queues.created_at', 'asc')
 		->get();
 
-		if(strpos($queues[0]->surface, 'PLT') !== false){
-			$jobs = array();
-			foreach ($queues as $queue) {
-				if(strpos($queue->surface, 'LCQ')){
-					break;
-				}
-				array_push($jobs, array(
-					'jig' => '-',
-					'key' => $queue->key,
-					'model' => $queue->model,
-					'surface' => $queue->surface,
-					'material_child' => $queue->material_child,
-					'material_description' => $queue->material_description,
-					'tag' => $queue->tag,
-				));
-			}
-		}
-		else{
-			$jobs = db::table('barrel_jigs')
-			->leftJoin(db::raw('(
-				select min(barrel_queues.id) as id, materials.key from barrel_queues left join materials on materials.material_number = barrel_queues.material_number where materials.surface like "%LCQ%" and materials.mrpc = "S51" group by materials.key
-			) as queue'), 'queue.key', '=', 'barrel_jigs.key')
-			->leftJoin('barrel_queues', 'barrel_queues.id', '=', 'queue.id')
-			->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-			// ->leftJoin('bom_components', 'bom_components.material_parent', '=', 'materials.material_number')
-			->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
-			->select('barrel_jigs.jig', 'barrel_jigs.key', 'barrel_queues.tag', 'materials.model', 'materials.surface', 'materials.material_number', 'materials.material_description', 'bom_components.material_child', 'bom_components.material_description')
-			->where('barrel_jigs.hpl', '=', $request->get('hpl'))
-			->orderBy('barrel_jigs.jig', 'asc')
-			->orderBy('barrel_jigs.key', 'asc')
-			->get();
-		}
+		// $queues = db::table('barrel_queues')
+		// ->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		// ->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
+		// ->where('materials.category', '=', 'WIP')
+		// ->where('materials.hpl', '=', $request->get('hpl'))
+		// ->where('materials.mrpc', '=', $request->get('mrpc'))
+		// ->select('materials.model', 'materials.key', 'materials.surface', 'barrel_queues.created_at', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.tag')
+		// ->orderBy('barrel_queues.created_at', 'asc')
+		// ->get();
+
+		// if(strpos($queues[0]->surface, 'PLT') !== false){
+		// 	$jobs = array();
+		// 	foreach ($queues as $queue) {
+		// 		if(strpos($queue->surface, 'LCQ')){
+		// 			break;
+		// 		}
+		// 		array_push($jobs, array(
+		// 			'jig' => '-',
+		// 			'key' => $queue->key,
+		// 			'model' => $queue->model,
+		// 			'surface' => $queue->surface,
+		// 			'material_child' => $queue->material_child,
+		// 			'material_description' => $queue->material_description,
+		// 			'tag' => $queue->tag,
+		// 		));
+		// 	}
+		// }
+		// else{
+		// 	$jobs = db::table('barrel_jigs')
+		// 	->leftJoin(db::raw('(
+		// 		select min(barrel_queues.id) as id, materials.key from barrel_queues left join materials on materials.material_number = barrel_queues.material_number where materials.surface like "%LCQ%" and materials.mrpc = "S51" group by materials.key
+		// 	) as queue'), 'queue.key', '=', 'barrel_jigs.key')
+		// 	->leftJoin('barrel_queues', 'barrel_queues.id', '=', 'queue.id')
+		// 	->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		// 	// ->leftJoin('bom_components', 'bom_components.material_parent', '=', 'materials.material_number')
+		// 	->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
+		// 	->select('barrel_jigs.jig', 'barrel_jigs.key', 'barrel_queues.tag', 'materials.model', 'materials.surface', 'materials.material_number', 'materials.material_description', 'bom_components.material_child', 'bom_components.material_description')
+		// 	->where('barrel_jigs.hpl', '=', $request->get('hpl'))
+		// 	->orderBy('barrel_jigs.jig', 'asc')
+		// 	->orderBy('barrel_jigs.key', 'asc')
+		// 	->get();
+		// }
 
 		$response = array(
 			'status' => true,
-			'jobs' => $jobs,
+			'queues' => $queues,
 		);
 		return Response::json($response);
 	}
@@ -218,130 +235,306 @@ class MiddleProcessController extends Controller
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		if($request->get('no_machine') == 'Direct To Plating'){
-			$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-			->whereIn('barrel_queues.tag', $request->get('tag'))
-			->get();
+		if($request->get('surface') == 'LCQ'){
+			$code_generator = CodeGenerator::where('note','=','barrel_machine')->first();
+			$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+			$qr_machine = $code_generator->prefix . $number;
+			try{
+				$tags = $request->get('tag');
 
-			$data_middle_inventory = array();
-			
-			foreach ($queues as $queue) {
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(4,4);
-				$printer->setUnderline(true);
-				$printer->text('PLATING'."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(5,2);
-				$printer->text($queue->model." ".$queue->key."\n");
-				$printer->text($queue->surface."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-				$printer->text($queue->tag."\n\n");
-				$printer->initialize();
-				$printer->setTextSize(1,2);
-				$printer->text("GMC : ".$queue->material_number."\n");
-				$printer->text("DESC: ".$queue->material_description."\n");	
-				$printer->text("QTY : ".$queue->quantity." PC(S)\n");			
-				$printer->cut(Printer::CUT_PARTIAL, 50);
-				$printer->close();
+				foreach ($tags as $tag) {
+					$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+					->where('barrel_queues.tag', '=', $tag[0])
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')
+					->first();
 
-				$data_middle_inventory = [
-					'tag' => $queue->tag,
-					'material_number' => $queue->material_number,
-					'quantity' => $queue->quantity,
-					'location' => 'incoming-plating',
-				];
+					$insert_jig = [
+						'machine' => $request->get('no_machine'),
+						'jig' => $tag[1],
+						'key' => $barrel_queue->key,
+						'tag' => $tag[0],
+						'material_number' => $barrel_queue->material_number,
+						'qty' => $barrel_queue->quantity,
+						'status' => 'racking',
+						'remark' => $qr_machine,
+						'created_by' => $id
+					];
 
-				try{
-					$middle_inventory = MiddleInventory::firstOrCreate(
-						['tag' => $queue->tag],
-						$data_middle_inventory
-					);
-					$delete_queue = BarrelQueue::where('tag', $queue->tag)->forceDelete();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(4,4);
+					$printer->setUnderline(true);
+					$printer->text('LACQUERING'."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(5,2);
+					$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
+					$printer->text($barrel_queue->surface."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->qrCode($barrel_queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+					$printer->text($barrel_queue->tag."\n\n");
+					$printer->initialize();
+					$printer->setTextSize(1,1);
+					$printer->text("GMC : ".$barrel_queue->material_number." MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");
+					$printer->text("DESC: ".$barrel_queue->material_description."\n");	
+					$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");			
+					$printer->cut(Printer::CUT_PARTIAL, 50);
+					$printer->close();
+
+					$barrel = new Barrel($insert_jig);
+					$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
+
+					DB::transaction(function() use ($barrel, $delete_queue){
+						$barrel->save();
+						$delete_queue->forceDelete();
+					});
 				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => $e->getMessage(),
-					);
-					return Response::json($response);
-				}
-			}
 
-			$response = array(
-				'status' => true,
-				'message' => 'New kanban has been printed',
-			);
-			return Response::json($response);
-		}
-		elseif($request->get('no_machine') !== 'FULL'){
-			$machine = BarrelMachine::where('status', '=', 'idle')->orderBy('updated_at', 'asc')->first();
-
-			if(strlen($machine->machine) <= 0){
+				$code_generator->index = $code_generator->index+1;
+				$code_generator->save();
+				
 				$response = array(
-					'status' => false,
-					'message' => 'No Machine Available',
+					'status' => true,
+					'message' => 'New kanban has been printed',
+					'tes' => $tags,
 				);
 				return Response::json($response);
 			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}
+		else{
 
-			$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-			->whereIn('barrel_queues.tag', $request->get('tag'))
-			->get();
+		}
 
-			$data_barrel = array();
-			$data_middle_inventory = array();
+		// $printer_name = 'Trial Printer';
+		// $connector = new WindowsPrintConnector($printer_name);
+		// $printer = new Printer($connector);
 
-			foreach ($queues as $queue) {
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(4,4);
-				$printer->setUnderline(true);
-				$printer->text('LACQUERING'."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(5,2);
-				$printer->text($queue->model." ".$queue->key."\n");
-				$printer->text($queue->surface."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-				$printer->text($queue->tag."\n\n");
-				$printer->initialize();
-				$printer->setTextSize(1,2);
-				$printer->text("GMC : ".$queue->material_number."\n");
-				$printer->text("DESC: ".$queue->material_description."\n");	
-				$printer->text("QTY : ".$queue->quantity." PC(S)\n");			
-				$printer->cut(Printer::CUT_PARTIAL, 50);
-				$printer->close();
+		// if($request->get('no_machine') == 'Direct To Plating'){
+		// 	$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		// 	->whereIn('barrel_queues.tag', $request->get('tag'))
+		// 	->get();
 
-				$data_barrel = [
-					'machine' => $machine->machine,
-					'tag' => $queue->tag,
-					'key' => $queue->key,
-					'material_number' => $queue->material_number,
-					'qty' => $queue->quantity,
-					'status' => 'racking',
-					'created_by' => $id,
-				];
+		// 	$data_middle_inventory = array();
 
-				$data_middle_inventory = [
-					'tag' => $queue->tag,
-					'material_number' => $queue->material_number,
-					'quantity' => $queue->quantity,
-					'location' => 'barrel',
-				];
+		// 	foreach ($queues as $queue) {
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->setTextSize(4,4);
+		// 		$printer->setUnderline(true);
+		// 		$printer->text('PLATING'."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->setTextSize(5,2);
+		// 		$printer->text($queue->model." ".$queue->key."\n");
+		// 		$printer->text($queue->surface."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		// 		$printer->text($queue->tag."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setTextSize(1,2);
+		// 		$printer->text("GMC : ".$queue->material_number."\n");
+		// 		$printer->text("DESC: ".$queue->material_description."\n");	
+		// 		$printer->text("QTY : ".$queue->quantity." PC(S)\n");			
+		// 		$printer->cut(Printer::CUT_PARTIAL, 50);
+		// 		$printer->close();
 
-				try{
+		// 		$data_middle_inventory = [
+		// 			'tag' => $queue->tag,
+		// 			'material_number' => $queue->material_number,
+		// 			'quantity' => $queue->quantity,
+		// 			'location' => 'incoming-plating',
+		// 		];
+
+		// 		try{
+		// 			$middle_inventory = MiddleInventory::firstOrCreate(
+		// 				['tag' => $queue->tag],
+		// 				$data_middle_inventory
+		// 			);
+		// 			$delete_queue = BarrelQueue::where('tag', $queue->tag)->forceDelete();
+		// 		}
+		// 		catch(\Exception $e){
+		// 			$response = array(
+		// 				'status' => false,
+		// 				'message' => $e->getMessage(),
+		// 			);
+		// 			return Response::json($response);
+		// 		}
+		// 	}
+
+		// 	$response = array(
+		// 		'status' => true,
+		// 		'message' => 'New kanban has been printed',
+		// 	);
+		// 	return Response::json($response);
+		// }
+		// elseif($request->get('no_machine') !== 'FULL'){
+		// 	$machine = BarrelMachine::where('status', '=', 'idle')->orderBy('updated_at', 'asc')->first();
+
+		// 	if(strlen($machine->machine) <= 0){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => 'No Machine Available',
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+
+		// 	$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		// 	->whereIn('barrel_queues.tag', $request->get('tag'))
+		// 	->get();
+
+		// 	$data_barrel = array();
+		// 	$data_middle_inventory = array();
+
+		// 	foreach ($queues as $queue) {
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->setTextSize(4,4);
+		// 		$printer->setUnderline(true);
+		// 		$printer->text('LACQUERING'."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->setTextSize(5,2);
+		// 		$printer->text($queue->model." ".$queue->key."\n");
+		// 		$printer->text($queue->surface."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 		$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		// 		$printer->text($queue->tag."\n\n");
+		// 		$printer->initialize();
+		// 		$printer->setTextSize(1,2);
+		// 		$printer->text("GMC : ".$queue->material_number."\n");
+		// 		$printer->text("DESC: ".$queue->material_description."\n");	
+		// 		$printer->text("QTY : ".$queue->quantity." PC(S)\n");			
+		// 		$printer->cut(Printer::CUT_PARTIAL, 50);
+		// 		$printer->close();
+
+		// 		$data_barrel = [
+		// 			'machine' => $machine->machine,
+		// 			'tag' => $queue->tag,
+		// 			'key' => $queue->key,
+		// 			'material_number' => $queue->material_number,
+		// 			'qty' => $queue->quantity,
+		// 			'status' => 'racking',
+		// 			'created_by' => $id,
+		// 		];
+
+		// 		$data_middle_inventory = [
+		// 			'tag' => $queue->tag,
+		// 			'material_number' => $queue->material_number,
+		// 			'quantity' => $queue->quantity,
+		// 			'location' => 'barrel',
+		// 		];
+
+		// 		try{
+		// 			try{
+		// 				$barrel = new Barrel($data_barrel);
+		// 				$middle_inventory = MiddleInventory::firstOrCreate(
+		// 					['tag' => $queue->tag],
+		// 					$data_middle_inventory
+		// 				);
+		// 				$barrel->save();
+		// 				$delete_queue = BarrelQueue::where('tag', $queue->tag)->forceDelete();
+		// 			}
+		// 			catch(\Exception $e){
+		// 				$response = array(
+		// 					'status' => false,
+		// 					'message' => $e->getMessage(),
+		// 				);
+		// 				return Response::json($response);
+		// 			}
+		// 		}
+		// 		catch(\Exception $e){
+		// 			$response = array(
+		// 				'status' => false,
+		// 				'message' => $e->getMessage(),
+		// 			);
+		// 			return Response::json($response);
+		// 		}
+		// 	}
+
+		// 	$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($machine->updated_at)))->format('U');
+		// 	$input_log = new BarrelMachineLog([
+		// 		'machine' => $machine->machine,
+		// 		'status' => 'idle',
+		// 		'created_by' => $id,
+		// 		'duration' => $duration,
+		// 	]);
+		// 	$input_log->save();
+		// 	$update_machine = BarrelMachine::where('machine', '=', $machine->machine)->update([
+		// 		'status' => 'racking',
+		// 	]);
+
+		// 	$response = array(
+		// 		'status' => true,
+		// 		'message' => 'New kanban has been printed',
+		// 	);
+		// 	return Response::json($response);
+		// }
+		// else{
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Undefined Error',
+		// 	);
+		// 	return Response::json($response);
+		// }
+	}
+
+	public function scanMiddleBarrel(Request $request){	
+		$id = Auth::id();
+		$printer_name = 'Trial Printer';
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		if(substr($request->get('qr'),0,3) == 'MCB'){
+			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
+			$barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->first();
+
+			if($barrels->count() > 0){
+				if($barrel_machine->status == 'idle' && $barrels[0]->status == 'queue'){
 					try{
-						$barrel = new Barrel($data_barrel);
-						$middle_inventory = MiddleInventory::firstOrCreate(
-							['tag' => $queue->tag],
-							$data_middle_inventory
+						$update_barrel = Barrel::where('remark', '=', $request->get('qr'))->update([
+							'status' => 'running',
+						]);
+
+						$duration_log = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($barrel_machine->updated_at)))->format('U');
+						$update_log = new BarrelLog([
+							'machine' => $barrels[0]->machine,
+							'status' => 'idle',
+							'created_by' => $id,
+							'duration' => $duration_log,
+						]);
+						$update_log->save();
+
+						$update_barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->update([
+							'status' => 'running',
+						]);
+
+						// foreach ($barrels as $barrel) {
+						// 	$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($barrel->finish_racking)))->format('U');
+						// 	$insert_log = [
+						// 		'machine' => $barrel->machine,
+						// 		'tag' => $barrel->tag,
+						// 		'material' => $barrel->material_number,
+						// 		'qty' => $barrel->qty,
+						// 		'status' => 'queue',
+						// 		'duration' => $duration,
+						// 		'created_by' => $id,
+						// 	];
+						// 	$barrel_log = new BarrelLog($insert_log);
+						// }
+
+						$response = array(
+							'status' => true,
+							'message' => 'Machine running.',
 						);
-						$barrel->save();
-						$delete_queue = BarrelQueue::where('tag', $queue->tag)->forceDelete();
+						return Response::json($response);
+
 					}
 					catch(\Exception $e){
 						$response = array(
@@ -351,6 +544,92 @@ class MiddleProcessController extends Controller
 						return Response::json($response);
 					}
 				}
+				elseif($barrel_machine->status == 'running' && $barrels[0]->status == 'running'){
+					try{
+
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
+					}
+				}
+				else{
+					$response = array(
+						'status' => false,
+						'message' => 'Machine status invalid.',
+					);
+					return Response::json($response);
+				}	
+			}
+			else{
+				$response = array(
+					'status' => false,
+					'message' => 'Qr code cycle is done.',
+				);
+				return Response::json($response);
+			}
+		}
+		else{
+			$barrel = Barrel::where('tag', '=', $request->get('qr'))
+			->where('status', '=', 'racking')
+			->first();
+
+			if($barrel != null){
+				try{
+					$barrel->finish_racking = date('Y-m-d H:i:s');
+					$barrel->status = 'queue';
+
+					$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($barrel->updated_at)))->format('U');
+
+					$insert_log = [
+						'machine' => $barrel->machine,
+						'tag' => $barrel->tag,
+						'material' => $barrel->material_number,
+						'qty' => $barrel->qty,
+						'status' => 'racking',
+						'duration' => $duration,
+						'created_by' => $id,
+					];
+
+					$barrel_log = new BarrelLog($insert_log);
+
+					DB::transaction(function() use ($barrel, $barrel_log){
+						$barrel->save();
+						$barrel_log->save();
+					});
+
+					$check_barrels = Barrel::where('remark', '=', $barrel->remark)->where('status', '<>', 'queue')->get();
+
+					if($check_barrels->count() == 0){
+
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(4,4);
+						$printer->text('BARREL'."\n");
+						$printer->text("MACHINE ".$barrel->machine."\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->qrCode($barrel->remark, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+						$printer->text($barrel->remark."\n\n");
+						$printer->cut();
+						$printer->close();
+
+						$response = array(
+							'status' => true,
+							'message' => 'All material has been racked, printing machine label.',
+						);
+						return Response::json($response);
+					}
+
+					$response = array(
+						'status' => true,
+						'message' => 'Material has been racked',
+					);
+					return Response::json($response);
+
+				}
 				catch(\Exception $e){
 					$response = array(
 						'status' => false,
@@ -359,126 +638,105 @@ class MiddleProcessController extends Controller
 					return Response::json($response);
 				}
 			}
-
-			$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($machine->updated_at)))->format('U');
-			$input_log = new BarrelMachineLog([
-				'machine' => $machine->machine,
-				'status' => 'idle',
-				'created_by' => $id,
-				'duration' => $duration,
-			]);
-			$input_log->save();
-			$update_machine = BarrelMachine::where('machine', '=', $machine->machine)->update([
-				'status' => 'racking',
-			]);
-
-			$response = array(
-				'status' => true,
-				'message' => 'New kanban has been printed',
-			);
-			return Response::json($response);
-		}
-		else{
-			$response = array(
-				'status' => false,
-				'message' => 'Undefined Error',
-			);
-			return Response::json($response);
-		}
-	}
-
-	public function scanMiddleBarrel(Request $request){	
-		$id = Auth::id();	
-		if(substr($request->get('qr'),0,3) == 'MCB'){
-			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
-
-			foreach ($barrels as $barrel) {
-				# code...
-			}
-
-		}
-		else{
-			$barrel = Barrel::where('tag', '=', $request->get('qr'))->first();
-			if($barrel->status <> 'racking'){
+			else{
 				$response = array(
 					'status' => false,
 					'message' => 'QR code status invalid.',
 				);
 				return Response::json($response);
 			}
-			if($barrel != null){
-				$barrel->finish_racking = date('Y-m-d H:i:s');
-				$barrel->status = 'running';
-				$barrel->save();
-
-				$check_barrels = Barrel::where('machine', '=', $barrel->machine)->where('status', '<>', 'running')->get();
-
-				if($check_barrels->count() == 0){
-					$printer_name = 'Trial Printer';
-					$connector = new WindowsPrintConnector($printer_name);
-					$printer = new Printer($connector);
-
-					$barrel_machine = BarrelMachine::where('machine', '=', $barrel->machine)->first();
-					$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($barrel_machine->updated_at)))->format('U');
-
-					try{
-						$input_log = new BarrelMachineLog([
-							'machine' => $barrel->machine,
-							'status' => 'racking',
-							'created_by' => $id,
-							'duration' => $duration,
-						]);
-						$input_log->save();
-					}
-					catch(\Exception $e){
-						$response = array(
-							'status' => false,
-							'message' => $e->getMessage(),
-						);
-						return Response::json($response);
-					}
-
-					$update_barrel_machine = BarrelMachine::where('machine', '=', $barrel->machine)->update([
-						'status' => 'running',
-					]);
-
-					$code_generator = CodeGenerator::where('note','=','barrel_machine')->first();
-					$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
-					$qr_machine = $code_generator->prefix . $number;
-
-					$update_barrel = Barrel::where('machine', '=', $barrel->machine)->update([
-						'remark' => $qr_machine,
-					]);
-
-					$code_generator->index = $code_generator->index+1;
-					$code_generator->save();
-
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setTextSize(4,4);
-					$printer->text('BARREL'."\n");
-					$printer->text("MACHINE ".$barrel->machine."\n");
-					$printer->initialize();
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->qrCode($qr_machine, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-					$printer->text($qr_machine."\n\n");
-					$printer->cut();
-					$printer->close();
-				}
-			}
-			else{
-				$response = array(
-					'status' => false,
-					'message' => 'QR code not found',
-				);
-				return Response::json($response);
-			}
 		}
 
-		$response = array(
-			'status' => true,
-			'message' => substr($request->get('qr'),0,2),
-		);
-		return Response::json($response);
+		// if(substr($request->get('qr'),0,3) == 'MCB'){
+		// 	$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
+
+		// 	foreach ($barrels as $barrel) {
+		// 		# code...
+		// 	}
+
+		// }
+		// else{
+		// 	$barrel = Barrel::where('tag', '=', $request->get('qr'))->first();
+		// 	if($barrel->status <> 'racking'){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => 'QR code status invalid.',
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// 	if($barrel != null){
+		// 		$barrel->finish_racking = date('Y-m-d H:i:s');
+		// 		$barrel->status = 'running';
+		// 		$barrel->save();
+
+		// 		$check_barrels = Barrel::where('machine', '=', $barrel->machine)->where('status', '<>', 'running')->get();
+
+		// 		if($check_barrels->count() == 0){
+		// 			$printer_name = 'Trial Printer';
+		// 			$connector = new WindowsPrintConnector($printer_name);
+		// 			$printer = new Printer($connector);
+
+		// 			$barrel_machine = BarrelMachine::where('machine', '=', $barrel->machine)->first();
+		// 			$duration = date_create(date('Y-m-d H:i:s'))->format('U')-date_create(date('Y-m-d H:i:s', strtotime($barrel_machine->updated_at)))->format('U');
+
+		// 			try{
+		// 				$input_log = new BarrelMachineLog([
+		// 					'machine' => $barrel->machine,
+		// 					'status' => 'racking',
+		// 					'created_by' => $id,
+		// 					'duration' => $duration,
+		// 				]);
+		// 				$input_log->save();
+		// 			}
+		// 			catch(\Exception $e){
+		// 				$response = array(
+		// 					'status' => false,
+		// 					'message' => $e->getMessage(),
+		// 				);
+		// 				return Response::json($response);
+		// 			}
+
+		// 			$update_barrel_machine = BarrelMachine::where('machine', '=', $barrel->machine)->update([
+		// 				'status' => 'running',
+		// 			]);
+
+		// 			$code_generator = CodeGenerator::where('note','=','barrel_machine')->first();
+		// 			$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+		// 			$qr_machine = $code_generator->prefix . $number;
+
+		// 			$update_barrel = Barrel::where('machine', '=', $barrel->machine)->update([
+		// 				'remark' => $qr_machine,
+		// 			]);
+
+		// 			$code_generator->index = $code_generator->index+1;
+		// 			$code_generator->save();
+
+		// 			$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 			$printer->setTextSize(4,4);
+		// 			$printer->text('BARREL'."\n");
+		// 			$printer->text("MACHINE ".$barrel->machine."\n");
+		// 			$printer->initialize();
+		// 			$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// 			$printer->qrCode($qr_machine, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		// 			$printer->text($qr_machine."\n\n");
+		// 			$printer->cut();
+		// 			$printer->close();
+		// 		}
+		// 	}
+		// 	else{
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => 'QR code not found',
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// }
+
+		// $response = array(
+		// 	'status' => true,
+		// 	'message' => substr($request->get('qr'),0,2),
+		// );
+		// return Response::json($response);
 	}
 
 	public function fetchResultMiddleKensa(Request $request){
@@ -727,6 +985,41 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'contents' => $data,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchProcessBarrel()
+	{
+		$data = DB::table('barrels')
+		->leftJoin('materials', 'barrels.material_number', '=', 'materials.material_number')
+		->select('barrels.machine', 'barrels.jig', 'barrels.key', DB::raw('SUM(qty) as qty'), 'barrels.status', DB::raw('LEFT(materials.model, 1) as model'))
+		->groupBy('barrels.machine', 'barrels.jig', 'barrels.key','barrels.status',DB::raw('LEFT(materials.model, 1)'))
+		->orderBy('remark','asc')
+		->orderBy('jig','asc')
+		->get();
+
+		$barrel_machine = DB::table('barrel_machines')		
+		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
+		->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $data,
+			'machine_stat' => $barrel_machine
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMachine()
+	{
+		$barrel_machine = DB::table('barrel_machines')		
+		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'), DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
+		->get();
+
+		$response = array(
+			'status' => true,
+			'machine_stat' => $barrel_machine
 		);
 		return Response::json($response);
 	}

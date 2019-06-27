@@ -184,7 +184,6 @@
 					$('#progress_bar_shipment').css('width', (result.total_shipment/result.total_plan)*100 + '%');
 					$('#progress_bar_shipment').css('color', 'black');
 					$('#progress_bar_shipment').css('font-weight', 'bold');
-					
 				}
 				else{
 					alert('Attempt to receive data failed');
@@ -290,25 +289,24 @@
 				}
 			} ],
 			"processing": true,
-				// "serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/tb_production") }}",
-					"data" : data,
-				},
-				"columns": [
-				{ "data": "st_month" },
-				{ "data": "sales_order" },
-				{ "data": "material_number" },
-				{ "data": "material_description" },
-				{ "data": "destination_shortname" },
-				{ "data": "quantity" },
-				{ "data": "actual" },
-				{ "data": "diff" },
-				{ "data": "st_date" },
-				{ "data": "bl_date" },
-				]
-			});
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/tb_production") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "st_month" },
+			{ "data": "sales_order" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "destination_shortname" },
+			{ "data": "quantity" },
+			{ "data": "actual" },
+			{ "data": "diff" },
+			{ "data": "st_date" },
+			{ "data": "bl_date" },
+			]
+		});
 
 		$('#info').html('');
 		if(id == 'production'){
@@ -321,18 +319,6 @@
 			$('#info').html('<div class="callout callout-warning"><h4>Shipment!</h4>Total hasil produksi <i>finished goods</i> yang telah melewati proses <i>stuffing</i> atau sudah diberangkatkan.<br>コンテナ積込・出荷済みの完成品数</div>');
 		}
 	}
-	
-	// function fillTable(id){
-	// 	data = {
-	// 		id:id,
-	// 	};
-	// 	$.get('{{ url("fetch/tb_production") }}', data, function(result, status, xhr){
-	// 		console.log(status);
-	// 		console.log(result);
-	// 		console.log(xhr);
-
-	// 	});
-	// }
 
 </script>
 @endsection

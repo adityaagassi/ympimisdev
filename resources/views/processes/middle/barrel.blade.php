@@ -46,28 +46,33 @@
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
 	</h1>
-	<ol class="breadcrumb">
-		<li>
-
-		</li>
-	</ol>
 </section>
 @stop
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-top: 0;">
+<section class="content">
 	<div class="row">
 		<input type="hidden" id="hpl" value="{{ $hpl }}">
 		<input type="hidden" id="mrpc" value="{{ $mrpc }}">
+		<input type="hidden" id="surface" value="{{ $surface }}">
 		<div class="col-xs-12">
-			<center>
-				<span style="font-weight: bold; font-size: 16px;">Machine No: </span> <span id="no_machine" style="font-weight: bold; font-size: 26px; color: red;"></span>
-				<span style="font-size: 16px;">Max Capacity: </span> <span id="capacity" style="font-size: 26px; color: red;"></span><span style="font-size: 16px; color: red;"> Kanban</span>
-			</center>
-			<table id="tableJob" class="table table-bordered table-striped">
+			<table id="tableMachine" class="table table-bordered table-striped" style="background-color: rgb(204,255,255);">
+				<thead>
+					<tr>
+						<th onclick="changeColor(this)" id="1" style="padding: 0px; cursor: pointer; width: 1%">Machine 1</th>
+						<th onclick="changeColor(this)" id="2" style="padding: 0px; cursor: pointer; width: 1%">Machine 2</th>
+						<th onclick="changeColor(this)" id="3" style="padding: 0px; cursor: pointer; width: 1%">Machine 3</th>
+						<th onclick="changeColor(this)" id="4" style="padding: 0px; cursor: pointer; width: 1%">Machine 4</th>
+						<th onclick="changeColor(this)" id="5" style="padding: 0px; cursor: pointer; width: 1%">Machine 5</th>
+						<th onclick="changeColor(this)" id="6" style="padding: 0px; cursor: pointer; width: 1%">Machine 6</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="col-xs-12">
+			<table id="tableJob" class="table table-bordered table-striped" style="margin-bottom: 0;">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="width: 1%;">No</th>
 						<th style="width: 1%;">Jig</th>
 						<th style="width: 1%;">Key</th>
 						<th style="width: 1%;">Model</th>
@@ -81,8 +86,12 @@
 				</tbody>
 			</table>
 			<center>
-				<span style="font-weight: bold; font-size: 16px;">Total: </span><span id="total_kanban" style="font-weight: bold; font-size: 26px; color: red;"></span><span style="font-size: 16px; color: red;"> Kanban</span>
-				<span style="font-weight: bold; font-size: 16px;">Material Picked: </span><span id="total_picked" style="font-weight: bold; font-size: 26px; color: red;">0</span><span style="font-size: 16px; color: red;"> Kanban</span>
+				<span style="font-weight: bold; font-size: 20px;">No Machine: #</span>
+				<span id="machine" style="font-weight: bold; font-size: 24px; color: red;"></span>
+				<span style="font-weight: bold; font-size: 20px;">Material Picked: </span>
+				<span id="picked" style="font-weight: bold; font-size: 24px; color: red;"></span>
+				<span style="font-weight: bold; font-size: 16px; color: red;">/</span>
+				<span id="total" style="font-weight: bold; font-size: 16px; color: red;"></span>
 			</center>
 			<button class="btn btn-primary" style="width: 100%; font-size: 22px; margin-bottom: 30px;" onclick="printJob()"><i class="fa fa-print"></i> PRINT</button>
 		</div>
@@ -98,71 +107,88 @@
 		}
 	});
 
-	var picked = 0;
+	var jig_arr = [];
+	var total;
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		setInterval(function(){
-			fillMachine();
-		}, 1000);
 		fillTable();
+		setInterval(headCreate, 1000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	function count_picked(element){
+	function changeColor(element) {
+		$("#1").css("background-color","rgb(204,255,255)");
+		$("#2").css("background-color","rgb(204,255,255)");
+		$("#3").css("background-color","rgb(204,255,255)");
+		$("#4").css("background-color","rgb(204,255,255)");
+		$("#5").css("background-color","rgb(204,255,255)");
+		$("#6").css("background-color","rgb(204,255,255)");
+		$(element).css("background-color","rgb(255,0,0)");
+		$("#machine").html(element.id);
+	}
 
-		if(element.checked == true) {
-			picked +=1;
-		}
-		else {
-			picked -=1;	
-		}
+	function headCreate() {
+		$.get('{{ url("fetch/middle/barrel_machine_status") }}', function(result, status, xhr){
+			$.each(result.machine_stat, function(index, value) {
+				$("#"+value.machine).empty();
+				var jam = "" , menit = "";
+				if (value.jam != 0) {
+					jam = value.jam +" h";
+				}
 
-		$("#total_picked").text(picked);
+				if (value.menit != 0 && value.jam != 0) {
+					menit = value.menit +" min";
+				}
+
+				detik = value.detik + " sec";
+
+				$("#"+value.machine).append("Machine "+value.machine+"<br>"+value.status.toUpperCase()+"<br>"+jam+" "+menit+" "+detik);
+			})
+		})
 	}
 
 	function printJob(){
-		if($('#no_machine').text() == 'FULL'){
-			audio_error.play();
-			openErrorGritter('Error!', 'No Machine Available');
-			return false;
-		}
-		if($('#total_picked').text() == 0){
-			audio_error.play();
-			openErrorGritter('Error!', 'No Material Picked');
+
+		if ($("#machine").text() == "") {
+			openErrorGritter('Error', 'No Machine Selected');
 			return false;
 		}
 
-		if($('#total_picked').text() < $('#total_kanban').text()){
-			alert('asdad');
+		if($('input[type=checkbox]:checked').length !== $('input[type=checkbox]').length){
+			alert("cek tidak semua");
 		}
 		else{
 			var d = [];
 			$("input[type=checkbox]:checked").each(function() {
-				d.push(this.id);
+				d.push([this.id, this.name]);
 			});
 
 			var data = {
 				tag : d,
-				mrpc : $('#mrpc').val(),
-				hpl : $('#hpl').val(),
-				no_machine : $('#no_machine').text(),
+				// mrpc : $('#mrpc').val(),
+				// hpl : $('#hpl').val(),
+				surface : $('#surface').val(),
+				no_machine : $('#machine').text(),
 			}
 
 			$.post('{{ url("print/middle/barrel") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
-						openSuccessGritter('Succes', result.message);
+						openSuccessGritter('Success', result.message);
 						fillTable();
+						$("#1").css("background-color","rgb(204,255,255)");
+						$("#2").css("background-color","rgb(204,255,255)");
+						$("#3").css("background-color","rgb(204,255,255)");
+						$("#4").css("background-color","rgb(204,255,255)");
+						$("#5").css("background-color","rgb(204,255,255)");
+						$("#6").css("background-color","rgb(204,255,255)");
+						$('#machine').text('');
 					}
 					else{
 						audio_error.play();
 						openErrorGritter('Error', result.message);
-						fillTable();
 					}
 				}
 				else{
@@ -171,77 +197,77 @@
 					fillTable();
 				}
 			});
-		}
-	}
 
-	function fillMachine(){
-		var data = {
-			mrpc : $('#mrpc').val(),
-			hpl : $('#hpl').val()
 		}
-		$.get('{{ url("fetch/middle/barrel_machine") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
-			if(xhr.status == 200){
-				if(result.status){
-					$('#no_machine').html("");
-					$('#capacity').html("");
-					$('#no_machine').html(result.no_machine);
-					$('#capacity').html(result.capacity);
-				}
-				else{
-					audio_error.play();
-					alert('Attempt to retrieve data failed');
-				}
-			}
-			else{
-				audio_error.play();
-				alert('Disconnected from server');
-			}
-		});
 	}
 
 	function fillTable(){
+		var hpl = $('#hpl').val().split(',');
 		var data = {
 			mrpc : $('#mrpc').val(),
-			hpl : $('#hpl').val()
+			hpl : hpl,
+			surface : $('#surface').val(),
 		}
+
 		$.get('{{ url("fetch/middle/barrel") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					$('#no_machine').html(result.no_machine);
-					$('#capacity').html(result.capacity);
+					var arr = result.queues;
+					var tag = [];
+					var jig_arr = [];
+					var jig_baru = [];
 
+					for (var i = 0; i < 8; i++) {
+						var first_arr = [];
+						var tot_spring = 0;
+						var springs = 0;
+						$.each(arr, function(index, value) {
+							if($.inArray(value.tag, tag) == -1){
+								if(first_arr.length == 0){
+									first_arr.push([value.hpl, value.spring]);
+								}
+								if(value.hpl == first_arr[0][0] && value.spring == first_arr[0][1]){
+									tot_spring += value.lot;
+									if(tot_spring <= 4){
+										jig_arr.push([value.hpl, value.spring, value.key, value.surface, value.tag, value.lot, value.model, value.material_child, value.material_description]);
+										springs += value.lot;
+										tag.push(value.tag);
+									}
+								}
+
+								if (springs > 3) {
+									jig_baru.push();
+								}
+
+							}
+						});
+					}
+
+					console.log(jig_arr);
+					return false;
+
+					var jig = 1;
+					var tmp = 0;
+
+					$('#tableJobBody').html('');
 					var tableJobBody = "";
-					$('#tableJobBody').html("");
-					$('#total_kanban').html("");
-					var c = 1;
-					var total_kanban = 0;
-
-					$.each(result.jobs, function(index, value) {
-						tableJobBody += "<tr>";
-						tableJobBody += "<td>"+ c +"</td>";
-						tableJobBody += "<td>"+ value.jig +"</td>";
-						tableJobBody += "<td>"+ value.key +"</td>";
-						if(value.model !== null){
-							tableJobBody += "<td>"+ value.model +"</td>";
-							tableJobBody += "<td>"+ value.surface +"</td>";
-							tableJobBody += "<td>"+ value.material_child +"</td>";
-							tableJobBody += "<td>"+ value.material_description +"</td>";
-							tableJobBody += "<td><input type='checkbox' id='" + value.tag+ "' onclick='count_picked(this)'></center></td>";
-							total_kanban += 1;
-						}					
-						tableJobBody += "</tr>";
-						c += 1;
-					});
+					for (var z = 0; z < jig_arr.length; z++) {
+						tmp += jig_arr[z][5];
+						if(tmp >= 4) {jig++; tmp = 0;}
+						tableJobBody += '<tr>';
+						tableJobBody += '<td>'+jig+'</td>';
+						tableJobBody += '<td>'+jig_arr[z][2]+'</td>';
+						tableJobBody += '<td>'+jig_arr[z][6]+'</td>';
+						tableJobBody += '<td>'+jig_arr[z][3]+'</td>';
+						tableJobBody += '<td>'+jig_arr[z][7]+'</td>';
+						tableJobBody += '<td>'+jig_arr[z][8]+'</td>';
+						tableJobBody += '<td><input type="checkbox" id="'+jig_arr[z][4]+'" name="'+jig+'" onclick="count_picked(this)" checked></center></td>';
+						tableJobBody += '</tr>';
+					}
 					$('#tableJobBody').append(tableJobBody);
-					$('#total_kanban').html(total_kanban);
-					$('#total_picekd').html(0);
-
+					$('#total').html(jig_arr.length);
+					$('#picked').html(jig_arr.length);
+					total = jig_arr.length;
 				}
 				else{
 					audio_error.play();
@@ -253,6 +279,17 @@
 				alert('Disconnected from server');
 			}
 		});
+	}
+
+	function count_picked(element){
+		if(element.checked == true) {
+			total +=1;
+		}
+		else {
+			total--;	
+		}
+
+		$("#picked").html(total);
 	}
 
 	function openSuccessGritter(title, message){

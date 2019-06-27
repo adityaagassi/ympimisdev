@@ -34,6 +34,9 @@
 		border:1px solid black;
 		padding:0;
 	}
+	thead {
+		background-color: rgba(126,86,134,.7);
+	}
 	td{
 		overflow:hidden;
 		text-overflow: ellipsis;
@@ -91,74 +94,263 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">	
-			<table id="ququeTable" class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<th style="font-size: 25px;" >Key</th>
-						<th style="font-size: 25px;" id="head_mesin1">Machine 1</th>
-						<th style="font-size: 25px;" id="head_mesin2">Machine 2</th>
-						<th style="font-size: 25px;" id="head_mesin3">Machine 3</th>
-						<th style="font-size: 25px;" id="head_mesin4">Machine 4</th>
-						<th style="font-size: 25px;" id="head_mesin5">Machine 5</th>
-						<th style="font-size: 25px;" id="head_mesin6">Machine 6</th>
-					</tr>
-					<tr>
-						<th style="font-size: 25px;">Status</th>						
-						<th style="font-size: 25px;" id="status_mesin1">-</th>
-						<th style="font-size: 25px;" id="status_mesin2">-</th>
-						<th style="font-size: 25px;" id="status_mesin3">-</th>
-						<th style="font-size: 25px;" id="status_mesin4">-</th>
-						<th style="font-size: 25px;" id="status_mesin5">-</th>
-						<th style="font-size: 25px;" id="status_mesin6">-</th>
-					</tr>
-					<tr>
-						<th style="font-size: 25px;">Duration</th>						
-						<th style="font-size: 25px;" id="dur_mesin1">00:00:00</th>
-						<th style="font-size: 25px;" id="dur_mesin2">00:00:00</th>
-						<th style="font-size: 25px;" id="dur_mesin3">00:00:00</th>
-						<th style="font-size: 25px;" id="dur_mesin4">00:00:00</th>
-						<th style="font-size: 25px;" id="dur_mesin5">00:00:00</th>
-						<th style="font-size: 25px;" id="dur_mesin6">00:00:00</th>
-					</tr>
-				</thead>
-				<tbody id="tableBody" style="font-weight: bold; font-size: 18px">
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="C-1">C-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="C-2">C-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="C-3">C-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="C-4">C-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="C-5">C-5</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="D-1">D-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="D-2">D-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="D-3">D-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="D-4">D-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="D-5">D-5</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-1">E-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-2">E-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-3">E-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-4">E-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-5">E-5</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-6">E-6</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-7">E-7</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="E-8">E-8</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="F-1">F-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="F-2">F-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="F-3">F-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="F-4">F-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="G-1">G-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="G-2">G-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="H-1">H-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="H-2">H-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="H-3">H-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="H-4">H-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="H-5">H-5</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="J-1">J-1</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="J-2">J-2</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="J-3">J-3</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="J-4">J-4</td></tr>
-					<tr><td style="vertical-align: middle; font-size: 20px; font-weight: bold; padding:0;" class="konten" id="J-6">J-6</td></tr>
+			<div class="row">
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin1">
+							<tr>
+								<th colspan="3">Machine 1</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status1"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration1"> &nbsp;</th>
+								
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody1">
+						</tbody>
+					</table>
+				</div>
 
-				</tbody>
-			</table>
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin2">
+							<tr>
+								<th colspan="3">Machine 2</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status2"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration2"> &nbsp;</th>
+								
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody2">
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin3">
+							<tr>
+								<th colspan="3">Machine 3</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status3"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration3"> &nbsp;</th>
+								
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody3">
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin4">
+							<tr>
+								<th colspan="3">Machine 4</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status4"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration4"> &nbsp;</th>
+								
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody4">
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin5">
+							<tr>
+								<th colspan="3">Machine 5</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status5"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration5"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody5">
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead id="mesin6">
+							<tr>
+								<th colspan="3">Machine 6</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="status6"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th colspan="3" id="duration6"> &nbsp;</th>
+							</tr>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="tbody6">
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue1">
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue2">
+							<tr>
+								<td>asdds</td>
+								<td>ddd</td>
+								<td>3</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue3">
+							<tr>
+								<td>asdds</td>
+								<td>ddd</td>
+								<td>1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue4">
+							<tr>
+								<td>asdds</td>
+								<td>ddd</td>
+								<td>9</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue5">
+							<tr>
+								<td>asdds</td>
+								<td>ddd</td>
+								<td>7</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-xs-2" style="padding:1px">
+					<table class="table table-responsive table-bordered table-stripped">
+						<thead>
+							<tr>
+								<th>Jig</th>
+								<th>Key</th>
+								<th>Qty</th>
+							</tr>
+						</thead>
+						<tbody id="queue6">
+							<tr>
+								<td>asdds</td>
+								<td>ddd</td>
+								<td>3</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -181,105 +373,160 @@
 		$('.konten').each(function () {
 			keys.push($(this).text());
 		});
-		create_content_container();
-		setInterval(getMachineStatus, 1000);
-		// setInterval(getMachineKey, 1000);
+		
+		// setInterval(getBarrelMachine, 1000);
+		getBarrelMachine();
+		// setInterval(getMachineStatus, 1000);
 	});
 
-	function getMachineStatus() {
-		var tmp, tes = 0, s;
-		kunci = [];
-		$.get('{{ url("fetch/middle/get_barrel_machine") }}', function(result, status, xhr){
+	function getBarrelMachine() {
+		$.get('{{ url("fetch/middle/get_barrel") }}', function(result, status, xhr){
+			var antrian = 0;
 
-			//  ------------------ HEADS ----------------
+			$.each(result.machine_stat, function(index, value) {
+				var jam = "" , menit = "";
+				if (value.jam != 0) {
+					jam = value.jam +" h";
+				}
+
+				if (value.menit != 0) {
+					menit = value.menit +" min";
+				}
+
+				detik = value.detik + " sec";
+
+
+				if (value.status == "idle") {
+					$("#mesin"+value.machine).removeClass("blink");
+					$("#mesin"+value.machine).addClass("blink2");
+				}
+				else if (value.status == "running" && value.jam >= 4){
+					$("#mesin"+value.machine).removeClass("blink2");
+					$("#mesin"+value.machine).addClass("blink");
+				}
+				else{
+					$("#mesin"+value.machine).removeClass("blink");
+					$("#mesin"+value.machine).removeClass("blink2");
+				}
+
+				$("#duration"+value.machine).text(jam+" "+menit+" "+detik);
+				$("#status"+value.machine).text(value.status.toUpperCase());
+			})
+
+			for (var i = 1; i <= 6; i++) {
+				$("#tbody"+i).empty();
+				$("#queue"+i).empty();
+			}
 
 			$.each(result.datas, function(index, value) {
-				if(value.status == 'running'){
-					$("#head_mesin"+value.machine).removeClass("blink2");
-					$("#status_mesin"+value.machine).removeClass("blink2");
-					$("#dur_mesin"+value.machine).removeClass("blink2");
-					if(value.hour >= 3) {
-						$("#head_mesin"+value.machine).addClass("blink");
-						$("#status_mesin"+value.machine).addClass("blink");
-						$("#dur_mesin"+value.machine).addClass("blink");
+				var mesin = value.machine;
+				if (value.status == 'running') {
+					$("#tbody"+mesin).append("<tr><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+				}
+				else {
+					var d = value.remark;
+					if (antrian <=2) {
+						$("#queue"+mesin).append("<tr><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
 					}
-					else {
-						$("#head_mesin"+value.machine).removeClass("blink");
-						$("#status_mesin"+value.machine).removeClass("blink");
-						$("#duration_mesin"+value.machine).removeClass("blink");
-						$("#status_mesin"+value.machine).css("background-color","rgb(204,255,255)");
-						$("#dur_mesin"+value.machine).css("background-color","rgb(204,255,255)");
-					}
-
 				}
-
-				if(value.status == 'idle'){
-					$("#head_mesin"+value.machine).addClass("blink2");
-					$("#status_mesin"+value.machine).addClass("blink2");
-					$("#dur_mesin"+value.machine).addClass("blink2");
-					$("#status_mesin"+value.machine).css("background-color","rgb(255,204,255)");
-					$("#dur_mesin"+value.machine).css("background-color","rgb(255,204,255)");
-				}
-
-				if(value.status == 'racking'){
-					$("#head_mesin"+value.machine).removeClass("blink");
-					$("#status_mesin"+value.machine).removeClass("blink");
-					$("#duration_mesin"+value.machine).removeClass("blink");
-					$("#head_mesin"+value.machine).removeClass("blink2");
-					$("#status_mesin"+value.machine).removeClass("blink2");
-					$("#dur_mesin"+value.machine).removeClass("blink2");
-					$("#status_mesin"+value.machine).css("background-color","rgb(255,255,102)");
-					$("#dur_mesin"+value.machine).css("background-color","rgb(255,255,102)");
-				}
-
-				$("#status_mesin"+value.machine).text(value.status.toUpperCase());
-				$("#dur_mesin"+value.machine).text(value.duration);
-			});
-
-
-			//  -------------- CONTENTS ------------
-
-			for (var i = 0; i < keys.length; i++) {
-				
-				for (var k = 6; k >= 1; k--) {
-					var d = 0;
-					for (var z = 0; z < result.contents.length; z++) {
-						if (d == 0) {
-							if(result.contents[z].key == keys[i] && result.contents[z].machine == k){
-								tmp = result.contents[z].content;
-								d = 1;
-							}
-							else {
-								tmp = "-";
-							}
-						}
-						s = tmp;
-					}
-					var arr = [keys[i], k, s]; 
-					kunci.push(arr);
-					// $("#"+).after("<td class='kunci'></td>");
-				}
-			}
-			// console.log(kunci);
-
-			var r = 1;
-			for (var p = 0; p < kunci.length; p++) {
-				// $("#"+kunci[p][0]).after("<td class='kunci'>"+kunci[p][2]+"</td>");
-				$("#"+kunci[p][0]+"_"+r).text(kunci[p][2]);
-				if (r >= 6) { r = 1; } else { r++ }
-
-				// console.log(kunci[p][0]+"_"+kunci[p][2]);
-			}
-		});
+			})
+		})
 	}
 
-	function create_content_container() {
-		for (var i = 0; i < keys.length; i++) {
-			for (var k = 1; k <= 6; k++) {
-				$("#"+keys[i]).after("<td id='"+keys[i]+"_"+k+"'></td>");
-			}
-		}
-	}
+	// function getMachineStatus() {
+	// 	var tmp, tes = 0, s;
+	// 	kunci = [];
+	// 	$.get('{{ url("fetch/middle/get_barrel_machine") }}', function(result, status, xhr){
+
+	// 		//  ------------------ HEADS ----------------
+
+	// 		$.each(result.datas, function(index, value) {
+	// 			if(value.status == 'running'){
+	// 				$("#head_mesin"+value.machine).removeClass("blink2");
+	// 				$("#status_mesin"+value.machine).removeClass("blink2");
+	// 				$("#dur_mesin"+value.machine).removeClass("blink2");
+	// 				if(value.hour >= 3) {
+	// 					$("#head_mesin"+value.machine).addClass("blink");
+	// 					$("#status_mesin"+value.machine).addClass("blink");
+	// 					$("#dur_mesin"+value.machine).addClass("blink");
+	// 				}
+	// 				else {
+	// 					$("#head_mesin"+value.machine).removeClass("blink");
+	// 					$("#status_mesin"+value.machine).removeClass("blink");
+	// 					$("#duration_mesin"+value.machine).removeClass("blink");
+	// 					$("#status_mesin"+value.machine).css("background-color","rgb(204,255,255)");
+	// 					$("#dur_mesin"+value.machine).css("background-color","rgb(204,255,255)");
+	// 				}
+
+	// 			}
+
+	// 			if(value.status == 'idle'){
+	// 				$("#head_mesin"+value.machine).addClass("blink2");
+	// 				$("#status_mesin"+value.machine).addClass("blink2");
+	// 				$("#dur_mesin"+value.machine).addClass("blink2");
+	// 				$("#status_mesin"+value.machine).css("background-color","rgb(255,204,255)");
+	// 				$("#dur_mesin"+value.machine).css("background-color","rgb(255,204,255)");
+	// 			}
+
+	// 			if(value.status == 'racking'){
+	// 				$("#head_mesin"+value.machine).removeClass("blink");
+	// 				$("#status_mesin"+value.machine).removeClass("blink");
+	// 				$("#duration_mesin"+value.machine).removeClass("blink");
+	// 				$("#head_mesin"+value.machine).removeClass("blink2");
+	// 				$("#status_mesin"+value.machine).removeClass("blink2");
+	// 				$("#dur_mesin"+value.machine).removeClass("blink2");
+	// 				$("#status_mesin"+value.machine).css("background-color","rgb(255,255,102)");
+	// 				$("#dur_mesin"+value.machine).css("background-color","rgb(255,255,102)");
+	// 			}
+
+	// 			$("#status_mesin"+value.machine).text(value.status.toUpperCase());
+	// 			$("#dur_mesin"+value.machine).text(value.duration);
+	// 		});
+
+
+	// 		//  -------------- CONTENTS ------------
+
+	// 		for (var i = 0; i < keys.length; i++) {
+
+	// 			for (var k = 6; k >= 1; k--) {
+	// 				var d = 0;
+	// 				for (var z = 0; z < result.contents.length; z++) {
+	// 					if (d == 0) {
+	// 						if(result.contents[z].key == keys[i] && result.contents[z].machine == k){
+	// 							tmp = result.contents[z].content;
+	// 							d = 1;
+	// 						}
+	// 						else {
+	// 							tmp = "-";
+	// 						}
+	// 					}
+	// 					s = tmp;
+	// 				}
+	// 				var arr = [keys[i], k, s]; 
+	// 				kunci.push(arr);
+	// 				// $("#"+).after("<td class='kunci'></td>");
+	// 			}
+	// 		}
+	// 		// console.log(kunci);
+
+	// 		var r = 1;
+	// 		for (var p = 0; p < kunci.length; p++) {
+	// 			// $("#"+kunci[p][0]).after("<td class='kunci'>"+kunci[p][2]+"</td>");
+	// 			$("#"+kunci[p][0]+"_"+r).text(kunci[p][2]);
+	// 			if (r >= 6) { r = 1; } else { r++ }
+
+	// 			// console.log(kunci[p][0]+"_"+kunci[p][2]);
+	// 		}
+	// 	});
+	// }
+
+	// function create_content_container() {
+	// 	for (var i = 0; i < keys.length; i++) {
+	// 		for (var k = 1; k <= 6; k++) {
+	// 			$("#"+keys[i]).after("<td id='"+keys[i]+"_"+k+"'></td>");
+	// 		}
+	// 	}
+	// }
 
 
 	

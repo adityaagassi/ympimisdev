@@ -452,8 +452,9 @@ Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBa
 Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
 Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
 Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
-Route::get('fetch/middle/get_barrel_machine_key', 'MiddleProcessController@fetchProcessBarrelMachineContent');
+Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
 Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
+Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchMachine');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

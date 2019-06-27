@@ -247,9 +247,7 @@ table.table-bordered > tfoot > tr > th{
 			</div>
 		</div>
 	</div>
-
 </section>
-
 
 @stop
 @section('scripts')
