@@ -1363,7 +1363,12 @@ public function fetchStampPlansax3($id){
 
 	$query3 ="select model, COUNT(model) as actual from stamp_inventories where process_code='3' and origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
 
-	$planData = DB::select($query3);
+	$query4 ="SELECT COUNT(quantity) as actual,  b.model from (
+SELECT serial_number from log_processes WHERE origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(created_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3' ) a
+LEFT JOIN (
+SELECT model,serial_number,quantity from stamp_inventories WHERE model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3') b on a.serial_number = b.serial_number GROUP BY b.model";
+
+	$planData = DB::select($query4);
 
 	$response = array(
 		'status' => true,
