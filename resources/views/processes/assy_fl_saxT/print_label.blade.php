@@ -88,7 +88,7 @@
 							</p>
 						</div>
 						
-{{-- 
+
 						<div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Alto:</span>
@@ -107,8 +107,8 @@
 									
 								</tfoot>
 							</table>
-						</div> --}}
-						{{-- <div class="col-xs-2">
+						</div> 
+						 <div class="col-xs-2">
 							<center>
 								<span style="font-size: 20px;">Total Production Tenor:</span>
 							</center>
@@ -126,8 +126,8 @@
 									
 								</tfoot>
 							</table>							
-						</div> --}}
-						
+						</div> 
+						<!-- 
 						<div class="col-xs-4">
 							<center>
 								<span style="font-size: 20px;">Total Production :</span>
@@ -167,7 +167,7 @@
 									
 								</tfoot>
 							</table>						
-						</div>
+						</div> -->
 						<div class="col-xs-3">
 							<center>
 								<span style="font-size: 24px">Last Print:</span><br>
@@ -347,10 +347,10 @@
 
 
 				$('body').toggleClass("sidebar-collapse");
-				fillPlan3();
-				fillPlan4()
-				 // fillPlan2();
-				 // fillPlan();
+				// fillPlan3();
+				// fillPlan4()
+				 fillPlan2();
+				 fillPlan();
 				fillResult();
 
 			});
@@ -895,10 +895,10 @@
 						$("#snmodel").val('');
 						$('#sn').focus();
 						fillResult();
-						// fillPlan();
-						// fillPlan2();
-						fillPlan3();
-						fillPlan4()
+						fillPlan();
+						fillPlan2();
+						// fillPlan3();
+						// fillPlan4()
 						$('#btnprint').prop('disabled',true);
 						$('#btnprintmodal').prop('disabled',true);
 						$('#btnprint2').prop('disabled',true);
@@ -998,11 +998,11 @@
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
 					
-					// fillPlan();
-					// fillPlan2();
+					fillPlan();
+					fillPlan2();
 
-					fillPlan3();
-					fillPlan4()
+					// fillPlan3();
+					// fillPlan4()
 				}
 				else{
 					audio_error.play();
@@ -1039,10 +1039,10 @@
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
 						
-						// fillPlan();
-						// fillPlan2();
-						fillPlan3();
-						fillPlan4()
+						fillPlan();
+						fillPlan2();
+						// fillPlan3();
+						// fillPlan4()
 					}
 					else{
 						audio_error.play();
