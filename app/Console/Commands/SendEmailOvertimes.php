@@ -43,13 +43,19 @@ class SendEmailOvertimes extends Command
     {
         $mail_to = db::table('send_emails')
         ->where('remark', '=', 'overtime')
+        ->WhereNull('deleted_at')
         ->orWhere('remark', '=', 'superman')
-        ->whereNull('deleted_at')
+        ->WhereNull('deleted_at')
         ->select('email')
         ->get();
 
         $first = date('Y-m-01');
+
         $now = date('Y-m-d');
+        if($now == $first){
+            $first = Carbondate('Y-m-d', strtotime(Carbon::now()->subMonth(1)));
+            $now = Carbondate('Y-m-d', strtotime(Carbon::now()->subDays(1)));
+        }
         $mon = date('Y-m');
 
         $query = "SELECT
@@ -69,7 +75,7 @@ class SendEmailOvertimes extends Command
         LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
         WHERE
         DATE_FORMAT( tanggal, '%Y-%m-%d' ) >= '".$first."'
-        AND DATE_FORMAT( tanggal, '%Y-%m-%d' ) < '".$now."'
+        AND DATE_FORMAT( tanggal, '%Y-%m-%d' ) <= '".$now."'
         AND deleted_at IS NULL 
         AND jam_aktual = 0 
         GROUP BY
@@ -112,17 +118,21 @@ class SendEmailOvertimes extends Command
                 ]);
                 $c_prd += 1;
             }
-            if($c_ofc && $c_prd == 20){
+            if($c_ofc == 20 && $c_prd == 20){
                 break;
             }
         }
 
-        dd($offices);
-        // echo $data;
+        $overtimes = [
+            'offices' => $offices,
+            'productions' => $productions,
+        ];
 
-        // if($data != null){
-        //     Mail::to($mail_to)->send(new SendEmail($data, 'shipment'));
-        // }
+        // dd($overtimes);
+
+        if($data != null){
+            Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
+        }
         
     }
 }

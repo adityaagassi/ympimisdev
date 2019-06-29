@@ -2,77 +2,83 @@
 <html>
 <head>
 	<style type="text/css">
+		table {
+			border-collapse: collapse;
+		}
+		table, th, td {
+			border: 1px solid black;
+		}
 	</style>
 </head>
 <body>
 	<div style="width: 700px;">
 		<center>
-			{{-- <img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br> --}}
-			{{-- <p style="font-size: 18px;">Informasi Kekurangan Ekspor ETD YMPI (Last Update: {{ date('d-M-Y H:i:s') }})</p> --}}
-			{{-- <p style="font-weight: bold;">Shipment Date: {{ date('l, d F Y', strtotime($data[0]->st_date)) }}</p> --}}
+			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			This is an automatic notification. Please do not reply to this address.
-			<table style="border:1px solid black; border-collapse: collapse;">
+			<br>
+			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="7">Production Overtime</th>
+						<th colspan="6" style="background-color: #9f84a7">Production Overtime</th>
 					</tr>
-					<tr>
+					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 1%; border:1px solid black;">Period</th>
 						<th style="width: 1%; border:1px solid black;">Department</th>
-						<th style="width: 1%; border:1px solid black;">Section</th>
-						<th style="width: 1%; border:1px solid black;">Employee ID</th>
+						<th style="width: 3%; border:1px solid black;">Section</th>
+						<th style="width: 2%; border:1px solid black;">Employee ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
-						<th style="width: 1%; border:1px solid black;">ΣOvertime</th>
+						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
 					</tr>
 				</thead>
 				<tbody>
-					{{-- @foreach($data as $col)
-					@if($col->diff < 0)
-					<tr>
-						<td style="border:1px solid black;">{{$col->hpl}}</td>
-						<td style="border:1px solid black;">{{$col->material_number}}</td>
-						<td style="border:1px solid black;">{{$col->material_description}}</td>
-						<td style="border:1px solid black;">{{$col->destination_shortname}}</td>
-						<td style="border:1px solid black; text-align: right;">{{$col->plan}}</td>
-						<td style="border:1px solid black; text-align: right;">{{$col->actual}}</td>
-						<td style="border:1px solid black; text-align: right; padding-left: 1px; padding-right: 1px;">{{$col->diff}}</td>
-					</tr>
-					@endif
-					@endforeach --}}
+					<?php
+					for ($i=0; $i < count($data['productions']); $i++) { 
+						print_r ('<tr>
+							<td>'.$data['productions'][$i]['period'].'</td>
+							<td>'.$data['productions'][$i]['department'].'</td>
+							<td>'.$data['productions'][$i]['section'].'</td>
+							<td>'.$data['productions'][$i]['employee_id'].'</td>
+							<td>'.$data['productions'][$i]['name'].'</td>
+							<td>'.$data['productions'][$i]['overtime'].'</td>
+							</tr>');
+					}
+					?>
 				</tbody>
 			</table>
+
 			<br>
-			<table style="border:1px solid black; border-collapse: collapse;">
+
+			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="7">Office Overtime</th>
+						<th colspan="6" style="background-color: #9f84a7">Office Overtime</th>
 					</tr>
-					<tr>
+					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 1%; border:1px solid black;">Period</th>
 						<th style="width: 1%; border:1px solid black;">Department</th>
-						<th style="width: 1%; border:1px solid black;">Section</th>
-						<th style="width: 1%; border:1px solid black;">Employee ID</th>
+						<th style="width: 3%; border:1px solid black;">Section</th>
+						<th style="width: 2%; border:1px solid black;">Employee ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
-						<th style="width: 1%; border:1px solid black;">ΣOvertime</th>
+						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
 					</tr>
 				</thead>
 				<tbody>
-					{{-- @foreach($data as $col)
-					@if($col->diff < 0)
-					<tr>
-						<td style="border:1px solid black;">{{$col->hpl}}</td>
-						<td style="border:1px solid black;">{{$col->material_number}}</td>
-						<td style="border:1px solid black;">{{$col->material_description}}</td>
-						<td style="border:1px solid black;">{{$col->destination_shortname}}</td>
-						<td style="border:1px solid black; text-align: right;">{{$col->plan}}</td>
-						<td style="border:1px solid black; text-align: right;">{{$col->actual}}</td>
-						<td style="border:1px solid black; text-align: right; padding-left: 1px; padding-right: 1px;">{{$col->diff}}</td>
-					</tr>
-					@endif
-					@endforeach --}}
+					<?php
+					for ($i=0; $i < count($data['offices']); $i++) { 
+						print_r ('<tr>
+							<td>'.$data['offices'][$i]['period'].'</td>
+							<td>'.$data['offices'][$i]['department'].'</td>
+							<td>'.$data['offices'][$i]['section'].'</td>
+							<td>'.$data['offices'][$i]['employee_id'].'</td>
+							<td>'.$data['offices'][$i]['name'].'</td>
+							<td>'.$data['offices'][$i]['overtime'].'</td>
+							</tr>');
+					}
+					?>
 				</tbody>
 			</table>
 		</center>
+
 	</div>
 </body>
 </html>

@@ -35,5 +35,8 @@ class SendEmail extends Mailable
         if($this->remark == 'shipment'){
             return $this->from('ympimis@gmail.com')->subject('MIS Shipment Reminder')->view('mails.shipment');
         }
+        if($this->remark == 'overtime'){
+            return $this->from('ympimis@gmail.com')->subject('MIS Overtime Information')->view('mails.overtime');
+        }
     }
 }
