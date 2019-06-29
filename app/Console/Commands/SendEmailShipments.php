@@ -41,7 +41,11 @@ class SendEmailShipments extends Command
      */
     public function handle()
     {
-        $mail_to = db::table('send_emails')->where('remark', '=', 'shipment')->whereNull('deleted_at')->select('email')->get();
+        $mail_to = db::table('send_emails')->where('remark', '=', 'shipment')
+        ->orWhere('remark', '=', 'superman')
+        ->whereNull('deleted_at')
+        ->select('email')
+        ->get();
         $st_date = date('Y-m-d', strtotime(Carbon::now()->addDays(2)));
 
         $query = "
