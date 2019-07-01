@@ -48,10 +48,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
 
-        $schedule->command('email:shipment')->weekdays()->dailyAt('05:00');
+        $schedule->command('email:shipment')->weekdays()->dailyAt('08:00');
         $schedule->command('email:shipment')->weekends()->dailyAt('13:00');
-        $schedule->command('email:overtime')->weekdays()->->dailyAt('05:30');
-        $schedule->command('email:overtime')->weekends()->->dailyAt('13:30');
+        $schedule->command('email:overtime')->weekdays()->->dailyAt('08:00');
+        $schedule->command('email:overtime')->weekends()->->dailyAt('13:00');
 
     }
 
