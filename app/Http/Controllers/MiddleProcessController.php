@@ -56,19 +56,31 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexProcessMiddleBarrel($id){
-		if($id == 'barrel-sx'){
-			$title = 'Saxophone Tumbling-Barrel';
+		if($id == 'barrel-sx-lcq'){
+			$title = 'Saxophone Tumbling-Barrel For Lacquering';
 			$mprc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 			$surface = 'LCQ';
+			return view('processes.middle.barrel_lcq', array(
+				'title' => $title,
+				'mrpc' => $mprc,
+				'hpl' => $hpl,
+				'surface' => $surface,
+			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 		}
 
-		return view('processes.middle.barrel', array(
-			'title' => $title,
-			'mrpc' => $mprc,
-			'hpl' => $hpl,
-			'surface' => $surface,
-		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
+		if($id == 'barrel-sx-plt'){
+			$title = 'Saxophone Tumbling-Barrel For Plating';
+			$mprc = 'S51';
+			$hpl = 'ASKEY,TSKEY';
+			$surface = 'PLT';
+			return view('processes.middle.barrel_plt', array(
+				'title' => $title,
+				'mrpc' => $mprc,
+				'hpl' => $hpl,
+				'surface' => $surface,
+			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
+		}
 	}
 
 	public function indexProcessMiddleKensa($id){
@@ -102,27 +114,40 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 	}
 
-	public function fetchMiddleBarrelBoard(){
+	public function fetchMiddleBarrelBoard(Request $request){
+
+		$now = date('Y-m-d');
 		$barrel_board =  DB::table('barrel_logs')
 		->leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material')
-		->where(DB::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d")'), '=', '2019-06-27')
+		->where(DB::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d")'), '=', $now)
+		->where('materials.category', '=', 'WIP')
+		->where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
 		->select('materials.model', 'materials.key', 'material',DB::raw("SUM(IF(barrel_logs.`status` = 'set',`qty`,0)) as `set`"), DB::raw("SUM(IF(barrel_logs.`status` = 'reset',`qty`,0)) as `reset`"), DB::raw("SUM(IF(barrel_logs.`status` = 'plt',`qty`,0)) as `plt`"))
 		->groupBy('materials.model', 'materials.key', 'barrel_logs.material')
 		->orderBy('materials.model', 'asc')
 		->orderBy('materials.key', 'asc')
 		->get();
 
+		$barrel_queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		->where('materials.category', '=', 'WIP')
+		->where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->select('materials.model', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_queues.created_at')
+		->orderBy('barrel_queues.created_at', 'asc')
+		->get();
+
 		$response = array(
 			'status' => true,
 			'barrel_board' => $barrel_board,
+			'barrel_queues' => $barrel_queues,
 		);
 		return Response::json($response);
 	}
 
 	public function fetchMiddleBarrel(Request $request){
 		if($request->get('surface') == 'LCQ'){
-			$queues = db::table('barrel_queues')
-			->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+			$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 			->leftJoin('barrel_jigs', function($join)
 			{
 				$join->on('barrel_jigs.key', '=', 'materials.key');
@@ -144,7 +169,16 @@ class MiddleProcessController extends Controller
 			}
 		}
 		elseif($request->get('surface') == 'PLT'){
-			
+			$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+			->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
+			->where('materials.category', '=', 'WIP')
+			->where('materials.mrpc', '=', $request->get('mrpc'))
+			->whereIn('materials.hpl', $request->get('hpl'))
+			->where('materials.surface', 'like', '%PLT')
+			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
+			->limit(30)
+			->get();
+			$code = 'PLT';
 		}
 
 		$response = array(
@@ -229,6 +263,13 @@ class MiddleProcessController extends Controller
 							'created_by' => $id
 						];
 
+						$insert_inventory = [
+							'tag' => $tag[0],
+							'material_number' => $barrel_queue->material_number,
+							'qty' => $barrel_queue->quantity,
+							'location' => 'barrel',
+						];
+
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
@@ -257,6 +298,13 @@ class MiddleProcessController extends Controller
 							$barrel->save();
 							$delete_queue->forceDelete();
 						});
+
+						$firstOrCreate = MiddleInventory(
+							[
+								'tag' => $tag[0]
+							],
+							$insert_inventory
+						);
 					}
 
 					$response = array(
@@ -334,7 +382,7 @@ class MiddleProcessController extends Controller
 
 					$response = array(
 						'status' => true,
-						'message' => 'New kanban has been printed',
+						'message' => 'New id slip for lacquering has been printed',
 					);
 					return Response::json($response);
 				}
@@ -348,7 +396,42 @@ class MiddleProcessController extends Controller
 			}
 		}
 		elseif($request->get('surface') == 'PLT'){
+			$tags = $request->get('tag');
 
+			try{
+				$queues = BarrelQueues::whereIn('barrel_qeueus.tag', $request->get('tag'))->get();
+				foreach ($queues as $queue) {
+					$insert_log = [
+						'machine' => 'PLT',
+						'tag' => $queue->tag,
+						'material' => $queue->material_number,
+						'qty' => $queue->quantity,
+						'status' => 'plt',
+						'started_at' => date('Y-m-d H:i:s', strtotime($barrel->finish_queue)),
+						'created_by' => $id,
+					];
+					$barrel_log = new BarrelLog($insert_log);
+					$delete_queue = BarrelQueue::where('tag', '=', $queue->tag);
+
+					DB::transaction(function() use ($barrel, $delete_queue){
+						$barrel_log->save();
+						$delete_queue->forceDelete();
+					});
+				}
+
+				$response = array(
+					'status' => true,
+					'message' => 'New ID slip for plating has been printed',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}			
 		}
 	}
 
@@ -397,7 +480,14 @@ class MiddleProcessController extends Controller
 						return Response::json($response);
 					}
 				}
-				elseif($barrel_machine->status == 'running' && $barrels[0]->status == 'running'){
+				else{
+					$response = array(
+						'status' => false,
+						'message' => 'Machine is not ready',
+					);
+					return Response::json($response);
+				}
+				if($barrel_machine->status == 'running' && $barrels[0]->status == 'running'){
 					try{
 						$insert_machine_log = new BarrelMachineLog([
 							'machine' => $barrels[0]->machine,
