@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	return view('processes.middle.barrel_board_X');
+	return view('mails.overtime');
 });
 Route::post('trial/tes', 'TrialController@tes');
 

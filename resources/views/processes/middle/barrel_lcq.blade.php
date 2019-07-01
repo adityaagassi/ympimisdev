@@ -52,6 +52,12 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
+		<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+			<p style="position: absolute; color: White; top: 45%; left: 35%;">
+				<span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
+			</p>
+		</div>
+
 		<input type="hidden" id="hpl" value="{{ $hpl }}">
 		<input type="hidden" id="mrpc" value="{{ $mrpc }}">
 		<input type="hidden" id="surface" value="{{ $surface }}">
@@ -60,12 +66,12 @@
 			<table id="tableMachine" class="table table-bordered table-striped" style="background-color: rgb(204,255,255);">
 				<thead>
 					<tr>
-						<th onclick="changeColor(this)" id="1" style="padding: 0px; cursor: pointer; width: 1%">Machine 1</th>
-						<th onclick="changeColor(this)" id="2" style="padding: 0px; cursor: pointer; width: 1%">Machine 2</th>
-						<th onclick="changeColor(this)" id="3" style="padding: 0px; cursor: pointer; width: 1%">Machine 3</th>
-						<th onclick="changeColor(this)" id="4" style="padding: 0px; cursor: pointer; width: 1%">Machine 4</th>
-						<th onclick="changeColor(this)" id="5" style="padding: 0px; cursor: pointer; width: 1%">Machine 5</th>
-						<th onclick="changeColor(this)" id="6" style="padding: 0px; cursor: pointer; width: 1%">Machine 6</th>
+						<th onclick="changeColor(this)" id="1" style="padding: 0px; cursor: pointer; width: 1%">Machine #1</th>
+						<th onclick="changeColor(this)" id="2" style="padding: 0px; cursor: pointer; width: 1%">Machine #2</th>
+						<th onclick="changeColor(this)" id="3" style="padding: 0px; cursor: pointer; width: 1%">Machine #3</th>
+						<th onclick="changeColor(this)" id="4" style="padding: 0px; cursor: pointer; width: 1%">Machine #4</th>
+						<th onclick="changeColor(this)" id="5" style="padding: 0px; cursor: pointer; width: 1%">Machine #5</th>
+						<th onclick="changeColor(this)" id="6" style="padding: 0px; cursor: pointer; width: 1%">Machine #6</th>
 					</tr>
 				</thead>
 			</table>
@@ -87,14 +93,14 @@
 				</tbody>
 			</table>
 			<center>
-				<span style="font-weight: bold; font-size: 20px;">No Machine: #</span>
+				<span style="font-weight: bold; font-size: 20px;">No. Machine: #</span>
 				<span id="machine" style="font-weight: bold; font-size: 24px; color: red;"></span>
 				<span style="font-weight: bold; font-size: 20px;">Material Picked: </span>
 				<span id="picked" style="font-weight: bold; font-size: 24px; color: red;"></span>
 				<span style="font-weight: bold; font-size: 16px; color: red;">of</span>
 				<span id="total" style="font-weight: bold; font-size: 16px; color: red;"></span>
 			</center>
-			<button class="btn btn-primary" style="width: 100%; font-size: 22px; margin-bottom: 30px;" onclick="printJob()"><i class="fa fa-print"></i> PRINT</button>
+			<button class="btn btn-primary" style="width: 100%; font-size: 22px; margin-bottom: 30px;" onclick="printJob(this)"><i class="fa fa-print"></i> PRINT</button>
 		</div>
 	</div>
 </section>
@@ -114,8 +120,8 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		fillTable();
-		// headCreate();
-		// setInterval(headCreate, 1000);
+		headCreate();
+		setInterval(headCreate, 1000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -127,7 +133,7 @@
 		$("#4").css("background-color","rgb(204,255,255)");
 		$("#5").css("background-color","rgb(204,255,255)");
 		$("#6").css("background-color","rgb(204,255,255)");
-		$(element).css("background-color","rgb(255,0,0)");
+		$(element).css("background-color","#ff4d4d");
 		$("#machine").html(element.id);
 	}
 
@@ -137,21 +143,24 @@
 				$("#"+value.machine).empty();
 				var jam = "" , menit = "";
 				if (value.jam != 0) {
-					jam = value.jam +" h";
+					jam = value.jam +"H";
 				}
 
 				if (value.menit != 0 && value.jam != 0) {
-					menit = value.menit +" min";
+					menit = value.menit +"M";
 				}
 
-				detik = value.detik + " sec";
+				detik = value.detik + "S";
 
-				$("#"+value.machine).append("Machine "+value.machine+"<br>"+value.status.toUpperCase()+"<br>"+jam+" "+menit+" "+detik);
+				$("#"+value.machine).append("Machine #"+value.machine+"<br>"+value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
 			})
 		})
 	}
 
-	function printJob(){
+	function printJob(element){
+		$(element).attr('disabled',true);
+		$("#loading").show();
+		
 		if($('#code').val() == 'BARREL'){
 			if ($("#machine").text() == "") {
 				openErrorGritter('Error', 'No Machine Selected');
@@ -178,6 +187,8 @@
 			$.post('{{ url("print/middle/barrel") }}', data, function(result, status, xhr){
 				if(xhr.status == 200){
 					if(result.status){
+						$("#loading").hide();
+						$(element).removeAttr('disabled');
 						openSuccessGritter('Success', result.message);
 						fillTable();
 						$("#1").css("background-color","rgb(204,255,255)");
@@ -189,11 +200,15 @@
 						$('#machine').text('');
 					}
 					else{
+						$("#loading").hide();
+						$(element).removeAttr('disabled');
 						audio_error.play();
 						openErrorGritter('Error', result.message);
 					}
 				}
 				else{
+					$("#loading").hide();
+					$(element).removeAttr('disabled');
 					audio_error.play();
 					alert('Disconnected from server');
 					fillTable();

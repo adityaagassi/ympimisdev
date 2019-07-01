@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -37,51 +37,79 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
+	.dataTable > thead > tr > th[class*="sort"]:after{
+		content: "" !important;
+	}
+	#queueTable.dataTable {
+		margin-top: 0px!important;
+	}
 	#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
-<section class="content-header">
+<section class="content-header" style="padding-top: 0; padding-bottom: 0;">
 	<h1>
-		{{ $title }}
-		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
+		<span class="text-yellow">
+			{{ $title }}
+		</span>
+		<small>
+			<span style="color: #FFD700;"> ??</span>
+		</small>
 	</h1>
-	<ol class="breadcrumb">
-		<li>
-
-		</li>
-	</ol>
 </section>
-@stop
+@endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content">
+<section class="content" style="padding-left: 0px; padding-right: 0px;">
 	<div class="row">
-		<div class="col-xs-12">
+		<input type="hidden" id="mrpc" value="{{ $mrpc }}">
+		<input type="hidden" id="hpl" value="{{ $hpl }}">
+		<div class="col-xs-8" style="padding-right: 0;">
+			<table id="queueTable" class="table table-bordered">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th style="width: 1%; padding: 0;">No</th>
+						<th style="width: 3%; padding: 0;">Model</th>
+						<th style="width: 1%; padding: 0;">Qty</th>
+						<th style="width: 2%; padding: 0;">Key C</th>
+						<th style="width: 2%; padding: 0;">Key D</th>
+						<th style="width: 2%; padding: 0;">Key E</th>
+						<th style="width: 2%; padding: 0;">Key F</th>
+						<th style="width: 2%; padding: 0;">Key G</th>
+						<th style="width: 2%; padding: 0;">Key H</th>
+						<th style="width: 2%; padding: 0;">Key J</th>
+						<th style="width: 6%; padding: 0;">Created At</th>
+					</tr>
+				</thead>
+				<tbody id="queueTableBody">
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+		<div class="col-xs-4">
 			<div class="input-group">
-				<input type="text" style="text-align: center; font-size: 22px; height: 40px;" class="form-control" id="qr" placeholder="Scan QR Here...">
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+					<i class="glyphicon glyphicon-qrcode"></i>
+				</div>
+				<input type="text" style="text-align: center;" class="form-control" id="qr" placeholder="Scan QR Here...">
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
 					<i class="glyphicon glyphicon-qrcode"></i>
 				</div>
 			</div>
-			<input type="hidden" id="mrpc" value="{{ $mrpc }}">
-			<input type="hidden" id="hpl" value="{{ $hpl }}">
-			<center><p style="margin: 10px 0 0 0; font-size: 20px">20 Juni 2019</p></center>
-		</div>
-		<div class="col-xs-4" style="margin-top: 5px;">
-			<center style="font-size: 20px; margin: 2px">Laquering (LCQ)</center>
-			<table id="lcq" class="table table-bordered table-striped" width="100%">
-				<thead style="background-color: rgba(126,86,134,.7); font-size: 18px">
+			<center><h4 class="text-yellow">Lacquering (LCQ)</h4></center>
+			<table id="lcq" class="table table-bordered" width="100%" style="margin-bottom: 0;">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th style="width: 10%;">Model</th>
-						<th style="width: 10%;">Key</th>
-						<th style="width: 10%;">Set</th>
-						<th style="width: 10%;">Reset</th>
+						<th style="width: 10%; padding:0;">Model</th>
+						<th style="width: 10%; padding:0;">Key</th>
+						<th style="width: 10%; padding:0;">Set</th>
+						<th style="width: 10%; padding:0;">Reset</th>
 					</tr>
 				</thead>
-				<tbody id="tb_lcq" style="font-size: 16px;  font-weight: bold; padding:0;">
+				<tbody id="tb_lcq">
 				</tbody>
-				<tfoot style="font-size: 18px; background-color: #ddd">
+				<tfoot style="background-color: #708cdb">
 					<tr>
 						<th colspan="2">Total</th>
 						<th id="total_set">0</th>
@@ -89,29 +117,27 @@
 					</tr>
 				</tfoot>
 			</table>
-		</div>
-		`
-		<div class="col-xs-4" style="margin-top: 5px;">
-			<center style="font-size: 20px; margin: 2px">Plating (PLT)</center>
-			<table id="plt" class="table table-bordered table-striped" width="100%">
-				<thead style="background-color: rgba(126,86,134,.7); font-size: 18px">
+			<center><h4 class="text-yellow">Plating (PLT)</h4></center>
+			<table id="plt" class="table table-bordered" width="100%">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th style="width: 10%;">Model</th>
-						<th style="width: 10%;">Key</th>
-						<th style="width: 10%;">Qty</th>
+						<th style="width: 10%; padding:0;">Model</th>
+						<th style="width: 10%; padding:0;">Key</th>
+						<th style="width: 10%; padding:0;">Qty</th>
 					</tr>
 				</thead>
-				<tbody id="tb_plt" style="font-size: 16px;  font-weight: bold; padding:0;">
+				<tbody id="tb_plt">
 				</tbody>
-				<tfoot style="font-size: 18px; background-color: #ddd">
+				<tfoot style="background-color: #708cdb">
 					<tr>
 						<th colspan="2">Total</th>
 						<th id="total_plt">0</th>
 					</tr>
 				</tfoot>
 			</table>
-			
 		</div>
+
+
 	</div>
 </section>
 @endsection
@@ -152,7 +178,7 @@
 		data = {
 			qr:qr
 		}
-		
+
 		$.post('{{ url("scan/middle/barrel") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
@@ -177,30 +203,138 @@
 	}
 
 	function get_barrel_board() {
-		$('#tb_plt').empty();
-		$('#tb_lcq').empty();
-		$.get('{{ url("fetch/middle/barrel_board") }}', function(result, status, xhr){
+		var hpl = $('#hpl').val().split(',');
+		var data = {
+			mrpc : $('#mrpc').val(),
+			hpl : hpl,
+		}
+		$.get('{{ url("fetch/middle/barrel_board") }}', data, function(result, status, xhr){
+			$('#tb_plt').empty();
+			$('#tb_lcq').empty();
+
+			$('#queueTable').DataTable().clear();
+			$('#queueTable').DataTable().destroy();
 			var set = 0, reset = 0, plt = 0;
 			var tb_plt = "";
 			var tb_lcq = "";
+			var no1 = 1, no2 = 1;
 			$.each(result.barrel_board, function(index, value) {
+				var color = "";
+
+				if (no1 % 2 === 0 ) {
+					color1 = 'style="background-color: #fffcb7"';
+				} else {
+					color1 = 'style="background-color: #ffd8b7"';
+				}
+
+				if (no2 % 2 === 0 ) {
+					color2 = 'style="background-color: #fffcb7"';
+				} else {
+					color2 = 'style="background-color: #ffd8b7"';
+				}
+
 				if (value.plt != 0 ) {
-					tb_plt += "<tr><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.plt+"</td></tr>";
+					tb_plt += "<tr "+color2+"><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.plt+"</td></tr>";
 
 					plt += parseInt(value.plt);
+					no2++;
 				} else {
-					tb_lcq += "<tr><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.set+"</td><td>"+value.reset+"</td></tr>";
+					tb_lcq += "<tr "+color1+"><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.set+"</td><td>"+value.reset+"</td></tr>";
 
 					set += parseInt(value.set);
 					reset += parseInt(value.reset);
+					no1++;
 				}
 
 				$("#total_set").text(set);
 				$("#total_reset").text(reset);
 				$("#total_plt").text(plt);
 			});
+
 			$("#tb_plt").append(tb_plt);
 			$("#tb_lcq").append(tb_lcq);
+
+			$('#queueTableBody').html("");
+			var queueTableBody = "";
+			var no = 1
+			$.each(result.barrel_queues, function(index, value){
+				if (no % 2 === 0 ) {
+					color = 'style="background-color: #fffcb7"';
+				} else {
+					color = 'style="background-color: #ffd8b7"';
+				}
+
+				var k = value.key;
+				var key = k.substr(0,1);
+				queueTableBody += "<tr "+color+">";
+				queueTableBody += "<td>"+no+"</td>";
+				queueTableBody += "<td>"+value.model+" "+value.surface+"</td>";
+				queueTableBody += "<td>"+value.quantity+"</td>";
+				if(key == 'C'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+				if(key == 'D'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+				if(key == 'E'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+				if(key == 'F'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+				if(key == 'G'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+
+				if(key == 'H'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+
+				if(key == 'J'){
+					queueTableBody += "<td>"+value.key+"</td>";					
+				}
+				else{
+					queueTableBody += "<td>-</td>";					
+				}
+				queueTableBody += "<td>"+value.created_at+"</td>";	
+				queueTableBody += "</tr>";
+				no += 1;
+			});
+			$("#queueTableBody").append(queueTableBody);
+
+			$('#queueTable').DataTable({
+				'responsive':true,
+				"pageLength": 30,
+				'paging': true,
+				'lengthChange': false,
+				'searching': false,
+				'ordering': false,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
 		});
 	}
 

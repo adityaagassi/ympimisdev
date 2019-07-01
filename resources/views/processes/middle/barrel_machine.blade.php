@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -33,9 +33,11 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid black;
 		padding:0;
+		background-color: rgb(126,86,134);
+		color: #FFD700;
 	}
 	thead {
-		background-color: rgba(126,86,134,.7);
+		background-color: rgb(126,86,134);
 	}
 	td{
 		overflow:hidden;
@@ -43,51 +45,18 @@
 	}
 	#loading, #error { display: none; }
 
-	.blink {
-		-webkit-animation: blinking 1s infinite;  /* Safari 4+ */
-		-moz-animation: blinking 1s infinite;  /* Fx 5+ */
-		-o-animation: blinking 1s infinite;  /* Opera 12+ */
-		animation: blinking 1s infinite;  /* IE 10+, Fx 29+ */
-	}
-
-	@-webkit-keyframes blinking {
-		0%, 49% {
-			background-color: rgb(117, 209, 63);
-		}
-		50%, 100% {
-			background-color: none;
-		}
-	}
-
-	.blink2 {
-		-webkit-animation: blinking_dua 1s infinite;  /* Safari 4+ */
-		-moz-animation: blinking_dua 1s infinite;  /* Fx 5+ */
-		-o-animation: blinking_dua 1s infinite;  /* Opera 12+ */
-		animation: blinking_dua 1s infinite;  /* IE 10+, Fx 29+ */
-	}
-
-	@-webkit-keyframes blinking_dua {
-		0%, 49% {
-			background-color: rgb(255, 0, 0);
-		}
-		50%, 100% {
-			background-color: none;
-		}
-	}
 </style>
 @stop
 @section('header')
-{{-- <section class="content-header">
-	<h1>
-		{{ $title }}
-		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
-	</h1>
-	<ol class="breadcrumb">
-		<li>
 
-		</li>
-	</ol>
-</section> --}}
+<section class="content-header" style="padding-top: 0; padding-bottom: 0;">
+	<h1>
+		<span class="text-yellow">{{ $title }}<span>
+		<small>
+			<span style="color: #FFD700;"> ??</span>
+		</small>
+	</h1>
+</section>
 @stop
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -99,15 +68,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin1">
 							<tr>
-								<th colspan="3">Machine 1</th>
+								<th colspan="3">Machine #1</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status1"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration1"> &nbsp;</th>
-								
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -116,6 +84,12 @@
 						</thead>
 						<tbody id="tbody1">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total1"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 
@@ -123,15 +97,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin2">
 							<tr>
-								<th colspan="3">Machine 2</th>
+								<th colspan="3">Machine #2</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status2"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration2"> &nbsp;</th>
-								
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -140,6 +113,12 @@
 						</thead>
 						<tbody id="tbody2">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total2"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 
@@ -147,15 +126,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin3">
 							<tr>
-								<th colspan="3">Machine 3</th>
+								<th colspan="3">Machine #3</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status3"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration3"> &nbsp;</th>
-								
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -164,6 +142,12 @@
 						</thead>
 						<tbody id="tbody3">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total3"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 
@@ -171,15 +155,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin4">
 							<tr>
-								<th colspan="3">Machine 4</th>
+								<th colspan="3">Machine #4</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status4"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration4"> &nbsp;</th>
-								
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -188,6 +171,12 @@
 						</thead>
 						<tbody id="tbody4">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total4"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 
@@ -195,14 +184,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin5">
 							<tr>
-								<th colspan="3">Machine 5</th>
+								<th colspan="3">Machine #5</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status5"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration5"> &nbsp;</th>
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -211,6 +200,12 @@
 						</thead>
 						<tbody id="tbody5">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total5"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 
@@ -218,14 +213,14 @@
 					<table class="table table-responsive table-bordered table-stripped">
 						<thead id="mesin6">
 							<tr>
-								<th colspan="3">Machine 6</th>
+								<th colspan="3">Machine #6</th>
 							</tr>
 							<tr>
 								<th colspan="3" id="status6"> &nbsp;</th>
 							</tr>
-							<tr>
-								<th colspan="3" id="duration6"> &nbsp;</th>
-							</tr>
+							
+						</thead>
+						<thead style="color: #FFD700;">
 							<tr>
 								<th>Jig</th>
 								<th>Key</th>
@@ -234,6 +229,12 @@
 						</thead>
 						<tbody id="tbody6">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="2">Total</th>
+								<th id="total6"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -244,11 +245,9 @@
 			<div class="row">
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #1</th>
 							</tr>
 						</thead>
 						<tbody id="queue1">
@@ -258,11 +257,9 @@
 
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #2</th>
 							</tr>
 						</thead>
 						<tbody id="queue2">
@@ -272,11 +269,9 @@
 
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #3</th>
 							</tr>
 						</thead>
 						<tbody id="queue3">
@@ -286,11 +281,9 @@
 
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #4</th>
 							</tr>
 						</thead>
 						<tbody id="queue4">
@@ -300,11 +293,9 @@
 
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #5</th>
 							</tr>
 						</thead>
 						<tbody id="queue5">
@@ -314,11 +305,9 @@
 
 				<div class="col-xs-2" style="padding:1px">
 					<table class="table table-responsive table-bordered table-stripped">
-						<thead>
+						<thead style="color: #FFD700;">
 							<tr>
-								<th>Jig</th>
-								<th>Key</th>
-								<th>Qty</th>
+								<th colspan="3">Queue Machine #6</th>
 							</tr>
 						</thead>
 						<tbody id="queue6">
@@ -357,35 +346,36 @@
 	function getBarrelMachine() {
 		$.get('{{ url("fetch/middle/get_barrel") }}', function(result, status, xhr){
 			var antrian = 0;
+			var total = 0;
 
 			$.each(result.machine_stat, function(index, value) {
 				var jam = "" , menit = "";
 				if (value.jam != 0) {
-					jam = value.jam +" h";
+					jam = ("0" + value.jam).slice(-2)+"H";
 				}
 
 				if (value.menit != 0) {
-					menit = value.menit +" min";
+					menit = ("0" + value.menit).slice(-2)+"M";
 				}
 
-				detik = value.detik + " sec";
+				detik = ("0" + value.detik).slice(-2)+"S";
 
 
 				if (value.status == "idle") {
-					$("#mesin"+value.machine).removeClass("blink");
-					$("#mesin"+value.machine).addClass("blink2");
+					$("#mesin"+value.machine).css("background-color","rgb(255,77,77)");
 				}
-				else if (value.status == "running" && value.jam >= 4){
-					$("#mesin"+value.machine).removeClass("blink2");
-					$("#mesin"+value.machine).addClass("blink");
-				}
-				else{
-					$("#mesin"+value.machine).removeClass("blink");
-					$("#mesin"+value.machine).removeClass("blink2");
+				else if (value.status == "running"){
+
+					if (value.jam >= 3) {
+						$("#mesin"+value.machine).css("background-color","#ffc544");
+					}
+					else {
+						$("#mesin"+value.machine).css("background-color","rgb(77,255,77)");
+					}
 				}
 
-				$("#duration"+value.machine).text(jam+" "+menit+" "+detik);
-				$("#status"+value.machine).text(value.status.toUpperCase());
+				$("#status"+value.machine).text(value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
+				// $("#duration"+value.machine).text();
 			})
 
 			for (var i = 1; i <= 6; i++) {
@@ -395,116 +385,33 @@
 
 			$.each(result.datas, function(index, value) {
 				var mesin = value.machine;
+				var color = "";
+
+				if (value.jig % 2 === 0 ) {
+					color = 'style="background-color: #fffcb7"';
+				} else {
+					color = 'style="background-color: #ffd8b7"';
+				}
+
 				if (value.status == 'running') {
-					$("#tbody"+mesin).append("<tr><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+					if (result.datas[index].machine == result.datas[index+1].machine) {
+						total += value.qty;
+					} else {
+						total += value.qty;
+						$("#total"+result.datas[index].machine).text(total);
+						total = 0;
+					}
+					// console.log(result.datas[index+1].key);
+					$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
 				}
 				else {
-					var d = value.remark;
 					if (antrian <=2) {
-						$("#queue"+mesin).append("<tr><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+						$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
 					}
 				}
 			})
 		})
-	}
-
-	// function getMachineStatus() {
-	// 	var tmp, tes = 0, s;
-	// 	kunci = [];
-	// 	$.get('{{ url("fetch/middle/get_barrel_machine") }}', function(result, status, xhr){
-
-	// 		//  ------------------ HEADS ----------------
-
-	// 		$.each(result.datas, function(index, value) {
-	// 			if(value.status == 'running'){
-	// 				$("#head_mesin"+value.machine).removeClass("blink2");
-	// 				$("#status_mesin"+value.machine).removeClass("blink2");
-	// 				$("#dur_mesin"+value.machine).removeClass("blink2");
-	// 				if(value.hour >= 3) {
-	// 					$("#head_mesin"+value.machine).addClass("blink");
-	// 					$("#status_mesin"+value.machine).addClass("blink");
-	// 					$("#dur_mesin"+value.machine).addClass("blink");
-	// 				}
-	// 				else {
-	// 					$("#head_mesin"+value.machine).removeClass("blink");
-	// 					$("#status_mesin"+value.machine).removeClass("blink");
-	// 					$("#duration_mesin"+value.machine).removeClass("blink");
-	// 					$("#status_mesin"+value.machine).css("background-color","rgb(204,255,255)");
-	// 					$("#dur_mesin"+value.machine).css("background-color","rgb(204,255,255)");
-	// 				}
-
-	// 			}
-
-	// 			if(value.status == 'idle'){
-	// 				$("#head_mesin"+value.machine).addClass("blink2");
-	// 				$("#status_mesin"+value.machine).addClass("blink2");
-	// 				$("#dur_mesin"+value.machine).addClass("blink2");
-	// 				$("#status_mesin"+value.machine).css("background-color","rgb(255,204,255)");
-	// 				$("#dur_mesin"+value.machine).css("background-color","rgb(255,204,255)");
-	// 			}
-
-	// 			if(value.status == 'racking'){
-	// 				$("#head_mesin"+value.machine).removeClass("blink");
-	// 				$("#status_mesin"+value.machine).removeClass("blink");
-	// 				$("#duration_mesin"+value.machine).removeClass("blink");
-	// 				$("#head_mesin"+value.machine).removeClass("blink2");
-	// 				$("#status_mesin"+value.machine).removeClass("blink2");
-	// 				$("#dur_mesin"+value.machine).removeClass("blink2");
-	// 				$("#status_mesin"+value.machine).css("background-color","rgb(255,255,102)");
-	// 				$("#dur_mesin"+value.machine).css("background-color","rgb(255,255,102)");
-	// 			}
-
-	// 			$("#status_mesin"+value.machine).text(value.status.toUpperCase());
-	// 			$("#dur_mesin"+value.machine).text(value.duration);
-	// 		});
-
-
-	// 		//  -------------- CONTENTS ------------
-
-	// 		for (var i = 0; i < keys.length; i++) {
-
-	// 			for (var k = 6; k >= 1; k--) {
-	// 				var d = 0;
-	// 				for (var z = 0; z < result.contents.length; z++) {
-	// 					if (d == 0) {
-	// 						if(result.contents[z].key == keys[i] && result.contents[z].machine == k){
-	// 							tmp = result.contents[z].content;
-	// 							d = 1;
-	// 						}
-	// 						else {
-	// 							tmp = "-";
-	// 						}
-	// 					}
-	// 					s = tmp;
-	// 				}
-	// 				var arr = [keys[i], k, s]; 
-	// 				kunci.push(arr);
-	// 				// $("#"+).after("<td class='kunci'></td>");
-	// 			}
-	// 		}
-	// 		// console.log(kunci);
-
-	// 		var r = 1;
-	// 		for (var p = 0; p < kunci.length; p++) {
-	// 			// $("#"+kunci[p][0]).after("<td class='kunci'>"+kunci[p][2]+"</td>");
-	// 			$("#"+kunci[p][0]+"_"+r).text(kunci[p][2]);
-	// 			if (r >= 6) { r = 1; } else { r++ }
-
-	// 			// console.log(kunci[p][0]+"_"+kunci[p][2]);
-	// 		}
-	// 	});
-	// }
-
-	// function create_content_container() {
-	// 	for (var i = 0; i < keys.length; i++) {
-	// 		for (var k = 1; k <= 6; k++) {
-	// 			$("#"+keys[i]).after("<td id='"+keys[i]+"_"+k+"'></td>");
-	// 		}
-	// 	}
-	// }
-
-
-	
+	}	
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
