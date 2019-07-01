@@ -130,7 +130,7 @@ var printSettings = {
 	"edgeRight": 0,
 	"edgeTop": 0,
 	"edgeBottom": 0,
-	"marginLeft": 3.5,
+	"marginLeft": 5,
 	"marginRight": 0,
 	"marginTop": 0,
 	"marginBottom": 0,
