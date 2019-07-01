@@ -242,11 +242,9 @@
 									<label for="kode">Kode</label>
 									<select id="kode" class="form-control select2" name="kode">
 										<option value="" disabled selected>Select Kode</option>
-										<?php 
-										foreach ($kode as $key) {
-											echo "<option value='".$key->nama."'>".$key->nama."</option>";
-										}
-										?>
+										@foreach($kode as $kd)
+										<option value="{{ $kd->code }}" > {{$kd->code}}</option>
+										@endforeach
 									</select>
 								</div>
 

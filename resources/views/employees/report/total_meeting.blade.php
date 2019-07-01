@@ -1105,7 +1105,7 @@ function drawChartOvertimeControl() {
     var seriesDataBudget = [];
     var seriesDataAktual = [];
     var budgetHarian = [];
-    var ctg, tot_act = 0;
+    var ctg, tot_act = 0, avg = 0;
     var tot_day_budget = 0, tot_diff;
 
     for(var i = 0; i < result.report_control.length; i++){
@@ -1142,6 +1142,10 @@ function drawChartOvertimeControl() {
     $('#diff_text').removeClass('text-green').addClass('text-red');
     $("#tot_diff").html(tot_diff2);
   }
+
+  avg = tot_act / data[1];
+  avg = Math.round(avg * 100) / 100;
+  // $("#avg").html(avg);
 
   Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
     return ['M', x, y + h / 2, 'L', x + w, y + h / 2];

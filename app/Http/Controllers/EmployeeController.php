@@ -78,9 +78,12 @@ class EmployeeController extends Controller
     $sec = OrganizationStructure::where('status','LIKE','SEC%')->get();
     $sub = OrganizationStructure::where('status','LIKE','SSC%')->get();
     $grup = OrganizationStructure::where('status','LIKE','GRP%')->get();
+    $kode =  DB::table('total_meeting_codes')->select('code')->groupBy('code')->get();
     $grade = Grade::orderBy('id', 'asc')->get();
     $position = Position::orderBy('id', 'asc')->get();
     $cc = CostCenter::get();
+
+    
 
     return view('employees.master.insertEmp', array(
       'dev' => $dev,
@@ -90,6 +93,7 @@ class EmployeeController extends Controller
       'grup' => $grup,
       'grade' => $grade,
       'cc' => $cc,
+      'kode' => $kode,
       'position' => $position, 
       'keluarga' => $this->keluarga ))->with('page', 'Master Employee');
   }
