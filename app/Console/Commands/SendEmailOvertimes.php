@@ -50,13 +50,13 @@ class SendEmailOvertimes extends Command
         ->get();
 
         $first = date('Y-m-01');
-
         $now = date('Y-m-d');
-        if($now == $first){
-            $first = Carbondate('Y-m-d', strtotime(Carbon::now()->subMonth(1)));
-            $now = Carbondate('Y-m-d', strtotime(Carbon::now()->subDays(1)));
-        }
         $mon = date('Y-m');
+        if($now == $first){
+            $first = date('Y-m-d', strtotime(Carbon::now()->subMonth(1)));
+            $now = date('Y-m-d', strtotime(Carbon::now()->subDays(1)));
+            $mon = date('Y-m', strtotime(Carbon::now()->subDays(1)));
+        }
 
         $query = "SELECT
         ovr.nik,
@@ -86,7 +86,7 @@ class SendEmailOvertimes extends Command
         LEFT JOIN ympimis.total_meeting_codes AS helper ON pos.`group` = helper.group_name
         ORDER BY
         ovr.act DESC";
-
+        
         $datas = db::connection('mysql3')->select($query);
 
         $ofc = ['OFC'];
@@ -126,6 +126,7 @@ class SendEmailOvertimes extends Command
         $overtimes = [
             'offices' => $offices,
             'productions' => $productions,
+            'first' => $first,
         ];
 
         // dd($overtimes);
@@ -133,6 +134,6 @@ class SendEmailOvertimes extends Command
         if($data != null){
             Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
         }
-        
+
     }
 }

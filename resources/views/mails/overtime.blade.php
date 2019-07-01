@@ -14,6 +14,8 @@
 	<div style="width: 700px;">
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
+			<p style="font-size: 18px;">Informasi Overtime (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-weight: bold;">Overtime Period: {{ date('F Y', strtotime($data['first'])) }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<br>
 			<table style="border-color: black">
