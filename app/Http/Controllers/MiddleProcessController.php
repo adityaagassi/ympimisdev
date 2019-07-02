@@ -317,17 +317,18 @@ class MiddleProcessController extends Controller
 						$barrel = new Barrel($insert_jig);
 						$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
 
-						DB::transaction(function() use ($barrel, $delete_queue){
-							$barrel->save();
-							$delete_queue->forceDelete();
-						});
-
 						$middle_inventory = MiddleInventory::firstOrcreate(
 							[
 								'tag' => $tag[0]
 							],
 							$insert_inventory
 						);
+						
+						DB::transaction(function() use ($barrel, $delete_queue){
+							$barrel->save();
+							$delete_queue->forceDelete();
+						});
+
 					}
 
 					$response = array(
@@ -370,6 +371,13 @@ class MiddleProcessController extends Controller
 							'created_by' => $id
 						];
 
+						$insert_inventory = [
+							'tag' => $tag[0],
+							'material_number' => $barrel_queue->material_number,
+							'quantity' => $barrel_queue->quantity,
+							'location' => 'barrel',
+						];
+
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
@@ -394,10 +402,18 @@ class MiddleProcessController extends Controller
 						$barrel = new Barrel($insert_jig);
 						$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
 
+						$middle_inventory = MiddleInventory::firstOrcreate(
+							[
+								'tag' => $tag[0]
+							],
+							$insert_inventory
+						);
+
 						DB::transaction(function() use ($barrel, $delete_queue){
 							$barrel->save();
 							$delete_queue->forceDelete();
 						});
+
 					}
 
 					$code_generator->index = $code_generator->index+1;
@@ -422,7 +438,11 @@ class MiddleProcessController extends Controller
 			$tags = $request->get('tag');
 
 			try{
-				$queues = BarrelQueue::whereIn('barrel_queues.tag', $request->get('tag'))->get();
+				$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
+				->whereIn('barrel_queues.tag', $request->get('tag'))
+				->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description')
+				->get();
+
 				foreach ($queues as $queue) {
 					$insert_log = [
 						'machine' => 'PLT',
@@ -433,13 +453,52 @@ class MiddleProcessController extends Controller
 						'started_at' => date('Y-m-d H:i:s'),
 						'created_by' => $id,
 					];
+
+					$insert_inventory = [
+						'tag' => $queue->tag,
+						'material_number' => $queue->material_number,
+						'quantity' => $queue->quantity,
+						'location' => 'barrel',
+					];
+
 					$barrel_log = new BarrelLog($insert_log);
 					$delete_queue = BarrelQueue::where('tag', '=', $queue->tag);
+
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(1,1);
+					$printer->text('ID SLIP'."\n\n");
+					$printer->setTextSize(4,4);
+					$printer->setUnderline(true);
+					$printer->text('PLATING'."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(5,2);
+					$printer->text($queue->model." ".$queue->key."\n");
+					$printer->text($queue->surface."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+					$printer->text($queue->tag."\n\n");
+					$printer->initialize();
+					$printer->setTextSize(1,1);
+					$printer->text("GMC : ".$queue->material_number."\n");
+					$printer->text("DESC: ".$queue->material_description."\n");
+					$printer->text("QTY : ".$queue->quantity." PC(S)"."\n");
+					$printer->cut(Printer::CUT_PARTIAL, 50);
+					$printer->close();
+
+					$middle_inventory = MiddleInventory::firstOrcreate(
+						[
+							'tag' => $queue->tag
+						],
+						$insert_inventory
+					);
 
 					DB::transaction(function() use ($barrel_log, $delete_queue){
 						$barrel_log->save();
 						$delete_queue->forceDelete();
 					});
+
 				}
 
 				$response = array(
