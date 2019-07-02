@@ -344,15 +344,14 @@
 				keys.push($(this).text());
 			});
 
-			getBarrelMachine();
-			// setInterval(getBarrelMachine, 1000);
+			// getBarrelMachine();
+			setInterval(getBarrelMachine, 1000);
 		});
 
 		function getBarrelMachine() {
 			$.get('{{ url("fetch/middle/get_barrel") }}', function(result, status, xhr){
 				var antrian = 0;
-				var total = 0;
-				var total2 = 0;
+				var total1 = 0, total2 = 0,total3 = 0,total4 = 0,total5 = 0, total6 = 0;
 
 				$.each(result.machine_stat, function(index, value) {
 					var jam = "" , menit = "";
@@ -400,7 +399,32 @@
 					}
 
 					if (value.status == 'running') {
+
 						$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+						if (value.machine == '1') {
+							total1 += value.qty;
+						}
+
+						if (value.machine == '2') {
+							total2 += value.qty;
+						}
+
+						if (value.machine == '3') {
+							total3 += value.qty;
+						}
+
+						if (value.machine == '4') {
+							total4 += value.qty;
+						}
+
+						if (value.machine == '5') {
+							total5 += value.qty;
+						}
+
+						if (value.machine == '6') {
+							total6 += value.qty;
+						}
+
 					}
 					else if(value.status == 'queue'){
 						if (antrian <=2) {
@@ -408,6 +432,13 @@
 						}
 					}
 				})
+
+				$("#total1").text(total1);
+				$("#total2").text(total2);
+				$("#total3").text(total3);
+				$("#total4").text(total4);
+				$("#total5").text(total5);
+				$("#total6").text(total6);
 			})
 		}	
 
