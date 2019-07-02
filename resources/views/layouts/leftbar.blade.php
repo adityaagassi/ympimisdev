@@ -229,11 +229,27 @@
         </li>
         @endif
 
-        @if(in_array('S17', $navs))
+        @if(in_array('S18', $navs))
         @if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
           <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
         </li>
         @endif
+
+        @if(in_array('S13', $navs))
+        @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
+          <a href="#">
+           <i class="fa fa-tv"></i> <span>NG-RATE</span>
+           <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+         @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
+        </li>
+
+         </ul>
+    </li>
 
         @if(in_array('S13', $navs))
         @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
