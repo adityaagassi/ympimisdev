@@ -53,7 +53,7 @@
 			{{ $title }}
 		</span>
 		<small>
-			<span style="color: #FFD700;"> ??</span>
+			<span style="color: #FFD700;"> {{ $title_jp }}</span>
 		</small>
 	</h1>
 </section>

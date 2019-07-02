@@ -53,7 +53,7 @@
 	<h1>
 		<span class="text-yellow">{{ $title }}<span>
 			<small>
-				<span style="color: #FFD700;"> ??</span>
+				<span style="color: #FFD700;"> {{ $title_jp }}</span>
 			</small>
 		</h1>
 	</section>
@@ -344,10 +344,9 @@
 				keys.push($(this).text());
 			});
 
-			setInterval(getBarrelMachine, 1000);
-		// getBarrelMachine();
-		// setInterval(getMachineStatus, 1000);
-	});
+			getBarrelMachine();
+			// setInterval(getBarrelMachine, 1000);
+		});
 
 		function getBarrelMachine() {
 			$.get('{{ url("fetch/middle/get_barrel") }}', function(result, status, xhr){
@@ -401,18 +400,11 @@
 					}
 
 					if (value.status == 'running') {
-						if (result.datas[index].machine == result.datas[index+1].machine) {
-							total += value.qty;
-						} else {
-							total += value.qty;
-							$("#total"+result.datas[index].machine).text(total);
-							total = 0;
-						}
-						$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
+						$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
 					}
 					else if(value.status == 'queue'){
 						if (antrian <=2) {
-							$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
+							$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
 						}
 					}
 				})

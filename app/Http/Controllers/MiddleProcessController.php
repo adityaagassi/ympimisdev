@@ -38,7 +38,9 @@ class MiddleProcessController extends Controller
 		$title_jp = 'サックスのバレル機';
 		
 		return view('processes.middle.barrel_machine', array(
-			'title' => $title,))->with('page', 'Middle Process Barrel Machine')->with('head', 'Middle Process');
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Middle Process Barrel Machine')->with('head', 'Middle Process');
 	}
 
 	public function indexProcessBarrelBoard($id){
@@ -52,6 +54,7 @@ class MiddleProcessController extends Controller
 		
 		return view('processes.middle.barrel_board', array(
 			'title' => $title,
+			'title_jp' => $title_jp,
 			'mrpc' => $mprc,
 			'hpl' => $hpl,
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
@@ -532,9 +535,9 @@ class MiddleProcessController extends Controller
 
 		if(substr($request->get('qr'),0,3) == 'MCB'){
 			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
-			$barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->first();
 
 			if($barrels->count() > 0){
+				$barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->first();
 				if($barrel_machine->status == 'idle' && $barrels[0]->status == 'queue'){
 					try{
 						$update_barrel = Barrel::where('remark', '=', $request->get('qr'))->update([
@@ -568,13 +571,6 @@ class MiddleProcessController extends Controller
 						);
 						return Response::json($response);
 					}
-				}
-				else{
-					$response = array(
-						'status' => false,
-						'message' => 'Machine is not ready',
-					);
-					return Response::json($response);
 				}
 				if($barrel_machine->status == 'running' && $barrels[0]->status == 'running'){
 					try{
@@ -1002,8 +998,8 @@ class MiddleProcessController extends Controller
 	{
 		$data = DB::table('barrels')
 		->leftJoin('materials', 'barrels.material_number', '=', 'materials.material_number')
-		->select('barrels.machine', 'barrels.jig', 'barrels.key', DB::raw('SUM(qty) as qty'), 'barrels.status', DB::raw('LEFT(materials.model, 1) as model'))
-		->groupBy('barrels.machine', 'barrels.jig', 'barrels.key','barrels.status',DB::raw('LEFT(materials.model, 1)'))
+		->select('barrels.machine', 'barrels.jig', 'barrels.key', DB::raw('SUM(qty) as qty'), 'barrels.status', 'materials.model')
+		->groupBy('barrels.machine', 'barrels.jig', 'barrels.key','barrels.status','materials.model')
 		->orderBy('remark','asc')
 		->orderBy('jig','asc')
 		->get();
