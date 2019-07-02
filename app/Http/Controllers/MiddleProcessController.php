@@ -256,7 +256,7 @@ class MiddleProcessController extends Controller
 	public function printMiddleBarrel(Request $request){
 		$id = Auth::id();
 
-		if(Auth::user()->role_code == "op-barrel-sx"){
+		if(Auth::user()->role_code == "OP-Barrel-SX"){
 			$printer_name = 'Barrel-Printer';
 		}
 		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
@@ -523,7 +523,7 @@ class MiddleProcessController extends Controller
 	public function scanMiddleBarrel(Request $request){	
 		$id = Auth::id();
 		
-		if(Auth::user()->role_code == "op-barrel-sx"){
+		if(Auth::user()->role_code == "OP-Barrel-SX"){
 			$printer_name = 'Barrel-Printer';
 		}
 		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
