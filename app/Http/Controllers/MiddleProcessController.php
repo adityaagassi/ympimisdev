@@ -422,7 +422,7 @@ class MiddleProcessController extends Controller
 			$tags = $request->get('tag');
 
 			try{
-				$queues = BarrelQueues::whereIn('barrel_qeueus.tag', $request->get('tag'))->get();
+				$queues = BarrelQueue::whereIn('barrel_qeueus.tag', $request->get('tag'))->get();
 				foreach ($queues as $queue) {
 					$insert_log = [
 						'machine' => 'PLT',
