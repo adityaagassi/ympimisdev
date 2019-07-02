@@ -119,6 +119,10 @@
 	}
 
 	function printJob(element){
+
+		$("#loading").show();
+		$(element).attr('disabled',true);
+
 		var tag = [];
 		$("input[type=checkbox]:checked").each(function() {
 			tag.push([this.id, this.name]);
@@ -133,6 +137,8 @@
 		$.post('{{ url("print/middle/barrel") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
+					$("#loading").hide();
+					$(element).removeAttr('disabled');
 					openSuccessGritter('Success', result.message);
 					fillTable();
 				}

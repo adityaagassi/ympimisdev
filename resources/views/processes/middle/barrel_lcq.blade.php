@@ -57,6 +57,11 @@
 				<span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
 			</p>
 		</div>
+		<div id="error" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(255,102,102); z-index: 30001; opacity: 0.8;">
+			<p id="pError" style="position: absolute; color: White; top: 45%; left: 35%;">
+
+			</p>
+		</div>
 
 		<input type="hidden" id="hpl" value="{{ $hpl }}">
 		<input type="hidden" id="mrpc" value="{{ $mrpc }}">
@@ -247,6 +252,11 @@
 									if($.inArray(value.tag, tag) == -1){
 										if(first_arr.length == 0){
 											first_arr.push([value.hpl, value.spring]);
+										}
+										if(value.spring == null){
+											$("#error").show();
+											$("#pError").html('<span style="font-size: 40px"><i class="fa fa-unlink"></i>Error!<br>There is key without jig data.</span>');
+											return false;
 										}
 										if(value.hpl == first_arr[0][0] && value.spring == first_arr[0][1]){
 											tot_spring += value.lot;
