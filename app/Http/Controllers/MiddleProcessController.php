@@ -430,7 +430,7 @@ class MiddleProcessController extends Controller
 						'material' => $queue->material_number,
 						'qty' => $queue->quantity,
 						'status' => 'plt',
-						'started_at' => date('Y-m-d H:i:s', strtotime($barrel->finish_queue)),
+						'started_at' => date('Y-m-d H:i:s'),
 						'created_by' => $id,
 					];
 					$barrel_log = new BarrelLog($insert_log);
