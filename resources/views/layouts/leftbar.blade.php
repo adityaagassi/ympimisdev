@@ -235,7 +235,7 @@
         </li>
         @endif
 
-        @if(in_array('S13', $navs))
+        @if(in_array('S18', $navs))
         @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
            <i class="fa fa-tv"></i> <span>NG-RATE</span>
@@ -250,6 +250,7 @@
 
          </ul>
     </li>
+      @endif
 
         @if(in_array('S13', $navs))
         @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
