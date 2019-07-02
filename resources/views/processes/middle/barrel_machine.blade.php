@@ -401,7 +401,7 @@
 					}
 
 					if (value.status == 'running') {
-						if (result.datas[index].machine == result.datas[index+1].machine && result.datas[index+1].machine) {
+						if (result.datas[index].machine == result.datas[index+1].machine) {
 							total += value.qty;
 						} else {
 							total += value.qty;
