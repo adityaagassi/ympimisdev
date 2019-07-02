@@ -252,6 +252,7 @@
 							</thead>
 							<tbody id="queue1">
 							</tbody>
+							
 						</table>
 					</div>
 
@@ -264,6 +265,7 @@
 							</thead>
 							<tbody id="queue2">
 							</tbody>
+							
 						</table>
 					</div>
 
@@ -276,6 +278,7 @@
 							</thead>
 							<tbody id="queue3">
 							</tbody>
+							
 						</table>
 					</div>
 
@@ -288,6 +291,7 @@
 							</thead>
 							<tbody id="queue4">
 							</tbody>
+							
 						</table>
 					</div>
 
@@ -300,6 +304,7 @@
 							</thead>
 							<tbody id="queue5">
 							</tbody>
+							
 						</table>
 					</div>
 
@@ -312,6 +317,7 @@
 							</thead>
 							<tbody id="queue6">
 							</tbody>
+							
 						</table>
 					</div>
 				</div>
@@ -347,6 +353,7 @@
 			$.get('{{ url("fetch/middle/get_barrel") }}', function(result, status, xhr){
 				var antrian = 0;
 				var total = 0;
+				var total2 = 0;
 
 				$.each(result.machine_stat, function(index, value) {
 					var jam = "" , menit = "";
@@ -394,14 +401,12 @@
 					}
 
 					if (value.status == 'running') {
-						if (result.datas[index+1]) {
-							if (result.datas[index].machine == result.datas[index+1].machine) {
-								total += value.qty;
-							} else {
-								total += value.qty;
-								$("#total"+result.datas[index].machine).text(total);
-								total = 0;
-							}
+						if (result.datas[index].machine == result.datas[index+1].machine && result.datas[index+1].machine) {
+							total += value.qty;
+						} else {
+							total += value.qty;
+							$("#total"+result.datas[index].machine).text(total);
+							total = 0;
 						}
 						$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
 					}
