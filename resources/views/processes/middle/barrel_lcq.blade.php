@@ -138,33 +138,37 @@
 	}
 
 	function headCreate() {
+		var antrian = 0;
+		var total = 0;
+		
 		$.get('{{ url("fetch/middle/barrel_machine_status") }}', function(result, status, xhr){
 			$.each(result.machine_stat, function(index, value) {
 				$("#"+value.machine).empty();
 				var jam = "" , menit = "";
 				if (value.jam != 0) {
-					jam = value.jam +"H";
+					jam = ("0" + value.jam).slice(-2)+"H";
 				}
 
-				if (value.menit != 0 && value.jam != 0) {
-					menit = value.menit +"M";
+				if (value.menit != 0) {
+					menit = ("0" + value.menit).slice(-2)+"M";
 				}
 
-				detik = value.detik + "S";
+				detik = ("0" + value.detik).slice(-2)+"S";
 
 				$("#"+value.machine).append("Machine #"+value.machine+"<br>"+value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
 			})
 		})
 	}
 
-	function printJob(element){
-		$(element).attr('disabled',true);
-		$("#loading").show();
-		
+	function printJob(element){	
 		if($('#code').val() == 'BARREL'){
 			if ($("#machine").text() == "") {
 				openErrorGritter('Error', 'No Machine Selected');
 				return false;
+			}
+			else {
+				$("#loading").show();
+				$(element).attr('disabled',true);
 			}
 		}
 

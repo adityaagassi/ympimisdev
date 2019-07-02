@@ -109,7 +109,7 @@
 				</thead>
 				<tbody id="tb_lcq">
 				</tbody>
-				<tfoot style="background-color: #708cdb">
+				<tfoot style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
 						<th colspan="2">Total</th>
 						<th id="total_set">0</th>
@@ -128,7 +128,7 @@
 				</thead>
 				<tbody id="tb_plt">
 				</tbody>
-				<tfoot style="background-color: #708cdb">
+				<tfoot style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
 						<th colspan="2">Total</th>
 						<th id="total_plt">0</th>

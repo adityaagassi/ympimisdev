@@ -116,6 +116,20 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 	}
 
+	public function indexBarrelAdjustment()
+	{
+		$title = 'Saxophone Barrel Board 2';
+		$title_jp = 'サックスのバレル加工用モニター';
+		$mprc = 'S51';
+		$hpl = 'ASKEY,TSKEY';
+		
+		return view('processes.middle.barrel_adjustment', array(
+			'title' => $title,
+			'mrpc' => $mprc,
+			'hpl' => $hpl,
+		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+	}
+
 	public function fetchMiddleBarrelBoard(Request $request){
 
 		$now = date('Y-m-d');
@@ -275,7 +289,7 @@ class MiddleProcessController extends Controller
 						$insert_inventory = [
 							'tag' => $tag[0],
 							'material_number' => $barrel_queue->material_number,
-							'qty' => $barrel_queue->quantity,
+							'quantity' => $barrel_queue->quantity,
 							'location' => 'barrel',
 						];
 
@@ -950,7 +964,7 @@ class MiddleProcessController extends Controller
 	public function fetchMachine()
 	{
 		$barrel_machine = DB::table('barrel_machines')		
-		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'), DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
+		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
 		->get();
 
 		$response = array(

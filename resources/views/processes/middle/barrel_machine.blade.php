@@ -404,7 +404,7 @@
 					// console.log(result.datas[index+1].key);
 					$("#tbody"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
 				}
-				else {
+				else if(value.status == 'queue'){
 					if (antrian <=2) {
 						$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+"S "+value.key+"</td><td>"+value.qty+"</td></tr>");
 					}
