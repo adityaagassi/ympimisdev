@@ -35,6 +35,7 @@ class MiddleProcessController extends Controller
 
 	public function indexProcessBarrelMachine(){
 		$title = 'Saxophone Barrel Machine';
+		$title_jp = 'サックスのバレル機';
 		
 		return view('processes.middle.barrel_machine', array(
 			'title' => $title,))->with('page', 'Middle Process Barrel Machine')->with('head', 'Middle Process');
@@ -44,6 +45,7 @@ class MiddleProcessController extends Controller
 
 		if($id == 'barrel-sx'){
 			$title = 'Saxophone Barrel Board';
+			$title_jp = 'サックスのバレル加工用モニター';
 			$mprc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -236,7 +238,14 @@ class MiddleProcessController extends Controller
 
 	public function printMiddleBarrel(Request $request){
 		$id = Auth::id();
-		$printer_name = 'Trial Printer';
+
+		if(Auth::user()->role_code == "op-barrel-sx"){
+			$printer_name = 'Barrel-Printer';
+		}
+		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
+			$printer_name = 'MIS';
+		}
+
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -299,7 +308,7 @@ class MiddleProcessController extends Controller
 							$delete_queue->forceDelete();
 						});
 
-						$firstOrCreate = MiddleInventory(
+						$middle_inventory = MiddleInventory::firstOrcreate(
 							[
 								'tag' => $tag[0]
 							],
@@ -437,7 +446,14 @@ class MiddleProcessController extends Controller
 
 	public function scanMiddleBarrel(Request $request){	
 		$id = Auth::id();
-		$printer_name = 'Trial Printer';
+		
+		if(Auth::user()->role_code == "op-barrel-sx"){
+			$printer_name = 'Barrel-Printer';
+		}
+		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
+			$printer_name = 'MIS';
+		}
+
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
