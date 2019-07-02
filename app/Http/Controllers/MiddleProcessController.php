@@ -436,7 +436,7 @@ class MiddleProcessController extends Controller
 					$barrel_log = new BarrelLog($insert_log);
 					$delete_queue = BarrelQueue::where('tag', '=', $queue->tag);
 
-					DB::transaction(function() use ($barrel, $delete_queue){
+					DB::transaction(function() use ($barrel_log, $delete_queue){
 						$barrel_log->save();
 						$delete_queue->forceDelete();
 					});
