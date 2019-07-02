@@ -443,6 +443,82 @@ Route::group(['nav' => 'S17', 'middleware' => 'permission'], function(){
 	Route::post('fetch/double', 'OvertimeController@fetchDoubleSPL');
 });
 
+
+//pianica
+
+
+Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
+	//-----master op
+	Route::get('index/Op', 'Pianica@op');
+	Route::get('index/FillOp', 'Pianica@fillop');
+	Route::get('index/Op_Code', 'Pianica@opcode');
+	Route::get('edit/Op', 'Pianica@editop');
+	Route::post('update/Op', 'Pianica@updateop');
+	Route::post('add/Op', 'Pianica@addop');
+
+
+	//----------bensuki
+	Route::get('index/Pianica', 'Pianica@index');	
+	Route::get('index/Bensuki', 'Pianica@bensuki');
+	Route::post('index/Save', 'Pianica@input');
+	Route::post('index/Incoming', 'Pianica@input2');
+	Route::get('index/Otokensa', 'Pianica@otokensa');
+	
+	//------------pureto
+	Route::get('index/Pureto', 'Pianica@pureto');
+	Route::get('index/op_Pureto', 'Pianica@op_pureto');
+	Route::post('index/SavePureto', 'Pianica@savepureto');
+
+	
+	//------------kensa awal 
+	Route::get('index/KensaAwal', 'Pianica@kensaawal');
+	Route::get('index/model', 'Pianica@tag_model');
+	Route::post('index/SaveKensaAwal', 'Pianica@savekensaawal');
+	Route::get('index/TotalNg', 'Pianica@total_ng');
+
+
+	//-----------kensa akhir
+	Route::get('index/KensaAkhir', 'Pianica@kensaakhir');
+	Route::post('index/SaveKensaAkhir', 'Pianica@savekensaakhir');
+
+	//------------ kakuning visual
+	Route::get('index/KakuningVisual', 'Pianica@kakuningvisual');
+	Route::post('index/SaveKakuningVisual', 'Pianica@savekensaakhir');
+
+	//-------- display
+	Route::get('index/DisplayPN', 'Pianica@display');
+	Route::get('index/TotalNgAll', 'Pianica@total_ng_all');
+	Route::get('index/TotalNgAllLine', 'Pianica@total_ng_all_line');
+	Route::get('index/getTarget', 'Pianica@getTarget');
+
+	//---------- report bensuki
+	Route::get('index/reportBensuki', 'Pianica@reportBensuki');
+	Route::get('index/getTotalNG', 'Pianica@getTotalNG');
+	Route::get('index/getMesinNg', 'Pianica@getMesinNg');
+
+	//---------- report kensa awal
+	Route::get('index/reportAwal', 'Pianica@reportAwal');
+	Route::get('index/getKensaAwalALL', 'Pianica@getKensaAwalALL');
+	
+	//---------- report kensa awal
+	Route::get('index/reportAwalLine', 'Pianica@reportAwalLine');
+	Route::get('index/getKensaAwalALLLine', 'Pianica@getKensaAwalALLLine');
+
+	//---------- report kensa awal
+	Route::get('index/reportAkhir', 'Pianica@reportAkhir');
+	Route::get('index/getKensaAkhirALL', 'Pianica@getKensaAkhirALL');
+	
+	//---------- report kensa awal
+	Route::get('index/reportAkhirLine', 'Pianica@reportAkhirLine');
+	Route::get('index/getKensaAkhirALLLine', 'Pianica@getKensaAkhirALLLine');
+
+	//---------- report kakuning visual
+	Route::get('index/reportVisual', 'Pianica@reportVisual');
+	Route::get('index/getKensaVisualALL', 'Pianica@getKensaVisualALL');
+	
+	
+});
+
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
@@ -455,6 +531,7 @@ Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProc
 Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
 Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
 Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchMachine');
+Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
