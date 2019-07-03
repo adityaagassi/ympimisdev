@@ -533,7 +533,7 @@ class MiddleProcessController extends Controller
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		if(substr($request->get('qr'),0,3) == 'MCB'){
+		if(substr($request->get('qr'),0,3) == 'mcb'){
 			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
 
 			if($barrels->count() > 0){
