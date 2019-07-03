@@ -324,6 +324,7 @@ public function input(Request $request)
             'nik_op_plate' => $request->get('nikplate'),
             'shift' => $request->get('shift'),
             'mesin' =>  $request->get('mesin'),
+            'line' =>  $request->get('line'),
             'created_by' => $id_user
         ]);
         $head->save();
@@ -630,6 +631,54 @@ public function total_ng_all(Request $request)
     return Response::json($response);
 
 }
+public function GetNgBensuki(Request $request)
+{
+    $date = date('Y-m-d');
+    
+    $query2 ="select process_code as line, COALESCE(total,0) as total from ( 
+SELECT COUNT(model) as total, line from header_bensukis
+WHERE DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') ='".$date."' GROUP BY line
+)
+a
+RIGHT JOIN  
+(SELECT process_code from processes where remark ='pn') b
+on a.line=b.process_code";
+
+    
+    $total =DB::select($query2);
+
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',        
+        'total' => $total,
+
+    );
+    return Response::json($response);
+}
+
+public function GetNgBensukiAll(Request $request)
+{
+    $date = date('Y-m-d');
+    
+    $query2 ="SELECT COUNT(model) as total from header_bensukis WHERE DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') ='".$date."' ";
+
+     $query3 ="SELECT sum(total) as total, sum(total_ng) as ng from (
+    select COUNT(DISTINCT(tag)) as total, 0 total_ng  from pn_log_proces where DATE_FORMAT(created_at,'%Y-%m-%d')='".$date."' and location='PN_Pureto'
+    union all
+    select 0 total, COUNT(DISTINCT(tag)) as total_ng  from pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d')='".$date."' and location='PN_Pureto' ) a";
+    
+    $total =DB::select($query2);
+    $totalAll =DB::select($query3);
+
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',        
+        'total' => $total,
+        'totalAll' => $totalAll,
+
+    );
+    return Response::json($response);
+}
 
 public function total_ng_all_line(Request $request)
 {  
@@ -841,7 +890,7 @@ LEFT JOIN detail_bensukis ON  header_bensukis.ID = detail_bensukis.id_bensuki wh
 GROUP BY mesin ORDER BY mesin asc )
 a RIGHT JOIN (
 SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
-)b on a.mesin = b.ng_name";
+)b on a.mesin = b.ng_name ORDER BY mesin asc";
 $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis  ORDER BY created_at desc limit 1";
 
 $tgl2 =DB::select($tgl);

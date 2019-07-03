@@ -431,7 +431,9 @@
           var nikplate = $('#nikplate').text(); 
           var shift = $('#kodeshift').text();
           var mesin = $('#kodemesin').text();
-          var ng = $('#ng').val();    
+          var ng = $('#ng').val();  
+          var a = "{{Auth::user()->name}}";
+          var line = a.substr(a.length - 1);  
           if(model == '' || kodebensuki == '' || nikbensuki == '' || kodeplate == '' || nikplate == '' || shift == '' || mesin == ''){
             alert('All field must be filled');  
           }else{
@@ -444,6 +446,7 @@
               shift:shift,
               mesin:mesin,
               ng:ng,
+              line:line
             }
             $.post('{{ url("index/Save") }}', data, function(result, status, xhr){
               console.log(status);

@@ -490,6 +490,8 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	Route::get('index/TotalNgAll', 'Pianica@total_ng_all');
 	Route::get('index/TotalNgAllLine', 'Pianica@total_ng_all_line');
 	Route::get('index/getTarget', 'Pianica@getTarget');
+	Route::get('index/GetNgBensuki', 'Pianica@GetNgBensuki');
+	Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
 
 	//---------- report bensuki
 	Route::get('index/reportBensuki', 'Pianica@reportBensuki');
