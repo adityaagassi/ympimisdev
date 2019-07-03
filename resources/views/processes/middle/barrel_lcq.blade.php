@@ -177,7 +177,7 @@
 			}
 		}
 
-		if($('input[type=checkbox]:checked').length !== $('input[type=checkbox]').length){
+		// if($('input[type=checkbox]:checked').length !== $('input[type=checkbox]').length){
 			if(confirm("There is unchecked data!")){
 				var d = [];
 				$("input[type=checkbox]:checked").each(function() {
@@ -222,51 +222,51 @@
 					}
 				});
 			}
-		}
-		else{
-			var d = [];
-			$("input[type=checkbox]:checked").each(function() {
-				d.push([this.id, this.name]);
-			});
+		// }
+		// else{
+		// 	var d = [];
+		// 	$("input[type=checkbox]:checked").each(function() {
+		// 		d.push([this.id, this.name]);
+		// 	});
 
-			var data = {
-				tag : d,
-				code : $('#code').val(),
-				surface : $('#surface').val(),
-				no_machine : $('#machine').text(),
-			}
+		// 	var data = {
+		// 		tag : d,
+		// 		code : $('#code').val(),
+		// 		surface : $('#surface').val(),
+		// 		no_machine : $('#machine').text(),
+		// 	}
 
-			$.post('{{ url("print/middle/barrel") }}', data, function(result, status, xhr){
-				if(xhr.status == 200){
-					if(result.status){
-						$("#loading").hide();
-						$(element).removeAttr('disabled');
-						openSuccessGritter('Success', result.message);
-						fillTable();
-						$("#1").css("background-color","rgb(204,255,255)");
-						$("#2").css("background-color","rgb(204,255,255)");
-						$("#3").css("background-color","rgb(204,255,255)");
-						$("#4").css("background-color","rgb(204,255,255)");
-						$("#5").css("background-color","rgb(204,255,255)");
-						$("#6").css("background-color","rgb(204,255,255)");
-						$('#machine').text('');
-					}
-					else{
-						$("#loading").hide();
-						$(element).removeAttr('disabled');
-						audio_error.play();
-						openErrorGritter('Error', result.message);
-					}
-				}
-				else{
-					$("#loading").hide();
-					$(element).removeAttr('disabled');
-					audio_error.play();
-					alert('Disconnected from server');
-					fillTable();
-				}
-			});
-		}
+		// 	$.post('{{ url("print/middle/barrel") }}', data, function(result, status, xhr){
+		// 		if(xhr.status == 200){
+		// 			if(result.status){
+		// 				$("#loading").hide();
+		// 				$(element).removeAttr('disabled');
+		// 				openSuccessGritter('Success', result.message);
+		// 				fillTable();
+		// 				$("#1").css("background-color","rgb(204,255,255)");
+		// 				$("#2").css("background-color","rgb(204,255,255)");
+		// 				$("#3").css("background-color","rgb(204,255,255)");
+		// 				$("#4").css("background-color","rgb(204,255,255)");
+		// 				$("#5").css("background-color","rgb(204,255,255)");
+		// 				$("#6").css("background-color","rgb(204,255,255)");
+		// 				$('#machine').text('');
+		// 			}
+		// 			else{
+		// 				$("#loading").hide();
+		// 				$(element).removeAttr('disabled');
+		// 				audio_error.play();
+		// 				openErrorGritter('Error', result.message);
+		// 			}
+		// 		}
+		// 		else{
+		// 			$("#loading").hide();
+		// 			$(element).removeAttr('disabled');
+		// 			audio_error.play();
+		// 			alert('Disconnected from server');
+		// 			fillTable();
+		// 		}
+		// 	});
+		// }
 	}
 
 	function fillTable(){
