@@ -37,6 +37,9 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
+	.dataTable > thead > tr > th[class*="sort"]:after{
+		content: "" !important;
+	}
 	#loading, #error { display: none; }
 </style>
 @stop
@@ -167,6 +170,9 @@
 				if(result.status){
 					var tableJobBody = "";
 					$('#tableJobBody').html("");
+					$('#tableJob').DataTable().clear();
+					$('#tableJob').DataTable().destroy();
+
 					var no = 1;
 					$.each(result.queues, function(index, value){
 						tableJobBody += '<tr>';
@@ -185,6 +191,22 @@
 					$('#total').html(result.queues.length);
 					$('#picked').html(0);
 					total = 0;
+
+					$('#tableJob').DataTable({
+						'responsive':true,
+						"pageLength": 40,
+						'paging': true,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+					});
 				}
 				else{
 					audio_error.play();

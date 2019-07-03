@@ -220,7 +220,6 @@ class MiddleProcessController extends Controller
 			->whereIn('materials.hpl', $request->get('hpl'))
 			->where('materials.surface', 'like', '%LCQ')
 			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
-			->limit(30)
 			->get();
 			$code = 'FLANEL';
 		}
