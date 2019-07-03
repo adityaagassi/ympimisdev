@@ -20,6 +20,7 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Lacquering</a>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-plt") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Plating</a>
+			<a href="{{ url("index/process_middle_barrel", "barrel-sx-flanel") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Flanel</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_kensa", "incoming-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check</a>
 			<a href="{{ url("index/process_middle_kensa", "incoming-lcq2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check (After Treatment)</a>

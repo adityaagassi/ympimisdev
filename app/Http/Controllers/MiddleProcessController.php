@@ -86,6 +86,19 @@ class MiddleProcessController extends Controller
 				'surface' => $surface,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 		}
+
+		if($id == 'barrel-sx-flanel'){
+			$title = 'Saxophone Flanel';
+			$mprc = 'S51';
+			$hpl = 'ASKEY,TSKEY';
+			$surface = 'FLANEL';
+			return view('processes.middle.barrel_flanel', array(
+				'title' => $title,
+				'mrpc' => $mprc,
+				'hpl' => $hpl,
+				'surface' => $surface,
+			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
+		}
 	}
 
 	public function indexProcessMiddleKensa($id){
@@ -198,6 +211,18 @@ class MiddleProcessController extends Controller
 			->limit(30)
 			->get();
 			$code = 'PLT';
+		}
+		elseif($request->get('surface') == 'FLANEL'){
+			$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+			->leftJoin(db::raw('(select bom_components.material_parent, bom_components.material_child, materials.material_description from bom_components left join materials on materials.material_number = bom_components.material_child) as bom_components'), 'bom_components.material_parent', '=', 'barrel_queues.material_number')
+			->where('materials.category', '=', 'WIP')
+			->where('materials.mrpc', '=', $request->get('mrpc'))
+			->whereIn('materials.hpl', $request->get('hpl'))
+			->where('materials.surface', 'like', '%LCQ')
+			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
+			->limit(30)
+			->get();
+			$code = 'FLANEL';
 		}
 
 		$response = array(
@@ -524,6 +549,91 @@ class MiddleProcessController extends Controller
 				);
 				return Response::json($response);
 			}			
+		}
+
+		elseif($request->get('surface') == 'FLANEL'){
+			try{
+				$tags = $request->get('tag');
+
+				foreach ($tags as $tag) {
+					$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+					->where('barrel_queues.tag', '=', $tag[0])
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')
+					->first();
+
+					$insert_jig = [
+						'machine' => $request->get('code'),
+						'jig' => 0,
+						'key' => $barrel_queue->key,
+						'tag' => $tag[0],
+						'material_number' => $barrel_queue->material_number,
+						'qty' => $barrel_queue->quantity,
+						'status' => $request->get('code'),
+						'remark' => $request->get('code'),
+						'created_by' => $id
+					];
+
+					$insert_inventory = [
+						'tag' => $tag[0],
+						'material_number' => $barrel_queue->material_number,
+						'quantity' => $barrel_queue->quantity,
+						'location' => 'barrel',
+					];
+
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(1,1);
+					$printer->text('ID SLIP'."\n");
+					$printer->setTextSize(4,4);
+					$printer->setUnderline(true);
+					$printer->text('LACQUERING'."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->setTextSize(5,2);
+					$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
+					$printer->text($barrel_queue->surface."\n\n");
+					$printer->initialize();
+					$printer->setJustification(Printer::JUSTIFY_CENTER);
+					$printer->qrCode($barrel_queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+					$printer->text($barrel_queue->tag."\n\n");
+					$printer->initialize();
+					$printer->setTextSize(1,1);
+					$printer->text("GMC : ".$barrel_queue->material_number."\n");
+					$printer->text("DESC: ".$barrel_queue->material_description."\n");	
+					$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                MACHINE: ".$request->get('code')."\n");
+					$printer->cut(Printer::CUT_PARTIAL, 50);
+					$printer->close();
+
+					$barrel = new Barrel($insert_jig);
+					$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
+
+					$middle_inventory = MiddleInventory::firstOrcreate(
+						[
+							'tag' => $tag[0]
+						],
+						$insert_inventory
+					);
+
+					DB::transaction(function() use ($barrel, $delete_queue){
+						$barrel->save();
+						$delete_queue->forceDelete();
+					});
+
+				}
+
+				$response = array(
+					'status' => true,
+					'message' => 'New kanban has been printed',
+					'tes' => $tags,
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 		}
 	}
 
