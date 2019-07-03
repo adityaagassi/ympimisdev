@@ -130,7 +130,8 @@ class SendEmailOvertimes extends Command
         ];
 
         // dd($overtimes);
-
+        // exit;
+        
         if($data != null){
             Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
         }
