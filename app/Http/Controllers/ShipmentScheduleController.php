@@ -181,7 +181,6 @@ class ShipmentScheduleController extends Controller
     {
         try
         {
-            $id = Auth::id();
             $st_month = date('Y-m-d', strtotime(str_replace('/','-','01/' . $request->get('st_month'))));
             $shipment_schedule = ShipmentSchedule::find($id);
 
@@ -194,7 +193,6 @@ class ShipmentScheduleController extends Controller
             $shipment_schedule->st_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('st_date'))));
             $shipment_schedule->bl_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('bl_date'))));
             $shipment_schedule->quantity = $request->get('quantity');
-            $shipment_schedule->created_by = $id;
             $shipment_schedule->save();
             
             return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been updated.')->with('page', 'Shipment Schedule');
@@ -229,7 +227,7 @@ class ShipmentScheduleController extends Controller
 
     public function import(Request $request)
     {
-       if($request->hasFile('shipment_schedule')){
+     if($request->hasFile('shipment_schedule')){
 
         $id = Auth::id();
 
