@@ -445,12 +445,15 @@ class MiddleProcessController extends Controller
 			$tags = $request->get('tag');
 
 			try{
-				$queues = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
-				->whereIn('barrel_queues.tag', $request->get('tag'))
-				->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description')
-				->get();
 
-				foreach ($queues as $queue) {
+				foreach ($tags as $tag) {
+
+					$queue = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
+					->where('barrel_queues.tag', '=', $tag[0])
+					// ->whereIn('barrel_queues.tag', $request->get('tag'))
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description')
+					->first();
+
 					$insert_log = [
 						'machine' => 'PLT',
 						'tag' => $queue->tag,
@@ -537,7 +540,7 @@ class MiddleProcessController extends Controller
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		if(substr($request->get('qr'),0,3) == 'mcb'){
+		if(substr($request->get('qr'),0,3) == 'MCB'){
 			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
 
 			if($barrels->count() > 0){

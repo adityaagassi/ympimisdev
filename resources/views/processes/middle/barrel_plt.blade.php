@@ -101,7 +101,7 @@
 	var total;
 
 	jQuery(document).ready(function() {
-
+		$('body').toggleClass("sidebar-collapse");
 		fillTable();
 	});
 

@@ -322,7 +322,7 @@
 
 			$('#queueTable').DataTable({
 				'responsive':true,
-				"pageLength": 30,
+				"pageLength": 40,
 				'paging': true,
 				'lengthChange': false,
 				'searching': false,
