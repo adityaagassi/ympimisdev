@@ -197,7 +197,7 @@
 						"pageLength": 40,
 						'paging': true,
 						'lengthChange': false,
-						'searching': false,
+						'searching': true,
 						'ordering': false,
 						'order': [],
 						'info': true,
