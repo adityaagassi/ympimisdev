@@ -595,7 +595,8 @@ class MiddleProcessController extends Controller
 
 							$barrel_log = new BarrelLog($insert_log);
 
-							$delete_barrel = Barrel::where('tag', '=', $barrel->tag)->where('machine', '=', $barrel->machine)->forceDelete();							
+							$delete_barrel = Barrel::where('tag', '=', $barrel->tag)->where('machine', '=', $barrel->machine)->forceDelete();
+							$barrel_log->save();					
 						}
 
 						$update_barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->update([
