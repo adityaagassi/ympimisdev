@@ -104,8 +104,12 @@ class MiddleProcessController extends Controller
 	public function indexProcessMiddleReturn($id){
 		if($id == 'buffing'){
 			$title = 'Return Material to Buffing';
+			$mprc = 'S51';
+			$hpl = 'ASKEY,TSKEY';
 			return view('processes.middle.return', array(
 				'title' => $title,
+				'mrpc' => $mprc,
+				'hpl' => $hpl,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 		}
 	}
@@ -1188,11 +1192,14 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchProcessMiddleReturn()
+	public function fetchProcessMiddleReturn(Request $request)
 	{
-		$barrel_queues = DB::table('barrel_queues')		
-		->select('tag','material_number','quantity','created_at','remark')
-		->where('remark','LIKE','return%')
+		$barrel_queues = DB::table('barrel_queues')->leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		->select('barrel_queues.tag', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_number', 'materials.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at', 'barrel_queues.remark')
+		->where('materials.category', '=', 'WIP')
+		->where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->where('barrel_queues.remark','LIKE','return%')
 		->orderBy('created_at','asc')
 		->get();
 

@@ -56,6 +56,8 @@
 @stop
 @section('header')
 <section class="content-header">
+	<input type="hidden" id="hpl" value="{{ $hpl }}">
+	<input type="hidden" id="mrpc" value="{{ $mrpc }}">
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
@@ -86,11 +88,15 @@
 					<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 						<tr>
 							<th style="width: 1%; padding: 0;">No</th>
-							<th style="width: 7%; padding: 0;">Tag</th>
-							<th style="width: 3%; padding: 0;">Material</th>
+							<th style="width: 2%; padding: 0;">Tag</th>
+							<th style="width: 1%; padding: 0;">Model</th>
+							<th style="width: 1%; padding: 0;">Key</th>
+							<th style="width: 1%; padding: 0;">Surface</th>
+							<th style="width: 1%; padding: 0;">Material</th>
+							<th style="width: 7%; padding: 0;">Description</th>
 							<th style="width: 1%; padding: 0;">Quantity</th>
-							<th style="width: 4%; padding: 0;">Created At</th>
-							<th style="width: 2%; padding: 0;">Action</th>
+							<th style="width: 3%; padding: 0;">Created At</th>
+							<th style="width: 1%; padding: 0;">Action</th>
 						</tr>
 					</thead>
 					<tbody id="returnTableBody">
@@ -113,8 +119,8 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		filltable();
 		$('#qr').focus();
+		filltable();
 
 		$('#qr').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
@@ -175,17 +181,26 @@
 	}
 
 	function filltable() {
-		$.get('{{ url("fetch/middle_return/barrel_return") }}', function(result, status, xhr){
+		var hpl = $('#hpl').val().split(',');
+		var data = {
+			mrpc : $('#mrpc').val(),
+			hpl : hpl,
+		}
+		$.get('{{ url("fetch/middle_return/barrel_return") }}', data, function(result, status, xhr){
 			$("#returnTableBody").empty();
 			var body = "", no = 1;
 			$.each(result.datas, function(index, value){
 				body += "<tr>";
 				body += "<td>"+no+"</td>";
 				body += "<td>"+value.tag+"</td>";
+				body += "<td>"+value.model+"</td>";
+				body += "<td>"+value.key+"</td>";
+				body += "<td>"+value.surface+"</td>";
 				body += "<td>"+value.material_number+"</td>";
+				body += "<td>"+value.material_description+"</td>";
 				body += "<td>"+value.quantity+"</td>";
 				body += "<td>"+value.created_at+"</td>";
-				body += "<td><button class='btn btn-xs btn-success' onclick='toInventories(\""+value.tag+"\",\""+value.remark+"\",\""+value.material_number+"\","+value.quantity+")'><i class='fa fa-rotate-left'></i> inventories</td>";
+				body += "<td><button class='btn btn-xs btn-danger' onclick='toInventories(\""+value.tag+"\",\""+value.remark+"\",\""+value.material_number+"\","+value.quantity+")'><i class='fa fa-rotate-left'></i> Cancel</td>";
 				body += "</tr>";
 				no++;
 			})
