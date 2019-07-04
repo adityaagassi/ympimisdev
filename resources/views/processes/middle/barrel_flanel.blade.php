@@ -130,6 +130,7 @@
 		$("input[type=checkbox]:checked").each(function() {
 			tag.push([this.id, this.name]);
 		});
+		// console.log(tag);
 
 		var data = {
 			tag : tag,

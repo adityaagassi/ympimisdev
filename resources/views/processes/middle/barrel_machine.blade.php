@@ -73,7 +73,9 @@
 								<tr>
 									<th colspan="3" id="status1"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown1"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -102,7 +104,9 @@
 								<tr>
 									<th colspan="3" id="status2"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown2"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -131,7 +135,9 @@
 								<tr>
 									<th colspan="3" id="status3"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown3"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -160,7 +166,9 @@
 								<tr>
 									<th colspan="3" id="status4"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown4"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -189,7 +197,9 @@
 								<tr>
 									<th colspan="3" id="status5"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown5"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -218,7 +228,9 @@
 								<tr>
 									<th colspan="3" id="status6"> &nbsp;</th>
 								</tr>
-
+								<tr>
+									<th colspan="3" id="countdown6"> &nbsp;</th>
+								</tr>
 							</thead>
 							<thead style="color: #FFD700;">
 								<tr>
@@ -232,7 +244,7 @@
 							<tfoot>
 								<tr>
 									<th colspan="2">Total</th>
-									<th id="total6"></th>
+									<th id="total6"> &nbsp;</th>
 								</tr>
 							</tfoot>
 						</table>
