@@ -399,7 +399,24 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
 	Route::post('scan/middle/barrel', 'MiddleProcessController@scanMiddleBarrel');
+	Route::post('post/middle_return/barrel_return', 'MiddleProcessController@postProcessMiddleReturn');
+	Route::post('post/middle_return/return_inventory', 'MiddleProcessController@postReturnInventory');
 });
+Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
+Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
+Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
+Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
+Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
+Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBarrelMachine');
+Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
+Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
+Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
+Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
+Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
+Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchMachine');
+Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
+Route::get('index/process_middle_return/{id}', 'MiddleProcessController@indexProcessMiddleReturn');
+Route::get('fetch/middle_return/barrel_return', 'MiddleProcessController@fetchProcessMiddleReturn');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
@@ -520,20 +537,6 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	
 	
 });
-
-Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
-Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
-Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
-Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
-Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
-Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBarrelMachine');
-Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
-Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
-Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
-Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
-Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
-Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchMachine');
-Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

@@ -101,6 +101,15 @@ class MiddleProcessController extends Controller
 		}
 	}
 
+	public function indexProcessMiddleReturn($id){
+		if($id == 'buffing'){
+			$title = 'Return Material to Buffing';
+			return view('processes.middle.return', array(
+				'title' => $title,
+			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
+		}
+	}
+
 	public function indexProcessMiddleKensa($id){
 		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
 		$groups = DB::table('middle_groups')->where('location', '=', $id)->get();
@@ -134,8 +143,8 @@ class MiddleProcessController extends Controller
 
 	public function indexBarrelAdjustment()
 	{
-		$title = 'Saxophone Barrel Board 2';
-		$title_jp = 'サックスのバレル加工用モニター';
+		$title = 'Saxophone Barrel Adjustment';
+		$title_jp = '??';
 		$mprc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
 		
@@ -220,7 +229,7 @@ class MiddleProcessController extends Controller
 			->whereIn('materials.hpl', $request->get('hpl'))
 			->where('materials.surface', 'like', '%LCQ')
 			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
-			->limit(30)
+			// ->limit(30)
 			->get();
 			$code = 'FLANEL';
 		}
@@ -1143,6 +1152,73 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'machine_stat' => $barrel_machine
+		);
+		return Response::json($response);
+	}
+
+	public function postProcessMiddleReturn(Request $request)
+	{
+		$tag = $request->get('qr');
+		$barrel_inventories = DB::table('middle_inventories')		
+		->select('tag', 'material_number','location','quantity')
+		->where('tag','=', $tag)
+		->get();
+
+		$created = DB::table('barrel_queues')		
+		->select(DB::raw("created_at - INTERVAL 5 SECOND as created_at"))
+		->orderBy('created_at','asc')
+		->limit(1)
+		->get();
+
+		DB::table('barrel_queues')->insert(
+			['tag' => $request->get('qr'),
+			'material_number' => $barrel_inventories[0]->material_number,
+			'remark' => "return+".$barrel_inventories[0]->location,
+			'quantity' => $barrel_inventories[0]->quantity,
+			'created_at' => $created[0]->created_at,
+			'updated_at' => $created[0]->created_at
+		]
+	);
+
+		DB::table('middle_inventories')->where('tag', '=', $tag)->delete();
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchProcessMiddleReturn()
+	{
+		$barrel_queues = DB::table('barrel_queues')		
+		->select('tag','material_number','quantity','created_at','remark')
+		->where('remark','LIKE','return%')
+		->orderBy('created_at','asc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $barrel_queues,
+		);
+		return Response::json($response);
+	}
+
+	public function postReturnInventory(Request $request)
+	{
+		$tag = $request->get('tag');
+		$inventory = new MiddleInventory([
+			'tag' => $tag,
+			'material_number' => $request->get('material'),
+			'location' => $request->get('location'),
+			'quantity' => $request->get('quantity')
+		]);
+
+		$inventory->save();
+
+		DB::table('barrel_queues')->where('tag', '=', $tag)->delete();
+
+		$response = array(
+			'status' => true
 		);
 		return Response::json($response);
 	}
