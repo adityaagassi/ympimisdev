@@ -663,7 +663,7 @@ class MiddleProcessController extends Controller
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		if(substr($request->get('qr'),0,3) == 'MCB'){
+		if(substr($request->get('qr'),0,3) == 'MCB' || substr($request->get('qr'),0,3) == 'mcb'){
 			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
 
 			if($barrels->count() > 0){
@@ -1226,6 +1226,20 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBarrelAdjustment()
+	{
+		$adjust = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		->select('barrel_queues.tag', 'barrel_queues.material_number', 'materials.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
+		->orderBy('barrel_queues.created_at', 'asc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'barrel_adjust' => $adjust
 		);
 		return Response::json($response);
 	}
