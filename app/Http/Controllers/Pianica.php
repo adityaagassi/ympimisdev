@@ -113,7 +113,7 @@ public function bensuki()
         'middles' => $middles,
         'middle' => $middles,
         'bennukis' => $bennukis,        
-    ))->with('page', 'Bensuki');
+    ))->with('page', 'Bentsuki');
 }
 
 
@@ -209,7 +209,7 @@ public function op()
     return view('pianica.op',array(        
         'lines' => $lines,
         'bagians' => $bagians,
-    ))->with('page', 'Master Operator');
+    ))->with('page', 'Operator');
 }
 
 public function fillop($value='')
@@ -812,7 +812,7 @@ public function savekensaakhir(Request $request){
  public function reportBensuki()
   {
 
-    return view('pianica.reportBensuki')->with('page', 'Report Bensuki');
+    return view('pianica.reportBensuki')->with('page', 'Report Bentsuki');
 }
 
 public function getTotalNG(Request $request)
@@ -911,7 +911,7 @@ $tgl2 =DB::select($tgl);
  public function display()
   {
 
-    return view('pianica.display')->with('page', 'Display');
+    return view('pianica.display')->with('page', 'Production Result');
 }
 
 public function getTarget(Request $request){
@@ -1601,7 +1601,7 @@ select id,ng_name from ng_lists WHERE location='PN_Kensa_Akhir'
  public function reportVisual()
   {
 
-    return view('pianica.reportVisual')->with('page', 'Report Kakuning Visual');
+    return view('pianica.reportVisual')->with('page', 'Report Kakunin Visual');
 }
 
 public function getKensaVisualALL(Request $request)
