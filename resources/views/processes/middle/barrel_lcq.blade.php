@@ -178,7 +178,7 @@
 		}
 
 		// if($('input[type=checkbox]:checked').length !== $('input[type=checkbox]').length){
-			if(confirm("There is unchecked data!")){
+			if(confirm("ID slip will be printed, contiune?")){
 				var d = [];
 				$("input[type=checkbox]:checked").each(function() {
 					d.push([this.id, this.name]);
