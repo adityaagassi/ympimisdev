@@ -46,7 +46,7 @@
 <section class="content-header">
   <h1>
     Detail {{ $page }}
-    <small>it all starts here</small>
+     <span class="text-purple"> プレート詳細</span>
   </h1>
 
   <ol class="breadcrumb">
@@ -82,7 +82,13 @@
           <span  ><b id="textmodel" style="color:red"> [ Model ] - </b><b class="destroy" id="modelb"></span><br>
             <div class="col-xs-12" style="padding: 0px">
               @foreach($models as $model) 
-              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg btn-warning" onclick="model(this.id)" id="{{$model}}" style="width:100%;">{{$model}}</button></div>
+              @if($model == "P-37")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  #800000; color: white">{{$model}}</button></div>
+              @elseif($model == "P-32")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(135,206,250); color: black">{{$model}}</button></div>
+              @else
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(240,230,140); color: black">{{$model}}</button></div>
+              @endif
               @endforeach
               <br>          
             </div>
@@ -99,13 +105,13 @@
                 <button class="btn btn-warning btn-lg pull-right" onclick="openmodal()">Change Operator Pureto</button>
                 <br>
                 <span class="info-box-text" style="font-size: 25px">OPERATOR PURETO</span>
-                <span class="info-box-number" id="p_pureto_nama" style="font-size: 25px">[ ]</span><b id="p_pureto" hidden></b> <b id="p_pureto_nik" hidden></b> 
+                <span class="info-box-number" id="p_pureto_nama" style="font-size: 25px; color:blue">[ ]</span><b id="p_pureto" hidden></b> <b id="p_pureto_nik" hidden></b> 
                 <span class="info-box-text" style="font-size: 25px">RFID</span>
-                <span class="info-box-number" id="p_rfid" style="font-size: 25px">[ ]</span>
+                <span class="info-box-number" id="p_rfid" style="font-size: 25px; color:blue">[ ]</span>
                 <span class="info-box-text" style="font-size: 25px">MODEL</span>
-                <span class="info-box-number" id="p_model" style="font-size: 25px">[ ]</span>
+                <span class="info-box-number" id="p_model" style="font-size: 25px;color:blue">[ ]</span>
                 <span class="info-box-text" style="font-size: 25px">OPERATOR BENSUKI</span>
-                <span class="info-box-number" id="p_bensuki" style="font-size: 25px">[ ] </span><b id="nikbensuki" hidden></b>
+                <span class="info-box-number" id="p_bensuki" style="font-size: 25px; color:blue">[ ] </span><b id="nikbensuki" hidden></b>
               
                 &nbsp;
               </div>
@@ -119,26 +125,30 @@
             <div class="box box-body">              
             <span ><b id="opbentetx" style="color:red"> [ Op Bensuki ] - </b> <b class="destroy" id="posisi"></b> <b class="destroy" id="opben"></b></span><br>
             <div class="table-responsive">
+
               <div class="col-xs-4">
-              <table>
-                <tr><td colspan="6" style="padding: 10px" align="center">LOW</td></tr>
-                <tr>                  
-                  @foreach($lows  as $nomor => $lows)
-                  @if($lows->warna =="M" )
-                  <td style="padding: 10px"><button class="btn btn-lg btn-danger" id="{{ $lows->nama}}" name="{{ $lows->nik}}" onclick="opben('LOW',this.id,this.name,this)">
-                    {{$a = explode('-', trim($lows->kode))[0]}}</button></td>
-                    @endif                
-                    @endforeach
-                  </tr>
-                  <tr>
-                    @foreach($low  as $nomor => $low)
-                    @if($low->warna =="H" )
-                    <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $low->nama}}" name="{{ $lows->nik}}" onclick="opben('LOW',this.id,this.name,this)">{{$a = explode('-', trim($low->kode))[0]}}</button></td>
-                    @endif                
-                    @endforeach                
-                  </tr>
-                </table>
-                </div>
+                    <table>
+                      <tr><td colspan="6" style="padding: 10px" align="center">HIGH</td></tr>
+                    <tr>
+                      
+                      @foreach($highs  as $nomor => $highs)
+                      @if($highs->warna =="M" )
+                      <td style="padding: 10px"><button class="btn btn-lg btn-danger" id="{{ $highs->nama}}" name="{{ $highs->nik}}"onclick="opben('HIGH',this.id,this.name,this)">
+                        {{$a = explode('-', trim($highs->kode))[0]}}</button></td>
+                        @endif                
+                        @endforeach
+                      </tr>
+                      <tr>
+                        @foreach($high  as $nomor => $high)
+                        @if($high->warna =="H" )
+                        <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $high->nama}}" name="{{ $highs->nik}}"onclick="opben('HIGH',this.id,this.name,this)">{{$a = explode('-', trim($high->kode))[0]}}</button></td>
+                        @endif                
+                        @endforeach                
+                      </tr>
+                    </table>                       
+                    </div> 
+
+              
                 <div class="col-xs-4">
                 <table>
                   <tr><td colspan="6" style="padding: 10px" align="center">MIDDLE</td></tr>
@@ -160,27 +170,28 @@
                     </tr>
                     </table>
                   </div>
+
                   <div class="col-xs-4">
-                    <table>
-                      <tr><td colspan="6" style="padding: 10px" align="center">HIGH</td></tr>
-                    <tr>
-                      
-                      @foreach($highs  as $nomor => $highs)
-                      @if($highs->warna =="M" )
-                      <td style="padding: 10px"><button class="btn btn-lg btn-danger" id="{{ $highs->nama}}" name="{{ $highs->nik}}"onclick="opben('HIGH',this.id,this.name,this)">
-                        {{$a = explode('-', trim($highs->kode))[0]}}</button></td>
-                        @endif                
-                        @endforeach
-                      </tr>
-                      <tr>
-                        @foreach($high  as $nomor => $high)
-                        @if($high->warna =="H" )
-                        <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $high->nama}}" name="{{ $highs->nik}}"onclick="opben('HIGH',this.id,this.name,this)">{{$a = explode('-', trim($high->kode))[0]}}</button></td>
-                        @endif                
-                        @endforeach                
-                      </tr>
-                    </table>                       
-                    </div>  
+              <table>
+                <tr><td colspan="6" style="padding: 10px" align="center">LOW</td></tr>
+                <tr>                  
+                  @foreach($lows  as $nomor => $lows)
+                  @if($lows->warna =="M" )
+                  <td style="padding: 10px"><button class="btn btn-lg btn-danger" id="{{ $lows->nama}}" name="{{ $lows->nik}}" onclick="opben('LOW',this.id,this.name,this)">
+                    {{$a = explode('-', trim($lows->kode))[0]}}</button></td>
+                    @endif                
+                    @endforeach
+                  </tr>
+                  <tr>
+                    @foreach($low  as $nomor => $low)
+                    @if($low->warna =="H" )
+                    <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $low->nama}}" name="{{ $lows->nik}}" onclick="opben('LOW',this.id,this.name,this)">{{$a = explode('-', trim($low->kode))[0]}}</button></td>
+                    @endif                
+                    @endforeach                
+                  </tr>
+                </table>
+                </div>
+                   
                     <BUTTON class="btn btn-lg btn-success pull-right" onclick="simpan()" style="margin: 0px 0px 0px 0px; " >Save</BUTTON>             
             </div>
             </div>            

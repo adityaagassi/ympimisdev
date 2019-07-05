@@ -50,7 +50,7 @@
 <section class="content-header">
   <h1>
     Detail {{ $page }}
-    <small>it all starts here</small>
+    <span class="text-purple"> 最初検査詳細</span>
   </h1>
 
   <ol class="breadcrumb">

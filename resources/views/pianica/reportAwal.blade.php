@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
      {{ $page }}
-    <small>it all starts here</small>
+    <span class="text-purple"> 最初検査リポート</span>
   </h1>
   <ol class="breadcrumb">
     <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->

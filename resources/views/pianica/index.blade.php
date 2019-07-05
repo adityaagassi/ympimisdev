@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Pianica<span class="text-purple"> FL仮組・組立の仕掛品</span>
+		Pianica<span class="text-purple"> ピアニカ</span>
 		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
 	</h1>
 </section>
@@ -24,22 +24,22 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/Bensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Bensuki-Benage </a>
+			<a href="{{ url("index/Bensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Bentsuki-Benage </a>
 			<a href="{{ url("index/Pureto") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Pureto </a>
 			<a href="{{ url("index/KensaAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kensa Awal </a>
 			<a href="{{ url("index/KensaAkhir") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kensa Akhir </a>
-			<a href="{{ url("index/KakuningVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kakuning Visual </a>
+			<a href="{{ url("index/KakuningVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kakunin Visual </a>
 			{{-- <a href="{{ url("/index/repairFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Return/Repair</a> --}}
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			 <a href="{{ url("/index/DisplayPN") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Display</a>
-			  <a href="{{ url("/index/reportBensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Bensuki</a>
+			  <a href="{{ url("/index/reportBensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Bentsuki</a>
 			  <a href="{{ url("/index/reportAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Awal All Line</a>
 			   <a href="{{ url("/index/reportAwalLine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Awal / Line</a>
 			   <a href="{{ url("/index/reportAkhir") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Akhir All Line</a>
 			   <a href="{{ url("/index/reportAkhirLine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Akhir / Line</a>
-			   <a href="{{ url("/index/reportVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kakuning Visual All Line</a>
+			   <a href="{{ url("/index/reportVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kakunin Visual All Line</a>
 		
 		</div>
 	</div>
@@ -54,6 +54,7 @@
 		}
 	});
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		
 	});
 </script>

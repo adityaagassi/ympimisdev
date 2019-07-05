@@ -42,7 +42,7 @@
 <section class="content-header">
   <h1>
     Detail {{ $page }}
-    <small>it all starts here</small>
+     <span class="text-purple"> 弁付き詳細</span>
   </h1>
 
   <ol class="breadcrumb">
@@ -165,7 +165,11 @@
                 Shift<br>
                 <div class="col-xs-12" style="padding: 0px">
                  @foreach($shifts as $shifts) 
-                 <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-LG btn-info" onclick="shift(this.id,this)" id="{{$shifts}}" style="width:100%;">{{$shifts}}</button></div>
+                 @if($shifts =="B")
+                 <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ></div>
+                 @else
+                  <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-LG btn-info" onclick="shift(this.id,this)" id="{{$shifts}}" style="width:100%;">{{$shifts}}</button></div>
+                  @endif
                  @endforeach
                </div>
 
