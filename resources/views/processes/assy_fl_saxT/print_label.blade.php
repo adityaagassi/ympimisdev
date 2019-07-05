@@ -284,9 +284,10 @@
 						<input type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw"  name="modelText" id="modelText2"  disabled>
 						<BR><BR>
 						<center>
+							<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
 							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label Besar</button>
-							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label Kecil</button>
-							<button class="btn btn-lg btn-primary" onclick="reprintAll();">Label Besar + Kecil</button>
+							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label Kecil</button><br><br>
+							<button class="btn btn-lg btn-primary" onclick="reprintAll();">Label Besar + Kecil + Deskripsi</button>
 						</center>
 					</div>
 					<div class="modal-footer">
@@ -904,6 +905,7 @@
 						$('#btnprint2').prop('disabled',true);
 
 						window.open('{{ url("index/label_besar") }}'+'/'+sn+'/'+gmc+'/'+jpn, '_blank');
+						window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
 						// window.open('{{ url("index/label_des") }}'+'/'+sn, '_blank');
 
 					}
@@ -1073,9 +1075,9 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					// alert(result.reprint[0].material_number)
-					
+					// alert(result.reprint[0].material_number)					
 					window.open('{{ url("index/label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+result.reprint[0].status+'R', '_blank');
+					window.open('{{ url("index/label_des") }}'+'/'+result.reprint[0].serial_number, '_blank');
 					
 				}
 				else{
@@ -1088,6 +1090,11 @@
 				alert('Disconnected from sever');
 			}
 		});
+	}
+
+	function repintDes() {
+		var sn = $('#sn').val();
+		window.open('{{ url("index/label_des") }}'+'/'+sn, '_blank');
 	}
 
 	function repintKecil() {

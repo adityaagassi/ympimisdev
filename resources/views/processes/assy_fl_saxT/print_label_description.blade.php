@@ -11,7 +11,7 @@
 		.name {
 			
 			font-family: 'arial';
-			-moz-transform:scale(1,1.4);
+			
 		}
 
 
@@ -21,14 +21,12 @@
 include(app_path() . '\barcode\barcode.php');
 @endphp
 
-<br><br><br><br>
-<br><br><br><br>
-<table border="0" style="margin-left: 22px">	
+<table border="0" >	
 	@foreach($barcode as $nomor => $barcode)	
 	<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
 	@endforeach	
 	<tr>
-		<td colspan="3" class="name" align="center" id="model" style="font-size: 75pt;">YAS-280//ID </td>
+		<td class="name" align="center" id="model" style="font-size: 48pt; -moz-transform:scale(1,1.6);">YAS-280//ID </td>
 	</tr>	
 </table>
 </body>
@@ -37,16 +35,18 @@ include(app_path() . '\barcode\barcode.php');
 <script>
 	jQuery(document).ready(function() {		
 		day();		
+    defineCustomPaperSize();
 		printWindow(window, 'Label Besar');
+
 				
 	});
 	function day() {
 		var models = $('#codemodel').val();
 		$('#model').text(models);		
 		var panjang = (models.length - 11)*2;
-		var	ukuran = 38;
+		var	ukuran = 48;
 		if (models.length > 11) {
-			$('#model').css({"font-size":ukuran-panjang+"pt"});
+			$('#model').css({"font-size":ukuran-panjang+"pt", "-moz-transform":"scale(1,2)"});
 		}		
 	}
 	
@@ -54,10 +54,38 @@ include(app_path() . '\barcode\barcode.php');
 
 // default print settings
 var printSettings = {
-	"printSilent": true
-
-	, "printerName" : "Microsoft XPS Document Writer" 
+	"printSilent": true,
+  "shrinkToFit": true,
+  "unwriteableMarginLeft": 0,
+  "unwriteableMarginRight": 0,
+  "unwriteableMarginTop": 0,
+  "unwriteableMarginBottom": 0,
+  "edgeLeft": 0,
+  "edgeRight": 0,
+  "edgeTop": 0,
+  "edgeBottom": 0,
+  "marginLeft": 2,
+  "marginRight": 0,
+  "marginTop": 6,
+  "marginBottom": 0,
+  "scaling": 1,
+  "title": "",
+  "docURL": "",
+  "headerStrLeft": "",
+  "headerStrCenter": "",
+  "headerStrRight": "",
+  "footerStrLeft": "",
+  "footerStrCenter": "",
+  "footerStrRight": "",
+   "printerName" : "SATO LM408e (MESIN2)" 
 };
+
+function defineCustomPaperSize() {
+  console.log("Define custom paper size", false);
+  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 80.0, 10.0, jsPrintSetup.kPaperSizeInches);
+  // w, h
+  console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
+}
 
 function printWindow(win, what) {
   // jsPrintSetup messages  
@@ -103,7 +131,7 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
   		
-  		// window.close();
+  		window.close();
 
   	});
   }
