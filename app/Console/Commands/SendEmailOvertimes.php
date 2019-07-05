@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Mail\SendEmail;
 use Carbon\Carbon;
+use Artisan;
 
 class SendEmailOvertimes extends Command
 {
@@ -132,6 +133,9 @@ class SendEmailOvertimes extends Command
         // dd($overtimes);
         // exit;
         
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('config:cache');
         if($data != null){
             Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
         }
