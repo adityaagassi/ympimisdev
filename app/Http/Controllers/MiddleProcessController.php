@@ -18,6 +18,7 @@ use App\TagMaterial;
 use App\MiddleInventory;
 use App\BarrelQueue;
 use App\Barrel;
+use App\BarrelQueueInactive;
 use App\BarrelLog;
 use App\BarrelMachine;
 use App\BarrelMachineLog;
@@ -157,6 +158,215 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mprc,
 			'hpl' => $hpl,
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+	}
+
+	public function fetchMiddleBarrelReprint(Request $request){
+		if($request->get('surface') == 'LCQ'){
+			$barrels = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
+			->where('materials.category', '=', 'WIP')
+			->where('materials.mrpc', '=', $request->get('mrpc'))
+			->whereIn('materials.hpl', $request->get('hpl'))
+			->where('materials.surface', 'like', '%LCQ')
+			->select('barrels.tag', 'barrels.remark', 'materials.key', 'materials.model', 'materials.surface', 'barrels.machine')
+			->get();
+		}
+		if($request->get('surface') == 'PLT'){
+			$barrels = MiddleInventory::leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+			->where('materials.category', '=', 'WIP')
+			->where('materials.mrpc', '=', $request->get('mrpc'))
+			->whereIn('materials.hpl', $request->get('hpl'))
+			->where('materials.surface', 'like', '%PLT')
+			->where('middle_inventories.location', '=', 'barrel')
+			->select('middle_inventories.tag', 'materials.key', 'materials.model', 'materials.surface', 'middle_inventories.quantity')
+			->get();
+		}
+
+		$response = array(
+			'status' => true,
+			'barrels' => $barrels,
+		);
+		return Response::json($response);
+
+	}
+
+	public function printMiddleBarrelReprint(Request $request){
+
+		if(Auth::user()->role_code == "OP-Barrel-SX"){
+			$printer_name = 'Barrel-Printer';
+		}
+		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
+			$printer_name = 'MIS';
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		if($request->get('id') == 'PLT'){
+			if($request->get('tagMaterial') == null){
+				$response = array(
+					'status' => false,
+					'message' => 'No material selected',
+				);
+				return Response::json($response);	
+			}
+
+			$middle_inventories = MiddleInventory::leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+			->where('middle_inventories.location', '=', 'barrel');
+			if($request->get('tagMaterial') != null){
+				$middle_inventories = $middle_inventories->whereIn('middle_inventories.tag', $request->get('tagMaterial'));
+			}
+
+			$middle_inventories = $middle_inventories->select('middle_inventories.tag', 'middle_inventories.material_number', 'middle_inventories.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')->get();
+
+			if($middle_inventories == null){
+				$response = array(
+					'status' => false,
+					'message' => 'Material not found in barrel location.',
+				);
+				return Response::json($response);
+			}
+
+			foreach ($middle_inventories as $middle_inventory) {
+				$printer->setJustification(Printer::JUSTIFY_CENTER);
+				$printer->setTextSize(1,1);
+				$printer->text('ID SLIP '. date('d-M-Y H:i:s')." Reprint\n");
+				$printer->setTextSize(4,4);
+				$printer->setUnderline(true);
+				$printer->text('PLATING'."\n\n");
+				$printer->initialize();
+				$printer->setJustification(Printer::JUSTIFY_CENTER);
+				$printer->setTextSize(5,2);
+				$printer->text($middle_inventory->model." ".$middle_inventory->key."\n");
+				$printer->text($middle_inventory->surface."\n\n");
+				$printer->initialize();
+				$printer->setJustification(Printer::JUSTIFY_CENTER);
+				$printer->qrCode($middle_inventory->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+				$printer->text($middle_inventory->tag."\n\n");
+				$printer->initialize();
+				$printer->setTextSize(1,1);
+				$printer->text("GMC : ".$middle_inventory->material_number."\n");
+				$printer->text("DESC: ".$middle_inventory->material_description."\n");
+				$printer->text("QTY : ".$middle_inventory->quantity." PC(S)"."\n");
+				$printer->cut(Printer::CUT_PARTIAL, 50);
+				$printer->close();
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Qr code PLATING has been printed.',
+				'tes' => $middle_inventories,
+			);
+			return Response::json($response);
+		}
+		else{
+			if($request->get('tagMaterial') == null && $request->get('tagMachine') == null){
+				$response = array(
+					'status' => false,
+					'message' => 'No material or machine selected',
+				);
+				return Response::json($response);	
+			}
+
+			$barrels = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number');
+			if($request->get('tagMaterial') != null){
+				$barrels = $barrels->whereIn('barrels.tag', $request->get('tagMaterial'));
+			}
+			if($request->get('tagMachine') != null){
+				$barrels = $barrels->whereIn('barrels.remark', $request->get('tagMachine'));
+			}
+
+			$barrels = $barrels->select('barrels.tag', 'barrels.material_number', 'barrels.qty', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', 'barrels.machine', 'barrels.jig', 'barrels.remark')->get();
+
+			if ($barrels == null) {
+				$response = array(
+					'status' => false,
+					'message' => 'Material not found in barrel location.',
+				);
+				return Response::json($response);
+			}
+
+			if($request->get('id') == 'material'){
+				foreach ($barrels as $barrel) {
+					if($barrel->machine == 'FLANEL'){
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(1,1);
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." Reprint\n");
+						$printer->setTextSize(4,4);
+						$printer->setUnderline(true);
+						$printer->text('LACQUERING'."\n\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(5,2);
+						$printer->text($barrel->model." ".$barrel->key."\n");
+						$printer->text($barrel->surface."\n\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->qrCode($barrel->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+						$printer->text($barrel->tag."\n\n");
+						$printer->initialize();
+						$printer->setTextSize(1,1);
+						$printer->text("GMC : ".$barrel->material_number."\n");
+						$printer->text("DESC: ".$barrel->material_description."\n");	
+						$printer->text("QTY : ".$barrel->quantity." PC(S)                 MACHINE: FLANEL\n");
+						$printer->cut(Printer::CUT_PARTIAL, 50);
+						$printer->close();
+					}
+					else{
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(1,1);
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." Reprint\n");
+						$printer->setTextSize(4,4);
+						$printer->setUnderline(true);
+						$printer->text('LACQUERING'."\n\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(5,2);
+						$printer->text($barrel->model." ".$barrel->key."\n");
+						$printer->text($barrel->surface."\n\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->qrCode($barrel->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+						$printer->text($barrel->tag."\n\n");
+						$printer->initialize();
+						$printer->setTextSize(1,1);
+						$printer->text("GMC : ".$barrel->material_number."                           ".$barrel->remark."\n");
+						$printer->text("DESC: ".$barrel->material_description."\n");	
+						$printer->text("QTY : ".$barrel->quantity." PC(S)                 MACHINE: ".$barrel->machine." JIG: ".$barrel->jig."\n");	
+						$printer->cut(Printer::CUT_PARTIAL, 50);
+						$printer->close();
+					}
+				}
+				$response = array(
+					'status' => true,
+					'message' => 'Qr code has been printed.',
+				);
+				return Response::json($response);
+			}
+			if($request->get('id') == 'machine'){
+				$m = array();
+				foreach ($barrels as $barrel) {
+					if(!in_array($barrel->remark, $m) && $barrel->remark != 'FLANEL'){
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->setTextSize(4,4);
+						$printer->text('BARREL'."\n");
+						$printer->text("MACHINE_".$barrel->machine."\n");
+						$printer->initialize();
+						$printer->setJustification(Printer::JUSTIFY_CENTER);
+						$printer->qrCode($barrel->remark, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+						$printer->text($barrel->remark."\n\n");
+						$printer->cut();
+						$printer->close();
+						array_push($m, $barrel->remark);
+					}
+				}
+				$response = array(
+					'status' => true,
+					'message' => 'Qr code has been printed.',
+					'tes' => $barrels,
+				);
+				return Response::json($response);
+			}
+		}		
 	}
 
 	public function fetchMiddleBarrelBoard(Request $request){
@@ -336,7 +546,7 @@ class MiddleProcessController extends Controller
 
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('Y-m-d H:i:s')."\n");
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
 						$printer->text('LACQUERING'."\n\n");
@@ -353,7 +563,7 @@ class MiddleProcessController extends Controller
 						$printer->setTextSize(1,1);
 						$printer->text("GMC : ".$barrel_queue->material_number."\n");
 						$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                MACHINE: ".$request->get('code')."\n");
+						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('code')."\n");
 						$printer->cut(Printer::CUT_PARTIAL, 50);
 						$printer->close();
 
@@ -423,7 +633,7 @@ class MiddleProcessController extends Controller
 
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('Y-m-d H:i:s')."\n");
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
 						$printer->text('LACQUERING'."\n\n");
@@ -438,9 +648,9 @@ class MiddleProcessController extends Controller
 						$printer->text($barrel_queue->tag."\n\n");
 						$printer->initialize();
 						$printer->setTextSize(1,1);
-						$printer->text("GMC : ".$barrel_queue->material_number."\n");
+						$printer->text("GMC : ".$barrel_queue->material_number."                           ".$qr_machine."\n");
 						$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");			
+						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");			
 						$printer->cut(Printer::CUT_PARTIAL, 50);
 						$printer->close();
 
@@ -514,7 +724,7 @@ class MiddleProcessController extends Controller
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP'. date('Y-m-d H:i:s')."\n");
+					$printer->text('ID SLIP '. date('d-M-Y H:i:s')."\n");
 					$printer->setTextSize(4,4);
 					$printer->setUnderline(true);
 					$printer->text('PLATING'."\n\n");
@@ -595,7 +805,7 @@ class MiddleProcessController extends Controller
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '.date('Y-m-d H:i:s')."\n");
+					$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
 					$printer->setTextSize(4,4);
 					$printer->setUnderline(true);
 					$printer->text('LACQUERING'."\n\n");
@@ -612,7 +822,7 @@ class MiddleProcessController extends Controller
 					$printer->setTextSize(1,1);
 					$printer->text("GMC : ".$barrel_queue->material_number."\n");
 					$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-					$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                MACHINE: ".$request->get('code')."\n");
+					$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('code')."\n");
 					$printer->cut(Printer::CUT_PARTIAL, 50);
 					$printer->close();
 
@@ -804,7 +1014,7 @@ class MiddleProcessController extends Controller
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(4,4);
 						$printer->text('BARREL'."\n");
-						$printer->text("MACHINE ".$barrel->machine."\n");
+						$printer->text("MACHINE_".$barrel->machine."\n");
 						$printer->initialize();
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->qrCode($barrel->remark, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
@@ -1136,7 +1346,7 @@ class MiddleProcessController extends Controller
 		->get();
 
 		$barrel_machine = DB::table('barrel_machines')		
-		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
+		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'), DB::raw('hour(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as jam_cd'), DB::raw('minute(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as menit_cd'), DB::raw('second(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as detik_cd'))
 		->get();
 
 		$response = array(
@@ -1174,15 +1384,14 @@ class MiddleProcessController extends Controller
 		->limit(1)
 		->get();
 
-		DB::table('barrel_queues')->insert(
-			['tag' => $request->get('qr'),
+		DB::table('barrel_queues')->insert([
+			'tag' => $request->get('qr'),
 			'material_number' => $barrel_inventories[0]->material_number,
 			'remark' => "return+".$barrel_inventories[0]->location,
 			'quantity' => $barrel_inventories[0]->quantity,
 			'created_at' => $created[0]->created_at,
 			'updated_at' => $created[0]->created_at
-		]
-	);
+		]);
 
 		DB::table('middle_inventories')->where('tag', '=', $tag)->delete();
 
@@ -1237,9 +1446,59 @@ class MiddleProcessController extends Controller
 		->orderBy('barrel_queues.created_at', 'asc')
 		->get();
 
+		return DataTables::of($adjust)
+		->addColumn('check', function($adjust){
+			return '<input type="checkbox" class="queue" id="'.$adjust->tag.'+'.$adjust->material_number.'+'.$adjust->quantity.'+inactive" onclick="inactive(this)">';
+		})
+		->rawColumns([ 'check' => 'check'])
+		->make(true);
+	}
+
+	public function fetchBarrelInactive()
+	{
+		$inactive = BarrelQueueInactive::leftJoin('materials', 'materials.material_number', '=', 'barrel_queue_inactives.material_number')
+		->select('barrel_queue_inactives.tag', 'barrel_queue_inactives.material_number', 'materials.material_description', 'barrel_queue_inactives.quantity', 'barrel_queue_inactives.created_at')
+		->orderBy('barrel_queue_inactives.created_at', 'asc')
+		->get();
+
+		return DataTables::of($inactive)
+		->addColumn('check', function($inactive){
+			return '<input type="checkbox" class="aktif" id="'.$inactive->tag.'+'.$inactive->material_number.'+'.$inactive->quantity.'+active" onclick="active(this)">';
+		})
+		->rawColumns([ 'check' => 'check'])
+		->make(true);
+	}
+
+	public function postInactive(Request $request){
+
+		$datas = $request->get('data')[0];
+
+		for ($i=0; $i < count($datas['tag']); $i++) {
+			if ($datas['stat'][$i] == 'inactive') {
+				DB::table('barrel_queues')->where('tag', '=', $datas['tag'][$i])->delete();
+
+				$inactive = new BarrelQueueInactive([
+					'tag' => $datas['tag'][$i],
+					'material_number' => $datas['material'][$i],
+					'quantity' => $datas['qty'][$i]
+				]);
+				$inactive->save();
+			} else if($datas['stat'][$i] == "active") {
+				DB::table('barrel_queue_inactives')->where('tag', '=', $datas['tag'][$i])->delete();
+
+				$active = db::table('barrel_queues')->insert([
+					'tag' => $datas['tag'][$i],
+					'material_number' => $datas['material'][$i],
+					'quantity' => $datas['qty'][$i],
+					'created_at' => $datas['created_at'][$i],
+					'updated_at' => date('Y-m-d H:i:s')
+				]);
+			} 
+		}
+
 		$response = array(
 			'status' => true,
-			'barrel_adjust' => $adjust
+			// 'tes' => $datas['tag']
 		);
 		return Response::json($response);
 	}

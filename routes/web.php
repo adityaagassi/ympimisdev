@@ -173,6 +173,13 @@ Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 	Route::get('edit/daily_report', 'DailyReportController@edit');
 });
 
+Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
+	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
+	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
+	Route::get('fetch/middle/barrel_inactive', 'MiddleProcessController@fetchBarrelInactive');
+	Route::post('post/middle/barrel_inactive', 'MiddleProcessController@postInactive');
+});
+
 Route::get('setting/user', 'UserController@index_setting');
 Route::post('setting/user', 'UserController@setting');
 	// Route::get('register', 'UserController@indexRegister');
@@ -401,6 +408,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('scan/middle/barrel', 'MiddleProcessController@scanMiddleBarrel');
 	Route::post('post/middle_return/barrel_return', 'MiddleProcessController@postProcessMiddleReturn');
 	Route::post('post/middle_return/return_inventory', 'MiddleProcessController@postReturnInventory');
+	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
 Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
@@ -414,9 +422,9 @@ Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProc
 Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
 Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
 Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchMachine');
-Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 Route::get('index/process_middle_return/{id}', 'MiddleProcessController@indexProcessMiddleReturn');
 Route::get('fetch/middle_return/barrel_return', 'MiddleProcessController@fetchProcessMiddleReturn');
+Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBarrelReprint');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');

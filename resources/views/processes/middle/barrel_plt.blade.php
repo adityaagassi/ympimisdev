@@ -45,6 +45,9 @@
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
+		<button href="javascript:void(0)" class="btn btn-danger btn-sm pull-right" data-toggle="modal" onclick="fetchModal()">
+			<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint Slip
+		</button>
 	</h1>
 </section>
 @stop
@@ -88,6 +91,44 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal modal-info fade" id="reprintModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">
+						&times;
+					</span>
+				</button>
+				<h4 class="modal-title">
+					Reprint Qr Code Slip
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-7">
+						<div class="form-group">
+							<label>Tag Material</label>
+							<select class="form-control select2" multiple="multiple" style="width: 100%;" id="tagMaterial">
+
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+					Close
+				</button>
+				<button type="button" class="btn btn-outline" onclick="reprint('material')">
+					Reprint Material
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -101,6 +142,7 @@
 	var total;
 
 	jQuery(document).ready(function() {
+		$('.select2').select2();
 		$('body').toggleClass("sidebar-collapse");
 		fillTable();
 	});
@@ -116,6 +158,58 @@
 		}
 
 		$("#picked").html(total);
+	}
+
+	function fetchModal(){
+		var hpl = $('#hpl').val().split(',');
+		var data = {
+			mrpc : $('#mrpc').val(),
+			hpl : hpl,
+			surface : $('#surface').val(),	
+		}
+
+		$.get('{{ url("fetch/middle/barrel_reprint") }}', data, function(result, status, xhr){
+			$('#tagMaterial').html("");
+			var tagMaterial = "";
+			var t = [];
+
+			$.each(result.barrels, function(index, value){
+
+				if($.inArray(value.tag, t) == -1){
+					tagMaterial += '<option value="'+value.tag+'">'+value.tag+' | '+value.model+' | '+value.key+' | '+value.surface+'</option>';
+				}
+
+				t.push(value.tag);
+
+			});
+
+			$('#tagMaterial').append(tagMaterial);
+			$('#reprintModal').modal('show');
+		});
+	}
+
+	function reprint(id){
+		var material = $('#tagMaterial').val();
+		data = {
+			tagMaterial:material,
+			id:$('#surface').val(),
+		}
+
+		$.get('{{ url("print/middle/barrel_reprint") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from server.');
+			}
+		});
 	}
 
 	function printJob(element){

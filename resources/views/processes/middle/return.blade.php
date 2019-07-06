@@ -61,7 +61,6 @@
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
-		<a data-toggle="modal" data-target="#modalOperator" class="btn btn-success btn-sm pull-right" style="color:white">Check In</a>
 	</h1>
 </section>
 @stop
@@ -136,39 +135,6 @@
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-	$('#tag').keydown(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#tag").val().length >= 11){
-				if($('#prodDate').text() != '-'){
-					scanTag();
-					return false;
-				}
-				else{
-					var loop = $('#loop').val();
-					for (var i = 1; i <= loop; i++) {
-						$('#count'+i).text('0');
-					}
-					openErrorGritter('Error!', 'Check in first.');
-					audio_error.play();
-					$("#tag").val("");
-				}
-			}
-			else{
-				var loop = $('#loop').val();
-				for (var i = 1; i <= loop; i++) {
-					$('#count'+i).text('0');
-				}
-				openErrorGritter('Error!', 'Invalid.');
-				audio_error.play();
-				$("#tag").val("");
-			}
-		}
-	});
-
-	function scanTag(){
-
-	}
 
 	function returnBarrel(qr) {
 		data = {
@@ -253,31 +219,6 @@
 
 		return date;
 	};
-
-	function checkIn(){
-		val = $("#incoming_op").val();
-
-		if($('#incoming_op').val() != ""){
-			if (val.length < 8) {
-				openErrorGritter('Error!', 'Please enter valid NIK');
-				return false;
-			}
-
-			$('#prodDate').text($('#prod_date').val());
-			$('#opKensa').text(val);
-			openSuccessGritter('Success!', 'Check in complete');
-			$('#modalOperator').modal('hide');
-			$('#incoming_op').val('');
-			$('#tag').val('');
-			fillResult();
-			$('#tag').focus();
-			$('#tag').blur();
-		}
-		else{
-			audio_error.play();
-			openErrorGritter('Error!', 'Please complete the form');
-		}
-	}
 
 	function openErrorGritter(title, message) {
 		jQuery.gritter.add({

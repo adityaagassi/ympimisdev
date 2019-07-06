@@ -380,6 +380,7 @@
 
 					if (value.status == "idle") {
 						$("#mesin"+value.machine).css("background-color","rgb(255,77,77)");
+						$("#countdown"+value.machine).html(" &nbsp;");
 					}
 					else if (value.status == "running"){
 
@@ -389,6 +390,12 @@
 						else {
 							$("#mesin"+value.machine).css("background-color","rgb(77,255,77)");
 						}
+
+						$("#countdown"+value.machine).text(
+							("0" + value.jam_cd).slice(-2)+"H "+
+							("0" + value.menit_cd).slice(-2)+"M "+
+							("0" + value.detik_cd).slice(-2)+"S Left"
+							);
 					}
 
 					$("#status"+value.machine).text(value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
