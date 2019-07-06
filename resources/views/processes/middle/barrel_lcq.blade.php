@@ -45,6 +45,9 @@
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
+		<button href="javascript:void(0)" class="btn btn-danger btn-sm pull-right" data-toggle="modal" onclick="fetchModal()">
+			<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint Slip
+		</button>
 	</h1>
 </section>
 @stop
@@ -109,6 +112,54 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal modal-info fade" id="reprintModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">
+						&times;
+					</span>
+				</button>
+				<h4 class="modal-title">
+					Reprint Qr Code Slip
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-7">
+						<div class="form-group">
+							<label>Tag Material</label>
+							<select class="form-control select2" multiple="multiple" style="width: 100%;" id="tagMaterial">
+
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-5" style="padding-left: 0;">
+						<div class="form-group">
+							<label>Tag Machine</label>
+							<select class="form-control select2" multiple="multiple" style="width: 100%;" id="tagMachine">
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+					Close
+				</button>
+				<button type="button" class="btn btn-outline" onclick="reprint('machine')">
+					Reprint Machine
+				</button>
+				<button type="button" class="btn btn-outline" onclick="reprint('material')">
+					Reprint Material
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -123,6 +174,7 @@
 	var total;
 
 	jQuery(document).ready(function() {
+		$('.select2').select2();
 		$('body').toggleClass("sidebar-collapse");
 		fillTable();
 		headCreate();
@@ -145,7 +197,7 @@
 	function headCreate() {
 		var antrian = 0;
 		var total = 0;
-		
+
 		$.get('{{ url("fetch/middle/barrel_machine_status") }}', function(result, status, xhr){
 			$.each(result.machine_stat, function(index, value) {
 				$("#"+value.machine).empty();
@@ -163,6 +215,65 @@
 				$("#"+value.machine).append("Machine #"+value.machine+"<br>"+value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
 			})
 		})
+	}
+
+	function fetchModal(){
+		var hpl = $('#hpl').val().split(',');
+		var data = {
+			mrpc : $('#mrpc').val(),
+			hpl : hpl,
+			surface : $('#surface').val(),
+		}
+
+		$.get('{{ url("fetch/middle/barrel_reprint") }}', data, function(result, status, xhr){
+			$('#tagMaterial').html("");
+			$('#tagMachine').html("");
+			var tagMaterial = "";
+			var tagMachine = "";
+			var t = [];
+
+			$.each(result.barrels, function(index, value){
+
+				if($.inArray(value.remark, t) == -1){
+					tagMachine += '<option value="'+value.remark+'">'+value.remark+' | No: '+value.machine+'</option>';
+				}
+
+				tagMaterial += '<option value="'+value.tag+'">'+value.tag+' | '+value.model+' | '+value.key+' | '+value.surface+'</option>';
+
+				t.push(value.remark);
+
+			});
+
+			$('#tagMaterial').append(tagMaterial);
+			$('#tagMachine').append(tagMachine);
+			$('#reprintModal').modal('show');
+		});
+	}
+
+	function reprint(id){
+		var material = $('#tagMaterial').val();
+		var machine = $('#tagMachine').val();
+		data = {
+			tagMaterial:material,
+			tagMachine:machine,
+			id:id
+		}
+
+		$.get('{{ url("print/middle/barrel_reprint") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from server.');
+			}
+		});
 	}
 
 	function printJob(element){	

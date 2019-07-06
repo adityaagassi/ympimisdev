@@ -388,7 +388,7 @@ class MiddleProcessController extends Controller
 		->where('materials.category', '=', 'WIP')
 		->where('materials.mrpc', '=', $request->get('mrpc'))
 		->whereIn('materials.hpl', $request->get('hpl'))
-		->select('materials.model', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_queues.created_at')
+		->select('materials.model', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_queues.created_at', db::raw('coalesce(barrel_queues.remark, "-") as remark'))
 		->orderBy('barrel_queues.created_at', 'asc')
 		->get();
 

@@ -1,0 +1,504 @@
+@extends('layouts.master')
+@section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
+<style type="text/css">
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	thead>tr>th{
+		text-align:center;
+		overflow:hidden;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+		vertical-align: middle;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+
+	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+		background-color: #ffd8b7;
+	}
+
+	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+		background-color: #FFD700;
+	}
+	#loading, #error { display: none; }
+</style>
+@stop
+@section('header')
+<section class="content-header">
+	<h1>
+		{{ $title }}
+		<small>WIP Control <span class="text-purple"> ??</span></small>
+	</h1>
+</section>
+@stop
+@section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<section class="content">
+	<div class="row">
+		<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+			<p style="position: absolute; color: White; top: 45%; left: 35%;">
+				<span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
+			</p>
+		</div>
+
+		<div class="col-xs-6">
+			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th width="15%">Tag</th>
+						<th width="10%">Material</th>
+						<th>Material Description</th>
+						<th width="1%">Quantity</th>
+						<th>Created at</th>
+						<th width="1%"> Check</th>					
+					</tr>
+				</thead>
+				<tbody id="tableAdjustBody">
+				</tbody>
+				<tfoot>
+					<tr style="color: black">
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="row">
+				<div class="col-xs-10" style="padding-right: 0px">
+					<b style="font-size: 13pt">item selected : </b><br>
+					<div id="selected1"></div>
+				</div>
+				<div class="col-xs-2" style="padding-left: 0px">
+					<button class="btn btn-warning pull-right" onclick="insertInactive()" style="margin-bottom: 6px">Inactive</button>
+				</div>
+			</div>
+			
+		</div>
+
+
+		<div class="col-xs-6">
+			<table id="tableInactive" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th width="15%">Tag</th>
+						<th width="7%">Material</th>
+						<th >Material Description</th>
+						<th width="1%">Quantity</th>
+						<th width="1%">Check</th>
+					</tr>
+				</thead>
+				<tbody id="tableInactiveBody">
+				</tbody>
+				<tfoot>
+					<tr style="color: black">
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="row" style="margin-bottom: 5px">
+				<div class="col-xs-6">
+					<input type="text" id="tanggal" class="form-control datepicker">
+				</div>
+				<div class="col-xs-6">
+					<input type="text" id="waktu" class="form-control timepicker">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-10" style="padding-right: 0px">
+					<b style="font-size: 13pt">item selected : </b><br>
+					<div id="selected2"></div>
+				</div>
+				<div class="col-xs-2" style="padding-left: 0px">
+					<button class="btn btn-success pull-right" onclick="insertActive()" style="margin-bottom: 6px">Active</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+@endsection
+@section('scripts')
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var arr = [];
+	var arr2 = [];
+
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+
+		tableAdjust();
+		tableInactive();
+	});	
+
+	// -------------------- TABEL ADJUST ----------------------
+
+	function tableAdjust() {
+		$('#tableAdjust tfoot th').each(function(){
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+		});
+
+
+		var table = $('#tableAdjust').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': false,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+				"ajax": {
+					"type" : "get",
+					"url" : "{{ url("fetch/middle/barrel_adjustment") }}"
+				},
+				"columns": [
+				{ "data": "tag"},
+				{ "data": "material_number"},
+				{ "data": "material_description" },
+				{ "data": "quantity"},
+				{ "data": "created_at"},
+				{ "data": "check" }]
+			});
+
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			} );
+		} );
+
+		$('#tableAdjust tfoot tr').appendTo('#tableAdjust thead');
+
+	}
+
+	// ----------------- TABEL INACTIVE ----------------------
+
+	function tableInactive() {
+		$('#tableInactive tfoot th').each(function(){
+			var title2 = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title2+'" size="8"/>' );
+		});
+
+
+		var table2 = $('#tableInactive').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': false,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+			// "sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/middle/barrel_inactive") }}"
+			},
+			"columns": [
+			{ "data": "tag"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "quantity"},
+			{ "data": "check" }]
+		});
+
+		table2.columns().every( function () {
+			var that2 = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that2.search() !== this.value ) {
+					that2
+					.search( this.value )
+					.draw();
+				}
+			} );
+		} );
+
+		$('#tableInactive tfoot tr').appendTo('#tableInactive thead');
+
+
+	}
+
+
+	function insertInactive() {
+		var data = [];
+		var tag = [];
+		var material = [];
+		var qty = [];
+		var stat = [];
+
+		$.each( arr, function( key, value ) {
+			tag.push(arr[key][0]);
+			material.push(arr[key][1]);
+			qty.push(arr[key][2]);
+			stat.push(arr[key][3]);
+		})
+
+		data.push({tag,material,qty,stat});
+
+		var arrs = {
+			data:data
+		}
+
+		$.post('{{ url("post/middle/barrel_inactive") }}', arrs, function(result, status, xhr){
+			$('#tableAdjust').DataTable().ajax.reload();
+			$('#tableInactive').DataTable().ajax.reload();
+
+			arr = [];
+			$("#selected1").empty();
+		});
+	}
+
+	function insertActive() {
+		var create = $("#tanggal").val()+" "+$("#waktu").val();
+
+		var data = [];
+		var tag = [];
+		var material = [];
+		var qty = [];
+		var stat = [];
+		var created_at = [];
+
+		$.each( arr2, function( key, value ) {
+			tag.push(arr2[key][0]);
+			material.push(arr2[key][1]);
+			qty.push(arr2[key][2]);
+			stat.push(arr2[key][3]);
+			created_at.push(create);
+		})
+
+		data.push({tag,material,qty,stat,created_at});
+
+		var arrs = {
+			data:data
+		}
+		console.log(arrs);
+
+		$.post('{{ url("post/middle/barrel_inactive") }}', arrs, function(result, status, xhr){
+			$('#tableAdjust').DataTable().ajax.reload();
+			$('#tableInactive').DataTable().ajax.reload();
+			
+			arr2 = [];
+			
+			$("#selected2").empty();
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function inactive(elem) {
+		var id = $(elem).attr("id");
+		var data = id.split("+");
+		if ($(elem).is(':checked')) {
+			arr.push(data);
+			$("#selected1").empty();
+
+			$.each( arr, function( key, value ) {
+				$("#selected1").append(value[0]+" ");
+			});
+
+		} else {
+			arr.splice($.inArray(id, arr),1);
+			$("#selected1").empty();
+
+			$.each( arr, function( key, value ) {
+				$("#selected1").append(value[0]+" ");
+			});
+		}
+	}
+
+	function active(elem) {
+		var id = $(elem).attr("id");
+		
+		var data = id.split("+");
+		if ($(elem).is(':checked')) {
+			arr2.push(data);
+			$("#selected2").empty();
+
+			$.each( arr2, function( key, value ) {
+				$("#selected2").append(value[0]+" ");
+			});
+
+		} else {
+			arr2.splice($.inArray(id, arr2),1);
+			$("#selected2").empty();
+
+			$.each( arr2, function( key, value ) {
+				$("#selected2").append(value[0]+" ");
+			});
+		}
+
+	}
+
+	$('.timepicker').timepicker({
+		use24hours: true,
+		showInputs: false,
+		showMeridian: false,
+		minuteStep: 30,
+		defaultTime: '00:00',
+		timeFormat: 'h:mm'
+	})
+
+	$('.datepicker').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
+		});
+</script>
+@endsection

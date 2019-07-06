@@ -79,6 +79,7 @@
 						<th style="width: 2%; padding: 0;">Key H</th>
 						<th style="width: 2%; padding: 0;">Key J</th>
 						<th style="width: 6%; padding: 0;">Created At</th>
+						<th style="width: 1%; padding: 0;">#</th>
 					</tr>
 				</thead>
 				<tbody id="queueTableBody">
@@ -314,7 +315,9 @@
 				else{
 					queueTableBody += "<td>-</td>";					
 				}
-				queueTableBody += "<td>"+value.created_at+"</td>";	
+				queueTableBody += "<td>"+value.created_at+"</td>";
+				var r = value.remark
+				queueTableBody += "<td>"+r.split('+')[0]+"</td>";	
 				queueTableBody += "</tr>";
 				no += 1;
 			});
