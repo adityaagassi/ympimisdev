@@ -365,7 +365,7 @@
             getDataAllLineakhir();
             getDataAllLinevisual();
             getDataAllLinebensuki()
-            // setTimeout(recall, 6000);
+            setTimeout(recall, 6000);
           }
 
           function getTarget() { 
@@ -386,7 +386,7 @@
                var dt = new Date();
               var time = dt.getHours() + ":" + dt.getMinutes();
               var s = time.split(':');
-              var h = parseInt(s[0]) - 7 ;
+              var h = parseInt(s[0]) - 8 ;
               var hs = parseInt(s[1]) - 0 ;
               var minut = (h * 60) + hs;
               
@@ -465,7 +465,8 @@
                     $('#tpuretotot'+i).text(result.total[i].total);
                     $('#tbensukitot'+i).text(result.total[i].total);
                     // $('#tpuretook'+i).text((result.total[i].total - result.total[i].ng));
-                    $('#tpuretong'+i).text((result.total[i].ng));
+                    // $('#tpuretong'+i).text((result.total[i].ng));
+                    $('#tpuretong'+i).text('-');
                   }
                 // openSuccessGritter('Success!', result.message);
               }
@@ -664,8 +665,10 @@
                 if(result.status){
                   $('#puretotot').text(result.total[0].total+" pcs");
                   $('#puretook').text((result.total[0].total - result.total[0].ng)+" pcs");
-                  $('#puretong').text((result.total[0].ng)+" pcs");
-                  $('#puretopersen').text(Math.round((result.total[0].ng / result.total[0].total)*100)/100+"%");       
+                  // $('#puretong').text((result.total[0].ng)+" pcs");
+                  // $('#puretopersen').text(Math.round((result.total[0].ng / result.total[0].total)*100)/100+"%");  
+                  $('#puretong').text('-');
+                  $('#puretopersen').text('-');      
                 // openSuccessGritter('Success!', result.message);
                 Highcharts.chart('container2', {
                   chart: {

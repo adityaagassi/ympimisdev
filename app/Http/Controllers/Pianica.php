@@ -81,19 +81,19 @@ public function bensuki()
     $low ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%LOW' and code.bagian='bensuki'";
+    where code.kode like '%LOW' and code.bagian='bensuki' ORDER BY code.kode asc";
     $lows = DB::select($low);
 
     $high ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%HIGH' and code.bagian='bensuki'";
+    where code.kode like '%HIGH' and code.bagian='bensuki' ORDER BY code.kode asc";
     $highs = DB::select($high);
 
     $middle ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%MIDDLE' and code.bagian='bensuki'";
+    where code.kode like '%MIDDLE' and code.bagian='bensuki' ORDER BY code.kode asc";
     $middles = DB::select($middle);
 
     $bennuki = "select op.nik, op.nama, code.kode from pn_operators as op
@@ -125,19 +125,19 @@ public function pureto()
     $low ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%LOW' and code.bagian='bensuki'";
+    where code.kode like '%LOW' and code.bagian='bensuki' ORDER BY code.kode asc";
     $lows = DB::select($low);
 
     $high ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%HIGH' and code.bagian='bensuki'";
+    where code.kode like '%HIGH' and code.bagian='bensuki' ORDER BY code.kode asc";
     $highs = DB::select($high);
 
     $middle ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
-    where code.kode like '%MIDDLE' and code.bagian='bensuki'";
+    where code.kode like '%MIDDLE' and code.bagian='bensuki' ORDER BY code.kode asc";
     $middles = DB::select($middle);
 
     $bennuki = "select op.nik, op.nama, code.kode from pn_operators as op
@@ -200,6 +200,8 @@ public function kakuningvisual()
         'ng_list' => $ng_list,
     ))->with('page', 'Kakuning Visual');
 }
+
+
 
 ///-------------- operator 
 public function op()
@@ -530,6 +532,18 @@ public function savekensaawal(Request $request){
         return Response::json($response);
     }
 
+}
+
+// delete kakuning 
+
+public function deleteInv(Request $request)
+{
+    $op = PnInventorie::where('tag','=', $request->get('tag')); 
+    $op->delete();
+    $response = array(
+            'status' => true,
+            'message' => 'Delete Success'
+        );
 }
 
 public function tag_model(Request $request)
