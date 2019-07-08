@@ -905,7 +905,7 @@
 						$('#btnprint2').prop('disabled',true);
 
 						window.open('{{ url("index/label_besar") }}'+'/'+sn+'/'+gmc+'/'+jpn, '_blank');
-						// window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
+						window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
 						// window.open('{{ url("index/label_des") }}'+'/'+sn, '_blank');
 
 					}
@@ -1077,7 +1077,7 @@
 				if(result.status){
 					// alert(result.reprint[0].material_number)					
 					window.open('{{ url("index/label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+result.reprint[0].status+'R', '_blank');
-					// window.open('{{ url("index/label_des") }}'+'/'+result.reprint[0].serial_number, '_blank');
+					window.open('{{ url("index/label_des") }}'+'/'+result.reprint[0].serial_number, '_blank');
 					
 				}
 				else{
