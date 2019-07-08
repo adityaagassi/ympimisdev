@@ -522,7 +522,7 @@ class MiddleProcessController extends Controller
 					foreach ($tags as $tag) {
 						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')
+						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 						->first();
 
 						$insert_jig = [
@@ -546,7 +546,7 @@ class MiddleProcessController extends Controller
 
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
 						$printer->text('LACQUERING'."\n\n");
@@ -609,7 +609,7 @@ class MiddleProcessController extends Controller
 					foreach ($tags as $tag) {
 						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')
+						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 						->first();
 
 						$insert_jig = [
@@ -633,7 +633,7 @@ class MiddleProcessController extends Controller
 
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
+						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
 						$printer->setTextSize(4,4);
 						$printer->setUnderline(true);
 						$printer->text('LACQUERING'."\n\n");
@@ -699,7 +699,7 @@ class MiddleProcessController extends Controller
 					$queue = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
 					->where('barrel_queues.tag', '=', $tag[0])
 					// ->whereIn('barrel_queues.tag', $request->get('tag'))
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description')
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 					->first();
 
 					$insert_log = [
@@ -724,7 +724,7 @@ class MiddleProcessController extends Controller
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '. date('d-M-Y H:i:s')."\n");
+					$printer->text('ID SLIP '. date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
 					$printer->setTextSize(4,4);
 					$printer->setUnderline(true);
 					$printer->text('PLATING'."\n\n");
@@ -781,7 +781,7 @@ class MiddleProcessController extends Controller
 				foreach ($tags as $tag) {
 					$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 					->where('barrel_queues.tag', '=', $tag[0])
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 					->first();
 
 					$insert_jig = [
@@ -805,7 +805,7 @@ class MiddleProcessController extends Controller
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '.date('d-M-Y H:i:s')."\n");
+					$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
 					$printer->setTextSize(4,4);
 					$printer->setUnderline(true);
 					$printer->text('LACQUERING'."\n\n");

@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Saxophone Surface Treatment<span class="text-purple"> ???</span>
+		Saxophone Surface Treatment<span class="text-purple"> 表面処理</span>
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
 	</h1>
 </section>
