@@ -724,7 +724,7 @@ class MiddleProcessController extends Controller
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '. date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
+					$printer->text('ID SLIP '. date('d-M-Y H:i:s')." ".$queue->remark."\n");
 					$printer->setTextSize(4,4);
 					$printer->setUnderline(true);
 					$printer->text('PLATING'."\n\n");
