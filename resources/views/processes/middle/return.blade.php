@@ -124,12 +124,12 @@
 		$('#qr').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
 				var qr = $("#qr").val();
-				if(confirm("Add "+qr+" to queues?")){
+				// if(confirm("Add "+qr+" to queues?")){
 					returnBarrel(qr);
 					$("#qr").val("");
 					$('#qr').focus();
 					openSuccessGritter('Success', 'Success Adding to Queues');
-				}
+				// }
 			}
 		});
 	});
