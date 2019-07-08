@@ -46,7 +46,7 @@ include(app_path() . '\barcode\barcode.php');
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 48;
 		if (models.length > 11) {
-			$('#model').css({"font-size":ukuran-panjang+"pt", "-moz-transform":"scale(1,2)"});
+			$('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,2)"});
 		}		
 	}
 	
