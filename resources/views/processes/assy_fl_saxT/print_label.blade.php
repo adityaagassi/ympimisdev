@@ -185,7 +185,7 @@
 									</div>
 								</center>
 								<input type="text" id="japan2" hidden="">
-								<input type="text" id="gmc" hidden="">
+								<input type="text" id="gmc"  value="" hidden="">
 							{{-- 	<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
 								<button id="btnprint2"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;display: none;" class="btn btn-info" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;Reprint</button>
 								<button id="btnprintmodal"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw; display: none;" class="btn btn-warning" onclick="modalshow();" disabled>Show Model</button> --}}
@@ -904,8 +904,9 @@
 						$('#btnprintmodal').prop('disabled',true);
 						$('#btnprint2').prop('disabled',true);
 
+						
+						// window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
 						window.open('{{ url("index/label_besar") }}'+'/'+sn+'/'+gmc+'/'+jpn, '_blank');
-						window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
 						// window.open('{{ url("index/label_des") }}'+'/'+sn, '_blank');
 
 					}
@@ -945,6 +946,7 @@
 		$('#modelText').val(id);
 		$('#gmc').val(name);
 		$('#japan2').val(japans);
+		// alert(id+name+japans)
 	}
 
 	function editStamp(id){

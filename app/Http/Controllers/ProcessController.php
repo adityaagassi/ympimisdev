@@ -1629,7 +1629,8 @@ public function label_kecil($id,$remark){
 	
 	return view('processes.assy_fl_saxT.print_label_kecil',array(
 		'barcode' => $barcode,
-		'sn' => $sn
+		'sn' => $sn,
+		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 

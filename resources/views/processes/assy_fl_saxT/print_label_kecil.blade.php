@@ -64,7 +64,8 @@
 	@endphp
 
 
-	<table border="0" style="margin: 0px">		
+	<table border="0" style="margin: 0px">
+		<!-- <input type="text" name="rem" id="rem" value="{{$remark}}" >		 -->
 		<input type="text" name="codemodel" id="codemodel" value="{{$sn}}" hidden="">
 		
 		@foreach($barcode as $nomor => $barcode)
@@ -188,7 +189,13 @@ function printWindow(win, what) {
   		console.log("before print: "+what, true);
   	});
   	win.addEventListener("afterprint", function(event) {
+  		var sn = $('#codemodel').val();
+  		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
+  		// if(rem =="J" || rem =="NJ"){
+  			window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
+  		// }
+  		
   		window.close();
   	});
   }
