@@ -61,4 +61,54 @@ class TrialController extends Controller
 			return Response::json($response);
 		}
 	}
+
+	public function buffingIndex()
+	{
+		$title = 'Buffing Work Station Control';
+		$title_jp = '???';
+
+		return view('trials.buffing_index', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Buffing')->with('head', 'Middle Process');
+	}
+
+	public function fetchBuffingQueue(){
+		$work_stations = db::connection('digital_kanban')->table('dev_list')->get();
+
+		$material_akans = array();
+		$material_sedangs = array();
+		$material_selesais = array();
+		$employee_ids = array();
+		foreach ($work_stations as $work_station) {
+			if(!in_array($work_station->dev_akan_num, $material_akans)){
+				array_push($material_akans, $work_station->dev_akan_num);
+			}
+			if(!in_array($work_station->dev_sedang_num, $material_sedangs)){
+				array_push($material_sedangs, $work_station->dev_sedang_num);
+			}
+			if(!in_array($work_station->dev_selesai_num, $material_selesais)){
+				array_push($material_selesais, $work_station->dev_selesai_num);
+			}
+			if(!in_array($work_station->dev_operator_id, $employee_ids)){
+				array_push($employee_ids, $work_station->dev_operator_id);
+			}
+		}
+
+		$akans = db::table('materials')->whereIn('materials.material_number', $material_akans)->get();
+		$sedangs = db::table('materials')->whereIn('materials.material_number', $material_sedangs)->get();
+		$selesais = db::table('materials')->whereIn('materials.material_number', $material_selesais)->get();
+		$employees = db::table('employees')->whereIn('employees.employee_id', $employee_ids)->get();
+
+		$response = array(
+			'status' => true,
+			'work_stations' => $work_stations,
+			'akans' => $akans,
+			'sedangs' => $sedangs,
+			'selesais' => $selesais,
+			'employees' => $employees,
+
+		);
+		return Response::json($response);
+	}
 }

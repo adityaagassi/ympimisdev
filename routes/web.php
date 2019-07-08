@@ -21,6 +21,8 @@ Route::get('/tes', function () {
 	return view('mails.overtime');
 });
 Route::post('trial/tes', 'TrialController@tes');
+Route::get('index/buffing', 'TrialController@buffingIndex');
+Route::get('fetch/buffing', 'TrialController@fetchBuffingQueue');
 
 Route::get('/tes2', function () {
 	return view('purchase_orders.tes');
