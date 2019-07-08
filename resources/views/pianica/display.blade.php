@@ -115,11 +115,11 @@
               <table border="1" style="border-color: white;" id="tabelapp">
                 <tr>    
                   <td class="gambar2"></td>           
-                  <td colspan="2" class="gambar2">Bensuki</td>
+                  <td colspan="2" class="gambar2">Bentsuki</td>
                   <td colspan="4"class="gambar2" >Pureto</td>
                   <td colspan="2"class="gambar2" >Kensa Awal</td>
                   <td colspan="2"class="gambar2" >Kensa Akhir</td>
-                  <td colspan="2"class="gambar2" >Kakuning Visual</td>
+                  <td colspan="2"class="gambar2" >Kakunin Visual</td>
                 </tr>
                 <tr> 
                   <td class="gambar2"></td> 
@@ -155,8 +155,8 @@
                   <td class="tengah" id="tvisualtot0">0</td> </tr> 
                   <tr> <td class="kiri">NG</td>
                     <td class="tengah2" id="tbensuking0" >1</td> 
-                    <td colspan="2" class="kiri">NG</td>
-                    <td colspan="2" class="tengah2" id="tpuretong0">0</td>
+                    <td colspan="2" bgcolor="black">NG</td>
+                    <td colspan="2"  id="tpuretong0" bgcolor="black">0</td>
                     <td class="kiri">NG</td>
                     <td class="tengah2" id="tawalng0">0</td> 
                     <td class="kiri">NG</td>
@@ -218,16 +218,16 @@
                     <tr>
                       <td class="tengah6">TARGET</td>
                       <td class="tengah6">TOTAL</td>
-                      <td class="tengah4">OK</td>
-                      <td class="tengah5">NG</td>
-                      <td class="tengah5">% NG</td>
+                      <!-- <td class="tengah4">OK</td> -->
+                      <!-- <td class="tengah5">NG</td> -->
+                      <!-- <td class="tengah5">% NG</td> -->
                     </tr>
                     <tr>
                       <td class="tengah6" id="puretotarget">133 (pc)</td>
                       <td class="tengah6" id="puretotot">133 (pc)</td>
-                      <td class="tengah4" id="puretook">111 (pc)</td>
-                      <td class="tengah5" id="puretong">22 (pc)</td>
-                      <td class="tengah5" id="puretopersen">15%</td>
+                      <!-- <td class="tengah4" id="puretook">111 (pc)</td> -->
+                      <!-- <td class="tengah5" id="puretong">22 (pc)</td> -->
+                      <!-- <td class="tengah5" id="puretopersen">15%</td> -->
                     </tr>
                   </table>
                 </div>
@@ -283,7 +283,7 @@
                 </div>
                  <div class="col-xs-2" >
                   <center>
-                    <B class="judul">ALL KAKUNING VISUAL</B>
+                    <B class="judul">ALL KAKUNIN VISUAL</B>
                     <div id="container5" style="  margin: 0 auto; height: 200px"> 
                     </div>
                   </center>
@@ -467,6 +467,10 @@
                     // $('#tpuretook'+i).text((result.total[i].total - result.total[i].ng));
                     // $('#tpuretong'+i).text((result.total[i].ng));
                     $('#tpuretong'+i).text('-');
+
+                    // $('#tpuretong').css({"bgcolor":"black"});
+
+
                   }
                 // openSuccessGritter('Success!', result.message);
               }
@@ -653,6 +657,7 @@
           }
 
           function pureto() {
+            var target = $('#puretotarget').text();
             var data ={
               location:'PN_Pureto'
 
@@ -670,69 +675,127 @@
                   $('#puretong').text('-');
                   $('#puretopersen').text('-');      
                 // openSuccessGritter('Success!', result.message);
-                Highcharts.chart('container2', {
-                  chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie',
-                    options3d: {
-                      enabled: true,
-                      alpha: 45,
-                      beta: 0,
-                      maintainAspectRatio: false
-                    }
-                  },
-                  title: {
-                    text: ''
-                  },
-                  tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                  },
-                  plotOptions: {
-                    pie: {
-                      allowPointSelect: true,
-                      cursor: 'pointer',
-                      depth: 35,
-                      dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
-                        style: {
-                      fontSize: '0.8vw'
-                    },
-                        distance: -50,
-                        filter: {
-                          property: 'percentage',
-                          operator: '>',
-                          value: 4
-                        },
+                // Highcharts.chart('container2', {
+                //   chart: {
+                //     plotBackgroundColor: null,
+                //     plotBorderWidth: null,
+                //     plotShadow: false,
+                //     type: 'pie',
+                //     options3d: {
+                //       enabled: true,
+                //       alpha: 45,
+                //       beta: 0,
+                //       maintainAspectRatio: false
+                //     }
+                //   },
+                //   title: {
+                //     text: ''
+                //   },
+                //   tooltip: {
+                //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                //   },
+                //   plotOptions: {
+                //     pie: {
+                //       allowPointSelect: true,
+                //       cursor: 'pointer',
+                //       depth: 35,
+                //       dataLabels: {
+                //         enabled: true,
+                //         format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                //         style: {
+                //       fontSize: '0.8vw'
+                //     },
+                //         distance: -50,
+                //         filter: {
+                //           property: 'percentage',
+                //           operator: '>',
+                //           value: 4
+                //         },
                         
-                      },
-                      showInLegend: false
-                    }
-                  },
-                  credits:{
-                    enabled:false,
-                  },
-                  exporting:{
-                    enabled:false,
-                  },
-                  series: [{
+                //       },
+                //       showInLegend: false
+                //     }
+                //   },
+                //   credits:{
+                //     enabled:false,
+                //   },
+                //   exporting:{
+                //     enabled:false,
+                //   },
+                //   series: [{
 
-                    animation: false,
-                    name: 'Percentage',
-                    colorByPoint: true,
-                    data: [{
-                      name: 'OK',
-                      y: parseInt(result.total[0].total - result.total[0].ng),
-                      color: 'rgba(126,86,134,.7)'
-                    }, {
-                      name: 'NG',
-                      y: parseInt(result.total[0].ng),
-                      color: 'PINK'
-                    }]
-                  }]
-                });
+                //     animation: false,
+                //     name: 'Percentage',
+                //     colorByPoint: true,
+                //     data: [{
+                //       name: 'OK',
+                //       y: parseInt(result.total[0].total - result.total[0].ng),
+                //       color: 'rgba(126,86,134,.7)'
+                //     }, {
+                //       name: 'NG',
+                //       y: parseInt(result.total[0].ng),
+                //       color: 'PINK'
+                //     }]
+                //   }]
+                // });
+
+                 Highcharts.chart('container2', {
+    chart: {
+        type: 'column'
+    },
+    
+     title: {
+        text: ''
+    },
+    xAxis: {
+        categories: ['Production'],
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: ''
+        }
+    },
+
+     exporting:{
+                enabled:false,
+              },
+    
+    tooltip: {
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0,
+             dataLabels: {
+                enabled: true
+            }
+        }
+
+    },
+    credits:{
+                enabled:false,
+              },
+    series: [{
+      animation: false,
+        name: 'Target',
+        color: 'rgba(165,170,217,1)',
+        data: [parseInt(target)],
+        pointPadding: 0.4,
+        pointPlacement: -0.1
+    }, {
+      animation: false,
+        name: 'Total',
+        color: 'rgba(126,86,134,.9)',
+        data: [parseInt(result.total[0].total)],
+        pointPadding: 0.4,
+        pointPlacement: 0.1
+    }
+
+    ]
+});
               }
               else{                
                 // openErrorGritter('Error!', result.message);
@@ -1022,7 +1085,7 @@
           function app() {
             for (var i = 1; i < 5; i++) {     
 
-              $("#tabelapp").append('<tr><td colspan="3" class="gambar2" style="color: white"></td><td colspan="4"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td> <td colspan="2"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td></tr><tr> <td class="tengah" style="text-align: center; font-size: 1vw; background-color: rgba(126,86,134,.7); border-color: white;">LINE</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tbensukiok'+i+'">1</td> <td colspan="2"class="kiri" width="5%">TARGET</td><td colspan="2"class="tengah3" id="tpuretook'+i+'">0</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tawalok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="takhirok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tvisualok'+i+'">0</td> </tr> <tr> <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px" id="lineno'+i+'">'+i+'</td><td class="kiri">ACT</td> <td class="tengah" id="tbensukitot'+i+'">0</td> <td colspan="2" class="kiri">ACT</td><td colspan="2" class="tengah" id="tpuretotot'+i+'">0</td><td class="kiri">ACT</td> <td class="tengah" id="tawaltot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="takhirtot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="tvisualtot'+i+'">0</td> </tr> <tr> <td class="kiri">NG</td><td class="tengah2" id="tbensuking'+i+'">1</td> <td colspan="2" class="kiri">NG</td><td colspan="2" class="tengah2" id="tpuretong'+i+'">0</td><td class="kiri">NG</td><td class="tengah2" id="tawalng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="takhirng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="tvisualng'+i+'">0</td> </tr>    ');
+              $("#tabelapp").append('<tr><td colspan="3" class="gambar2" style="color: white"></td><td colspan="4"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td> <td colspan="2"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td></tr><tr> <td class="tengah" style="text-align: center; font-size: 1vw; background-color: rgba(126,86,134,.7); border-color: white;">LINE</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tbensukiok'+i+'">1</td> <td colspan="2"class="kiri" width="5%">TARGET</td><td colspan="2"class="tengah3" id="tpuretook'+i+'">0</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tawalok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="takhirok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tvisualok'+i+'">0</td> </tr> <tr> <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px" id="lineno'+i+'">'+i+'</td><td class="kiri">ACT</td> <td class="tengah" id="tbensukitot'+i+'">0</td> <td colspan="2" class="kiri">ACT</td><td colspan="2" class="tengah" id="tpuretotot'+i+'">0</td><td class="kiri">ACT</td> <td class="tengah" id="tawaltot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="takhirtot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="tvisualtot'+i+'">0</td> </tr> <tr> <td class="kiri">NG</td><td class="tengah2" id="tbensuking'+i+'">1</td> <td bgcolor="black" colspan="2" >NG</td><td colspan="2"  id="tpuretong'+i+'" bgcolor="black">0</td><td class="kiri">NG</td><td class="tengah2" id="tawalng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="takhirng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="tvisualng'+i+'">0</td> </tr>    ');
             }
             for (var i = 0; i < 5; i++) {
               $('#lineno'+i).text(i+2)

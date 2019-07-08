@@ -183,7 +183,7 @@ table.table-bordered > tfoot > tr > th{
     series: [{
         name: 'Previous Month Total Avg',
         color: 'rgba(165,170,217,1)',
-        data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         pointPadding: 0.3,
         pointPlacement: -0.3
     }, {
@@ -195,7 +195,7 @@ table.table-bordered > tfoot > tr > th{
     }, {
         name: 'Previous Month High Avg',
         color: 'rgba(248,161,63,1)',
-        data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         
         pointPadding: 0.3,
         pointPlacement: 0,
@@ -211,7 +211,7 @@ table.table-bordered > tfoot > tr > th{
     },{
         name: 'Previous Month Low Avg',
         color: 'rgba(166, 247, 67,.9)',
-        data: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         
         pointPadding: 0.3,
         pointPlacement: 0.3,
