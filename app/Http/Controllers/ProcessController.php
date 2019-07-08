@@ -1608,6 +1608,7 @@ public function label_besar($id,$gmc,$remark){
 }
 
 public function label_kecil($id,$remark){
+	$remark2 = $remark;
 	$sn = $id;
 	$date = date('Y-m-d');
 	// if ($remark =="RP") {
@@ -1630,7 +1631,7 @@ public function label_kecil($id,$remark){
 	return view('processes.assy_fl_saxT.print_label_kecil',array(
 		'barcode' => $barcode,
 		'sn' => $sn,
-		'remark' => $remark,
+		'remark' => $remark2,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
