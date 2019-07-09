@@ -60,6 +60,24 @@
 			background-color: rgb(255,100,120);
 		}
 	}
+
+	.color2 {
+		width: 50px;
+		height: 50px;
+		-webkit-animation: sukses 1s infinite;  /* Safari 4+ */
+		-moz-animation: sukses 1s infinite;  /* Fx 5+ */
+		-o-animation: sukses 1s infinite;  /* Opera 12+ */
+		animation: sukses 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes sukses {
+		0%, 49% {
+			background-color: #fffcb7;
+		}
+		50%, 100% {
+			background-color: rgb(100,250,120);
+		}
+	}
 	#loading, #error { display: none; }
 </style>
 @stop
@@ -134,6 +152,7 @@
 					var body = "", sedang = "-", akan = "-", selesai = "-", emp = "-";
 					var ws = result.work_stations;
 					var colorAKan = "";
+					var colorSelesai = "";
 					// console(result.akans)
 					for (var i = 0; i < ws.length; i++) {
 						var body = "";
@@ -161,15 +180,19 @@
 						}
 
 						if (result.selesais[i]) {
+							colorSelesai = "class='color2'";
 							selesai = result.selesais[i].material_number+'<br>'+result.selesais[i].model+' '+result.selesais[i].key;
-						} else selesai = '-';
+						} else {
+							selesai = '-';
+							colorSelesai = "";
+						}
 
 						body += '<tr '+color+'>';
 						body += '<td '+colorAKan+'>'+ws[i].dev_name+'</td>';
 						body += "<td "+colorAKan+">"+emp+"</td>";
 						body += "<td>"+sedang+"</td>";
 						body += "<td "+colorAKan+">"+akan+"</td>";
-						body += "<td>"+selesai+"</td>";
+						body += "<td "+colorSelesai+">"+selesai+"</td>";
 						body += "<td>-</td>";
 						body += "<td>-</td>";
 						body += "<td>-</td>";
