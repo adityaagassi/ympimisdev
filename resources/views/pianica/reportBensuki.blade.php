@@ -220,6 +220,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0,
        
     },{
+      
       animation: false,
         name: 'Previous Month Low Avg',
         color: 'rgba(166, 247, 67,.9)',
@@ -229,6 +230,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0.3,
         
     }, {
+      animation: false,
         name: 'Low to day',
         color: 'rgba(2, 125, 27,1)',
         data: totalL,
