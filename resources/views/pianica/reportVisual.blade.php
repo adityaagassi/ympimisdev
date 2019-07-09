@@ -185,12 +185,14 @@ table.table-bordered > tfoot > tr > th{
                 enabled:false,
               },
     series: [{
+      animation: false,
         name: 'Total yesterday',
         color: 'rgba(165,170,217,1)',
         data: totallas,
         pointPadding: 0.3,
         // pointPlacement: -0.3
     }, {
+      animation: false,
         name: 'Total to day',
         color: 'rgba(126,86,134,.9)',
         data: total,
