@@ -88,6 +88,7 @@
 						<th style="width: 1%; padding: 0;">Sedang</th>
 						<th style="width: 1%; padding: 0;">Akan</th>
 						<th style="width: 1%; padding: 0;">Selesai</th>
+						<th style="width: 1%; padding: 0;">Time</th>
 						<th style="width: 1%; padding: 0;">#1</th>
 						<th style="width: 1%; padding: 0;">#2</th>
 						<th style="width: 1%; padding: 0;">#3</th>
@@ -119,8 +120,9 @@
 	});
 
 	jQuery(document).ready(function() {
+		// fetchTable();
+		// setInterval(fetchTable, 1000);
 		fetchTable();
-		setInterval(fetchTable, 1000);
 	});
 
 	function fetchTable(){
@@ -178,9 +180,12 @@
 						body += "<td>-</td>";
 						body += "<td>-</td>";
 						body += "<td>-</td>";
+						body += "<td>-</td>";
 						body += '</tr>';
 					}
 					$('#buffingTableBody').append(body);
+
+					setTimeout(fetchTable, 1000);
 				}
 			}
 		})

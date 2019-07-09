@@ -33,6 +33,8 @@
 			<a href="{{ url("index/process_middle_return", "buffing") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Repair/Return to Buffing</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Buffing <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/buffing") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Control</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Machine Activity</a>
