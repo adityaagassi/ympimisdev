@@ -40,6 +40,7 @@
 			   <a href="{{ url("/index/reportAkhir") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Akhir All Line</a>
 			   <a href="{{ url("/index/reportAkhirLine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Akhir / Line</a>
 			   <a href="{{ url("/index/reportVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kakunin Visual All Line</a>
+			   <a href="{{ url("/index/record") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Pianica Inventories</a>
 		
 		</div>
 	</div>

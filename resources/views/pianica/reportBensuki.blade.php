@@ -107,12 +107,19 @@ table.table-bordered > tfoot > tr > th{
   jQuery(document).ready(function() { 
     ngTotal();
     ngMesin();
+    recall();
      $('body').toggleClass("sidebar-collapse");
     $('.select2').select2({
       dropdownAutoWidth : true,
       width: '100%',
     });
   });
+
+  function recall() {
+            ngTotal();
+    ngMesin();
+            setTimeout(recall, 6000);
+          }
   
   function ngTotal() {
     $.get('{{ url("index/getTotalNG") }}', function(result, status, xhr){
@@ -181,18 +188,21 @@ table.table-bordered > tfoot > tr > th{
                 enabled:false,
               },
     series: [{
+      animation: false,
         name: 'Previous Month Total Avg',
         color: 'rgba(165,170,217,1)',
         data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         pointPadding: 0.3,
         pointPlacement: -0.3
     }, {
+      animation: false,
         name: 'Total to day',
         color: 'rgba(126,86,134,.9)',
         data: total,
         pointPadding: 0.4,
         pointPlacement: -0.3
     }, {
+      animation: false,
         name: 'Previous Month High Avg',
         color: 'rgba(248,161,63,1)',
         data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -201,6 +211,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0,
        
     }, {
+      animation: false,
         name: 'High to day',
         color: 'rgba(186,60,61,.9)',
         data: totalH,
@@ -209,6 +220,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0,
        
     },{
+      animation: false,
         name: 'Previous Month Low Avg',
         color: 'rgba(166, 247, 67,.9)',
         data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -307,6 +319,7 @@ function ngMesin() {
                 enabled:false,
               },
     series: [{
+      animation: false,
        type: 'column',
         name: 'Previous Month Total NG Avg',
         data: [15,15,15,15,15,15],
@@ -314,6 +327,7 @@ function ngMesin() {
         pointPlacement: 0,
 
     }, {
+      animation: false,
        type: 'column',
         name: 'Total NG TO DAY',
         data: nglist,
@@ -321,6 +335,7 @@ function ngMesin() {
         pointPlacement: 0,
 
     },{
+      animation: false,
         type: 'spline',
         name: 'Maximum NG',
         data: [20,20,20,20,20,20],

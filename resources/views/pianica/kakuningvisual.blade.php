@@ -75,6 +75,8 @@
         <b>Tag RFID</b> 
         {{-- <b>RFID</b> --}} <b id="textmodel" style="color:red"> [ Model ] - </b><b class="destroy" id="modelb"></b><br>
         <input type="text" name="rfid" id="rfid" class="form-control"  autofocus style="text-align: center; font-size: 30px; height: 45px" placeholder="RFID"><br>
+
+        <input type="text" name="rfid2" id="rfid2" hidden="">
         
         <center><button class="btn btn-lg btn-primary" onclick="rf()">Change</button></center> <br>
       </div>
@@ -120,7 +122,9 @@
           <li style="width: 14%"><a href="#tab_5" data-toggle="tab">Button</a></li>
           <li style="width: 14%"><a href="#tab_6" data-toggle="tab">Pianica</a></li>
 
-          <li class="btn btn-lg btn-warning pull-right"><a  style="margin: 0px 0px 0px 0px; font-size: 15px;padding: 0px" onclick="simpan()"><i class="fa fa-save"></i>&nbsp;Save</a></li>
+          <li ><button class="btn btn-lg btn-warning pull-right" onclick="simpan()"><i class="fa fa-save"></i>&nbsp;Save</button></a></li>
+
+
         </ul>
         <div class="tab-content">
 
@@ -622,6 +626,7 @@
         $('#rfid').prop('disabled', true);
         var id = $('#rfid').val();           
         $('#p_rfid').text(id);
+        $('#rfid2').val(id);
         getmodel();
                // alert("aa");            
                return false;
@@ -732,6 +737,7 @@
                     }
                     openSuccessGritter('Success!', result.message);
                     gettotalng();
+                    deleteInv();
                   }
                   else{
                     openErrorGritter('Error!', result.message);
@@ -774,7 +780,7 @@
              var pureto = $('#oppureto').val();
              var data ={
               pureto:pureto,
-              op:'pureto',
+              op:'kakuning visual',
             }
             $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
               console.log(status);
@@ -860,6 +866,7 @@
                 // alert(result.model[0].total)
                 // $('#textmodel').css({'color':'black'})        
                 openSuccessGritter('Success!', result.message);
+
               }
               else{                
                 openErrorGritter('Error!', result.message);
@@ -872,6 +879,33 @@
           });
 
       }
+
+      function deleteInv() {
+         var tag = $('#rfid2').val();
+          var data = {
+                  tag:tag,
+                }
+         $.post('{{ url("index/deleteInv") }}', data, function(result, status, xhr){
+                  console.log(status);
+                  console.log(result);
+                  console.log(xhr);
+                  if(xhr.status == 200){
+                    if(result.status){
+                    
+
+                    // openSuccessGritter('Success!', result.message);
+                  }
+                  else{
+                    // openErrorGritter('Error!', result.message);
+                  }
+                }
+                else{
+
+                  alert("Disconnected from server");
+                }
+              });
+              }
+      
 
 
 

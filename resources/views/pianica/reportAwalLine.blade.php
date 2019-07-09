@@ -97,13 +97,18 @@ table.table-bordered > tfoot > tr > th{
   });
   jQuery(document).ready(function() { 
     ngTotal();
-    
+    recall();
      $('body').toggleClass("sidebar-collapse");
     $('.select2').select2({
       dropdownAutoWidth : true,
       width: '100%',
     });
   });
+
+    function recall() {
+            ngTotal();
+            setTimeout(recall, 6000);
+          }
   
   function ngTotal() {
     $.get('{{ url("index/getKensaAwalALLLine") }}', function(result, status, xhr){
@@ -256,6 +261,7 @@ table.table-bordered > tfoot > tr > th{
                 enabled:false,
               },
     series: [{
+      animation: false,
         name: 'Line 2 yesterday',
         color: 'rgba(165,170,217,1)',
         data: total1las,
@@ -264,6 +270,7 @@ table.table-bordered > tfoot > tr > th{
         pointWidth: 20,
 
     }, {
+      animation: false,
         name: 'Line 2 to day',
         color: 'rgba(126,86,134,.5)',
         data: total1,
@@ -271,6 +278,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: -0.4
     },
     {
+      animation: false,
         name: 'Line 3 yesterday',
         color: 'rgba(186,60,61,.9)',
         data:  total2las,
@@ -278,6 +286,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: -0.2,
         pointWidth: 20
     }, {
+      animation: false,
         name: 'Line 3 to day',
         color: 'rgba(186,60,61,.5)',
         data: total2,
@@ -285,6 +294,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: -0.2
     },
     {
+      animation: false,
         name: 'Line 4 yesterday',
         color: 'rgba(248,161,63,1)',
         data: total3las,
@@ -292,6 +302,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0,
         pointWidth: 20
     }, {
+      animation: false,
         name: 'Line 4 to day',
         color: 'rgba(248,161,63,.5)',
         data: total3,
@@ -299,6 +310,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0
     },
     {
+      animation: false,
         name: 'Line 5 yesterday',
         color: 'rgba(2, 125, 27,1)',
         data:  total4las,
@@ -306,6 +318,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0.2,
         pointWidth: 20
     }, {
+      animation: false,
         name: 'Line 5 to day',
         color: 'rgba(2, 125, 27,.5)',
         data: total4 ,
@@ -313,6 +326,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0.2
     },
     {
+      animation: false,
         name: 'Line 6 yesterday',
         color: 'rgba(0,0,0,1)',
         data:  total5las,
@@ -320,6 +334,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: 0.4,
         pointWidth: 20
     }, {
+      animation: false,
         name: 'Line 6 to day',
         color: 'rgba(0,0,0,0.5)',
         data: total5 ,

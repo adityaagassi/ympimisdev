@@ -109,13 +109,13 @@
   <div class="row">
     <div class="col-xs-12" >
       <div class="row"> 
-        <div class="col-xs-12"> 
+        <div class="col-xs-6"> 
           <div class="box"> 
             <div class="box-body" >
               <table border="1" style="border-color: white;" id="tabelapp">
                 <tr>    
                   <td class="gambar2"></td>           
-                  <td colspan="2" class="gambar2">Bentsuki</td>
+                  <td colspan="2" class="gambar2">Bensuki</td>
                   <td colspan="4"class="gambar2" >Pureto</td>
                   <td colspan="2"class="gambar2" >Kensa Awal</td>
                   <td colspan="2"class="gambar2" >Kensa Akhir</td>
@@ -155,8 +155,8 @@
                   <td class="tengah" id="tvisualtot0">0</td> </tr> 
                   <tr> <td class="kiri">NG</td>
                     <td class="tengah2" id="tbensuking0" >1</td> 
-                    <td colspan="2" bgcolor="black">NG</td>
-                    <td colspan="2"  id="tpuretong0" bgcolor="black">0</td>
+                    <td colspan="2" class="kiri">NG</td>
+                    <td colspan="2" class="tengah2" id="tpuretong0">0</td>
                     <td class="kiri">NG</td>
                     <td class="tengah2" id="tawalng0">0</td> 
                     <td class="kiri">NG</td>
@@ -166,9 +166,20 @@
 
 
                   </table>
+
+                   <div id="Rbensuki"></div>
                 </div> 
               </div> 
             </div> 
+            <div  class="col-xs-6">
+              <div class="box">                
+            <div class="box-body" >
+               <div id="Rkensaawal"></div>
+               <div id="Rkensaakhir"></div>
+               <div id="Rvisual"></div>
+            </div>
+          </div>
+            </div>
           </div>    
           <!-- SEBELAH KANAN -->
 
@@ -218,16 +229,16 @@
                     <tr>
                       <td class="tengah6">TARGET</td>
                       <td class="tengah6">TOTAL</td>
-                      <!-- <td class="tengah4">OK</td> -->
-                      <!-- <td class="tengah5">NG</td> -->
-                      <!-- <td class="tengah5">% NG</td> -->
+                      <td class="tengah4">OK</td>
+                      <td class="tengah5">NG</td>
+                      <td class="tengah5">% NG</td>
                     </tr>
                     <tr>
                       <td class="tengah6" id="puretotarget">133 (pc)</td>
                       <td class="tengah6" id="puretotot">133 (pc)</td>
-                      <!-- <td class="tengah4" id="puretook">111 (pc)</td> -->
-                      <!-- <td class="tengah5" id="puretong">22 (pc)</td> -->
-                      <!-- <td class="tengah5" id="puretopersen">15%</td> -->
+                      <td class="tengah4" id="puretook">111 (pc)</td>
+                      <td class="tengah5" id="puretong">22 (pc)</td>
+                      <td class="tengah5" id="puretopersen">15%</td>
                     </tr>
                   </table>
                 </div>
@@ -364,7 +375,11 @@
             getDataAllLineawal();
             getDataAllLineakhir();
             getDataAllLinevisual();
-            getDataAllLinebensuki()
+            getDataAllLinebensuki();
+            ngTotal();
+            ngTotal2();
+            ngTotal3();
+            ngTotal4();
             setTimeout(recall, 6000);
           }
 
@@ -377,10 +392,8 @@
               if(xhr.status == 200){
                 if(result.status){
                   var targetall = 0; 
-                  var targetallAsli = 0; 
                   for (var i = 0; i < result.target.length; i++) {
                     targetall += (result.target[i].plan)-(result.target[i].debt);
-                    targetallAsli += (result.target[i].plan)-(result.target[i].debt);
                   }
 
                var target = targetall / 5;
@@ -391,21 +404,11 @@
               var h = parseInt(s[0]) - 8 ;
               var hs = parseInt(s[1]) - 0 ;
               var minut = (h * 60) + hs;
-
-              if (h >= 12 ) {
-                minut - 60;
-              }
               
               var targetMinut = Math.round(target/minut);
 
               var targetLine = (Math.round(target / 480))*minut;
               var targetall = ((Math.round(target / 480))*minut) * 5;
-
-              if (targetall >= targetallAsli ) {
-                  targetall = targetallAsli;
-                  targetLine = target;
-
-              }
               for (var i = 0; i < 5; i++) {
                 $('#tbensukiok'+i).text(targetLine);
                $('#tpuretook'+i).text(targetLine);
@@ -479,10 +482,6 @@
                     // $('#tpuretook'+i).text((result.total[i].total - result.total[i].ng));
                     // $('#tpuretong'+i).text((result.total[i].ng));
                     $('#tpuretong'+i).text('-');
-
-                    // $('#tpuretong').css({"bgcolor":"black"});
-
-
                   }
                 // openSuccessGritter('Success!', result.message);
               }
@@ -669,7 +668,6 @@
           }
 
           function pureto() {
-            var target = $('#puretotarget').text();
             var data ={
               location:'PN_Pureto'
 
@@ -687,127 +685,69 @@
                   $('#puretong').text('-');
                   $('#puretopersen').text('-');      
                 // openSuccessGritter('Success!', result.message);
-                // Highcharts.chart('container2', {
-                //   chart: {
-                //     plotBackgroundColor: null,
-                //     plotBorderWidth: null,
-                //     plotShadow: false,
-                //     type: 'pie',
-                //     options3d: {
-                //       enabled: true,
-                //       alpha: 45,
-                //       beta: 0,
-                //       maintainAspectRatio: false
-                //     }
-                //   },
-                //   title: {
-                //     text: ''
-                //   },
-                //   tooltip: {
-                //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                //   },
-                //   plotOptions: {
-                //     pie: {
-                //       allowPointSelect: true,
-                //       cursor: 'pointer',
-                //       depth: 35,
-                //       dataLabels: {
-                //         enabled: true,
-                //         format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
-                //         style: {
-                //       fontSize: '0.8vw'
-                //     },
-                //         distance: -50,
-                //         filter: {
-                //           property: 'percentage',
-                //           operator: '>',
-                //           value: 4
-                //         },
+                Highcharts.chart('container2', {
+                  chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie',
+                    options3d: {
+                      enabled: true,
+                      alpha: 45,
+                      beta: 0,
+                      maintainAspectRatio: false
+                    }
+                  },
+                  title: {
+                    text: ''
+                  },
+                  tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                  },
+                  plotOptions: {
+                    pie: {
+                      allowPointSelect: true,
+                      cursor: 'pointer',
+                      depth: 35,
+                      dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                        style: {
+                      fontSize: '0.8vw'
+                    },
+                        distance: -50,
+                        filter: {
+                          property: 'percentage',
+                          operator: '>',
+                          value: 4
+                        },
                         
-                //       },
-                //       showInLegend: false
-                //     }
-                //   },
-                //   credits:{
-                //     enabled:false,
-                //   },
-                //   exporting:{
-                //     enabled:false,
-                //   },
-                //   series: [{
+                      },
+                      showInLegend: false
+                    }
+                  },
+                  credits:{
+                    enabled:false,
+                  },
+                  exporting:{
+                    enabled:false,
+                  },
+                  series: [{
 
-                //     animation: false,
-                //     name: 'Percentage',
-                //     colorByPoint: true,
-                //     data: [{
-                //       name: 'OK',
-                //       y: parseInt(result.total[0].total - result.total[0].ng),
-                //       color: 'rgba(126,86,134,.7)'
-                //     }, {
-                //       name: 'NG',
-                //       y: parseInt(result.total[0].ng),
-                //       color: 'PINK'
-                //     }]
-                //   }]
-                // });
-
-                 Highcharts.chart('container2', {
-    chart: {
-        type: 'column'
-    },
-    
-     title: {
-        text: ''
-    },
-    xAxis: {
-        categories: ['Production'],
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: ''
-        }
-    },
-
-     exporting:{
-                enabled:false,
-              },
-    
-    tooltip: {
-        shared: false
-    },
-    plotOptions: {
-        column: {
-            grouping: false,
-            shadow: false,
-            borderWidth: 0,
-             dataLabels: {
-                enabled: true
-            }
-        }
-
-    },
-    credits:{
-                enabled:false,
-              },
-    series: [{
-      animation: false,
-        name: 'Target',
-        color: 'rgba(165,170,217,1)',
-        data: [parseInt(target)],
-        pointPadding: 0.4,
-        pointPlacement: -0.1
-    }, {
-      animation: false,
-        name: 'Total',
-        color: 'rgba(126,86,134,.9)',
-        data: [parseInt(result.total[0].total)],
-        pointPadding: 0.4,
-        pointPlacement: 0.1
-    }
-
-    ]
-});
+                    animation: false,
+                    name: 'Percentage',
+                    colorByPoint: true,
+                    data: [{
+                      name: 'OK',
+                      y: parseInt(result.total[0].total - result.total[0].ng),
+                      color: 'rgba(126,86,134,.7)'
+                    }, {
+                      name: 'NG',
+                      y: parseInt(result.total[0].ng),
+                      color: 'PINK'
+                    }]
+                  }]
+                });
               }
               else{                
                 // openErrorGritter('Error!', result.message);
@@ -1097,13 +1037,415 @@
           function app() {
             for (var i = 1; i < 5; i++) {     
 
-              $("#tabelapp").append('<tr><td colspan="3" class="gambar2" style="color: white"></td><td colspan="4"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td> <td colspan="2"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td></tr><tr> <td class="tengah" style="text-align: center; font-size: 1vw; background-color: rgba(126,86,134,.7); border-color: white;">LINE</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tbensukiok'+i+'">1</td> <td colspan="2"class="kiri" width="5%">TARGET</td><td colspan="2"class="tengah3" id="tpuretook'+i+'">0</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tawalok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="takhirok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tvisualok'+i+'">0</td> </tr> <tr> <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px" id="lineno'+i+'">'+i+'</td><td class="kiri">ACT</td> <td class="tengah" id="tbensukitot'+i+'">0</td> <td colspan="2" class="kiri">ACT</td><td colspan="2" class="tengah" id="tpuretotot'+i+'">0</td><td class="kiri">ACT</td> <td class="tengah" id="tawaltot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="takhirtot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="tvisualtot'+i+'">0</td> </tr> <tr> <td class="kiri">NG</td><td class="tengah2" id="tbensuking'+i+'">1</td> <td bgcolor="black" colspan="2" >NG</td><td colspan="2"  id="tpuretong'+i+'" bgcolor="black">0</td><td class="kiri">NG</td><td class="tengah2" id="tawalng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="takhirng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="tvisualng'+i+'">0</td> </tr>    ');
+              $("#tabelapp").append('<tr><td colspan="3" class="gambar2" style="color: white"></td><td colspan="4"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td> <td colspan="2"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td></tr><tr> <td class="tengah" style="text-align: center; font-size: 1vw; background-color: rgba(126,86,134,.7); border-color: white;">LINE</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tbensukiok'+i+'">1</td> <td colspan="2"class="kiri" width="5%">TARGET</td><td colspan="2"class="tengah3" id="tpuretook'+i+'">0</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tawalok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="takhirok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tvisualok'+i+'">0</td> </tr> <tr> <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px" id="lineno'+i+'">'+i+'</td><td class="kiri">ACT</td> <td class="tengah" id="tbensukitot'+i+'">0</td> <td colspan="2" class="kiri">ACT</td><td colspan="2" class="tengah" id="tpuretotot'+i+'">0</td><td class="kiri">ACT</td> <td class="tengah" id="tawaltot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="takhirtot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="tvisualtot'+i+'">0</td> </tr> <tr> <td class="kiri">NG</td><td class="tengah2" id="tbensuking'+i+'">1</td> <td colspan="2" class="kiri">NG</td><td colspan="2" class="tengah2" id="tpuretong'+i+'">0</td><td class="kiri">NG</td><td class="tengah2" id="tawalng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="takhirng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="tvisualng'+i+'">0</td> </tr>    ');
             }
             for (var i = 0; i < 5; i++) {
               $('#lineno'+i).text(i+2)
             }
 
           }
+
+          function ngTotal() {
+    $.get('{{ url("index/getKensaAwalALL") }}', function(result, status, xhr){
+              console.log(status);
+              console.log(result);
+              console.log(xhr);
+              if(xhr.status == 200){
+                if(result.status){
+
+                  var nglist = [];
+                  var total = [];
+                  var totallas = [];
+                  var totalJenisNGA = 0;
+                  var totalJenisNGAlas = 0;
+                  
+                  var totalCek = result.total[0].total;
+                  var totalOK = result.total[0].total - result.total[0].ng;
+
+                  var totalCeklas = result.totallas[0].total;
+                  var totalOKlas = result.totallas[0].total - result.totallas[0].ng;
+
+                  for (var i = 0; i < result.ng.length; i++) {    
+                     totalJenisNGA += parseInt(result.ng[i].total);
+                     totalJenisNGAlas += parseInt(result.nglas[i].total);
+                    } 
+                     var totalJenisNGC = totalJenisNGA - (totalCek - totalOK);
+                     var PengurangC = Math.round( totalJenisNGC / 4);
+
+                     var totalJenisNGClas = totalJenisNGAlas - (totalCeklas - totalOKlas);
+                     var PengurangClas = Math.round( totalJenisNGClas / 4);
+
+                    for (var i = 0; i < result.ng.length; i++) {                    
+                     nglist.push(result.ng[i].ng_name);
+                     total.push(parseInt(result.ng[i].total - PengurangC));
+                     totallas.push(parseInt(result.nglas[i].total - PengurangClas));
+                     
+                    } 
+
+                    
+    Highcharts.chart('Rkensaawal', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'TOTAL NG RATE KENSA AWAL'
+    },
+    subtitle: {
+        text: 'Last Update '+result.tgl[0].tgl
+    },
+    xAxis: {
+        categories: nglist
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'TOTAL NG'
+        }
+    },
+    
+    tooltip: {
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0,
+             dataLabels: {
+                enabled: true
+            }
+        }
+
+    },
+    credits:{
+                enabled:false,
+              },
+    series: [{
+        name: 'Total yesterday',
+        color: 'rgba(165,170,217,1)',
+        data: totallas,
+        pointPadding: 0.3,
+        // pointPlacement: -0.3
+    }, {
+        name: 'Total to day',
+        color: 'rgba(126,86,134,.9)',
+        data: total,
+        pointPadding: 0.4,
+        // pointPlacement: -0.3
+    }
+
+    ]
+});
+
+    }
+              else{                
+                // openErrorGritter('Error!', result.message);
+              }
+            }
+            else{
+
+              alert("Disconnected from server");
+            }
+          });
+  }
+
+  function ngTotal2() {
+    $.get('{{ url("index/getKensaAkhirALL") }}', function(result, status, xhr){
+              console.log(status);
+              console.log(result);
+              console.log(xhr);
+              if(xhr.status == 200){
+                if(result.status){
+
+                  var nglist = [];
+                  var total = [];
+                  var totallas = [];
+                    for (var i = 0; i < result.ng.length; i++) {                    
+                     nglist.push(result.ng[i].ng_name);
+                     total.push(parseInt(result.ng[i].total));
+                     totallas.push(parseInt(result.nglas[i].total));
+                     
+                    } 
+
+                    
+    Highcharts.chart('Rkensaakhir', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'TOTAL NG RATE KENSA AKHIR'
+    },
+    subtitle: {
+        text: 'Last Update '+result.tgl[0].tgl
+    },
+    xAxis: {
+        categories: nglist
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'TOTAL NG'
+        }
+    },
+    
+    tooltip: {
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0,
+             dataLabels: {
+                enabled: true
+            }
+        }
+
+    },
+    credits:{
+                enabled:false,
+              },
+    series: [{
+        name: 'Total yesterday',
+        color: 'rgba(165,170,217,1)',
+        data: totallas,
+        pointPadding: 0.3,
+        // pointPlacement: -0.3
+    }, {
+        name: 'Total to day',
+        color: 'rgba(126,86,134,.9)',
+        data: total,
+        pointPadding: 0.4,
+        // pointPlacement: -0.3
+    }
+
+    ]
+});
+
+    }
+              else{                
+                // openErrorGritter('Error!', result.message);
+              }
+            }
+            else{
+
+              alert("Disconnected from server");
+            }
+          });
+  }
+
+
+  function ngTotal3() {
+    $.get('{{ url("index/getTotalNG") }}', function(result, status, xhr){
+              console.log(status);
+              console.log(result);
+              console.log(xhr);
+              if(xhr.status == 200){
+                if(result.status){
+
+                  var nglist = [];
+                  var total = [];
+                  var totalH = [];
+                  var totalL = [];
+
+                  var total2 = [];
+                  var totalH2 = [];
+                  var totalL2 = [];
+                 
+                  for (var i = 0; i < result.ng.length; i++) {                    
+                     nglist.push(result.ng[i].ngH);
+                     total.push(parseInt(result.ng[i].total));
+                     totalH.push(parseInt(result.ngH[i].totalH));
+                     totalL.push(parseInt(result.ngL[i].totalL));
+
+                      total2.push(parseInt(result.ng[i].total2)-1);
+                     totalH2.push(parseInt(result.ngH[i].totalH2)-1);
+                     totalL2.push(parseInt(result.ngL[i].totalL2)-1);
+                    } 
+
+
+    Highcharts.chart('Rbensuki', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'TOTAL NG RATE MESIN SPOT WELDING'
+    },
+    subtitle: {
+        text: 'Last Update'+result.tgl[0].tgl
+    },
+    xAxis: {
+        categories: nglist
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'TOTAL NG'
+        }
+    },
+    
+    tooltip: {
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0,
+             dataLabels: {
+                enabled: true
+            }
+        }
+
+    },
+    credits:{
+                enabled:false,
+              },
+    series: [{
+        name: 'Previous Month Total Avg',
+        color: 'rgba(165,170,217,1)',
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        pointPadding: 0.3,
+        pointPlacement: -0.3
+    }, {
+        name: 'Total to day',
+        color: 'rgba(126,86,134,.9)',
+        data: total,
+        pointPadding: 0.4,
+        pointPlacement: -0.3
+    }, {
+        name: 'Previous Month High Avg',
+        color: 'rgba(248,161,63,1)',
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        
+        pointPadding: 0.3,
+        pointPlacement: 0,
+       
+    }, {
+        name: 'High to day',
+        color: 'rgba(186,60,61,.9)',
+        data: totalH,
+        
+        pointPadding: 0.4,
+        pointPlacement: 0,
+       
+    },{
+        name: 'Previous Month Low Avg',
+        color: 'rgba(166, 247, 67,.9)',
+        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        
+        pointPadding: 0.3,
+        pointPlacement: 0.3,
+        
+    }, {
+        name: 'Low to day',
+        color: 'rgba(2, 125, 27,1)',
+        data: totalL,
+        
+        pointPadding: 0.4,
+        pointPlacement: 0.3,
+        
+    }
+
+    ]
+});
+    }
+              else{                
+                // openErrorGritter('Error!', result.message);
+              }
+            }
+            else{
+
+              alert("Disconnected from server");
+            }
+          });
+  }
+
+   function ngTotal4() {
+    $.get('{{ url("index/getKensaVisualALL") }}', function(result, status, xhr){
+              console.log(status);
+              console.log(result);
+              console.log(xhr);
+              if(xhr.status == 200){
+                if(result.status){
+
+                  var nglist = [];
+                  var total = [];
+                  var totallas = [];
+                    for (var i = 0; i < result.ng.length; i++) {                    
+                     nglist.push(result.ng[i].location.replace("PN_Kakuning_Visual_", ""));
+                     total.push(parseInt(result.ng[i].tot));
+                     totallas.push(parseInt(result.nglas[i].tot));
+                     
+                    } 
+
+                    
+    Highcharts.chart('Rvisual', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'TOTAL NG RATE KAKUNIN VISUAL'
+    },
+    subtitle: {
+        text: 'Last Update '+result.tgl[0].tgl
+    },
+    xAxis: {
+        categories: nglist
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'TOTAL NG'
+        }
+    },
+    
+    tooltip: {
+        shared: false
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0,
+             dataLabels: {
+                enabled: true
+            }
+        }
+
+    },
+    credits:{
+                enabled:false,
+              },
+    series: [{
+        name: 'Total yesterday',
+        color: 'rgba(165,170,217,1)',
+        data: totallas,
+        pointPadding: 0.3,
+        // pointPlacement: -0.3
+    }, {
+        name: 'Total to day',
+        color: 'rgba(126,86,134,.9)',
+        data: total,
+        pointPadding: 0.4,
+        // pointPlacement: -0.3
+    }
+
+    ]
+});
+
+
+    }
+              else{                
+                // openErrorGritter('Error!', result.message);
+              }
+            }
+            else{
+
+              alert("Disconnected from server");
+            }
+          });
+  }
 
         </script>
 

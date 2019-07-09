@@ -114,6 +114,7 @@ table.table-bordered > tfoot > tr > th{
   });
   jQuery(document).ready(function() { 
     ngTotal();
+    recall();
     
      $('body').toggleClass("sidebar-collapse");
     $('.select2').select2({
@@ -121,6 +122,11 @@ table.table-bordered > tfoot > tr > th{
       width: '100%',
     });
   });
+
+  function recall() {
+            ngTotal();
+            setTimeout(recall, 6000);
+          }
   
   function ngTotal() {
     $.get('{{ url("index/getKensaVisualALL") }}', function(result, status, xhr){

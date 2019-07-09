@@ -67,9 +67,17 @@
           Incomings Reed Plate <br>
           <span  >Model <b class="destroy" id="modelb2">[ ]</b></span><br>
           <div class="col-xs-12" style="padding: 0px">
-            @foreach($models as $model) 
-            <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-LG btn-warning" onclick="model2(this.id)" id="{{$model}}" style="width:100%;">{{$model}}</button></div>
-            @endforeach
+            
+
+             @foreach($models as $model) 
+              @if($model == "P-37")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model2(this.id)" id="{{$model}}" style="width:100%; background-color:  #800000; color: white">{{$model}}</button></div>
+              @elseif($model == "P-32")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(135,206,250); color: black">{{$model}}</button></div>
+              @else
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(240,230,140); color: black">{{$model}}</button></div>
+              @endif
+              @endforeach
             <br>
             Qty <br>
             <input type="text" name="qty" id="qty" class="form-control">
@@ -150,9 +158,17 @@
 
                 <div class="col-xs-12" style="padding: 0px">
                   <span >Model  </span><br>
-                  @foreach($models as $model) 
-                  <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-LG btn-warning" onclick="model(this.id)" id="{{$model}}" style="width:100%;">{{$model}}</button></div>
-                  @endforeach
+                 
+
+                   @foreach($models as $model) 
+              @if($model == "P-37")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  #800000; color: white">{{$model}}</button></div>
+              @elseif($model == "P-32")
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(135,206,250); color: black">{{$model}}</button></div>
+              @else
+              <div class="col-xs-4"style="padding: 0px 5px 0px 5px" ><button class="btn btn-lg" onclick="model(this.id)" id="{{$model}}" style="width:100%; background-color:  rgb(240,230,140); color: black">{{$model}}</button></div>
+              @endif
+              @endforeach
                 </div>
 
                 Op Reed Plate  <br>

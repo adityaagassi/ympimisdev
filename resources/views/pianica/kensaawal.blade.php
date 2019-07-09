@@ -382,7 +382,7 @@
              var pureto = $('#oppureto').val();
              var data ={
               pureto:pureto,
-              op:'pureto',
+              op:'kensa awal',
             }
             $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
               console.log(status);

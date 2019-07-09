@@ -114,6 +114,7 @@ table.table-bordered > tfoot > tr > th{
   });
   jQuery(document).ready(function() { 
     ngTotal();
+    recall();
     
      $('body').toggleClass("sidebar-collapse");
     $('.select2').select2({
@@ -121,6 +122,11 @@ table.table-bordered > tfoot > tr > th{
       width: '100%',
     });
   });
+
+   function recall() {
+            ngTotal();
+            setTimeout(recall, 6000);
+          }
   
   function ngTotal() {
     $.get('{{ url("index/getKensaAwalALL") }}', function(result, status, xhr){
@@ -198,12 +204,14 @@ table.table-bordered > tfoot > tr > th{
                 enabled:false,
               },
     series: [{
+      animation: false,
         name: 'Total yesterday',
         color: 'rgba(165,170,217,1)',
         data: totallas,
         pointPadding: 0.3,
         // pointPlacement: -0.3
     }, {
+      animation: false,
         name: 'Total to day',
         color: 'rgba(126,86,134,.9)',
         data: total,

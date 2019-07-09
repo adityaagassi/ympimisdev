@@ -1670,4 +1670,41 @@ on a.ng = b.id
     return Response::json($response);
 }
 
+/// Laporan Kensa Awal
+
+ public function recordPianica()
+  {
+
+    return view('pianica.record')->with('page', 'Pianica Inventori');
+}
+
+public function recordPianica2(Request $request){
+    $flo_detailsTable = DB::table('pn_log_proces')
+    
+    ->select('tag', 'model', 'qty', db::raw('date_format(updated_at, "%d-%b-%Y") as st_date'), DB::raw('(CASE WHEN location = "PN_Pureto" THEN "Pureto" WHEN location = "PN_Kensa_Awal" THEN "Kensa Awal" WHEN location = "PN_Kensa_Akhir" THEN "Kensa Akhir" ELSE "Kakunin Visual" END) AS location') );
+
+    if(strlen($request->get('datefrom')) > 0){
+        $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(updated_at, "%Y-%m-%d")'), '>=', $date_from);
+    }
+
+    if(strlen($request->get('code')) > 0){
+        $code = $request->get('code');
+        $flo_detailsTable = $flo_detailsTable->where('location','=', $code );
+    }
+
+    if(strlen($request->get('dateto')) > 0){
+        $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+        $flo_detailsTable = $flo_detailsTable->where(DB::raw('DATE_FORMAT(updated_at, "%Y-%m-%d")'), '<=', $date_to);
+    }
+
+    $stamp_detail = $flo_detailsTable->orderBy('updated_at', 'desc')->get();
+
+    return DataTables::of($stamp_detail)
+    ->addColumn('action', function($stamp_detail){
+        return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+    })
+    ->make(true);
+}
+
 }
