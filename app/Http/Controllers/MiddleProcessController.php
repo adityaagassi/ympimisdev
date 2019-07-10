@@ -1378,7 +1378,7 @@ class MiddleProcessController extends Controller
 		->where('tag','=', $tag)
 		->get();
 
-		$created = DB::table('barrel_queues')		
+		$created = DB::table('barrel_queues')
 		->select(DB::raw("created_at - INTERVAL 5 SECOND as created_at"))
 		->orderBy('created_at','asc')
 		->limit(1)
