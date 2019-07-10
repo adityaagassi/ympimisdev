@@ -430,7 +430,8 @@ class MiddleProcessController extends Controller
 			->where('materials.mrpc', '=', $request->get('mrpc'))
 			->whereIn('materials.hpl', $request->get('hpl'))
 			->where('materials.surface', 'like', '%PLT')
-			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
+			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
+			->orderBy('barrel_queues.created_at', 'asc')
 			->limit(30)
 			->get();
 			$code = 'PLT';
@@ -442,7 +443,8 @@ class MiddleProcessController extends Controller
 			->where('materials.mrpc', '=', $request->get('mrpc'))
 			->whereIn('materials.hpl', $request->get('hpl'))
 			->where('materials.surface', 'like', '%LCQ')
-			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity')
+			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
+			->orderBy('barrel_queues.created_at', 'asc')
 			// ->limit(30)
 			->get();
 			$code = 'FLANEL';

@@ -178,7 +178,7 @@
 		$('body').toggleClass("sidebar-collapse");
 		fillTable();
 		headCreate();
-		setInterval(headCreate, 1000);
+		setInterval(headCreate, 10000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -213,6 +213,7 @@
 				detik = ("0" + value.detik).slice(-2)+"S";
 
 				$("#"+value.machine).append("Machine #"+value.machine+"<br>"+value.status.toUpperCase()+" : "+jam+" "+menit+" "+detik);
+				// setTimeout(headCreate, 1000);
 			})
 		})
 	}
