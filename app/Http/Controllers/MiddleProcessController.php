@@ -1394,6 +1394,13 @@ class MiddleProcessController extends Controller
 		]);
 
 		DB::table('middle_inventories')->where('tag', '=', $tag)->delete();
+		
+		try{
+			DB::table('barrels')->where('tag', '=', $tag)->delete();
+		}
+		catch(\Exception $e){
+
+		}
 
 		$response = array(
 			'status' => true,
