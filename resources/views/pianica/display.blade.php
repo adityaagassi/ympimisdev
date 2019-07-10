@@ -388,8 +388,8 @@
                var dt = new Date();
               var time = dt.getHours() + ":" + dt.getMinutes();
               var s = time.split(':');
-              var h = parseInt(s[0]) - 8 ;
-              var hs = parseInt(s[1]) - 0 ;
+              var h = parseInt(s[0]) - 7 ;
+              var hs = parseInt(s[1]) - 15 ;
               var minut = (h * 60) + hs;
 
               if (h >= 12 ) {
