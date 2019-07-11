@@ -98,47 +98,125 @@
 					<i class="glyphicon glyphicon-qrcode"></i>
 				</div>
 			</div>
-			<center><h4 class="text-yellow">Lacquering (LCQ)</h4></center>
-			<table id="lcq" class="table table-bordered" width="100%" style="margin-bottom: 0;">
+			<table id="lcq" class="table table-bordered" width="100%" style="margin-top: 5px;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th style="width: 10%; padding:0;">Model</th>
-						<th style="width: 10%; padding:0;">Key</th>
-						<th style="width: 10%; padding:0;">Set</th>
-						<th style="width: 10%; padding:0;">Reset</th>
+						<th style="width: 1%; padding:0;">Shift</th>
+						<th style="width: 3%; padding:0;">Key</th>
+						<th style="width: 2%; padding:0;">Set</th>
+						<th style="width: 2%; padding:0;">Reset</th>
+						<th style="width: 1%; padding:0;">#</th>
 					</tr>
 				</thead>
-				<tbody id="tb_lcq">
+				<tbody>
+					<tr>
+						<td style="background-color: #fffcb7;">1</td>
+						<td style="background-color: #fffcb7;">AS LCQ</td>
+						<td style="background-color: #fffcb7;" id="aslcqset1">0</td>
+						<td style="background-color: #fffcb7;" id="aslcqreset1">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+ASLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">1</td>
+						<td style="background-color: #fffcb7;">TS LCQ</td>
+						<td style="background-color: #fffcb7;" id="tslcqset1">0</td>
+						<td style="background-color: #fffcb7;" id="aslcqreset1">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+TSLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">1</td>
+						<td style="background-color: #fffcb7;">AS PLT</td>
+						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: #fffcb7;" id="aspltreset1">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+ASPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">1</td>
+						<td style="background-color: #fffcb7;">TS PLT</td>
+						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: #fffcb7;" id="tspltreset1">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+TSPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totset1">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totreset1">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;"></td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffd8b7;">2</td>
+						<td style="background-color: #ffd8b7;">AS LCQ</td>
+						<td style="background-color: #ffd8b7;" id="aslcqset2">0</td>
+						<td style="background-color: #ffd8b7;" id="aslcqreset2">0</td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+ASLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffd8b7;">2</td>
+						<td style="background-color: #ffd8b7;">TS LCQ</td>
+						<td style="background-color: #ffd8b7;" id="tslcqset2">0</td>
+						<td style="background-color: #ffd8b7;" id="tslcqreset2">0</td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+TSLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffd8b7;">2</td>
+						<td style="background-color: #ffd8b7;">AS PLT</td>
+						<td style="background-color: #ffd8b7;">0</td>
+						<td style="background-color: #ffd8b7;" id="aspltreset2">0</td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+ASPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #ffd8b7;">2</td>
+						<td style="background-color: #ffd8b7;">TS PLT</td>
+						<td style="background-color: #ffd8b7;">0</td>
+						<td style="background-color: #ffd8b7;" id="tspltreset2">0</td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+TSPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totset2">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totreset2">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;"></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">3</td>
+						<td style="background-color: #fffcb7;">AS LCQ</td>
+						<td style="background-color: #fffcb7;" id="aslcqset3">0</td>
+						<td style="background-color: #fffcb7;" id="aslcqreset3">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+ASLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">3</td>
+						<td style="background-color: #fffcb7;">TS LCQ</td>
+						<td style="background-color: #fffcb7;" id="tslcqset3">0</td>
+						<td style="background-color: #fffcb7;" id="tslcqreset3">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+TSLCQ')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">3</td>
+						<td style="background-color: #fffcb7;">AS PLT</td>
+						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: #fffcb7;" id="aspltreset3">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+ASPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #fffcb7;">3</td>
+						<td style="background-color: #fffcb7;">TS PLT</td>
+						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: #fffcb7;" id="tspltreset3">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+TSPLT')">Detail</button></td>
+					</tr>
+					<tr>
+						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totset3">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;" id="totreset3">0</td>
+						<td style="background-color: #f39c12; font-weight: bold;"></td>
+					</tr>
 				</tbody>
-				<tfoot style="background-color: rgb(126,86,134); color: #FFD700;">
-					<tr>
-						<th colspan="2">Total</th>
-						<th id="total_set">0</th>
-						<th id="total_reset">0</th>
-					</tr>
-				</tfoot>
-			</table>
-			<center><h4 class="text-yellow">Plating (PLT)</h4></center>
-			<table id="plt" class="table table-bordered" width="100%">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-					<tr>
-						<th style="width: 10%; padding:0;">Model</th>
-						<th style="width: 10%; padding:0;">Key</th>
-						<th style="width: 10%; padding:0;">Qty</th>
-					</tr>
-				</thead>
-				<tbody id="tb_plt">
-				</tbody>
-				<tfoot style="background-color: rgb(126,86,134); color: #FFD700;">
-					<tr>
-						<th colspan="2">Total</th>
-						<th id="total_plt">0</th>
-					</tr>
-				</tfoot>
 			</table>
 		</div>
+		<div class="col-sx-4">
 
-
+		</div>
 	</div>
 </section>
 @endsection
@@ -210,51 +288,9 @@
 			hpl : hpl,
 		}
 		$.get('{{ url("fetch/middle/barrel_board") }}', data, function(result, status, xhr){
-			$('#tb_plt').empty();
-			$('#tb_lcq').empty();
 
 			$('#queueTable').DataTable().clear();
 			$('#queueTable').DataTable().destroy();
-			var set = 0, reset = 0, plt = 0;
-			var tb_plt = "";
-			var tb_lcq = "";
-			var no1 = 1, no2 = 1;
-			$.each(result.barrel_board, function(index, value) {
-				var color = "";
-
-				if (no1 % 2 === 0 ) {
-					color1 = 'style="background-color: #fffcb7"';
-				} else {
-					color1 = 'style="background-color: #ffd8b7"';
-				}
-
-				if (no2 % 2 === 0 ) {
-					color2 = 'style="background-color: #fffcb7"';
-				} else {
-					color2 = 'style="background-color: #ffd8b7"';
-				}
-
-				if (value.plt != 0 ) {
-					tb_plt += "<tr "+color2+"><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.plt+"</td></tr>";
-
-					plt += parseInt(value.plt);
-					no2++;
-				} else {
-					tb_lcq += "<tr "+color1+"><td>"+value.model+"</td><td>"+value.key+"</td><td>"+value.set+"</td><td>"+value.reset+"</td></tr>";
-
-					set += parseInt(value.set);
-					reset += parseInt(value.reset);
-					no1++;
-				}
-
-				$("#total_set").text(set);
-				$("#total_reset").text(reset);
-				$("#total_plt").text(plt);
-			});
-
-			$("#tb_plt").append(tb_plt);
-			$("#tb_lcq").append(tb_lcq);
-
 			$('#queueTableBody').html("");
 			var queueTableBody = "";
 			var no = 1
@@ -338,45 +374,201 @@
 				"bAutoWidth": false,
 				"processing": true
 			});
+
+			var aslcqset1 = 0;
+			var tslcqset1 = 0;
+
+			var aslcqset2 = 0;
+			var tslcqset2 = 0;
+
+			var aslcqset3 = 0;
+			var tslcqset3 = 0;
+
+			var aslcqreset1 = 0;
+			var tslcqreset1 = 0;
+			var aspltreset1 = 0;
+			var tspltreset1 = 0;
+
+			var aslcqreset2 = 0;
+			var tslcqreset2 = 0;
+			var aspltreset2 = 0;
+			var tspltreset2 = 0;
+
+			var aslcqreset3 = 0;
+			var tslcqreset3 = 0;
+			var aspltreset3 = 0;
+			var tspltreset3 = 0;
+
+			var totset1 = 0;
+			var totreset1 = 0;
+			var totset2 = 0;
+			var totreset2 = 0;
+			var totset3 = 0;
+			var totreset3 = 0;
+
+			$('#aslcqset1').html("");
+			$('#tslcqset1').html("");
+			$('#aslcqset2').html("");
+			$('#tslcqset2').html("");
+			$('#aslcqset3').html("");
+			$('#tslcqset3').html("");
+
+			$('#aslcqreset1').html("");
+			$('#tslcqreset1').html("");
+			$('#aspltreset1').html("");
+			$('#tspltreset1').html("");
+
+			$('#aslcqreset2').html("");
+			$('#tslcqreset2').html("");
+			$('#aspltreset2').html("");
+			$('#tspltreset2').html("");
+
+			$('#aslcqreset3').html("");
+			$('#tslcqreset3').html("");
+			$('#aspltreset3').html("");
+			$('#tspltreset3').html("");
+
+			$('#totset1').html("");
+			$('#totreset1').html("");
+			$('#totset2').html("");
+			$('#totreset2').html("");
+			$('#totset3').html("");
+			$('#totreset3').html("");
+
+			$.each(result.barrel_board, function(index, value){
+				if(value.hpl == 'ASKEY' && value.status == 'set' && value.shift == 1){
+					aslcqset1 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'set' && value.shift == 1){
+					tslcqset1 += parseInt(value.qty);
+				}
+				if(value.hpl == 'ASKEY' && value.status == 'set' && value.shift == 2){
+					aslcqset2 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'set' && value.shift == 2){
+					tslcqset2 += parseInt(value.qty);
+				}
+				if(value.hpl == 'ASKEY' && value.status == 'set' && value.shift == 3){
+					aslcqset3 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'set' && value.shift == 3){
+					tslcqset3 += parseInt(value.qty);
+				}
+
+				if(value.hpl == 'ASKEY' && value.status == 'reset' && value.shift == 1){
+					aslcqreset1 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 1){
+					tslcqreset1 += parseInt(value.qty);
+				}
+				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 1){
+					aspltreset1 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 1){
+					tspltreset1 += parseInt(value.qty);
+				}
+
+				if(value.hpl == 'ASKEY' && value.status == 'reset' && value.shift == 2){
+					aslcqreset2 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 2){
+					tslcqreset2 += parseInt(value.qty);
+				}
+				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 2){
+					aspltreset2 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 2){
+					tspltreset2 += parseInt(value.qty);
+				}
+
+				if(value.hpl == 'ASKEY' && value.status == 'reset' && value.shift == 3){
+					aslcqreset3 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 3){
+					tslcqreset3 += parseInt(value.qty);
+				}
+				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 3){
+					aspltreset3 += parseInt(value.qty);
+				}
+				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 3){
+					tspltreset3 += parseInt(value.qty);
+				}
+			});
+
+			$('#aslcqset1').html(aslcqset1);
+			$('#tslcqset1').html(tslcqset1);
+			$('#aslcqset2').html(aslcqset2);
+			$('#tslcqset2').html(tslcqset2);
+			$('#aslcqset3').html(aslcqset3);
+			$('#tslcqset3').html(tslcqset3);
+
+			$('#aslcqreset1').html(aslcqreset1);
+			$('#tslcqreset1').html(tslcqreset1);
+			$('#aspltreset1').html(aspltreset1);
+			$('#tspltreset1').html(tspltreset1);
+
+			$('#aslcqreset2').html(aslcqreset2);
+			$('#tslcqreset2').html(tslcqreset2);
+			$('#aspltreset2').html(aspltreset2);
+			$('#tspltreset2').html(tspltreset2);
+
+			$('#aslcqreset3').html(aslcqreset3);
+			$('#tslcqreset3').html(tslcqreset3);
+			$('#aspltreset3').html(aspltreset3);
+			$('#tspltreset3').html(tspltreset3);
+
+			totset1 = aslcqset1+tslcqset1;
+			totreset1 = aslcqreset1+tslcqreset1+aspltreset1+tspltreset1;
+			totset2 = aslcqset2+tslcqset2;
+			totreset2 = aspltreset2+tspltreset2+aslcqreset2+tslcqreset2;
+			totset3 = aslcqset3+tslcqset3;
+			totreset3 = aslcqreset3+tslcqreset3+aspltreset3+tspltreset3;
+
+			$('#totset1').html(totset1);
+			$('#totreset1').html(totreset1);
+			$('#totset2').html(totset2);
+			$('#totreset2').html(totreset2);
+			$('#totset3').html(totset3);
+			$('#totreset3').html(totreset3);
 		});
+}
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+$.date = function(dateObject) {
+	var d = new Date(dateObject);
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (day < 10) {
+		day = "0" + day;
 	}
-
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
+	if (month < 10) {
+		month = "0" + month;
 	}
+	var date = day + "/" + month + "/" + year;
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
-
-	$.date = function(dateObject) {
-		var d = new Date(dateObject);
-		var day = d.getDate();
-		var month = d.getMonth() + 1;
-		var year = d.getFullYear();
-		if (day < 10) {
-			day = "0" + day;
-		}
-		if (month < 10) {
-			month = "0" + month;
-		}
-		var date = day + "/" + month + "/" + year;
-
-		return date;
-	};
+	return date;
+};
 </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
 use Yajra\DataTables\Exception;
 use Response;
 use Illuminate\Support\Facades\DB;
@@ -378,10 +379,8 @@ class MiddleProcessController extends Controller
 		->where('materials.category', '=', 'WIP')
 		->where('materials.mrpc', '=', $request->get('mrpc'))
 		->whereIn('materials.hpl', $request->get('hpl'))
-		->select('materials.model', 'materials.key', 'material',DB::raw("SUM(IF(barrel_logs.`status` = 'set',`qty`,0)) as `set`"), DB::raw("SUM(IF(barrel_logs.`status` = 'reset',`qty`,0)) as `reset`"), DB::raw("SUM(IF(barrel_logs.`status` = 'plt',`qty`,0)) as `plt`"))
-		->groupBy('materials.model', 'materials.key', 'barrel_logs.material')
-		->orderBy('materials.model', 'asc')
-		->orderBy('materials.key', 'asc')
+		->select('materials.hpl', 'barrel_logs.status', db::raw('sum(barrel_logs.qty) as qty'), db::raw('IF(TIME(barrel_logs.started_at) > "00:00:00" and TIME(barrel_logs.started_at) < "07:00:00", 3, IF(TIME(barrel_logs.started_at) > "07:00:00" and TIME(barrel_logs.started_at) < "16:00:00", 1, IF(TIME(barrel_logs.started_at) > "16:00:00" and TIME(started_at) < "23:59:59", 2, "ERROR"))) AS shift'))
+		->groupBy('materials.hpl', 'barrel_logs.status', 'barrel_logs.started_at')
 		->get();
 
 		$barrel_queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
@@ -633,6 +632,9 @@ class MiddleProcessController extends Controller
 							'location' => 'barrel',
 						];
 
+						$footer = EscposImage::load(public_path('mirai.jpg'));
+						// $printer->bitImage($footer);
+
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
 						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
@@ -652,7 +654,7 @@ class MiddleProcessController extends Controller
 						$printer->setTextSize(1,1);
 						$printer->text("GMC : ".$barrel_queue->material_number."                           ".$qr_machine."\n");
 						$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");			
+						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");
 						$printer->cut(Printer::CUT_PARTIAL, 50);
 						$printer->close();
 
