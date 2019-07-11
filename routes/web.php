@@ -544,6 +544,7 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	//---------- report kakuning visual
 	Route::get('index/reportVisual', 'Pianica@reportVisual');
 	Route::get('index/getKensaVisualALL', 'Pianica@getKensaVisualALL');
+	Route::post('index/deleteInv', 'Pianica@deleteInv');
 
 	//record
 	Route::get('index/record', 'Pianica@recordPianica');
