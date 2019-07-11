@@ -45,12 +45,21 @@ include(app_path() . '\barcode\barcode.php');
 		$('#model').text(models);		
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 48;
+
+    if (models == "YAS-VDHMII//ID") {
+      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
+      alert(models);
+    }
+
     if (models == "YAS-PLU1II//02 ID") {
       $('#model').css({"font-size":"30pt", "-moz-transform":"scale(1,2.1)","padding-top":"5px"});
     }
-		if (models.length > 11 && models != "YAS-PLU1II//02 ID") {
+
+		if (models.length > 11 && models != "YAS-PLU1II//02 ID" && models != "YAS-VDHMII//ID") {
 			$('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
 		}		
+
+
 	}
 	
 
