@@ -126,14 +126,14 @@
 					<tr>
 						<td style="background-color: #fffcb7;">1</td>
 						<td style="background-color: #fffcb7;">AS PLT</td>
-						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="aspltreset1">0</td>
 						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+ASPLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">1</td>
 						<td style="background-color: #fffcb7;">TS PLT</td>
-						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="tspltreset1">0</td>
 						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+TSPLT')">Detail</button></td>
 					</tr>
@@ -160,14 +160,14 @@
 					<tr>
 						<td style="background-color: #ffd8b7;">2</td>
 						<td style="background-color: #ffd8b7;">AS PLT</td>
-						<td style="background-color: #ffd8b7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #ffd8b7;" id="aspltreset2">0</td>
 						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+ASPLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #ffd8b7;">2</td>
 						<td style="background-color: #ffd8b7;">TS PLT</td>
-						<td style="background-color: #ffd8b7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #ffd8b7;" id="tspltreset2">0</td>
 						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+TSPLT')">Detail</button></td>
 					</tr>
@@ -194,14 +194,14 @@
 					<tr>
 						<td style="background-color: #fffcb7;">3</td>
 						<td style="background-color: #fffcb7;">AS PLT</td>
-						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="aspltreset3">0</td>
 						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+ASPLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">3</td>
 						<td style="background-color: #fffcb7;">TS PLT</td>
-						<td style="background-color: #fffcb7;">0</td>
+						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="tspltreset3">0</td>
 						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+TSPLT')">Detail</button></td>
 					</tr>
