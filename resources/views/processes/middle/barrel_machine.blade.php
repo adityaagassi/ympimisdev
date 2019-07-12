@@ -334,6 +334,113 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #1</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set1">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #2</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set2">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #3</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set3">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #4</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set4">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #5</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set5">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-2" style="padding:1px">
+						<table class="table table-responsive table-bordered table-stripped">
+							<thead style="color: #FFD700;">
+								<tr>
+									<th colspan="3">Racking #6</th>
+								</tr>
+								<tr>
+									<th>Jig</th>
+									<th>Key</th>
+									<th>Tag</th>
+								</tr>
+							</thead>
+							<tbody id="set6">
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
 		</div>
 
 
@@ -405,6 +512,7 @@
 				for (var i = 1; i <= 6; i++) {
 					$("#tbody"+i).empty();
 					$("#queue"+i).empty();
+					$("#set"+i).empty();
 				}
 
 				$.each(result.datas, function(index, value) {
@@ -446,8 +554,14 @@
 
 					}
 					else if(value.status == 'queue'){
-						if (antrian <=2) {
-							$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+						$("#queue"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+value.qty+"</td></tr>");
+					}
+
+					else if(value.status == 'racking') {
+						var tags = value.tag.split(",");
+
+						for (var z = 0; z < tags.length; z++) {
+							$("#set"+mesin).append("<tr "+color+"><td>"+value.jig+"</td><td>"+value.model+" "+value.key+"</td><td>"+tags[z]+"</td></tr>");
 						}
 					}
 				})

@@ -427,6 +427,7 @@ Route::get('fetch/middle/barrel_machine_status', 'MiddleProcessController@fetchM
 Route::get('index/process_middle_return/{id}', 'MiddleProcessController@indexProcessMiddleReturn');
 Route::get('fetch/middle_return/barrel_return', 'MiddleProcessController@fetchProcessMiddleReturn');
 Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBarrelReprint');
+Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');

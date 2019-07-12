@@ -372,7 +372,7 @@ class MiddleProcessController extends Controller
 
 	public function fetchMiddleBarrelBoard(Request $request){
 
-		$now = date('Y-m-d');
+		$now = date('Y-m-d',strtotime('2019-07-04'));
 		$barrel_board =  DB::table('barrel_logs')
 		->leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material')
 		->where(DB::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d")'), '=', $now)
@@ -455,6 +455,26 @@ class MiddleProcessController extends Controller
 			'queues' => $queues,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchBarrelBoardDetails(Request $request)
+	{
+		// if ($request->get('shift')) {
+			$awal = "07:00:00";
+			$akhir = "16:00:00";
+		// } else {}
+
+		$now = date('Y-m-d');
+		$details = db::table('barrel_logs')
+		->leftJoin('materials', 'materials.material_number = barrel_logs.material')
+		->where('materials.hpl','=', 'ASKEY')
+		->where('materials.category','=', 'WIP')
+		->where('materials.mrpc','=', 'S51')
+		->where('materials.surface','LIKE', '%LCQ')
+		->where(db::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d") = "'.$now.'"'))
+		->where(db::raw('DATE_FORMAT(barrel_logs.started_at,"%H:%i:%s") >= "'.$awal.'" and DATE_FORMAT(barrel_logs.started_at,"%H:%i:%s") < "'.$akhir.'"'))
+		->groupBy('materials.model', 'materials.key')
+		->get();
 	}
 
 	public function fetchMiddleBarrelMachine(Request $request){
@@ -1343,7 +1363,7 @@ class MiddleProcessController extends Controller
 	{
 		$data = DB::table('barrels')
 		->leftJoin('materials', 'barrels.material_number', '=', 'materials.material_number')
-		->select('barrels.machine', 'barrels.jig', 'barrels.key', DB::raw('SUM(qty) as qty'), 'barrels.status', 'materials.model')
+		->select('barrels.machine', 'barrels.jig', 'barrels.key', DB::raw('SUM(qty) as qty'), 'barrels.status', 'materials.model',  DB::raw('GROUP_CONCAT(barrels.tag) as tag'))
 		->groupBy('barrels.machine', 'barrels.jig', 'barrels.key','barrels.status','materials.model')
 		->orderBy('remark','asc')
 		->orderBy('jig','asc')
