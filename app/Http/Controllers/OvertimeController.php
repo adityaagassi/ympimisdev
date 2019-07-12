@@ -724,6 +724,7 @@ public function overtimeControl(Request $request)
 	( SELECT over_time_member.nik, over_time.tanggal, sum( IF ( STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam FROM
 	over_time LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
 	WHERE DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$tanggal."'  AND over_time_member.nik IS NOT NULL AND over_time.deleted_at IS NULL 
+	AND jam_aktual = 0
 	GROUP BY over_time_member.nik, over_time.tanggal 
 	) d
 	LEFT JOIN karyawan ON karyawan.nik = d.nik 
