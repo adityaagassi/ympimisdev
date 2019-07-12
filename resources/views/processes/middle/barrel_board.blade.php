@@ -114,28 +114,28 @@
 						<td style="background-color: #fffcb7;">AS LCQ</td>
 						<td style="background-color: #fffcb7;" id="aslcqset1">0</td>
 						<td style="background-color: #fffcb7;" id="aslcqreset1">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+ASLCQ')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(1,'ASKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">1</td>
 						<td style="background-color: #fffcb7;">TS LCQ</td>
 						<td style="background-color: #fffcb7;" id="tslcqset1">0</td>
-						<td style="background-color: #fffcb7;" id="aslcqreset1">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+TSLCQ')">Detail</button></td>
+						<td style="background-color: #fffcb7;" id="tslcqreset1">0</td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(1,'TSKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">1</td>
 						<td style="background-color: #fffcb7;">AS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="aspltreset1">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+ASPLT')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(1,'ASKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">1</td>
 						<td style="background-color: #fffcb7;">TS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="tspltreset1">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('1+TSPLT')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(1,'TSKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
@@ -148,28 +148,28 @@
 						<td style="background-color: #ffd8b7;">AS LCQ</td>
 						<td style="background-color: #ffd8b7;" id="aslcqset2">0</td>
 						<td style="background-color: #ffd8b7;" id="aslcqreset2">0</td>
-						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+ASLCQ')">Detail</button></td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult(2,'ASKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #ffd8b7;">2</td>
 						<td style="background-color: #ffd8b7;">TS LCQ</td>
 						<td style="background-color: #ffd8b7;" id="tslcqset2">0</td>
 						<td style="background-color: #ffd8b7;" id="tslcqreset2">0</td>
-						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+TSLCQ')">Detail</button></td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult(2,'TSKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #ffd8b7;">2</td>
 						<td style="background-color: #ffd8b7;">AS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #ffd8b7;" id="aspltreset2">0</td>
-						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+ASPLT')">Detail</button></td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult(2,'ASKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #ffd8b7;">2</td>
 						<td style="background-color: #ffd8b7;">TS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #ffd8b7;" id="tspltreset2">0</td>
-						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult('2+TSPLT')">Detail</button></td>
+						<td style="background-color: #ffd8b7;"><button class="btn btn-info btn-xs" onclick="detailResult(2,'TSKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
@@ -182,28 +182,28 @@
 						<td style="background-color: #fffcb7;">AS LCQ</td>
 						<td style="background-color: #fffcb7;" id="aslcqset3">0</td>
 						<td style="background-color: #fffcb7;" id="aslcqreset3">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+ASLCQ')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(3,'ASKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">3</td>
 						<td style="background-color: #fffcb7;">TS LCQ</td>
 						<td style="background-color: #fffcb7;" id="tslcqset3">0</td>
 						<td style="background-color: #fffcb7;" id="tslcqreset3">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+TSLCQ')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(3,'TSKEY','LCQ')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">3</td>
 						<td style="background-color: #fffcb7;">AS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="aspltreset3">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+ASPLT')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(3,'ASKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #fffcb7;">3</td>
 						<td style="background-color: #fffcb7;">TS PLT</td>
 						<td style="background-color: black;">0</td>
 						<td style="background-color: #fffcb7;" id="tspltreset3">0</td>
-						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult('3+TSPLT')">Detail</button></td>
+						<td style="background-color: #fffcb7;"><button class="btn btn-info btn-xs" onclick="detailResult(3,'TSKEY','PLT')">Detail</button></td>
 					</tr>
 					<tr>
 						<td style="background-color: #f39c12; font-weight: bold;" colspan="2">Total</td>
@@ -214,8 +214,46 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-sx-4">
+	</div>
 
+	<div class="modal fade" id="detailModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><b>Edit Overtime Hour(s)</b></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class=" col-md-12">
+							<table class="table table-bordered" width="100%">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Model</th>
+										<th>Key</th>
+										<th>Set</th>
+										<th>Reset</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td></td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="2">Total</th>
+										<th>0</th>
+										<th>0</th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -531,6 +569,22 @@
 			$('#totset3').html(totset3);
 			$('#totreset3').html(totreset3);
 		});
+}
+
+function detailResult(shift, key, surface) {
+	var data = {
+		shift:shift,
+		key:key,
+		surface:surface
+	}
+
+	// console.log(shift+" "+key+" "+surface);
+
+	$.get('{{ url("fetch/middle/barrel_result") }}', data, function(result, status, xhr){
+
+	});
+	
+	$("#detailModal").modal("show");
 }
 
 function openSuccessGritter(title, message){
