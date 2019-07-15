@@ -887,6 +887,15 @@ class PurchaseOrderController extends Controller
 					$row = explode("\t", $row);
 					try{
 						if($row[5] != "" && preg_match('/^[0-9]+$/', $row[11])){
+							$price = 0;
+							if($row[1] == 'G01'){
+								$material = db::table('materials')->where('materials.material_number', '=', $row[5])->select('materials.std_price')->first();
+								$price = $material->std_price;
+							}
+							if($row[1] == "G08"){
+								$price = str_replace('"','',str_replace(',','',$row[19]));
+							}
+
 							$po_list = PoList::updateOrCreate(
 								['purchdoc' => $row[11], 'item' => trim($row[12], ' ')],
 								[
@@ -909,7 +918,7 @@ class PurchaseOrderController extends Controller
 									'order_qty' => str_replace('"','',str_replace(',','',$row[16])),
 									'deliv_qty' => str_replace('"','',str_replace(',','',$row[17])),
 									'base_unit_of_measure' => $row[18],
-									'price' => str_replace('"','',str_replace(',','',$row[19])),
+									'price' => $price,
 									'curr' => $row[20],
 									'order_no' => $row[21],
 									'reply_date' => date('Y-m-d', strtotime($row[22])),

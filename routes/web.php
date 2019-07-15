@@ -102,6 +102,7 @@ Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlR
 Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
+Route::get('index/employee/service', 'EmployeeController@indexEmployeeService');
 
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){

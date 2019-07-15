@@ -372,7 +372,7 @@ class MiddleProcessController extends Controller
 
 	public function fetchMiddleBarrelBoard(Request $request){
 
-		$now = date('Y-m-d',strtotime('2019-07-04'));
+		$now = date('Y-m-d');
 		$barrel_board =  DB::table('barrel_logs')
 		->leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material')
 		->where(DB::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d")'), '=', $now)
@@ -455,26 +455,6 @@ class MiddleProcessController extends Controller
 			'queues' => $queues,
 		);
 		return Response::json($response);
-	}
-
-	public function fetchBarrelBoardDetails(Request $request)
-	{
-		// if ($request->get('shift')) {
-			$awal = "07:00:00";
-			$akhir = "16:00:00";
-		// } else {}
-
-		$now = date('Y-m-d');
-		$details = db::table('barrel_logs')
-		->leftJoin('materials', 'materials.material_number = barrel_logs.material')
-		->where('materials.hpl','=', 'ASKEY')
-		->where('materials.category','=', 'WIP')
-		->where('materials.mrpc','=', 'S51')
-		->where('materials.surface','LIKE', '%LCQ')
-		->where(db::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d") = "'.$now.'"'))
-		->where(db::raw('DATE_FORMAT(barrel_logs.started_at,"%H:%i:%s") >= "'.$awal.'" and DATE_FORMAT(barrel_logs.started_at,"%H:%i:%s") < "'.$akhir.'"'))
-		->groupBy('materials.model', 'materials.key')
-		->get();
 	}
 
 	public function fetchMiddleBarrelMachine(Request $request){
@@ -1530,6 +1510,44 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			// 'tes' => $datas['tag']
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBarrelBoardDetails(Request $request)
+	{
+		$sif = $request->get('shift');
+		$now = date('Y-m-d');
+
+		if ($sif == 1) {
+			$awal = '07:00:00';
+			$akhir = '16:00:00';
+		} elseif($sif == 2) {
+			$awal = '16:00:00';
+			$akhir = '23:59:59';
+		}  elseif($sif == 3) {
+			$awal = '00:00:00';
+			$akhir = '07:00:00';
+		}
+
+
+		$detailPerolehan = db::table('materials')
+		->leftJoin('barrel_logs','materials.material_number','=','barrel_logs.material')
+		->where('materials.category', '=', 'WIP')
+		->where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->where('surface','like','%'.$request->get('surface'))
+		->where('hpl', $request->get('key'))
+		->where(db::raw("DATE_FORMAT(started_at,'%Y-%m-%d')"),"=", $now)
+		->where(db::raw("DATE_FORMAT(started_at,'%H:%i:%s')"), '>=', $awal)
+		->where(db::raw("DATE_FORMAT(started_at,'%H:%i:%s')"), '<', $akhir)
+		->select('model','key', db::raw("SUM(IF(`status`='set',qty,0)) as `set`"), db::raw("SUM(IF(`status`='reset',qty,0)) as `reset`"), db::raw("SUM(IF(`status`='plt',qty,0)) as `plt`"))
+		->groupBy('model','key')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $detailPerolehan
 		);
 		return Response::json($response);
 	}

@@ -220,11 +220,11 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title"><b>Edit Overtime Hour(s)</b></h4>
+					<h4 class="modal-title"><b id="headModal"></b></h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class=" col-md-12">
+						<div class="col-md-12">
 							<table class="table table-bordered" width="100%">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
@@ -234,16 +234,13 @@
 										<th>Reset</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td></td>
-									</tr>
+								<tbody id="detailBody">
 								</tbody>
 								<tfoot>
-									<tr>
-										<th colspan="2">Total</th>
-										<th>0</th>
-										<th>0</th>
+									<tr style="background-color: #f39c12; font-weight: bold;">
+										<th colspan="2" >Total</th>
+										<th id="total1">0</th>
+										<th id="total2">0</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -572,17 +569,53 @@
 }
 
 function detailResult(shift, key, surface) {
+	var hpl = $('#hpl').val().split(',');
 	var data = {
 		shift:shift,
 		key:key,
-		surface:surface
+		surface:surface,
+		mrpc : $('#mrpc').val(),
+		hpl : hpl
 	}
 
-	// console.log(shift+" "+key+" "+surface);
-
 	$.get('{{ url("fetch/middle/barrel_result") }}', data, function(result, status, xhr){
+		if (key == 'ASKEY')
+			var longName = "Alto Saxophone";
+		else if  (key == 'TSKEY')
+			var longName = "Tenor Saxophone";
 
+		$("#headModal").text(longName+" Shift "+shift);
+		$("#detailBody").empty();
+		var body = "", total1 = 0, total2 = 0, no = 1;
+		$.each(result.datas, function(index, value){
+
+			if (no % 2 === 0 ) {
+				color = 'style="background-color: #fffcb7"';
+			} else {
+				color = 'style="background-color: #ffd8b7"';
+			}
+			body += "<tr "+color+">";
+			body += "<td>"+value.model+"</td>";
+			body += "<td>"+value.key+"</td>";
+			body += "<td>"+value.set+"</td>";
+			total1 += parseInt(value.set);
+			if (value.plt == "0") {
+				body += "<td>"+value.reset+"</td>";
+				total2 += parseInt(value.reset);
+			}
+			else {
+				body += "<td>"+value.plt+"</td>";
+				total2 += parseInt(value.plt);
+			}
+			body += "</tr>";
+			no++;
+		});
+
+		$("#detailBody").append(body);
+		$("#total1").text(total1);
+		$("#total2").text(total2);
 	});
+
 	
 	$("#detailModal").modal("show");
 }
