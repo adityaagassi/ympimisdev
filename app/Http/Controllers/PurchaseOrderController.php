@@ -897,7 +897,7 @@ class PurchaseOrderController extends Controller
 							}
 
 							$po_list = PoList::updateOrCreate(
-								['purchdoc' => $row[11], 'item' => trim($row[12], ' ')],
+								['purchdoc' => $row[11], 'item' => sprintf("%'.0" . 5 . "d", trim($row[12], ' '))],
 								[
 									'porg' => $row[0],
 									'pgr' => $row[1],

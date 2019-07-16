@@ -66,7 +66,7 @@
 
         @if(in_array('A8', $navs))
         @if(isset($page) && $page == "Barrel Adjustment")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/middle/barrel_adjustment") }}"><i class="fa fa-users"></i> <span>Barrel Adjustment</span></a>
+          <a href="{{ url("/index/middle/barrel_adjustment") }}"><i class="fa fa-exchange"></i> <span>Barrel Adjustment</span></a>
         </li>
         @endif
 
