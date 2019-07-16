@@ -625,6 +625,8 @@ class MiddleProcessController extends Controller
 				$qr_machine = $code_generator->prefix . $number;
 				try{
 					$tags = $request->get('tag');
+					$code_generator->index = $code_generator->index+1;
+					$code_generator->save();
 
 					foreach ($tags as $tag) {
 						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
@@ -693,9 +695,6 @@ class MiddleProcessController extends Controller
 						});
 
 					}
-
-					$code_generator->index = $code_generator->index+1;
-					$code_generator->save();
 
 					$response = array(
 						'status' => true,
