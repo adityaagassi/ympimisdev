@@ -439,7 +439,7 @@ class PurchaseOrderController extends Controller
 			->leftJoin('countries', 'countries.country_code', '=', 'vendors.cty')
 			->leftJoin('payment_terms', 'vendors.tpay', '=', 'payment_terms.payment_code')
 			->select('po_lists.purchdoc', 'po_lists.pgr', db::raw('mrps.name as pgr_name'), 'po_lists.vendor', db::raw('vendors.name as vendor_name'), 'vendors.street', 'vendors.city', 'vendors.postl_code', 'countries.country_name', 'vendors.salesperson', 'vendors.tpay', 'payment_terms.payment_name', 'vendors.telephone_1', 'vendors.fax_number', 'vendors.incot', 'vendors.crcy', 'po_lists.item', 'po_lists.material', 'po_lists.description', 'po_lists.order_qty', 'po_lists.base_unit_of_measure', 'po_lists.price', db::raw('round(po_lists.price*po_lists.order_qty, 2) as amount'), 'materials.hpl')
-			->orderBy('materials.hpl', 'asc')->orderBy('po_lists.purchdoc', 'asc')->orderBy('po_lists.item', 'asc')
+			->orderBy('materials.hpl', 'asc')->orderBy('po_lists.material', 'asc')->orderBy('po_lists.purchdoc', 'asc')->orderBy('po_lists.item', 'asc')
 			->get();
 
 			$shipment_condition = db::table('shipment_conditions')->where('shipment_conditions.shipment_condition_code', '=', $request->get('shipmentCondition'))->first();
