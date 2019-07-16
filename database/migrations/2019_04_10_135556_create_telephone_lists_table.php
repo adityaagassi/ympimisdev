@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVisitorsTable extends Migration
+class CreateTelephoneListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,11 @@ class CreateVisitorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('visitors', function (Blueprint $table) {
+        Schema::create('telephone_lists', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('company');
-            $table->string('purpose');
-            $table->string('status');
-            $table->string('remark');
-            $table->string('employee');
-            $table->string('reason');
-            $table->string('transport');
-            $table->string('pol');
+            $table->string('person');
+            $table->string('dept');
+            $table->string('nomor');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,6 +30,6 @@ class CreateVisitorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visitors');
+        Schema::dropIfExists('telephone_lists');
     }
 }

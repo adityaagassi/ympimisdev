@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVisitorDetailsTable extends Migration
+class CreateVisitorIdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,10 @@ class CreateVisitorDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('visitor_details', function (Blueprint $table) {
+        Schema::create('visitor_ids', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_visitor');
-            $table->string('id_number');
+            $table->string('ktp');
             $table->string('full_name');
-            $table->string('in_time');
-            $table->string('out_time');
-            $table->string('status');
-            $table->string('tag');
-            $table->string('remark');
             $table->string('telp');
             $table->softDeletes();
             $table->timestamps();
@@ -36,6 +30,6 @@ class CreateVisitorDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visitor_details');
+        Schema::dropIfExists('visitor_ids');
     }
 }
