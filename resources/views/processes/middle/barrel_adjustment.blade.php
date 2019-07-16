@@ -2,6 +2,8 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
+<link rel="stylesheet" href="{{ url("css/bootstrap-datetimepicker.min.css")}}">
+
 <style type="text/css">
 	thead input {
 		width: 100%;
@@ -59,12 +61,32 @@
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> ??</span></small>
+		<button href="javascript:void(0)" class="btn bg-purple btn-sm pull-right" data-toggle="modal"  data-target="#import_modal">
+			<i class="fa fa-download"></i>&nbsp;&nbsp;Import Inactive
+		</button>
+		<button href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
+			<i class="fa fa-plus"></i>&nbsp;&nbsp;New Inactive
+		</button>
 	</h1>
 </section>
 @stop
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	@if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+		{{ session('status') }}
+	</div>
+	@endif
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>   
+	@endif
 	<div class="row">
 		<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 			<p style="position: absolute; color: White; top: 45%; left: 35%;">
@@ -103,10 +125,9 @@
 					<div id="selected1"></div>
 				</div>
 				<div class="col-xs-2" style="padding-left: 0px">
-					<button class="btn btn-warning pull-right" onclick="insertInactive()" style="margin-bottom: 6px">Inactive</button>
+					<button class="btn btn-warning pull-right" onclick="insertInactive()" style="margin-bottom: 6px">Inactive <i class="fa fa-mail-forward"></i></button>
 				</div>
-			</div>
-			
+			</div>			
 		</div>
 
 
@@ -147,14 +168,105 @@
 					<div id="selected2"></div>
 				</div>
 				<div class="col-xs-2" style="padding-left: 0px">
-					<button class="btn btn-success pull-right" onclick="insertActive()" style="margin-bottom: 6px">Active</button>
+					<button class="btn btn-success pull-right" onclick="insertActive()" style="margin-bottom: 6px"><i class="fa fa-mail-reply"></i> Active</button>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-default fade" id="create_modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title">
+						Add Inactive Material
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Tag<span class="text-red">*</span></label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" id="tag" placeholder="Enter Tag Code" required>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Material<span class="text-red">*</span></label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" id="material" placeholder="Enter Material" required>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Material Description<span class="text-red">*</span></label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" id="material_desc" placeholder="Enter Material Description" required>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+									<div class="col-sm-2">
+										<input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" required>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" onclick="tambahInAktif()"><i class="fa fa-plus"></i> Add Inactive</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-default fade" id="import_modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title">
+						Import Inactive Material
+					</h4>
+				</div>
+				<form method="post" action="{{ url('import/barrel_inactive') }}" enctype="multipart/form-data">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="box-body">
+									<input type="file" name="inactive_material" accept="text/plain">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-sm bg-purple" type="submit"><i class="fa fa-download"></i> Import</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </section>
 @endsection
 @section('scripts')
+
+<script src="{{ url("js/moment.min.js")}}"></script>
+<script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
 <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
@@ -179,7 +291,11 @@
 
 		tableAdjust();
 		tableInactive();
+		$('.datetime').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm:ss'
+		});
 	});	
+	
 
 	// -------------------- TABEL ADJUST ----------------------
 
@@ -483,7 +599,64 @@
 				$("#selected2").append(value[0]+" ");
 			});
 		}
+	}
 
+	function tambahInAktif() {
+		var tag = $("#tag").val();
+		var qty = $("#quantity").val();
+		var mat = $("#material").val();
+		var mat_desc = $("#material_desc").val();
+
+		if ($.isNumeric(qty) && qty != "" && tag != "" && mat != "" && mat_desc != "") {
+			var data = {
+				tag:tag,
+				material:mat,
+				material_description:mat_desc,
+				quantity:qty
+			};
+
+			$.post('{{ url("post/middle/new/barrel_inactive") }}', data, function(result, status, xhr){
+				if (result.status) {
+					$("#tag").val("");
+					$("#quantity").val("");
+					$("#material").val("");
+					$("#material_desc").val("");
+					openSuccessGritter('Success','Insert Inactive Success');
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Insert Failed');
+				}
+			})
+		} else {
+			audio_error.play();
+			openErrorGritter('Error','Invalid Value');
+		}
+	}
+
+	function importInactive() {
+		console.log($("#import_inactive").val());
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
 	}
 
 	$('.timepicker').timepicker({
@@ -496,9 +669,10 @@
 	})
 
 	$('.datepicker').datepicker({
-			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
-		});
+		autoclose: true,
+		format: 'yyyy-mm-dd',
+		todayHighlight: true
+	});
+
 </script>
 @endsection

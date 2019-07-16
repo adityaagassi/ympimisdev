@@ -41,9 +41,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Barrel<i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Set & Reset</a>
-			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Machine Log</a>
-
+			<a href="{{ url("index/report_middle", "slip-fulfillment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">ID Slip Fulfillment</a>
 		</div>
 	</div>
 </section>

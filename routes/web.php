@@ -202,6 +202,7 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('fetch/middle/barrel_inactive', 'MiddleProcessController@fetchBarrelInactive');
 	Route::post('post/middle/barrel_inactive', 'MiddleProcessController@postInactive');
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
+	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
 });
 
 Route::get('setting/user', 'UserController@index_setting');
