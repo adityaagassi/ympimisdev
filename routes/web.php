@@ -45,8 +45,28 @@ Route::get('/fetch/mis_investment', 'HomeController@fetch_mis_investment');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
 
 //Vistor Controll
+
+//Vistor Controll
 Route::get('visitor_index', 'VisitorController@index');
 Route::get('visitor_registration', 'VisitorController@registration');
+Route::get('simpan', 'VisitorController@simpanheader');
+Route::get('visitor_list', 'VisitorController@receive');
+Route::get('visitor_telpon', 'VisitorController@telpon');
+Route::get('visitor_filllist/{nik}', 'VisitorController@filllist');
+Route::get('visitor_getlist', 'VisitorController@editlist');
+Route::post('visitor_inputtag', 'VisitorController@inputtag');
+Route::get('visitor_confirmation', 'VisitorController@confirmation');
+Route::post('visitor_updateremark', 'VisitorController@updateremark');
+Route::post('visitor_updateremarkall', 'VisitorController@updateremarkall');
+Route::get('visitor_leave', 'VisitorController@leave');
+Route::get('visitor_getvisit', 'VisitorController@getvisit');
+Route::post('visitor_out', 'VisitorController@out');
+Route::get('visitor_getdata', 'VisitorController@getdata');
+Route::get('visitor_display', 'VisitorController@display');
+Route::get('visitor_filldisplay/{nik}', 'VisitorController@filldisplay');
+Route::get('visitor_getchart', 'VisitorController@getchart');
+
+//end visitor control 
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');
@@ -181,6 +201,7 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive', 'MiddleProcessController@fetchBarrelInactive');
 	Route::post('post/middle/barrel_inactive', 'MiddleProcessController@postInactive');
+	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 });
 
 Route::get('setting/user', 'UserController@index_setting');
@@ -429,6 +450,7 @@ Route::get('index/process_middle_return/{id}', 'MiddleProcessController@indexPro
 Route::get('fetch/middle_return/barrel_return', 'MiddleProcessController@fetchProcessMiddleReturn');
 Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBarrelReprint');
 Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
+Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddle');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');

@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Visitor extends Model
+
+
+class VisitorId extends Model
 {
-	use SoftDeletes;
+   use SoftDeletes;
  protected $fillable = [
-'company','purpose','status','remark','employee','reason','transport','pol'
+'full_name','ktp','telp'
  ];
 }
-

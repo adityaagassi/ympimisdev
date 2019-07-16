@@ -2,7 +2,6 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ url("css/jqbtk.css")}}">
 <style>
 	thead input {
 		width: 100%;
@@ -86,7 +85,7 @@
 												<button type="button" class="btn btn-warning"><i class="fa fa-search"></i>&nbsp;Search</button>
 											</div>
 											<!-- /btn-group -->
-											<input type="text" id="telp" class="form-control" placeholder="Search Telephone" onclick="emptytlp()">
+											<input type="text" id="telp" class="form-control" placeholder="Search Line Telephone" >
 										</div>
 										<!-- /input-group -->
 										
@@ -113,13 +112,13 @@
 										</thead>
 										<tbody>
 										</tbody>
-										{{-- <tfoot>
+										<tfoot>
 											<tr>
 												<th></th>
 												<th></th>
 												<th></th>								
 											</tr>
-										</tfoot> --}}
+										</tfoot>
 									</table>									
 								</div>
 							</div>
@@ -197,13 +196,9 @@
 														</div>
 													</div>
 													<div class="modal-body">
-
-												{{-- 	Scan tag	
-
-												<div class="form-group">
+														<div class="form-group">
 															<center><input type="text" id="tagvisit" name="tagvisit" placeholder="Input or Scan Visitor Id Card" style="width: 80%" class="form-control " onkeydown="inputag(this.id,this.name)"></center>
-														</div> --}}
-
+														</div>
 														<div  class="form-group">
 
 															<input type="text" name="lop" id="lop" value="1" hidden>
@@ -230,7 +225,7 @@
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-														<button type="button" class="btn btn-primary" onclick="inputag2();reloadtable(); ">Confirm All</button>
+														<button type="button" class="btn btn-primary" onclick="reloadtable(); ">Save Tag</button>
 													</div>
 												</div>
 												<!-- /.modal-content -->
@@ -260,7 +255,6 @@
 	<script src="{{ url("js/vfs_fonts.js")}}"></script>
 	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
 	<script src="{{ url("js/buttons.print.min.js")}}"></script>
-	<script src="{{ url("js/jqbtk.js")}}"></script>
 	<script >
 		$.ajaxSetup({
 			headers: {
@@ -269,8 +263,6 @@
 		});
 
 		jQuery(document).ready(function() { 
-			$('#nikkaryawan').keyboard();
-			$('#telp').keyboard();
 			// $('#nikkaryawan').val('asd');
 			filltelpon();
 
@@ -426,7 +418,7 @@
 
 			$('#telponlist tfoot th').each( function () {
 				var title = $(this).text();
-				// $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
 			});
 			var table = $('#telponlist').DataTable({
 				'dom': 'Bfrtip',
@@ -474,15 +466,13 @@
 			table.columns().every( function () {
 				var that = this;
 
-				// $( 'input', this.footer() ).keyboard();
-
-				// $( 'input', this.footer() ).on( 'keyup change', function () {
-				// 	if ( that.search() !== this.value ) {
-				// 		that
-				// 		.search( this.value )
-				// 		.draw();
-				// 	}
-				// } );
+				$( 'input', this.footer() ).on( 'keyup change', function () {
+					if ( that.search() !== this.value ) {
+						that
+						.search( this.value )
+						.draw();
+					}
+				} );
 			});
 
 			$('#telponlist tfoot tr').appendTo('#telponlist thead');
@@ -567,35 +557,6 @@
 			}	
 		}
 
-		// update all remark
-
-		function inputag2(id) {
-			
-				var id = $('#idhead').text();
-				var data = {
-					id:id,            
-				}
-				$.post('{{ url("visitor_updateremarkall") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
-					if(xhr.status == 200){
-						if(result.status){							
-							openSuccessGritter('Success!', result.message);
-												
-						}
-						else{
-							openErrorGritter('Error!', result.message);
-							
-						}
-					}
-					else{
-						alert("Disconnected from server");
-					}
-				});				
-				
-		}
-
 		function reloadtable() {
 
 			$('#visitorlist').DataTable().ajax.reload();
@@ -616,18 +577,6 @@
 			$('#tabelvisior').css({'display':'none'})
 			$('#nikkaryawan').val('');
 
-		}
-
-		function cari(a){
-			if (a=="telp"){
-			 var table = $('#telponlist').DataTable();
-			 var telp = $('#telp').val();
-			 table.search( telp ).draw();
-			}
-		}
-
-		function emptytlp() {
-			$("#telp").val('');
 		}
 
 		

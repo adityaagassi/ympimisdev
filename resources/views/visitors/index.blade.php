@@ -26,7 +26,12 @@
 		<br>
 		<br>
 		<a href="{{ url("visitor_registration") }}" class="btn btn-lg btn-success btn-block" style="font-size: 80px; padding: 0; font-weight: bold;">MASUK</a>
-		<a href="{{ url("vistor_leave") }}" class="btn btn-lg btn-danger btn-block" style="font-size: 80px; padding: 0; font-weight: bold;">KELUAR</a>
+		<a href="{{ url("visitor_list") }}" class="btn btn-lg btn-danger btn-block" style="font-size: 80px; padding: 0; font-weight: bold;">KELUAR</a>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 	</div>
 </div>
 @endsection
