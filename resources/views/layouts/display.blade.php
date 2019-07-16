@@ -31,7 +31,8 @@
               <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
             </a>
           </div>
-          <div class="navbar-custom-menu">
+          @if(Auth::user() !="")
+          <div class="navbar-custom-menu">            
             <ul class="nav navbar-nav">
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service Desk <span class="caret"></span></a>
@@ -73,7 +74,9 @@
                 </ul>
               </li>
             </ul>
+             
           </div>
+         @endif
         {{-- </div> --}}
       </nav>
     </header>
