@@ -98,7 +98,7 @@
 					<i class="glyphicon glyphicon-qrcode"></i>
 				</div>
 			</div>
-			<table id="lcq" class="table table-bordered" width="100%" style="margin-top: 5px;">
+			<table id="lcq" class="table table-bordered" width="100%" style="margin-top: 5px; margin-bottom: 5px;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
 						<th style="width: 1%; padding:0;">Shift</th>
@@ -211,6 +211,20 @@
 						<td style="background-color: #f39c12; font-weight: bold;" id="totreset3">0</td>
 						<td style="background-color: #f39c12; font-weight: bold;"></td>
 					</tr>
+				</tbody>
+			</table>
+			<table id="tableFlanel" class="table table-bordered" width="100%">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th colspan="5" style="padding: 0;">FLANEL NOT SCANNED</th>
+					</tr>
+					<tr>
+						<th style="width: 2%; padding:0;">Tag</th>
+						<th style="width: 2%; padding:0;">Model</th>
+						<th style="width: 3%; padding:0;">Created</th>
+					</tr>
+				</thead>
+				<tbody id="tableBodyFlanel">
 				</tbody>
 			</table>
 		</div>
@@ -565,6 +579,46 @@
 			$('#totreset2').html(totreset2);
 			$('#totset3').html(totset3);
 			$('#totreset3').html(totreset3);
+
+			$('#tableFlanel').DataTable().clear();
+			$('#tableFlanel').DataTable().destroy();
+			$('#tableBodyFlanel').html("");
+			var tableBodyFlanel = "";
+
+			no2 = 1;
+
+			$.each(result.flanels, function(index, value){
+
+				if (no2 % 2 === 0 ) {
+					color2 = 'style="background-color: #fffcb7"';
+				} else {
+					color2 = 'style="background-color: #ffd8b7"';
+				}
+
+				tableBodyFlanel += "<tr "+color2+">";
+				tableBodyFlanel += "<td>"+value.tag+"</td>";
+				tableBodyFlanel += "<td>"+value.model+" "+value.key+"</td>";
+				tableBodyFlanel += "<td>"+value.created_at+"</td>";	
+				tableBodyFlanel += "</tr>";
+				no2 += 1;
+			});
+			$('#tableBodyFlanel').append(tableBodyFlanel);
+
+			$('#tableFlanel').DataTable({
+				'responsive':true,
+				"pageLength": 19,
+				'paging': true,
+				'lengthChange': false,
+				'searching': false,
+				'ordering': false,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
 		});
 }
 

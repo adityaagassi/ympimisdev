@@ -62,6 +62,18 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
 	}
 
+	public function indexReportMiddle($id){
+		if($id == 'slip-fulfillment'){
+			$title = "";
+			$title_jp = "";
+
+			return view('processes.middle.report.slip_fulfillment', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Middle Process Barrel Machine')->with('head', 'Middle Process');
+		}
+	}
+
 	public function indexProcessMiddleBarrel($id){
 		if($id == 'barrel-sx-lcq'){
 			$title = 'Saxophone Tumbling-Barrel For Lacquering';
@@ -391,10 +403,17 @@ class MiddleProcessController extends Controller
 		->orderBy('barrel_queues.created_at', 'asc')
 		->get();
 
+		$flanels = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
+		->where('barrels.machine', '=', 'FLANEL')
+		->select('barrels.tag', 'materials.material_number', 'materials.model', 'materials.key', 'barrels.created_at')
+		->orderBy('barrels.created_at', 'asc')
+		->get();
+
 		$response = array(
 			'status' => true,
 			'barrel_board' => $barrel_board,
 			'barrel_queues' => $barrel_queues,
+			'flanels' => $flanels,
 		);
 		return Response::json($response);
 	}
@@ -1550,5 +1569,55 @@ class MiddleProcessController extends Controller
 			'datas' => $detailPerolehan
 		);
 		return Response::json($response);
+	}
+
+	public function CreateInactive(Request $request)
+	{
+		try {
+			$inactive = new BarrelQueueInactive([
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material'),
+				'quantity' => $request->get('quantity')
+			]);
+			$inactive->save();
+			$status = true;
+		} catch (Exception $e) {
+			$status = false;
+		}
+		
+
+		$response = array(
+			'status' => $status
+		);
+		return Response::json($response);
+	}
+
+	public function importInactive(Request $request)
+	{
+		if($request->hasFile('inactive_material')){
+			$file = $request->file('inactive_material');
+
+			$data = file_get_contents($file);
+
+			$rows = explode("\r\n", $data);
+			foreach ($rows as $row)
+			{
+				if (strlen($row) > 0) {
+					$row = explode("\t", $row);
+					$inactive = new BarrelQueueInactive([
+						'tag' => $row[0],
+						'material_number' => $row[1],
+						'quantity' => $row[2]
+					]);
+
+					$inactive->save();
+				}
+			}
+			return redirect('/index/middle/barrel_adjustment')->with('status', 'New Inactive materials has been imported.')->with('page', 'Middle Process');
+		} 
+		else
+		{
+			return redirect('/index/middle/barrel_adjustment')->with('error', 'Please select a file.')->with('page', 'Middle Process');
+		}
 	}
 }
