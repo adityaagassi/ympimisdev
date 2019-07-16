@@ -12,7 +12,7 @@
       padding-bottom: 8px;
     }
     #tableBody1>tr>td{
-      height: 33px
+      height: 32px
     }
     p{
       margin:0;
