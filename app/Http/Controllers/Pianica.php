@@ -1701,9 +1701,9 @@ public function recordPianica2(Request $request){
     $stamp_detail = $flo_detailsTable->orderBy('updated_at', 'desc')->get();
 
     return DataTables::of($stamp_detail)
-    ->addColumn('action', function($stamp_detail){
-        return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
-    })
+    // ->addColumn('action', function($stamp_detail){
+    //     return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+    // })
     ->make(true);
 }
 
