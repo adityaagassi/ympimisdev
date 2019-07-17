@@ -507,7 +507,7 @@ class PurchaseOrderController extends Controller
 				$purchase_orders = PurchaseOrder::where('order_no', '=', $order)
 				->select('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', db::raw('group_concat(item) as item'), 'material', 'description', 'deliv_date', db::raw('sum(order_qty) as order_qty'), 'base_unit_of_measure', 'price', db::raw('sum(amount) as amount'))
 				->groupBy('purchdoc', 'order_no', 'order_date', 'pgr', 'pgr_name', 'rev_no', 'rev_date', 'vendor', 'name', 'street', 'city', 'postl_code', 'cty', 'salesperson', 'sc', 'sc_name', 'tpay', 'tpay_name', 'telephone', 'fax_number', 'incot', 'curr', 'material', 'description', 'deliv_date', 'base_unit_of_measure', 'price')
-				->orderBy('material', 'asc')->orderBy('purchdoc', 'asc')->orderBy('po_lists.item', 'asc')
+				->orderBy('material', 'asc')->orderBy('purchdoc', 'asc')->orderBy('item', 'asc')
 				->get();
 				$total_amount = PurchaseOrder::where('order_no', '=', $order)->sum('amount');
 
