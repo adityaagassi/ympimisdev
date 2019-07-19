@@ -153,6 +153,10 @@
                             <a href="{{ url("/index/process_middle_sx") }}">
                                 <i class="fa fa-caret-right"></i> SX Surface Treatment (サックス表面処理)
                             </a>
+                            <br>
+                            <a href="{{ url("/index/Pianica") }}">
+                                <i class="fa fa-caret-right"></i> PN Assembly (Nihon go)
+                            </a>
                         </td>
                     </tr>
                     <tr>

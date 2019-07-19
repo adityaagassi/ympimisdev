@@ -207,13 +207,6 @@
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Material Description<span class="text-red">*</span></label>
-									<div class="col-sm-4">
-										<input type="text" class="form-control" id="material_desc" placeholder="Enter Material Description" required>
-									</div>
-								</div>
-
-								<div class="form-group row" align="right">
 									<label class="col-sm-4">Quantity<span class="text-red">*</span></label>
 									<div class="col-sm-2">
 										<input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" required>
@@ -605,13 +598,11 @@
 		var tag = $("#tag").val();
 		var qty = $("#quantity").val();
 		var mat = $("#material").val();
-		var mat_desc = $("#material_desc").val();
 
-		if ($.isNumeric(qty) && qty != "" && tag != "" && mat != "" && mat_desc != "") {
+		if ($.isNumeric(qty) && qty != "" && tag != "" && mat != "") {
 			var data = {
 				tag:tag,
 				material:mat,
-				material_description:mat_desc,
 				quantity:qty
 			};
 
@@ -620,7 +611,8 @@
 					$("#tag").val("");
 					$("#quantity").val("");
 					$("#material").val("");
-					$("#material_desc").val("");
+					$('#tableAdjust').DataTable().ajax.reload();
+					$('#tableInactive').DataTable().ajax.reload();
 					openSuccessGritter('Success','Insert Inactive Success');
 				} else {
 					audio_error.play();
