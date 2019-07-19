@@ -64,6 +64,7 @@
 <section class="content" style="padding-top: 0;">
     <div class="row">
         <div class="col-md-3">
+
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 16px;">
                     <tr>
@@ -75,6 +76,14 @@
                         <td>
                             <span style="font-weight: bold;">HR Management (人材管理)</span>
                             <br>
+                            
+                            {{-- @if($employee_service == "")
+                            asdasas
+                            @else
+                            {{$employee_service}}
+                            @endif --}}
+
+                            
                             <a href="http://172.17.128.4/myhris/management" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Overtime (勤怠管理)
                             </a><br>
@@ -101,6 +110,15 @@
                             <br>
                             <a href="{{ url("index/report/total_meeting") }}" target="blank">
                                 <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Employment Service (???)</span>
+                            <br>
+                            <a href="{{ url("index/employee/service") }}" target="blank">
+                                <i class="fa fa-caret-right"></i> Employment Service (???)
                             </a>
                         </td>
                     </tr>
@@ -133,7 +151,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/process_middle_sx") }}">
-                                <i class="fa fa-caret-right"></i> SX Buffing-Surface Treatmeny (??)
+                                <i class="fa fa-caret-right"></i> SX Surface Treatment (サックス表面処理)
                             </a>
                         </td>
                     </tr>
