@@ -216,7 +216,7 @@
 			<table id="tableFlanel" class="table table-bordered" width="100%">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th colspan="5" style="padding: 0;">FLANEL NOT SCANNED</th>
+						<th colspan="5" style="padding: 0;">Flanel Process</th>
 					</tr>
 					<tr>
 						<th style="width: 2%; padding:0;">Tag</th>

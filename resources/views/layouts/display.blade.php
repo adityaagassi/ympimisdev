@@ -3,6 +3,7 @@
 <head>
   <link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
   <meta charset="utf-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <title>YMPI 情報システム</title>
