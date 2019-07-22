@@ -2,9 +2,9 @@
 /* Demonstration of available options on the qrCode() command */
 require __DIR__ . '/../autoload.php';
 use Mike42\Escpos\Printer;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
-$connector = new WindowsPrintConnector("FLO Printer");
+$connector = new FilePrintConnector("php://stdout");
 $printer = new Printer($connector);
 
 // Most simple example
