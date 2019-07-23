@@ -277,8 +277,10 @@ function printWindow(win, what) {
   		var sn = $('#codesn').val();
   		var rem = $('#rem').val();
   		if (rem =="JR" || rem =="NJR") {
+  			alert(sn);
   			window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
   		}else if(rem =="J" || rem =="NJ"){
+  			alert(sn);
   			window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
   		}else{
   			// alert("asas")

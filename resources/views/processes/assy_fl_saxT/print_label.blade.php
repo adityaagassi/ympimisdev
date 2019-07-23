@@ -750,7 +750,7 @@
 								// }
 
 								else {
-									planData += '<button type="button" class="btn btn-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'()\')">'+value.material_description+'<br>'+'</button>';	
+									planData += '<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'()\')">'+value.material_description+'<br>'+'</button>';	
 								}						
 							});
 							$('#listModel3').append(planData);	

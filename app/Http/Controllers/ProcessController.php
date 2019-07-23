@@ -1368,7 +1368,9 @@ SELECT serial_number from log_processes WHERE origin_group_code='043' and model 
 LEFT JOIN (
 SELECT model,serial_number,quantity from stamp_inventories WHERE model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3') b on a.serial_number = b.serial_number GROUP BY b.model";
 
-	$planData = DB::select($query4);
+	$query5 ="select model, COUNT(model) as actual from log_processes where process_code='4' and origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(created_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
+
+	$planData = DB::select($query5);
 
 	$response = array(
 		'status' => true,
@@ -1482,6 +1484,24 @@ public function print_sax2(Request $request){
 				]
 			);
 
+			$log_process4 = LogProcess::updateOrCreate(
+				[
+					'process_code' => '4', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin')
+				],
+				[
+					'process_code' => '4', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin'),
+					'status' => $request->get('jpn'),
+					'model' => $request->get('snmodel'),
+					'quantity' => 1,
+					'created_by' => $id,
+					'created_at' => date('Y-m-d H:i:s')
+				]
+			);
+
 			$inventory = StampInventory::where('process_code', '=', $request->get('code'))
 			->where('origin_group_code','=' ,$request->get('origin'))
 			->where('serial_number','=' ,$request->get('sn'))
@@ -1507,6 +1527,7 @@ public function print_sax2(Request $request){
 			}
 			
 			$log_process->save();
+			$log_process4->save();
 
 		}
 
@@ -1637,7 +1658,7 @@ public function label_kecil($id,$remark){
 
 public function label_des($id){
 	
-	$query ="select model from stamp_inventories where process_code ='3' and serial_number='".$id."'";
+	$query ="select model from log_processes where process_code ='4' and serial_number='".$id."'";
 	$barcode = DB::select($query);
 	
 	return view('processes.assy_fl_saxT.print_label_description',array(
@@ -1656,20 +1677,29 @@ public function editStampLabel(Request $request){
 }
 
 public function updateStampLabel(Request $request){
-	$stamp = StampInventory::where('serial_number',$request->get('id'))->get()->first();	
+	$stamp = StampInventory::where('serial_number',$request->get('id'))->get()->first();
+
+	$log = LogProcess::where('serial_number',$stamp->serial_number)
+	->where('process_code', '=', "4")
+	->get()->first();	
 
 	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $stamp->serial_number)
 	->where('stamp_inventories.model', '=', $stamp->model)
 	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
+	
+
 	$stamp_inventory->update([
 		'status' => $request->get('jpn'),
 		'model' => $request->get('model')]);
-	
+
+	$log->update([
+		'model' => $request->get('model')]);
 
 	$response = array(
 		'status' => true,
 		'message' => 'Update Success',
+		'log' => $log,
 	);
 	return Response::json($response);
 }
