@@ -476,6 +476,14 @@ Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::get('create/overtime/overtime_form', 'OvertimeController@createOvertimeForm');
 	Route::get('select/overtime/division_hierarchy', 'OvertimeController@selectDivisionHierarchy');
 	Route::get('fetch/overtime/employee', 'OvertimeController@fetchEmployee');
+	Route::post('fetch/overtime/break', 'OvertimeController@fetchBreak');
+	Route::post('save/overtime', 'OvertimeController@saveOvertimeHead');
+	Route::post('save/overtime_detail', 'OvertimeController@saveOvertimeDetail');
+	Route::get('index/overtime/print/{id}', 'OvertimeController@indexPrint');
+	Route::post('fetch/report/overtime_graph', 'OvertimeController@graphPrint');
+	Route::get('fetch/overtime', 'OvertimeController@fetchOvertime');
+	Route::get('fetch/overtime/detail', 'OvertimeController@fetchOvertimeDetail');
+	Route::get('index/overtime/edit/{id}', 'OvertimeController@fetchOvertimeEdit');
 });
 
 Route::group(['nav' => 'S15', 'middleware' => 'permission'], function(){
@@ -502,8 +510,6 @@ Route::group(['nav' => 'S17', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	//-----master op
 	Route::get('index/Op', 'Pianica@op');
-	Route::get('index/FillOp', 'Pianica@fillop');
-	Route::get('index/Op_Code', 'Pianica@opcode');
 	Route::get('edit/Op', 'Pianica@editop');
 	Route::post('update/Op', 'Pianica@updateop');
 	Route::post('add/Op', 'Pianica@addop');
@@ -536,47 +542,45 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	//------------ kakuning visual
 	Route::get('index/KakuningVisual', 'Pianica@kakuningvisual');
 	Route::post('index/SaveKakuningVisual', 'Pianica@savekensaakhir');
-
+	
+	Route::get('index/FillOp', 'Pianica@fillop');
+});
+Route::get('index/Op_Code', 'Pianica@opcode');
+	//record
+Route::get('index/record', 'Pianica@recordPianica');
+Route::post('index/recordPianica', 'Pianica@recordPianica2');
+	//---------- report kakuning visual
+Route::get('index/reportVisual', 'Pianica@reportVisual');
+Route::get('index/getKensaVisualALL', 'Pianica@getKensaVisualALL');
+Route::post('index/deleteInv', 'Pianica@deleteInv');
 	//-------- display
-	Route::get('index/DisplayPN', 'Pianica@display');
-	Route::get('index/TotalNgAll', 'Pianica@total_ng_all');
-	Route::get('index/TotalNgAllLine', 'Pianica@total_ng_all_line');
-	Route::get('index/getTarget', 'Pianica@getTarget');
-	Route::get('index/GetNgBensuki', 'Pianica@GetNgBensuki');
-	Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
+Route::get('index/DisplayPN', 'Pianica@display');
+Route::get('index/TotalNgAll', 'Pianica@total_ng_all');
+Route::get('index/TotalNgAllLine', 'Pianica@total_ng_all_line');
+Route::get('index/getTarget', 'Pianica@getTarget');
+Route::get('index/GetNgBensuki', 'Pianica@GetNgBensuki');
+Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
 
 	//---------- report bensuki
-	Route::get('index/reportBensuki', 'Pianica@reportBensuki');
-	Route::get('index/getTotalNG', 'Pianica@getTotalNG');
-	Route::get('index/getMesinNg', 'Pianica@getMesinNg');
+Route::get('index/reportBensuki', 'Pianica@reportBensuki');
+Route::get('index/getTotalNG', 'Pianica@getTotalNG');
+Route::get('index/getMesinNg', 'Pianica@getMesinNg');
 
 	//---------- report kensa awal
-	Route::get('index/reportAwal', 'Pianica@reportAwal');
-	Route::get('index/getKensaAwalALL', 'Pianica@getKensaAwalALL');
-	
-	//---------- report kensa awal
-	Route::get('index/reportAwalLine', 'Pianica@reportAwalLine');
-	Route::get('index/getKensaAwalALLLine', 'Pianica@getKensaAwalALLLine');
+Route::get('index/reportAwal', 'Pianica@reportAwal');
+Route::get('index/getKensaAwalALL', 'Pianica@getKensaAwalALL');
 
 	//---------- report kensa awal
-	Route::get('index/reportAkhir', 'Pianica@reportAkhir');
-	Route::get('index/getKensaAkhirALL', 'Pianica@getKensaAkhirALL');
-	
+Route::get('index/reportAwalLine', 'Pianica@reportAwalLine');
+Route::get('index/getKensaAwalALLLine', 'Pianica@getKensaAwalALLLine');
+
 	//---------- report kensa awal
-	Route::get('index/reportAkhirLine', 'Pianica@reportAkhirLine');
-	Route::get('index/getKensaAkhirALLLine', 'Pianica@getKensaAkhirALLLine');
+Route::get('index/reportAkhir', 'Pianica@reportAkhir');
+Route::get('index/getKensaAkhirALL', 'Pianica@getKensaAkhirALL');
 
-	//---------- report kakuning visual
-	Route::get('index/reportVisual', 'Pianica@reportVisual');
-	Route::get('index/getKensaVisualALL', 'Pianica@getKensaVisualALL');
-	Route::post('index/deleteInv', 'Pianica@deleteInv');
-
-	//record
-	Route::get('index/record', 'Pianica@recordPianica');
-	Route::post('index/recordPianica', 'Pianica@recordPianica2');
-	
-	
-});
+	//---------- report kensa awal
+Route::get('index/reportAkhirLine', 'Pianica@reportAkhirLine');
+Route::get('index/getKensaAkhirALLLine', 'Pianica@getKensaAkhirALLLine');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

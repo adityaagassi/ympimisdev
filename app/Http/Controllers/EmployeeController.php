@@ -33,7 +33,7 @@ class EmployeeController extends Controller
   {
     $this->middleware('auth');
     $this->keluarga = [
-      '0',
+      'Tk',
       'K0',
       'K1',
       'K2',
@@ -41,14 +41,14 @@ class EmployeeController extends Controller
       'Pk1',
       'Pk2',
       'Pk3',
-      'Tk',
+      '0',
     ];
 
     $this->status = [
       'Percobaan',
-      'PKWTT1',
-      'PKWTT2',
-      'PKWT'
+      'Kontrak 1',
+      'Kontrak 2',
+      'Tetap'
     ];
 
   }
@@ -154,7 +154,9 @@ class EmployeeController extends Controller
   {
     $id = Auth::id();
 
-    try{    
+    try{
+
+      $hire_date = $request->get('tglM');
 
       if($request->hasFile('foto')){
         $files = $request->file('foto');
@@ -182,7 +184,7 @@ class EmployeeController extends Controller
             'bpjskes' => $request->get('bpjskes'), 
             'npwp' => $request->get('npwp'),                 
             'direct_superior' => $request->get('leader'), 
-            'hire_date' => $request->get('tglM'), 
+            'hire_date' => $hire_date, 
             'avatar' => $photo_number, 
             'remark' => $request->get('pin'), 
             'created_by' => $id
@@ -208,7 +210,7 @@ class EmployeeController extends Controller
         'bpjskes' => $request->get('bpjskes'), 
         'npwp' => $request->get('npwp'),                 
         'direct_superior' => $request->get('leader'), 
-        'hire_date' => $request->get('tglM'), 
+        'hire_date' => $hire_date, 
         'remark' => $request->get('pin'), 
         'created_by' => $id
       ]);
@@ -218,7 +220,6 @@ class EmployeeController extends Controller
 
        // --------------- Promotion Log insert
 
-     $date = date('Y-m-d');
      $grade1 = $request->get('grade');
      $grade2 = explode("#", $grade1);
      $grade = new PromotionLog([
@@ -226,7 +227,7 @@ class EmployeeController extends Controller
       'grade_code' => $grade2[0],
       'grade_name' => $grade2[1],
       'position' => $request->get('jabatan'),
-      'valid_from' => $date,
+      'valid_from' => $hire_date,
       'created_by' => $id
 
     ]);
@@ -242,7 +243,7 @@ class EmployeeController extends Controller
        'section' => $request->get('section'), 
        'sub_section' => $request->get('subsection'), 
        'group' => $request->get('group'), 
-       'valid_from' => $date,
+       'valid_from' => $hire_date,
        'created_by' => $id
      ]);
 
@@ -253,7 +254,7 @@ class EmployeeController extends Controller
      $emp = new EmploymentLog ([
        'employee_id' => $request->get('nik'), 
        'status' => $request->get('statusKar'),
-       'valid_from' => $date,
+       'valid_from' => $hire_date,
        'created_by' => $id
      ]);
 
@@ -712,5 +713,55 @@ public function indexEmployment()
   return view('employees.master.indexEmployment')->with('page', 'Employement');
 }
 // --------------------- End Employement -----------------------
+
+
+// -------------------------  Start Employee Service ------------------
+public function indexEmployeeService()
+{
+  $title = 'Employment Services';
+  $title_jp = '???';
+  $emp_id = Auth::user()->username;
+  $status = true;
+  
+  $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
+  left join 
+  (
+  SELECT employee_id, `status` FROM employment_logs
+  WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as emp_log on employees.employee_id = emp_log.employee_id
+  left join
+  (
+  select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
+  WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as mut_log on employees.employee_id = mut_log.employee_id
+  left join
+  (
+  select employee_id ,grade_code, grade_name, position from promotion_logs
+  WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as promot_log on employees.employee_id = promot_log.employee_id
+  where employees.employee_id = '".$emp_id."'";
+
+  $absence = "select nik, tanggal, sum(if(shift = 1,1,0)) as shift1, sum(if(shift = "-",1,0)) as kosong from ftm.presensi where nik = '19014987'
+  group by DATE_FORMAT(tanggal,'%Y-%m')";
+
+  $absences = db::select($absence);
+
+  $datas = db::select($query);
+
+  if ($datas == null) {
+   return view('home', array(
+    'employee_service' => 'Belum Terdaftar'
+  ))->with('page', 'Dashboard');
+ }
+
+ return view('employees.service.indexEmploymentService', array(
+  'status' => $status,
+  'title' => $title,
+  'title_jp' => $title_jp,
+  'emp_id' => $emp_id,
+  'profil' => $datas
+))->with('page', 'Employment Service');
+}
+// -------------------------  End Employee Service --------------------
 
 }
