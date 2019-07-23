@@ -186,6 +186,10 @@ function printWindow(win, what) {
   	win.addEventListener("message", jspListener);
 
   	win.addEventListener("beforeprint", function(event) {
+		jan();
+		 // window.print();
+
+		 defineCustomPaperSize();
   		console.log("before print: "+what, true);
   	});
   	win.addEventListener("afterprint", function(event) {
