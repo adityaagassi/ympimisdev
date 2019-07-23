@@ -782,6 +782,15 @@ class FloController extends Controller
 					}
 				}
 
+				if($material->origin_group_code == '043'){
+					$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+					->where('origin_group_code', '=', $material->origin_group_code)
+					->first();
+					if($inventory_stamp != null){
+						$inventory_stamp->forceDelete();
+					}
+				}
+
 				$response = array(
 					'status' => true,
 					'message' => 'New FLO has been printed',
@@ -858,6 +867,15 @@ class FloController extends Controller
 						]
 					);
 
+					$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
+					->where('origin_group_code', '=', $material->origin_group_code)
+					->first();
+					if($inventory_stamp != null){
+						$inventory_stamp->forceDelete();
+					}
+				}
+
+				if($material->origin_group_code == '043'){
 					$inventory_stamp = StampInventory::where('serial_number', '=', $serial_number)
 					->where('origin_group_code', '=', $material->origin_group_code)
 					->first();

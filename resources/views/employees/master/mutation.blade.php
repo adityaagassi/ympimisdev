@@ -138,7 +138,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Division<span class="text-red">*</span></label>
 									<div class="col-sm-6" align="left">
-										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Division" id="division" required>
+										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Division" id="division" required onchange="changeDivision()">
 										</select>
 									</div>
 								</div>
@@ -146,7 +146,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Department<span class="text-red">*</span></label>
 									<div class="col-sm-6" align="left">
-										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Department" id="department" required>
+										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Department" id="department" required onchange="changeDepartment()">
 										</select>
 									</div>
 								</div>
@@ -154,23 +154,23 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Section<span class="text-red">*</span></label>
 									<div class="col-sm-6" align="left">
-										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Section" id="section" required>
+										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Section" id="section" required onchange="changeSection()">
 										</select>
 									</div>
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+									<label class="col-sm-4">Sub Section</label>
 									<div class="col-sm-6" align="left">
-										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Sub Section" id="subsection" required>
+										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Sub Section" id="subsection">
 										</select>
 									</div>
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Group<span class="text-red">*</span></label>
+									<label class="col-sm-4">Group</label>
 									<div class="col-sm-6" align="left">
-										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Group" id="group" required>
+										<select class="form-control select2" style="width: 100%;" data-placeholder="Choose Group" id="group">
 										</select>
 									</div>
 								</div>
@@ -223,6 +223,7 @@
 	var main_section = "";
 	var main_subsection = "";
 	var main_group = "";
+	var division = [], department = [], section = [], sub_section = [], group = [], cost_center = [];
 
 	$.ajaxSetup({
 		headers: {
@@ -288,57 +289,17 @@
 					$("#cc_old").val(main_cc);
 					$("#valid_from_old").val(result.mutation_logs.valid_from);
 
-					$("#division").empty();
+					department = result.department;
+					section = result.section;
+					sub_section = result.sub_section;
+					group = result.group;
+					cost_center = result.cost_center;
+
+					$("#division").append("<option disabled selected value=''>Choose Division</option>");
 					$.each(result.devision, function(key, value) {
 						var txt_division =  capitalize_Words(value.child_code);
-						if(value.child_code == main_division)
-							$("#division").append("<option value='"+value.child_code+"' selected>"+txt_division+"</option>");
-						else
-							$("#division").append("<option value='"+value.child_code+"'>"+txt_division+"</option>");
-					});
 
-					$("#department").empty();
-					$.each(result.department, function(key, value) {
-						var txt_department =  capitalize_Words(value.child_code);
-						if(value.child_code == main_department)
-							$("#department").append("<option value='"+value.child_code+"' selected>"+txt_department+"</option>");
-						else
-							$("#department").append("<option value='"+value.child_code+"'>"+txt_department+"</option>");
-					});
-
-					$("#section").empty();
-					$.each(result.section, function(key, value) {
-						var txt_section =  capitalize_Words(value.child_code);
-						if(value.child_code == main_section)
-							$("#section").append("<option value='"+value.child_code+"' selected>"+txt_section+"</option>");
-						else
-							$("#section").append("<option value='"+value.child_code+"'>"+txt_section+"</option>");
-					});
-
-					$("#subsection").empty();
-					$.each(result.sub_section, function(key, value) {
-						var txt_section =  capitalize_Words(value.child_code);
-						if(value.child_code == main_subsection)
-							$("#subsection").append("<option value='"+value.child_code+"' selected>"+txt_section+"</option>");
-						else
-							$("#subsection").append("<option value='"+value.child_code+"'>"+txt_section+"</option>");
-					});
-
-					$("#group").empty();
-					$.each(result.group, function(key, value) {
-						var txt_group =  capitalize_Words(value.child_code);
-						if(value.child_code == main_group)
-							$("#group").append("<option value='"+value.child_code+"' selected>"+txt_group+"</option>");
-						else
-							$("#group").append("<option value='"+value.child_code+"'>"+txt_group+"</option>");
-					});
-
-					$("#cc").empty();
-					$.each(result.cost_center, function(key, value) {
-						if(value.cost_center == main_cc)
-							$("#cc").append("<option value='"+value.cost_center+"' selected>"+value.cost_center+"</option>");
-						else
-							$("#cc").append("<option value='"+value.cost_center+"'>"+value.cost_center+"</option>");
+						$("#division").append("<option value='"+value.child_code+"' name='"+value.status+"'>"+txt_division+"</option>");
 					});
 
 				}
@@ -349,6 +310,103 @@
 			else{
 				alert('Disconnected from server');
 			}
+		});
+	}
+
+	function changeDivision() {
+		var cat = $("#division").find('option:selected').attr("name");
+
+		$("#department").empty();
+		$("#section").empty();
+		$("#subsection").empty();
+		$("#group").empty();
+		$("#cc").empty();
+
+		$("#department").append("<option disabled selected value=''>Choose Department</option>");
+
+		$.each(department, function(key, value) {
+			var txt_department =  capitalize_Words(value.child_code);
+			if (value.parent_name == cat) {
+				$("#department").append("<option value='"+value.child_code+"' name='"+value.status+"'>"+txt_department+"</option>");
+			}
+		});
+
+		get_cost_center();
+	}
+
+	function changeDepartment() {
+		var cat = $("#department").find('option:selected').attr("name");
+
+		$("#section").empty();
+		$("#subsection").empty();
+		$("#group").empty();
+		$("#cc").empty();
+
+		$("#section").append("<option selected disabled value=''>Choose Section</option>");
+
+		$.each(section, function(key, value) {
+			var txt_section = capitalize_Words(value.child_code);		
+
+			if (value.parent_name == cat) {
+				$("#section").append("<option value='"+value.child_code+"' name='"+value.status+"'>"+txt_section+"</option>");
+			}
+		});
+
+		get_cost_center();
+	}
+
+	function changeSection() {
+		var cat = $("#section").find('option:selected').attr("name");
+
+		$("#subsection").empty();
+		$("#group").empty();
+		$("#cc").empty();
+
+		$("#subsection").append("<option selected disabled value=''>Choose Sub Section</option>");
+
+		$.each(sub_section, function(key, value) {
+			var txt_sub_section = capitalize_Words(value.child_code);		
+
+			if (value.parent_name == cat) {
+				$("#subsection").append("<option value='"+value.child_code+"' name='"+value.status+"'>"+txt_sub_section+"</option>");
+			}
+		});
+
+		get_cost_center();
+	}
+
+	function changeSubSection() {
+		var cat = $("#subsection").find('option:selected').attr("name");
+
+		$("#group").empty();
+		$("#cc").empty();
+
+		$("#group").append("<option selected disabled value=''>Choose Group</option>");
+
+		$.each(group, function(key, value) {
+			var txt_group = capitalize_Words(value.child_code);		
+
+			if (value.parent_name == cat) {
+				$("#group").append("<option value='"+value.child_code+"' name='"+value.status+"'>"+txt_group+"</option>");
+			}
+		});
+
+		get_cost_center();
+	}
+
+	function changeGroup() {
+		var cat = $("#subsection").find('option:selected').attr("name");
+
+		get_cost_center();
+	}
+
+
+	function get_cost_center() {
+		$("#cc").empty();
+
+		$("#cc").append("<option selected disabled value=''>Choose Cost Center</option>");
+		$.each(cost_center, function(key, value) {
+			$("#cc").append("<option value='"+value.cost_center+"'>"+value.cost_center+"</option>");
 		});
 	}
 
@@ -363,14 +421,14 @@
 		var reason = $('#reason').val();
 		var valid_from = $('#valid_from').val();
 		var valid_to = $('#valid_to').val();
-		var cc =  $("#cc option:selected").val();
+		var cc = $("#cc option:selected").val();
 		var division =  $("#division option:selected").val();
 		var department =  $("#department option:selected").val();
 		var section =  $("#section option:selected").val();
 		var subsection =  $("#subsection option:selected").val();
 		var group =  $("#group option:selected").val();
 
-		if(main_cc == cc && main_division == division && main_department == department && main_section == section && main_subsection == subsection && main_group == group) {
+		if(main_cc == cc && main_division == division && main_department == department && main_section == section) {
 			openDangerGritter('Invalid','Nothing Changed');
 		}
 		else if (reason == "") {
@@ -382,7 +440,12 @@
 		else if (valid_to == "") {
 			openDangerGritter('Invalid','Valid To Cannot Empty');
 		}
+		else if (cc === "" || division === "" || section === "" || department === "") {
+			openDangerGritter('Invalid','There\'s Empty Field');
+			// return false;
+		}
 		else {
+			console.log(division+" d "+department);
 			main_cc = cc;
 			main_division = division;
 			main_department = department;
@@ -413,7 +476,7 @@
 		$.get('{{ url("change/mutation") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){					
-					openSuccessGritter('Success','Promotion Success');
+					openSuccessGritter('Success','Mutation Success');
 				}
 				else{
 					alert('Attempt to retrieve data failed');

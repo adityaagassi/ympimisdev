@@ -199,7 +199,7 @@
                   </div>
                 </div>
                 <div class="col-xs-7">
-                  <label>Remark</label>
+                  <label>Note</label>
                   <div class="form-group">
                     <textarea class="form-control" id="ot_remark" placeholder="Enter Remarks"></textarea>
                   </div>
@@ -393,7 +393,7 @@
     }
     $.get('{{ url("fetch/overtime/employee") }}', data, function(result, status, xhr){
       if(xhr.status == 200){
-        if(result.status){
+        if(result.employee){
           for (var z = 0; z < arrNik.length; z++) {
             if (arrNik[z] == result.employee.employee_id) {
               openErrorGritter("Error!", "Employee Already Inserted");
@@ -403,7 +403,6 @@
 
           arrNik.push(result.employee.employee_id);
           console.log(arrNik);
-
 
           var tableBody = "";
           tableBody += '<tr id="'+counter+'">';
@@ -448,7 +447,7 @@
             showInputs: false,
             showMeridian: false,
             interval: 30,
-          });;
+          });
 
           $('#ot_employee_id').val('');
           $('#ot_employee_id').focus();
@@ -457,7 +456,7 @@
 
           $('input[type="checkbox"].minimal').iCheck({
             checkboxClass: 'icheckbox_minimal-blue'
-          });
+          }); 
 
           $('input[type="radio"].minimal').iCheck({
             radioClass: 'iradio_minimal-blue'
@@ -481,11 +480,10 @@
 
 
           counter++;
-          // $('#totalsemua').text("Total : "+count);
         }
         else{
           audio_error.play();
-          openErrorGritter('Error!', result.message);
+          openErrorGritter('Error!', 'Employee doesn\'t exist');
         }
       }
       else{
@@ -595,8 +593,8 @@ function hour_to(id)
     else{
       var group = '';
     }
-    // var shift = document.getElementById('ot_shift').value;
     var hari = document.getElementById('ot_day').value;
+    var shift = $("#ot_shift").find(':selected')[0].value;
     arrId = [];
     arrFood = [];
     arrEFood = [];
@@ -614,7 +612,8 @@ function hour_to(id)
       ot_day:hari,
       section:sec,
       sub_section:subsec,
-      group:group
+      group:group,
+      shift:shift
     }
 
     for (var i = 1; i < counter; i++) {
@@ -649,19 +648,18 @@ function hour_to(id)
       ot_transports:arrTransport,
       ot_foods:arrFood,
       ot_efoods:arrEFood,
-      ot_porposes:arrPurpose,
+      ot_purposes:arrPurpose,
       ot_statuses:arrStatus,
       ot_remarks:arrRemark,
     }
-
-    console.log(data_details);
 
     $.post('{{ url("save/overtime") }}', data, function(result, status, xhr){
       if(xhr.status == 200) {
         $.post('{{ url("save/overtime_detail") }}', data_details, function(result, status, xhr){
           if(xhr.status == 200) {
             openSuccessGritter('Success', 'Data Saved');
-            window.open('{{ url("index/overtime/print") }}' , '_blank');
+            var wndw = '{{ url("index/overtime/print/") }}/'+ot_id;
+            window.open(wndw , '_blank');
           }
         })
       }

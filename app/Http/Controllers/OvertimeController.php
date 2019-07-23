@@ -48,9 +48,17 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.control_report')->with('page', 'Overtime Control');
 	}
 
-	public function indexPrint(Request $request)
+	public function indexPrint($id)
 	{
-		return view('overtimes.overtime_forms.index_print');
+		$ot = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
+		->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
+		->where("overtimes.overtime_id","=",$id)
+		->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center")
+		->get();
+
+		return view('overtimes.overtime_forms.index_print', array(
+			'datas' => $ot
+		));
 	}
 
 	public function indexOvertimeForm(){
@@ -84,7 +92,7 @@ class OvertimeController extends Controller
 			'day_statuses' => $day_statuses,
 			'purposes' => $purposes,
 			'sections' => $sections,
-			'shifts' => $shifts,
+			'shifts' => $shifts
 		))->with('page', 'Overtime Form');
 	}
 
@@ -147,12 +155,13 @@ class OvertimeController extends Controller
 		$group = $request->get('group');
 		$ot_date = date('Y-m-d',strtotime($request->get('ot_date')));
 		$ot_day = $request->get('ot_day');
-
+		$shift = $request->get('shift');
 
 		$overtime = new Overtime([
 			'overtime_id' => $ot_id,
 			'overtime_date' => $ot_date,
 			'day_status' => $ot_day,
+			'shift' => $shift,
 			'division' => $org[0]->division,
 			'department' => $org[0]->department,
 			'section' => $section,
@@ -179,34 +188,40 @@ class OvertimeController extends Controller
 		$ot_transports = $request->get('ot_transports');
 		$ot_foods = $request->get('ot_foods');
 		$ot_efoods = $request->get('ot_efoods');
-		$ot_porposes = $request->get('ot_porposes');
+		$ot_purposes = $request->get('ot_purposes');
 		$ot_remarks = $request->get('ot_remarks');
 		$ot_statuses = $request->get('ot_statuses');
 
-		for ($i=0; $i < sizeof($emp_ids); $i++) { 
+		for ($i=0; $i < sizeof($emp_ids); $i++) {
+			$emp = db::table('mutation_logs')
+			->where('employee_id','=', $emp_ids[$i])
+			->whereNull('valid_to')
+			->select('cost_center')
+			->get();
+
 			$overtime_detail = new OvertimeDetail([
 				'overtime_id' => $ot_id,
 				'employee_id' => $emp_ids[$i],
-				'cost_center' => '1',
+				'cost_center' => $emp[0]->cost_center,
 				'food' => $ot_foods[$i],
 				'ext_food' => $ot_efoods[$i],
 				'transport' => $ot_transports[$i],
 				'start_time' => $ot_starts[$i],
 				'end_time' => $ot_ends[$i],
-				'porpose' => $ot_porposes[$i],
+				'purpose' => $ot_purposes[$i],
 				'remark' => $ot_remarks[$i],
 				'final_hour' => $ot_hours[$i],
 				'final_overtime' => '0',
 				'status' => '0',
 				'ot_status' => $ot_statuses[$i],
-				'created_by' => 1
+				'created_by' => Auth::user()->username
 			]);
 			$overtime_detail->save();
 		}		
 
 
 		$response = array(
-			'status' => true,
+			'status' => true
 		);
 		return Response::json($response);
 	}
@@ -927,6 +942,79 @@ public function fetchDoubleSPL(Request $request)
 	->make(true);
 }
 // --------------------- End Employement -----------------------
+
+public function fetchOvertime()
+{
+	$get_overtime = Overtime::whereNull('deleted_at')
+	->select('overtime_date','overtime_id','division','department','section','subsection','group')
+	->get();
+
+	return DataTables::of($get_overtime)
+	->addColumn('action', function($get_overtime){
+		return '
+		<a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="edit(this.id)" id="'.$get_overtime->overtime_id.'"><i class="fa fa-pencil"></i></a>
+		&nbsp;
+		<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="details(this.id)" id="'.$get_overtime->overtime_id.'">Detail</a>
+		&nbsp;
+		<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="delete(this.id)" id="'.$get_overtime->overtime_id.'"><i class="fa fa-trash"></i></a>';
+	})
+	->rawColumns(['action' => 'action'])
+	->make(true);
+}
+
+public function fetchOvertimeDetail(Request $request)
+{
+	$ot_details = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
+	->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
+	->where("overtimes.overtime_id","=",$request->get('overtime_id'))
+	->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center")
+	->get();
+
+	$response = array(
+		'status' => true,
+		'data_details' => $ot_details
+	);
+	return Response::json($response);
+}
+
+public function fetchOvertimeEdit($id)
+{
+	$ot_details = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
+	->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
+	->where("overtimes.overtime_id","=",$id)
+	->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center","overtimes.day_status","overtimes.shift")
+	->get();
+
+	return view('overtimes.overtime_forms.edit', array(
+		'datas' => $ot_details,
+		'transports' => $this->transport,
+		'purposes' => $this->purpose
+	));	
+}
+
+public function graphPrint(Request $request)
+{
+	$dt = date('Y-m-d', strtotime($request->get("tanggal")));
+	$query = '
+	select DATE_FORMAT(cal.week_date,"%d/%m") week_date, COALESCE(jam,0) as final, (select round(budget_total / DAY(LAST_DAY("'.$dt.'")) , 2) as bdg_day from ftm.cost_center_budget where DATE_FORMAT(period,"%Y-%m") = DATE_FORMAT("'.$dt.'","%Y-%m") and id_cc = "'.$request->get("cc").'") as day_bdg from
+	(select week_date from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = DATE_FORMAT("'.$dt.'","%Y-%m")) cal
+	left join (
+	select overtimes.overtime_date, overtime_details.cost_center, SUM(IF(status = 0,final_hour,final_overtime)) jam from overtimes
+	join overtime_details on overtimes.overtime_id = overtime_details.overtime_id
+	where DATE_FORMAT(overtimes.overtime_date,"%Y-%m") = DATE_FORMAT("'.$dt.'","%Y-%m") and
+	overtime_details.cost_center = "'.$request->get("cc").'"
+	group by overtimes.overtime_date, overtime_details.cost_center
+	) act on cal.week_date = act.overtime_date
+	where cal.week_date <= "'.$dt.'"';
+
+	$get_graph = db::select($query);
+
+	$response = array(
+		'status' => true,
+		'datas' => $get_graph
+	);
+	return Response::json($response);
+}
 
 public function tes(Request $request){
 	$html = $request->get('hidden_html');

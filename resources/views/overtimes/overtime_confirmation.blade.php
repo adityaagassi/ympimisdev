@@ -59,7 +59,6 @@
           <div class="col-xs-12">
                <div class="box">
                     <div class="box-body">
-
                          <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
                               <p style="position: absolute; color: White; top: 45%; left: 35%;">
                                    <span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
@@ -253,6 +252,19 @@
                          }
                     },
                     {
+                         "targets": [7, 8],
+                         "createdCell": function (td, cellData, rowData, row, col) {
+                              $(td).css('background-color', '#fce2fc')
+                         }
+                    },
+                    {
+                         "targets": [5, 6],
+                         "createdCell": function (td, cellData, rowData, row, col) {
+                              $(td).css('background-color', '#e8cef0')
+                              $(td).css('color', 'blue')
+                         }
+                    },
+                    {
                          "targets": [11, 12],
                          "createdCell": function (td, cellData, rowData, row, col) {
                               $(td).css('background-color', 'RGB(255,255,204,0.50)')
@@ -298,22 +310,22 @@
                     { "data": "edit" }]
                });
 
-          $('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
+$('#overtimeConfirmationTable').find("thead th").removeClass("sorting_asc");
 
-          table.columns().every( function () {
-               var that = this;
+table.columns().every( function () {
+     var that = this;
 
-               $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                         that
-                         .search( this.value )
-                         .draw();
-                    }
-               } );
-          } );
+     $( 'input', this.footer() ).on( 'keyup change', function () {
+          if ( that.search() !== this.value ) {
+               that
+               .search( this.value )
+               .draw();
+          }
+     } );
+} );
 
-          $('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
-     });
+$('#overtimeConfirmationTable tfoot tr').appendTo('#overtimeConfirmationTable thead');
+});
 
 function delete_ot(){
      var id_ot = $("#id_ot").val();
@@ -497,9 +509,9 @@ function openErrorGritter(title, message) {
           text: message,
           class_name: 'growl-danger',
           image: '{{ url("images/image-stop.png") }}',
-     sticky: false,
-     time: '2000'
-});
+          sticky: false,
+          time: '2000'
+     });
 }
 
 function openSuccessGritter(title, message){
@@ -508,9 +520,9 @@ function openSuccessGritter(title, message){
           text: message,
           class_name: 'growl-success',
           image: '{{ url("images/image-screen.png") }}',
-     sticky: false,
-     time: '2000'
-});
+          sticky: false,
+          time: '2000'
+     });
 }
 
 $('.timepicker').timepicker({

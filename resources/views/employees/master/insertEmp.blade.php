@@ -88,8 +88,6 @@
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<div class="active tab-pane" id="activity">
 						<div class="box-body">
-
-
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="nik">Employee ID<span class="text-red">*</span></label>
