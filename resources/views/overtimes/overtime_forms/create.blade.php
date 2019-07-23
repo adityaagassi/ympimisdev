@@ -231,9 +231,9 @@
                   <th style="width: 3%;">Food</th>
                   <th style="width: 3%;">Extra Food</th>
                   <th style="width: 12%;">Purpose</th>
-                  <th>Remark</th>
-                  <th>First</th>
-                  <th>Last</th>
+                  <th>Notes</th>
+                  <th>Awal</th>
+                  <th>Akhir</th>
                   <th style="width: 3%">Action</th>
                 </tr>
               </thead>
@@ -269,6 +269,7 @@
 
   var counter = 1;
   var count = 0;
+  var shift2;
   arrNik = [];
   
   jQuery(document).ready(function() {
@@ -388,6 +389,7 @@
     ot_transport = $('#ot_transport').val();
     ot_purpose = $('#ot_purpose').val();
     ot_remark = $('#ot_remark').val();
+
     var data = {
       employee_id:employee_id
     }
@@ -513,7 +515,6 @@ function hour_to(id)
 
   var tgl = $('#ot_date').val();
   var shift = $("#ot_shift").find(':selected')[0].value;
-
 
   jam = sampai1.split(":")[0] - dari1.split(":")[0];
   menit = sampai1.split(":")[1] - dari1.split(":")[1];
@@ -672,8 +673,9 @@ function hour_to(id)
     var ids = $(elem).parent('td').parent('tr').attr('id');
 
     var oldid = ids;
+
     count-=1;
-    if (count ==0){
+    if (count == 0){
       arrNik = [];
     }
 
@@ -685,12 +687,21 @@ function hour_to(id)
     jQuery("#"+newid).attr("id",oldid);
     jQuery("#ot_employee_id"+newid).attr("id","ot_employee_id"+oldid);
     jQuery("#ot_employee_name"+newid).attr("id","ot_employee_name"+oldid);
+
+    document.getElementById('ot_from'+newid).setAttribute('onchange','hour_to('+oldid+');');
     jQuery("#ot_from"+newid).attr("id","ot_from"+oldid);
+
+    document.getElementById('ot_to'+newid).setAttribute('onchange','hour_to('+oldid+');');
     jQuery("#ot_to"+newid).attr("id","ot_to"+oldid);
+    
     jQuery("#ot_hour"+newid).attr("id","ot_hour"+oldid);
     jQuery("#ot_transport"+newid).attr("id","ot_transport"+oldid);
+    jQuery("#ot_food"+newid).attr("id","ot_food"+oldid);
+    jQuery("#ot_extra_food"+newid).attr("id","ot_extra_food"+oldid);
     jQuery("#ot_purpose"+newid).attr("id","ot_purpose"+oldid);
     jQuery("#ot_remark"+newid).attr("id","ot_remark"+oldid);
+    jQuery("#awal"+newid).attr("id","awal"+oldid).attr('name', 'lembur'+oldid);
+    jQuery("#akhir"+newid).attr("id","akhir"+oldid).attr('name', 'lembur'+oldid);
     // jQuery("#exfood"+newid).attr("id","exfood"+oldid);
     jQuery("#ot_delete"+newid).attr("id","ot_delete"+oldid);
 
@@ -711,8 +722,12 @@ function hour_to(id)
         jQuery("#ot_to"+newid).attr("id","ot_to"+oldid);
         jQuery("#ot_hour"+newid).attr("id","ot_hour"+oldid);
         jQuery("#ot_transport"+newid).attr("id","ot_transport"+oldid);
+        jQuery("#ot_food"+newid).attr("id","ot_food"+oldid);
+        jQuery("#ot_extra_food"+newid).attr("id","ot_extra_food"+oldid);
         jQuery("#ot_purpose"+newid).attr("id","ot_purpose"+oldid);
         jQuery("#ot_remark"+newid).attr("id","ot_remark"+oldid);
+        jQuery("#awal"+newid).attr("id","awal"+oldid).attr('name', 'lembur'+oldid);
+        jQuery("#akhir"+newid).attr("id","akhir"+oldid).attr('name', 'lembur'+oldid);
         // jQuery("#exfood"+newid).attr("id","exfood"+oldid);
         jQuery("#ot_delete"+newid).attr("id","ot_delete"+oldid);
       }

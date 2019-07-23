@@ -427,6 +427,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle_kensa', 'MiddleProcessController@ScanMiddleKensa');
+	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
@@ -479,6 +480,7 @@ Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::post('fetch/overtime/break', 'OvertimeController@fetchBreak');
 	Route::post('save/overtime', 'OvertimeController@saveOvertimeHead');
 	Route::post('save/overtime_detail', 'OvertimeController@saveOvertimeDetail');
+	Route::post('edit/overtime_detail', 'OvertimeController@editOvertimeDetail');
 	Route::get('index/overtime/print/{id}', 'OvertimeController@indexPrint');
 	Route::post('fetch/report/overtime_graph', 'OvertimeController@graphPrint');
 	Route::get('fetch/overtime', 'OvertimeController@fetchOvertime');

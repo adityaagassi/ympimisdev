@@ -53,6 +53,7 @@ class OvertimeController extends Controller
 		$ot = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
 		->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
 		->where("overtimes.overtime_id","=",$id)
+		->whereNull("overtime_details.deleted_at")
 		->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center")
 		->get();
 
@@ -222,6 +223,51 @@ class OvertimeController extends Controller
 
 		$response = array(
 			'status' => true
+		);
+		return Response::json($response);
+	}
+
+	public function editOvertimeDetail(Request $request)
+	{
+		$ot_id = $request->get('ot_id');
+		$emp_ids = $request->get('emp_ids');
+		$ot_starts = $request->get('ot_starts');
+		$ot_ends = $request->get('ot_ends');
+		$ot_hours = $request->get('ot_hours');
+		$ot_transports = $request->get('ot_transports');
+		$ot_foods = $request->get('ot_foods');
+		$ot_efoods = $request->get('ot_efoods');
+		$ot_purposes = $request->get('ot_purposes');
+		$ot_remarks = $request->get('ot_remarks');
+		$ot_statuses = $request->get('ot_statuses');
+
+		$emp_id2 = $emp_ids;
+
+		$datas = OvertimeDetail::where('overtime_id',$ot_id)->get();
+		foreach ($datas as $ot) {
+			if (!in_array($ot->employee_id, $emp_ids)) {
+				OvertimeDetail::where('overtime_id',$ot_id)->where('employee_id',$ot->employee_id)->delete();
+			}
+		}
+
+		for ($i=0; $i < sizeof($emp_ids); $i++) {
+			$overtime_detail = OvertimeDetail::where('overtime_id', '=', $ot_id)
+			->where('employee_id', '=', $emp_ids[$i])
+			->update([
+				'food' => $ot_foods[$i],
+				'ext_food' => $ot_efoods[$i],
+				'transport' => $ot_transports[$i],
+				'start_time' => $ot_starts[$i],
+				'end_time' => $ot_ends[$i],
+				'purpose' => $ot_purposes[$i],
+				'remark' => $ot_remarks[$i],
+				'final_hour' => $ot_hours[$i],
+				'ot_status' => $ot_statuses[$i]
+			]);
+		}	
+
+		$response = array(
+			'status' => true,
 		);
 		return Response::json($response);
 	}
@@ -967,6 +1013,7 @@ public function fetchOvertimeDetail(Request $request)
 	$ot_details = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
 	->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
 	->where("overtimes.overtime_id","=",$request->get('overtime_id'))
+	->whereNull("overtime_details.deleted_at")
 	->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center")
 	->get();
 
@@ -982,7 +1029,8 @@ public function fetchOvertimeEdit($id)
 	$ot_details = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
 	->leftJoin("employees","employees.employee_id","=","overtime_details.employee_id")
 	->where("overtimes.overtime_id","=",$id)
-	->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center","overtimes.day_status","overtimes.shift")
+	->whereNull("overtime_details.deleted_at")
+	->select("overtimes.overtime_id", db::raw("date_format(overtimes.overtime_date,'%d-%m-%Y') as overtime_date"), "overtimes.division", "overtimes.department", "overtimes.section", "overtimes.subsection", "overtimes.group", "overtime_details.employee_id","employees.name", "overtime_details.food", "overtime_details.ext_food", "overtime_details.transport", "overtime_details.start_time", "overtime_details.end_time","overtime_details.final_hour", "overtime_details.purpose", "overtime_details.remark", "overtime_details.cost_center","overtimes.day_status","overtimes.shift","overtime_details.ot_status")
 	->get();
 
 	return view('overtimes.overtime_forms.edit', array(
@@ -1003,6 +1051,8 @@ public function graphPrint(Request $request)
 	join overtime_details on overtimes.overtime_id = overtime_details.overtime_id
 	where DATE_FORMAT(overtimes.overtime_date,"%Y-%m") = DATE_FORMAT("'.$dt.'","%Y-%m") and
 	overtime_details.cost_center = "'.$request->get("cc").'"
+	and overtime_details.deleted_at is null
+	and overtimes.deleted_at is null
 	group by overtimes.overtime_date, overtime_details.cost_center
 	) act on cal.week_date = act.overtime_date
 	where cal.week_date <= "'.$dt.'"';
