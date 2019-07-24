@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	return view('mails.overtime');
+	return view('displays.shipment_progress');
 });
 Route::post('trial/tes', 'TrialController@tes');
 Route::get('index/buffing', 'TrialController@buffingIndex');
@@ -105,6 +105,11 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
 	Route::get('index/report/gender', 'EmployeeController@indexReportGender');
 	Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
+	Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
+	Route::get('index/report/grade', 'EmployeeController@indexReportGrade');
+	Route::get('index/report/department', 'EmployeeController@indexReportDepartment');
+	Route::get('index/report/jabatan', 'EmployeeController@indexReportJabatan');
+	Route::get('fetch/report/stat', 'EmployeeController@fetchReport');
 	Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 });
 
@@ -426,7 +431,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
-	Route::get('scan/middle_kensa', 'MiddleProcessController@ScanMiddleKensa');
+	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
 	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
 	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
@@ -457,6 +462,7 @@ Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddl
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
 	Route::get('fetch/purchase_order/po_list', 'PurchaseOrderController@fetchPoList');
+	// Route::get('export/purchase_order/po_list', 'PurchaseOrderController@exportPoList');
 	Route::post('import/purchase_order/po_list', 'PurchaseOrderController@importPoList');
 	Route::get('index/purchase_order/po_create', 'PurchaseOrderController@indexPoCreate');
 	Route::post('generate/purchase_order/po_create', 'PurchaseOrderController@generatePoCreate');
@@ -470,6 +476,7 @@ Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::post('generate/purchase_order/po_revise', 'PurchaseOrderController@generatePoRevise');
 	Route::post('generate/purchase_order/po_revise2', 'PurchaseOrderController@generatePoRevise2');
 	Route::post('generate/purchase_order/po_revise3', 'PurchaseOrderController@generatePoRevise2');
+	Route::get('export/purchase_order/po_list', 'PurchaseOrderController@exportPoList');
 });
 
 Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
@@ -485,6 +492,7 @@ Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::post('fetch/report/overtime_graph', 'OvertimeController@graphPrint');
 	Route::get('fetch/overtime', 'OvertimeController@fetchOvertime');
 	Route::get('fetch/overtime/detail', 'OvertimeController@fetchOvertimeDetail');
+	Route::post('delete/overtime', 'OvertimeController@deleteOvertime');
 	Route::get('index/overtime/edit/{id}', 'OvertimeController@fetchOvertimeEdit');
 });
 
@@ -706,3 +714,7 @@ Route::get('fetch/flo_lading', 'FloController@fetch_flo_lading');
 Route::post('input/flo_lading', 'FloController@input_flo_lading');
 Route::post('update/flo_container', 'FloController@update_flo_container');
 Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
+
+
+//DISPLAY ALL
+Route::get('fetch/display/shipment_progress', 'DisplayController@fetchShipmentProgress');

@@ -59,6 +59,66 @@ class DisplayController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchShipmentProgress(Request $request){
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setWeekEndsAt(Carbon::SATURDAY);
+
+		if($request->get('datefrom') != ""){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		else{
+			$datefrom = date('Y-m-d', strtotime(Carbon::now()->subDays(1)));
+		}
+
+		if($request->get('dateto') != ""){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+		else{
+			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
+		}
+		
+		$query = "select date_format(e.st_date, '%d-%b-%Y') as st_date, e.hpl, coalesce(act,0) as act, coalesce(plan,0) as plan, actual from
+		(
+		select distinct materials.hpl, c.st_date from materials
+		left join
+		(
+		select shipment_schedules.st_date, materials.category from shipment_schedules left join materials on materials.material_number = shipment_schedules.material_number where shipment_schedules.st_date >= '" . $datefrom . "' and shipment_schedules.st_date <= '" . $dateto . "' group by shipment_schedules.st_date, materials.category
+		) as c 
+		on c.category = materials.category
+		where materials.category = 'FG'
+		) as e
+
+		left join
+		(
+		select b.st_date, b.hpl, a.actual as act, b.plan as plan, round((coalesce(a.actual,0)/b.plan)*100,1) as actual from
+		(
+		select shipment_schedules.st_date, materials.hpl, sum(flos.actual) as actual from flos 
+		left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where materials.category = 'FG'
+		group by shipment_schedules.st_date, materials.hpl
+		) as a
+		right join
+		(
+		select shipment_schedules.st_date, materials.hpl, sum(shipment_schedules.quantity) as plan from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		where materials.category = 'FG'
+		group by  shipment_schedules.st_date, materials.hpl
+		) as b on b.st_date = a.st_date and a.hpl = b.hpl
+		where b.st_date >= '" . $datefrom . "' and b.st_date <= '" . $dateto . "'
+		) as d
+		on d.st_date = e.st_date and d.hpl = e.hpl
+		order by e.st_date asc, e.hpl desc";
+
+		$shipment_results = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'shipment_results' => $shipment_results,
+		);
+		return Response::json($response);
+	}
+
 	public function fetch_dp_fg_accuracy(){
 		$now = date('Y-m-d');
 		// $queryAccuracyBI = "select g.week_name, g.week_date, sum(g.minus) as minus, sum(g.plus) as plus from

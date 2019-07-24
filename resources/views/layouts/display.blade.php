@@ -32,80 +32,85 @@
               <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
             </a>
           </div>
-          @if(Auth::user() != "")
-          <div class="navbar-custom-menu">            
+          <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service Desk <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="{{ url("index/wjo_mis") }}">Management Information System <b>(MIS)</b></a></li>
-                </ul>
-              </li>
-              <li class="dropdown user user-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  @php
-                  $avatar = 'images/avatar/'.Auth::user()->avatar;
-                  @endphp
-                  <img src="{{ url($avatar) }}" class="user-image" alt="User Image">
-                  <span class="hidden-xs">{{Auth::user()->name}}</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="user-header">
-                    <img src="{{ url($avatar) }}" class="img-circle" alt="User Image">
-                    <p>
-                      {{Auth::user()->name}}
-                      <small>{{Auth::user()->email}}</small>
-                    </p>
-                  </li>
-                  <li class="user-footer">
-                    <div class="row">
-                      <div class="col-xs-4 pull-left">
-                        <a class="btn btn-info btn-flat" href="{{ url("setting/user") }}">Setting</a>
-                      </div>
-                      <div class="col-xs-4 pull-right">
-                        <a class="btn btn-danger btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                          Logout
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                          {{ csrf_field() }}
-                        </form>
-                      </div>
+              <li>
+                <a style="font-size: 20px; font-weight: bold;" class="text-yellow">
+                  <?php if (isset($title)) {
+                   echo $title;
+                 } ?>
+               </a>
+             </li>
+           </ul>
+         </div>
+         @if(Auth::user() != "")
+         <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <li class="dropdown user user-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                @php
+                $avatar = 'images/avatar/'.Auth::user()->avatar;
+                @endphp
+                <img src="{{ url($avatar) }}" class="user-image" alt="User Image">
+                <span class="hidden-xs">{{Auth::user()->name}}</span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="user-header">
+                  <img src="{{ url($avatar) }}" class="img-circle" alt="User Image">
+                  <p>
+                    {{Auth::user()->name}}
+                    <small>{{Auth::user()->email}}</small>
+                  </p>
+                </li>
+                <li class="user-footer">
+                  <div class="row">
+                    <div class="col-xs-4 pull-left">
+                      <a class="btn btn-info btn-flat" href="{{ url("setting/user") }}">Setting</a>
                     </div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-             
-          </div>
-         @endif
-        {{-- </div> --}}
-      </nav>
-    </header>
-    <div class="content-wrapper" style="background-color: rgb(62,78,99);">
-      {{-- <div class="container"> --}}
-        <section class="content-header">
-         @yield('header')
-       </section>
-       <section class="content" style="padding-top:0px">
-         @yield('content')
-       </section>
-     </div>
-   {{-- </div> --}}
-   @include('layouts.footer')
- </div>
- <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
- <script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
- <script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
- <script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
- <script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
- <script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
- <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
- <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
- <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
- {{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
- <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
- <script src="{{ url("dist/js/demo.js")}}"></script>
- {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
- @yield('scripts')
+                    <div class="col-xs-4 pull-right">
+                      <a class="btn btn-danger btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                      </a>
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                      </form>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          
+        </div>
+        @endif
+      {{-- </div> --}}
+    </nav>
+  </header>
+  <div class="content-wrapper" style="background-color: rgb(62,78,99);">
+    {{-- <div class="container"> --}}
+      <section class="content-header">
+       @yield('header')
+     </section>
+     <section class="content" style="padding-top:0px">
+       @yield('content')
+     </section>
+   </div>
+ {{-- </div> --}}
+ @include('layouts.footer')
+</div>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+<script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
+<script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
+<script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
+<script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
+<script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
+<script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
+<script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
+<script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
+{{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
+<script src="{{ url("dist/js/adminlte.min.js")}}"></script>
+<script src="{{ url("dist/js/demo.js")}}"></script>
+{{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
+@yield('scripts')
 </body>
 </html>
