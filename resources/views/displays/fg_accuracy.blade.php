@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
 	thead>tr>th{
@@ -31,9 +31,9 @@
 </style>
 @endsection
 @section('header')
-<section class="content-header">
+<section class="content-header" style="padding-top: 0;">
 	<h1>
-		Finished Goods Accuracy <span class="text-purple"> FG週次出荷</span>
+		<span class="text-yellow">Finished Goods Accuracy</span> <span style="color: yellow;"> FG週次出荷</span>
 		{{-- <small>By Shipment Schedule <span class="text-purple">??????</span></small> --}}
 	</h1>
 	<ol class="breadcrumb" id="last_update">
@@ -45,44 +45,44 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div id="container1" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container2" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container3" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container4" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container5" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container6" style="width: 100%; height: 350px; padding: 0;"></div>			
-	</div>
-</div><br>
+		</div>
+	</div><br>
 
-<div class="row">
+	<div class="row">
 		<div class="col-xs-12">
 			<div id="container7" style="width: 100%; height: 350px; padding: 0;"></div>			
+		</div>
 	</div>
-</div>
 
 </section>
 
@@ -119,8 +119,215 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		fillChart();
-	});
+		Highcharts.createElement('link', {
+			href: 'https://fonts.googleapis.com/css?family=Unica+One',
+			rel: 'stylesheet',
+			type: 'text/css'
+		}, null, document.getElementsByTagName('head')[0]);
+
+		Highcharts.theme = {
+			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+			'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+			chart: {
+				backgroundColor: {
+					linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+					stops: [
+					[0, '#2a2a2b'],
+					[1, '#3e3e40']
+					]
+				},
+				style: {
+					fontFamily: '\'Unica One\', sans-serif'
+				},
+				plotBorderColor: '#606063'
+			},
+			title: {
+				style: {
+					color: '#E0E0E3',
+					textTransform: 'uppercase',
+					fontSize: '20px'
+				}
+			},
+			subtitle: {
+				style: {
+					color: '#E0E0E3',
+					textTransform: 'uppercase'
+				}
+			},
+			xAxis: {
+				gridLineColor: '#707073',
+				labels: {
+					style: {
+						color: '#E0E0E3'
+					}
+				},
+				lineColor: '#707073',
+				minorGridLineColor: '#505053',
+				tickColor: '#707073',
+				title: {
+					style: {
+						color: '#A0A0A3'
+
+					}
+				}
+			},
+			yAxis: {
+				gridLineColor: '#707073',
+				labels: {
+					style: {
+						color: '#E0E0E3'
+					}
+				},
+				lineColor: '#707073',
+				minorGridLineColor: '#505053',
+				tickColor: '#707073',
+				tickWidth: 1,
+				title: {
+					style: {
+						color: '#A0A0A3'
+					}
+				}
+			},
+			tooltip: {
+				backgroundColor: 'rgba(0, 0, 0, 0.85)',
+				style: {
+					color: '#F0F0F0'
+				}
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						color: '#B0B0B3'
+					},
+					marker: {
+						lineColor: '#333'
+					}
+				},
+				boxplot: {
+					fillColor: '#505053'
+				},
+				candlestick: {
+					lineColor: 'white'
+				},
+				errorbar: {
+					color: 'white'
+				}
+			},
+			legend: {
+				itemStyle: {
+					color: '#E0E0E3'
+				},
+				itemHoverStyle: {
+					color: '#FFF'
+				},
+				itemHiddenStyle: {
+					color: '#606063'
+				}
+			},
+			credits: {
+				style: {
+					color: '#666'
+				}
+			},
+			labels: {
+				style: {
+					color: '#707073'
+				}
+			},
+
+			drilldown: {
+				activeAxisLabelStyle: {
+					color: '#F0F0F3'
+				},
+				activeDataLabelStyle: {
+					color: '#F0F0F3'
+				}
+			},
+
+			navigation: {
+				buttonOptions: {
+					symbolStroke: '#DDDDDD',
+					theme: {
+						fill: '#505053'
+					}
+				}
+			},
+
+    // scroll charts
+    rangeSelector: {
+    	buttonTheme: {
+    		fill: '#505053',
+    		stroke: '#000000',
+    		style: {
+    			color: '#CCC'
+    		},
+    		states: {
+    			hover: {
+    				fill: '#707073',
+    				stroke: '#000000',
+    				style: {
+    					color: 'white'
+    				}
+    			},
+    			select: {
+    				fill: '#000003',
+    				stroke: '#000000',
+    				style: {
+    					color: 'white'
+    				}
+    			}
+    		}
+    	},
+    	inputBoxBorderColor: '#505053',
+    	inputStyle: {
+    		backgroundColor: '#333',
+    		color: 'silver'
+    	},
+    	labelStyle: {
+    		color: 'silver'
+    	}
+    },
+
+    navigator: {
+    	handles: {
+    		backgroundColor: '#666',
+    		borderColor: '#AAA'
+    	},
+    	outlineColor: '#CCC',
+    	maskFill: 'rgba(255,255,255,0.1)',
+    	series: {
+    		color: '#7798BF',
+    		lineColor: '#A6C7ED'
+    	},
+    	xAxis: {
+    		gridLineColor: '#505053'
+    	}
+    },
+
+    scrollbar: {
+    	barBackgroundColor: '#808083',
+    	barBorderColor: '#808083',
+    	buttonArrowColor: '#CCC',
+    	buttonBackgroundColor: '#606063',
+    	buttonBorderColor: '#606063',
+    	rifleColor: '#FFF',
+    	trackBackgroundColor: '#404043',
+    	trackBorderColor: '#404043'
+    },
+
+    // special colors for some of the
+    legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+    background2: '#505053',
+    dataLabelsColor: '#B0B0B3',
+    textColor: '#C0C0C0',
+    contrastTextColor: '#F0F0F3',
+    maskColor: 'rgba(255,255,255,0.3)'
+};
+
+// Apply the theme
+Highcharts.setOptions(Highcharts.theme);
+fillChart();
+});
 
 	var interval;
 	var statusx = "idle";
@@ -341,11 +548,6 @@
 					}
 
 					window.chart = Highcharts.stockChart('container1', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -374,7 +576,7 @@
 								text: 'Flute Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -391,6 +593,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -410,13 +616,13 @@
 						series: [{
 							name: 'FLFG Plus',
 							data: dataPlusFL,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'FLFG Minus',
 							data: dataMinusFL,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -447,11 +653,6 @@
 					// });
 
 					window.chart2 = Highcharts.stockChart('container2', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -480,7 +681,7 @@
 								text: 'Clarinet Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -497,6 +698,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -516,13 +721,13 @@
 						series: [{
 							name: 'CLFG Plus',
 							data: dataPlusCL,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'CLFG Minus',
 							data: dataMinusCL,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -553,11 +758,6 @@
 					// });
 
 					window.chart3 = Highcharts.stockChart('container3', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -586,7 +786,7 @@
 								text: 'Alto Saxophone Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -603,6 +803,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -622,13 +826,13 @@
 						series: [{
 							name: 'ASFG Plus',
 							data: dataPlusAS,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'ASFG Minus',
 							data: dataMinusAS,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -659,11 +863,6 @@
 					// });
 
 					window.chart4 = Highcharts.stockChart('container4', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -692,7 +891,7 @@
 								text: 'Tenor Saxophone Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -709,6 +908,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -728,13 +931,13 @@
 						series: [{
 							name: 'TSFG Plus',
 							data: dataPlusTS,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'TSFG Minus',
 							data: dataMinusTS,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -765,11 +968,6 @@
 					// });
 
 					window.chart5 = Highcharts.stockChart('container5', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -798,7 +996,7 @@
 								text: 'Pianica Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -815,6 +1013,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -834,13 +1036,13 @@
 						series: [{
 							name: 'PN Plus',
 							data: dataPlusPN,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'PN Minus',
 							data: dataMinusPN,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -871,11 +1073,6 @@
 					// });
 
 					window.chart6 = Highcharts.stockChart('container6', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -904,7 +1101,7 @@
 								text: 'Recorder Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -921,6 +1118,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -940,13 +1141,13 @@
 						series: [{
 							name: 'RC Plus',
 							data: dataPlusRC,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'RC Minus',
 							data: dataMinusRC,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
@@ -977,11 +1178,6 @@
 					// });
 					
 					window.chart7 = Highcharts.stockChart('container7', {
-						chart:{
-							borderColor: 'rgb(200,200,200)',
-							borderRadius: 5,
-							borderWidth: 2,
-						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -1010,7 +1206,7 @@
 								text: 'Venova Finished Goods'
 							},
 							plotLines: [{
-								color: '#00FF00',
+								color: '#FFFFFF',
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
@@ -1027,6 +1223,10 @@
 						},
 						plotOptions: {
 							series: {
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
@@ -1046,13 +1246,13 @@
 						series: [{
 							name: 'VN Plus',
 							data: dataPlusVN,
-							color: '#0000FF',
-							lineWidth: 1
+							color: 'RGB(255,211,0)',
+							lineWidth: 2
 						},{
 							name: 'VN Minus',
 							data: dataMinusVN,
 							color: '#FF0000',
-							lineWidth: 1
+							lineWidth: 2
 						}],
 						responsive: {
 							rules: [{
