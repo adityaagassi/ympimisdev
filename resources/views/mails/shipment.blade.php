@@ -40,6 +40,7 @@
 				</tbody>
 			</table>
 		</center>
+		<a href="http://172.17.128.4/mirai/public/index/fg_shipment_result">Realtime Shipment Progress</a>
 	</div>
 </body>
 </html>

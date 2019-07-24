@@ -80,7 +80,9 @@
 				</tbody>
 			</table>
 		</center>
-
+		<a href="http://172.17.128.4/myhris/management/overtime_control">OT By Budget</a>
+		<a href="http://172.17.128.4/myhris/management/ot_m">OT By Section</a>
+		<a href="http://172.17.128.4/myhris/management/ot_report2">OT By All</a>
 	</div>
 </body>
 </html>
