@@ -218,6 +218,15 @@ var printSettings = {
 	 "printerName" : "SATO LM408e" 
 };
 
+function snp() {
+	var sn = $('#codesn').val();
+	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
+}
+
+function snr() {
+	var sn = $('#codesn').val();
+	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
+}
 
 function defineCustomPaperSize() {
   console.log("Define custom paper size", false);
@@ -277,11 +286,13 @@ function printWindow(win, what) {
   		var sn = $('#codesn').val();
   		var rem = $('#rem').val();
   		if (rem =="JR" || rem =="NJR") {
-  			alert(sn);
-  			window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
+  			setTimeout(snr,2000);
+  			// alert(sn);
+  			// window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
   		}else if(rem =="J" || rem =="NJ"){
-  			alert(sn);
-  			window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
+  			setTimeout(snp,2000);
+  			// alert(sn);
+  			// window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
   		}else{
   			// alert("asas")
   		}
