@@ -202,7 +202,7 @@
 		plotOptions: {
 			series: {
 				dataLabels: {
-					color: '#B0B0B3'
+					color: 'white'
 				},
 				marker: {
 					lineColor: '#333'
@@ -547,20 +547,20 @@
 						labels: {
 							enabled:false
 						}
-						// ,stackLabels: {
-						// 	enabled: true,
-						// 	rotation: -90,
-						// 	verticalAlign: 'middle',
-						// 	style: {
-						// 		fontSize: '20px',
-						// 		color: 'white',
-						// 		textOutline: false,
-						// 		fontWeight: 'bold',
-						// 	},
-						// 	formatter:  function() {
-						// 		return this.stack;
-						// 	}
-						// }
+						,stackLabels: {
+							enabled: true,
+							verticalAlign: 'left',
+							align:'center',
+							style: {
+								fontSize: '20px',
+								color: 'white',
+								textOutline: false,
+								fontWeight: 'bold',
+							},
+							formatter:  function() {
+								return this.stack;
+							}
+						}
 					},
 					tooltip: {
 						formatter: function () {
@@ -581,12 +581,9 @@
 							borderWidth: 0.93,
 							cursor: 'pointer',
 							dataLabels: {
-								verticalAlign: 'bottom',
 								enabled: true,
-								rotation: -90,
-								align: 'left',
 								formatter: function() {
-									return this.series.userOptions.stack +' '+ this.y;
+									return this.y;
 								},
 								y:-5,
 								style: {
@@ -636,7 +633,7 @@
 					}, {
 						name: 'Plan',
 						data: planVN,
-						stack: 'VENOVA',
+						stack: 'VN',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Actual',
@@ -671,7 +668,7 @@
 					}, {
 						name: 'Actual',
 						data: actualVN,
-						stack: 'VENOVA',
+						stack: 'VN',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}]
 				});
