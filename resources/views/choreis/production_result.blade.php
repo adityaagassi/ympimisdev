@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 {{-- <link href="{{ url("css/jquery-ui.css") }}" rel="stylesheet"> --}}
 <style type="text/css">
@@ -54,14 +54,14 @@
 </style>
 @stop
 @section('header')
-<section class="content-header">
+{{-- <section class="content-header">
 	<h1>
 		Production Result <span class="text-purple">生産実績</span>
-		{{-- <small>By Shipment Schedule <span class="text-purple">??????</span></small> --}}
+		<small>By Shipment Schedule <span class="text-purple">??????</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
-</section>
+</section> --}}
 @stop
 @section('content')
 <section class="content" style="padding-top: 0">

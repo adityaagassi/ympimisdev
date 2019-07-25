@@ -477,6 +477,7 @@ Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::post('generate/purchase_order/po_revise2', 'PurchaseOrderController@generatePoRevise2');
 	Route::post('generate/purchase_order/po_revise3', 'PurchaseOrderController@generatePoRevise2');
 	Route::get('export/purchase_order/po_list', 'PurchaseOrderController@exportPoList');
+	Route::get('export/purchase_order/po_list2', 'PurchaseOrderController@export')->name('export_excel.excel');
 });
 
 Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
@@ -716,5 +717,7 @@ Route::post('update/flo_container', 'FloController@update_flo_container');
 Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
 
 
-//DISPLAY ALL
+//DISPLAY EXPORT PROGRESS
 Route::get('fetch/display/shipment_progress', 'DisplayController@fetchShipmentProgress');
+Route::get('fetch/display/modal_shipment_progress', 'DisplayController@fetchModalShipmentProgress');
+Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentProgress');

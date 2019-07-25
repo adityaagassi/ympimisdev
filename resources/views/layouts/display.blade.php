@@ -18,10 +18,11 @@
   <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
-
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
 </head>
+
+
 <body class="hold-transition skin-purple layout-top-nav">
   <div class="wrapper">
     <header class="main-header" >
@@ -80,37 +81,28 @@
               </ul>
             </li>
           </ul>
-          
         </div>
         @endif
-      {{-- </div> --}}
-    </nav>
-  </header>
-  <div class="content-wrapper" style="background-color: rgb(62,78,99);">
-    {{-- <div class="container"> --}}
-      <section class="content-header">
-       @yield('header')
-     </section>
-     <section class="content" style="padding-top:0px">
-       @yield('content')
-     </section>
-   </div>
- {{-- </div> --}}
- @include('layouts.footer')
-</div>
-<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
-<script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
-<script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
-<script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
-<script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
-<script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
-<script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
-<script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
-<script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
-{{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
-<script src="{{ url("dist/js/adminlte.min.js")}}"></script>
-<script src="{{ url("dist/js/demo.js")}}"></script>
-{{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
-@yield('scripts')
+      </nav>
+    </header>
+    <div class="content-wrapper" style="background-color: rgb(62,78,99); padding-top: 10px;">
+      @yield('content')
+    </div>
+    @include('layouts.footer')
+  </div>
+  <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+  <script src="{{ url("bower_components/bootstrap/dist/js/bootstrap.min.js")}}"></script>
+  <script src="{{ url("bower_components/datatables.net/js/jquery.dataTables.min.js")}}"></script>
+  <script src="{{ url("bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}"></script>
+  <script src="{{ url("bower_components/select2/dist/js/select2.full.min.js")}}"></script>
+  <script src="{{ url("bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}"></script>
+  <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
+  <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
+  <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
+  {{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
+  <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
+  <script src="{{ url("dist/js/demo.js")}}"></script>
+  {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
+  @yield('scripts')
 </body>
 </html>

@@ -120,7 +120,7 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		Highcharts.createElement('link', {
-			href: 'https://fonts.googleapis.com/css?family=Unica+One',
+			href: '{{ url("fonts/UnicaOne.css")}}',
 			rel: 'stylesheet',
 			type: 'text/css'
 		}, null, document.getElementsByTagName('head')[0]);

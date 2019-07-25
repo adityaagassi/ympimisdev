@@ -2,15 +2,113 @@
 
 @section('stylesheets')
 <style type="text/css">
-
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+		padding: 0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
 </style>
 @endsection
-
+@section('header')
+@stop
 @section('content')
-<div class="col-xs-12">
-
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-1">
+					<label style="color: white;">Stuffing Date From:</label>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right" id="datefrom" nama="datefrom">
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-1">
+					<label style="color: white;">Stuffing Date To:</label>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right" id="datefrom" nama="dateto">
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<button id="search" onClick="fillChart()" class="btn btn-primary bg-purple">Update Chart</button>
+				</div>
+			</div>
+			<div id="container" style="min-width: 310px; height:600px; margin: 0 auto"></div>
+		</div>
+	</div>
+</section>
+<div class="modal fade" id="modalProgress">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalProgressTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+					</center>
+					<table class="table table-hover table-bordered table-striped" id="tableModal">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th>Material</th>
+								<th>Description</th>
+								<th>Dest.</th>
+								<th>Plan</th>
+								<th>Actual</th>
+								<th>Diff</th>
+							</tr>
+						</thead>
+						<tbody id="modalProgressBody">
+						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th>Total</th>
+							<th></th>
+							<th></th>
+							<th id="modalProgressTotal1"></th>
+							<th id="modalProgressTotal2"></th>
+							<th id="modalProgressTotal3"></th>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<div id="container" style="min-width: 310px; height:600px; margin: 0 auto"></div>
 
 @endsection
 
@@ -25,7 +123,6 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-
 
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
@@ -232,12 +329,98 @@
 	Highcharts.setOptions(Highcharts.theme);
 
 	jQuery(document).ready(function() {
-
+		$('#datefrom').datepicker({
+			autoclose: true,
+			todayHighlight: true
+		});
+		$('#dateto').datepicker({
+			autoclose: true,
+			todayHighlight: true
+		});
+		$('#datefrom').val("");
+		$('#dateto').val("");
 		fillChart();
+		setInterval(function(){
+			fillChart();
+		}, 10000);
 	});
 
+	function fillModal(cat, name){
+		$('#modalProgress').modal('show');
+		$('#loading').show();
+		$('#modalProgressTitle').hide();
+		$('#tableModal').hide();
+		var data = {
+			date:cat,
+			hpl:name
+		}
+		$.get('{{ url("fetch/display/modal_shipment_progress") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableModal').DataTable().destroy();
+				// $('#modalProgressTitle').html('');
+				// $('#modalProgressTitle').html(hpl +' Export Date: '+ date);
+				$('#modalProgressBody').html('');
+				var resultData = '';
+				var resultTotal1 = 0;
+				var resultTotal2 = 0;
+				var resultTotal3 = 0;
+				$.each(result.shipment_progress, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td style="width: 10%">'+ value.material_number +'</td>';
+					resultData += '<td style="width: 40%">'+ value.material_description +'</td>';
+					resultData += '<td style="width: 5%">'+ value.destination_shortname +'</td>';
+					resultData += '<td style="width: 15%">'+ value.plan.toLocaleString() +'</td>';
+					resultData += '<td style="width: 15%">'+ value.actual.toLocaleString() +'</td>';
+					resultData += '<td style="width: 15%; font-weight: bold;">'+ value.diff.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal1 += value.plan;
+					resultTotal2 += value.actual;
+					resultTotal3 += value.diff;
+				});
+				$('#modalProgressBody').append(resultData);
+				$('#modalProgressTotal1').html('');
+				$('#modalProgressTotal1').append(resultTotal1.toLocaleString());
+				$('#modalProgressTotal2').html('');
+				$('#modalProgressTotal2').append(resultTotal2.toLocaleString());
+				$('#modalProgressTotal3').html('');
+				$('#modalProgressTotal3').append(resultTotal3.toLocaleString());
+				$('#tableModal').DataTable({
+					"paging": false,
+					'searching': false,
+					'order':[],
+					'responsive': true,
+					'info': false,
+					"columnDefs": [{
+						"targets": 5,
+						"createdCell": function (td, cellData, rowData, row, col) {
+							if ( cellData.substring(0,1) ==  "-" ) {
+								$(td).css('background-color', 'RGB(255,204,255)')
+							}
+							else
+							{
+								$(td).css('background-color', 'RGB(204,255,255)')
+							}
+						}
+					}]
+				});
+				$('#loading').hide();
+				// $('#modalProgressTitle').show();
+				$('#tableModal').show();
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+	}
+
 	function fillChart(){
-		$.get('{{ url("fetch/display/shipment_progress") }}', function(result, status, xhr){
+		var datefrom = $('#datefrom').val();
+		var dateto = $('#dateto').val();
+		var data = {
+			datefrom:datefrom,
+			dateto:dateto
+		};
+		$.get('{{ url("fetch/display/shipment_progress") }}', data, function(result, status, xhr){
 			if(result.status){
 
 				var data = result.shipment_results;
@@ -307,14 +490,18 @@
 
 
 				var yAxisLabels = [0,25,50,75,100,110];
-				Highcharts.chart('container', {
+				var chart = Highcharts.chart('container', {
 
 					chart: {
 						type: 'column'
 					},
 
 					title: {
-						text: 'Shipment Fulfillment Progress'
+						text: 'Shipment Progress',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
 					},
 					legend:{
 						enabled: false
@@ -342,38 +529,38 @@
 						tickPositioner: function() {
 							return yAxisLabels;
 						},
-						plotLines: [{
-							color: '#FF0000',
-							width: 2,
-							value: 100,
-							label: {
-								align:'right',
-								text: '100%',
-								x:-7,
-								style: {
-									fontSize: '1vw',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
+						// plotLines: [{
+						// 	color: '#FF0000',
+						// 	width: 2,
+						// 	value: 100,
+						// 	label: {
+						// 		align:'right',
+						// 		text: '100%',
+						// 		x:-7,
+						// 		style: {
+						// 			fontSize: '1vw',
+						// 			color: '#FF0000',
+						// 			fontWeight: 'bold'
+						// 		}
+						// 	}
+						// }],
 						labels: {
 							enabled:false
-						},
-						stackLabels: {
-							enabled: true,
-							rotation: -90,
-							verticalAlign: 'middle',
-							style: {
-								fontSize: '20px',
-								color: 'white',
-								textOutline: false,
-								fontWeight: 'bold',
-							},
-							formatter:  function() {
-								return this.stack;
-							}
 						}
+						// ,stackLabels: {
+						// 	enabled: true,
+						// 	rotation: -90,
+						// 	verticalAlign: 'middle',
+						// 	style: {
+						// 		fontSize: '20px',
+						// 		color: 'white',
+						// 		textOutline: false,
+						// 		fontWeight: 'bold',
+						// 	},
+						// 	formatter:  function() {
+						// 		return this.stack;
+						// 	}
+						// }
 					},
 					tooltip: {
 						formatter: function () {
@@ -388,15 +575,29 @@
 						},
 						series:{
 							animation: false,
-							minPointLength: 2,
+							// minPointLength: 2,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
 							cursor: 'pointer',
+							dataLabels: {
+								verticalAlign: 'bottom',
+								enabled: true,
+								rotation: -90,
+								align: 'left',
+								formatter: function() {
+									return this.series.userOptions.stack +' '+ this.y;
+								},
+								y:-5,
+								style: {
+									fontSize:'18px',
+									fontWeight: 'bold',
+								}
+							},
 							point: {
 								events: {
 									click: function () {
-										fillModal(this.category, this.series.name);
+										fillModal(this.category, this.series.userOptions.stack);
 									}
 								}
 							}
@@ -475,6 +676,22 @@
 					}]
 				});
 
+				$('.highcharts-xaxis-labels text').on('click', function () {
+					fillModal(this.textContent, 'all');
+				});
+
+				$.each(chart.xAxis[0].ticks, function(i, tick) {
+					$('.highcharts-xaxis-labels text').hover(function () {
+						$(this).css('fill', '#33c570');
+						$(this).css('cursor', 'pointer');
+
+					},
+					function () {
+						$(this).css('cursor', 'pointer');
+						$(this).css('fill', 'white');
+					});
+				});
+
 
 			}
 			else{
@@ -482,6 +699,8 @@
 			}
 		});
 }
+
+
 
 function addZero(i) {
 	if (i < 10) {

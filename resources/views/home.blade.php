@@ -209,6 +209,10 @@
                                 <i class="fa fa-caret-right"></i> Shipment Result (出荷結果)
                             </a>
                             <br>
+                            <a href="{{ url("/index/display/shipment_progress") }}">
+                                <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/fg_container_departure") }}">
                                 <i class="fa fa-caret-right"></i> Container Departure (コンテナー出発)
                             </a>
@@ -235,7 +239,7 @@
                         <td>
                             <span style="font-weight: bold;">Chorei (朝礼)</span>
                             <br>
-                            <a href="{{ url("/index/ch_daily_production_result") }}">
+                            <a href="{{ url("/index/ch_daily_production_result") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                             </a>
                         </td>

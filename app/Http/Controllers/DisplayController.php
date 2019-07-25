@@ -17,6 +17,10 @@ class DisplayController extends Controller
 		))->with('page', 'Display Production Result')->with('head', 'Display');
 	}
 
+	public function indexShipmentProgress(){
+		return view('displays.shipment_progress')->with('page', 'Display Shipment Result')->with('head', 'Display');
+	}
+
 	public function index_dp_stockroom_stock(){
 		return view('displays.stockroom_stock')->with('page', 'Display Stockroom Stock')->with('head', 'Display');
 	}
@@ -55,6 +59,46 @@ class DisplayController extends Controller
 			'status' => true,
 			'accuracyDetail' => $accuracyDetail,
 			'title' => 'Details of '. $request->get('category'),
+		);
+		return Response::json($response);
+	}
+
+	public function fetchModalShipmentProgress(Request $request){
+		$st_date = date('Y-m-d', strtotime($request->get('date')));
+
+		
+		$hpl = " and materials.hpl = '" . $request->get('hpl') . "'";
+
+		if( $request->get('hpl') == 'all'){
+			$hpl = "";
+		}
+
+		$query = "
+		select a.material_number, a.material_description, a.destination_shortname, a.plan, coalesce(b.actual,0) as actual, coalesce(b.actual,0)-a.plan as diff from
+		(
+		select shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname, sum(shipment_schedules.quantity) as plan from shipment_schedules
+		left join materials on materials.material_number = shipment_schedules.material_number
+		left join destinations on destinations.destination_code = shipment_schedules.destination_code
+		where materials.category = 'FG' and shipment_schedules.st_date = '" .$st_date . "'
+		
+		" . $hpl . "
+
+		group by shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname
+		) as a
+		left join
+		(
+		select shipment_schedules.st_date, shipment_schedules.material_number, shipment_schedules.destination_code, sum(flos.actual) as actual from flos
+		left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id
+		group by shipment_schedules.st_date, shipment_schedules.material_number, shipment_schedules.destination_code
+		) as b 
+		on a.st_date = b.st_date and a.material_number = b.material_number and a.destination_code = b.destination_code
+		order by diff asc";
+
+		$shipment_progress = DB::select($query);
+
+		$response = array(
+			'status' => true,
+			'shipment_progress' => $shipment_progress,
 		);
 		return Response::json($response);
 	}
