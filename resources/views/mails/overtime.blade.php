@@ -21,7 +21,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="6" style="background-color: #9f84a7">Production Overtime</th>
+						<th colspan="7" style="background-color: #9f84a7">Production Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
@@ -30,6 +30,7 @@
 						<th style="width: 2%; border:1px solid black;">Employee ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
+						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,6 +43,7 @@
 							<td>'.$data['productions'][$i]['employee_id'].'</td>
 							<td>'.$data['productions'][$i]['name'].'</td>
 							<td>'.$data['productions'][$i]['overtime'].'</td>
+							<td>'.$data['productions'][$i]['fq'].'</td>
 							</tr>');
 					}
 					?>
@@ -53,7 +55,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="6" style="background-color: #9f84a7">Office Overtime</th>
+						<th colspan="7" style="background-color: #9f84a7">Office Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
@@ -62,6 +64,7 @@
 						<th style="width: 2%; border:1px solid black;">Employee ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
+						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,15 +77,18 @@
 							<td>'.$data['offices'][$i]['employee_id'].'</td>
 							<td>'.$data['offices'][$i]['name'].'</td>
 							<td>'.$data['offices'][$i]['overtime'].'</td>
+							<td>'.$data['offices'][$i]['fq'].'</td>
 							</tr>');
 					}
 					?>
 				</tbody>
 			</table>
+			<br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="http://172.17.128.4/myhris/management/overtime_control">Overtime By Budget</a><br>
+			<a href="http://172.17.128.4/myhris/management/ot_m">Overtime By Section</a><br>
+			<a href="http://172.17.128.4/myhris/management/ot_report2">Overtime By All</a>
 		</center>
-		<a href="http://172.17.128.4/myhris/management/overtime_control">OT By Budget</a>
-		<a href="http://172.17.128.4/myhris/management/ot_m">OT By Section</a>
-		<a href="http://172.17.128.4/myhris/management/ot_report2">OT By All</a>
 	</div>
 </body>
 </html>

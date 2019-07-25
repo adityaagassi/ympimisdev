@@ -39,8 +39,10 @@
 					@endforeach
 				</tbody>
 			</table>
+			<br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="http://172.17.128.4/mirai/public/index/fg_shipment_result">Realtime Shipment Progress</a>
 		</center>
-		<a href="http://172.17.128.4/mirai/public/index/fg_shipment_result">Realtime Shipment Progress</a>
 	</div>
 </body>
 </html>

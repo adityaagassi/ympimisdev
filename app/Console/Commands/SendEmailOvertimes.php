@@ -87,7 +87,7 @@ class SendEmailOvertimes extends Command
         LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, section, `group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE DATE_FORMAT( valid_from, '%Y-%m' ) <= '".$mon."' AND valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
         LEFT JOIN ympimis.total_meeting_codes AS helper ON pos.`group` = helper.group_name
         LEFT JOIN (
-        select forecast.cost_center, round(forecast.fc / emp_data.jml, 2) as fc_mp from (select cost_center, sum(jam) as fc from budget_harian where DATE_FORMAT( tanggal, '%Y-%m-%d' ) >= '".$first."'
+        select forecast.cost_center, round(forecast.fc / emp_data.jml) as fc_mp from (select cost_center, sum(jam) as fc from budget_harian where DATE_FORMAT( tanggal, '%Y-%m-%d' ) >= '".$first."'
         AND DATE_FORMAT( tanggal, '%Y-%m-%d' ) <= '".$now."'
         group by cost_center) as forecast
         left join (
@@ -95,7 +95,6 @@ class SendEmailOvertimes extends Command
         join (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) as cc on emp.employee_id = cc.employee_id
         group by cost_center
         ) as emp_data on emp_data.cost_center = forecast.cost_center
-        group by forecast.cost_center
         ) as forecast_mp on forecast_mp.cost_center = pos.cost_center
         ORDER BY
         ovr.act DESC";
@@ -116,7 +115,8 @@ class SendEmailOvertimes extends Command
                     'section' => ucwords($data->section),
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
-                    'overtime' => $data->act
+                    'overtime' => $data->act,
+                    'fq' => $data->fc_mp
                 ]);
                 $c_ofc += 1;
             }
@@ -127,7 +127,8 @@ class SendEmailOvertimes extends Command
                     'section' => ucwords($data->section),
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
-                    'overtime' => $data->act
+                    'overtime' => $data->act,
+                    'fq' => $data->fc_mp
                 ]);
                 $c_prd += 1;
             }
