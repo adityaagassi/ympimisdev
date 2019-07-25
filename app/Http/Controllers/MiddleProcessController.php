@@ -130,32 +130,33 @@ class MiddleProcessController extends Controller
 
 	public function indexProcessMiddleKensa($id){
 		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
-		$groups = DB::table('middle_groups')->where('location', '=', $id)->get();
 
-		if($id == 'incoming-lcq'){
-			$title = 'Incoming Check Saxophone Key Lcq';
+		if($id == 'lcq-incoming'){
+			$title = 'I.C. Saxophone Key Lacquering';
+			$title_jp= '?';
 		}
 		if($id == 'incoming-lcq2'){
-			$title = 'Incoming Check Saxophone Key After Treatment Lcq';
-		}
-		if($id == 'incoming-lcq-body'){
-			$title = 'Incoming Check Saxophone Body Lcq';
+			$title = 'I.C. Saxophone Key After Treatment Lacquering';
+			$title_jp= '?';
 		}
 		if($id == 'incoming-plt-sx'){
-			$title = 'Incoming Check Saxophone Plt';
+			$title = 'I.C. Saxophone Key Plating';
+			$title_jp= '?';
 		}
 		if($id == 'kensa-lcq'){
-			$title = 'Kensa Saxophone Lcq';
+			$title = 'Kensa Saxophone Key Lacquering';
+			$title_jp= '?';
 		}
 		if($id == 'kensa-plt-sx'){
-			$title = 'Kensa Saxophone Plt';
+			$title = 'Kensa Saxophone Key Plating';
+			$title_jp= '?';
 		}
 
 		return view('processes.middle.kensa', array(
 			'ng_lists' => $ng_lists,
-			'groups' => $groups,
 			'loc' => $id,
 			'title' => $title,
+			'title_jp' => $title_jp,
 		))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 	}
 
@@ -200,6 +201,26 @@ class MiddleProcessController extends Controller
 		);
 		return Response::json($response);
 
+	}
+
+	public function scanMiddleOperator(Request $request){
+		$employee = db::table('employees')->where('employee_id', '=', $request->get('employee_id'))->first();
+
+		if(count($employee) > 0 ){
+			$response = array(
+				'status' => true,
+				'message' => 'Logged In',
+				'employee' => $employee,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Employee ID Invalid',
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function printMiddleBarrelReprint(Request $request){
@@ -1157,74 +1178,32 @@ class MiddleProcessController extends Controller
 
 	public function ScanMiddleKensa(Request $request){
 		$id = Auth::id();
-		$tag_material = db::table('tag_materials')->where('tag_materials.tag', '=', $request->get('tag'))
-		->leftjoin('materials', 'materials.material_number', '=', 'tag_materials.material_number')
-		->select('materials.model', 'materials.mrpc', 'materials.material_number', 'tag_materials.tag')
+
+		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))
+		->leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+		->select('materials.model', 'materials.key', 'materials.surface', 'middle_inventories.material_number', 'middle_inventories.quantity', 'middle_inventories.tag')
 		->first();
 
-		if($tag_material == null){
-			$completion = db::connection('mysql2')->table('completions')
-			->where('completions.barcode_number', '=', $request->get('tag'))
-			->leftjoin('materials', 'materials.id', '=', 'completions.material_id')
-			->where('completions.active', '=', '1')
-			->where('materials.location', '=', $request->get('sLoc'))
-			->select('completions.lot_completion', 'materials.material_number')
-			->first();
-
-			if($completion == null){
+		if(count($middle_inventory) > 0){
+			if($request->get('loc') == 'lcq-incoming' && strpos($middle_inventory->surface, 'plt') !== false ){
 				$response = array(
 					'status' => false,
-					'message' => 'Tag material not registered or inactive.',
+					'message' => 'ID slip location for PLATING, please check ID slip.',
 				);
 				return Response::json($response);
 			}
 
-			$new_tag = new TagMaterial([
-				'tag' => $request->get('tag'),
-				'material_number' => $completion->material_number,
-				'qty' => $completion->lot_completion ,
-				'op_prod' => '-',
-				'location' => $request->get('location'),
-				'created_by'=> $id,
-			]);
-			$new_tag->save();
-
-			$tag_material2 = db::table('tag_materials')->where('tag_materials.tag', '=', $request->get('tag'))
-			->leftjoin('materials', 'materials.material_number', '=', 'tag_materials.material_number')
-			->select('materials.model', 'materials.mrpc', 'materials.material_number', 'tag_materials.tag')
-			->first();
-
-			if($tag_material2 == null){
-				$response = array(
-					'status' => false,
-					'message' => 'Material not registered in MIRAI.',
-				);
-				return Response::json($response);
-			}
-
-			$model = $tag_material2->model;
-			$tag = $tag_material2->tag;
-			$mrpc = $tag_material2->mrpc;
-		}
-		else{
-			$model = $tag_material->model;
-			$tag = $tag_material->tag;
-			$mrpc = $tag_material->mrpc;
-		}
-
-		if($mrpc != $request->get('workCenter')){
 			$response = array(
-				'status' => false,
-				'message' => 'Wrong location',
+				'status' => true,
+				'message' => 'ID slip found.',
+				'middle_inventory' => $middle_inventory,
 			);
 			return Response::json($response);
 		}
 		else{
 			$response = array(
-				'status' => true,
-				'message' => 'Material found',
-				'model' => $model,
-				'tag' => $tag,
+				'status' => false,
+				'message' => 'ID slip not found.',
 			);
 			return Response::json($response);
 		}
@@ -1519,6 +1498,7 @@ class MiddleProcessController extends Controller
 					'tag' => $datas['tag'][$i],
 					'material_number' => $datas['material'][$i],
 					'quantity' => $datas['qty'][$i],
+					'remark' => 'add',
 					'created_at' => $datas['created_at'][$i],
 					'updated_at' => date('Y-m-d H:i:s')
 				]);

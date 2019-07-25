@@ -350,6 +350,7 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	Route::post('create/empCreate', 'EmployeeController@empCreate');
 	Route::post('update/empCreate', 'EmployeeController@updateEmpData');
 	Route::get('index/MasterKaryawan', 'EmployeeController@index');
+	Route::get('index/termination', 'EmployeeController@indexTermination');
 
 	//insert
 	Route::get('index/insertEmp', 'EmployeeController@insertEmp');

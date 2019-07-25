@@ -348,8 +348,20 @@
       </span>
     </a>
     <ul class="treeview-menu">
+       @if(isset($page) && $page == "Manpower by Status Kerja")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/stat") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Status Kerja</a>
+      </li>
       @if(isset($page) && $page == "Manpower by Gender")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/report/gender") }}"><i class="fa fa-line-chart"></i> Manpower by Gender</a>
+        <a href="{{ url("/index/report/gender") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Gender</a>
+      </li>
+      @if(isset($page) && $page == "Manpower by Grade")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/grade") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Grade</a>
+      </li>
+      @if(isset($page) && $page == "Manpower by Department")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/department") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Department</a>
+      </li>
+      @if(isset($page) && $page == "Manpower by Jabatan")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/report/jabatan") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Jabatan</a>
       </li>
       @if(isset($page) && $page == "Leave Control")<li class="active">@else<li>@endif
         <a href="{{ url("/index/report/leave_control") }}"><i class="fa fa-line-chart"></i> Leave Control</a>
