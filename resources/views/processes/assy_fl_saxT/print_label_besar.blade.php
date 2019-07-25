@@ -221,11 +221,13 @@ var printSettings = {
 function snp() {
 	var sn = $('#codesn').val();
 	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/P', '_blank');
+	window.close();
 }
 
 function snr() {
 	var sn = $('#codesn').val();
 	window.open('{{ url("index/label_kecil") }}'+'/'+sn+'/RP', '_blank');
+	window.close();
 }
 
 function defineCustomPaperSize() {
@@ -296,7 +298,7 @@ function printWindow(win, what) {
   		}else{
   			// alert("asas")
   		}
-  		window.close();
+  		// window.close();
 
   	});
   }
