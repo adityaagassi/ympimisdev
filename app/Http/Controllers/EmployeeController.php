@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
 use App\User;
 use App\PresenceLog;
 use App\Division;
@@ -25,6 +26,7 @@ use DataTables;
 use Illuminate\Support\Facades\DB;
 use Response;
 use Illuminate\Support\Arr;
+use App\Http\Controllers\Controller;
 
 
 class EmployeeController extends Controller
@@ -67,6 +69,11 @@ class EmployeeController extends Controller
   {
     return view('employees.master.termination',array(
       'status' => $this->status))->with('page', 'Termination')->with('head', 'Employees Data');
+  }
+
+  public function indexEmployeeInformation()
+  {
+    return view('employees.index_employee_information');
   }
 
   public function updateEmp($id){
@@ -844,6 +851,36 @@ $response = array(
 );
 
 return Response::json($response); 
+}
+
+public function exportBagian()
+{
+  $bagian = Mutationlog::select("employee_id", "cost_center", "division", "department", "section", "sub_section", "group")
+  // ->whereIn('id', db::raw(""))
+  ->whereRaw('id in (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id)')
+  ->get()
+  ->toArray();
+
+  $bagian_array[] = array('employee_id', 'cost_center','division','department','section','sub_section','group');
+
+  foreach ($bagian as $key) {
+    $bagian_array[] = array(
+      'employee_id' => $key['employee_id'],
+      'cost_center' => $key['cost_center'],
+      'division' => $key['division'],
+      'department' => $key['department'],
+      'section' => $key['section'],
+      'sub_section' => $key['sub_section'],
+      'group' => $key['group']
+    );
+  }
+
+  Excel::create('Bagian', function($excel) use ($bagian_array){
+    $excel->setTitle('PO List');
+    $excel->sheet('Employee Bagian Data', function($sheet) use ($bagian_array){
+      $sheet->fromArray($bagian_array, null, 'A1', false, false);
+    });
+  })->download('xlsx');
 }
 
 }

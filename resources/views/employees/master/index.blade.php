@@ -77,7 +77,8 @@
 
   <ol class="breadcrumb">
   	<li>
-  		<!-- <a href="{{ url("index/termination") }}"  class="btn btn-sm bg-red" style="color:white"><i class="fa fa-ban"></i>Termination</a> -->
+  		<a class="btn btn-primary btn-sm" style="color: white" href="{{ url("index/bagian/export") }}"><i class="fa fa-download"></i> Get Bagian Data</a>
+  		<button class="btn btn-primary btn-sm"><i class="fa fa-database"></i> Import Bagian</button>
   		<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white"><i class="fa fa-plus"></i>Create {{ $page }}</a>
   	</li>
   </ol>
@@ -406,21 +407,21 @@
 				}
 			});
 			jQuery(document).ready(function() {
-		// $('body').toggleClass("sidebar-collapse");
-		$('#datebegin').datepicker({
-			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
-		});
 
-		$('#valid_from_2').datepicker({
-			autoclose: true,
-			format: "dd-mm-yyyy",
-			todayHighlight: true,
-		});
-		
-		fillmasteremp();
-	});
+				$('#datebegin').datepicker({
+					autoclose: true,
+					format: 'yyyy-mm-dd',
+					todayHighlight: true
+				});
+
+				$('#valid_from_2').datepicker({
+					autoclose: true,
+					format: "dd-mm-yyyy",
+					todayHighlight: true,
+				});
+
+				fillmasteremp();
+			});
 
 			function fillmasteremp(){
 				$('#masteremp tfoot th').each( function () {
@@ -568,7 +569,7 @@
 				$.post('{{ url("fetch/masterempdetail") }}', data, function(result, status, xhr){
 
 				})
-			}
+			}			
 
 			function modalUpgrade(emp_id, name, status) {
 				$('#employee_id').text(emp_id);
