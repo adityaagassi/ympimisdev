@@ -1129,7 +1129,7 @@ class PurchaseOrderController extends Controller
 			$join->on('purchase_orders.purchdoc', '=', 'po_lists.purchdoc');
 			$join->on('purchase_orders.item', '=', 'po_lists.item');
 		})
-		->select('po_lists.porg', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.NAME', 'po_lists.country', 'po_lists.material', 'po_lists.description', 'po_lists.plnt', 'po_lists.sloc', 'po_lists.sc_vendor', 'po_lists.cost_ctr', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.acctassigcat', 'po_lists.order_date', 'po_lists.deliv_date', 'po_lists.order_qty', 'po_lists.deliv_qty', 'po_lists.base_unit_of_measure', 'po_lists.price', 'po_lists.curr', 'po_lists.order_no', 'po_lists.reply_date', 'po_lists.create_date', 'po_lists.delay', 'po_lists.reply_qty', 'po_lists.comment', 'po_lists.del', 'po_lists.incomplete','po_lists.compl', 'po_lists.ctr', 'po_lists.spt', 'po_lists.stock', 'po_lists.lt', 'po_lists.dsf', 'po_lists.die_end', 'purchase_orders.order_no', 'purchase_orders.deliv_date');
+		->select('po_lists.porg', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.NAME', 'po_lists.country', 'po_lists.material', 'po_lists.description', 'po_lists.plnt', 'po_lists.sloc', 'po_lists.sc_vendor', 'po_lists.cost_ctr', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.acctassigcat', 'po_lists.order_qty', 'po_lists.deliv_qty', 'po_lists.base_unit_of_measure', 'po_lists.price', 'po_lists.curr', 'po_lists.order_no', 'po_lists.reply_date', 'po_lists.create_date', 'po_lists.delay', 'po_lists.reply_qty', 'po_lists.comment', 'po_lists.del', 'po_lists.incomplete','po_lists.compl', 'po_lists.ctr', 'po_lists.spt', 'po_lists.stock', 'po_lists.lt', 'po_lists.dsf', 'po_lists.die_end', 'purchase_orders.order_no', 'purchase_orders.deliv_date', 'purchase_orders.order_date');
 
 		if($request->get('pgr') != null){
 			$po_lists = $po_lists->whereIn('po_lists.pgr', $request->get('pgr'));
@@ -1185,7 +1185,7 @@ class PurchaseOrderController extends Controller
 
 		$po_lists = $po_lists->distinct()->get()->toArray();
 
-		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','order_no','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_no','deliv_date');
+		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','order_no','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_no');
 
 		foreach ($po_lists as $key) {
 			$po_array[] = array(
@@ -1225,8 +1225,7 @@ class PurchaseOrderController extends Controller
 				'lt' => $key['lt'],
 				'dsf' => $key['dsf'],
 				'die_end' => $key['die_end'],
-				'order_no' => $key['order_no'],
-				'deliv_date' => $key['deliv_date']
+				'order_no' => $key['order_no']
 			);
 		}
 
