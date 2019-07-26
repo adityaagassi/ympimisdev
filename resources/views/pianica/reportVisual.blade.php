@@ -41,6 +41,12 @@ table.table-bordered > tfoot > tr > th{
      {{ $page }}
    <span class="text-purple"> 外観確認リポート</span>
   </h1>
+  <div class="col-xs-2 input-group date pull-right ">
+                  <div class="input-group-addon bg-blue">
+                    <i class="fa fa-calendar  "></i>
+                  </div>
+                  <input type="text" onchange="ngTotal();" class="form-control pull-right" id="datefrom2" name="datefrom2">
+                </div><br><br>
   <ol class="breadcrumb">
     <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->
   </ol>
@@ -121,6 +127,11 @@ table.table-bordered > tfoot > tr > th{
       dropdownAutoWidth : true,
       width: '100%',
     });
+
+      $('#datefrom2').datepicker({
+      autoclose: true, 
+      format :'yyyy-mm-dd',
+    });
   });
 
   function recall() {
@@ -129,7 +140,14 @@ table.table-bordered > tfoot > tr > th{
           }
   
   function ngTotal() {
-    $.get('{{ url("index/getKensaVisualALL") }}', function(result, status, xhr){
+
+    var datep = $('#datefrom2').val();    
+    
+    var data = {
+      datep:datep,
+      
+    }
+    $.get('{{ url("index/getKensaVisualALL") }}',data, function(result, status, xhr){
               console.log(status);
               console.log(result);
               console.log(xhr);
@@ -146,6 +164,21 @@ table.table-bordered > tfoot > tr > th{
                      
                     } 
 
+                    var tgl ="";
+                    var tgly ="";
+
+                    if (result.tgly == "") {
+                      tgly = " No Data";
+                    }else{
+                      tgly =result.tgly[0].tgl;
+                    }
+
+                    if (result.tgl == "") {
+                      tgl = " No Data";
+                    }else{
+                      tgl =result.tgl[0].tgl;
+                    }
+
                     
     Highcharts.chart('container', {
     chart: {
@@ -155,7 +188,7 @@ table.table-bordered > tfoot > tr > th{
         text: 'TOTAL NG RATE KAKUNIN VISUAL'
     },
     subtitle: {
-        text: 'Last Update '+result.tgl[0].tgl
+        text: 'Last Update '+tgl
     },
     xAxis: {
         categories: nglist
@@ -221,7 +254,7 @@ table.table-bordered > tfoot > tr > th{
                 text: 'TOTAL NG RATE KAKUNIN VISUAL YESTERDAY'
               },
               subtitle: {
-        text: 'Last Update '+result.tgl[0].tgl
+        text: 'Last Update '+tgly
     },
               tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -311,7 +344,7 @@ table.table-bordered > tfoot > tr > th{
                 text: 'TOTAL NG RATE KAKUNIN VISUAL TO DAY'
               },
               subtitle: {
-        text: 'Last Update '+result.tgl[0].tgl
+        text: 'Last Update '+tgl
     },
               tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
