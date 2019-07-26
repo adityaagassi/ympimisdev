@@ -2,36 +2,36 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
-thead input {
-	width: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -68,7 +68,6 @@ table.table-bordered > tfoot > tr > th{
 										<th style="width: 5%">Cont. Code</th>
 										<th style="width: 7%">Destination</th>
 										<th style="width: 5%">Ship. Date</th>
-										<th style="width: 5%">Ship. Cond.</th>
 										<th style="width: 20%">Cont. Number</th>
 										<th style="width: 5%">Action</th>
 									</tr>
@@ -77,7 +76,6 @@ table.table-bordered > tfoot > tr > th{
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -191,12 +189,18 @@ table.table-bordered > tfoot > tr > th{
 					contentType: false,
 					cache: false,
 					success:function(data){
-						$('#container_after').val('');
-						$('#container_process').val('');
-						$('#container_before').val('');
-						$('#attModal').modal('hide');
-						$('#iv_table').DataTable().ajax.reload();
-						openSuccessGritter('Success', data.message);
+						if(data.status){
+							$('#container_after').val('');
+							$('#container_process').val('');
+							$('#container_before').val('');
+							$('#attModal').modal('hide');
+							$('#iv_table').DataTable().ajax.reload();
+							openSuccessGritter('Success', data.message);
+						}
+						else{
+							openErrorGritter('Error', data.message);
+						}
+						
 					}
 				});
 			});
@@ -268,7 +272,7 @@ table.table-bordered > tfoot > tr > th{
 				"processing": true,
 				"serverSide": true,
 				"ajax": {
-					"type" : "post",
+					"type" : "get",
 					"url" : "{{ url("index/flo_container") }}",
 				},
 
@@ -276,8 +280,7 @@ table.table-bordered > tfoot > tr > th{
 				{ "data": "container_id" },
 				{ "data": "container_code" },
 				{ "data": "destination_shortname" },
-				{ "data": "shipment_date" },
-				{ "data": "shipment_condition_name" },
+				{ "data": "st_date" },
 				{ "data": "container_number" },
 				{ "data": "action" }
 				]

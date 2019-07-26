@@ -66,7 +66,8 @@ class SendEmailOvertimes extends Command
         pos.section,
         helper.code,
         ovr.act,
-        forecast_mp.fc_mp
+        forecast_mp.fc_mp,
+        budget.mp_budget
         FROM
         (
         SELECT
@@ -96,6 +97,9 @@ class SendEmailOvertimes extends Command
         group by cost_center
         ) as emp_data on emp_data.cost_center = forecast.cost_center
         ) as forecast_mp on forecast_mp.cost_center = pos.cost_center
+        LEFT JOIN (
+        select cost_center, floor(budget_mp / DAY(LAST_DAY('".$first."')) * DAY('".$now."') * 2  + 0.5) / 2 mp_budget from ympimis.budgets where DATE_FORMAT(period,'%Y-%m') = '".$mon."'
+        ) as budget on budget.cost_center = pos.cost_center
         ORDER BY
         ovr.act DESC";
         
@@ -116,7 +120,8 @@ class SendEmailOvertimes extends Command
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
                     'overtime' => $data->act,
-                    'fq' => $data->fc_mp
+                    'fq' => $data->fc_mp,
+                    'budget' => $data->mp_budget
                 ]);
                 $c_ofc += 1;
             }
@@ -128,7 +133,8 @@ class SendEmailOvertimes extends Command
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
                     'overtime' => $data->act,
-                    'fq' => $data->fc_mp
+                    'fq' => $data->fc_mp,
+                    'budget' => $data->mp_budget
                 ]);
                 $c_prd += 1;
             }

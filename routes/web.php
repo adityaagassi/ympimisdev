@@ -127,7 +127,7 @@ Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService');
-
+Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -350,6 +350,7 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	Route::post('update/empCreate', 'EmployeeController@updateEmpData');
 	Route::get('index/MasterKaryawan', 'EmployeeController@index');
 	Route::get('index/termination', 'EmployeeController@indexTermination');
+	Route::get('index/bagian/export', 'EmployeeController@exportBagian');
 
 	//insert
 	Route::get('index/insertEmp', 'EmployeeController@insertEmp');
@@ -594,9 +595,9 @@ Route::get('index/reportAkhirLine', 'Pianica@reportAkhirLine');
 Route::get('index/getKensaAkhirALLLine', 'Pianica@getKensaAkhirALLLine');
 
 //report per tanggal
-	Route::get('index/reportDayAwal', 'Pianica@reportDayAwal');
-	Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
-	Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
+Route::get('index/reportDayAwal', 'Pianica@reportDayAwal');
+Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
+Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -707,7 +708,7 @@ Route::group(['nav' => 'R1', 'middleware' => 'permission'], function(){
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
 Route::post('index/flo_invoice', 'FloController@index_flo_invoice');
 Route::post('index/flo', 'FloController@index_flo');
-Route::post('index/flo_container', 'FloController@index_flo_container');
+Route::get('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');

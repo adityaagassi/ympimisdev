@@ -1117,10 +1117,10 @@ class PurchaseOrderController extends Controller
 		->make(true);
 	}
 
-	public function exportPoList(Request $request)
-	{
-		return Excel::create(new POExport($request->get('vendor'),$request->get('material'),$request->get('purchdoc'),$request->get('order_date_from'), $request->get('order_date_to'), $request->get('deliv_date_from'), $request->get('deliv_date_to'), $request->get('status'), $request->get('pgr')), 'po_list.xlsx');
-	}
+	// public function exportPoList(Request $request)
+	// {
+	// 	return Excel::create(new POExport($request->get('vendor'),$request->get('material'),$request->get('purchdoc'),$request->get('order_date_from'), $request->get('order_date_to'), $request->get('deliv_date_from'), $request->get('deliv_date_to'), $request->get('status'), $request->get('pgr')), 'po_list.xlsx');
+	// }
 
 	public function export(Request $request)
 	{
