@@ -833,7 +833,15 @@ public function getTotalNG(Request $request)
 {
 
 
+    $datep = $request->get('datep');
+
+    if ($datep != "") {
+    $date = $datep;
+    // $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
+    }else{
     $date = date('Y-m-d');
+    // $last = date('Y-m-d', strtotime(Carbon::yesterday()));
+    }
 
       $query = "SELECT ngH,sum(totalH+totalL) as total from (
     SELECT ngH,count(b.ng) as totalL from (
@@ -872,7 +880,7 @@ SELECT ng from detail_bensukis WHERE posisi='HIGH' and DATE_FORMAT(created_at,'%
 on a.ngH = b.ng 
 GROUP BY a.ngH ORDER BY ngH asc";
 
-$tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis  ORDER BY created_at desc limit 1";
+$tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."'  ORDER BY created_at desc limit 1";
 
 $tgl2 =DB::select($tgl);
 
@@ -897,7 +905,15 @@ $totalH =DB::select($query3);
 public function getMesinNg(Request $request)
 {
 
-$date = date('Y-m-d');
+$datep = $request->get('datep');
+
+    if ($datep != "") {
+    $date = $datep;
+    // $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
+    }else{
+    $date = date('Y-m-d');
+    // $last = date('Y-m-d', strtotime(Carbon::yesterday()));
+    }
     $query="SELECT ng_name as mesin, COALESCE(ng,0) as ng from (
 SELECT mesin, COUNT(ng) as ng  FROM header_bensukis
 LEFT JOIN detail_bensukis ON  header_bensukis.ID = detail_bensukis.id_bensuki where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."'
@@ -905,7 +921,7 @@ GROUP BY mesin ORDER BY mesin asc )
 a RIGHT JOIN (
 SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
 )b on a.mesin = b.ng_name ORDER BY mesin asc";
-$tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis  ORDER BY created_at desc limit 1";
+$tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."'  ORDER BY created_at desc limit 1";
 
 $tgl2 =DB::select($tgl);
     $total =DB::select($query);
@@ -1087,8 +1103,16 @@ select id,ng_name from ng_lists WHERE location='PN_Kensa_Awal'
 
 public function getKensaAwalALLLine(Request $request)
 {
+     $datep = $request->get('datep');
+
+    if ($datep != "") {
+    $date = $datep;
+    // $date2 = date('Y-m-d',strtotime($date));
+    $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
+    }else{
     $date = date('Y-m-d');
     $last = date('Y-m-d', strtotime(Carbon::yesterday()));
+    }
 
     $query="SELECT 1_5.*, b.total_5 from (
 select 1_4.*, b.total_4 from(
@@ -1291,7 +1315,7 @@ select id,ng_name from ng_lists WHERE location='PN_Kensa_Awal'
     union all
     select 0 total, COUNT(DISTINCT(tag)) as total_ng  from pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d')='".$last."' and location='PN_Kensa_Awal' and line ='5' )  a";
 
-    $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from pn_log_proces  ORDER BY created_at desc limit 1";
+    $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from pn_log_proces where DATE_FORMAT(created_at,'%Y-%m-%d')='".$date."' and location='PN_Kensa_Awal' ORDER BY created_at desc limit 1";
     $tgl2 =DB::select($tgl);
 
     $total_ng =DB::select($query2);
@@ -1410,8 +1434,16 @@ select id,ng_name from ng_lists WHERE location='PN_Kensa_Akhir'
 
 public function getKensaAkhirALLLine(Request $request)
 {
+    $datep = $request->get('datep');
+
+    if ($datep != "") {
+    $date = $datep;
+    $date2 = date('Y-m-d',strtotime($date));
+    $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
+    }else{
     $date = date('Y-m-d');
     $last = date('Y-m-d', strtotime(Carbon::yesterday()));
+    }
 
     $query="SELECT 1_5.*, b.total_5 from (
 select 1_4.*, b.total_4 from(
@@ -1614,7 +1646,7 @@ select id,ng_name from ng_lists WHERE location='PN_Kensa_Akhir'
     union all
     select 0 total, COUNT(DISTINCT(tag)) as total_ng  from pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d')='".$last."' and location='PN_Kensa_Akhir' and line ='5' )  a";
 
-    $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from pn_log_proces where location='PN_Kensa_Akhir'  ORDER BY created_at desc limit 1";
+    $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from pn_log_proces where location='PN_Kensa_Akhir' and DATE_FORMAT(created_at,'%Y-%m-%d')='".$date."'  ORDER BY created_at desc limit 1";
     $tgl2 =DB::select($tgl);
 
     $total_ng =DB::select($query2);

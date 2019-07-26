@@ -41,6 +41,12 @@ table.table-bordered > tfoot > tr > th{
      {{ $page }}
     <span class="text-purple"> 全ラインの最終検査リポート</span>
   </h1>
+  <div class="col-xs-2 input-group date pull-right ">
+                  <div class="input-group-addon bg-blue">
+                    <i class="fa fa-calendar  "></i>
+                  </div>
+                  <input type="text" onchange="ngTotal();" class="form-control pull-right" id="datefrom2" name="datefrom2">
+                </div><br><br>
   <ol class="breadcrumb">
     <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->
   </ol>
@@ -104,15 +110,26 @@ table.table-bordered > tfoot > tr > th{
       dropdownAutoWidth : true,
       width: '100%',
     });
+
+    $('#datefrom2').datepicker({
+      autoclose: true, 
+      format :'yyyy-mm-dd',
+    });
   });
   
   function recall() {
             ngTotal();
-            setTimeout(recall, 6000);
+            setTimeout(recall, 1000);
           }
 
   function ngTotal() {
-    $.get('{{ url("index/getKensaAkhirALLLine") }}', function(result, status, xhr){
+    var datep = $('#datefrom2').val();    
+    
+    var data = {
+      datep:datep,
+      
+    }
+    $.get('{{ url("index/getKensaAkhirALLLine") }}',data, function(result, status, xhr){
               console.log(status);
               console.log(result);
               console.log(xhr);
@@ -150,6 +167,13 @@ table.table-bordered > tfoot > tr > th{
                      
                     } 
 
+                    var tgl ="";
+                    
+                    if (result.tgl == "") {
+                      tgl = " No Data";
+                    }else{
+                      tgl =result.tgl[0].tgl;
+                    }
                     
     Highcharts.chart('container', {
     chart: {
@@ -159,7 +183,7 @@ table.table-bordered > tfoot > tr > th{
         text: 'TOTAL NG RATE KENSA AKHIR'
     },
     subtitle: {
-        text: 'Last Update '+result.tgl[0].tgl
+        text: 'Last Update '+tgl
     },
     xAxis: {
         categories: nglist

@@ -41,6 +41,12 @@ table.table-bordered > tfoot > tr > th{
      {{ $page }}
     <span class="text-purple"> 弁付きリポート</span>
   </h1>
+  <div class="col-xs-2 input-group date pull-right ">
+                  <div class="input-group-addon bg-blue">
+                    <i class="fa fa-calendar  "></i>
+                  </div>
+                  <input type="text" onchange="recall();" class="form-control pull-right" id="datefrom2" name="datefrom2">
+                </div><br><br>
   <ol class="breadcrumb">
     <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->
   </ol>
@@ -113,16 +119,29 @@ table.table-bordered > tfoot > tr > th{
       dropdownAutoWidth : true,
       width: '100%',
     });
+
+     $('#datefrom2').datepicker({
+      autoclose: true, 
+      format :'yyyy-mm-dd',
+    });
+
+
   });
 
   function recall() {
             ngTotal();
-    ngMesin();
-            setTimeout(recall, 6000);
+            ngMesin();
+            setTimeout(recall, 1000);
           }
   
   function ngTotal() {
-    $.get('{{ url("index/getTotalNG") }}', function(result, status, xhr){
+     var datep = $('#datefrom2').val();    
+    
+    var data = {
+      datep:datep,
+      
+    }
+    $.get('{{ url("index/getTotalNG") }}',data, function(result, status, xhr){
               console.log(status);
               console.log(result);
               console.log(xhr);
@@ -149,6 +168,14 @@ table.table-bordered > tfoot > tr > th{
                      totalL2.push(parseInt(result.ngL[i].totalL2)-1);
                     } 
 
+                    var tgl ="";
+                    
+                    if (result.tgl == "") {
+                      tgl = " No Data";
+                    }else{
+                      tgl =result.tgl[0].tgl;
+                    }
+
 
     Highcharts.chart('container', {
     chart: {
@@ -158,7 +185,7 @@ table.table-bordered > tfoot > tr > th{
         text: 'TOTAL NG RATE MESIN SPOT WELDING'
     },
     subtitle: {
-        text: 'Last Update'+result.tgl[0].tgl
+        text: 'Last Update '+tgl
     },
     xAxis: {
         categories: nglist
@@ -256,7 +283,13 @@ table.table-bordered > tfoot > tr > th{
 
 
 function ngMesin() {
-    $.get('{{ url("index/getMesinNg") }}', function(result, status, xhr){
+  var datep = $('#datefrom2').val();    
+    
+    var data = {
+      datep:datep,
+      
+    }
+    $.get('{{ url("index/getMesinNg") }}',data, function(result, status, xhr){
               console.log(status);
               console.log(result);
               console.log(xhr);
@@ -270,6 +303,14 @@ function ngMesin() {
                      
                     } 
 
+                     var tgl ="";
+                    
+                    if (result.tgl == "") {
+                      tgl = " No Data";
+                    }else{
+                      tgl =result.tgl[0].tgl;
+                    }
+
 
     Highcharts.chart('container2', {
     
@@ -277,7 +318,7 @@ function ngMesin() {
         text: 'TOTAL NG RATE MESIN SPOT WELDING'
     },
     subtitle: {
-        text: 'Last Update'+result.tgl[0].tgl
+        text: 'Last Update '+tgl
     },
     xAxis: {
         categories: [
