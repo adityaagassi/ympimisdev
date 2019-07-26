@@ -83,12 +83,8 @@
                             {{$employee_service}}
                             @endif --}}
 
-                            
-                            <a href="http://172.17.128.4/myhris/management" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Overtime (勤怠管理)
-                            </a><br>
-                            <a href="http://172.17.128.4/myhris/management_mp" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Infromation (社員構成)
+                            <a href="{{ url("/index/employee_information") }}">
+                                <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
                             </a><br>
                             <a href="http://172.17.128.4/myhris/home/overtime_form" target="blank">
                                 <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
@@ -115,10 +111,15 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Employment Service (???)</span>
+                            {{-- <span style="font-weight: bold;">Employment Service (???)</span>
                             <br>
                             <a href="{{ url("index/employee/service") }}" target="blank">
                                 <i class="fa fa-caret-right"></i> Employment Service (???)
+                            </a> --}}
+                            <span style="font-weight: bold;">Clinic Chart</span>
+                            <br>
+                            <a href="http://172.17.128.114/clinic-new/chart.php" target="blank">
+                                <i class="fa fa-caret-right"></i> Clinic Chart
                             </a>
                         </td>
                     </tr>
