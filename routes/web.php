@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	return view('displays.shipment_progress');
+	return view('mails.stuffing');
 });
 Route::post('trial/tes', 'TrialController@tes');
 Route::get('index/buffing', 'TrialController@buffingIndex');
@@ -119,7 +119,6 @@ Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
 Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
-Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
@@ -593,6 +592,11 @@ Route::get('index/getKensaAkhirALL', 'Pianica@getKensaAkhirALL');
 	//---------- report kensa awal
 Route::get('index/reportAkhirLine', 'Pianica@reportAkhirLine');
 Route::get('index/getKensaAkhirALLLine', 'Pianica@getKensaAkhirALLLine');
+
+//report per tanggal
+	Route::get('index/reportDayAwal', 'Pianica@reportDayAwal');
+	Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
+	Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');

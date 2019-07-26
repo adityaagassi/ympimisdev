@@ -1700,11 +1700,496 @@ public function recordPianica2(Request $request){
 
     $stamp_detail = $flo_detailsTable->orderBy('updated_at', 'desc')->get();
 
-    return DataTables::of($stamp_detail)
-    // ->addColumn('action', function($stamp_detail){
-    //     return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $stamp_detail->serial_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
-    // })
-    ->make(true);
+    return DataTables::of($stamp_detail)->make(true);
 }
+
+//report monthly
+public function reportDayAwal()
+  {
+
+    return view('pianica.reportAwalMonthly')->with('page', 'Report Kensa Awal / Akhir Monthly');
+}
+
+
+public function reportDayAwalData(Request $request){
+    
+    $from = $request->get('datefrom');
+    $to = $request->get('dateto');
+
+    $process = $request->get('code');   
+    
+    if ($from == "") {
+        $from = date('Y-m-01');
+    }
+    if ($to == "") {      
+       $to = date('Y-m-d');
+    }
+
+    $query = "SELECT biri.tgl, biri, oktaf, tinggi, rendah from (
+SELECT week_date as tgl,COALESCE(a.total,0) as biri from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='Biri'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl)
+ 
+ Biri
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as oktaf from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='Oktaf'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) oktaf 
+ on biri.tgl = oktaf.tgl
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as tinggi from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='T. Tinggi'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) tinggi 
+ on biri.tgl = tinggi.tgl
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as rendah from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='T. Rendah'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) rendah
+ on biri.tgl = rendah.tgl ";
+
+
+ $query2=" select tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica from (
+
+SELECT 'visual' as pro,frame.tgl, frame,rl,lower,handle,button,pianica from (
+SELECT week_date as tgl,sum(a.total) as frame from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Frame Assy'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date) frame
+ 
+ LEFT JOIN 
+ 
+ (
+ SELECT week_date as tgl,sum(a.total) as rl from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Cover R/L'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) rl
+ on frame.tgl = rl.tgl
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as lower from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Cover Lower'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) lower
+ on frame.tgl = lower.tgl
+ 
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as handle from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Handle'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) handle
+ on frame.tgl = handle.tgl
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as button from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Button'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) button
+ on frame.tgl = button.tgl
+ 
+  LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as pianica from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Pianica'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) pianica
+ on frame.tgl = pianica.tgl ) a 
+
+ ";
+
+ if ($process != "PN_Kakuning_Visual") {
+     $record =DB::select($query); 
+    }else{
+       $record =DB::select($query2); 
+    } 
+
+
+
+    return DataTables::of($record)->make(true);
+    
+}
+
+
+public function reportDayAwalDataGrafik(Request $request){
+    
+    $from = $request->get('datefrom');
+    $to = $request->get('dateto');
+
+    $process = $request->get('code');   
+    
+    if ($from == "") {
+        $from = date('Y-m-01');
+    }
+    if ($to == "") {      
+       $to = date('Y-m-d');
+    }
+
+    if ($process == "") {
+         $process = 'PN_Kensa_Awal'; 
+    }
+
+    $query = "SELECT 'awal' as pro,biri.tgl, biri, oktaf, tinggi, rendah,target from (
+SELECT week_date as tgl,COALESCE(a.total,0) as biri from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='Biri'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl)
+ 
+ Biri
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as oktaf from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='Oktaf'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) oktaf 
+ on biri.tgl = oktaf.tgl
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as tinggi from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='T. Tinggi'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) tinggi 
+ on biri.tgl = tinggi.tgl
+ 
+ LEFT JOIN
+ (
+ 
+SELECT week_date as tgl,COALESCE(a.total,0) as rendah from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='T. Rendah'
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl 
+ ) rendah
+ on biri.tgl = rendah.tgl 
+
+left join (
+SELECT SUM(total) as target, due_date from (
+SELECT material_number, due_date, sum(quantity) as total from production_schedules WHERE material_number in (
+SELECT material_number from materials where materials.category = 'FG' and materials.origin_group_code = '073')
+GROUP BY material_number, due_date
+) a GROUP BY due_date
+) target on biri.tgl = target.due_date
+ ";
+
+ $query2=" select tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica, target from (
+
+SELECT 'visual' as pro,frame.tgl, frame,rl,lower,handle,button,pianica, target from (
+SELECT week_date as tgl,sum(a.total) as frame from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Frame Assy'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date) frame
+ 
+ LEFT JOIN 
+ 
+ (
+ SELECT week_date as tgl,sum(a.total) as rl from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Cover R/L'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) rl
+ on frame.tgl = rl.tgl
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as lower from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Cover Lower'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) lower
+ on frame.tgl = lower.tgl
+ 
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as handle from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Handle'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) handle
+ on frame.tgl = handle.tgl
+ 
+ LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as button from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Button'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) button
+ on frame.tgl = button.tgl
+ 
+  LEFT JOIN
+ (
+ SELECT week_date as tgl,sum(a.total) as pianica from (
+SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
+SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual'
+and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+GROUP BY ng, DATE_FORMAT(created_at,'%Y-%m-%d')) a
+RIGHT JOIN 
+(
+select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Pianica'  
+) b
+ on a.ng = b.id ORDER BY ng_name, tgl asc ) a 
+ RIGHT JOIN 
+ (
+ SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."'
+ )b on b.week_date = a.tgl GROUP BY b.week_date
+ 
+ ) pianica
+ on frame.tgl = pianica.tgl  
+
+
+left join (
+SELECT SUM(total) as target, due_date from (
+SELECT material_number, due_date, sum(quantity) as total from production_schedules WHERE material_number in (
+SELECT material_number from materials where materials.category = 'FG' and materials.origin_group_code = '073')
+GROUP BY material_number, due_date
+) a GROUP BY due_date
+) target on frame.tgl = target.due_date
+) a ORDER BY a.tgl asc
+
+ ";
+
+ if ($process != "PN_Kakuning_Visual") {
+     $record =DB::select($query); 
+    }else{
+       $record =DB::select($query2); 
+    } 
+
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',  
+        'record' => $record,       
+
+    );
+    return Response::json($response);
+}
+
 
 }
