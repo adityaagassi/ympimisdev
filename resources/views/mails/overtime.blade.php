@@ -25,12 +25,12 @@
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
-						<th style="width: 1%; border:1px solid black;">Department</th>
-						<th style="width: 3%; border:1px solid black;">Section</th>
-						<th style="width: 2%; border:1px solid black;">Employee ID</th>
+						<th style="width: 1%; border:1px solid black;">Dept</th>
+						<th style="width: 3%; border:1px solid black;">Sect</th>
+						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
+						<th style="width: 2%; border:1px solid black;">Σ Forecast</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
-						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,8 +42,8 @@
 							<td>'.$data['productions'][$i]['section'].'</td>
 							<td>'.$data['productions'][$i]['employee_id'].'</td>
 							<td>'.$data['productions'][$i]['name'].'</td>
-							<td>'.$data['productions'][$i]['overtime'].'</td>
 							<td>'.$data['productions'][$i]['fq'].'</td>
+							<td>'.$data['productions'][$i]['overtime'].'</td>
 							</tr>');
 					}
 					?>
@@ -59,12 +59,12 @@
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
-						<th style="width: 1%; border:1px solid black;">Department</th>
-						<th style="width: 3%; border:1px solid black;">Section</th>
-						<th style="width: 2%; border:1px solid black;">Employee ID</th>
+						<th style="width: 1%; border:1px solid black;">Dept</th>
+						<th style="width: 3%; border:1px solid black;">Sect</th>
+						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
+						<th style="width: 2%; border:1px solid black;">Σ Forecast</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
-						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -76,8 +76,8 @@
 							<td>'.$data['offices'][$i]['section'].'</td>
 							<td>'.$data['offices'][$i]['employee_id'].'</td>
 							<td>'.$data['offices'][$i]['name'].'</td>
-							<td>'.$data['offices'][$i]['overtime'].'</td>
 							<td>'.$data['offices'][$i]['fq'].'</td>
+							<td>'.$data['offices'][$i]['overtime'].'</td>
 							</tr>');
 					}
 					?>
