@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+// use Maatwebsite\Excel\Excel;
+
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use PDF;
+use Excel;
+use App\Exports\POExport;
 use Response;
 use File;
 use DataTables;
@@ -15,15 +19,18 @@ use App\PurchaseOrder;
 use App\CodeGenerator;
 use App\PoList;
 use App\PoListFile;
+use App\Http\Controllers\Controller;
 
 class PurchaseOrderController extends Controller
 {
-	public function __construct(){
+	private $excel;
+	public function __construct(Excel $excel){
 		$this->middleware('auth');
 		$this->pgr = [
 			'G01',
 			'G08',
 		];
+		$this->excel = $excel;
 	}
 
 	public function indexPoList(){
@@ -123,13 +130,17 @@ class PurchaseOrderController extends Controller
 						"filename" => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf"
 					]);
 
+
 				if($pdf){
-					$po_file = new PolistFile([
+					$po_file = PolistFile::updateOrCreate([
+						'order_noorder_no' => $order_no, 
+						'file_name' => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . '.pdf'
+					],
+					[
 						'order_no' => $orderNo,
 						'file_name' => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . '.pdf',
 						'created_by' => $id
 					]);
-					$po_file->save();
 				}
 			}
 			$response = array(
@@ -896,6 +907,15 @@ class PurchaseOrderController extends Controller
 							if($row[1] == "G08"){
 								$price = str_replace('"','',str_replace(',','',$row[19]));
 							}
+							
+							$reply_date = null;
+							$create_date = null;
+							if(strlen($row[22]) > 0){
+								$reply_date = date('Y-m-d', strtotime($row[22]));
+							}
+							if(strlen($row[23]) > 0){
+								$create_date = date('Y-m-d', strtotime($row[23]));
+							}
 
 							$po_list = PoList::updateOrCreate(
 								['purchdoc' => $row[11], 'item' => sprintf("%'.0" . 5 . "d", trim($row[12], ' '))],
@@ -922,8 +942,8 @@ class PurchaseOrderController extends Controller
 									'price' => $price,
 									'curr' => $row[20],
 									'order_no' => $row[21],
-									'reply_date' => date('Y-m-d', strtotime($row[22])),
-									'create_date' => date('Y-m-d', strtotime($row[23])),
+									'reply_date' => $reply_date,
+									'create_date' => $create_date,
 									'delay' => $row[24],
 									'reply_qty' => str_replace('"','',str_replace(',','',$row[25])),
 									'comment' => $row[26],
@@ -1095,5 +1115,126 @@ class PurchaseOrderController extends Controller
 		})
 		->rawColumns(['action' => 'action', 'status'=>'status'])
 		->make(true);
+	}
+
+	public function exportPoList(Request $request)
+	{
+		return Excel::create(new POExport($request->get('vendor'),$request->get('material'),$request->get('purchdoc'),$request->get('order_date_from'), $request->get('order_date_to'), $request->get('deliv_date_from'), $request->get('deliv_date_to'), $request->get('status'), $request->get('pgr')), 'po_list.xlsx');
+	}
+
+	public function export(Request $request)
+	{
+		$po_lists = PoList::leftJoin('purchase_orders',  function($join)
+		{
+			$join->on('purchase_orders.purchdoc', '=', 'po_lists.purchdoc');
+			$join->on('purchase_orders.item', '=', 'po_lists.item');
+		})
+		->select('po_lists.porg', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.NAME', 'po_lists.country', 'po_lists.material', 'po_lists.description', 'po_lists.plnt', 'po_lists.sloc', 'po_lists.sc_vendor', 'po_lists.cost_ctr', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.acctassigcat', 'po_lists.order_date', 'po_lists.deliv_date', 'po_lists.order_qty', 'po_lists.deliv_qty', 'po_lists.base_unit_of_measure', 'po_lists.price', 'po_lists.curr', 'po_lists.order_no', 'po_lists.reply_date', 'po_lists.create_date', 'po_lists.delay', 'po_lists.reply_qty', 'po_lists.comment', 'po_lists.del', 'po_lists.incomplete','po_lists.compl', 'po_lists.ctr', 'po_lists.spt', 'po_lists.stock', 'po_lists.lt', 'po_lists.dsf', 'po_lists.die_end', 'purchase_orders.order_no', 'purchase_orders.deliv_date');
+
+		if($request->get('pgr') != null){
+			$po_lists = $po_lists->whereIn('po_lists.pgr', $request->get('pgr'));
+		}
+
+		if(strlen($request->get('status')) == 0){
+			$po_lists = $po_lists->where('po_file.remark', '=', null);
+		}
+
+		if(strlen($request->get('status')) == 1){
+			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
+		}
+
+		if(strlen($request->get('order_date_from')) > 0){
+			$order_date_from = date('Y-m-d', strtotime($request->get('order_date_from')));
+			$po_lists = $po_lists->where(DB::raw('DATE_FORMAT(po_lists.order_date, "%Y-%m-%d")'), '>=', $order_date_from);
+		}
+
+		if(strlen($request->get('order_date_to')) > 0){
+			$order_date_to = date('Y-m-d', strtotime($request->get('order_date_to')));
+			$po_lists = $po_lists->where(DB::raw('DATE_FORMAT(po_lists.order_date, "%Y-%m-%d")'), '<=', $order_date_to);
+		}
+
+		if(strlen($request->get('deliv_date_from')) > 0){
+			$deliv_date_from = date('Y-m-d', strtotime($request->get('deliv_date_from')));
+			$po_lists = $po_lists->where(DB::raw('DATE_FORMAT(po_lists.deliv_date, "%Y-%m-%d")'), '>=', $deliv_date_from);
+		}
+
+		if(strlen($request->get('deliv_date_to')) > 0){
+			$deliv_date_to = date('Y-m-d', strtotime($request->get('deliv_date_to')));
+			$po_lists = $po_lists->where(DB::raw('DATE_FORMAT(po_lists.deliv_date, "%Y-%m-%d")'), '<=', $deliv_date_to);
+		}
+
+		if(strlen($request->get('purchdoc')) > 0){
+			$purchdoc = explode(",", $request->get('purchdoc'));
+			$po_lists = $po_lists->whereIn('po_lists.purchdoc', $purchdoc);
+		}
+
+		if(strlen($request->get('material')) > 0){
+			$material = explode(",", $request->get('material'));
+			$po_lists = $po_lists->whereIn('po_lists.material', $material);
+		}
+
+		if(strlen($request->get('item')) > 0){
+			$item = explode(",", $request->get('item'));
+			$po_lists = $po_lists->whereIn('po_lists.item', $item);
+		}
+
+		if(strlen($request->get('vendor')) > 0){
+			$vendor = explode(",", $request->get('vendor'));
+			$po_lists = $po_lists->whereIn('po_lists.vendor', $vendor);
+		}
+
+		$po_lists = $po_lists->distinct()->get()->toArray();
+
+		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','order_no','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_no','deliv_date');
+
+		foreach ($po_lists as $key) {
+			$po_array[] = array(
+				'porg' => $key['porg'],
+				'pgr' => $key['pgr'],
+				'vendor' => $key['vendor'],
+				'NAME' => $key['NAME'],
+				'country' => $key['country'],
+				'material' => $key['material'],
+				'description' => $key['description'],
+				'plnt' => $key['plnt'],
+				'sloc' => $key['sloc'],
+				'sc_vendor' => $key['sc_vendor'],
+				'cost_ctr' => $key['cost_ctr'],
+				'purchdoc' => $key['purchdoc'],
+				'item' => $key['item'],
+				'acctassigcat' => $key['acctassigcat'],
+				'order_date' => $key['order_date'],
+				'deliv_date' => $key['deliv_date'],
+				'order_qty' => $key['order_qty'],
+				'deliv_qty' => $key['deliv_qty'],
+				'base_unit_of_measure' => $key['base_unit_of_measure'],
+				'price' => $key['price'],
+				'curr' => $key['curr'],
+				'order_no' => $key['order_no'],
+				'reply_date' => $key['reply_date'],
+				'create_date' => $key['create_date'],
+				'delay' => $key['delay'],
+				'reply_qty' => $key['reply_qty'],
+				'comment' => $key['comment'],
+				'del' => $key['del'],
+				'incomplete' => $key['incomplete'],
+				'compl' => $key['compl'],
+				'ctr' => $key['ctr'],
+				'spt' => $key['spt'],
+				'stock' => $key['stock'],
+				'lt' => $key['lt'],
+				'dsf' => $key['dsf'],
+				'die_end' => $key['die_end'],
+				'order_no' => $key['order_no'],
+				'deliv_date' => $key['deliv_date']
+			);
+		}
+
+		Excel::create('PO List', function($excel) use ($po_array){
+			$excel->setTitle('PO List');
+			$excel->sheet('PO Data', function($sheet) use ($po_array){
+				$sheet->fromArray($po_array, null, 'A1', false, false);
+			});
+		})->download('xlsx');
 	}
 }

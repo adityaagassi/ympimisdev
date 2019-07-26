@@ -164,13 +164,14 @@
     });
 
     var overtime_id;
+    var table;
 
     $(document).ready(function() {
       drawTable();
     })
 
     function drawTable() {
-      var table = $('#overtimeTable').DataTable({
+      table = $('#overtimeTable').DataTable({
         'dom': 'Bfrtip',
         'responsive': true,
         'lengthMenu': [
@@ -312,6 +313,18 @@
         $("#note").val(newNoteArr);
 
       })
+    }
+
+    function delete_ot(id) {
+      var data = {
+        id : id
+      };
+
+      if (confirm("Are you sure want to delete SPL "+id+"?")) {
+        $.post('{{ url("delete/overtime") }}', data, function(result, status, xhr){
+          table.ajax.reload();
+        })
+      }
     }
 
     function edit(id) {

@@ -434,8 +434,8 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
 	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
-	Route::post('input/ng_middle_kensa', 'MiddleProcessController@inputNgMiddleKensa');
-	Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
+	Route::post('input/middle/kensa', 'MiddleProcessController@inputMiddleKensa');
+	// Route::post('input/result_middle_kensa', 'MiddleProcessController@inputResultMiddleKensa');
 	Route::post('print/middle/barrel', 'MiddleProcessController@printMiddleBarrel');
 	Route::post('scan/middle/barrel', 'MiddleProcessController@scanMiddleBarrel');
 	Route::post('post/middle_return/barrel_return', 'MiddleProcessController@postProcessMiddleReturn');

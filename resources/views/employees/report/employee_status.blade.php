@@ -58,6 +58,44 @@
 		<div class="col-xs-12">
 			<div id="chart"></div>
 
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 style="float: right;" id="modal-title"></h4>
+							<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
+										<thead>
+											<tr>
+												<th>Employee ID</th>
+												<th>Employee Name</th>
+												<th>Division</th>
+												<th>Department</th>
+												<th>Section</th>
+												<th>Sub Section</th>
+												<th>Entry Date</th>
+												<th>Employee Status</th>
+												<th>Status</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
 		</div>
 	</div>
 
@@ -88,63 +126,71 @@
 			ctg:'{{$title}}'
 		};
 
-		$.get('{{ url("fetch/report/gender") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/report/stat") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					var seriesL, seriesP;
+					var ctg = [], series = [];
 
-					$.each(result.manpower_by_gender, function(key, value) {
-						if (value.gender == "L") {
-							seriesL = value.jml;
-						} else if (value.gender == "P") {
-							seriesP = value.jml;
-						}
+					$.each(result.datas, function(key, value) {
+						ctg.push(value.status);
+						series.push(value.jml);
 					})
 
-					Highcharts.chart('chart', {
+					$('#chart').highcharts({
 						chart: {
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false,
-							type: 'pie'
+							type: 'column'
 						},
 						title: {
 							text: '{{$title}}'
 						},
-						tooltip: {
-							pointFormat: '<b>{point.percentage:.1f}%</b>'
+						xAxis: {
+							type: 'category',
+							categories: ctg
+						},
+						yAxis: {
+							type: 'logarithmic',
+							title: {
+								text: 'Total Employee'
+							}
+						},
+						legend: {
+							enabled: false
 						},
 						plotOptions: {
-							pie: {
-								allowPointSelect: true,
-								cursor: 'pointer',
-								dataLabels: {
-									enabled: false
-								},
-								showInLegend: true
-							},
 							series: {
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											ShowModal(this.category);
+										}
+									}
+								},
+								borderWidth: 0,
 								dataLabels: {
 									enabled: true,
-									format: '<b>{point.name}</b>: {point.y} Manpower',
-									style: {
-										color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-									}
+									format: '{point.y}'
 								}
 							}
 						},
-						series: [{
-							name: 'Gender',
-							colorByPoint: true,
-							data: [{
-								name: 'Male',
-								y: seriesL
-							}, {
-								name: 'Female',
-								y: seriesP
-							}]
-						}]
-					});
+						credits: {
+							enabled: false
+						},
+
+						tooltip: {
+							formatter:function(){
+								return this.key + ' : ' + this.y;
+							}
+						},
+
+						"series": [
+						{
+							"name": "By Status",
+							"colorByPoint": true,
+							"data": series
+						}
+						]
+					})
 				} else{
 					alert('Attempt to retrieve data failed');
 				}

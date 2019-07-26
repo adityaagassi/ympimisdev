@@ -77,7 +77,8 @@
 
   <ol class="breadcrumb">
   	<li>
-  		<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white">Create {{ $page }}</a>
+  		<!-- <a href="{{ url("index/termination") }}"  class="btn btn-sm bg-red" style="color:white"><i class="fa fa-ban"></i>Termination</a> -->
+  		<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white"><i class="fa fa-plus"></i>Create {{ $page }}</a>
   	</li>
   </ol>
 </section>
@@ -350,10 +351,6 @@
 
 							<div class="row">
 								<div class="col-md-5">
-									{{-- <div class="pull-right">
-										<input type="text" id="status_old" class="form-control" readonly>
-									</div>
-									--}}
 									<div class="text-right" style="font-size: 15pt" id="stat">status</div>
 								</div>
 
@@ -368,10 +365,22 @@
 										@endforeach
 									</select>
 								</div>
+
+								<div class="col-md-5">
+									<div class="text-right" style="font-size: 15pt">Valid from</div>
+								</div>
+
+								<div class="col-md-2">
+									<div class="text-center" style="font-size: 15pt"><i class="fa fa-arrow-right"></i></div>
+								</div>
+
+								<div class="col-lg-4">
+									<input type="text" class="form-control datepicker" placeholder="select valid date" id="valid_from_2">
+								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button class="btn btn-success">Update</button>
+							<button class="btn btn-success" onclick="upgrade()">Update</button>
 						</div>
 					</div>
 				</div>
@@ -402,6 +411,12 @@
 			autoclose: true,
 			format: 'yyyy-mm-dd',
 			todayHighlight: true
+		});
+
+		$('#valid_from_2').datepicker({
+			autoclose: true,
+			format: "dd-mm-yyyy",
+			todayHighlight: true,
 		});
 		
 		fillmasteremp();
@@ -541,6 +556,18 @@
 							alert('Disconnected from server');
 						}
 					});
+			}
+
+			function upgrade() {
+				var valid_to = $("#valid_from_2").val();
+				if (valid_to == "") {
+					alert("kosong");
+					return false;
+				}
+
+				$.post('{{ url("fetch/masterempdetail") }}', data, function(result, status, xhr){
+
+				})
 			}
 
 			function modalUpgrade(emp_id, name, status) {

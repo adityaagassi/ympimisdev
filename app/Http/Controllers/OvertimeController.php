@@ -1002,7 +1002,7 @@ public function fetchOvertime()
 		&nbsp;
 		<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="details(this.id)" id="'.$get_overtime->overtime_id.'">Detail</a>
 		&nbsp;
-		<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="delete(this.id)" id="'.$get_overtime->overtime_id.'"><i class="fa fa-trash"></i></a>';
+		<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="delete_ot(this.id)" id="'.$get_overtime->overtime_id.'"><i class="fa fa-trash"></i></a>';
 	})
 	->rawColumns(['action' => 'action'])
 	->make(true);
@@ -1064,6 +1064,20 @@ public function graphPrint(Request $request)
 		'datas' => $get_graph
 	);
 	return Response::json($response);
+}
+
+public function deleteOvertime(Request $request)
+{
+	Overtime::where('overtime_id',$request->get('id'))->delete();
+	$response = array(
+		'status' => true
+	);
+	return Response::json($response);
+}
+
+public function indexReportOvertimeAll()
+{
+	return view('overtimes.reports.overtime_monthly')->with('page', 'Overtime Management by NIK');
 }
 
 public function tes(Request $request){

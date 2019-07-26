@@ -55,12 +55,18 @@ class EmployeeController extends Controller
 // master emp
   public function index(){
     return view('employees.master.index',array(
-      'status' => $this->status ))->with('page', 'Master Employee');
+      'status' => $this->status))->with('page', 'Master Employee')->with('head', 'Employees Data');
   }
 
   public function indexTotalMeeting()
   {
     return view('employees.report.total_meeting')->with('page', 'Total Meeting');
+  }
+
+  public function indexTermination()
+  {
+    return view('employees.master.termination',array(
+      'status' => $this->status))->with('page', 'Termination')->with('head', 'Employees Data');
   }
 
   public function updateEmp($id){
@@ -125,8 +131,6 @@ class EmployeeController extends Controller
         <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>';
       }
     })
-
-
 
     ->rawColumns(['action' => 'action'])
     ->make(true);
@@ -416,7 +420,7 @@ catch (QueryException $e){
     // master promotion_logs
 
 public function indexpromotion(){
-  return view('employees.master.promotion')->with('page', 'Promotion');
+  return view('employees.master.promotion')->with('page', 'Promotion')->with('head', 'Employees Data');
 }
 
 public function fetchpromotion(Request $request)
@@ -478,7 +482,7 @@ public function changePromotion(Request $request)
 
 public function indexMutation()
 {
-  return view('employees.master.mutation')->with('page', 'Mutation');
+  return view('employees.master.mutation')->with('page', 'Mutation')->with('head', 'Employees Data');
 }
 
 public function fetchMutation(Request $request)
@@ -544,51 +548,55 @@ public function changeMutation(Request $request)
   return Response::json($response);
 }
 
+public function changeStatusEmployee(Request $request)
+{
+  $emp_id = $request->get('emp_id');
+
+  $data = MutationLog::where('employee_id','=' , $emp_id)
+  ->latest()
+  ->first();
+  $data->valid_to = $request->get('valid_to');
+  $data->save();
+
+  $mutation = new MutationLog([
+    'employee_id' => $emp_id,
+    'cost_center' => $request->get('cc'),
+    'division' => $request->get('division'),
+    'department' => $request->get('department'),
+    'section' => $request->get('section'),
+    'sub_section' => $request->get('subsection'),
+    'group' => $request->get('group'),
+    'reason' => $request->get('reason'),
+    'valid_from' => $request->get('valid_from'),
+    'created_by' => 1
+  ]);
+
+  $mutation->save();
+
+  $response = array(
+    'status' => true,
+    'data' => $mutation,
+  );
+  return Response::json($response);
+}
+
     //end mutation_log
 
  // --------------------- Total Meeting Report -------------------------
 
 public function indexReportGender()
 {
-  return view('employees.report.manpower_by_gender')->with('page', 'Manpower by Gender');
+  return view('employees.report.manpower_by_gender',array(
+    'title' => 'Report Employee by Gender',
+    'title_jp' => '??'
+  ))->with('page', 'Manpower by Gender');
 }
 
 public function fetchReportGender()
 {
-  $tgl = date('Y-m-d');
-  $fiskal = "select fiscal_year from weekly_calendars WHERE week_date = '".$tgl."'";
-
-  $get_fiskal = db::select($fiskal);
-
-  $gender = "select mon, gender, sum(tot_karyawan) as tot_karyawan from
-  (select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
-  (
-  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
-  from weekly_calendars
-  ) as b
-  join
-  (
-  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, hire_date, employee_id, gender
-  from employees
-  ) as a
-  on a.fy = b.fiscal_year
-  where mon <= date_format('".$tgl."','%Y-%m-%d') 
-  group by mon, gender
-  union all
-  select mon, gender, count(if(if(date_format(a.entry_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
-  (
-  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
-  from weekly_calendars
-  ) as b
-  join
-  (
-  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, entry_date, nik, gender
-  from outsources
-  ) as a
-  on a.fy = b.fiscal_year
-  where mon <= date_format('".$tgl."','%Y-%m-%d') 
-  group by mon, gender) semua
-  group by mon, gender";
+  $gender = "select COUNT(employee_id) as jml, gender from employees
+  where end_date is null
+  GROUP BY gender";
 
   $get_manpower = db::select($gender);
 
@@ -762,5 +770,80 @@ public function indexEmployeeService()
 ))->with('page', 'Employment Service');
 }
 // -------------------------  End Employee Service --------------------
+
+public function indexReportStatus()
+{
+  return view('employees.report.employee_status',  array(
+    'title' => 'Report Employee by Status Kerja',
+    'title_jp' => '??'
+  ))->with('page', 'Manpower by Status Kerja');
+}
+
+public function indexReportGrade()
+{
+  return view('employees.report.employee_status',  array(
+    'title' => 'Report Employee by Grade',
+    'title_jp' => '??'
+  ))->with('page', 'Manpower by Grade');
+}
+
+public function indexReportDepartment()
+{
+  return view('employees.report.employee_status',  array(
+    'title' => 'Report Employee by Department',
+    'title_jp' => '??'
+  ))->with('page', 'Manpower by Department');
+}
+
+public function indexReportJabatan()
+{
+  return view('employees.report.employee_status',  array(
+    'title' => 'Report Employee by Jabatan',
+    'title_jp' => '??'
+  ))->with('page', 'Manpower by jabatan');
+}
+
+public function fetchReport(Request $request)
+{
+  if ($request->get("ctg") == 'Report Employee by Status Kerja') {
+   $emp = Employee::leftJoin(db::raw("(select employee_id, status from employment_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
+   ->whereNull("end_date")
+   ->select("status", db::raw("count(employees.employee_id) as jml"))
+   ->groupBy("emp_log.status")
+   ->get();
+ } 
+ else if ($request->get("ctg") == 'Report Employee by Grade') 
+ {
+  $emp = Employee::leftJoin(db::raw("(select employee_id, grade_code as status from promotion_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
+  ->whereNull("end_date")
+  ->select("status", db::raw("count(employees.employee_id) as jml"))
+  ->groupBy("emp_log.status")
+  ->orderBy(db::raw('FIELD(emp_log.status, "E0", "E1", "E2","E3", "E4", "E5","E6", "E7", "E8","L1", "L2", "L3","L4", "M1", "M2","M3", "M4","D3")'))
+  ->get();
+}
+else if ($request->get("ctg") == 'Report Employee by Department') {
+  $emp = Employee::leftJoin(db::raw("(select employee_id, department as status from mutation_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
+  ->whereNull("end_date")
+  ->select("status", db::raw("count(employees.employee_id) as jml"))
+  ->groupBy("emp_log.status")
+  ->orderBy("jml","asc")
+  ->get();
+} else if ($request->get("ctg") == 'Report Employee by Jabatan') {
+  $emp = Employee::leftJoin(db::raw("(select employee_id, position as status from promotion_logs where valid_to is null and position <> '-') as emp_log"),"emp_log.employee_id","=","employees.employee_id")
+  ->whereNull("end_date")
+  ->whereNotNull("status")
+  ->select("status", db::raw("count(employees.employee_id) as jml"))
+  ->groupBy("emp_log.status")
+  ->orderBy("jml","asc")
+  ->get();
+}
+
+$response = array(
+  'status' => true,
+  'datas' => $emp,
+);
+
+return Response::json($response); 
+}
 
 }
