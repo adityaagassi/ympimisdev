@@ -113,7 +113,7 @@ class EmployeeController extends Controller
 
   public function fetchMasterEmp(){
     $emp = "select employees.employee_id,name,division, department,DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
-    LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
+    LEFT JOIN (select employee_id, division, department from mutation_logs where valid_to is null group by employee_id, division, department) mutation_logs on employees.employee_id = mutation_logs.employee_id
     left join (
     select employee_id, status from employment_logs 
     WHERE id IN (
@@ -646,6 +646,11 @@ public function fetchReportGender()
   return Response::json($response); 
 }
 
+public function fetchReportGender2()
+{
+  # code...
+}
+
 
 public function fetchReportStatus()
 {
@@ -907,11 +912,61 @@ public function exportBagian()
   }
 
   Excel::create('Bagian', function($excel) use ($bagian_array){
-    $excel->setTitle('PO List');
+    $excel->setTitle('Bagian List');
     $excel->sheet('Employee Bagian Data', function($sheet) use ($bagian_array){
       $sheet->fromArray($bagian_array, null, 'A1', false, false);
     });
   })->download('xlsx');
+}
+
+public function importBagian(Request $request)
+{
+  $id = Auth::id();
+  try{
+   
+
+   if($request->hasFile('importBagian')){
+    $file = $request->file('importBagian');
+    $data = file_get_contents($file);
+    $rows = explode("\r\n", $data);
+
+    foreach ($rows as $row)
+    {
+     if (strlen($row) > 0) {
+      $row = explode("\t", $row);
+
+      $date_from = date("Y-m-d",strtotime($row[7]));
+      
+      $date_to = date("Y-m-d",strtotime('-1 day', strtotime($row[7])));
+      Mutationlog::where('employee_id', $row[0])
+      ->orderBy('id','desc')
+      ->take(1)
+      ->update(['valid_to' => $date_to]);
+
+      $bagian = new Mutationlog([
+        'employee_id' => $row[0],
+        'cost_center' =>  $row[1],
+        'division' => $row[2],
+        'department' => $row[3],
+        'section' => $row[4],
+        'sub_section' => $row[5],
+        'group' => $row[6],
+        'valid_from' => $date_from,
+        'created_by' => $id
+      ]);
+
+      $bagian->save();
+    }
+  }
+}
+return redirect('/index/MasterKaryawan')->with('status', 'Update Bagian Employee Success')->with('page', 'Master Employee');
+}
+catch (QueryException $e){
+  // $emp = PresenceLog::where('presence_date','=',$tgl)
+  // ->forceDelete();
+  return redirect('/index/MasterKaryawan')->with('error', $e->getMessage())->with('page', 'Master Employee');
+}
+
 }
 
 }

@@ -83,16 +83,16 @@
                             {{$employee_service}}
                             @endif --}}
 
-                            <a href="http://172.17.128.4/myhris/management" target="blank">
+                            {{-- <a href="http://172.17.128.4/myhris/management" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Overtime (勤怠管理)
+                            </a><br> --}}
+                            <a href="{{ url("/index/employee_information") }}">
+                                <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
                             </a><br>
-                            {{-- <a href="{{ url("/index/employee_information") }}">
+                            {{-- <a href="http://172.17.128.4/myhris/management_mp" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
                             </a><br> --}}
-                            <a href="http://172.17.128.4/myhris/management_mp" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Infromation (社員構成)
-                            </a><br>
-                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="blank">
+                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
                                 <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
                             </a>
                         </td>
@@ -101,7 +101,7 @@
                         <td>
                             <span style="font-weight: bold;">Plant Maintenance (工場保全管理)</span>
                             <br>
-                            <a href="http://172.17.129.99/zed/dashboard/awal" target="blank">
+                            <a href="http://172.17.129.99/zed/dashboard/awal" target="_blank">
                                 <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                             </a>
                         </td>
@@ -110,7 +110,7 @@
                         <td>
                             <span style="font-weight: bold;">Total Meeting (トータルミーティング)</span>
                             <br>
-                            <a href="{{ url("index/report/total_meeting") }}" target="blank">
+                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
                             </a>
                         </td>
@@ -122,10 +122,10 @@
                             <a href="{{ url("index/employee/service") }}" target="blank">
                                 <i class="fa fa-caret-right"></i> Employment Service (???)
                             </a> --}}
-                            <span style="font-weight: bold;">Clinic Chart</span>
+                            <span style="font-weight: bold;">Clinic Chart (Japanese)</span>
                             <br>
-                            <a href="http://172.17.128.114/clinic-new/chart.php" target="blank">
-                                <i class="fa fa-caret-right"></i> Clinic Chart
+                            <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
+                                <i class="fa fa-caret-right"></i> Clinic Chart (Japanese)
                             </a>
                         </td>
                     </tr>

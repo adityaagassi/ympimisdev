@@ -56,8 +56,19 @@
 <section class="content" style="padding-left: 0px; padding-right: 0px;">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="chart"></div>
-
+			<table class="table table-responsive table-bordered">
+				<thead>
+					<tr>
+						<th>Period</th>
+						<th>Employee Id</th>
+						<th>Name</th>
+						<th>Department</th>
+						<th>Section</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
 		</div>
 	</div>
 
@@ -65,7 +76,6 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
@@ -88,63 +98,71 @@
 			ctg:'{{$title}}'
 		};
 
-		$.get('{{ url("fetch/report/gender2") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/report/stat") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					var seriesL, seriesP;
+					var ctg = [], series = [];
 
-					$.each(result.manpower_by_gender, function(key, value) {
-						if (value.gender == "L") {
-							seriesL = value.jml;
-						} else if (value.gender == "P") {
-							seriesP = value.jml;
-						}
+					$.each(result.datas, function(key, value) {
+						ctg.push(value.status);
+						series.push(value.jml);
 					})
 
-					Highcharts.chart('chart', {
+					$('#chart').highcharts({
 						chart: {
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false,
-							type: 'pie'
+							type: 'column'
 						},
 						title: {
 							text: '{{$title}}'
 						},
-						tooltip: {
-							pointFormat: '<b>{point.percentage:.1f}%</b>'
+						xAxis: {
+							type: 'category',
+							categories: ctg
+						},
+						yAxis: {
+							type: 'logarithmic',
+							title: {
+								text: 'Total Employee'
+							}
+						},
+						legend: {
+							enabled: false
 						},
 						plotOptions: {
-							pie: {
-								allowPointSelect: true,
-								cursor: 'pointer',
-								dataLabels: {
-									enabled: false
-								},
-								showInLegend: true
-							},
 							series: {
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											ShowModal(this.category);
+										}
+									}
+								},
+								borderWidth: 0,
 								dataLabels: {
 									enabled: true,
-									format: '<b>{point.name}</b>: {point.y} Manpower',
-									style: {
-										color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-									}
+									format: '{point.y}'
 								}
 							}
 						},
-						series: [{
-							name: 'Gender',
-							colorByPoint: true,
-							data: [{
-								name: 'Male',
-								y: seriesL
-							}, {
-								name: 'Female',
-								y: seriesP
-							}]
-						}]
-					});
+						credits: {
+							enabled: false
+						},
+
+						tooltip: {
+							formatter:function(){
+								return this.key + ' : ' + this.y;
+							}
+						},
+
+						"series": [
+						{
+							"name": "By Status",
+							"colorByPoint": true,
+							"data": series
+						}
+						]
+					})
 				} else{
 					alert('Attempt to retrieve data failed');
 				}

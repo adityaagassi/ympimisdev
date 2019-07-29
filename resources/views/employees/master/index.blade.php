@@ -77,8 +77,8 @@
 
   <ol class="breadcrumb">
   	<li>
-  		<a class="btn btn-primary btn-sm" style="color: white" href="{{ url("index/bagian/export") }}"><i class="fa fa-download"></i> Get Bagian Data</a>
-  		<button class="btn btn-primary btn-sm"><i class="fa fa-database"></i> Import Bagian</button>
+  		<a class="btn btn-warning btn-sm" style="color: white" href="{{ url("index/bagian/export") }}"><i class="fa fa-download"></i> Get Bagian Data</a>
+  		<button class="btn btn-primary btn-sm"  data-target="#modalImport" data-toggle="modal"><i class="fa fa-upload"></i> Import Bagian</button>
   		<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white"><i class="fa fa-plus"></i>Create {{ $page }}</a>
   	</li>
   </ol>
@@ -386,6 +386,26 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="modal fade" id="modalImport">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<form name="importForm2" method="post" action="{{ url('import/bagian') }}" enctype="multipart/form-data">
+							<input type="hidden" value="{{csrf_token()}}" name="_token" />
+							<div class="modal-header">
+								<h4>Import Data Employee Bagian</h4>
+							</div>
+							<div class="modal-body">
+								<input type="file" name="importBagian" id="importBagian" accept=".txt">
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary pull-right" type="submit"><i class="fa fa-upload"></i>&nbsp; Import</button>
+								<button class="btn btn-default pull-left" data-dismiss="modal" type="button">Close</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		</section>
 
 
@@ -538,7 +558,7 @@
 								$('#dev').text(result.detail[0].division);
 								$('#dep').text(result.detail[0].department);
 								$('#sec').text(result.detail[0].section);
-								$('#sub-sec').text(result.detail[0].subsection);
+								$('#sub-sec').text(result.detail[0].sub_section);
 								$('#group').text(result.detail[0].group);
 								$('#grade').text(result.detail[0].grade_code+" - "+result.detail[0].grade_name);
 								$('#jabatan').text(result.detail[0].position);

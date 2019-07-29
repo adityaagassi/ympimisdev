@@ -21,8 +21,6 @@ Route::get('/tes', function () {
 	return view('mails.stuffing');
 });
 Route::post('trial/tes', 'TrialController@tes');
-Route::get('index/buffing', 'TrialController@buffingIndex');
-Route::get('fetch/buffing', 'TrialController@fetchBuffingQueue');
 
 Route::get('/tes2', function () {
 	return view('purchase_orders.tes');
@@ -104,7 +102,7 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
 	Route::get('index/report/gender', 'EmployeeController@indexReportGender');
-	Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
+	Route::get('fetch/report/gender2', 'EmployeeController@fetchReportGender2');
 	Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
 	Route::get('index/report/grade', 'EmployeeController@indexReportGrade');
 	Route::get('index/report/department', 'EmployeeController@indexReportDepartment');
@@ -358,6 +356,7 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 
 	//import
 	Route::post('import/importEmp', 'EmployeeController@importEmp');
+	Route::post('import/bagian', 'EmployeeController@importBagian');
 });
 
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
@@ -442,7 +441,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('post/middle_return/return_inventory', 'MiddleProcessController@postReturnInventory');
 	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
-Route::get('fetch/result_middle_kensa', 'MiddleProcessController@fetchResultMiddleKensa');
+Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
@@ -450,6 +449,7 @@ Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
 Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBarrelMachine');
 Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
 Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
+Route::get('index/middle/buffing_board/{id}', 'MiddleProcessController@indexBuffingBoard');
 Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
 Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
 Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
@@ -459,6 +459,7 @@ Route::get('fetch/middle_return/barrel_return', 'MiddleProcessController@fetchPr
 Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBarrelReprint');
 Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
 Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddle');
+Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
