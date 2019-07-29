@@ -350,9 +350,15 @@
 		$('#loading').show();
 		$('#modalProgressTitle').hide();
 		$('#tableModal').hide();
+		if(name == 'VN'){
+			var hpl = 'VENOVA';
+		}
+		else{
+			var hpl = name;
+		}
 		var data = {
 			date:cat,
-			hpl:name
+			hpl:hpl
 		}
 		$.get('{{ url("fetch/display/modal_shipment_progress") }}', data, function(result, status, xhr){
 			if(result.status){
