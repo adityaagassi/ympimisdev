@@ -1778,7 +1778,7 @@ public function recordPianica2(Request $request){
 public function reportDayAwal()
   {
 
-    return view('pianica.reportAwalMonthly')->with('page', 'Report Kensa Awal / Akhir Monthly');
+    return view('pianica.reportAwalMonthly')->with('page', 'Monthly Report');
 }
 
 
@@ -1875,7 +1875,7 @@ select id,ng_name from ng_lists WHERE location='".$process."'  and ng_name='T. R
  on biri.tgl = rendah.tgl ";
 
 
- $query2=" select tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica from (
+ $query2=" SELECT 'visual' as pro,  tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica from (
 
 SELECT 'visual' as pro,frame.tgl, frame,rl,lower,handle,button,pianica from (
 SELECT week_date as tgl,sum(a.total) as frame from (
@@ -1997,10 +1997,75 @@ select id,ng_name from ng_lists WHERE location = 'PN_Kakuning_Visual_Pianica'
 
  ";
 
- if ($process != "PN_Kakuning_Visual") {
+ $query3="
+ SELECT week_date, 
+count(IF(ng ='Celah Lebar' and posisi ='low' ,1,null)) as CLebarL,
+count(IF(ng ='Celah Lebar' and posisi ='high' ,1,null)) as CLebarH,
+count(IF(ng ='Celah Sempit' and posisi ='low' ,1,null)) as CSempitL,
+count(IF(ng ='Celah Sempit' and posisi ='high' ,1,null)) as CSempitH,
+count(IF(ng ='Kepala Rusak' and posisi ='low' ,1,null)) as KRusakL,
+count(IF(ng ='Kepala Rusak' and posisi ='high' ,1,null)) as KRusakH,
+count(IF(ng ='Kotor' and posisi ='low' ,1,null)) as KotorL,
+count(IF(ng ='Kotor' and posisi ='high' ,1,null)) as KotorH,
+count(IF(ng ='Lekukan' and posisi ='low' ,1,null)) as LekukanL,
+count(IF(ng ='Lekukan' and posisi ='high' ,1,null)) as LekukanH,
+count(IF(ng ='Lengkung' and posisi ='low' ,1,null)) as LengkungL,
+count(IF(ng ='Lengkung' and posisi ='high' ,1,null)) as LengkungH,
+count(IF(ng ='Lepas' and posisi ='low' ,1,null)) as LepasL,
+count(IF(ng ='Lepas' and posisi ='high' ,1,null)) as LepasH,
+count(IF(ng ='Longgar' and posisi ='low' ,1,null)) as LonggarL,
+count(IF(ng ='Longgar' and posisi ='high' ,1,null)) as LonggarH,
+count(IF(ng ='Melekat' and posisi ='low' ,1,null)) as MelekatL,
+count(IF(ng ='Melekat' and posisi ='high' ,1,null)) as MelekatH,
+count(IF(ng ='Pangkal Menempel' and posisi ='low' ,1,null)) as PMenempelL,
+count(IF(ng ='Pangkal Menempel' and posisi ='high' ,1,null)) as PMenempelH,
+count(IF(ng ='Panjang' and posisi ='low' ,1,null)) as PanjangL,
+count(IF(ng ='Panjang' and posisi ='high' ,1,null)) as PanjangH,
+count(IF(ng ='Patah' and posisi ='low' ,1,null)) as PatahL,
+count(IF(ng ='Patah' and posisi ='high' ,1,null)) as PatahH,
+count(IF(ng ='Salah Posisi' and posisi ='low' ,1,null)) as SPosisiL,
+count(IF(ng ='Salah Posisi' and posisi ='high' ,1,null)) as SPosisiH,
+count(IF(ng ='Terbalik' and posisi ='low' ,1,null)) as TerbalikL,
+count(IF(ng ='Terbalik' and posisi ='high' ,1,null)) as TerbalikH,
+count(IF(ng ='Ujung Menempel' and posisi ='low' ,1,null)) as UMenempelL,
+count(IF(ng ='Ujung Menempel' and posisi ='high' ,1,null)) as UMenempelH
+from 
+(SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
+left join (
+SELECT ng, posisi, created_at FROM detail_bensukis) as d on DATE_FORMAT(d.created_at,'%Y-%m-%d') = s.week_date
+group by week_date
+ ";
+
+ $query4="
+ SELECT week_date, 
+count(IF(ng ='Celah Lebar' ,1,null)) as CLebar,
+count(IF(ng ='Celah Sempit' ,1,null)) as CSempit,
+count(IF(ng ='Kepala Rusak' ,1,null)) as KRusak,
+count(IF(ng ='Kotor' ,1,null)) as Kotor,
+count(IF(ng ='Lekukan' ,1,null)) as Lekukan,
+count(IF(ng ='Lengkung' ,1,null)) as Lengkung,
+count(IF(ng ='Lepas' ,1,null)) as Lepas,
+count(IF(ng ='Longgar' ,1,null)) as Longgar,
+count(IF(ng ='Melekat' ,1,null)) as Melekat,
+count(IF(ng ='Pangkal Menempel' ,1,null)) as PMenempel,
+count(IF(ng ='Panjang' ,1,null)) as Panjang,
+count(IF(ng ='Patah' ,1,null)) as Patah,
+count(IF(ng ='Salah Posisi' ,1,null)) as SPosisi,
+count(IF(ng ='Terbalik' ,1,null)) as Terbalik,
+count(IF(ng ='Ujung Menempel',1,null)) as UMenempel
+from 
+(SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
+left join (
+SELECT ng, posisi, created_at FROM detail_bensukis) as d on DATE_FORMAT(d.created_at,'%Y-%m-%d') = s.week_date
+group by week_date
+ ";
+
+ if ( $process == "PN_Kensa_Akhir" || $process == "PN_Kensa_Awal") {
      $record =DB::select($query); 
+    }else if($process == "PN_Kakuning_Visual"){
+    $record =DB::select($query2); 
     }else{
-       $record =DB::select($query2); 
+    $record =DB::select($query3); 
     } 
 
 
@@ -2028,7 +2093,7 @@ public function reportDayAwalDataGrafik(Request $request){
          $process = 'PN_Kensa_Awal'; 
     }
 
-    $query = "SELECT 'awal' as pro,biri.tgl, biri, oktaf, tinggi, rendah,target from (
+    $query = "SELECT 'awal' as pro,biri.tgl, biri, oktaf, tinggi, rendah,COALESCE(target,0) target from (
 SELECT week_date as tgl,COALESCE(a.total,0) as biri from (
 SELECT b.ng_name, COALESCE(a.total,0) total, a.tgl from (
 SELECT ng, COUNT(qty) as total, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location='".$process."' 
@@ -2115,7 +2180,7 @@ GROUP BY material_number, due_date
 ) target on biri.tgl = target.due_date
  ";
 
- $query2=" select tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica, target from (
+ $query2=" SELECT 'visual' as pro, tgl, COALESCE(frame,0) as frame, COALESCE(rl,0) as rl, COALESCE(lower,0) as lower, COALESCE(handle,0) as handle, COALESCE(button,0) as button, COALESCE(pianica,0) as pianica, COALESCE(target,0) target from (
 
 SELECT 'visual' as pro,frame.tgl, frame,rl,lower,handle,button,pianica, target from (
 SELECT week_date as tgl,sum(a.total) as frame from (
@@ -2247,10 +2312,87 @@ GROUP BY material_number, due_date
 
  ";
 
- if ($process != "PN_Kakuning_Visual") {
+ $query3 ="
+
+ SELECT week_date as tgl, 
+count(IF(ng ='Celah Lebar' and posisi ='low' ,1,null)) as CLebarL,
+count(IF(ng ='Celah Lebar' and posisi ='high' ,1,null)) as CLebarH,
+count(IF(ng ='Celah Sempit' and posisi ='low' ,1,null)) as CSempitL,
+count(IF(ng ='Celah Sempit' and posisi ='high' ,1,null)) as CSempitH,
+count(IF(ng ='Kepala Rusak' and posisi ='low' ,1,null)) as KRusakL,
+count(IF(ng ='Kepala Rusak' and posisi ='high' ,1,null)) as KRusakH,
+count(IF(ng ='Kotor' and posisi ='low' ,1,null)) as KotorL,
+count(IF(ng ='Kotor' and posisi ='high' ,1,null)) as KotorH,
+count(IF(ng ='Lekukan' and posisi ='low' ,1,null)) as LekukanL,
+count(IF(ng ='Lekukan' and posisi ='high' ,1,null)) as LekukanH,
+count(IF(ng ='Lengkung' and posisi ='low' ,1,null)) as LengkungL,
+count(IF(ng ='Lengkung' and posisi ='high' ,1,null)) as LengkungH,
+count(IF(ng ='Lepas' and posisi ='low' ,1,null)) as LepasL,
+count(IF(ng ='Lepas' and posisi ='high' ,1,null)) as LepasH,
+count(IF(ng ='Longgar' and posisi ='low' ,1,null)) as LonggarL,
+count(IF(ng ='Longgar' and posisi ='high' ,1,null)) as LonggarH,
+count(IF(ng ='Melekat' and posisi ='low' ,1,null)) as MelekatL,
+count(IF(ng ='Melekat' and posisi ='high' ,1,null)) as MelekatH,
+count(IF(ng ='Pangkal Menempel' and posisi ='low' ,1,null)) as PMenempelL,
+count(IF(ng ='Pangkal Menempel' and posisi ='high' ,1,null)) as PMenempelH,
+count(IF(ng ='Panjang' and posisi ='low' ,1,null)) as PanjangL,
+count(IF(ng ='Panjang' and posisi ='high' ,1,null)) as PanjangH,
+count(IF(ng ='Patah' and posisi ='low' ,1,null)) as PatahL,
+count(IF(ng ='Patah' and posisi ='high' ,1,null)) as PatahH,
+count(IF(ng ='Salah Posisi' and posisi ='low' ,1,null)) as SPosisiL,
+count(IF(ng ='Salah Posisi' and posisi ='high' ,1,null)) as SPosisiH,
+count(IF(ng ='Terbalik' and posisi ='low' ,1,null)) as TerbalikL,
+count(IF(ng ='Terbalik' and posisi ='high' ,1,null)) as TerbalikH,
+count(IF(ng ='Ujung Menempel' and posisi ='low' ,1,null)) as UMenempelL,
+count(IF(ng ='Ujung Menempel' and posisi ='high' ,1,null)) as UMenempelH
+from 
+(SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
+left join (
+SELECT ng, posisi, created_at FROM detail_bensukis) as d on DATE_FORMAT(d.created_at,'%Y-%m-%d') = s.week_date
+group by week_date
+ ";
+
+ $query4="
+ select a.*, COALESCE(target,0) target from (
+ SELECT week_date as tgl, 
+count(IF(ng ='Celah Lebar' ,1,null)) as CLebar,
+count(IF(ng ='Celah Sempit' ,1,null)) as CSempit,
+count(IF(ng ='Kepala Rusak' ,1,null)) as KRusak,
+count(IF(ng ='Kotor' ,1,null)) as Kotor,
+count(IF(ng ='Lekukan' ,1,null)) as Lekukan,
+count(IF(ng ='Lengkung' ,1,null)) as Lengkung,
+count(IF(ng ='Lepas' ,1,null)) as Lepas,
+count(IF(ng ='Longgar' ,1,null)) as Longgar,
+count(IF(ng ='Melekat' ,1,null)) as Melekat,
+count(IF(ng ='Pangkal Menempel' ,1,null)) as PMenempel,
+count(IF(ng ='Panjang' ,1,null)) as Panjang,
+count(IF(ng ='Patah' ,1,null)) as Patah,
+count(IF(ng ='Salah Posisi' ,1,null)) as SPosisi,
+count(IF(ng ='Terbalik' ,1,null)) as Terbalik,
+count(IF(ng ='Ujung Menempel',1,null)) as UMenempel
+from 
+(SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
+left join (
+SELECT ng, posisi, created_at FROM detail_bensukis) as d on DATE_FORMAT(d.created_at,'%Y-%m-%d') = s.week_date
+group by week_date ) a
+
+left join (
+SELECT SUM(total) as target, due_date from (
+SELECT material_number, due_date, sum(quantity) as total from production_schedules WHERE material_number in (
+SELECT material_number from materials where materials.category = 'FG' and materials.origin_group_code = '073')
+GROUP BY material_number, due_date
+) a GROUP BY due_date
+) target on a.tgl = target.due_date  ORDER BY tgl asc
+
+ ";
+
+
+     if ( $process == "PN_Kensa_Akhir" || $process == "PN_Kensa_Awal") {
      $record =DB::select($query); 
+    }else if($process == "PN_Kakuning_Visual"){
+    $record =DB::select($query2); 
     }else{
-       $record =DB::select($query2); 
+    $record =DB::select($query4); 
     } 
 
     $response = array(

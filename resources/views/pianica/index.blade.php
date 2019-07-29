@@ -42,7 +42,7 @@
 			   <a href="{{ url("/index/reportVisual") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kakunin Visual All Line</a>
 			   <a href="{{ url("/index/record") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Pianica Inventories</a>
 
-			    <a href="{{ url("/index/reportDayAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Monthly </a>
+			    <a href="{{ url("/index/reportDayAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monthly Report </a>
 		
 		</div>
 	</div>
