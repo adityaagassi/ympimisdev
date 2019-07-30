@@ -284,6 +284,11 @@
 						<input type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw"  name="modelText" id="modelText2"  disabled>
 						<BR><BR>
 						<center>
+						<button id="japnnewr1" class="btn btn-md btn-warning" onclick="japannewr('Japan');" style="display: block;">Japan</button>
+						<button id="japnnewr2" class="btn btn-md btn-warning" onclick="japannewr('Not Japan');" style="display: none;">Not Japan</button>
+						<b id="japnnewr3" style="color:red">Not Japan</b>
+						</center>
+						<center>
 							<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
 							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label Besar</button>
 							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label Kecil</button><br><br>
@@ -1105,12 +1110,19 @@
 	}
 
 	function repintBesar() {
-			var sn = $('#sn').val();
+		var sn = $('#sn').val();
+		var	jbutton = $('#japnnewr3').text();
+		var j = "";
+		if (jbutton =="Japan") {
+			j = "J";
+		}else{
+			j = "NJ";
+		}
 		var data = {
 			sn:sn,
 		}
 
-		$.get('{{ url("index/getdatareprintAll") }}', data, function(result, status, xhr){
+		$.get('{{ url("index/getdatareprintAll2") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
@@ -1118,7 +1130,7 @@
 				if(result.status){
 					// alert(result.reprint[0].material_number)
 					
-					window.open('{{ url("index/label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+result.reprint[0].status+'RB', '_blank');
+					window.open('{{ url("index/label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+j+'RB', '_blank');
 					
 				}
 				else{
@@ -1131,6 +1143,21 @@
 				alert('Disconnected from sever');
 			}
 		});
+	}
+
+		function japannewr(jp) {
+		var jp = jp;
+		$('#japnnewr3').text(jp);
+		var	jbutton = $('#japnnewr3').text();
+		if (jbutton =="Not Japan") {
+			$('#japnnewr1').css({'display':'block'});
+			$('#japnnewr2').css({'display':'none'});
+		}else{
+			$('#japnnewr2').css({'display':'block'});
+			$('#japnnewr1').css({'display':'none'});
+		}
+
+		
 	}
 
 </script>

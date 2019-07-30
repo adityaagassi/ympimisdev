@@ -1058,6 +1058,174 @@ return Response::json($response);
 
 
 
+//edit reprint ali
+
+public function getModelReprintAll2(Request $request)
+{
+	$query ="SELECT material_number,serial_number from materials 
+	LEFT JOIN log_processes 
+	on materials.material_description = log_processes.model
+	where serial_number ='".$request->get('sn')."' and process_code='4'";
+
+	$reprint = DB::select($query);
+	$response = array(
+		'status' => true,
+		'reprint' => $reprint,
+	);
+	return Response::json($response);
+}
+
+public function getsnsax2(Request $request)
+{
+	$sn = StampInventory::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+	$sn2 = LogProcess::where('process_code', '=', '4')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+
+	if ($sn != null) {
+		$response = array(
+			'status' => true,
+			'message' => '1',
+			'model' => $sn->model,
+			'sn' => $sn->serial_number,
+		);
+		return Response::json($response);
+	}
+	elseif ($sn2 != null) {
+		$response = array(
+			'status' => true,
+			'message' => '2',
+			'model' => $sn2->model,
+			'sn' => $sn2->serial_number,
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false,
+			'message' => 'Serial Number not registered',
+		);
+		return Response::json($response);
+	}
+}
+
+public function label_kecil($id,$remark){
+	$remark2 = $remark;
+	$sn = $id;
+	$date = date('Y-m-d');
+	
+	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+(
+SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='4' and origin_group_code='043'
+)";
+	$barcode = DB::select($query);
+	
+	return view('processes.assy_fl_saxT.print_label_kecil',array(
+		'barcode' => $barcode,
+		'sn' => $sn,
+		'remark' => $remark2,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function label_besar($id,$gmc,$remark){
+
+	$date = date('Y-m-d');
+	if ($remark =="J") {
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="NJ"){
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="JR") {
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}
+
+	elseif ($remark =="NJR"){
+		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+	}elseif ($remark =="JRB") {
+		$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		LEFT JOIN 
+		(
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4'
+		) c on a.serial_number = c.sn2";
+	}
+
+	elseif ($remark =="NJRB"){
+		$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		) a INNER JOIN (
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+		LEFT JOIN 
+		(
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4'
+		) c on a.serial_number = c.sn2";
+	}
+
+	$barcode = DB::select($query);
+
+	$date = date('Y-m-d');
+	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+(
+SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
+)";
+	$date2 = DB::select($querydate);
+	
+	return view('processes.assy_fl_saxT.print_label_besar',array(
+		'barcode' => $barcode,
+		'date2' => $date2,
+
+		'remark' => $remark,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+//end edit reprint ali
+
 
 // print saxophone
 
@@ -1404,46 +1572,46 @@ public function getModel(Request $request)
 	return Response::json($response);
 }
 
-public function getsnsax2(Request $request)
-{
-	$sn = StampInventory::where('process_code', '=', $request->get('code'))
-	->where('origin_group_code','=' ,$request->get('origin'))
-	->where('serial_number','=' ,$request->get('sn2'))
-	->select('model', 'serial_number')
-	->first();
+// public function getsnsax2(Request $request)
+// {
+// 	$sn = StampInventory::where('process_code', '=', $request->get('code'))
+// 	->where('origin_group_code','=' ,$request->get('origin'))
+// 	->where('serial_number','=' ,$request->get('sn2'))
+// 	->select('model', 'serial_number')
+// 	->first();
 
-	$sn2 = StampInventory::where('process_code', '=', '3')
-	->where('origin_group_code','=' ,$request->get('origin'))
-	->where('serial_number','=' ,$request->get('sn2'))
-	->select('model', 'serial_number')
-	->first();
+// 	$sn2 = StampInventory::where('process_code', '=', '3')
+// 	->where('origin_group_code','=' ,$request->get('origin'))
+// 	->where('serial_number','=' ,$request->get('sn2'))
+// 	->select('model', 'serial_number')
+// 	->first();
 
 
-	if ($sn != null) {
-		$response = array(
-			'status' => true,
-			'message' => '1',
-			'model' => $sn->model,
-			'sn' => $sn->serial_number,
-		);
-		return Response::json($response);
-	}
-	elseif ($sn2 != null) {
-		$response = array(
-			'status' => true,
-			'message' => '2',
-			'model' => $sn2->model,
-			'sn' => $sn2->serial_number,
-		);
-		return Response::json($response);
-	}else{
-		$response = array(
-			'status' => false,
-			'message' => 'Serial Number not registered',
-		);
-		return Response::json($response);
-	}
-}
+// 	if ($sn != null) {
+// 		$response = array(
+// 			'status' => true,
+// 			'message' => '1',
+// 			'model' => $sn->model,
+// 			'sn' => $sn->serial_number,
+// 		);
+// 		return Response::json($response);
+// 	}
+// 	elseif ($sn2 != null) {
+// 		$response = array(
+// 			'status' => true,
+// 			'message' => '2',
+// 			'model' => $sn2->model,
+// 			'sn' => $sn2->serial_number,
+// 		);
+// 		return Response::json($response);
+// 	}else{
+// 		$response = array(
+// 			'status' => false,
+// 			'message' => 'Serial Number not registered',
+// 		);
+// 		return Response::json($response);
+// 	}
+// }
 
 public function print_sax2(Request $request){
 	$stamp = LogProcess::where('process_code', '=', $request->get('code'))
@@ -1547,114 +1715,114 @@ public function print_sax2(Request $request){
 }
 
 
-public function label_besar($id,$gmc,$remark){
+// public function label_besar($id,$gmc,$remark){
 
-	$date = date('Y-m-d');
-	if ($remark =="J") {
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}
+// 	$date = date('Y-m-d');
+// 	if ($remark =="J") {
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}
 
-	elseif ($remark =="NJ"){
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}
+// 	elseif ($remark =="NJ"){
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}
 
-	elseif ($remark =="JR") {
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}
+// 	elseif ($remark =="JR") {
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}
 
-	elseif ($remark =="NJR"){
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}elseif ($remark =="JRB") {
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}
+// 	elseif ($remark =="NJR"){
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}elseif ($remark =="JRB") {
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}
 
-	elseif ($remark =="NJRB"){
-		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
-	}
+// 	elseif ($remark =="NJRB"){
+// 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
+// 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+// 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+// 		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+// 		) a INNER JOIN (
+// 		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+// 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
+// 	}
 
-	$barcode = DB::select($query);
+// 	$barcode = DB::select($query);
 
-	$date = date('Y-m-d');
-	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
-	$date2 = DB::select($querydate);
+// 	$date = date('Y-m-d');
+// 	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
+// 	$date2 = DB::select($querydate);
 	
-	return view('processes.assy_fl_saxT.print_label_besar',array(
-		'barcode' => $barcode,
-		'date2' => $date2,
+// 	return view('processes.assy_fl_saxT.print_label_besar',array(
+// 		'barcode' => $barcode,
+// 		'date2' => $date2,
 
-		'remark' => $remark,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-}
+// 		'remark' => $remark,
+// 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+// }
 
-public function label_kecil($id,$remark){
-	$remark2 = $remark;
-	$sn = $id;
-	$date = date('Y-m-d');
-	// if ($remark =="RP") {
-	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
-	// 	INNER JOIN (
-	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
-	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-	// 	WHERE a.serial_number='".$id."'";
-	// }else{
-	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
-	// 	INNER JOIN (
-	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
-	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-	// 	WHERE a.serial_number='".$id."'";
-	// }
+// public function label_kecil($id,$remark){
+// 	$remark2 = $remark;
+// 	$sn = $id;
+// 	$date = date('Y-m-d');
+// 	// if ($remark =="RP") {
+// 	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+// 	// 	INNER JOIN (
+// 	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+// 	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 	// 	WHERE a.serial_number='".$id."'";
+// 	// }else{
+// 	// 	$query ="SELECT a.serial_number,b.date_code from stamp_inventories as a
+// 	// 	INNER JOIN (
+// 	// 	SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
+// 	// 	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+// 	// 	WHERE a.serial_number='".$id."'";
+// 	// }
 
-	$query = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
-	$barcode = DB::select($query);
+// 	$query = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
+// 	$barcode = DB::select($query);
 	
-	return view('processes.assy_fl_saxT.print_label_kecil',array(
-		'barcode' => $barcode,
-		'sn' => $sn,
-		'remark' => $remark2,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-}
+// 	return view('processes.assy_fl_saxT.print_label_kecil',array(
+// 		'barcode' => $barcode,
+// 		'sn' => $sn,
+// 		'remark' => $remark2,
+// 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+// }
 
 public function label_des($id){
 	
