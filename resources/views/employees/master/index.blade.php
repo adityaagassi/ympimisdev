@@ -540,7 +540,9 @@
 						// console.log(xhr);
 						if(xhr.status == 200){
 							if(result.status){
-								var path = "{{asset('uploads/employee_photos')}}";
+								var path = "{{url('images/photos')}}";
+								$('#nama').text(result.detail[0].name);
+								$('#nik').text(result.detail[0].employee_id);
 								$('#tempatLahir').text(result.detail[0].birth_place);
 								$('#tanggalLahir').text(result.detail[0].birth_date);
 								$('#jk').text(result.detail[0].gender);

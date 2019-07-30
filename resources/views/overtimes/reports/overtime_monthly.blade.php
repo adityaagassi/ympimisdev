@@ -3,9 +3,17 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
+  .morecontent span {
+    display: none;
+  }
+  .morelink {
+    display: block;
+  }
+
 	thead>tr>th{
 		text-align:center;
 		overflow:hidden;
+    padding: 3px;
 	}
 	tbody>tr>td{
 		text-align:center;
@@ -141,7 +149,7 @@
 										</center>
 									</div>
 									<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
-										<thead>
+										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
 												<th>No</th>
 												<th>NIK</th>
@@ -152,10 +160,11 @@
 										</thead>
 										<tbody id="tabelDetail"></tbody>
 										<tfoot>
-											<th>
-												<td colspan="2" style="font-weight: bold; size: 25px; text-align: right;">TOTAL </td>
-												<td id="tot" style="font-weight: bold; size: 25px"></td>
-											</th>
+											
+												<th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
+												<th id="tot" style="font-weight: bold; size: 25px"></th>
+                        <th  style="font-weight: bold; size: 25px"></th>
+											
 										</tfoot>
 									</table>
 								</div>
@@ -376,7 +385,7 @@ function total_budget(costCenter, date) {
 		},
 		dataType: 'json',
 		success: function(data) {
-			$("#modal-title").html(costCenter+" ( &Sigma; Budget "+data[0]+" )");
+			$("#modal-title").html(costCenter+" ( &Sigma; Budget "+data.datas[0].budget+" )");
 		}
 	})
 
@@ -412,46 +421,69 @@ function modalTampil(costCenter, date) {
       		var no = 1;
       		var jml = 0;
 
-      		$.each(data, function(i, item) {
-      			if (item[0] != ""){
-      				var newdiv1 = $( "<tr>"+                  
-      					"<td>"+no+"</td><td>"+item[0]+"</td>"+
-      					"<td>"+item[1]+"</td><td>"+item[2]+"</td><td><span class='more'>"+item[3]+"</span></td>"+
-      					"</tr>");
-      				no++;
-      				jml += item[2];
+          console.log(data);
+          var dataT = '';
+          var no = 1;
 
-      				$("#tabelDetail").append(newdiv1);
-      			}
-      		});
+          for (var i = 0; i <   data.datas.length; i++) {
+            
+            dataT += '<tr>';
+            dataT += '<td>'+ no++; +'</td>';
+            dataT += '<td>'+ data.datas[i].nik +'</td>';
+            dataT += '<td>'+ data.datas[i].namaKaryawan +'</td>';           
+            dataT += '<td>'+ data.datas[i].jam +'</td>';
+            dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
+            dataT += '</tr>';
+            jml += data.datas[i].jam;
+          }
+          $("#tabelDetail").append(dataT);
 
-      		$('.more').each(function() {
-      			var content = $(this).html();
+            
 
-      			if(content.length > showChar) {
+      		// $.each(data, function(i, item) {
+      		// 	if (item[0] != ""){
+      		// 		var newdiv1 = $( "<tr>"+                  
+      		// 			"<td>"+no+"</td><td>"+item[0]+"</td>"+
+      		// 			"<td>"+item[1]+"</td><td>"+item[2]+"</td><td><span class='more'>"+item[3]+"</span></td>"+
+      		// 			"</tr>");
+      		// 		no++;
+      		// 		jml += item[2];
 
-      				var c = content.substr(0, showChar);
-      				var h = content.substr(showChar, content.length - showChar);
+      		// 		$("#tabelDetail").append(newdiv1);
+      		// 	}
+      		// });
 
-      				var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+      
 
-      				$(this).html(html);
-      			}
+      $('.more').each(function() {
+          var content = $(this).html();
 
-      		});
 
-      		$(".morelink").click(function(){
-      			if($(this).hasClass("less")) {
-      				$(this).removeClass("less");
-      				$(this).html(moretext);
-      			} else {
-      				$(this).addClass("less");
-      				$(this).html(lesstext);
-      			}
-      			$(this).parent().prev().toggle();
-      			$(this).prev().toggle();
-      			return false;
-      		});
+
+          if(content.length > showChar) {
+
+            var c = content.substr(0, showChar);
+            var h = content.substr(showChar, content.length - showChar);
+
+            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+            $(this).html(html);
+          }
+
+        });
+
+        $(".morelink").click(function(){
+          if($(this).hasClass("less")) {
+            $(this).removeClass("less");
+            $(this).html(moretext);
+          } else {
+            $(this).addClass("less");
+            $(this).html(lesstext);
+          }
+          $(this).parent().prev().toggle();
+          $(this).prev().toggle();
+          return false;
+        });
 
       		$("#tot").text(jml);
       	}
