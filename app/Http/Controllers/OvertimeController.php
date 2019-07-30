@@ -1108,13 +1108,15 @@ public function fetchCostCenterBudget(Request $request)
 	);
 
 	return Response::json($response);
-
 }
 
 public function overtimeDetail(Request $request)
 {
 	$tgl = date('Y-m-d',strtotime($request->get('tgl')));
 	$bulan = date('Y-m',strtotime($request->get('tgl')));
+
+	$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
+	->select('cost_center')->first();
 
 	$query = "SELECT
 	final2.nik,
@@ -1161,7 +1163,7 @@ public function overtimeDetail(Request $request)
 	karyawan.costCenter
 	) AS c ON final2.nik = c.nik 
 	WHERE
-	c.costCenter = '".$request->get('cc')."' 
+	c.costCenter = '".$cost_center->cost_center."' 
 	GROUP BY
 	final2.nik,
 	c.namaKaryawan
@@ -1172,7 +1174,8 @@ public function overtimeDetail(Request $request)
 
 	$response = array(
 		'status' => true,
-		'datas' => $datas
+		'datas' => $datas,
+		'cc' => $cost_center
 	);
 
 	return Response::json($response);
