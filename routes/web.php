@@ -100,16 +100,20 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::post('delete/overtime_confirmation', 'OvertimeController@deleteOvertimeConfirmation');
 });
 
-Route::group(['nav' => 'R8', 'middleware' => 'permission'], function(){
-	Route::get('index/report/gender', 'EmployeeController@indexReportGender');
-	Route::get('fetch/report/gender2', 'EmployeeController@fetchReportGender2');
-	Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
-	Route::get('index/report/grade', 'EmployeeController@indexReportGrade');
-	Route::get('index/report/department', 'EmployeeController@indexReportDepartment');
-	Route::get('index/report/jabatan', 'EmployeeController@indexReportJabatan');
-	Route::get('fetch/report/stat', 'EmployeeController@fetchReport');
-	Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
-});
+
+//EMPLOYEE
+Route::get('index/report/gender', 'EmployeeController@indexReportGender');
+Route::get('fetch/report/gender2', 'EmployeeController@fetchReportGender2');
+Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
+Route::get('index/report/grade', 'EmployeeController@indexReportGrade');
+Route::get('index/report/department', 'EmployeeController@indexReportDepartment');
+Route::get('index/report/jabatan', 'EmployeeController@indexReportJabatan');
+Route::get('fetch/report/stat', 'EmployeeController@fetchReport');
+Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
+
+//OVERTIME
+Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
+
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -126,6 +130,8 @@ Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeC
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService');
 Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
+Route::get('fetch/cc/budget', 'OvertimeController@fetchCostCenterBudget');
+Route::get('fetch/chart/control/detail', 'OvertimeController@overtimeDetail');
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -682,6 +688,9 @@ Route::get('edit/stampLabel', 'ProcessController@editStampLabel');
 Route::post('edit/stampLabel', 'ProcessController@updateStampLabel');
 Route::get('index/reprintLabel', 'ProcessController@getModelReprint');
 Route::get('index/getdatareprintAll', 'ProcessController@getModelReprintAll');
+Route::get('index/getdatareprintAll2', 'ProcessController@getModelReprintAll2');
+
+
 
 Route::get('index/process_stamp_cl', 'ProcessController@indexProcessStampCl');
 Route::get('index/process_stamp_sx', 'ProcessController@indexProcessStampSX');
