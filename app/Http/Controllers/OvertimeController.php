@@ -48,6 +48,13 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.control_report')->with('page', 'Overtime Control');
 	}
 
+	public function indexReportControl()
+	{
+		return view('overtimes.reports.overtime_monthly', array(
+			'title' => 'Overtime Monthly Control',
+			'title_jp' => '??'))->with('page', 'Overtime Monthly Control');
+	}
+
 	public function indexPrint($id)
 	{
 		$ot = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
@@ -802,9 +809,15 @@ public function overtimeControl(Request $request)
 
 	$report_control = db::connection('mysql3')->select($ot_control);
 
+	$employee = db::table('employees')
+	->whereNull('end_date')
+	->select(db::raw("count(employee_id) as jml"))
+	->get();
+
 	$response = array(
 		'status' => true,
-		'report_control' => $report_control
+		'report_control' => $report_control,
+		'emp_total' => $employee
 	);
 
 	return Response::json($response);
@@ -1080,9 +1093,88 @@ public function indexReportOvertimeAll()
 	return view('overtimes.reports.overtime_monthly')->with('page', 'Overtime Management by NIK');
 }
 
-public function tes(Request $request){
-	$html = $request->get('hidden_html');
-	$pdf = PDF::loadHTML($html);
-	return $pdf->download('invoice.pdf');
+public function fetchCostCenterBudget(Request $request)
+{
+	$tgl = date('Y-m',strtotime($request->get('tgl')));
+	$query = "select budgets.cost_center, period, budget from budgets
+	left join cost_centers on budgets.cost_center = cost_centers.cost_center
+	where DATE_FORMAT(period,'%Y-%m') = '".$tgl."' and cost_centers.cost_center_name = '".$request->get('cc')."'";
+
+	$datas = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'datas' => $datas
+	);
+
+	return Response::json($response);
+
+}
+
+public function overtimeDetail(Request $request)
+{
+	$tgl = date('Y-m-d',strtotime($request->get('tgl')));
+	$bulan = date('Y-m',strtotime($request->get('tgl')));
+
+	$query = "SELECT
+	final2.nik,
+	c.namaKaryawan,
+	sum( final2.jam ) AS jam,
+	GROUP_CONCAT( DISTINCT c.kep ) AS kep 
+	FROM
+	(
+	SELECT
+	over_time_member.nik,
+	over_time.tanggal,
+	sum( over_time_member.jam ) AS jam 
+	FROM
+	over_time
+	LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
+	WHERE
+	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."'
+	AND over_time_member.nik IS NOT NULL 
+	AND over_time.deleted_at IS NULL 
+	and over_time.tanggal <= '".$tgl."'
+	and jam_aktual = 0
+	GROUP BY
+	over_time_member.nik,
+	over_time.tanggal 
+	) AS final2
+	LEFT JOIN (
+	SELECT
+	over_time_member.nik,
+	karyawan.namaKaryawan,
+	karyawan.costCenter,
+	GROUP_CONCAT( DISTINCT over_time.keperluan ) AS kep 
+	FROM
+	over_time
+	LEFT JOIN over_time_member ON over_time_member.id_ot = over_time.id
+	LEFT JOIN karyawan ON karyawan.nik = over_time_member.nik 
+	WHERE
+	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."' 
+	AND over_time.tanggal <= '".$tgl."' 
+	AND over_time_member.nik IS NOT NULL 
+	and jam_aktual = 0
+	GROUP BY
+	over_time_member.nik,
+	karyawan.namaKaryawan,
+	karyawan.costCenter
+	) AS c ON final2.nik = c.nik 
+	WHERE
+	c.costCenter = '".$request->get('cc')."' 
+	GROUP BY
+	final2.nik,
+	c.namaKaryawan
+	ORDER BY
+	sum( final2.jam ) DESC";
+
+	$datas = db::connection('mysql3')->select($query);
+
+	$response = array(
+		'status' => true,
+		'datas' => $datas
+	);
+
+	return Response::json($response);
 }
 }
