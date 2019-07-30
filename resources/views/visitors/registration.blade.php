@@ -8,9 +8,8 @@
 
 @section('header')
 <section class="content-header">
-	<h1><br><br>
-		<center><span style="color: white; font-weight: bold; font-size: 28px; text-align: center;">YMPI Visitor Registration</span></center>
-		{{-- <small>By Shipment Schedule <span class="text-purple">??????</span></small> --}}
+	<h1>
+		<center><span style="color: white; font-weight: bold; font-size: 28px; text-align: center;">YMPI Visitor Registration</span></center><br>
 	</h1>
 	<ol class="breadcrumb" id="last_update">
 	</ol>
