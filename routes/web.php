@@ -113,6 +113,7 @@ Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveCont
 
 //OVERTIME
 Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
+Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
 
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){

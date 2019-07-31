@@ -95,6 +95,14 @@
                             <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
                                 <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
                             </a>
+                            <br>
+                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
+                            </a>
+                            <br>
+                            <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
+                                <i class="fa fa-caret-right"></i> Clinic Information (Japanese)
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -103,29 +111,6 @@
                             <br>
                             <a href="http://172.17.129.99/zed/dashboard/awal" target="_blank">
                                 <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Total Meeting (トータルミーティング)</span>
-                            <br>
-                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{-- <span style="font-weight: bold;">Employment Service (???)</span>
-                            <br>
-                            <a href="{{ url("index/employee/service") }}" target="blank">
-                                <i class="fa fa-caret-right"></i> Employment Service (???)
-                            </a> --}}
-                            <span style="font-weight: bold;">Clinic Chart (Japanese)</span>
-                            <br>
-                            <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
-                                <i class="fa fa-caret-right"></i> Clinic Chart (Japanese)
                             </a>
                         </td>
                     </tr>

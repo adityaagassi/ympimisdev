@@ -71,9 +71,9 @@
 				<tbody>
 					<tr>
 						<td style="width: 1%; font-weight: bold; background-color: rgb(220,220,220);">Model</td>
-						<td id="model" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;">-</td>
+						<td id="model" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
 						<td style="width: 1%; font-weight: bold; background-color: rgb(220,220,220);">Key</td>
-						<td id="key" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;">-</td>
+						<td id="key" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
 						<input type="hidden" id="material_tag">
 						<input type="hidden" id="material_number">
 						<input type="hidden" id="material_quantity">
@@ -96,9 +96,9 @@
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Prod Total</th>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">NG Total</th>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate Total</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Result</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Not Good</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -143,8 +143,8 @@
 		</table>
 		<div>
 			<center>
-				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 49%" onclick="conf()" class="btn btn-success">CONFIRM</button>
-				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 49%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 30%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 69%" onclick="conf()" class="btn btn-success">CONFIRM</button>
 			</center>
 		</div>
 	</div>
@@ -176,10 +176,10 @@
 	});
 
 	jQuery(document).ready(function() {
-		// $('#modalOperator').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
+		$('#modalOperator').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
 		$('#operator').val('');
 		$('#tag').val('');
 	});
@@ -234,7 +234,115 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function fillResult(){
+		var data = {
+			location: $('#loc').val(),
+			employee_id : $("#operator").val(),
+		}
+		$.get('{{ url("fetch/middle/kensa") }}', data, function(result, status, xhr){
 
+			$('#result').text(result.result);
+			$('#notGood').text(result.ng);
+			$('#ngRate').text(Math.round((result.ng/result.result)*100, 2)+'%');
+		});
+	}
+
+	function conf(){
+		if($('#tag').val() == ""){
+			openErrorGritter('Error!', 'Tag is empty');
+			audio_error.play();
+			$("#tag").val("");
+			$("#tag").focus();
+			return false;
+		}
+
+		var tag = $('#tag_material').val();
+		var loop = $('#loop').val();
+		// var total = 0;
+		var count_ng = 0;
+		var ng = [];
+		var count_text = [];
+		for (var i = 1; i <= loop; i++) {
+			if($('#count'+i).text() > 0){
+				ng.push([$('#ng'+i).text(), $('#count'+i).text()]);
+				count_text.push('#count'+i);
+				// total += parseInt($('#count'+i).text());
+				count_ng += 1;
+			}
+		}
+
+		var data = {
+			loc: $('#loc').val(),
+			tag: $('#material_tag').val(),
+			material_number: $('#material_number').val(),
+			quantity: $('#material_quantity').val(),
+			employee_id: $('#employee_id').val(),
+			ng: ng,
+			count_text: count_text,
+			// total_ng: total,
+		}
+
+		$.post('{{ url("input/middle/kensa") }}', data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success!', result.message);
+				for (var i = 1; i <= loop; i++) {
+					$('#count'+i).text(0);
+				}
+				$('#model').text("");
+				$('#key').text("");
+				$('#material_tag').val("");
+				$('#material_number').val("");
+				$('#material_quantity').val("");
+				$('#tag').val("");
+				$('#tag').prop('disabled', false);
+				fillResult();
+				$('#tag').focus();
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+			}
+		});
+	}
+
+	function canc(){
+		$('#model').text("");
+		$('#key').text("");
+		$('#material_tag').val("");
+		$('#material_number').val("");
+		$('#material_quantity').val("");
+		$('#tag').val("");
+		$('#tag').prop('disabled', false);
+		$('#tag').focus();
+	}
+
+	function plus(id){
+		var count = $('#count'+id).text();
+		if($('#key').text() != ""){
+			$('#count'+id).text(parseInt(count)+1);
+		}
+		else{
+			audio_error.play();
+			openErrorGritter('Error!', 'Scan material first.');
+			$("#tag").val("");
+			$("#tag").focus();
+		}
+	}
+
+	function minus(id){
+		var count = $('#count'+id).text();
+		if($('#key').text() != ""){
+			if(count > 0)
+			{
+				$('#count'+id).text(parseInt(count)-1);
+			}
+		}
+		else{
+			audio_error.play();
+			openErrorGritter('Error!', 'Scan material first.');
+			$("#tag").val("");
+			$("#tag").focus();
+			$('#tag').blur();
+		}
 	}
 
 	function scanTag(tag){
