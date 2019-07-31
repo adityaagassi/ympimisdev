@@ -609,22 +609,22 @@
 					series: [{
 						name: 'Plan',
 						data: planFL,
-						stack: 'FLFG',
+						stack: 'FL',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
 						data: planCL,
-						stack: 'CLFG',
+						stack: 'CL',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
 						data: planAS,
-						stack: 'ASFG',
+						stack: 'AS',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
 						data: planTS,
-						stack: 'TSFG',
+						stack: 'TS',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
@@ -644,22 +644,22 @@
 					}, {
 						name: 'Actual',
 						data: actualFL,
-						stack: 'FLFG',
+						stack: 'FL',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
 						data: actualCL,
-						stack: 'CLFG',
+						stack: 'CL',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
 						data: actualAS,
-						stack: 'ASFG',
+						stack: 'AS',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
 						data: actualTS,
-						stack: 'TSFG',
+						stack: 'TS',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',

@@ -1566,7 +1566,7 @@ class FloController extends Controller
 		->select('email')
 		->get();
 
-		if($st_date == date('Y-m-d')){
+		// if($st_date == date('Y-m-d')){
 			$query = "select shipment_schedules.st_date, stuffings.container_id, destinations.destination_shortname, stuffings.container_number, stuffings.container_name, coalesce(sum(shipment_schedules.quantity),0) as plan, coalesce(if(stuffings.container_number is not null, sum(shipment_schedules.quantity), sum(stuffings.actual)),0) as actual, max(stuffings.created_at) as finished_at from shipment_schedules left join
 			(
 
@@ -1577,7 +1577,7 @@ class FloController extends Controller
 
 			) as stuffings on stuffings.shipment_schedule_id = shipment_schedules.id
 			left join destinations on destinations.destination_code = shipment_schedules.destination_code
-			where shipment_schedules.st_date = date(now())
+			where shipment_schedules.st_date = '".$st_date."'
 			group by shipment_schedules.st_date, stuffings.container_id, stuffings.container_number, destinations.destination_shortname, stuffings.container_name
 			order by finished_at desc";
 
@@ -1586,6 +1586,6 @@ class FloController extends Controller
 			if($stuffings != null){
 				Mail::to($mail_to)->send(new SendEmail($stuffings, 'stuffing'));
 			}
-		}
+		// }
 	}
 }

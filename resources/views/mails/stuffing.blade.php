@@ -18,8 +18,8 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Today Shipment Progress (Last Update: {{ date('d-M-Y H:i:s') }})</p>
-			<p style="font-weight: bold;">Shipment Date: {{ date('l, d F Y') }}</p>
+			<p style="font-size: 18px;">Today Stuffing Progress (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-weight: bold;">Stuffing Date: {{ date('l, d F Y') }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -32,6 +32,7 @@
 						<th style="width: 5%; border:1px solid black;">Plan</th>
 						<th style="width: 5%; border:1px solid black;">Actual</th>
 						<th style="width: 4%; border:1px solid black;">Diff</th>
+						<th style="width: 4%; border:1px solid black;">Finished At</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -61,6 +62,7 @@
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->plan}}</td>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->actual}}</td>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->actual-$col->plan}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->finished_at}}</td>
 					</tr>
 					@endforeach
 				</tbody>

@@ -9,7 +9,7 @@
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Informasi Kekurangan Ekspor ETD YMPI (Last Update: {{ date('d-M-Y H:i:s') }})</p>
-			<p style="font-weight: bold;">Shipment Date: {{ date('l, d F Y', strtotime($data[0]->st_date)) }}</p>
+			<p style="font-weight: bold;">Stuffing Date: {{ date('l, d F Y', strtotime($data[0]->st_date)) }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;">
 				<thead style="background-color: rgb(126,86,134);">
@@ -41,7 +41,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/fg_shipment_result">Realtime Shipment Progress</a>
+			<a href="http://172.17.128.4/mirai/public/index/display/shipment_progress">Realtime Hasil Produksi Terhadap Kebutuhan Ekspor</a>
 		</center>
 	</div>
 </body>
