@@ -48,6 +48,10 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.control_report')->with('page', 'Overtime Control');
 	}
 
+	public function indexReportSection(){
+		return view('overtimes.reports.overtime_section')->with('page', 'Overtime by Section');
+	}
+
 	public function indexReportControl()
 	{
 		return view('overtimes.reports.overtime_monthly', array(
@@ -842,7 +846,7 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = s.nik
 		where department = "'.$department.'"';
@@ -868,7 +872,7 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" 
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = s.nik
 		where jam > 14 and department = "'.$department.'"
@@ -876,16 +880,6 @@ public function overtimeReportDetail(Request $request)
 
 		$detail = '';
 
-
-		// $lebih_detail = 'SELECT s.nik, jam, week_name, tanggal from
-		// (select nik, sum(jam) jam, week_name, tanggal from
-		// (select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
-		// left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		// where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
-		// group by nik, tanggal, hari) m
-		// group by nik, week_name) s
-		// where jam > 14
-		// group by s.nik, week_name';
 	}
 	if($ctg == '3 & 14 hour(s) / week'){
 		$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
@@ -912,7 +906,7 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = c.nik
 		left join
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = c.nik
 		where department = "'.$department.'"';
@@ -932,7 +926,7 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = semua.nik
 		left join
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = semua.nik
 		where department = "'.$department.'"';
