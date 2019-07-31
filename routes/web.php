@@ -607,6 +607,13 @@ Route::get('index/reportDayAwal', 'Pianica@reportDayAwal');
 Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
 Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
 
+//detail chart
+	Route::get('index/getKensaVisualALL2', 'Pianica@getKensaVisualALL2');
+	Route::get('index/getKensaBensuki2', 'Pianica@getKensaBensuki2');
+	Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
+
+//end pianica
+
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
 	Route::get('create/CheckSheet', 'CheckSheet@create');

@@ -87,6 +87,44 @@ table.table-bordered > tfoot > tr > th{
 
 
   </div>
+
+
+  <div class="modal fade" id="modalProgress">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="modalProgressTitle"></h4>
+         <h4 class="modal-title" id="modalProgressTitle2"></h4>
+         <h4 class="modal-title" id="modalProgressTitle3"></h4>
+        <div class="modal-body table-responsive no-padding" style="min-height: 100px">
+          <center>
+            <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+          </center>
+          <table class="table table-hover table-bordered table-striped" id="tableModal">
+            <thead style="background-color: rgba(126,86,134,.7);">
+              <tr>
+                <th>Posisi</th>
+                <th>NG Name</th>
+                <th>Total</th>   
+                <th>Detail</th>              
+              </tr>
+            </thead>
+            <tbody id="modalProgressBody">
+            </tbody>
+            <tfoot style="background-color: RGB(252, 248, 227);">
+              <th colspan="2">Total</th>
+              <th id="totalP"></th>
+              <th></th>              
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </section>
 
 
@@ -131,7 +169,7 @@ table.table-bordered > tfoot > tr > th{
   function recall() {
             ngTotal();
             ngMesin();
-            setTimeout(recall, 1000);
+            setTimeout(recall, 7000);
           }
   
   function ngTotal() {
@@ -376,6 +414,13 @@ function ngMesin() {
         data: nglist,
          pointPadding: 0.4,
         pointPlacement: 0,
+        point: {
+                events: {
+                  click: function () {
+                    fillModal(this.category , tgl);
+                  }
+                }
+              }
 
     },{
       animation: false,
@@ -401,6 +446,96 @@ function ngMesin() {
             }
           });
   }
+
+  function fillModal(ng, tgl){
+    $('#modalProgress').modal('show');
+    $('#loading').show();
+    $('#modalProgressTitle').hide();
+    $('#tableModal').hide();
+
+    var data = {
+      ng:ng,
+      tgl:tgl
+    }
+    $.get('{{ url("index/getKensaBensuki2") }}', data, function(result, status, xhr){
+      if(result.status){
+        // $('#tableModal').DataTable().destroy();
+        // $('#modalProgressTitle').html('');
+        // $('#modalProgressTitle').html(hpl +' Export Date: '+ date);
+        $('#modalProgressBody').html('');
+        var resultData = '';
+        var total = 0;
+        
+        $.each(result.ng, function(key, value) {         
+          resultData += '<tr id='+ value.posisi+value.ng +'>';
+          resultData += '<td style="width: 40%">'+ value.posisi +'</td>';
+          resultData += '<td style="width: 40%">'+ value.ng +'</td>';
+          resultData += '<td style="width: 20%">'+ value.total +'</td>'; 
+          resultData += '<td style="width: 20%"> <button class="btn btn-xs btn-primary" id="expand'+value.posisi+value.ng+'"  onclick="detail(\''+ value.id +'\',this,\''+ value.posisi+value.ng +'\')" style="display:block">Detail</button> <button  class="btn btn-xs btn-primary" id="collapse'+value.posisi+value.ng+'" onclick="collapse(\''+ value.posisi+value.ng +'\',this)" style="display:none">Hide</button></td>';         
+          resultData += '</tr>';   
+          total += value.total;       
+        });
+        
+        $('#loading').hide();
+        $('#modalProgressBody').append(resultData);
+        $('#totalP').text(total);
+        $('#modalProgressTitle2').text(ng);
+        $('#modalProgressTitle3').text(tgl);  
+        
+        // $('#modalProgressTitle').show();
+        $('#tableModal').show();
+      }
+      else{
+        alert('Attempt to retrieve data failed');
+      }
+    });
+  }
+
+  function detail(id,element,nik) {
+
+      var data = {
+      id:id,      
+    }
+
+    $.get('{{ url("index/getKensaBensuki3") }}', data, function(result, status, xhr){
+      if(result.status){
+        var resultData = '';
+        
+        var tr_id =  $(element).closest('tr').attr('id');
+        $.each(result.ng, function(key, value) {         
+          resultData += '<tr>';
+          resultData += '<td style="width: 5%">'+ value.model +'</td>';
+          resultData += '<td style="width: 10%">'+ value.opbennik +'</td>';
+          resultData += '<td style="width: 20%">'+ value.opbennama +'</td>'; 
+          resultData += '<td style="width: 5%">'+ value.line +'</td>';
+          resultData += '<td style="width: 10%">'+ value.opplatenik +'</td>';
+          resultData += '<td style="width: 20%">'+ value.opplatenama +'</td>'; 
+          resultData += '<td style="width: 20%">'+ value.shift +'</td>';        
+          resultData += '</tr>';                  
+        }); 
+
+        // $(element).hide();
+        $('#'+tr_id).after('<tr id="col'+tr_id+'"><td colspan="4"><table style="margin: 5px 0 5px 0" width="100%" border="1"> <tr><td>Model</td><td>Op Bensuki</td> <td>Op Bensuki Name</td> <td>Line</td> <td>Op Reed Plate</td> <td>Op Reed Plate Name</td> <td>Op Reed Shift</td><tr>'+resultData+
+          '</table></td></tr>');
+        $('#expand'+nik).css({'display' : 'none'}); 
+        $('#collapse'+nik).css({'display' : 'block'}); 
+        
+      }
+      else{
+        alert('Attempt to retrieve data failed');
+      }
+    });
+
+  }
+
+  function collapse(nik,element) {
+
+  // $(element).hide();
+  var tr_id =  $(element).closest('tr').attr('id');
+  $("#col"+tr_id).remove();
+  $('#collapse'+nik).css({'display' : 'none'});
+   $('#expand'+nik).css({'display' : 'block'});  
+}
 </script>
 
 @stop

@@ -1741,6 +1741,8 @@ on a.ng = b.id
     return Response::json($response);
 }
 
+
+
 /// Laporan Kensa Awal
 
  public function recordPianica()
@@ -2404,5 +2406,110 @@ GROUP BY material_number, due_date
     return Response::json($response);
 }
 
+//detail chart
+
+
+public function getKensaVisualALL2(Request $request)
+{
+    $date = date('Y-m-d', strtotime($request->get('tgl')));
+    $ng = $request->get('ng');
+
+    $query="
+    SELECT ng_lists.ng_name as ng, COUNT(qty) as total from pn_log_ngs 
+LEFT JOIN ng_lists on pn_log_ngs.ng = ng_lists.id
+WHERE pn_log_ngs.location='PN_Kakuning_Visual' and ng_lists.location like '%_".$ng."' AND DATE_FORMAT(pn_log_ngs.created_at,'%Y-%m-%d')='".$date."'
+GROUP BY ng_lists.ng_name
+    ";
+
+    $total =DB::select($query);
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',        
+        'ng' => $total, 
+        'asd'=> $date,      
+      
+
+    );
+    return Response::json($response);
+}
+
+public function getKensaBensuki2(Request $request)
+{
+    $date = date('Y-m-d', strtotime($request->get('tgl')));
+    $ng = $request->get('ng');
+
+    if ($ng =="Mesin 1") {
+       $ng = "H1";
+    }
+
+    if ($ng =="Mesin 2") {
+       $ng = "H2";
+    }
+
+    if ($ng =="Mesin 3") {
+       $ng = "H3";
+    }
+
+    if ($ng =="Mesin 4") {
+       $ng = "M1";
+    }
+
+    if ($ng =="Mesin 5") {
+       $ng = "M2";
+    }
+
+    if ($ng =="Mesin 6") {
+       $ng = "M3";
+    }
+
+
+    $query="    
+    SELECT posisi,ng,COUNT(posisi) as total, GROUP_CONCAT(id_bensuki) as id from detail_bensukis where id_bensuki in (
+    SELECT id from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."' and mesin='".$ng."'
+    ) GROUP BY ng,posisi ORDER BY posisi asc
+    ";
+
+    $total =DB::select($query);
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',        
+        'ng' => $total,     
+      
+
+    );
+    return Response::json($response);
+}
+
+public function getKensaBensuki3(Request $request)
+{
+    
+    $ng = $request->get('id');
+
+
+    $query=" 
+    SELECT model,ben.nik as opbennik,ben.nama as opbennama, line, plate.nik as opplatenik, plate.nama as opplatenama,ben.shift from (
+    SELECT header_bensukis.id,pn_operators.nik, pn_operators.nama, header_bensukis.line, model,IF(header_bensukis.shift='M','Shift 1','Shift 2') as shift from header_bensukis 
+    LEFT JOIN pn_operators on header_bensukis.nik_op_bensuki = pn_operators.nik
+    WHERE header_bensukis.id in (".$ng.") 
+    )ben
+    LEFT JOIN
+    (
+    SELECT header_bensukis.id,pn_operators.nik, pn_operators.nama from header_bensukis 
+    LEFT JOIN pn_operators on header_bensukis.nik_op_plate = pn_operators.nik
+    WHERE header_bensukis.id in (".$ng.") 
+    ) plate 
+    on ben.id = plate.id
+    ";
+
+    $total =DB::select($query);
+    $response = array(
+        'status' => true,
+        'message' => 'NG Record found',        
+        'ng' => $total,     
+      
+
+    );
+    return Response::json($response);
+}
 
 }
