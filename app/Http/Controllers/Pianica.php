@@ -13,6 +13,7 @@ use App\PnOperator;
 use App\HeaderBensuki;
 use App\DetailBensuki;
 use App\Incoming;
+use App\PnCodeOperator;
 use Response;
 use App\PnInventorie;
 use App\PnLogProces;
@@ -297,10 +298,7 @@ public function addop(Request $request){
 
 }
 
-public function opcode()
-{
- return view('pianica.opcode')->with('page', 'Master Code Operator');
-}
+
 
 public function otokensa()
 {
@@ -2488,7 +2486,7 @@ public function getKensaBensuki3(Request $request)
 
     $query=" 
     SELECT model,ben.nik as opbennik,ben.nama as opbennama, line, plate.nik as opplatenik, plate.nama as opplatenama,ben.shift from (
-    SELECT header_bensukis.id,pn_operators.nik, pn_operators.nama, header_bensukis.line, model,IF(header_bensukis.shift='M','Shift 1','Shift 2') as shift from header_bensukis 
+    SELECT header_bensukis.id,pn_operators.nik, pn_operators.nama, header_bensukis.line, model,IF(header_bensukis.shift='M','Shift 1','Shift 3') as shift from header_bensukis 
     LEFT JOIN pn_operators on header_bensukis.nik_op_bensuki = pn_operators.nik
     WHERE header_bensukis.id in (".$ng.") 
     )ben
@@ -2510,6 +2508,66 @@ public function getKensaBensuki3(Request $request)
 
     );
     return Response::json($response);
+}
+///---------------------- master code op
+
+public function opcode()
+{
+ $dataop = "SELECT nik,nama from pn_operators";
+  $op = DB::select($dataop);
+ return view('pianica.opcode', array(
+    'op' => $op))->with('page', 'Master Code Operator');
+}
+
+public function fillopcode($value='')
+{
+    $op = "SELECT pn_code_operators.id,pn_code_operators.bagian,pn_code_operators.kode,pn_code_operators.nik,pn_operators.nama from pn_code_operators
+        LEFT JOIN pn_operators on pn_code_operators.nik = pn_operators.nik order By pn_code_operators.id asc";
+    $ops = DB::select($op);
+    return DataTables::of($ops)
+
+    ->addColumn('edit', function($ops){
+        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i></a>';
+    })
+    ->addColumn('hapus', function($ops){
+        return '<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="detailReport(id)" id="' . $ops->id . '">Delete</a>';
+    })
+    ->rawColumns(['edit' => 'edit', 'hapus'=>'hapus'])
+
+    ->make(true);
+}
+
+public function editopcode(Request $request)
+{
+    $id = $request->get('id');
+    $op = "SELECT pn_code_operators.id,pn_code_operators.bagian,pn_code_operators.kode,pn_code_operators.nik,pn_operators.nama from pn_code_operators
+        LEFT JOIN pn_operators on pn_code_operators.nik = pn_operators.nik where pn_code_operators.id ='".$id."'";
+    $id_op = DB::select($op);
+    $response = array(
+        'status' => true,
+        'id_op' => $id_op, 
+    );
+    return Response::json($response);
+}
+
+public function updateopcode(Request $request){
+    $id_user = Auth::id();
+    
+    try {  
+        $op = PnCodeOperator::where('id','=', $request->get('id'))       
+        ->first();         
+        $op->nik = $request->get('op');        
+        $op->created_by = $id_user;
+        $op->save();
+        $response = array(
+          'status' => true,
+          'message' => 'Update Success',
+      );
+        return redirect('/index/Op_Code')->with('status', 'Update operator success')->with('page', 'Master Operator');
+    }catch (QueryException $e){
+        return redirect('/index/Op_Code')->with('error', $e->getMessage())->with('page', 'Master Operator');
+    }
+
 }
 
 }

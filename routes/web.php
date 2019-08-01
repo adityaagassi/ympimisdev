@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/tes', function () {
-	return view('mails.stuffing');
+	return view('displays.shippings.stuffing_progress');
 });
 Route::post('trial/tes', 'TrialController@tes');
 
@@ -114,7 +114,6 @@ Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveCont
 //OVERTIME
 Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
-
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -528,6 +527,13 @@ Route::group(['nav' => 'S17', 'middleware' => 'permission'], function(){
 
 
 Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
+	//---master code op
+	Route::get('index/Op_Code', 'Pianica@opcode');
+	Route::get('index/FillOpcode', 'Pianica@fillopcode');
+	Route::get('edit/Opcode', 'Pianica@editopcode');
+	Route::post('update/Opcode', 'Pianica@updateopcode');
+
+
 	//-----master op
 	Route::get('index/Op', 'Pianica@op');
 	Route::get('edit/Op', 'Pianica@editop');
@@ -608,9 +614,9 @@ Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
 Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
 
 //detail chart
-	Route::get('index/getKensaVisualALL2', 'Pianica@getKensaVisualALL2');
-	Route::get('index/getKensaBensuki2', 'Pianica@getKensaBensuki2');
-	Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
+Route::get('index/getKensaVisualALL2', 'Pianica@getKensaVisualALL2');
+Route::get('index/getKensaBensuki2', 'Pianica@getKensaBensuki2');
+Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
 
 //end pianica
 
