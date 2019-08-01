@@ -350,11 +350,21 @@
 		$('#loading').show();
 		$('#modalProgressTitle').hide();
 		$('#tableModal').hide();
+		var hpl = name;
 		if(name == 'VN'){
 			var hpl = 'VENOVA';
 		}
-		else{
-			var hpl = name;
+		if(name == 'FL'){
+			var hpl = 'FLFG';
+		}
+		if(name == 'AS'){
+			var hpl = 'ASFG';
+		}
+		if(name == 'TS'){
+			var hpl = 'TSFG';
+		}
+		if(name == 'CL'){
+			var hpl = 'CLFG';
 		}
 		var data = {
 			date:cat,
