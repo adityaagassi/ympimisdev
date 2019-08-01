@@ -136,6 +136,15 @@
                 <tbody>
                     <tr>
                         <td>
+                            <span style="font-weight: bold;">KITTO (きっと)</span>
+                            <br>
+                            <a href="http://172.17.128.4/kitto/public" target="_blank">
+                                <i class="fa fa-caret-right"></i> Kanban Monitoring (Japanese)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <span style="font-weight: bold;">WIP Monitoring (仕掛品監視)</span>
                             <br>
                             <a href="{{ url("/index/process_assy_fl") }}">
