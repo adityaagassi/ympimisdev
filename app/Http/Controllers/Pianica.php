@@ -79,19 +79,19 @@ public function bensuki()
     $shifts = $this->shift;
     $models = $this->model;
 
-    $low ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $low ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%LOW' and code.bagian='bensuki' ORDER BY code.kode asc";
     $lows = DB::select($low);
 
-    $high ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $high ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%HIGH' and code.bagian='bensuki' ORDER BY code.kode asc";
     $highs = DB::select($high);
 
-    $middle ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $middle ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%MIDDLE' and code.bagian='bensuki' ORDER BY code.kode asc";
@@ -123,19 +123,19 @@ public function pureto()
 
     $models = $this->model;
 
-    $low ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $low ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%LOW' and code.bagian='bensuki' ORDER BY code.kode asc";
     $lows = DB::select($low);
 
-    $high ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $high ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%HIGH' and code.bagian='bensuki' ORDER BY code.kode asc";
     $highs = DB::select($high);
 
-    $middle ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $middle ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%MIDDLE' and code.bagian='bensuki' ORDER BY code.kode asc";
