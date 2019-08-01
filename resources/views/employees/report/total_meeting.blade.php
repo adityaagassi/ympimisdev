@@ -843,36 +843,36 @@ function drawChart() {
  }
 }
 
-var map = result.report_by_dep.reduce(function(map, invoice) {
-  var name = invoice.mon
-  var price = +invoice.ot_hour
-  map[name] = (map[name] || 0) + price
-  return map
-}, {})
+// var map = result.report_by_dep.reduce(function(map, invoice) {
+//   var name = invoice.mon
+//   var price = +invoice.ot_hour
+//   map[name] = (map[name] || 0) + price
+//   return map
+// }, {})
 
-xOTHour = map;
+// xOTHour = map;
 
-// console.log(xOTHour);
+// // console.log(xOTHour);
 
-var map2 = result.report_by_dep.reduce(function(map2, invoice) {
-  var name2 = invoice.mon
-  var price = +invoice.kar
-  map2[name2] = (map2[name2] || 0) + price
-  return map2
-}, {})
+// var map2 = result.report_by_dep.reduce(function(map2, invoice) {
+//   var name2 = invoice.mon
+//   var price = +invoice.kar
+//   map2[name2] = (map2[name2] || 0) + price
+//   return map2
+// }, {})
 
-xKar = map2;
+// xKar = map2;
 
-// console.log(xKar);
+// // console.log(xKar);
 
-$.each(xOTHour, function(key, value) {
-  var hasil = xOTHour[key] / xKar[key];
-  xTotal.push(Math.round(hasil * 100) / 100);
-});
+// $.each(xOTHour, function(key, value) {
+//   var hasil = xOTHour[key] / xKar[key];
+//   xTotal.push(Math.round(hasil * 100) / 100);
+// });
 
-console.log(xTotal);
+// console.log(xTotal);
 
-seriesData.push({name: 'avg', data: xTotal, visible: false})
+// seriesData.push({name: 'avg', data: xTotal, visible: false})
 
 console.log(seriesData);
 

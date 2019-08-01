@@ -604,6 +604,7 @@ class OvertimeController extends Controller
 	{
 	// ----------  Chart Overtime By Dep ----------
 		$tanggal = date('Y-m');
+		$tanggalMin = date("Y-m", strtotime("-3 months"));
 
 
 		$fiskal = "select fiscal_year from weekly_calendars WHERE date_format(week_date,'%Y-%m') = '".$tanggal."' group by fiscal_year";
@@ -620,7 +621,7 @@ class OvertimeController extends Controller
 		(
 		select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
 		cross join (
-		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
+		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') BETWEEN  '".$tanggalMin."' and  '".$tanggal."' group by date_format(week_date, '%Y-%m')) s
 		) m
 		where hire_month <= mon and (mon < end_month OR end_month is null)
 		) emp
@@ -633,7 +634,7 @@ class OvertimeController extends Controller
 		left join (
 		select nik, date_format(tanggal,'%Y-%m') as mon, sum(if(status = 0,om.jam,om.final)) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
 		where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%Y-%m') in (
-		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') <= '".$tanggal."' group by date_format(week_date, '%Y-%m')
+		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy[0]->fiscal_year."' and date_format(week_date, '%Y-%m') BETWEEN  '".$tanggalMin."' and '".$tanggal."' group by date_format(week_date, '%Y-%m')
 		)
 		group by date_format(tanggal,'%Y-%m'), nik
 		) ovr on em.employee_id = ovr.nik and em.mon = ovr.mon
