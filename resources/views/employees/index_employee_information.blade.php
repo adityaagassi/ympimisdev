@@ -26,15 +26,15 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Manpower Overtime <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/report/overtime_monthly") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Overtime Control</a>
-			<a href="http://172.17.128.4/myhris/management/ot_m" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Management by Section</a>
-			<a href="http://172.17.128.4/myhris/management/ot_report2" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Management by Employee</a>
-			<a href="http://172.17.128.4/myhris/management/overtime_control" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Control</a>
+			<a href="{{ url("index/report/overtime_section")}}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Management by Section</a>
+			<a href="http://172.17.128.4/myhris/management/ot_report2" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Management by Employee</a>
+			<a href="http://172.17.128.4/myhris/management/overtime_control" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Control</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Attendance Information<i class="fa fa-angle-double-down"></i></span>
-			<a href="http://172.17.128.4/myhris/management_mp/attendance" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Presence by Month</a>
-			<a href="http://172.17.128.4/myhris/management_mp/presensi" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Presence</a>
-			<a href="http://172.17.128.4/myhris/management_mp/absen" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Absence</a>
+			<a href="http://172.17.128.4/myhris/management_mp/attendance" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Presence by Month</a>
+			<a href="http://172.17.128.4/myhris/management_mp/presensi" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Presence</a>
+			<a href="http://172.17.128.4/myhris/management_mp/absen" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Absence</a>
 		</div>
 	</div>
 </section>

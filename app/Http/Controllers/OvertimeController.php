@@ -49,7 +49,14 @@ class OvertimeController extends Controller
 	}
 
 	public function indexReportSection(){
-		return view('overtimes.reports.overtime_section')->with('page', 'Overtime by Section');
+
+		$query = "select cost_center, cost_center_name from cost_centers order by cost_center_name ASC";
+		$cc = db::select($query);
+
+		return view('overtimes.reports.overtime_section', array(
+			'title' => 'Overtime by Section',
+			'title_jp' => '??',
+			'cost_center' => $cc))->with('page', 'Overtime by Section');
 	}
 
 	public function indexReportControl()
@@ -1171,6 +1178,53 @@ public function overtimeDetail(Request $request)
 		'status' => true,
 		'datas' => $datas,
 		'cc' => $cost_center
+	);
+
+	return Response::json($response);
+}
+
+public function fetchReportSection(Request $request)
+{
+	$bulan = date('Y-m');
+
+	$queryDate = "select DATE_FORMAT(week_date,'%Y-%m') as bulan from weekly_calendars where fiscal_year = '".$request->get('tahun')."' GROUP BY DATE_FORMAT(week_date,'%Y-%m')";
+
+	$date = db::select($queryDate);
+
+
+	$query = "select em.employee_id, name, mon, cost_center, COALESCE(jam,0) as jam from(
+	select emp.*, bagian.cost_center from 
+	(select employee_id, name, mon from 
+	(
+	select employee_id, name, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+	cross join (
+	select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$request->get('tahun')."' and date_format(week_date, '%Y-%m') <= '".$bulan."' group by date_format(week_date, '%Y-%m')) s
+	) m
+	where hire_month <= mon and (mon < end_month OR end_month is null)
+	) emp
+	left join (
+	SELECT id, employee_id, cost_center, date_format(valid_from, '%Y-%m') as mon_from, coalesce(date_format(valid_to, '%Y-%m'), date_format(DATE_ADD(now(), INTERVAL 1 MONTH),'%Y-%m')) as mon_to FROM mutation_logs
+	WHERE id IN (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id, DATE_FORMAT(valid_from,'%Y-%m'))
+	) bagian on emp.employee_id = bagian.employee_id and emp.mon >= bagian.mon_from and emp.mon < mon_to
+	where cost_center = '".$request->get('section')."') em left join
+
+	(select DATE_FORMAT(tanggal,'%Y-%m') as bulan, nik, SUM(IF(status=1,final, jam)) as jam from ftm.over_time_member left join ftm.over_time on ftm.over_time.id = ftm.over_time_member.id_ot
+	where deleted_at is null and jam_aktual = 0
+	group by nik, DATE_FORMAT(tanggal,'%Y-%m')) ovr on em.employee_id = ovr.nik and em.mon = ovr.bulan";
+
+	$datas = db::select($query);
+
+
+	$queryBudget = "select cost_center, budget, budget_mp from budgets where cost_center = '".$request->get('section')."' and date_format(period,'%Y-%m') in (
+	select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$request->get('tahun')."' group by date_format(week_date, '%Y-%m'))";
+
+	$data_budgets = db::select($queryBudget);
+
+	$response = array(
+		'status' => true,
+		'datas' => $datas,
+		'budgets' => $data_budgets,
+		'date' => $date
 	);
 
 	return Response::json($response);

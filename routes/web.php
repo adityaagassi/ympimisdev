@@ -114,6 +114,7 @@ Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveCont
 //OVERTIME
 Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
+Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -751,3 +752,7 @@ Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
 Route::get('fetch/display/shipment_progress', 'DisplayController@fetchShipmentProgress');
 Route::get('fetch/display/modal_shipment_progress', 'DisplayController@fetchModalShipmentProgress');
 Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentProgress');
+
+
+//DISPLAY STUFFING PROGRESS
+Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');

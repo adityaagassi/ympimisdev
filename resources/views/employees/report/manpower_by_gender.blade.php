@@ -56,7 +56,7 @@
 <section class="content" style="padding-left: 0px; padding-right: 0px;">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="chart"></div>
+			<div id="chart" style="height: 500px"></div>
 
 		</div>
 	</div>

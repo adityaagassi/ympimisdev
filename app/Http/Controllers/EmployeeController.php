@@ -648,40 +648,7 @@ public function fetchReportGender()
 
 public function fetchReportGender2()
 {
-  $tgl = date('Y-m-d');
-  $fiskal = "select fiscal_year from weekly_calendars WHERE week_date = '".$tgl."'";
-
-  $get_fiskal = db::select($fiskal);
-
-  $gender = "select mon, gender, sum(tot_karyawan) as tot_karyawan from
-  (select mon, gender, count(if(if(date_format(a.hire_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
-  (
-  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
-  from weekly_calendars
-  ) as b
-  join
-  (
-  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, hire_date, employee_id, gender
-  from employees
-  ) as a
-  on a.fy = b.fiscal_year
-  where mon <= date_format('".$tgl."','%Y-%m-%d') 
-  group by mon, gender
-  union all
-  select mon, gender, count(if(if(date_format(a.entry_date, '%Y-%m') <= mon, 1, 0 ) - if(date_format(a.end_date, '%Y-%m') <= mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
-  (
-  select distinct fiscal_year, date_format(week_date, '%Y-%m') as mon
-  from weekly_calendars
-  ) as b
-  join
-  (
-  select '".$get_fiskal[0]->fiscal_year."' as fy, end_date, entry_date, nik, gender
-  from outsources
-  ) as a
-  on a.fy = b.fiscal_year
-  where mon <= date_format('".$tgl."','%Y-%m-%d') 
-  group by mon, gender) semua
-  group by mon, gender";
+  $gender = "select gender, count(employee_id) as jml from employees where end_date is null group by gender";
 
   $get_manpower = db::select($gender);
 

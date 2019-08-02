@@ -54,47 +54,49 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-left: 0px; padding-right: 0px;">
-	<div class="row">
-		<div class="col-xs-12">
-			<div id="chart"></div>
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="chart" style="height: 500px"></div>
 
-			<div class="modal fade" id="myModal">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 style="float: right;" id="modal-title"></h4>
-							<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="col-md-12">
-									<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
-										<thead>
-											<tr>
-												<th>Employee ID</th>
-												<th>Employee Name</th>
-												<th>Division</th>
-												<th>Department</th>
-												<th>Section</th>
-												<th>Sub Section</th>
-												<th>Entry Date</th>
-												<th>Employee Status</th>
-												<th>Status</th>
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-									</table>
+				<div class="modal fade" id="myModal">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 style="float: right;" id="modal-title"></h4>
+								<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
+											<thead>
+												<tr>
+													<th>Employee ID</th>
+													<th>Employee Name</th>
+													<th>Division</th>
+													<th>Department</th>
+													<th>Section</th>
+													<th>Sub Section</th>
+													<th>Entry Date</th>
+													<th>Employee Status</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-						</div>
+						<!-- /.modal-content -->
 					</div>
-					<!-- /.modal-content -->
+					<!-- /.modal-dialog -->
 				</div>
-				<!-- /.modal-dialog -->
 			</div>
 		</div>
 	</div>
