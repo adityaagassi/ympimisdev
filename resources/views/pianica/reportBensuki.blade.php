@@ -261,7 +261,7 @@ table.table-bordered > tfoot > tr > th{
         pointPlacement: -0.3
     }, {
       animation: false,
-        name: 'Total to day',
+        name: 'Total today',
         color: 'rgba(126,86,134,.9)',
         data: total,
         pointPadding: 0.4,
@@ -277,7 +277,7 @@ table.table-bordered > tfoot > tr > th{
        
     }, {
       animation: false,
-        name: 'High to day',
+        name: 'High today',
         color: 'rgba(186,60,61,.9)',
         data: totalH,
         
@@ -296,7 +296,7 @@ table.table-bordered > tfoot > tr > th{
         
     }, {
       animation: false,
-        name: 'Low to day',
+        name: 'Low today',
         color: 'rgba(2, 125, 27,1)',
         data: totalL,
         
@@ -335,11 +335,16 @@ function ngMesin() {
                 if(result.status){
 
                   var nglist = [];                 
-                 
+                 var nglistm = []; 
                   for (var i = 0; i < result.ng.length; i++) {                    
                      nglist.push(result.ng[i].ng);
                      
                     } 
+
+                    for (var i = 0; i < result.totalm.length; i++) {                    
+                     nglistm.push(Math.round((result.totalm[i].ng / result.totaltgl.length)));
+                     
+                    }
 
                      var tgl ="";
                     
@@ -402,15 +407,22 @@ function ngMesin() {
     series: [{
       animation: false,
        type: 'column',
-        name: 'Previous Month Total NG Avg',
-        data: [15,15,15,15,15,15],
+        name: 'Previous Month Avg NG',
+        data: nglistm,
          pointPadding: 0.3,
         pointPlacement: 0,
+         // point: {
+         //        events: {
+         //          click: function () {
+         //            fillModal(this.category , tgl);
+         //          }
+         //        }
+         //      }
 
     }, {
       animation: false,
        type: 'column',
-        name: 'Total NG TO DAY',
+        name: 'Total NG TODAY',
         data: nglist,
          pointPadding: 0.4,
         pointPlacement: 0,

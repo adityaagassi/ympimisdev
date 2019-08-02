@@ -289,7 +289,7 @@ table.table-bordered > tfoot > tr > th{
               },
     series: [{
       animation: false,
-        name: 'Line 2 yesterday',
+        name: 'Line 1 yesterday',
         color: 'rgba(165,170,217,1)',
         data: total1las,
         pointPadding: 0.3,
@@ -298,7 +298,7 @@ table.table-bordered > tfoot > tr > th{
 
     }, {
       animation: false,
-        name: 'Line 2 to day',
+        name: 'Line 1 today',
         color: 'rgba(126,86,134,.5)',
         data: total1,
         pointPadding: 0.4,
@@ -306,7 +306,7 @@ table.table-bordered > tfoot > tr > th{
     },
     {
       animation: false,
-        name: 'Line 3 yesterday',
+        name: 'Line 2 yesterday',
         color: 'rgba(186,60,61,.9)',
         data:  total2las,
         pointPadding: 0.3,
@@ -314,7 +314,7 @@ table.table-bordered > tfoot > tr > th{
         pointWidth: 20
     }, {
       animation: false,
-        name: 'Line 3 to day',
+        name: 'Line 2 today',
         color: 'rgba(186,60,61,.5)',
         data: total2,
         pointPadding: 0.4,
@@ -322,7 +322,7 @@ table.table-bordered > tfoot > tr > th{
     },
     {
       animation: false,
-        name: 'Line 4 yesterday',
+        name: 'Line 3 yesterday',
         color: 'rgba(248,161,63,1)',
         data: total3las,
         pointPadding: 0.3,
@@ -330,7 +330,7 @@ table.table-bordered > tfoot > tr > th{
         pointWidth: 20
     }, {
       animation: false,
-        name: 'Line 4 to day',
+        name: 'Line 3 today',
         color: 'rgba(248,161,63,.5)',
         data: total3,
         pointPadding: 0.4,
@@ -338,7 +338,7 @@ table.table-bordered > tfoot > tr > th{
     },
     {
       animation: false,
-        name: 'Line 5 yesterday',
+        name: 'Line 4 yesterday',
         color: 'rgba(2, 125, 27,1)',
         data:  total4las,
         pointPadding: 0.3,
@@ -346,7 +346,7 @@ table.table-bordered > tfoot > tr > th{
         pointWidth: 20
     }, {
       animation: false,
-        name: 'Line 5 to day',
+        name: 'Line 4 today',
         color: 'rgba(2, 125, 27,.5)',
         data: total4 ,
         pointPadding: 0.4,
@@ -354,7 +354,7 @@ table.table-bordered > tfoot > tr > th{
     },
     {
       animation: false,
-        name: 'Line 6 yesterday',
+        name: 'Line 5 yesterday',
         color: 'rgba(0,0,0,1)',
         data:  total5las,
         pointPadding: 0.3,
@@ -362,7 +362,7 @@ table.table-bordered > tfoot > tr > th{
         pointWidth: 20
     }, {
       animation: false,
-        name: 'Line 6 to day',
+        name: 'Line 5 today',
         color: 'rgba(0,0,0,0.5)',
         data: total5 ,
         pointPadding: 0.4,

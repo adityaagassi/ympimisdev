@@ -123,19 +123,19 @@ public function pureto()
 
     $models = $this->model;
 
-    $low ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $low ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%LOW' and code.bagian='bensuki' ORDER BY code.kode asc";
     $lows = DB::select($low);
 
-    $high ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $high ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%HIGH' and code.bagian='bensuki' ORDER BY code.kode asc";
     $highs = DB::select($high);
 
-    $middle ="select DISTINCT (op.nik) as nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
+    $middle ="select op.nik, op.nama, code.kode, SUBSTRING(code.kode,1,1) as warna from pn_operators as op
     LEFT JOIN pn_code_operators as code
     on op.nik = code.nik
     where code.kode like '%MIDDLE' and code.bagian='bensuki' ORDER BY code.kode asc";
@@ -904,12 +904,18 @@ public function getMesinNg(Request $request)
 {
 
 $datep = $request->get('datep');
+$dateF = "";
+    $dateL = "";
 
     if ($datep != "") {
     $date = $datep;
+    $dateF = date('Y-m-01', strtotime("-1 months",strtotime($datep)));
+    $dateL = date('Y-m-t', strtotime("-1 months",strtotime($datep)));
     // $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
     }else{
     $date = date('Y-m-d');
+    $dateF = date('Y-m-01', strtotime("-1 months"));
+    $dateL = date('Y-m-t', strtotime("-1 months"));
     // $last = date('Y-m-d', strtotime(Carbon::yesterday()));
     }
     $query="SELECT ng_name as mesin, COALESCE(ng,0) as ng from (
@@ -921,13 +927,33 @@ SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
 )b on a.mesin = b.ng_name ORDER BY mesin asc";
 $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."'  ORDER BY created_at desc limit 1";
 
+$querym="        
+SELECT ng_name as mesin, COALESCE(ng,0) as ng from (
+SELECT mesin, COUNT(ng) as ng  FROM header_bensukis
+LEFT JOIN detail_bensukis ON  header_bensukis.ID = detail_bensukis.id_bensuki where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') <= '".$dateL."'
+GROUP BY mesin ORDER BY mesin asc )
+a RIGHT JOIN (
+SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
+)b on a.mesin = b.ng_name ORDER BY mesin asc
+";
+
+$querytgl="
+SELECT DISTINCT(DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d')) as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') <= '".$dateL."'
+";
+
 $tgl2 =DB::select($tgl);
     $total =DB::select($query);
+    $totalm =DB::select($querym);
+    $totaltgl =DB::select($querytgl);
     $response = array(
         'status' => true,
         'message' => 'NG Record found',        
         'ng' => $total,
         'tgl' => $tgl2,
+        'totalm' => $totalm,
+        'totaltgl' => $totaltgl,
+        'dateF' => $dateF,
+        
         
 
     );

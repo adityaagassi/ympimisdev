@@ -142,7 +142,7 @@
                   <td class="tengah3"  id="tvisualok0">0</td> 
                 </tr> 
                 <tr> 
-                  <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px">2</td>
+                  <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px">1</td>
                   <td class="kiri">ACT</td> 
                   <td class="tengah" id="tbensukitot0">0</td> 
                   <td colspan="2" class="kiri">ACT</td>
@@ -1100,7 +1100,7 @@
               $("#tabelapp").append('<tr><td colspan="3" class="gambar2" style="color: white"></td><td colspan="4"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td> <td colspan="2"class="gambar2" style="color: white"></td><td colspan="2"class="gambar2" style="color: white"></td></tr><tr> <td class="tengah" style="text-align: center; font-size: 1vw; background-color: rgba(126,86,134,.7); border-color: white;">LINE</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tbensukiok'+i+'">1</td> <td colspan="2"class="kiri" width="5%">TARGET</td><td colspan="2"class="tengah3" id="tpuretook'+i+'">0</td><td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tawalok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="takhirok'+i+'">0</td> <td class="kiri" width="5%">TARGET</td><td class="tengah3" id="tvisualok'+i+'">0</td> </tr> <tr> <td class="tengah" rowspan="2" style="font-size: 4vw; line-height: 2px" id="lineno'+i+'">'+i+'</td><td class="kiri">ACT</td> <td class="tengah" id="tbensukitot'+i+'">0</td> <td colspan="2" class="kiri">ACT</td><td colspan="2" class="tengah" id="tpuretotot'+i+'">0</td><td class="kiri">ACT</td> <td class="tengah" id="tawaltot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="takhirtot'+i+'">0</td> <td class="kiri">ACT</td> <td class="tengah" id="tvisualtot'+i+'">0</td> </tr> <tr> <td class="kiri">NG</td><td class="tengah2" id="tbensuking'+i+'">1</td> <td bgcolor="black" colspan="2" ></td><td colspan="2"  id="tpuretong'+i+'" bgcolor="black">0</td><td class="kiri">NG</td><td class="tengah2" id="tawalng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="takhirng'+i+'">0</td> <td class="kiri">NG</td><td class="tengah2" id="tvisualng'+i+'">0</td> </tr>    ');
             }
             for (var i = 0; i < 5; i++) {
-              $('#lineno'+i).text(i+2)
+              $('#lineno'+i).text(i+1)
             }
 
           }
