@@ -25,6 +25,7 @@ use File;
 use DataTables;
 use Illuminate\Support\Facades\DB;
 use Response;
+use DateTime;
 use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 
@@ -932,7 +933,7 @@ public function importBagian(Request $request)
 {
   $id = Auth::id();
   try{
-   
+
 
    if($request->hasFile('importBagian')){
     $file = $request->file('importBagian');
@@ -945,8 +946,13 @@ public function importBagian(Request $request)
       $row = explode("\t", $row);
 
       $date_from = date("Y-m-d",strtotime($row[7]));
+      $date = DateTime::createFromFormat('d/m/Y', $row[7]);
+
+      $date_from = $date->format('Y-m-d');
       
-      $date_to = date("Y-m-d",strtotime('-1 day', strtotime($row[7])));
+      date_sub($date, date_interval_create_from_date_string('1 days'));
+
+      $date_to = $date->format('Y-m-d');
       Mutationlog::where('employee_id', $row[0])
       ->orderBy('id','desc')
       ->take(1)

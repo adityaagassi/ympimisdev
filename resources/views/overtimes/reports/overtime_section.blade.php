@@ -207,7 +207,7 @@
 
 
         // Populate series
-        seriesData.push({type: 'spline', name: 'Max OT', data: target, color: 'red', dashStyle: 'dash'});
+        seriesData.push({type: 'spline', name: 'Target OT', data: target, color: 'red', dashStyle: 'dash'});
 
         
 
@@ -228,6 +228,12 @@
           },
           legend: {
             enabled: false
+          },
+          tooltip: {
+            formatter: function () {
+              return this.series.name +
+              ' : ' + this.y + 'hour(s)';
+            }
           },
           plotOptions: {
             line: {
@@ -251,148 +257,33 @@
       });
  }
 
- function total_budget(costCenter, date) {
-   $.ajax({
-    type: "GET",
-    url: '{{url("fetch/cc/budget")}}',
-    data: {
-     cc : costCenter,
-     tgl : date
-   },
-   dataType: 'json',
-   success: function(data) {
-     $("#modal-title").html(costCenter+" ( &Sigma; Budget "+data.datas[0].budget+" )");
-   }
- })
+ $('#tgl').datepicker({
+   <?php $tgl_max = date('d-m-Y') ?>
+   autoclose: true,
+   format: "dd-mm-yyyy",
+   endDate: '<?php echo $tgl_max ?>',
+ });
 
+ function openSuccessGritter(title, message){
+   jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '3000'
+  });
  }
 
- function modalTampil(costCenter, date) {
-   $("#myModal").modal('show');
-      var showChar = 100;  // How many characters are shown by default
-      var ellipsestext = "...";
-      var moretext = "Show more >";
-      var lesstext = "< Show less";
-
-      total_budget(costCenter, date);
-
-      $.ajax({
-      	type: "GET",
-      	url: "{{url('fetch/chart/control/detail')}}",
-      	data: {
-      		cc : costCenter,
-      		tgl : date
-      	},
-      	dataType: 'json',
-      	beforeSend: function () {
-      		$('#progressbar2').show();
-      		$('#example2').hide();
-      	},
-      	complete: function () {
-      		$('#progressbar2').hide();
-      		$('#example2').show();
-      	},
-      	success: function(data) {
-      		$("#tabelDetail").empty();
-      		var no = 1;
-      		var jml = 0;
-
-          console.log(data);
-          var dataT = '';
-          var no = 1;
-
-          for (var i = 0; i <   data.datas.length; i++) {
-
-            dataT += '<tr>';
-            dataT += '<td>'+ no++; +'</td>';
-            dataT += '<td>'+ data.datas[i].nik +'</td>';
-            dataT += '<td>'+ data.datas[i].namaKaryawan +'</td>';           
-            dataT += '<td>'+ data.datas[i].jam +'</td>';
-            dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
-            dataT += '</tr>';
-            jml += data.datas[i].jam;
-          }
-          $("#tabelDetail").append(dataT);
-
-
-
-      		// $.each(data, function(i, item) {
-      		// 	if (item[0] != ""){
-      		// 		var newdiv1 = $( "<tr>"+                  
-      		// 			"<td>"+no+"</td><td>"+item[0]+"</td>"+
-      		// 			"<td>"+item[1]+"</td><td>"+item[2]+"</td><td><span class='more'>"+item[3]+"</span></td>"+
-      		// 			"</tr>");
-      		// 		no++;
-      		// 		jml += item[2];
-
-      		// 		$("#tabelDetail").append(newdiv1);
-      		// 	}
-      		// });
-
-
-
-          $('.more').each(function() {
-            var content = $(this).html();
-
-
-
-            if(content.length > showChar) {
-
-              var c = content.substr(0, showChar);
-              var h = content.substr(showChar, content.length - showChar);
-
-              var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-
-              $(this).html(html);
-            }
-
-          });
-
-          $(".morelink").click(function(){
-            if($(this).hasClass("less")) {
-              $(this).removeClass("less");
-              $(this).html(moretext);
-            } else {
-              $(this).addClass("less");
-              $(this).html(lesstext);
-            }
-            $(this).parent().prev().toggle();
-            $(this).prev().toggle();
-            return false;
-          });
-
-          $("#tot").text(jml);
-        }
-      })
-    }
-
-    $('#tgl').datepicker({
-     <?php $tgl_max = date('d-m-Y') ?>
-     autoclose: true,
-     format: "dd-mm-yyyy",
-     endDate: '<?php echo $tgl_max ?>',
-   });
-
-    function openSuccessGritter(title, message){
-     jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-success',
-      image: '{{ url("images/image-screen.png") }}',
-      sticky: false,
-      time: '3000'
-    });
-   }
-
-   function openErrorGritter(title, message) {
-     jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-danger',
-      image: '{{ url("images/image-stop.png") }}',
-      sticky: false,
-      time: '3000'
-    });
-   }	
- </script>
- @endsection
+ function openErrorGritter(title, message) {
+   jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+ }	
+</script>
+@endsection
