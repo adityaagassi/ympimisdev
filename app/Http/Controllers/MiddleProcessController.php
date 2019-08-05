@@ -569,7 +569,7 @@ class MiddleProcessController extends Controller
 		->where('materials.category', '=', 'WIP')
 		->where('materials.mrpc', '=', $request->get('mrpc'))
 		->whereIn('materials.hpl', $request->get('hpl'))
-		->select('materials.hpl', 'barrel_logs.status', db::raw('sum(barrel_logs.qty) as qty'), db::raw('IF(TIME(barrel_logs.created_at) > "00:00:00" and TIME(barrel_logs.created_at) < "07:00:00", 3, IF(TIME(barrel_logs.created_at) > "07:00:00" and TIME(barrel_logs.created_at) < "16:00:00", 1, IF(TIME(barrel_logs.created_at) > "16:00:00" and TIME(created_at) < "23:59:59", 2, "ERROR"))) AS shift'))
+		->select('materials.hpl', 'barrel_logs.status', db::raw('sum(barrel_logs.qty) as qty'), db::raw('IF(TIME(barrel_logs.created_at) > "00:00:00" and TIME(barrel_logs.created_at) < "07:00:00", 3, IF(TIME(barrel_logs.created_at) > "07:00:00" and TIME(barrel_logs.created_at) < "16:00:00", 1, IF(TIME(barrel_logs.created_at) > "16:00:00" and TIME(barrel_logs.created_at) < "23:59:59", 2, "ERROR"))) AS shift'))
 		->groupBy('materials.hpl', 'barrel_logs.status', 'barrel_logs.created_at')
 		->get();
 
