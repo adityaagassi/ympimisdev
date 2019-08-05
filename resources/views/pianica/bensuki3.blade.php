@@ -228,11 +228,12 @@
                     <th align="center" width="6.6%">Lekukan</th>
                     <th align="center" width="6.6%">Kotor</th>
                     <th align="center" width="6.6%">Celah Sempit</th>
+                    <th align="center" width="6.6%">Double</th>
                   </tr>
 
 
                   <tr>
-                    <td colspan="15"> LOW</td>
+                    <td colspan="16"> LOW</td>
                   </tr>
                   <tr style="background-color: #F0FFF0">
                     <td >0</td>
@@ -250,11 +251,13 @@
                     <td >0</td>
                     <td >0</td>
                     <td >0</td>
+                    <td >0</td>
                   </tr>
                   <tr>
-                    <td colspan="15"> High</td>
+                    <td colspan="16"> High</td>
                   </tr>
                   <tr style="background-color: #F0FFF0">
+                    <td >0</td>
                     <td >0</td>
                     <td >0</td>
                     <td >0</td>
@@ -317,7 +320,7 @@
           var ngar = new Array();
           var tbl = document.getElementById("tblMain");
           if (tbl != null) {              
-            for (var j = 0; j < 15; j++) {
+            for (var j = 0; j < 16; j++) {
               tbl.rows[2].cells[j].onclick = function () { low(this,this.cellIndex); };  
               tbl.rows[4].cells[j].onclick = function () { low(this,this.cellIndex); };             
             }
@@ -421,7 +424,7 @@
           ngar = [];
           $('#ng').val(''); 
           $('.destroy').text('');
-          for (var i = 0; i < 15; i++) {
+          for (var i = 0; i < 16; i++) {
             tbl.rows[4].cells[i].innerHTML ="0";
             tbl.rows[4].cells[i].style.backgroundColor = "#F0FFF0";
             tbl.rows[2].cells[i].innerHTML ="0";
@@ -433,7 +436,7 @@
           $('#modelb2').text('');
           $('#qty').val(''); 
           $('#entrydate').val('');
-          for (var i = 0; i < 15; i++) {
+          for (var i = 0; i < 16; i++) {
             tbl.rows[4].cells[i].innerHTML ="0";
             tbl.rows[4].cells[i].style.backgroundColor = "#F0FFF0";
             tbl.rows[2].cells[i].innerHTML ="0";
