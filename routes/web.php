@@ -20,10 +20,11 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 Route::get('/tes', function () {
 	return view('displays.shippings.stuffing_progress');
 });
-Route::post('trial/tes', 'TrialController@tes');
 
-Route::get('/tes2', function () {
-	return view('purchase_orders.tes');
+
+
+Route::get('/trial', function () {
+	return view('trial');
 });
 
 Route::get('/', function () {

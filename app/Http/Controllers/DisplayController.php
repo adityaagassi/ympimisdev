@@ -29,6 +29,39 @@ class DisplayController extends Controller
 		return view('displays.fg_accuracy')->with('page', 'Display FG Accuracy')->with('head', 'Display');		
 	}
 
+	public function fetchStuffingProgress(){
+		$now = date('Y-m-d');
+		$query = "select if(master_checksheets.`status` = 1, 10, if(actual_stuffing.total_actual > 0, 8, 9)) as seq, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+		left join
+		(
+		select id_checkSheet, if(min(min_update) = '9999-99-99', '-', min(min_update)) as started_at, if(max(max_update) = '0000-00-00', '-', max(max_update)) as last_update, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
+		select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '9999-99-99') as min_update, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '0000-00-00') as max_update from detail_checksheets
+		) as stuffings
+		group by id_checkSheet
+		) as actual_stuffing
+		on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
+		where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date = '".$now."'
+		order by seq asc";
+
+		$stuffing_progress = db::select($query);
+
+		$query2 = "select master_checksheets.stuffing_date, count(if(master_checksheets.carier = 'C1', 1, null)) as 'sea', count(if(master_checksheets.carier = 'C2', 1, null)) as 'air', count(if(master_checksheets.carier = 'C4' or master_checksheets.carier = 'TR', 1, null)) as 'truck', sum(stuffings.total_plan) as total_plan from master_checksheets
+		left join
+		(
+		select id_checkSheet, sum(qty_qty) as total_plan from detail_checksheets group by id_checkSheet
+		) as stuffings 
+		on stuffings.id_checkSheet = master_checksheets.id_checkSheet where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date > '".$now."' group by master_checksheets.Stuffing_date";
+
+		$stuffing_resume = db::select($query2);
+
+		$response = array(
+			'status' => true,
+			'stuffing_progress' => $stuffing_progress,
+			'stuffing_resume' => $stuffing_resume
+		);
+		return Response::json($response);
+	}
+
 	public function fetch_dp_fg_accuracy_detail(Request $request){
 		$first = date('Y-m-d', strtotime(Carbon::parse('first day of '. date('F Y', strtotime($request->get('date'))))));
 
@@ -66,7 +99,7 @@ class DisplayController extends Controller
 	public function fetchModalShipmentProgress(Request $request){
 		$st_date = date('Y-m-d', strtotime($request->get('date')));
 
-		
+
 		$hpl = " and materials.hpl = '" . $request->get('hpl') . "'";
 
 		if( $request->get('hpl') == 'all'){
@@ -80,7 +113,7 @@ class DisplayController extends Controller
 		left join materials on materials.material_number = shipment_schedules.material_number
 		left join destinations on destinations.destination_code = shipment_schedules.destination_code
 		where materials.category = 'FG' and shipment_schedules.st_date = '" .$st_date . "'
-		
+
 		" . $hpl . "
 
 		group by shipment_schedules.st_date, shipment_schedules.material_number, materials.material_description, shipment_schedules.destination_code, destinations.destination_shortname
@@ -120,7 +153,7 @@ class DisplayController extends Controller
 		else{
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
 		}
-		
+
 		$query = "select date_format(e.st_date, '%d-%b-%Y') as st_date, e.hpl, coalesce(act,0) as act, coalesce(plan,0) as plan, actual from
 		(
 		select distinct materials.hpl, c.st_date from materials
@@ -267,7 +300,7 @@ class DisplayController extends Controller
 		// ->select('kitto.inventories.material_number', db::raw('sum(kitto.inventories.lot) as stock'))
 		// ->groupBy('kitto.inventories.material_number')
 		// ->get();
-		
+
 		$stock_plt_alto = db::table('ympimis.materials')
 		->leftjoin('kitto.inventories', 'kitto.inventories.material_number', '=', 'ympimis.materials.material_number')
 		->where('ympimis.materials.work_center', '=', 'WS51')
@@ -319,7 +352,7 @@ class DisplayController extends Controller
 		else{
 			$debt= "";
 		}
-		
+
 
 		$query = "select result.material_number, materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
 		(

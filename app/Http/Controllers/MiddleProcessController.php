@@ -13,8 +13,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Carbon\Carbon;
-use App\LogProcessMiddle;
-use App\LogNgMiddle;
 use App\TagMaterial;
 use App\MiddleInventory;
 use App\BarrelQueue;
@@ -24,6 +22,10 @@ use App\BarrelLog;
 use App\BarrelMachine;
 use App\BarrelMachineLog;
 use App\CodeGenerator;
+use App\MiddleNgLog;
+use App\MiddleLog;
+use App\Material;
+use App\Employee;
 
 class MiddleProcessController extends Controller
 {
@@ -50,14 +52,30 @@ class MiddleProcessController extends Controller
 		if($id == 'barrel-sx'){
 			$title = 'Saxophone Barrel Board';
 			$title_jp = 'サックスのバレル加工用モニター';
-			$mprc = 'S51';
+			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 		}
 		
 		return view('processes.middle.barrel_board', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'mrpc' => $mprc,
+			'mrpc' => $mrpc,
+			'hpl' => $hpl,
+		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+	}
+
+	public function indexBuffingBoard($id){
+		if($id == 'buffing-sx'){
+			$title = 'Saxophone Buffing Board';
+			$title_jp = '-';
+			$mrpc = 'S41';
+			$hpl = 'ASKEY,TSKEY';
+		}
+
+		return view('processes.middle.buffing_board', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
 	}
@@ -77,12 +95,12 @@ class MiddleProcessController extends Controller
 	public function indexProcessMiddleBarrel($id){
 		if($id == 'barrel-sx-lcq'){
 			$title = 'Saxophone Tumbling-Barrel For Lacquering';
-			$mprc = 'S51';
+			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 			$surface = 'LCQ';
 			return view('processes.middle.barrel_lcq', array(
 				'title' => $title,
-				'mrpc' => $mprc,
+				'mrpc' => $mrpc,
 				'hpl' => $hpl,
 				'surface' => $surface,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
@@ -90,12 +108,12 @@ class MiddleProcessController extends Controller
 
 		if($id == 'barrel-sx-plt'){
 			$title = 'Saxophone Tumbling-Barrel For Plating';
-			$mprc = 'S51';
+			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 			$surface = 'PLT';
 			return view('processes.middle.barrel_plt', array(
 				'title' => $title,
-				'mrpc' => $mprc,
+				'mrpc' => $mrpc,
 				'hpl' => $hpl,
 				'surface' => $surface,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
@@ -103,12 +121,12 @@ class MiddleProcessController extends Controller
 
 		if($id == 'barrel-sx-flanel'){
 			$title = 'Saxophone Flanel';
-			$mprc = 'S51';
+			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 			$surface = 'FLANEL';
 			return view('processes.middle.barrel_flanel', array(
 				'title' => $title,
-				'mrpc' => $mprc,
+				'mrpc' => $mrpc,
 				'hpl' => $hpl,
 				'surface' => $surface,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
@@ -118,11 +136,11 @@ class MiddleProcessController extends Controller
 	public function indexProcessMiddleReturn($id){
 		if($id == 'buffing'){
 			$title = 'Return Material to Buffing';
-			$mprc = 'S51';
+			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 			return view('processes.middle.return', array(
 				'title' => $title,
-				'mrpc' => $mprc,
+				'mrpc' => $mrpc,
 				'hpl' => $hpl,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 		}
@@ -164,14 +182,153 @@ class MiddleProcessController extends Controller
 	{
 		$title = 'Saxophone Barrel Adjustment';
 		$title_jp = '??';
-		$mprc = 'S51';
+		$mrpc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
 		
 		return view('processes.middle.barrel_adjustment', array(
 			'title' => $title,
-			'mrpc' => $mprc,
+			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+	}
+
+	public function fetchBuffingBoard(Request $request){
+		$tmp = [];
+
+		$work_stations = db::connection('digital_kanban')->table('dev_list')
+		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
+		->get();
+
+		$boards = array();
+		foreach ($work_stations as $work_station) {
+			$employee = Employee::where('employee_id', '=', $work_station->dev_operator_id)->select('name')->first();
+			if($employee != null){
+				$employee_name = $employee->name;
+			}
+			else{
+				$employee_name = "NotFound";
+			}
+
+			if($work_station->dev_selesai_detected == 1){
+				$selesai = $work_station->dev_selesai_num;
+				array_push($tmp, $work_station->dev_selesai_num);
+			}
+			else{
+				$selesai = "";
+			}
+
+			$queues = db::connection('digital_kanban')->table('buffing_queues')
+			// ->where('rack', '=', $work_station->dev_name)
+			->whereRaw('rack = concat(SPLIT_STRING("'.$work_station->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$work_station->dev_name.'", "-", 2))')
+			->orderBy('created_at', 'asc')
+			->limit(10)
+			->get();
+
+			$lists = array();
+			for ($i=0; $i < 10 ; $i++) {
+				if(isset($queues[$i])){
+					array_push($lists, $queues[$i]->material_num);
+					array_push($tmp, $queues[$i]->material_num);
+				}
+				else{
+					array_push($lists, "");
+				}
+			}
+
+			array_push($tmp, $work_station->dev_sedang_num);
+			array_push($tmp, $work_station->dev_akan_num);
+
+			array_push($boards, [
+				'ws' => $work_station->dev_name,
+				'employee_id' => $work_station->dev_operator_id,
+				'employee_name' => $employee_name,
+				'sedang' => $work_station->dev_sedang_num,
+				'akan' => $work_station->dev_akan_num,
+				'selesai' => $selesai,
+				'queue_1' => $lists[0],
+				'queue_2' => $lists[1],
+				'queue_3' => $lists[2],
+				'queue_4' => $lists[3],
+				'queue_5' => $lists[4],
+				'queue_6' => $lists[5],
+				'queue_7' => $lists[6],
+				'queue_8' => $lists[7],
+				'queue_9' => $lists[8],
+				'queue_10' => $lists[9]
+			]);
+		}
+
+		$tmp = array_unique($tmp);
+
+		$materials = Material::where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->whereIn('materials.material_number', $tmp)
+		->select('material_number',db::raw("concat(material_number,'<br>',model,'_',`key`) as isi"))
+		->get();
+
+
+		for ($i=0; $i < count($boards); $i++) { 
+			foreach ($materials as $material) {
+				if ($boards[$i]['sedang'] == $material->material_number) {
+					$boards[$i]['sedang'] = $material->isi;
+				}
+
+				if ($boards[$i]['akan'] == $material->material_number) {
+					$boards[$i]['akan'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_1'] == $material->material_number) {
+					$boards[$i]['queue_1'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_2'] == $material->material_number) {
+					$boards[$i]['queue_2'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_3'] == $material->material_number) {
+					$boards[$i]['queue_3'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_4'] == $material->material_number) {
+					$boards[$i]['queue_4'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_5'] == $material->material_number) {
+					$boards[$i]['queue_5'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_6'] == $material->material_number) {
+					$boards[$i]['queue_6'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_7'] == $material->material_number) {
+					$boards[$i]['queue_7'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_8'] == $material->material_number) {
+					$boards[$i]['queue_8'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_9'] == $material->material_number) {
+					$boards[$i]['queue_9'] = $material->isi;
+				}
+
+				if ($boards[$i]['queue_10'] == $material->material_number) {
+					$boards[$i]['queue_10'] = $material->isi;
+				}
+
+				if ($boards[$i]['selesai'] == $material->material_number) {
+					$boards[$i]['selesai'] = $material->isi;
+				}
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'boards' => $boards,
+			'materials' => $materials
+		);
+		return Response::json($response);
 	}
 
 	public function fetchMiddleBarrelReprint(Request $request){
@@ -400,7 +557,7 @@ class MiddleProcessController extends Controller
 				);
 				return Response::json($response);
 			}
-		}		
+		}
 	}
 
 	public function fetchMiddleBarrelBoard(Request $request){
@@ -408,12 +565,12 @@ class MiddleProcessController extends Controller
 		$now = date('Y-m-d');
 		$barrel_board =  DB::table('barrel_logs')
 		->leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material')
-		->where(DB::raw('DATE_FORMAT(barrel_logs.started_at,"%Y-%m-%d")'), '=', $now)
+		->where(DB::raw('DATE_FORMAT(barrel_logs.created_at,"%Y-%m-%d")'), '=', $now)
 		->where('materials.category', '=', 'WIP')
 		->where('materials.mrpc', '=', $request->get('mrpc'))
 		->whereIn('materials.hpl', $request->get('hpl'))
-		->select('materials.hpl', 'barrel_logs.status', db::raw('sum(barrel_logs.qty) as qty'), db::raw('IF(TIME(barrel_logs.started_at) > "00:00:00" and TIME(barrel_logs.started_at) < "07:00:00", 3, IF(TIME(barrel_logs.started_at) > "07:00:00" and TIME(barrel_logs.started_at) < "16:00:00", 1, IF(TIME(barrel_logs.started_at) > "16:00:00" and TIME(started_at) < "23:59:59", 2, "ERROR"))) AS shift'))
-		->groupBy('materials.hpl', 'barrel_logs.status', 'barrel_logs.started_at')
+		->select('materials.hpl', 'barrel_logs.status', db::raw('sum(barrel_logs.qty) as qty'), db::raw('IF(TIME(barrel_logs.created_at) > "00:00:00" and TIME(barrel_logs.created_at) < "07:00:00", 3, IF(TIME(barrel_logs.created_at) > "07:00:00" and TIME(barrel_logs.created_at) < "16:00:00", 1, IF(TIME(barrel_logs.created_at) > "16:00:00" and TIME(created_at) < "23:59:59", 2, "ERROR"))) AS shift'))
+		->groupBy('materials.hpl', 'barrel_logs.status', 'barrel_logs.created_at')
 		->get();
 
 		$barrel_queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
@@ -1128,50 +1285,20 @@ class MiddleProcessController extends Controller
 		}
 	}
 
-	public function fetchResultMiddleKensa(Request $request){
+	public function fetchMiddleKensa(Request $request){
 
-		$prodDate = \DateTime::createFromFormat('d/m/Y', $request->get('prodDate'))->format('Y-m-d');
+		$result = MiddleLog::where('employee_id', '=', $request->get('employee_id'))
+		->whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'. date('Y-m-d') .'"')
+		->sum('quantity');
 
-		$queryResume = "select sum(total_ok) as ok, sum(total_ng) as ng, round(sum(total_ng)/sum(total_ok), 2) as rate from
-		(
-		select 0 as total_ok, sum(qty) as total_ng from log_ng_middles where prod_date = '" . $prodDate . "' and group_code = '" . $request->get('group') . "' and location = '" . $request->get('location') . "'
-		union all
-		select sum(qty) as total_ok, 0 as total_ng from log_process_middles where prod_date = '" . $prodDate . "' and group_code = '" . $request->get('group') . "' and location = '" . $request->get('location') . "') as a";
-
-		$queryDetail = "select a.model, a.result, b.ng_name, coalesce(c.ng_qty, 0) as ng_qty from
-		(
-		select materials.model, sum(log_process_middles.qty) as result from log_process_middles left join materials on materials.material_number = log_process_middles.material_number where log_process_middles.prod_date = '" . $prodDate . "' and log_process_middles.group_code = '" . $request->get('group') . "' and log_process_middles.location = '" . $request->get('location') . "' group by materials.model
-		) as a
-		cross join
-		(
-		select ng_name from ng_lists where ng_lists.location = '" . $request->get('location') . "'
-		) as b
-		left join
-		(
-		select materials.model, log_ng_middles.ng_name, sum(qty) as ng_qty from log_ng_middles left join materials on materials.material_number = log_ng_middles.material_number where prod_date = '" . $prodDate . "' and group_code = '" . $request->get('group') . "' and location = '" . $request->get('location') . "' group by materials.model, log_ng_middles.ng_name
-		) as c on c.model = a.model and c.ng_name = b.ng_name
-		order by a.model asc, b.ng_name asc";
-
-		$queryNg = "select a.ng_name, coalesce(ng_qty, 0) as ng_qty from
-		(
-		(select ng_lists.ng_name from ng_lists where ng_lists.location = '" . $request->get('location') . "') as a
-		left join 
-		(select log_ng_middles.ng_name, sum(log_ng_middles.qty) as ng_qty from log_ng_middles where log_ng_middles.location = '" . $request->get('location') . "' and log_ng_middles.prod_date = '" . $prodDate . "' and log_ng_middles.group_code = '" . $request->get('group') . "' group by ng_name) as b on a.ng_name = b.ng_name
-		)
-		order by a.ng_name asc";
-
-		$resume = db::select($queryResume);
-		$detail = db::select($queryDetail);
-		$ng_lists = db::table('ng_lists')->where('location', '=', $request->get('location'))->select('ng_lists.ng_name')->orderBy('ng_lists.ng_name', 'asc')->get();
-		$ng = db::select($queryNg);
+		$ng = MiddleNgLog::where('employee_id', '=', $request->get('employee_id'))
+		->whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'. date('Y-m-d') .'"')
+		->sum('quantity');
 
 		$response = array(
 			'status' => true,
-			'resume' => $resume,
-			'detail' => $detail,
-			'ng_lists' => $ng_lists,
+			'result' => $result,
 			'ng' => $ng,
-			'ng_count' => count($ng_lists),
 		);
 		return Response::json($response);
 	}
@@ -1209,100 +1336,116 @@ class MiddleProcessController extends Controller
 		}
 	}
 
-	public function inputNgMiddleKensa(Request $request){
+	public function inputMiddleKensa(Request $request){
 
-		$tag_material = TagMaterial::where('tag_materials.tag', '=', $request->get('tag'))
-		->first();
-
-		$ngName = $request->get('ng_name');
-		$ngQty = $request->get('ng_qty');
-		$count_text = $request->get('count_text');
-		$prodDate = \DateTime::createFromFormat('d/m/Y', $request->get('prodDate'))->format('Y-m-d');
-		$id = Auth::id();
-
-		for ($i=0; $i < count($ngName); $i++) {
-			try{
-				$log_ng_middle = new LogNgMiddle([
-					'group_code' => $request->get('group'),
-					'op_kensa' => $request->get('opKensa'),
-					'prod_date' => $prodDate,
+		if($request->get('ng')){
+			foreach ($request->get('ng') as $ng) {
+				$middle_ng_log = new MiddleNgLog([
+					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
-					'material_number' => $tag_material->material_number,
-					'location' => $request->get('location'),
-					'ng_name' => $ngName[$i],
-					'qty' => $ngQty[$i],
-					'op_prod' => $tag_material->op_prod,
-					'created_by' => $id,
+					'material_number' => $request->get('material_number'),
+					'ng_name' => $ng[0],
+					'quantity' => $ng[1],
+					'location' => $request->get('loc'),
 				]);
-				$log_ng_middle->save();
-				$success_count[] = $count_text[$i];
-			}
-			catch (QueryException $e){
-				$fail_count[] = $count_text[$i];
-			}
-		}
 
-		if(isset($fail_count)){
-			$response = array(
-				'status' => false,
-				'fail_count' => $fail_count,
-				'message' => 'Material NG has some errors',
-			);
-			return Response::json($response);
-		}
-		else{
+				try{
+					$middle_ng_log->save();
+				}
+				catch(\Exception $e){
+					$response = array(
+						'status' => false,
+						'message' => $e->getMessage(),
+					);
+					return Response::json($response);
+				}
+			}
 			$response = array(
 				'status' => true,
-				'success_count' => $success_count,
-				'message' => 'Material NG has been inputted',
+				'message' => 'NG has been recorded.',
 			);
 			return Response::json($response);
 		}
-	}
 
-	public function inputResultMiddleKensa(Request $request){
-		$tag_material = TagMaterial::where('tag_materials.tag', '=', $request->get('tag'))
-		->first();
-
-		$prodDate = \DateTime::createFromFormat('d/m/Y', $request->get('prodDate'))->format('Y-m-d');
-
-		try{
-
-			$id = Auth::id();
-			$tag_material->location = $request->get('location');
-			$log_process_middle = new LogProcessMiddle([
-				'group_code' => $request->get('group'),
-				'op_kensa' => $request->get('opKensa'),
-				'prod_date' => $prodDate,
+		if(!$request->get('ng')){
+			$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
+			$middle_inventory->location = $request->get('loc');
+			$middle_log = new MiddleLog([
+				'employee_id' => $request->get('employee_id'),
 				'tag' => $request->get('tag'),
-				'material_number' => $tag_material->material_number,
-				'location' => $request->get('location'),
-				'qty' => $tag_material->qty,
-				'op_prod' => $tag_material->op_prod,
-				'created_by' => $id,
+				'material_number' => $request->get('material_number'),
+				'quantity' => $request->get('quantity'),
+				'location' => $request->get('loc'),
 			]);
 
-			$inventory = MiddleInventory::firstOrNew(['location' => $request->get('location'), 'material_number' => $tag_material->material_number]);
-			$inventory->quantity = ($inventory->quantity+$tag_material->qty);
+			try{
+				DB::transaction(function() use ($middle_log, $middle_inventory){
+					$middle_log->save();
+					$middle_inventory->save();
+				});
 
-			$tag_material->save();
-			$log_process_middle->save();
-			$inventory->save();
-
-			$response = array(
-				'status' => true,
-				'message' => 'Material '. $tag_material->material_number .' inputted as production result.',
-			);
-			return Response::json($response);
-
+				$response = array(
+					'status' => true,
+					'message' => 'Input material successfull.',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 		}
-		catch (QueryException $e){
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
-			);
-			return Response::json($response);
-		}
+
+		// $tag_material = TagMaterial::where('tag_materials.tag', '=', $request->get('tag'))
+		// ->first();
+
+		// $ngName = $request->get('ng_name');
+		// $ngQty = $request->get('ng_qty');
+		// $count_text = $request->get('count_text');
+		// $prodDate = \DateTime::createFromFormat('d/m/Y', $request->get('prodDate'))->format('Y-m-d');
+		// $id = Auth::id();
+
+		// for ($i=0; $i < count($ngName); $i++) {
+		// 	try{
+		// 		$log_ng_middle = new LogNgMiddle([
+		// 			'group_code' => $request->get('group'),
+		// 			'op_kensa' => $request->get('opKensa'),
+		// 			'prod_date' => $prodDate,
+		// 			'tag' => $request->get('tag'),
+		// 			'material_number' => $tag_material->material_number,
+		// 			'location' => $request->get('location'),
+		// 			'ng_name' => $ngName[$i],
+		// 			'qty' => $ngQty[$i],
+		// 			'op_prod' => $tag_material->op_prod,
+		// 			'created_by' => $id,
+		// 		]);
+		// 		$log_ng_middle->save();
+		// 		$success_count[] = $count_text[$i];
+		// 	}
+		// 	catch (QueryException $e){
+		// 		$fail_count[] = $count_text[$i];
+		// 	}
+		// }
+
+		// if(isset($fail_count)){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'fail_count' => $fail_count,
+		// 		'message' => 'Material NG has some errors',
+		// 	);
+		// 	return Response::json($response);
+		// }
+		// else{
+		// 	$response = array(
+		// 		'status' => true,
+		// 		'success_count' => $success_count,
+		// 		'message' => 'Material NG has been inputted',
+		// 	);
+		// 	return Response::json($response);
+		// }
 	}
 
 	public function fetchProcessBarrelMachine()
@@ -1536,9 +1679,9 @@ class MiddleProcessController extends Controller
 		->whereIn('materials.hpl', $request->get('hpl'))
 		->where('surface','like','%'.$request->get('surface'))
 		->where('hpl', $request->get('key'))
-		->where(db::raw("DATE_FORMAT(started_at,'%Y-%m-%d')"),"=", $now)
-		->where(db::raw("DATE_FORMAT(started_at,'%H:%i:%s')"), '>=', $awal)
-		->where(db::raw("DATE_FORMAT(started_at,'%H:%i:%s')"), '<', $akhir)
+		->where(db::raw("DATE_FORMAT(created_at,'%Y-%m-%d')"),"=", $now)
+		->where(db::raw("DATE_FORMAT(created_at,'%H:%i:%s')"), '>=', $awal)
+		->where(db::raw("DATE_FORMAT(created_at,'%H:%i:%s')"), '<', $akhir)
 		->select('model','key', db::raw("SUM(IF(`status`='set',qty,0)) as `set`"), db::raw("SUM(IF(`status`='reset',qty,0)) as `reset`"), db::raw("SUM(IF(`status`='plt',qty,0)) as `plt`"))
 		->groupBy('model','key')
 		->get();
