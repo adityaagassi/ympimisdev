@@ -2054,7 +2054,9 @@ count(IF(ng ='Salah Posisi' and posisi ='high' ,1,null)) as SPosisiH,
 count(IF(ng ='Terbalik' and posisi ='low' ,1,null)) as TerbalikL,
 count(IF(ng ='Terbalik' and posisi ='high' ,1,null)) as TerbalikH,
 count(IF(ng ='Ujung Menempel' and posisi ='low' ,1,null)) as UMenempelL,
-count(IF(ng ='Ujung Menempel' and posisi ='high' ,1,null)) as UMenempelH
+count(IF(ng ='Ujung Menempel' and posisi ='high' ,1,null)) as UMenempelH,
+count(IF(ng ='Double' and posisi ='low' ,1,null)) as DoubleL,
+count(IF(ng ='Double' and posisi ='high' ,1,null)) as DoubleH
 from 
 (SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
 left join (
@@ -2395,7 +2397,8 @@ count(IF(ng ='Panjang' ,1,null)) as Panjang,
 count(IF(ng ='Patah' ,1,null)) as Patah,
 count(IF(ng ='Salah Posisi' ,1,null)) as SPosisi,
 count(IF(ng ='Terbalik' ,1,null)) as Terbalik,
-count(IF(ng ='Ujung Menempel',1,null)) as UMenempel
+count(IF(ng ='Ujung Menempel',1,null)) as UMenempel,
+count(IF(ng ='Double',1,null)) as Doble
 from 
 (SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$to."') s
 left join (

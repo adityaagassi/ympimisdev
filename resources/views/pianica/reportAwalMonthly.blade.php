@@ -259,6 +259,7 @@
                       <th colspan="2">Salah Posisi</th>
                       <th colspan="2">Terbalik</th>
                       <th colspan="2">Ujung Menempel</th>
+                      <th colspan="2">Double</th>
                     </tr>
                     <tr>                     
                       <th>Low</th>
@@ -291,7 +292,8 @@
                       <th>High</th>
                       <th>Low</th>
                       <th>High</th>
-                      
+                      <th>Low</th>
+                      <th>High</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -299,6 +301,8 @@
                   <tfoot style="background-color: RGB(252, 248, 227);">
                     <tr>
                       <th>Total</th>
+                      <th></th>
+                      <th></th>
                       <th></th>
                       <th></th>
                       <th></th>
@@ -449,6 +453,7 @@
           var SPosisi = [];
           var Terbalik = [];
           var UMenempel = [];
+          var Doble = [];
 
 
                   // alert(result.record[0].pro);
@@ -468,6 +473,9 @@
                     SPosisi.push(parseInt(result.record[i].SPosisi));
                     Terbalik.push(parseInt(result.record[i].Terbalik));
                     UMenempel.push(parseInt(result.record[i].UMenempel));
+                    
+                    Doble.push(parseInt(result.record[i].Doble));
+                    
 
                    tgl.push(result.record[i].tgl);
 
@@ -736,6 +744,10 @@
                     {
                       name: 'Ujung Menempel',
                       data: UMenempel
+                    },
+                    {
+                      name: 'Double',
+                      data: Doble
                     },
 
                     {
@@ -1134,6 +1146,12 @@ function Fillrecord(){
         var rendah30 = api.column(30).data().reduce(function (a, b) {
           return intVal(a)+intVal(b);
         }, 0)
+        var rendah31 = api.column(31).data().reduce(function (a, b) {
+          return intVal(a)+intVal(b);
+        }, 0)
+        var rendah32 = api.column(32).data().reduce(function (a, b) {
+          return intVal(a)+intVal(b);
+        }, 0)
         $(api.column(1).footer()).html(biri.toLocaleString());
         $(api.column(2).footer()).html(oktaf.toLocaleString());
         $(api.column(3).footer()).html(tinggi.toLocaleString());
@@ -1167,8 +1185,8 @@ function Fillrecord(){
         $(api.column(28).footer()).html(rendah28.toLocaleString());
         $(api.column(29).footer()).html(rendah29.toLocaleString());
         $(api.column(30).footer()).html(rendah30.toLocaleString());
-        
-
+        $(api.column(31).footer()).html(rendah31.toLocaleString());
+        $(api.column(32).footer()).html(rendah32.toLocaleString());
         
         
 
@@ -1229,6 +1247,8 @@ function Fillrecord(){
     { "data": "TerbalikH" },
     { "data": "UMenempelL" },
     { "data": "UMenempelH" },
+    { "data": "DoubleL" },
+     { "data": "DoubleH" },
 
     ]
   });
