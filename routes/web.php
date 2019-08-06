@@ -471,6 +471,7 @@ Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBa
 Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
 Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddle');
 Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
+Route::get('index/middle/log/{id}', 'MiddleProcessController@indexLog');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
@@ -731,8 +732,8 @@ Route::get('index/getModelfl', 'ProcessController@getModelfl');
 Route::get('index/get_snfl', 'ProcessController@getsnsaxfl');
 
 Route::post('index/print_FL', 'ProcessController@print_FL');
-Route::get('edit/stampLabel', 'ProcessController@editStampLabelFL');
-Route::post('update/stampLabel', 'ProcessController@updateStampLabelFL');
+Route::get('edit/stampLabelFL', 'ProcessController@editStampLabelFL');
+Route::post('update/stampLabelFL', 'ProcessController@updateStampLabelFL');
 Route::get('index/label_besarFL/{id}/{gmc}/{remark}', 'ProcessController@label_besarFL');
 Route::get('index/getModelReprintAllFL', 'ProcessController@getModelReprintAllFL');
 Route::get('index/label_kecil_fl/{id}/{remark}', 'ProcessController@label_kecil_fl');
