@@ -301,6 +301,11 @@
  				$("#sn").val('');						
 				$('#sn').focus();
 				});
+
+				$('#editModal').on('hidden.bs.modal', function () {
+ 				$("#sn").val('');						
+				$('#sn').focus();
+				});
 				
 				 fillPlan();
 				 fillResult();

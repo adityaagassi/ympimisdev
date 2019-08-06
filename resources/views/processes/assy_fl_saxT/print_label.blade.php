@@ -277,7 +277,7 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Choose a Model</h4>
+						<h4 class="modal-title">Reprint</h4>
 					</div>
 					<div class="modal-body">
 						<input type="text" style="font-weight: bold; background-color: rgb(255,255,204);; width: 100%; text-align: center; font-size: 4vw"  name="serialNumberText" id="serialNumberText2"  disabled><br>
@@ -354,6 +354,10 @@
 				$('#sn').focus();
 				$('body').toggleClass("sidebar-collapse");
 				$('#modelreprint2').on('hidden.bs.modal', function () {
+ 				$("#sn").val('');						
+				$('#sn').focus();
+				});
+				$('#editModal').on('hidden.bs.modal', function () {
  				$("#sn").val('');						
 				$('#sn').focus();
 				});
