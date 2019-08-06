@@ -229,18 +229,16 @@ class MiddleProcessController extends Controller
 			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
 		}
 
+		if($request->get('code') != null){
+			$barrel_log = $barrel_log->whereIn('materials.origin_group_code', '=', $request->get('code'));
+		}
+
 		if(strlen($request->get('dateto')) > 0){
 			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
 			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
 		}
 
-		if(strlen($request->get('code')) > 0){
-			$code = $request->get('code');
-			$barrel_log = $barrel_log->where('materials.origin_group_code','=',$code);
-		}
-
 		$barrel_log = $barrel_log->get();
-
 
 		return Response::json($barrel_log);
 	}
