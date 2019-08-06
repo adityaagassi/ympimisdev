@@ -179,12 +179,14 @@ class FinishedGoodsController extends Controller
 		$shipment_schedules = $shipment_schedules->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
 		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
 		->leftJoin(db::raw('(select shipment_schedule_id, sum(actual) as actual_fstk from flos where status in ("2", "3", "4") group by shipment_schedule_id) as fstk'), 'fstk.shipment_schedule_id', 'shipment_schedules.id')
 		->select(
 			db::raw('date_format(shipment_schedules.st_month, "%b-%Y") as st_month'), 
 			'shipment_schedules.id', 
 			'shipment_schedules.sales_order', 
 			'destinations.destination_shortname', 
+			'shipment_conditions.shipment_condition_name', 
 			'materials.material_number', 
 			'materials.material_description', 
 			'shipment_schedules.quantity', 
@@ -205,6 +207,7 @@ class FinishedGoodsController extends Controller
 			'shipment_schedules.id', 
 			'shipment_schedules.sales_order', 
 			'destinations.destination_shortname', 
+			'shipment_conditions.shipment_condition_name', 
 			'materials.material_number', 
 			'materials.material_description', 
 			'shipment_schedules.quantity', 

@@ -101,9 +101,10 @@
 									<tr>
 										<th style="width: 1%;">Period</th>
 										<th style="width: 1%;">Sales Order</th>
-										<th style="width: 1%;">Destination</th>
+										<th style="width: 1%;">Dest</th>
+										<th style="width: 1%;">By</th>
 										<th style="width: 5%;">Material</th>
-										<th style="width: 30%;">Description</th>
+										<th style="width: 30%;">Desc</th>
 										<th style="width: 1%;">Plan</th>
 										<th style="width: 1%;">Act Prod.</th>
 										<th style="width: 1%;">Diff</th>
@@ -119,6 +120,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -215,6 +217,7 @@
 						tableData += '<td>'+ value.st_month +'</td>';
 						tableData += '<td>'+ value.sales_order +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';
+						tableData += '<td>'+ value.shipment_condition_name +'</td>';
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
