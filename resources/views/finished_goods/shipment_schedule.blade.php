@@ -290,10 +290,6 @@
 								i : 0;
 							};
 							var api = this.api();
-							var totalPlan = api.column(5).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(5).footer()).html(totalPlan.toLocaleString());
 							var totalPlan = api.column(6).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
@@ -310,9 +306,13 @@
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(9).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(10).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(10).footer()).html(totalPlan.toLocaleString());
 						},
 						"columnDefs": [ {
-							"targets": [7, 9],
+							"targets": [8, 10],
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
