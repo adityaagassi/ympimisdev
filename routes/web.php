@@ -210,9 +210,10 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
-	Route::get('fetch/middle/barrel_inactive', 'MiddleProcessController@fetchBarrelInactive');
+	Route::get('fetch/middle/barrel_inactive/{id}', 'MiddleProcessController@fetchBarrelInactive');
 	Route::get('fetch/middle/wip', 'MiddleProcessController@fetchWIP');
 	Route::post('post/middle/barrel_inactive', 'MiddleProcessController@postInactive');
+	Route::post('post/middle/barrel_inactive_wip', 'MiddleProcessController@postInactiveWIP');
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
 });
@@ -471,7 +472,8 @@ Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBa
 Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
 Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddle');
 Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
-Route::get('index/middle/log/{id}', 'MiddleProcessController@indexLog');
+Route::get('index/middle/barrel_log', 'MiddleProcessController@indexBarrelLog');
+Route::get('fetch/middle/barrel_log', 'MiddleProcessController@fetchBarrelLog');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');

@@ -33,6 +33,20 @@ class MiddleProcessController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function indexBarrelLog(){
+
+		$title = 'Barrel Log';
+		$title_jp = '';
+
+		$origin_groups = db::table('origin_groups')->get();
+
+		return view('processes.middle.report.barrel_log', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'origin_groups' => $origin_groups,
+		))->with('page', 'Middle Process Barrel Machine')->with('head', 'Middle Process');
+	}
+
 	public function indexProcessMiddleSX(){
 		return view('processes.middle.index_sx')->with('page', 'Middle Process SX')->with('head', 'Middle Process');
 	}
@@ -189,7 +203,46 @@ class MiddleProcessController extends Controller
 			'title' => $title,
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
-		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+		))->with('page', 'queue')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function indexWIPAdjustment()
+	{
+		$title = 'WIP Adjustment';
+		$title_jp = '??';
+		$mrpc = 'S51';
+		$hpl = 'ASKEY,TSKEY';
+		
+		return view('processes.middle.wip_adjustment', array(
+			'title' => $title,
+			'mrpc' => $mrpc,
+			'hpl' => $hpl,
+		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function fetchBarrelLog(Request $request){
+
+		$barrel_log = BarrelLog::leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+		}
+
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+		}
+
+		if(strlen($request->get('code')) > 0){
+			$code = $request->get('code');
+			$barrel_log = $barrel_log->where('materials.origin_group_code','=',$code);
+		}
+
+		$barrel_log = $barrel_log->get();
+
+
+		return Response::json($barrel_log);
 	}
 
 	public function fetchBuffingBoard(Request $request){
@@ -1605,19 +1658,24 @@ class MiddleProcessController extends Controller
 		->make(true);
 	}
 
-	public function fetchBarrelInactive()
+	public function fetchBarrelInactive($id)
 	{
 		$inactive = BarrelQueueInactive::leftJoin('materials', 'materials.material_number', '=', 'barrel_queue_inactives.material_number')
 		->select('barrel_queue_inactives.tag', 'barrel_queue_inactives.material_number', 'materials.material_description', 'barrel_queue_inactives.quantity', 'barrel_queue_inactives.created_at')
 		->orderBy('barrel_queue_inactives.created_at', 'asc')
 		->get();
 
-		return DataTables::of($inactive)
-		->addColumn('check', function($inactive){
-			return '<input type="checkbox" class="aktif" id="'.$inactive->tag.'+'.$inactive->material_number.'+'.$inactive->quantity.'+active" onclick="active(this)">';
-		})
-		->rawColumns([ 'check' => 'check'])
-		->make(true);
+		if ($id == "kanban") {
+			return DataTables::of($inactive)
+			->addColumn('check', function($inactive){
+				return '<input type="checkbox" class="aktif" id="'.$inactive->tag.'+'.$inactive->material_number.'+'.$inactive->quantity.'+active" onclick="active(this)">';
+			})
+			->rawColumns([ 'check' => 'check'])
+			->make(true);
+		} else {
+			return DataTables::of($inactive)
+			->make(true);
+		}
 	}
 
 	public function postInactive(Request $request){
@@ -1741,5 +1799,41 @@ class MiddleProcessController extends Controller
 		{
 			return redirect('/index/middle/barrel_adjustment')->with('error', 'Please select a file.')->with('page', 'Middle Process');
 		}
+	}
+
+	public function fetchWIP()
+	{
+		$adjust = MiddleInventory::leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
+		->select('middle_inventories.tag', 'middle_inventories.material_number', 'materials.material_description', 'middle_inventories.quantity', 'middle_inventories.created_at')
+		->orderBy('middle_inventories.created_at', 'desc')
+		->get();
+
+		return DataTables::of($adjust)
+		->addColumn('check', function($adjust){
+			return '<input type="checkbox" class="queue" id="'.$adjust->tag.'+'.$adjust->material_number.'+'.$adjust->quantity.'+inactive" onclick="inactive(this)">';
+		})
+		->rawColumns([ 'check' => 'check'])
+		->make(true);
+	}
+
+	public function postInactiveWIP(Request $request){
+
+		$datas = $request->get('data')[0];
+
+		for ($i=0; $i < count($datas['tag']); $i++) {
+			DB::table('middle_inventories')->where('tag', '=', $datas['tag'][$i])->delete();
+
+			$inactive = new BarrelQueueInactive([
+				'tag' => $datas['tag'][$i],
+				'material_number' => $datas['material'][$i],
+				'quantity' => $datas['qty'][$i]
+			]);
+			$inactive->save();
+		}
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
 	}
 }
