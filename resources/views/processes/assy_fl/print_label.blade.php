@@ -265,9 +265,7 @@
 							<label>Serial Number</label>
 							<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
 								<option value=""></option>
-								@foreach($model2 as $model)
-								<option value="{{ $model->serial_number }}">{{ $model->serial_number }}</option>
-								@endforeach
+								
 							</select>
 						</div>
 						<div class="modal-footer">

@@ -269,7 +269,7 @@ table.table-bordered > tfoot > tr > th{
         // pointPlacement: -0.3
     }, {
       animation: false,
-        name: 'Total to day',
+        name: 'Total today',
         color: 'rgba(126,86,134,.9)',
         data: total,
         pointPadding: 0.4,
@@ -391,7 +391,7 @@ table.table-bordered > tfoot > tr > th{
                 }
               },
               title: {
-                text: 'TOTAL NG RATE KAKUNIN VISUAL TO DAY'
+                text: 'TOTAL NG RATE KAKUNIN VISUAL TODAY'
               },
               subtitle: {
         text: 'Last Update '+tgl

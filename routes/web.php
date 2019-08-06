@@ -208,8 +208,10 @@ Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
+	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive', 'MiddleProcessController@fetchBarrelInactive');
+	Route::get('fetch/middle/wip', 'MiddleProcessController@fetchWIP');
 	Route::post('post/middle/barrel_inactive', 'MiddleProcessController@postInactive');
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
@@ -365,6 +367,7 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	//import
 	Route::post('import/importEmp', 'EmployeeController@importEmp');
 	Route::post('import/bagian', 'EmployeeController@importBagian');
+	Route::post('import/employee', 'EmployeeController@importKaryawan');
 });
 
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
@@ -717,6 +720,26 @@ Route::post('stamp/stamp_detail_sx', 'ProcessController@filter_stamp_detail_sx')
 Route::get('fetch/fetch_plan_labelsax/{id}', 'ProcessController@fetch_plan_labelsax');
 
 //end tambah ali
+
+
+// label flute
+
+Route::get('index/label_fl', 'ProcessController@indexLabelFL');
+Route::get('stamp/fetchResultFL5', 'ProcessController@fetchResultFL5');
+Route::get('stamp/fetchStampPlanFL5', 'ProcessController@fetchStampPlanFL5');
+Route::get('index/getModelfl', 'ProcessController@getModelfl');
+Route::get('index/get_snfl', 'ProcessController@getsnsaxfl');
+
+Route::post('index/print_FL', 'ProcessController@print_FL');
+Route::get('edit/stampLabel', 'ProcessController@editStampLabelFL');
+Route::post('update/stampLabel', 'ProcessController@updateStampLabelFL');
+Route::get('index/label_besarFL/{id}/{gmc}/{remark}', 'ProcessController@label_besarFL');
+Route::get('index/getModelReprintAllFL', 'ProcessController@getModelReprintAllFL');
+Route::get('index/label_kecil_fl/{id}/{remark}', 'ProcessController@label_kecil_fl');
+Route::get('index/label_des_fl/{id}', 'ProcessController@label_des_fl');
+
+
+//end label flute
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');

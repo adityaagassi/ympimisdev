@@ -2047,4 +2047,274 @@ public function fetch_plan_labelsax($id){
 }
 	//end tambah ali
 
+// print Flute
+
+	public function indexLabelFL(){
+		return view('processes.assy_fl.print_label')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function fetchResultFL5(){
+		$now = date('Y-m-d');
+		$log_processes = db::table('log_processes')
+		->where('process_code', '=', '6')
+		->where('model', 'like', 'YFL%')
+		->where(db::raw('date(created_at)'), '=', $now)
+		->orderBy('created_at', 'desc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'resultData' => $log_processes,
+		);
+		return Response::json($response);
+	}
+
+	public function getModelfl(Request $request)
+{
+	if ($request->get('log')==5) {
+		$query ="select material_number,material_description,remark from materials
+		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
+		WHERE stamp_hierarchies.model in ( SELECT model from log_processes WHERE serial_number='".$request->get('sn')."' )
+		";
+	}else{
+		$query ="select material_number,material_description,remark from materials
+		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
+		WHERE stamp_hierarchies.model in ( SELECT model from stamp_inventories WHERE serial_number='".$request->get('sn')."' )
+		";	
+	}
+
+	$planData = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+
+	);
+	return Response::json($response);
+}
+
+public function getsnsaxfl(Request $request)
+{
+	$sn = LogProcess::where('process_code', '=', $request->get('code'))
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+	$sn2 = LogProcess::where('process_code', '=', '6')
+	->where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn2'))
+	->select('model', 'serial_number')
+	->first();
+
+
+	if ($sn != null && $sn2 == null) {
+		$response = array(
+			'status' => true,
+			'message' => '1',
+			'model' => $sn->model,
+			'sn' => $sn->serial_number,
+		);
+		return Response::json($response);
+	}
+	elseif ($sn2 != null && $sn != null) {
+		$response = array(
+			'status' => true,
+			'message' => '2',
+			'model' => $sn2->model,
+			'sn' => $sn2->serial_number,
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false,
+			'message' => 'Serial Number not registered',
+		);
+		return Response::json($response);
+	}
+}
+
+public function print_FL(Request $request){
+
+	try{
+		$id = Auth::id();
+		if ($request->get('status') =="update") {
+		
+			
+			$log_process = LogProcess::updateOrCreate(
+				[
+					'process_code' => '6', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin')
+				],
+				[
+					'process_code' => '6', 
+					'serial_number' => $request->get('sn'),
+					'origin_group_code' => $request->get('origin'),
+					'status' => $request->get('jpn'),
+					'model' => $request->get('snmodel'),
+					'quantity' => 1,
+					'created_by' => $id,
+					'created_at' => date('Y-m-d H:i:s')
+				]
+			);
+
+			$log_process->save();		
+
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Print success',
+		);
+		return Response::json($response);
+	}
+	catch (QueryException $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+
+public function label_besarFL($id,$gmc,$remark){
+
+	$date = date('Y-m-d');
+	if ($remark =="P") {
+		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."' 
+		) a		
+		LEFT JOIN 
+		(
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6'
+		) c on a.serial_number = c.sn2";
+	}
+
+	elseif ($remark =="R"){
+		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
+		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,			log_processes.created_at  from log_processes 
+		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."' 
+		) a		
+		LEFT JOIN 
+		(
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6'
+		) c on a.serial_number = c.sn2";
+	}
+
+	$barcode = DB::select($query);
+
+	$date = date('Y-m-d');
+	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+(
+SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
+)";
+	$date2 = DB::select($querydate);
+	
+	return view('processes.assy_fl.print_label_besar_flute',array(
+		'barcode' => $barcode,
+		'date2' => $date2,
+
+		'remark' => $remark,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function getModelReprintAllFL(Request $request)
+{
+	$query ="SELECT material_number,serial_number from materials 
+	LEFT JOIN log_processes 
+	on materials.material_description = log_processes.model
+	where serial_number ='".$request->get('sn')."' and process_code='6' and log_processes.origin_group_code='041'";
+
+	$reprint = DB::select($query);
+	$response = array(
+		'status' => true,
+		'reprint' => $reprint,
+	);
+	return Response::json($response);
+}
+
+public function label_kecil_fl($id,$remark){
+	$remark2 = $remark;
+	$sn = $id;
+	$date = date('Y-m-d');
+	
+	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+(
+SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'
+) ";
+	
+	$query2=" SELECT serial_number,model  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'";
+
+	$barcode = DB::select($query);
+	$des = DB::select($query2);
+	
+	return view('processes.assy_fl.print_label_kecil_fl',array(
+		'barcode' => $barcode,
+		'sn' => $sn,
+		'remark' => $remark2,
+		'des' => $des,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function label_des_fl($id){
+	
+	$query ="select model from log_processes where process_code ='6' and serial_number='".$id."'";
+	$barcode = DB::select($query);
+	
+	return view('processes.assy_fl.print_label_description_fl',array(
+		'barcode' => $barcode,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function editStampLabelFL(Request $request){
+	$stamp = logProcess::find($request->get('id'));
+
+	$response = array(
+		'status' => true,
+		'stamp' => $stamp,
+	);
+	return Response::json($response);
+}
+
+public function updateStampLabelFL(Request $request){
+	$stamp = logProcess::where('serial_number',$request->get('id'))->get()->first();
+
+	$log = LogProcess::where('serial_number',$stamp->serial_number)
+	->where('process_code', '=', "6")
+	->get()->first();	
+	
+	$log->update([
+		'model' => $request->get('model')]);
+
+	$response = array(
+		'status' => true,
+		'message' => 'Update Success',
+		'log' => $log,
+	);
+	return Response::json($response);
+}
+
+public function fetchStampPlanFL5(Request $request){
+	
+	$now = date('Y-m-d');	
+
+	$query5 ="select model, COUNT(model) as actual from log_processes where process_code='6' and origin_group_code='041' and model like 'YFL%' and DATE_FORMAT(created_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
+
+	$planData = DB::select($query5);
+
+	$response = array(
+		'status' => true,
+		'planData' => $planData,
+
+	);
+	return Response::json($response);
+}
+
+// end print label fl
+
 }

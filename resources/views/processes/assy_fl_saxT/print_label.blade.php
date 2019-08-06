@@ -351,7 +351,7 @@
 					$('.select2').select2()
 				});
 
-				$("#sn").val('');
+				$('#sn').focus();
 				$('body').toggleClass("sidebar-collapse");
 				$('#modelreprint2').on('hidden.bs.modal', function () {
  				$("#sn").val('');						
