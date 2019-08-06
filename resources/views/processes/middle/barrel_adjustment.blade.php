@@ -437,7 +437,7 @@
 			"processing": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/middle/barrel_inactive") }}"
+				"url" : "{{ url("fetch/middle/barrel_inactive/kanban") }}"
 			},
 			"columns": [
 			{ "data": "tag"},
@@ -486,15 +486,25 @@
 		}
 
 		$.post('{{ url("post/middle/barrel_inactive") }}', arrs, function(result, status, xhr){
-			$('#tableAdjust').DataTable().ajax.reload();
-			$('#tableInactive').DataTable().ajax.reload();
+			if (result.status) {
+				$('#tableAdjust').DataTable().ajax.reload();
+				$('#tableInactive').DataTable().ajax.reload();
 
-			arr = [];
-			$("#selected1").empty();
+				arr = [];
+				$("#selected1").empty();
+				openSuccessGritter('Success','Insert InActive Success');
+			} else {
+				openErrorGritter('Error','Insert Failed');
+			}
 		});
 	}
 
 	function insertActive() {
+		if($("#tanggal").val() == "" || $("#waktu").val() == "") {
+			openErrorGritter('Error','Date or Time not Valid');
+			return false;
+		}
+
 		var create = $("#tanggal").val()+" "+$("#waktu").val();
 
 		var data = [];
@@ -520,36 +530,22 @@
 		console.log(arrs);
 
 		$.post('{{ url("post/middle/barrel_inactive") }}', arrs, function(result, status, xhr){
-			$('#tableAdjust').DataTable().ajax.reload();
-			$('#tableInactive').DataTable().ajax.reload();
-			
-			arr2 = [];
-			
-			$("#selected2").empty();
+			if (result.status) {
+				$('#tableAdjust').DataTable().ajax.reload();
+				$('#tableInactive').DataTable().ajax.reload();
+
+				arr2 = [];
+
+				$("#selected2").empty();
+
+				openSuccessGritter('Success','Insert Active Success');
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Insert Failed');
+			}
 		});
 	}
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
-
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
 
 	function inactive(elem) {
 		var id = $(elem).attr("id");
@@ -655,7 +651,7 @@
 		use24hours: true,
 		showInputs: false,
 		showMeridian: false,
-		minuteStep: 30,
+		minuteStep: 10,
 		defaultTime: '00:00',
 		timeFormat: 'h:mm'
 	})
