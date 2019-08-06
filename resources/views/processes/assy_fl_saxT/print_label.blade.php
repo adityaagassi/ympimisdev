@@ -351,8 +351,12 @@
 					$('.select2').select2()
 				});
 
-
+				$("#sn").val('');
 				$('body').toggleClass("sidebar-collapse");
+				$('#modelreprint2').on('hidden.bs.modal', function () {
+ 				$("#sn").val('');						
+				$('#sn').focus();
+				});
 				// fillPlan3();
 				// fillPlan4()
 				 fillPlan2();
