@@ -814,7 +814,7 @@ public function overtimeControl(Request $request)
 	) AS n
 	LEFT JOIN master_cc ON master_cc.id_cc = n.id_cc GROUP BY id_cc,  master_cc.NAME ORDER BY diff ASC 
 	) AS datas
-	LEFT JOIN ( SELECT cost_center, sum( jam ) AS jam_harian FROM budget_harian WHERE DATE_FORMAT( tanggal, '%Y-%m' ) = '".$tanggal."' AND tanggal <= '".$tanggal1."' 
+	LEFT JOIN ( SELECT cost_center, sum( hour ) AS jam_harian FROM ympimis.forecasts WHERE DATE_FORMAT( date, '%Y-%m' ) = '".$tanggal."' AND date <= '".$tanggal1."' 
 	GROUP BY cost_center 
 	) d ON datas.id_cc = d.cost_center
 	order by diff asc";
