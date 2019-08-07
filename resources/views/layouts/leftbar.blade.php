@@ -67,7 +67,7 @@
         @if(in_array('A8', $navs))
         @if(isset($head) && $head == "Middle Process Adjustment")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
-           <i class="fa fa-tv"></i> <span>Kanban Adjustment</span>
+           <i class="fa fa-credit-card"></i> <span>Kanban Adjustment</span>
            <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
