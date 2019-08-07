@@ -201,9 +201,9 @@ table.table-bordered > tfoot > tr > th{
                      totalH.push(parseInt(result.ngH[i].totalH));
                      totalL.push(parseInt(result.ngL[i].totalL));
 
-                      total2.push(parseInt(result.ng[i].total2)-1);
-                     totalH2.push(parseInt(result.ngH[i].totalH2)-1);
-                     totalL2.push(parseInt(result.ngL[i].totalL2)-1);
+                     total2.push(parseInt(result.ng2[i].total/ result.tlgtot.length));
+                     totalH2.push(parseInt(result.ngH2[i].totalH/ result.tlgtot.length));
+                     totalL2.push(parseInt(result.ngL2[i].totalL/ result.tlgtot.length));
                     } 
 
                     var tgl ="";
@@ -256,7 +256,7 @@ table.table-bordered > tfoot > tr > th{
       animation: false,
         name: 'Previous Month Total Avg',
         color: 'rgba(165,170,217,1)',
-        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        data: total2,
         pointPadding: 0.3,
         pointPlacement: -0.3
     }, {
@@ -270,7 +270,7 @@ table.table-bordered > tfoot > tr > th{
       animation: false,
         name: 'Previous Month High Avg',
         color: 'rgba(248,161,63,1)',
-        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        data: totalH2,
         
         pointPadding: 0.3,
         pointPlacement: 0,
@@ -289,7 +289,7 @@ table.table-bordered > tfoot > tr > th{
       animation: false,
         name: 'Previous Month Low Avg',
         color: 'rgba(166, 247, 67,.9)',
-        data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        data: totalL2,
         
         pointPadding: 0.3,
         pointPlacement: 0.3,

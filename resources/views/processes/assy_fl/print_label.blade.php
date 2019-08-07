@@ -665,7 +665,7 @@
 		var data = {
 			id:id
 		}
-		$.get('{{ url("edit/stampLabel") }}', data, function(result, status, xhr){
+		$.get('{{ url("edit/stampLabelFL") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
@@ -700,7 +700,7 @@
 			originGroupCode:'041',
 			
 		}
-		$.post('{{ url("update/stampLabel") }}', data, function(result, status, xhr){
+		$.post('{{ url("update/stampLabelFL") }}', data, function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);

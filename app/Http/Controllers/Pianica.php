@@ -831,13 +831,20 @@ public function getTotalNG(Request $request)
 {
 
 
+    
     $datep = $request->get('datep');
+    $dateF = "";
+    $dateL = "";
 
     if ($datep != "") {
     $date = $datep;
+    $dateF = date('Y-m-01', strtotime("-1 months",strtotime($datep)));
+    $dateL = date('Y-m-t', strtotime("-1 months",strtotime($datep)));
     // $last = date('Y-m-d', strtotime('-1 day', strtotime($date)));
     }else{
     $date = date('Y-m-d');
+    $dateF = date('Y-m-01', strtotime("-1 months"));
+    $dateL = date('Y-m-t', strtotime("-1 months"));
     // $last = date('Y-m-d', strtotime(Carbon::yesterday()));
     }
 
@@ -862,6 +869,8 @@ public function getTotalNG(Request $request)
     on a.ngH = b.ngL
     GROUP BY ngH";
 
+    
+
 $query2="SELECT ngH,count(b.ng) as totalL from (
 select ng_name as ngH from ng_lists WHERE location='PN_Bensuki' 
 )a
@@ -869,6 +878,8 @@ left JOIN  (
 SELECT ng from detail_bensukis WHERE posisi='LOW' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."') b
 on a.ngH = b.ng 
 GROUP BY a.ngH ORDER BY ngH asc";
+
+
 
 $query3="SELECT ngH,count(b.ng) as totalH from (
 select ng_name as ngH from ng_lists WHERE location='PN_Bensuki' 
@@ -878,14 +889,60 @@ SELECT ng from detail_bensukis WHERE posisi='HIGH' and DATE_FORMAT(created_at,'%
 on a.ngH = b.ng 
 GROUP BY a.ngH ORDER BY ngH asc";
 
+$queryTot = "SELECT ngH,sum(totalH+totalL) as total from (
+    SELECT ngH,count(b.ng) as totalL from (
+    select ng_name as ngH from ng_lists WHERE location='PN_Bensuki' 
+    )a
+    left JOIN  (
+    SELECT ng from detail_bensukis WHERE posisi='LOW' and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$dateL."' ) b
+    on a.ngH = b.ng 
+    GROUP BY a.ngH ORDER BY ngH asc
+    ) a
+    LEFT JOIN (
+
+    SELECT ngL,count(b.ng) as totalH from (
+    select ng_name as ngL from ng_lists WHERE location='PN_Bensuki' 
+    )a
+    left JOIN  (
+    SELECT ng from detail_bensukis WHERE posisi='HIGH' and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$dateL."' ) b
+    on a.ngL = b.ng 
+    GROUP BY a.ngL ORDER BY ngL asc) b
+    on a.ngH = b.ngL
+    GROUP BY ngH";
+
+$queryTotL="SELECT ngH,count(b.ng) as totalL from (
+select ng_name as ngH from ng_lists WHERE location='PN_Bensuki' 
+)a
+left JOIN  (
+SELECT ng from detail_bensukis WHERE posisi='LOW' and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$dateL."') b
+on a.ngH = b.ng 
+GROUP BY a.ngH ORDER BY ngH asc";
+
+$queryTotH="SELECT ngH,count(b.ng) as totalH from (
+select ng_name as ngH from ng_lists WHERE location='PN_Bensuki' 
+)a
+left JOIN  (
+SELECT ng from detail_bensukis WHERE posisi='HIGH' and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$dateL."') b
+on a.ngH = b.ng 
+GROUP BY a.ngH ORDER BY ngH asc";
+
 $tgl = "SELECT DATE_FORMAT(created_at,'%W, %d %b %Y %H:%I:%S') as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') = '".$date."'  ORDER BY created_at desc limit 1";
+
+$querytgl="
+SELECT DISTINCT(DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d')) as tgl from header_bensukis where DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') >= '".$dateF."' and DATE_FORMAT(header_bensukis.created_at,'%Y-%m-%d') <= '".$dateL."'
+";
 
 $tgl2 =DB::select($tgl);
 
 $total =DB::select($query);
-
 $totalL =DB::select($query2);
 $totalH =DB::select($query3);
+
+$total2 =DB::select($queryTot);
+$totalL2 =DB::select($queryTotL);
+$totalH2 =DB::select($queryTotH);
+
+$tlgtot =DB::select($querytgl);
 
     $response = array(
         'status' => true,
@@ -894,6 +951,10 @@ $totalH =DB::select($query3);
         'ngL' => $totalL,
         'ngH' => $totalH,
         'tgl' => $tgl2,
+        'ng2' => $total2,
+        'ngL2' => $totalL2,
+        'ngH2' => $totalH2,
+        'tlgtot' => $tlgtot,
 
     );
     return Response::json($response);
