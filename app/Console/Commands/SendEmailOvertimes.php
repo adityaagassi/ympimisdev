@@ -85,7 +85,7 @@ class SendEmailOvertimes extends Command
         nik 
         ) ovr
         LEFT JOIN ympimis.employees AS emp ON emp.employee_id = ovr.nik
-        LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, section, `group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE DATE_FORMAT( valid_from, '%Y-%m' ) <= '".$mon."' AND valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
+        LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, mutation_logs.section, mutation_logs.`group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE DATE_FORMAT( valid_from, '%Y-%m' ) <= '".$mon."' AND valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
         LEFT JOIN ympimis.total_meeting_codes AS helper ON pos.`group` = helper.group_name
         LEFT JOIN (
         select forecast.cost_center, round(forecast.fc / emp_data.jml) as fc_mp from (select cost_center, sum(jam) as fc from budget_harian where DATE_FORMAT( tanggal, '%Y-%m-%d' ) >= '".$first."'
