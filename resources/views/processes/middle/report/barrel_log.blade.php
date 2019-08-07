@@ -145,11 +145,6 @@
 			autoclose: true
 		});
 		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no flo with status 'close'";
-				}
-			}
 		});
 	});
 
@@ -169,7 +164,7 @@
 			dateto:dateto,
 			code:code
 		}
-		
+
 		$('#logTable tfoot th').each( function () {
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
