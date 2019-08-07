@@ -36,7 +36,13 @@ class DisplayController extends Controller
 	}
 
 	public function index_dp_fg_accuracy(){
-		return view('displays.fg_accuracy')->with('page', 'Display FG Accuracy')->with('head', 'Display');		
+		$title = 'Finished Goods Accuracy';
+		$title_jp = 'FG週次出荷';
+
+		return view('displays.fg_accuracy', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display FG Accuracy')->with('head', 'Display');		
 	}
 
 	public function fetchStuffingProgress(){

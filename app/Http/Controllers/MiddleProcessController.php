@@ -36,7 +36,7 @@ class MiddleProcessController extends Controller
 	public function indexBarrelLog(){
 
 		$title = 'Barrel Log';
-		$title_jp = '';
+		$title_jp = '(?)';
 
 		$origin_groups = db::table('origin_groups')->get();
 
@@ -222,25 +222,28 @@ class MiddleProcessController extends Controller
 
 	public function fetchBarrelLog(Request $request){
 
-		$barrel_log = BarrelLog::leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material');
+		$barrel_logs = BarrelLog::leftJoin('materials', 'materials.material_number', '=', 'barrel_logs.material');
 
 		if(strlen($request->get('datefrom')) > 0){
 			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
-			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
-		}
-
-		if($request->get('code') != null){
-			$barrel_log = $barrel_log->whereIn('materials.origin_group_code', '=', $request->get('code'));
+			$barrel_logs = $barrel_logs->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
 		}
 
 		if(strlen($request->get('dateto')) > 0){
 			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
-			$barrel_log = $barrel_log->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+			$barrel_logs = $barrel_logs->where(db::raw('date_format(barrel_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
 		}
 
-		$barrel_log = $barrel_log->get();
+		if($request->get('code') != null){
+			$barrel_logs = $barrel_logs->whereIn('materials.origin_group_code', $request->get('code'));
+		}
 
-		return Response::json($barrel_log);
+		$barrel_logs = $barrel_logs->select('barrel_logs.tag', 'barrel_logs.material','materials.material_description', 'barrel_logs.qty', 'barrel_logs.status', 'barrel_logs.created_at')->get();
+
+		return DataTables::of($barrel_logs)->make(true);
+		// return Response::json($barrel_logs);
+
+
 	}
 
 	public function fetchBuffingBoard(Request $request){
