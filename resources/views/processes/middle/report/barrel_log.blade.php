@@ -108,14 +108,6 @@
 								<tbody>
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
-									<tr>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-									</tr>
 								</tfoot>
 							</table>
 						</div>
@@ -145,10 +137,6 @@
 
 
 	jQuery(document).ready(function() {
-		$('#logTable tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
-		} );
 
 		$('#datefrom').datepicker({
 			autoclose: true
@@ -181,6 +169,11 @@
 			dateto:dateto,
 			code:code
 		}
+		
+		$('#logTable tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
+		} );
 
 		var table = $('#logTable').DataTable({
 			'dom': 'Bfrtip',
@@ -260,7 +253,7 @@
 			{ "data": "qty" },
 			{ "data": "status" },
 			{ "data": "created_at" }
-			],
+			]
 		});
 
 		table.columns().every( function () {
