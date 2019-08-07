@@ -18,7 +18,13 @@ class DisplayController extends Controller
 	}
 
 	public function indexStuffingProgress(){
-		return view('displays.shippings.stuffing_progress')->with('page', 'Display Stuffing Progress')->with('head', 'Display');
+		$title = 'Container Stuffing Progress';
+		$title_jp = '';
+
+		return view('displays.shippings.stuffing_progress', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display Stuffing Progress')->with('head', 'Display');
 	}
 
 	public function indexShipmentProgress(){
