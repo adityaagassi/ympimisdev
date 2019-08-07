@@ -55,7 +55,11 @@ include(app_path() . '\barcode\barcode.php');
       $('#model').css({"font-size":"30pt", "-moz-transform":"scale(1,2.1)","padding-top":"5px"});
     }
 
-		if (models.length > 11 && models != "YAS-PLU1II//02 ID" && models != "YAS-VDHMII//ID") {
+    if (models == "YTS-PLU1II//02 ID") {
+      $('#model').css({"font-size":"30pt", "-moz-transform":"scale(1,2.1)","padding-top":"8px","padding-left":"10px"});
+    }
+
+		if (models.length > 11 && models != "YAS-PLU1II//02 ID" && models != "YAS-VDHMII//ID" && models != "YTS-PLU1II//02 ID") {
 			$('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
 		}		
 
