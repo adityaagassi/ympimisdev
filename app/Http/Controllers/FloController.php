@@ -349,16 +349,16 @@ class FloController extends Controller
 		->groupBy('flos.flo_number')
 		->get();
 
-		if(count($checks) > 0 ){
-			$message = '';
-			foreach ($checks as $check) {
-				$message .= $check->flo_number.'<br>';
-			}
-			return response()->json([
-				'status' => false,
-				'message' => 'This FLO is not loaded:<br>'.$message
-			]);
-		}
+		// if(count($checks) > 0 ){
+		// 	$message = '';
+		// 	foreach ($checks as $check) {
+		// 		$message .= $check->flo_number.'<br>';
+		// 	}
+		// 	return response()->json([
+		// 		'status' => false,
+		// 		'message' => 'This FLO is not loaded:<br>'.$message
+		// 	]);
+		// }
 
 		if($request->get('container_number') != ""){
 			$container_schedule = ContainerSchedule::where('container_id', '=', $request->get('container_id'))->first();
