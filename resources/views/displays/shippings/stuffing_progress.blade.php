@@ -87,6 +87,7 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
+		setInterval(fillTable, 10000);
 	});
 
 	function fillTable(){
@@ -94,6 +95,14 @@
 			if(result.status){
 				$('#stuffingTableBody').html("");
 				var stuffingTableBody = "";
+
+				if(result.stuffing_progress.length == 0){
+					stuffingTableBody += "<tr>";
+					stuffingTableBody += "<td colspan='9'>There is no shipping schedule today</td>";
+					stuffingTableBody += "</tr>";
+					$('#stuffingTableBody').append(stuffingTableBody);
+					return false;
+				}
 				$.each(result.stuffing_progress, function(index, value){
 					var status = "";
 					if(value.status == 1){

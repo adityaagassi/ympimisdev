@@ -2,31 +2,31 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 
@@ -78,14 +78,14 @@ table.table-bordered > tfoot > tr > th{
 					
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
-							{{-- <div class="form-group">
+							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Process Code" name="code" id="code" style="width: 100%;">
 									<option value="">All</option>
 									@foreach($code as $code) 
 									<option value="{{ $code->process_code }}">{{ $code->process_code }} - {{ $code->process_name }}</option>
 									@endforeach
 								</select>
-							</div> --}}
+							</div>
 							<div class="form-group pull-right">
 								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 								<button id="search" onClick="fillFloDetail()" class="btn btn-primary">Search</button>
@@ -158,8 +158,6 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 	});
-
-	
 
 	function clearConfirmation(){
 		location.reload(true);

@@ -758,7 +758,7 @@ Route::group(['nav' => 'R1', 'middleware' => 'permission'], function(){
 });
 
 Route::post('index/flo_detail', 'FloController@index_flo_detail');
-Route::post('index/flo_invoice', 'FloController@index_flo_invoice');
+Route::post('index/flo_invoice', 'FloController@index_flo_inhttp://localhost/ympimisdev/public/index/display/stuffing_progressvoice');
 Route::post('index/flo', 'FloController@index_flo');
 Route::get('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
@@ -782,4 +782,5 @@ Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentPr
 
 
 //DISPLAY STUFFING PROGRESS
+Route::get('index/display/stuffing_progress', 'DisplayController@indexStuffingProgress');
 Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');

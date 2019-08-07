@@ -256,6 +256,10 @@
                             <a href="{{ url("/index/dp_fg_accuracy") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
                             </a>
+                            <br>
+                            <a href="{{ url("/index/display/stuffing_progress") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Stuffing Progress (??)
+                            </a>
                         </td>
                     </tr>
                 </tbody>

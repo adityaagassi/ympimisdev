@@ -17,6 +17,10 @@ class DisplayController extends Controller
 		))->with('page', 'Display Production Result')->with('head', 'Display');
 	}
 
+	public function indexStuffingProgress(){
+		return view('displays.shippings.stuffing_progress')->with('page', 'Display Stuffing Progress')->with('head', 'Display');
+	}
+
 	public function indexShipmentProgress(){
 		return view('displays.shipment_progress')->with('page', 'Display Shipment Result')->with('head', 'Display');
 	}

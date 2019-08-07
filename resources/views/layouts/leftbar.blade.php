@@ -521,18 +521,18 @@
           @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
            <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> FG Production Result</a>
          </li>
-          {{-- @if(isset($page) && $page == "Display Stockroom Stock")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/dp_stockroom_stock") }}"><i class="fa fa-line-chart"></i> Stockroom Stock</a>
-          </li> --}}
-        </ul>
-      </li>
-      @endif
+         @if(isset($page) && $page == "Display Stuffing Progress")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/display/stuffing_progress") }}"><i class="fa fa-line-chart"></i> Stuffing Progress</a>
+        </li>
+      </ul>
+    </li>
+    @endif
 
-      @if(in_array('R4', $navs))
-      @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
-      	<a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
-      </li>
-      @endif
+    @if(in_array('R4', $navs))
+    @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
+     <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
+   </li>
+   @endif
         {{-- <li class="header">Trial Menu</li>
         <li>
           <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
