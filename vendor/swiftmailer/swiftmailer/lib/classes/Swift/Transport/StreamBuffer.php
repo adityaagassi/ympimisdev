@@ -260,7 +260,7 @@ class Swift_Transport_StreamBuffer extends Swift_ByteStream_AbstractFilterableIn
         if (!empty($this->_params['protocol'])) {
             $host = $this->_params['protocol'].'://'.$host;
         }
-        $timeout = 15;
+        $timeout = 60;
         if (!empty($this->_params['timeout'])) {
             $timeout = $this->_params['timeout'];
         }
