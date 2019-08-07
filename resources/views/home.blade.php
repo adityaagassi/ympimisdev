@@ -101,7 +101,7 @@
                             </a>
                             <br>
                             <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
-                                <i class="fa fa-caret-right"></i> Clinic Information (Japanese)
+                                <i class="fa fa-caret-right"></i> Clinic Information (保健室利用状況)
                             </a>
                         </td>
                     </tr>
@@ -139,7 +139,7 @@
                             <span style="font-weight: bold;">KITTO (きっと)</span>
                             <br>
                             <a href="http://172.17.128.4/kitto/public" target="_blank">
-                                <i class="fa fa-caret-right"></i> Kanban Monitoring (Japanese)
+                                <i class="fa fa-caret-right"></i> Kanban Monitoring (かんばん監視)
                             </a>
                         </td>
                     </tr>
@@ -156,7 +156,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/Pianica") }}">
-                                <i class="fa fa-caret-right"></i> PN Assembly (Nihon go)
+                                <i class="fa fa-caret-right"></i> PN Assembly (ピアニカ組立)
                             </a>
                         </td>
                     </tr>
@@ -258,7 +258,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/stuffing_progress") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Stuffing Progress (??)
+                                <i class="fa fa-caret-right"></i> Stuffing Progress (荷積み進捗)
                             </a>
                         </td>
                     </tr>

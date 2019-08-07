@@ -165,121 +165,121 @@
     @if(in_array('M16', $navs))
     @if(isset($head) && $head == "Employees Data")<li class="treeview active">@else<li class="treeview">@endif
       <a href="#">
-       <i class="fa fa-tv"></i> <span>Master Employee</span>
-       <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-     @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
-      <a href="{{ url("index/MasterKaryawan") }}"><i class="fa fa-list-ol"></i>Employee Data</a>
-    </li>
+        <i class="fa fa-users"></i> <span>Master Employee</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+       @if(isset($page) && $page == "Master Employee")<li class="active">@else<li>@endif
+        <a href="{{ url("index/MasterKaryawan") }}"><i class="fa fa-list-ol"></i>Employee Data</a>
+      </li>
 
-    @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i> <span>Mutation</span></a>
-    </li>
+      @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i> <span>Mutation</span></a>
+      </li>
 
-    @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i> <span>Promotion</span></a>
-    </li>
+      @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i> <span>Promotion</span></a>
+      </li>
 
-    @if(isset($page) && $page == "Termination")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i> <span>Termination</span></a>
-    </li>
+      @if(isset($page) && $page == "Termination")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i> <span>Termination</span></a>
+      </li>
 
-  </ul>
-</li>
-@endif
+    </ul>
+  </li>
+  @endif
 
-@if(in_array('S0', $navs))
-<li class="header">Service Menu</li>
-@endif
+  @if(in_array('S0', $navs))
+  <li class="header">Service Menu</li>
+  @endif
 
 
-@if(in_array('S11', $navs))
-@if(isset($page) && $page == "Check Sheet")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/CheckSheet") }}"><i class="fa fa-calendar-check-o"></i> <span>Check Sheet</span></a>
-</li>
-@endif
+  @if(in_array('S11', $navs))
+  @if(isset($page) && $page == "Check Sheet")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/CheckSheet") }}"><i class="fa fa-calendar-check-o"></i> <span>Check Sheet</span></a>
+  </li>
+  @endif
 
-@if(in_array('S1', $navs))
-@if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
-</li>
-@endif
+  @if(in_array('S1', $navs))
+  @if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+  </li>
+  @endif
 
-@if(in_array('S2', $navs))
-@if(isset($page) && $page == "FLO Educational Instrument")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/ei") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
-</li>
-@endif
+  @if(in_array('S2', $navs))
+  @if(isset($page) && $page == "FLO Educational Instrument")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/ei") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+  </li>
+  @endif
 
-@if(in_array('S7', $navs))
-@if(isset($page) && $page == "FLO Maedaoshi BI")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maedaoshi_bi") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
-</li>
-@endif
+  @if(in_array('S7', $navs))
+  @if(isset($page) && $page == "FLO Maedaoshi BI")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/maedaoshi_bi") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+  </li>
+  @endif
 
-@if(in_array('S8', $navs))
-@if(isset($page) && $page == "FLO Maedaoshi EI")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maedaoshi_ei") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
-</li>
-@endif
+  @if(in_array('S8', $navs))
+  @if(isset($page) && $page == "FLO Maedaoshi EI")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/maedaoshi_ei") }}"><i class="fa fa-forward"></i> <span>Maedaoshi  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+  </li>
+  @endif
 
-@if(in_array('S3', $navs))
-@if(isset($page) && $page == "FLO Delivery")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/delivery") }}"><i class="fa fa-shopping-cart"></i> <span>FLO  <i class="fa fa-angle-right"></i> Delivery</span></a>
-</li>
-@endif
+  @if(in_array('S3', $navs))
+  @if(isset($page) && $page == "FLO Delivery")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/delivery") }}"><i class="fa fa-shopping-cart"></i> <span>FLO  <i class="fa fa-angle-right"></i> Delivery</span></a>
+  </li>
+  @endif
 
-@if(in_array('S4', $navs))
-@if(isset($page) && $page == "FLO Stuffing")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/stuffing") }}"><i class="fa fa-truck"></i> <span>FLO  <i class="fa fa-angle-right"></i> Stuffing</span></a>
-</li>
-@endif
+  @if(in_array('S4', $navs))
+  @if(isset($page) && $page == "FLO Stuffing")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/stuffing") }}"><i class="fa fa-truck"></i> <span>FLO  <i class="fa fa-angle-right"></i> Stuffing</span></a>
+  </li>
+  @endif
 
-@if(in_array('S5', $navs))
-@if(isset($page) && $page == "FLO Shipment")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/shipment") }}"><i class="fa fa-picture-o"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
-</li>
-@endif
+  @if(in_array('S5', $navs))
+  @if(isset($page) && $page == "FLO Shipment")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/shipment") }}"><i class="fa fa-picture-o"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Shipment</span></a>
+  </li>
+  @endif
 
-@if(in_array('S6', $navs))
-@if(isset($page) && $page == "FLO Lading")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> On Board</span></a>
-</li>
-@endif
+  @if(in_array('S6', $navs))
+  @if(isset($page) && $page == "FLO Lading")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> On Board</span></a>
+  </li>
+  @endif
 
-@if(in_array('S9', $navs))
-@if(isset($page) && $page == "FLO Deletion")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/flo_view/deletion") }}"><i class="fa fa-ban"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Deletion</span></a>
-</li>
-@endif
+  @if(in_array('S9', $navs))
+  @if(isset($page) && $page == "FLO Deletion")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/flo_view/deletion") }}"><i class="fa fa-ban"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> Deletion</span></a>
+  </li>
+  @endif
 
-@if(in_array('S14', $navs))
-@if(isset($page) && $page == "Overtime Form")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/overtime/overtime_form") }}"><i class="fa fa-clock-o"></i> <span> <span>Overtime Form</span></a>
-</li>
-@endif
+  @if(in_array('S14', $navs))
+  @if(isset($page) && $page == "Overtime Form")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/overtime/overtime_form") }}"><i class="fa fa-clock-o"></i> <span> <span>Overtime Form</span></a>
+  </li>
+  @endif
 
-@if(in_array('S18', $navs))
-@if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
-</li>
-@endif
+  @if(in_array('S18', $navs))
+  @if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
+  </li>
+  @endif
 
-@if(in_array('S18', $navs))
-@if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-   <i class="fa fa-tv"></i> <span>NG-RATE</span>
-   <span class="pull-right-container">
-    <i class="fa fa-angle-left pull-right"></i>
-  </span>
-</a>
-<ul class="treeview-menu">
- @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
-</li>
+  @if(in_array('S18', $navs))
+  @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-tv"></i> <span>NG-Rate</span>
+     <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+   @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
+  </li>
 
 </ul>
 </li>
@@ -449,7 +449,7 @@
 
 @if(in_array('R7', $navs))
 @if(isset($page) && $page == "Overtime Confirmation")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/overtime_confirmation") }}"><i class="fa fa-tv"></i> <span>Overtime Confirmation</span></a>
+  <a href="{{ url("/index/overtime_confirmation") }}"><i class="fa fa-check-square-o"></i> <span>Overtime Confirmation</span></a>
 </li>
 @endif
 

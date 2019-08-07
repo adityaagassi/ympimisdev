@@ -10,12 +10,12 @@
       </a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li class="dropdown">
+         {{--  <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service Desk <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li><a href="{{ url("index/wjo_mis") }}">Management Information System <b>(MIS)</b></a></li>
             </ul>
-          </li>
+          </li> --}}
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               @php

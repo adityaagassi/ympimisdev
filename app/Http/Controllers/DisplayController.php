@@ -19,7 +19,7 @@ class DisplayController extends Controller
 
 	public function indexStuffingProgress(){
 		$title = 'Container Stuffing Progress';
-		$title_jp = '';
+		$title_jp = 'コンテナ荷積み進捗';
 
 		return view('displays.shippings.stuffing_progress', array(
 			'title' => $title,
