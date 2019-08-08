@@ -461,7 +461,7 @@ class MiddleProcessController extends Controller
 				$middle_inventories = $middle_inventories->whereIn('middle_inventories.tag', $request->get('tagMaterial'));
 			}
 
-			$middle_inventories = $middle_inventories->select('middle_inventories.tag', 'middle_inventories.material_number', 'middle_inventories.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description')->get();
+			$middle_inventories = $middle_inventories->select('middle_inventories.tag', 'middle_inventories.material_number', 'middle_inventories.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', 'materials.hpl')->get();
 
 			if($middle_inventories == null){
 				$response = array(
@@ -481,6 +481,10 @@ class MiddleProcessController extends Controller
 				$printer->initialize();
 				$printer->setJustification(Printer::JUSTIFY_CENTER);
 				$printer->setTextSize(5,2);
+				if($middle_inventory->hpl == 'TSKEY'){
+					$printer->setEmphasis(true);
+					$printer->setReverseColors(true);					
+				}
 				$printer->text($middle_inventory->model." ".$middle_inventory->key."\n");
 				$printer->text($middle_inventory->surface."\n\n");
 				$printer->initialize();
@@ -520,7 +524,7 @@ class MiddleProcessController extends Controller
 				$barrels = $barrels->whereIn('barrels.remark', $request->get('tagMachine'));
 			}
 
-			$barrels = $barrels->select('barrels.tag', 'barrels.material_number', 'barrels.qty', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', 'barrels.machine', 'barrels.jig', 'barrels.remark')->get();
+			$barrels = $barrels->select('barrels.tag', 'barrels.material_number', 'barrels.qty', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', 'barrels.machine', 'barrels.jig', 'barrels.remark', 'materials.hpl')->get();
 
 			if ($barrels == null) {
 				$response = array(
@@ -542,6 +546,10 @@ class MiddleProcessController extends Controller
 						$printer->initialize();
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(5,2);
+						if($barrel->hpl == 'TSKEY'){
+							$printer->setEmphasis(true);
+							$printer->setReverseColors(true);					
+						}
 						$printer->text($barrel->model." ".$barrel->key."\n");
 						$printer->text($barrel->surface."\n\n");
 						$printer->initialize();
@@ -566,6 +574,10 @@ class MiddleProcessController extends Controller
 						$printer->initialize();
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(5,2);
+						if($barrel->hpl == 'TSKEY'){
+							$printer->setEmphasis(true);
+							$printer->setReverseColors(true);					
+						}
 						$printer->text($barrel->model." ".$barrel->key."\n");
 						$printer->text($barrel->surface."\n\n");
 						$printer->initialize();
@@ -774,7 +786,7 @@ class MiddleProcessController extends Controller
 					foreach ($tags as $tag) {
 						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
+						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.hpl', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 						->first();
 
 						$insert_jig = [
@@ -805,6 +817,10 @@ class MiddleProcessController extends Controller
 						$printer->initialize();
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(5,2);
+						if($barrel_queue->hpl == 'TSKEY'){
+							$printer->setEmphasis(true);
+							$printer->setReverseColors(true);					
+						}
 						$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
 						$printer->text($barrel_queue->surface."\n\n");
 						$printer->initialize();
@@ -863,7 +879,7 @@ class MiddleProcessController extends Controller
 					foreach ($tags as $tag) {
 						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
+						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.hpl', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 						->first();
 
 						$insert_jig = [
@@ -897,6 +913,10 @@ class MiddleProcessController extends Controller
 						$printer->initialize();
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(5,2);
+						if($barrel_queue->hpl == 'TSKEY'){
+							$printer->setEmphasis(true);
+							$printer->setReverseColors(true);					
+						}
 						$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
 						$printer->text($barrel_queue->surface."\n\n");
 						$printer->initialize();
@@ -953,7 +973,7 @@ class MiddleProcessController extends Controller
 					$queue = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
 					->where('barrel_queues.tag', '=', $tag[0])
 					// ->whereIn('barrel_queues.tag', $request->get('tag'))
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.hpl', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 					->first();
 
 					$insert_log = [
@@ -985,6 +1005,10 @@ class MiddleProcessController extends Controller
 					$printer->initialize();
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(5,2);
+					if($queue->hpl == 'TSKEY'){
+						$printer->setEmphasis(true);
+						$printer->setReverseColors(true);					
+					}
 					$printer->text($queue->model." ".$queue->key."\n");
 					$printer->text($queue->surface."\n\n");
 					$printer->initialize();
@@ -1010,7 +1034,6 @@ class MiddleProcessController extends Controller
 						$barrel_log->save();
 						$delete_queue->forceDelete();
 					});
-
 				}
 
 				$response = array(
@@ -1035,7 +1058,7 @@ class MiddleProcessController extends Controller
 				foreach ($tags as $tag) {
 					$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
 					->where('barrel_queues.tag', '=', $tag[0])
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.hpl', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 					->first();
 
 					$insert_jig = [
@@ -1066,6 +1089,10 @@ class MiddleProcessController extends Controller
 					$printer->initialize();
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(5,2);
+					if($barrel_queue->hpl == 'TSKEY'){
+						$printer->setEmphasis(true);
+						$printer->setReverseColors(true);					
+					}
 					$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
 					$printer->text($barrel_queue->surface."\n\n");
 					$printer->initialize();
