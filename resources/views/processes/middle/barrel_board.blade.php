@@ -43,6 +43,10 @@
 	#queueTable.dataTable {
 		margin-top: 0px!important;
 	}
+	.dataTables_info,
+	.dataTables_length {
+		color: white;
+	}
 	#loading, #error { display: none; }
 </style>
 @stop
