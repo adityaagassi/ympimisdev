@@ -365,10 +365,10 @@ class FloController extends Controller
 			$container_number = $container_schedule->container_number;
 			$container_schedule->container_number = $request->get('container_number');
 			$container_schedule->save();
-			if($container_number == null){
-				$check2 = db::table('flos')->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')->where('flos.container_id', '=', $request->get('container_id'))->first();
-				self::sendMail($check2->st_date);
-			}
+			// if($container_number == null){
+			// 	$check2 = db::table('flos')->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')->where('flos.container_id', '=', $request->get('container_id'))->first();
+			// 	self::sendMail($check2->st_date);
+			// }
 		}
 
 		if($request->hasFile('container_before')){

@@ -26,12 +26,12 @@
 					<tr>
 						<th style="width: 3%; border:1px solid black;">Progress</th>
 						<th style="width: 3%; border:1px solid black;">Remark</th>
-						<th style="width: 3%; border:1px solid black;">Container No</th>
-						<th style="width: 4%; border:1px solid black;">Container Type</th>
-						<th style="width: 3%; border:1px solid black;">Dest</th>
+						<th style="width: 3%; border:1px solid black;">Cont. ID</th>
+						<th style="width: 4%; border:1px solid black;">Dest</th>
 						<th style="width: 5%; border:1px solid black;">Plan</th>
 						<th style="width: 5%; border:1px solid black;">Actual</th>
 						<th style="width: 4%; border:1px solid black;">Diff</th>
+						<th style="width: 4%; border:1px solid black;">Started At</th>
 						<th style="width: 4%; border:1px solid black;">Finished At</th>
 					</tr>
 				</thead>
@@ -39,13 +39,10 @@
 					@foreach($data as $col)
 					<?php 
 					$color="";
-					$remark=""; 
-					if($col->container_number != "" && $col->actual-$col->plan == 0 ){
-						$remark = 'Departed';
+					if($col->remark == 'Departed' ){
 						$color = "background-color:RGB(204,255,255);";
 					}
-					elseif($col->container_number == "" && $col->actual > 0 ){
-						$remark = 'Loading';
+					elseif($col->remark == 'Loading'){
 						$color = "background-color:RGB(252,248,227);";
 					}
 					else{
@@ -54,22 +51,22 @@
 					?>
 
 					<tr>
-						<td style="border:1px solid black; text-align: center;{{$color}}">{{($col->actual/$col->plan)*100}}%</td>
-						<td style="border:1px solid black; text-align: center;{{$color}}">{{$remark}}</td>
-						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->container_number}}</td>
-						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->container_name}}</td>
-						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->destination_shortname}}</td>
-						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->plan}}</td>
-						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->actual}}</td>
-						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->actual-$col->plan}}</td>
+						<td style="border:1px solid black; text-align: center;{{$color}}">{{($col->total_actual/$col->total_plan)*100}}%</td>
+						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->remark}}</td>
+						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->id_checkSheet}}</td>
+						<td style="border:1px solid black; text-align: center;{{$color}}">{{$col->destination}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->total_plan}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->total_actual}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->total_actual-$col->total_plan}}</td>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->started_at}}</td>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->finished_at}}</td>
 					</tr>
 					@endforeach
 				</tbody>
 			</table>
 			<br>
-			{{-- <span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br> --}}
-			{{-- <a href="http://172.17.128.4/mirai/public/index/fg_shipment_result">Realtime Shipment Progress</a> --}}
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="http://172.17.128.4/mirai/public/index/display/stuffing_progress">Realtime Stuffing Progress</a>
 		</center>
 	</div>
 </body>
