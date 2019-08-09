@@ -116,6 +116,8 @@ Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveCont
 Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
 Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
+Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
+Route::get('fetch/report/overtime_data', 'OvertimeController@fetchOvertimeData');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -360,6 +362,7 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	Route::get('index/MasterKaryawan', 'EmployeeController@index');
 	Route::get('index/termination', 'EmployeeController@indexTermination');
 	Route::get('index/bagian/export', 'EmployeeController@exportBagian');
+	Route::get('fetch/cost_center', 'EmployeeController@getCostCenter');
 
 	//insert
 	Route::get('index/insertEmp', 'EmployeeController@insertEmp');

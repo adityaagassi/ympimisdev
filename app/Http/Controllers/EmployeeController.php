@@ -278,6 +278,24 @@ class EmployeeController extends Controller
   }
 }
 
+
+public function getCostCenter(Request $request)
+{
+  $cc = CostCenter::select('cost_center')
+  ->where('section','=',$request->get('section'))
+  ->where('sub_sec','=',$request->get('subsection'))
+  ->where('group','=',$request->get('group'))
+  ->get();
+
+  $response = array(
+    'status' => true,
+    'cost_center' => $cc,
+  );
+  return Response::json($response);
+  
+  // select cost_center from cost_centers where section = 'Assembly Process' and sub_sec = 'CL BODY' and `group` = 'Leader'
+}
+
 public function updateEmpData(Request $request)
 {
  $id = Auth::id();
@@ -509,7 +527,7 @@ public function fetchMutation(Request $request)
   $section = OrganizationStructure::where('status','LIKE','SEC%')->get();
   $sub_section = OrganizationStructure::where('status','LIKE','SSC%')->get();
   $group = OrganizationStructure::where('status','LIKE','GRP%')->get();
-  $cc = CostCenter::get();
+  $cc = CostCenter::select('cost_center')->groupBy('cost_center')->get();
   
   $response = array(
     'status' => true,
@@ -801,26 +819,27 @@ public function indexEmployeeService()
   ) as promot_log on employees.employee_id = promot_log.employee_id
   where employees.employee_id = '".$emp_id."'";
 
-  $absence = "select nik, tanggal, sum(if(shift = 1,1,0)) as shift1, sum(if(shift = "-",1,0)) as kosong from ftm.presensi where nik = '19014987'
-  group by DATE_FORMAT(tanggal,'%Y-%m')";
+  $absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
+  (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '19014987'
+  group by DATE_FORMAT(tanggal,'%b %Y') 
+  order by tanggal asc) abs
+  left join (
+  select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '19014987'
+  group by DATE_FORMAT(tanggal,'%b %Y')
+  ) ovr on ovr.period = abs.period";
 
-  $absences = db::select($absence);
+  $absences = db::connection('mysql3')->select($absence);
 
   $datas = db::select($query);
-
-  if ($datas == null) {
-   return view('home', array(
-    'employee_service' => 'Belum Terdaftar'
-  ))->with('page', 'Dashboard');
- }
 
  return view('employees.service.indexEmploymentService', array(
   'status' => $status,
   'title' => $title,
   'title_jp' => $title_jp,
   'emp_id' => $emp_id,
-  'profil' => $datas
-))->with('page', 'Employment Service');
+  'profil' => $datas,
+  'absences' => $absences
+))->with('page', 'Employment Services');
 }
 // -------------------------  End Employee Service --------------------
 
@@ -937,6 +956,59 @@ public function importBagian(Request $request)
 
    if($request->hasFile('importBagian')){
     $file = $request->file('importBagian');
+    $data = file_get_contents($file);
+    $rows = explode("\r\n", $data);
+
+    foreach ($rows as $row)
+    {
+     if (strlen($row) > 0) {
+      $row = explode("\t", $row);
+
+      $date_from = date("Y-m-d",strtotime($row[7]));
+      $date = DateTime::createFromFormat('d/m/Y', $row[7]);
+
+      $date_from = $date->format('Y-m-d');
+      
+      date_sub($date, date_interval_create_from_date_string('1 days'));
+
+      $date_to = $date->format('Y-m-d');
+      Mutationlog::where('employee_id', $row[0])
+      ->orderBy('id','desc')
+      ->take(1)
+      ->update(['valid_to' => $date_to]);
+
+      $bagian = new Mutationlog([
+        'employee_id' => $row[0],
+        'cost_center' =>  $row[1],
+        'division' => $row[2],
+        'department' => $row[3],
+        'section' => $row[4],
+        'sub_section' => $row[5],
+        'group' => $row[6],
+        'valid_from' => $date_from,
+        'created_by' => $id
+      ]);
+
+      $bagian->save();
+    }
+  }
+}
+return redirect('/index/MasterKaryawan')->with('status', 'Update Bagian Employee Success')->with('page', 'Master Employee');
+}
+catch (QueryException $e){
+  // $emp = PresenceLog::where('presence_date','=',$tgl)
+  // ->forceDelete();
+  return redirect('/index/MasterKaryawan')->with('error', $e->getMessage())->with('page', 'Master Employee');
+}
+
+}
+
+public function importKaryawan(Request $request)
+{
+  $id = Auth::id();
+  try{
+   if($request->hasFile('importEmployee')){
+    $file = $request->file('importEmployee');
     $data = file_get_contents($file);
     $rows = explode("\r\n", $data);
 

@@ -185,7 +185,7 @@
 
 								<div class="form-group">
 									<label for="section">Section</label>
-									<select id="section" name="section" class="form-control select2" >
+									<select id="section" name="section" class="form-control select2" onchange="getCostCenter()">
 										<option value="" disabled selected>Select Section</option>
 										@foreach($sec as $nomor => $sec)
 										<option value="{{ $sec->child_code }}" > {{$sec->child_code}}</option>
@@ -195,7 +195,7 @@
 
 								<div class="form-group">
 									<label for="subsection">Sub Section</label>
-									<select id="subsection" name="subsection" class="form-control select2" >
+									<select id="subsection" name="subsection" class="form-control select2" onchange="getCostCenter()">
 										<option value="" disabled selected>Select Sub Section</option>
 										@foreach($sub as $nomor => $sub)
 										<option value="{{ $sub->child_code }}" > {{$sub->child_code}}</option>
@@ -205,7 +205,7 @@
 
 								<div class="form-group">
 									<label for="group">Group</label>
-									<select id="group" class="form-control select2" name="group">
+									<select id="group" class="form-control select2" name="group" onchange="getCostCenter()">
 										<option value="" disabled selected>Select Group</option>
 										@foreach($grup as $nomor => $grup)
 										<option value="{{ $grup->child_code }}" > {{$grup->child_code}}</option>
@@ -286,11 +286,12 @@
 
 								<div class="form-group">
 									<label for="cs">Cost Center<span class="text-red">*</span></label>
-									<select id="cs" class="form-control select2" name="cs" required>
+									<input type="text" name="cs" class="form-control" id="cs" readonly required>
+									{{-- <select id="cs" class="form-control select2" name="cs" required>
 										@foreach($cc as $nomor => $cc)
 										<option value="{{ $cc->cost_center }}" > {{$cc->cost_center}}</option>
 										@endforeach
-									</select>
+									</select> --}}
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -378,6 +379,19 @@
 	$('input[type="radio"].minimal').iCheck({
 		radioClass   : 'iradio_minimal-blue'
 	})
+
+
+	function getCostCenter() {
+		var data = {
+			section: $("#section").val(),
+			subsection: $("#subsection").val(),
+			group: $("#group").val()
+		}
+
+		$.get('{{ url("fetch/cost_center") }}', data, function(result) {
+			$("#cs").val(result.cost_center[0].cost_center);
+		})
+	}
 
 </script>
 @endsection

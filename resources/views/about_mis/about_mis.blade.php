@@ -49,24 +49,20 @@
                <div class="box-body no-padding">
                     <ul class="users-list clearfix">
                          <li>
-                              <img src="{{ url('/dist/img/C99020314.jpg') }}" alt="User Image">
-                              <a class="users-list-name" href="#">Romy (1160)</a>
-                         </li>
-                         <li>
                               <img src="{{ url('/dist/img/R14122906.jpg') }}" alt="User Image">
-                              <a class="users-list-name" href="#">Agassi (1188)</a>
+                              <a class="users-list-name" href="#">Agassi (1189)</a>
                          </li>
                          <li>
                               <img src="{{ url('/dist/img/E01030740.jpg') }}" alt="User Image">
-                              <a class="users-list-name" href="#">Agus (1189)</a>
+                              <a class="users-list-name" href="#">Agus (1164)</a>
                          </li>
                          <li>
                               <img src="{{ url('/dist/img/J06021069.jpg') }}" alt="User Image">
-                              <a class="users-list-name" href="#">Buyung (1168)</a>
+                              <a class="users-list-name" href="#">Buyung (1169)</a>
                          </li>
                          <li>
                               <img src="{{ url('/dist/img/M09061339.jpg') }}" alt="User Image">
-                              <a class="users-list-name" href="#">Anton (1168)</a>
+                              <a class="users-list-name" href="#">Anton (1189)</a>
                          </li>
                     </ul>
                </div>

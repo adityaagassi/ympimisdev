@@ -10,6 +10,6 @@ class CostCenter extends Model
     use SoftDeletes;
     //
 	protected $fillable = [
-		'id', 'cost_center', 'cost_center_name', 'department', 'code', 'created_by'
+		'id', 'cost_center', 'cost_center_name', 'section', 'sub_sec', 'group', 'created_by'
 	];
 }
