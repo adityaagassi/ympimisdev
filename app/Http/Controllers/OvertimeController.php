@@ -1219,7 +1219,7 @@ public function overtimeDetail(Request $request)
 
 	$query = "SELECT
 	final2.nik,
-	c.namaKaryawan,
+	c.name,
 	sum( final2.jam ) AS jam,
 	GROUP_CONCAT( DISTINCT c.kep ) AS kep 
 	FROM
@@ -1244,13 +1244,13 @@ public function overtimeDetail(Request $request)
 	LEFT JOIN (
 	SELECT
 	over_time_member.nik,
-	karyawan.namaKaryawan,
-	karyawan.costCenter,
+	karyawan.name,
+	karyawan.cost_center,
 	GROUP_CONCAT( DISTINCT over_time.keperluan ) AS kep 
 	FROM
 	over_time
 	LEFT JOIN over_time_member ON over_time_member.id_ot = over_time.id
-	LEFT JOIN karyawan ON karyawan.nik = over_time_member.nik 
+	LEFT JOIN (select ympimis.employees.employee_id, name, cost_center from ympimis.employees left join (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ympimis.employees.employee_id) as karyawan ON karyawan.employee_id = over_time_member.nik 
 	WHERE
 	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."' 
 	AND over_time.tanggal <= '".$tgl."' 
@@ -1258,14 +1258,14 @@ public function overtimeDetail(Request $request)
 	and jam_aktual = 0
 	GROUP BY
 	over_time_member.nik,
-	karyawan.namaKaryawan,
-	karyawan.costCenter
+	karyawan.name,
+	karyawan.cost_center
 	) AS c ON final2.nik = c.nik 
 	WHERE
-	c.costCenter = '".$cost_center->cost_center."' 
+	c.cost_center = '".$cost_center->cost_center."' 
 	GROUP BY
 	final2.nik,
-	c.namaKaryawan
+	c.name
 	ORDER BY
 	sum( final2.jam ) DESC";
 
