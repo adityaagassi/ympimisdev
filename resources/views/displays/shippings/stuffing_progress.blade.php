@@ -58,7 +58,7 @@
 			<table id="resumeTable" class="table table-bordered pull-right" style="width: 45%;">
 				<thead style="background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 20px;">
 					<tr>
-						<th style="width: 1%;" rowspan="2">ETD YMPI</th>
+						<th style="width: 1%;" rowspan="2">Next Shipment<br>ETD YMPI</th>
 						<th style="width: 1%;" colspan="3">Total Container</th>
 						<th style="width: 1%;" rowspan="2">Shipping Qty</th>
 					</tr>
