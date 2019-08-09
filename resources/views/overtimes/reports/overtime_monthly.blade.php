@@ -430,7 +430,7 @@ function modalTampil(costCenter, date) {
             dataT += '<tr>';
             dataT += '<td>'+ no++; +'</td>';
             dataT += '<td>'+ data.datas[i].nik +'</td>';
-            dataT += '<td>'+ data.datas[i].namaKaryawan +'</td>';           
+            dataT += '<td>'+ data.datas[i].name +'</td>';           
             dataT += '<td>'+ data.datas[i].jam +'</td>';
             dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
             dataT += '</tr>';
