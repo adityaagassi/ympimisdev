@@ -1556,36 +1556,36 @@ class FloController extends Controller
 		->make(true);
 	}
 
-	public function sendMail($st_date){
+	// public function sendMail($st_date){
 
-		$mail_to = db::table('send_emails')
-		->where('remark', '=', 'stuffing')
-		->WhereNull('deleted_at')
-		->orWhere('remark', '=', 'superman')
-		->WhereNull('deleted_at')
-		->select('email')
-		->get();
+	// 	$mail_to = db::table('send_emails')
+	// 	->where('remark', '=', 'stuffing')
+	// 	->WhereNull('deleted_at')
+	// 	->orWhere('remark', '=', 'superman')
+	// 	->WhereNull('deleted_at')
+	// 	->select('email')
+	// 	->get();
 
-		// if($st_date == date('Y-m-d')){
-			$query = "select shipment_schedules.st_date, stuffings.container_id, destinations.destination_shortname, stuffings.container_number, stuffings.container_name, coalesce(sum(shipment_schedules.quantity),0) as plan, coalesce(if(stuffings.container_number is not null, sum(shipment_schedules.quantity), sum(stuffings.actual)),0) as actual, max(stuffings.created_at) as finished_at from shipment_schedules left join
-			(
+	// 	// if($st_date == date('Y-m-d')){
+	// 		$query = "select shipment_schedules.st_date, stuffings.container_id, destinations.destination_shortname, stuffings.container_number, stuffings.container_name, coalesce(sum(shipment_schedules.quantity),0) as plan, coalesce(if(stuffings.container_number is not null, sum(shipment_schedules.quantity), sum(stuffings.actual)),0) as actual, max(stuffings.created_at) as finished_at from shipment_schedules left join
+	// 		(
 
-			select flos.shipment_schedule_id, flos.container_id, container_schedules.container_number, containers.container_name, sum(flos.actual) as actual, max(logs.created_at) as created_at from flos left join container_schedules on container_schedules.container_id = flos.container_id left join containers on containers.container_code = container_schedules.container_code 
-			left join 
-			(select flo_logs.flo_number, flo_logs.created_at from flo_logs where flo_logs.status_code = 3) as logs on logs.flo_number = flos.flo_number where flos.`status` in (3,4)
-			group by flos.shipment_schedule_id, flos.container_id, containers.container_name, container_schedules.container_number
+	// 		select flos.shipment_schedule_id, flos.container_id, container_schedules.container_number, containers.container_name, sum(flos.actual) as actual, max(logs.created_at) as created_at from flos left join container_schedules on container_schedules.container_id = flos.container_id left join containers on containers.container_code = container_schedules.container_code 
+	// 		left join 
+	// 		(select flo_logs.flo_number, flo_logs.created_at from flo_logs where flo_logs.status_code = 3) as logs on logs.flo_number = flos.flo_number where flos.`status` in (3,4)
+	// 		group by flos.shipment_schedule_id, flos.container_id, containers.container_name, container_schedules.container_number
 
-			) as stuffings on stuffings.shipment_schedule_id = shipment_schedules.id
-			left join destinations on destinations.destination_code = shipment_schedules.destination_code
-			where shipment_schedules.st_date = '".$st_date."'
-			group by shipment_schedules.st_date, stuffings.container_id, stuffings.container_number, destinations.destination_shortname, stuffings.container_name
-			order by finished_at desc";
+	// 		) as stuffings on stuffings.shipment_schedule_id = shipment_schedules.id
+	// 		left join destinations on destinations.destination_code = shipment_schedules.destination_code
+	// 		where shipment_schedules.st_date = '".$st_date."'
+	// 		group by shipment_schedules.st_date, stuffings.container_id, stuffings.container_number, destinations.destination_shortname, stuffings.container_name
+	// 		order by finished_at desc";
 
-			$stuffings = db::select($query);
+	// 		$stuffings = db::select($query);
 
-			if($stuffings != null){
-				Mail::to($mail_to)->send(new SendEmail($stuffings, 'stuffing'));
-			}
-		// }
-	}
+	// 		if($stuffings != null){
+	// 			Mail::to($mail_to)->send(new SendEmail($stuffings, 'stuffing'));
+	// 		}
+	// 	// }
+	// }
 }

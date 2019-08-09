@@ -96,13 +96,6 @@
 				$('#stuffingTableBody').html("");
 				var stuffingTableBody = "";
 
-				if(result.stuffing_progress.length == 0){
-					stuffingTableBody += "<tr>";
-					stuffingTableBody += "<td colspan='9'>There is no shipping schedule today</td>";
-					stuffingTableBody += "</tr>";
-					$('#stuffingTableBody').append(stuffingTableBody);
-					return false;
-				}
 				$.each(result.stuffing_progress, function(index, value){
 					var status = "";
 					if(value.status == 1){
@@ -160,6 +153,13 @@
 					resumeTableBody += "</tr>";
 				});
 				$('#resumeTableBody').append(resumeTableBody);
+
+				if(result.stuffing_progress.length == 0){
+					stuffingTableBody += "<tr>";
+					stuffingTableBody += "<td colspan='9'>There is no shipping schedule today</td>";
+					stuffingTableBody += "</tr>";
+					$('#stuffingTableBody').append(stuffingTableBody);
+				}
 			}
 			else{
 				alert('Attempt to retrieve data failed.');
