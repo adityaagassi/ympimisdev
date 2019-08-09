@@ -62,8 +62,8 @@ class OvertimeController extends Controller
 	public function indexReportControl()
 	{
 		return view('overtimes.reports.overtime_monthly', array(
-			'title' => 'Overtime Monthly Control',
-			'title_jp' => '??'))->with('page', 'Overtime Monthly Control');
+			'title' => 'Monthly Overtime Control',
+			'title_jp' => ' 月次残業管理'))->with('page', 'Overtime Monthly Control');
 	}
 
 	public function indexPrint($id)
@@ -1255,14 +1255,15 @@ public function overtimeDetail(Request $request)
 	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."' 
 	AND over_time.tanggal <= '".$tgl."' 
 	AND over_time_member.nik IS NOT NULL 
-	and jam_aktual = 0
+	AND jam_aktual = 0
 	GROUP BY
 	over_time_member.nik,
 	karyawan.name,
 	karyawan.cost_center
 	) AS c ON final2.nik = c.nik 
 	WHERE
-	c.cost_center = '".$cost_center->cost_center."' 
+	c.cost_center = '".$cost_center->cost_center."'
+	AND jam > 0 
 	GROUP BY
 	final2.nik,
 	c.name
