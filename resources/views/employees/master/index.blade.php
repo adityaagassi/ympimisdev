@@ -496,13 +496,15 @@
 					filter:filter
 				};
 
-				$('#masteremp').DataTable().destroy();
 
 
 				$('#masteremp tfoot th').each( function () {
 					var title = $(this).text();
 					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
 				});
+
+				$('#masteremp').DataTable().destroy();
+				
 				var table = $('#masteremp').DataTable({
 					'dom': 'Bfrtip',
 					'responsive': true,
