@@ -121,18 +121,18 @@ public function check($id)
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number";
-     $container = AreaInspection::orderBy('id','ASC')
-     ->get();
-     $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
-     ->get();
+$container = AreaInspection::orderBy('id','ASC')
+->get();
+$Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
+->get();
 
-     $detail = db::select($details);
-     return view('Check_Sheet.check', array(
-          'time' => $time,
-          'detail' => $detail,
-          'container' => $container,
-          'inspection' => $Inspection,
-     ))->with('page', 'Check Sheet');
+$detail = db::select($details);
+return view('Check_Sheet.check', array(
+     'time' => $time,
+     'detail' => $detail,
+     'container' => $container,
+     'inspection' => $Inspection,
+))->with('page', 'Check Sheet');
 //
 }
 public function print_check($id)
@@ -169,18 +169,18 @@ public function print_check_surat($id)
 ) as inv on cek.gmc = inv.material_number";
 
 
-     $container = AreaInspection::orderBy('id','ASC')
-     ->get();
-     $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
-     ->get();
+$container = AreaInspection::orderBy('id','ASC')
+->get();
+$Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
+->get();
 
-     $detail = db::select($details);
-     return view('Check_Sheet.printsurat', array(
-          'time' => $time,
-          'detail' => $detail,
-          'container' => $container,
-          'Inspection' => $Inspection,
-     ))->with('page', 'Check Sheet');
+$detail = db::select($details);
+return view('Check_Sheet.printsurat', array(
+     'time' => $time,
+     'detail' => $detail,
+     'container' => $container,
+     'Inspection' => $Inspection,
+))->with('page', 'Check Sheet');
 //
 }
 
@@ -553,44 +553,44 @@ public function bara(Request $request){
 }
 
 public function getReason(Request $request)
-  {
-    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
-    ->select('reason')     
-    ->first();
+{
+ $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+ ->select('reason')     
+ ->first();
 
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
-      'reason' => $reason
-    );
-    return Response::json($response);
-  }
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+    'reason' => $reason
+);
+ return Response::json($response);
+}
 
-  public function edit(Request $request){
-    $id_user = Auth::id();
-    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
-    ->first();
-   
-    $master->countainer_number = $request->get('countainer_numberE');
-    $master->seal_number = $request->get('seal_numberE');
-    $master->no_pol = $request->get('nopolE');
-    $master->invoice = $request->get('invoiceE');
-    $master->destination = strtoupper($request->get('destinationE'));
-    $master->shipped_to = $request->get('shipped_toE');
-    $master->Stuffing_date = $request->get('Stuffing_dateE');
-    $master->etd_sub = $request->get('etd_subE');
-    $master->carier = $request->get('carierE');
-    $master->payment = $request->get('paymentE');
-    $master->reason = $request->get('reason');
-    $master->created_by = $id_user;
-    $master->save();
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
-    );
+public function edit(Request $request){
+ $id_user = Auth::id();
+ $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+ ->first();
 
-    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
-  }
+ $master->countainer_number = $request->get('countainer_numberE');
+ $master->seal_number = $request->get('seal_numberE');
+ $master->no_pol = $request->get('nopolE');
+ $master->invoice = $request->get('invoiceE');
+ $master->destination = strtoupper($request->get('destinationE'));
+ $master->shipped_to = $request->get('shipped_toE');
+ $master->Stuffing_date = $request->get('Stuffing_dateE');
+ $master->etd_sub = $request->get('etd_subE');
+ $master->carier = $request->get('carierE');
+ $master->payment = $request->get('paymentE');
+ $master->reason = $request->get('reason');
+ $master->created_by = $id_user;
+ $master->save();
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+);
+
+ return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+}
 
 public function marking(Request $request){
      $id_user = Auth::id();
@@ -611,11 +611,14 @@ public function save(Request $request){
      $id_user = Auth::id();
      $master = MasterChecksheet::where('id_checksheet','=', $request->get('id'))       
      ->first();
+     if($master->status != 1){
+          self::mailStuffing($master->Stuffing_date);
+     }
      $master->status = $request->get('status');
      $master->check_by = $id_user;
      $master->save();
 
-     self::mailStuffing($master->Stuffing_date);
+
 
      return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been saved.')->with('page', 'Check Sheet');
 
