@@ -41,5 +41,8 @@ class SendEmail extends Mailable
         if($this->remark == 'stuffing'){
             return $this->from('ympimis@gmail.com')->subject('MIS Stuffing Information')->view('mails.stuffing');
         }
+        if($this->remark == 'min_queue'){
+            return $this->from('ympimis@gmail.com')->subject('MIS Kanban Queue Information')->view('mails.min_queue');
+        }
     }
 }

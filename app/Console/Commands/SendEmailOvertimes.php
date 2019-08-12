@@ -59,7 +59,8 @@ class SendEmailOvertimes extends Command
             $mon = date('Y-m', strtotime(Carbon::now()->subDays(1)));
         }
 
-        $query = "SELECT
+        $query = "
+        SELECT DISTINCT
         ovr.nik,
         emp.name,
         pos.department,
@@ -85,11 +86,11 @@ class SendEmailOvertimes extends Command
         nik 
         ) ovr
         LEFT JOIN ympimis.employees AS emp ON emp.employee_id = ovr.nik
-        LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, mutation_logs.section, mutation_logs.`group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE DATE_FORMAT( valid_from, '%Y-%m' ) <= '".$mon."' AND valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
+        LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, mutation_logs.section, mutation_logs.`group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
         LEFT JOIN ympimis.total_meeting_codes AS helper ON pos.`group` = helper.group_name
         LEFT JOIN (
-        select forecast.cost_center, round(forecast.fc / emp_data.jml) as fc_mp from (select cost_center, sum(jam) as fc from budget_harian where DATE_FORMAT( tanggal, '%Y-%m-%d' ) >= '".$first."'
-        AND DATE_FORMAT( tanggal, '%Y-%m-%d' ) <= '".$now."'
+        select forecast.cost_center, coalesce(floor(forecast.fc / emp_data.jml * 2 + 0.5 ) / 2,0) as fc_mp from (select cost_center, sum(hour) as fc from ympimis.forecasts where DATE_FORMAT( date, '%Y-%m-%d' ) >= '".$first."'
+        AND DATE_FORMAT( date, '%Y-%m-%d' ) <= '".$now."'
         group by cost_center) as forecast
         left join (
         select count(emp.employee_id) as jml, cost_center from ympimis.employees as emp
@@ -100,8 +101,10 @@ class SendEmailOvertimes extends Command
         LEFT JOIN (
         select cost_center, floor(budget_mp / DAY(LAST_DAY('".$first."')) * DAY('".$now."') * 2  + 0.5) / 2 mp_budget from ympimis.budgets where DATE_FORMAT(period,'%Y-%m') = '".$mon."'
         ) as budget on budget.cost_center = pos.cost_center
-        ORDER BY
-        ovr.act DESC";
+                where department is not null
+                and act > 0 
+                and act > mp_budget
+        ORDER BY ovr.act DESC";
         
         $datas = db::connection('mysql3')->select($query);
 
