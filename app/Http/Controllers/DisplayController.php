@@ -47,8 +47,8 @@ class DisplayController extends Controller
 
 	public function fetchStuffingProgress(){
 		$now = date('Y-m-d');
-		
-		$query = "select if(master_checksheets.`status` = 1, 10, if(actual_stuffing.total_actual > 0, 8, 9)) as seq, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at, master_checksheets.reason from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+
+		$query = "select if(master_checksheets.`status` = 1, 'DEPARTED', if(actual_stuffing.total_actual<actual_stuffing.total_plan and actual_stuffing.total_actual>0, 'LOADING', if(actual_stuffing.total_actual>=actual_stuffing.total_plan, 'INSPECTION', '-'))) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at, master_checksheets.reason from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
 		left join
 		(
 		select id_checkSheet, if(min(min_update) = '9999-99-99', '-', min(min_update)) as started_at, if(max(max_update) = '0000-00-00', '-', max(max_update)) as last_update, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
@@ -58,7 +58,7 @@ class DisplayController extends Controller
 		) as actual_stuffing
 		on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
 		where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date = '".$now."'
-		order by seq asc";
+		order by started_at desc";
 
 		$stuffing_progress = db::select($query);
 
