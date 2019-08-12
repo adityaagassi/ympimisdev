@@ -112,9 +112,20 @@ class EmployeeController extends Controller
       'keluarga' => $this->keluarga ))->with('page', 'Master Employee');
   }
 
-  public function fetchMasterEmp(){
-    $emp = "select employees.employee_id,name,division, department,DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
-    LEFT JOIN (select employee_id, division, department from mutation_logs where valid_to is null group by employee_id, division, department) mutation_logs on employees.employee_id = mutation_logs.employee_id
+  public function fetchMasterEmp(Request $request){
+    $where = "";
+
+    if ($request->get("filter") != "") {
+      if($request->get("filter") == "ofc") {
+        $where = "where code in ('OFC')";
+      }
+      else if($request->get("filter") == "prod") {
+        $where = "where code in ('WH', 'AP', 'EI', 'MTC', 'PP', 'PE', 'QA', 'WST')";
+      }
+    }
+
+    $emp = "select employees.employee_id,name, department, section, DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
+    LEFT JOIN (select employee_id, department, section, `group` from mutation_logs where valid_to is null group by employee_id, department, section, `group`) mutation_logs on employees.employee_id = mutation_logs.employee_id
     left join (
     select employee_id, status from employment_logs 
     WHERE id IN (
@@ -123,6 +134,8 @@ class EmployeeController extends Controller
     GROUP BY employment_logs.employee_id
     )
     ) stat on stat.employee_id = employees.employee_id
+    LEFT JOIN ympimis.total_meeting_codes AS helper ON mutation_logs.`group` = helper.group_name
+    ".$where."
     ORDER BY employees.remark asc";
     $masteremp = DB::select($emp);
 
@@ -826,13 +839,13 @@ public function indexEmployeeService()
   left join (
   select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '19014987'
   group by DATE_FORMAT(tanggal,'%b %Y')
-  ) ovr on ovr.period = abs.period";
+) ovr on ovr.period = abs.period";
 
-  $absences = db::connection('mysql3')->select($absence);
+$absences = db::connection('mysql3')->select($absence);
 
-  $datas = db::select($query);
+$datas = db::select($query);
 
- return view('employees.service.indexEmploymentService', array(
+return view('employees.service.indexEmploymentService', array(
   'status' => $status,
   'title' => $title,
   'title_jp' => $title_jp,

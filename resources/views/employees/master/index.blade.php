@@ -63,26 +63,23 @@
 @stop
 @section('header')
 <section class="content-header">
-{{-- 	 @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-    {{ session('status') }}
-  </div>   
-  @endif --}}
-  <h1>
-  	Master Employees<span class="text-purple"> </span>
-  	{{-- <small>WIP Control <span class="text-purple"> 仕掛品管理</span></small> --}}
-  </h1>
+	{{-- 	 @if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif --}}
+	<h1>
+		Master Employees<span class="text-purple"> </span>
+		{{-- <small>WIP Control <span class="text-purple"> 仕掛品管理</span></small> --}}
+	</h1>
 
-  <ol class="breadcrumb">
-  	<li>
-  		<button class="btn btn-success btn-sm"  data-target="#modalImportActiveEmployee" data-toggle="modal"><i class="fa fa-upload"></i> Import Active Employee</button>
-  		<a class="btn btn-warning btn-sm" style="color: white" href="{{ url("index/bagian/export") }}"><i class="fa fa-download"></i> Get Bagian Data</a>
-  		<button class="btn btn-primary btn-sm"  data-target="#modalImport" data-toggle="modal"><i class="fa fa-upload"></i> Import Bagian</button>
-  		<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white"><i class="fa fa-plus"></i>Create {{ $page }}</a>
-  	</li>
-  </ol>
+	<ol class="breadcrumb">
+		<li>
+			<button class="btn btn-success btn-sm"  data-target="#modalImportPresence" data-toggle="modal"><i class="fa fa-group"></i> Import Presence</button>
+		</li>
+	</ol>
 </section>
 @stop
 @section('content')
@@ -104,36 +101,46 @@
 	</div>   
 	@endif
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="box">
+		<div class="col-xs-8">
+			<div class="box box-solid">
 				<div class="box-body">
-					<form name="importForm" method="post" action="{{ url('import/importEmp') }}" enctype="multipart/form-data">
-						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="form-group">
-							<label for="nik">Import Presence</label>
-							<input type="file" name="import" required><br>
-							<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Import <i class="fa fa-check"></i></button>
-						</div>	
-					</form>
+					<button class="btn btn-success btn-sm"  data-target="#modalImportActiveEmployee" data-toggle="modal"><i class="fa fa-upload"></i> Import Active Employee</button>
+					<a class="btn btn-warning btn-sm" style="color: white" href="{{ url("index/bagian/export") }}"><i class="fa fa-download"></i> Get Bagian Data</a>
+					<button class="btn btn-primary btn-sm"  data-target="#modalImport" data-toggle="modal"><i class="fa fa-upload"></i> Import Bagian</button>
+					<div class="pull-right">
+						<a href="{{ url("index/insertEmp") }}"  class="btn btn-sm bg-purple" style="color:white"><i class="fa fa-plus"></i> Create {{ $page }}</a>
+					</div>
 				</div>
 			</div>
 		</div>
 
+		<div class="col-xs-4">
+			<div class="box box-solid">
+				<div class="box-body">
+					<select id="filter" class="form-control select2" onchange="filter()">
+						<option disabled>Select filter</option>
+						<option value="all">All</option>
+						<option value="ofc">Office</option>
+						<option value="prod">Production</option>
+					</select>
+				</div>
+			</div>
+		</div>
 		
 		<div class="col-xs-12">
-				{{-- @foreach ($asd as $key => $value)
+			{{-- @foreach ($asd as $key => $value)
 				Key: {{ $key }}    
 				Value: {{ $value }} 
 				@endforeach --}}
-				<div class="box">
+				<div class="box box-solid">
 					<div class="box-body">
 						<table id="masteremp" class="table table-bordered table-striped table-hover">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th width="12%">Employee ID</th>
 									<th width="25%">Name</th>
-									<th>Division</th>
 									<th>Department</th>
+									<th>Section</th>
 									<th width="10%">Entry Date</th>
 									<th>Action</th>								
 								</tr>
@@ -427,6 +434,26 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="modal fade" id="modalImportPresence">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<form name="importForm" method="post" action="{{ url('import/importEmp') }}" enctype="multipart/form-data">
+							<input type="hidden" value="{{csrf_token()}}" name="_token" />
+							<div class="modal-header">
+								<h4>Import Presence</h4>
+							</div>
+							<div class="modal-body">
+								<input type="file" name="import" required>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success pull-right" type="submit" onclick="$('[name=importForm]').submit();">Import <i class="fa fa-check"></i></button>
+								<button class="btn btn-default pull-left" data-dismiss="modal" type="button">Close</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		</section>
 
 
@@ -461,10 +488,17 @@
 					todayHighlight: true,
 				});
 
-				fillmasteremp();
+				fillmasteremp("");
 			});
 
-			function fillmasteremp(){
+			function fillmasteremp(filter){
+				var data = {
+					filter:filter
+				};
+
+				$('#masteremp').DataTable().destroy();
+
+
 				$('#masteremp tfoot th').each( function () {
 					var title = $(this).text();
 					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
@@ -523,12 +557,13 @@
 					"ajax": {
 						"type" : "get",
 						"url" : "{{ url("fetch/masteremp") }}",
+						"data": data
 					},
 					"columns": [
 					{ "data": "employee_id"},
 					{ "data": "name"},
-					{ "data": "division"},
 					{ "data": "department"},
+					{ "data": "section"},
 					{ "data": "hire_date"},
 					{ "data": "action"}
 					]
@@ -545,7 +580,6 @@
 						}
 					} );
 				});
-
 				$('#masteremp tfoot tr').appendTo('#masteremp thead');
 			}
 
@@ -556,50 +590,47 @@
 					nik:nik
 				}
 				$.get('{{ url("fetch/masterempdetail") }}', data, function(result, status, xhr){
-						// console.log(status);
-						// console.log(result);
-						// console.log(xhr);
-						if(xhr.status == 200){
-							if(result.status){
-								var path = "{{url('images/photos')}}";
-								$('#nama').text(result.detail[0].name);
-								$('#nik').text(result.detail[0].employee_id);
-								$('#tempatLahir').text(result.detail[0].birth_place);
-								$('#tanggalLahir').text(result.detail[0].birth_date);
-								$('#jk').text(result.detail[0].gender);
-								$('#alamat').text(result.detail[0].address);
-								$('#sKeluarga').text(result.detail[0].family_id);
-								$('#tglMasuk').text(result.detail[0].hire_date);
-								$('#pin').text(result.detail[0].remark);
-								$('#hp').text(result.detail[0].phone);
-								$('#rek').text(result.detail[0].account);
-								$('#ktp').text(result.detail[0].card_id);
-								$('#npwp').text(result.detail[0].npwp);
-								$('#bpjstk').text(result.detail[0].bpjstk);
-								$('#jp').text(result.detail[0].jp);
-								$('#bpjskes').text(result.detail[0].bpjskes);
-								$('#dev').text(result.detail[0].division);
-								$('#dep').text(result.detail[0].department);
-								$('#sec').text(result.detail[0].section);
-								$('#sub-sec').text(result.detail[0].sub_section);
-								$('#group').text(result.detail[0].group);
-								$('#grade').text(result.detail[0].grade_code+" - "+result.detail[0].grade_name);
-								$('#jabatan').text(result.detail[0].position);
-								$('#atasan').text(result.detail[0].direct_superior);
-								$("#foto").attr("src",path+"/"+result.detail[0].avatar);	
-								$('#myModal').modal('show');
+					if(xhr.status == 200){
+						if(result.status){
+							var path = "{{url('images/photos')}}";
+							$('#nama').text(result.detail[0].name);
+							$('#nik').text(result.detail[0].employee_id);
+							$('#tempatLahir').text(result.detail[0].birth_place);
+							$('#tanggalLahir').text(result.detail[0].birth_date);
+							$('#jk').text(result.detail[0].gender);
+							$('#alamat').text(result.detail[0].address);
+							$('#sKeluarga').text(result.detail[0].family_id);
+							$('#tglMasuk').text(result.detail[0].hire_date);
+							$('#pin').text(result.detail[0].remark);
+							$('#hp').text(result.detail[0].phone);
+							$('#rek').text(result.detail[0].account);
+							$('#ktp').text(result.detail[0].card_id);
+							$('#npwp').text(result.detail[0].npwp);
+							$('#bpjstk').text(result.detail[0].bpjstk);
+							$('#jp').text(result.detail[0].jp);
+							$('#bpjskes').text(result.detail[0].bpjskes);
+							$('#dev').text(result.detail[0].division);
+							$('#dep').text(result.detail[0].department);
+							$('#sec').text(result.detail[0].section);
+							$('#sub-sec').text(result.detail[0].sub_section);
+							$('#group').text(result.detail[0].group);
+							$('#grade').text(result.detail[0].grade_code+" - "+result.detail[0].grade_name);
+							$('#jabatan').text(result.detail[0].position);
+							$('#atasan').text(result.detail[0].direct_superior);
+							$("#foto").attr("src",path+"/"+result.detail[0].avatar);	
+							$('#myModal').modal('show');
 
 
 
-							}
-							else{
-								alert('Attempt to retrieve data failed');
-							}
 						}
 						else{
-							alert('Disconnected from server');
+							alert('Attempt to retrieve data failed');
 						}
-					});
+					}
+					else{
+						alert('Disconnected from server');
+					}
+				});
 			}
 
 			function upgrade() {
@@ -619,6 +650,12 @@
 				$('#name').text(name);
 				$('#stat').text(status);
 				$('#modalUpgrade').modal('show');
+			}
+
+			function filter() {
+				var filter = $("#filter option:selected").val();
+				fillmasteremp(filter);
+				// console.log(filter);
 			}
 		</script>
 		@endsection

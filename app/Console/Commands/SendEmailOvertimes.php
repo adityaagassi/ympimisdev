@@ -101,9 +101,9 @@ class SendEmailOvertimes extends Command
         LEFT JOIN (
         select cost_center, floor(budget_mp / DAY(LAST_DAY('".$first."')) * DAY('".$now."') * 2  + 0.5) / 2 mp_budget from ympimis.budgets where DATE_FORMAT(period,'%Y-%m') = '".$mon."'
         ) as budget on budget.cost_center = pos.cost_center
-                where department is not null
-                and act > 0 
-                and act > mp_budget
+        where department is not null
+        and act > 0 
+        and act > mp_budget
         ORDER BY ovr.act DESC";
         
         $datas = db::connection('mysql3')->select($query);
