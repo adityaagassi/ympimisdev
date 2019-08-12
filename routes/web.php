@@ -653,6 +653,8 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('printsurat/CheckSheet/{id}', 'CheckSheet@print_check_surat');	
 	Route::get('delete/CheckSheet/{id}', 'CheckSheet@delete');
 	Route::get('persen/CheckSheet/{id}', 'CheckSheet@persen');
+	Route::get('fill/reason', 'CheckSheet@getReason');
+
 });
 Route::get('stamp/stamp', 'ProcessController@stamp');
 Route::post('reprint/stamp', 'ProcessController@reprint_stamp');

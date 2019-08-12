@@ -3,36 +3,36 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style>
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -114,16 +114,16 @@ table.table-bordered > tfoot > tr > th{
               {{-- <td style="font-size: 14">{{$time->shipped_from}}</td> --}}
               <td style="font-size: 14">{{$time->shipped_to}}</td>
               <td style="font-size: 14">@if(isset($time->shipmentcondition->shipment_condition_name)){{$time->shipmentcondition->shipment_condition_name}}@else Not registered @endif</td>
-             <td>
-              @if($time->status != 1) 
-              <a href="javascript:void(0)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" onclick="editConfirmation('{{ url("edit/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id_checkSheet'] }}');">Edit</a>
+              <td>
+                @if($time->status != 1) 
+                <a href="javascript:void(0)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" onclick="editConfirmation('{{ url("edit/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id_checkSheet'] }}'); reason('{{ $time['id_checkSheet'] }}');">Edit</a>
 
 
-              <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("delete/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id'] }}');">Delete</a>
-              <p id="id_checkSheet_mastera{{$nomor + 1}}" hidden>{{$time->id_checkSheet}}</p>
-              @else
-              @endif
-            </td>
+                <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("delete/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id'] }}');">Delete</a>
+                <p id="id_checkSheet_mastera{{$nomor + 1}}" hidden>{{$time->id_checkSheet}}</p>
+                @else
+                @endif
+              </td>
            <!-- <td>@if($time->status == 1)            
             <span class="label label-success">Checked</span>
             @else
@@ -275,52 +275,56 @@ table.table-bordered > tfoot > tr > th{
       </div>
       <div class="modal-body" id="modalDeleteBody">
         <form id ="Editform" method="post" action="" enctype="multipart/form-data">
-        <input type="hidden" value="{{csrf_token()}}" name="_token" />
-        <div class="modal-body col-xs-12">
-         <div class="col-xs-4">
-          <label>CONSIGNEE & ADDRESS</label>
-          <input type="text" name="destinationE" class="form-control" id="destinationE" required>
-          <label>NO POL</label>
-          <input type="text" name="nopolE" class="form-control" id="nopolE" required>
-          <label>CONTAINER NO.</label>
-          <input type="text" name="countainer_numberE" class="form-control" id="countainer_numberE" required>
-          <label>SEAL NO</label>
-          <input type="text" name="seal_numberE" class="form-control" id="seal_numberE" required>
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="modal-body col-xs-12">
+           <div class="col-xs-4">
+            <label>CONSIGNEE & ADDRESS</label>
+            <input type="text" name="destinationE" class="form-control" id="destinationE" required>
+            <label>NO POL</label>
+            <input type="text" name="nopolE" class="form-control" id="nopolE" required>
+            <label>CONTAINER NO.</label>
+            <input type="text" name="countainer_numberE" class="form-control" id="countainer_numberE" required>
+            <label>SEAL NO</label>
+            <input type="text" name="seal_numberE" class="form-control" id="seal_numberE" required>
 
-        </div>
+          </div>
 
-        <div class="col-xs-4">
-          <label>SHIPPED FROM</label>
-          <input type="text" name="shipped_from" class="form-control" id="shipped_from" value="SURABAYA" readonly>
-          <label>SHIPPED TO</label>
-          <input type="text" name="shipped_toE" class="form-control" id="shipped_toE" required>
-          <label>CARRIER</label>
+          <div class="col-xs-4">
+            <label>SHIPPED FROM</label>
+            <input type="text" name="shipped_from" class="form-control" id="shipped_from" value="SURABAYA" readonly>
+            <label>SHIPPED TO</label>
+            <input type="text" name="shipped_toE" class="form-control" id="shipped_toE" required>
+            <label>CARRIER</label>
 
-          <select class="form-control select2" name="carierE" id="carierE"  data-placeholder="aaaaa" style="width: 100%;" >
+            <select class="form-control select2" name="carierE" id="carierE"  data-placeholder="aaaaa" style="width: 100%;" >
 
-            @foreach($carier1 as $nomor => $carier)
-            <option value="{{ $carier->shipment_condition_code }}" > {{$carier->shipment_condition_name}}</option>
-            @endforeach
-          </select>
+              @foreach($carier1 as $nomor => $carier)
+              <option value="{{ $carier->shipment_condition_code }}" > {{$carier->shipment_condition_name}}</option>
+              @endforeach
+            </select>
 
-          <label>ON OR ABOUT</label>
-          <input type="text" name="etd_subE" class="form-control" ID= "etd_subE" required>
-        </div>
+            <label>ON OR ABOUT</label>
+            <input type="text" name="etd_subE" class="form-control" ID= "etd_subE" required>
+          </div>
 
-        <div class="col-xs-4">
-          <label>INVOICE NO.</label>
-          <input type="text" name="invoiceE" class="form-control" id="invoiceE" required>
-          <label>DATE</label>
-          <input type="text" name="Stuffing_dateE" class="form-control" id="Stuffing_dateE" required>
-          <label>PAYMENT</label>
-          <select class="form-control select2" name="paymentE" id="paymentE"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
+          <div class="col-xs-4">
+            <label>INVOICE NO.</label>
+            <input type="text" name="invoiceE" class="form-control" id="invoiceE" required>
+            <label>DATE</label>
+            <input type="text" name="Stuffing_dateE" class="form-control" id="Stuffing_dateE" required>
+            <label>PAYMENT</label>
+            <select class="form-control select2" name="paymentE" id="paymentE"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
 
              <option value="T/T REMITTANCE">T/T REMITTANCE</option>
-            <option value="D/P AT SIGHT">D/P AT SIGHT</option>
-            <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
-          </select>
-          <label>SHIPPER</label>
-          <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
+             <option value="D/P AT SIGHT">D/P AT SIGHT</option>
+             <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
+           </select>
+           <label>SHIPPER</label>
+           <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
+         </div>
+         <div class="col-xs-12">
+          <label>REASON</label>
+          <textarea name="reason" class="form-control" id="reason"></textarea>
         </div>
       </div>
       <input type="text" name="id_chek" id="id_chek" hidden>
@@ -329,9 +333,9 @@ table.table-bordered > tfoot > tr > th{
         <button id="modaleditButton" type="submit" class="btn btn-success">Edit</button>
       </div>
     </form>
-      </div>      
-    </div>
-  </div>
+  </div>      
+</div>
+</div>
 </div>
 
 
@@ -364,7 +368,7 @@ table.table-bordered > tfoot > tr > th{
     format: 'yyyy-mm-dd',
   })
   jQuery(document).ready(function() {
-    
+
     $(document).ready(function () {
       $('body').toggleClass("sidebar-collapse");
     })
@@ -453,7 +457,7 @@ table.table-bordered > tfoot > tr > th{
 
   function editConfirmation(url, name, id) {
 
-   
+
     jQuery('#modaleditButton').attr("href", url+'/'+id);
 
     var cont;
@@ -506,9 +510,33 @@ table.table-bordered > tfoot > tr > th{
     
   }
 
-  function addInspection(id){
-    var a = id;
-    var id =document.getElementById("id_checkSheet_master"+a).innerHTML;
+  function reason(id) {  
+   var data = {
+    id:id
+  }
+  $.get('{{ url("fill/reason") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+    if(xhr.status == 200){
+      if(result.status){
+       $('#reason').val(result.reason.reason);
+     }
+     else{
+      alert('Attempt to retrieve data failed');
+    }
+  }
+  else{
+    alert('Disconnected from server');
+  }
+});
+  
+}
+
+
+function addInspection(id){
+  var a = id;
+  var id =document.getElementById("id_checkSheet_master"+a).innerHTML;
       // var id2 =document.getElementById("id_checkSheet_master_id").innerHTML;
       // var a = "check/CheckSheet/{"+id2+"}";
       // alert(a)

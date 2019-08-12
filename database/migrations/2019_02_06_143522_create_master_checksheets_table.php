@@ -29,6 +29,7 @@ class CreateMasterChecksheetsTable extends Migration
             $table->string('shipped_to');
             $table->string('Stuffing_date');        
             $table->integer('status')->default('0');
+            $table->string('reason');
             $table->integer('check_by')->default('0');
             $table->integer('created_by');
             $table->softDeletes();

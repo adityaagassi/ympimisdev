@@ -141,6 +141,13 @@
 					stuffingTableBody += "<td>"+value.started_at+"</td>";
 					stuffingTableBody += "<td>"+finished+"</td>";
 					stuffingTableBody += "</tr>";
+
+					if(value.reason != null){
+						stuffingTableBody += "<tr>";
+						stuffingTableBody += "<td colspan='9' style='text-align: right; font-size: 20px;'>Note: "+value.reason+"</td>";
+						stuffingTableBody += "</tr>";
+					}
+
 				});
 				$('#stuffingTableBody').append(stuffingTableBody);
 
