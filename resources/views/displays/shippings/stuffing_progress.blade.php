@@ -98,23 +98,27 @@
 
 				$.each(result.stuffing_progress, function(index, value){
 					var status = "";
+					var finished = "-";
 					if(value.status == 1){
 						status = "DEPARTED";
 						size=30;
 						size2=35;
 						style = "style='background-color:rgb(6, 115, 82); color:white; font-size:"+size+"px'";
+						finished = value.finished_at;
 					}
 					else if(value.total_actual > 0){
 						status = "LOADING";
 						size=50;
 						size2=35;
 						style = "style='background-color:yellow; color:rgb(242, 81, 22); font-size:"+size+"px'";
+						finished = "-";
 					}
 					else{
 						status = "-";					
 						style = "";
 						size=30;
 						size2=35;
+						finished = "-";
 					}
 					var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
 
@@ -135,7 +139,7 @@
 					stuffingTableBody += "</div>";
 					stuffingTableBody += "</td>";
 					stuffingTableBody += "<td>"+value.started_at+"</td>";
-					stuffingTableBody += "<td>"+value.finished_at+"</td>";
+					stuffingTableBody += "<td>"+finished+"</td>";
 					stuffingTableBody += "</tr>";
 				});
 				$('#stuffingTableBody').append(stuffingTableBody);
