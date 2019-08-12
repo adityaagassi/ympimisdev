@@ -201,6 +201,7 @@ table.table-bordered > tfoot > tr > th{
                   <th>INVOICE</th>
                   <th>GMC</th>
                   <th>DESCRIPTION OF GOODS</th>
+                  <th>FSTK</th>
                   <th>MARKING NO.</th>
                   <th colspan="2">PACKAGE</th>
                   <th colspan="2">QUANTITY</th>
@@ -220,6 +221,7 @@ table.table-bordered > tfoot > tr > th{
                  <td>{{$detail->invoice}}</td>
                  <td>{{$detail->gmc}}</td>
                  <td>{{$detail->goods}}</td>
+                  <td>{{$detail->stock}}</td>
                  <td ><p id="marking{{$nomor + 1}}">{{$detail->marking}}</p></td>
                  @if($detail->package_set =="PL")
                  <td class="PLT" width="5%">{{$detail->package_qty}}</td>
@@ -291,7 +293,7 @@ table.table-bordered > tfoot > tr > th{
                 </tbody>
                 <tfoot style="background-color: RGB(252, 248, 227);">
                   <tr>
-                    <th colspan="5" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
+                    <th colspan="6" rowspan="2"> <CENTER>REMAIN PALLET & CTN</CENTER></th>                    
                     <th><p id="plte"></p></th>
                     <th>PL</th>
                     <th><p id="sete"></p></th>

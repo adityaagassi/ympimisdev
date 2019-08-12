@@ -115,9 +115,12 @@ public function check($id)
      $time = MasterChecksheet::find($id);
      // $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
      // ->get();
-     $details ="SELECT detail_checksheets.*, quantity as stock from detail_checksheets
-     LEFT JOIN inventories on detail_checksheets.gmc = inventories.material_number
-     WHERE id_checkSheet='".$time->id_checkSheet."' and storage_location='FSTK'";
+     $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
+     SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
+     ) cek
+     LEFT JOIN (
+     SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
+) as inv on cek.gmc = inv.material_number";
      $container = AreaInspection::orderBy('id','ASC')
      ->get();
      $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
@@ -155,12 +158,23 @@ public function print_check_surat($id)
 {
 
      $time = MasterChecksheet::find($id);
-     $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
-     ->get();
+     // $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
+     // ->get();
+
+     $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
+     SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
+     ) cek
+     LEFT JOIN (
+     SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
+) as inv on cek.gmc = inv.material_number";
+
+
      $container = AreaInspection::orderBy('id','ASC')
      ->get();
      $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
      ->get();
+
+     $detail = db::select($details);
      return view('Check_Sheet.printsurat', array(
           'time' => $time,
           'detail' => $detail,
