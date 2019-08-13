@@ -564,17 +564,17 @@ function addInspection(id){
      var on_or = $('#etd_sub').val();
 
      var start = new Date(date),
-    end   = new Date(on_or),
-    diff  = new Date(end - start),
-    days  = diff/1000/60/60/24;
-    if (days >= 1) {
+     end   = new Date(on_or),
+     diff  = new Date(end - start),
+     days  = diff/1000/60/60/24;
+     if (days >= 1) {
       
       document.getElementById("importForm").submit();
     }else{
       alert('Please Check Date Invoice And Date ON OR ABOUT');
 
     }
-    }
-  </script>
+  }
+</script>
 
-  @stop
+@stop
