@@ -197,18 +197,18 @@ public function checkmarking($id)
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number";
 
-     $container = AreaInspection::orderBy('id','ASC')
-     ->get();
-     $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
-     ->get();
-     $detail = db::select($details);
+$container = AreaInspection::orderBy('id','ASC')
+->get();
+$Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
+->get();
+$detail = db::select($details);
 
-     return view('Check_Sheet.checkmarking', array(
-          'time' => $time,
-          'detail' => $detail,
-          'container' => $container,
-          'inspection' => $Inspection,
-     ))->with('page', 'Check Sheet');
+return view('Check_Sheet.checkmarking', array(
+     'time' => $time,
+     'detail' => $detail,
+     'container' => $container,
+     'inspection' => $Inspection,
+))->with('page', 'Check Sheet');
 //
 }
 
@@ -557,42 +557,42 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
- $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
- ->select('reason')     
- ->first();
+    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+    ->select('reason')     
+    ->first();
 
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-    'reason' => $reason
-);
- return Response::json($response);
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => $reason
+ );
+    return Response::json($response);
 }
 
 public function edit(Request $request){
- $id_user = Auth::id();
- $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
- ->first();
+    $id_user = Auth::id();
+    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+    ->first();
 
- $master->countainer_number = $request->get('countainer_numberE');
- $master->seal_number = $request->get('seal_numberE');
- $master->no_pol = $request->get('nopolE');
- $master->invoice = $request->get('invoiceE');
- $master->destination = strtoupper($request->get('destinationE'));
- $master->shipped_to = $request->get('shipped_toE');
- $master->Stuffing_date = $request->get('Stuffing_dateE');
- $master->etd_sub = $request->get('etd_subE');
- $master->carier = $request->get('carierE');
- $master->payment = $request->get('paymentE');
- $master->reason = $request->get('reason');
- $master->created_by = $id_user;
- $master->save();
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-);
+    $master->countainer_number = $request->get('countainer_numberE');
+    $master->seal_number = $request->get('seal_numberE');
+    $master->no_pol = $request->get('nopolE');
+    $master->invoice = $request->get('invoiceE');
+    $master->destination = strtoupper($request->get('destinationE'));
+    $master->shipped_to = $request->get('shipped_toE');
+    $master->Stuffing_date = $request->get('Stuffing_dateE');
+    $master->etd_sub = $request->get('etd_subE');
+    $master->carier = $request->get('carierE');
+    $master->payment = $request->get('paymentE');
+    $master->reason = $request->get('reason');
+    $master->created_by = $id_user;
+    $master->save();
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+ );
 
- return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -614,7 +614,7 @@ public function save(Request $request){
      $id_user = Auth::id();
      $master = MasterChecksheet::where('id_checksheet','=', $request->get('id'))       
      ->first();
-     if($master->status != null){
+     if($master->status == null){
           self::mailStuffing($master->Stuffing_date);
      }
      $master->status = date('Y-m-d H:i:s');
