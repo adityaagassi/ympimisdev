@@ -26,6 +26,8 @@ use App\MiddleNgLog;
 use App\MiddleLog;
 use App\Material;
 use App\Employee;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class MiddleProcessController extends Controller
 {
@@ -674,7 +676,7 @@ class MiddleProcessController extends Controller
 			->where('materials.category', '=', 'WIP')
 			->where('materials.mrpc', '=', $request->get('mrpc'))
 			->whereIn('materials.hpl', $request->get('hpl'))
-			->where('materials.surface', 'like', '%LCQ')
+			->where('materials.surface', 'not like', '%PLT')
 			->select('barrel_queues.tag', 'barrel_queues.created_at', 'materials.model', 'materials.hpl', 'materials.material_number', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_jigs.spring', 'bom_components.material_child', 'bom_components.material_description', 'barrel_jigs.lot')
 			->orderBy('barrel_queues.created_at', 'asc')
 			->get();
@@ -704,7 +706,7 @@ class MiddleProcessController extends Controller
 			->where('materials.category', '=', 'WIP')
 			->where('materials.mrpc', '=', $request->get('mrpc'))
 			->whereIn('materials.hpl', $request->get('hpl'))
-			->where('materials.surface', 'like', '%LCQ')
+			->where('materials.surface', 'not like', '%PLT')
 			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
 			->orderBy('barrel_queues.created_at', 'asc')
 			// ->limit(30)
@@ -766,6 +768,12 @@ class MiddleProcessController extends Controller
 	}
 
 	public function printMiddleBarrel(Request $request){
+		// $count = BarrelQueue::count();
+		// if($count >= 64 && ($count-count($request->get('tag'))) <= 64){
+			// self::sendEmailMinQueue();
+		// 	return Response::json('okecok');
+		// }
+
 		$id = Auth::id();
 
 		if(Auth::user()->role_code == "OP-Barrel-SX"){
@@ -1863,5 +1871,30 @@ class MiddleProcessController extends Controller
 			'status' => true,
 		);
 		return Response::json($response);
+	}
+
+	public function sendEmailMinQueue(){
+		$mail_to = db::table('send_emails')
+		->where('remark', '=', 'barrel_queue')
+		->WhereNull('deleted_at')
+		->orWhere('remark', '=', 'superman')
+		->WhereNull('deleted_at')
+		->select('email')
+		->get();
+
+		$barrel_queues = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
+		->where('materials.category', '=', 'WIP')
+		->where('materials.mrpc', '=', 'S51')
+		->whereIn('materials.hpl', ['ASKEY', 'TSKEY'])
+		->select('barrel_queues.tag', 'barrel_queues.material_number', 'materials.model', 'materials.key', 'materials.surface', 'barrel_queues.quantity', 'barrel_queues.created_at', db::raw('coalesce(barrel_queues.remark, "-") as remark'))
+		->orderBy('barrel_queues.created_at', 'asc')
+		->get();
+
+		$queues = [
+			'barrel_queues' => $barrel_queues,
+			'barrel_count' => count($barrel_queues),
+		];
+
+		Mail::to($mail_to)->send(new SendEmail($queues, 'min_queue'));
 	}
 }
