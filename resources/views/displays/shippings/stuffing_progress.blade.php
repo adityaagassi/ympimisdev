@@ -85,19 +85,21 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
-		// setInterval(fillTable, 10000);
+		setInterval(fillTable, 10000);
 	});
 
 	function fillTable(){
 		$.get('{{ url("fetch/display/stuffing_progress") }}', function(result, status, xhr){
 			if(result.status){
-				$('#stuffingTableBody').html("");
 				var stuffingTableBody = "";
+				$('#stuffingTableBody').html("");
 
 
-				stuffingTableBody += '<tr style="background-color: rgb(255,255,204); color: red;">';
-				stuffingTableBody += '<td colspan="9" style="padding: 0;">LOADING</td>';
-				stuffingTableBody += '</tr>';
+				if(result.stuffing_progress.length != 0){
+					stuffingTableBody += '<tr style="background-color: rgb(255,255,204); color: red;">';
+					stuffingTableBody += '<td colspan="9" style="padding: 0;">LOADING</td>';
+					stuffingTableBody += '</tr>';
+				}
 				$.each(result.stuffing_progress, function(index, value){
 					if(value.stats == 'LOADING'){
 						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
@@ -124,9 +126,11 @@
 					}
 				});
 
-				stuffingTableBody += '<tr style="background-color: rgb(255,204,255); color: black;">';
-				stuffingTableBody += '<td colspan="9" style="padding: 0;">INSPECTION</td>';
-				stuffingTableBody += '</tr>';
+				if(result.stuffing_progress.length != 0){
+					stuffingTableBody += '<tr style="background-color: rgb(255,204,255); color: black;">';
+					stuffingTableBody += '<td colspan="9" style="padding: 0;">INSPECTION</td>';
+					stuffingTableBody += '</tr>';
+				}
 				$.each(result.stuffing_progress, function(index, value){
 					if(value.stats == 'INSPECTION'){
 						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
@@ -153,9 +157,11 @@
 					}
 				});
 
-				stuffingTableBody += '<tr>';
-				stuffingTableBody += '<td colspan="9" style="padding: 0;">WAITING</td>';
-				stuffingTableBody += '</tr>';
+				if(result.stuffing_progress.length != 0){
+					stuffingTableBody += '<tr>';
+					stuffingTableBody += '<td colspan="9" style="padding: 0;">WAITING</td>';
+					stuffingTableBody += '</tr>';
+				}
 				$.each(result.stuffing_progress, function(index, value){
 					if(value.stats == '-'){
 						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
@@ -177,9 +183,11 @@
 					}
 				});
 
-				stuffingTableBody += '<tr style="background-color: rgb(204,255,255); color: green;">';
-				stuffingTableBody += '<td colspan="9" style="padding: 0;">DEPARTED</td>';
-				stuffingTableBody += '</tr>';
+				if(result.stuffing_progress.length != 0){
+					stuffingTableBody += '<tr style="background-color: rgb(204,255,255); color: green;">';
+					stuffingTableBody += '<td colspan="9" style="padding: 0;">DEPARTED</td>';
+					stuffingTableBody += '</tr>';
+				}
 				$.each(result.stuffing_progress, function(index, value){
 					if(value.stats == 'DEPARTED'){
 						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
@@ -206,7 +214,7 @@
 					}
 				});
 
-				$('#stuffingTableBody').append(stuffingTableBody);
+				// $('#stuffingTableBody').append(stuffingTableBody);
 
 				$('#resumeTableBody').html("");
 				var resumeTableBody = "";
@@ -226,8 +234,8 @@
 					stuffingTableBody += "<tr>";
 					stuffingTableBody += "<td colspan='9'>There is no shipping schedule today</td>";
 					stuffingTableBody += "</tr>";
-					$('#stuffingTableBody').append(stuffingTableBody);
 				}
+				$('#stuffingTableBody').append(stuffingTableBody);
 			}
 			else{
 				alert('Attempt to retrieve data failed.');

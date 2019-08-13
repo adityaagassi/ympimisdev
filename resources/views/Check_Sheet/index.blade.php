@@ -87,9 +87,9 @@
                 <th>No. Pol</th>
                 <th>Dest</th>
                 <th>Invoice</th>
-                <th>Invoice Date</th>
+                <th>Stuffing Date</th>
 
-                <!-- <th>On or About</th> --><th>Stuffing Date</th>
+                <!-- <th>On or About</th> --><th>On Or About</th>
                 <th>Payment</th>
                 {{-- <th>From</th> --}}
                 <th>To</th>

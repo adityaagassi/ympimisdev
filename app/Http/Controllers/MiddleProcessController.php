@@ -768,11 +768,10 @@ class MiddleProcessController extends Controller
 	}
 
 	public function printMiddleBarrel(Request $request){
-		// $count = BarrelQueue::count();
-		// if($count >= 64 && ($count-count($request->get('tag'))) <= 64){
-			// self::sendEmailMinQueue();
-		// 	return Response::json('okecok');
-		// }
+		$count = BarrelQueue::count();
+		if($count >= 64 && ($count-count($request->get('tag'))) <= 64){
+			self::sendEmailMinQueue();
+		}
 
 		$id = Auth::id();
 
@@ -1875,7 +1874,7 @@ class MiddleProcessController extends Controller
 
 	public function sendEmailMinQueue(){
 		$mail_to = db::table('send_emails')
-		->where('remark', '=', 'barrel_queue')
+		->where('remark', '=', 'middle')
 		->WhereNull('deleted_at')
 		->orWhere('remark', '=', 'superman')
 		->WhereNull('deleted_at')
