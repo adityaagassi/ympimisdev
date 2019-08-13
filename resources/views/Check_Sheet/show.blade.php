@@ -66,12 +66,12 @@ table.table-bordered > tfoot > tr > th{
           <span class="info-box-text">CONSIGNEE & ADDRESS</span>
           <span class="info-box-number">{{$time->destination}}</span>
           <span class="info-box-text">STATUS</span>
-          @if($time->status == 1)            
+          @if($time->status != null)            
           <span class=" label label-success ">Checked</span>
           @else
           <span class="label label-warning">Unchecked</span>
           @endif
-          @if($time->status == 1)
+          @if($time->status != null)
           <span class="info-box-text">INSPECTOR  </span>
           <span class="info-box-number">@if(isset($time->user3->name))
            <!--  {{$time->created_by}} - --> {{$time->user3->name}}

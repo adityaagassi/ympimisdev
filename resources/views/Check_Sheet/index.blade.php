@@ -115,7 +115,7 @@
               <td style="font-size: 14">{{$time->shipped_to}}</td>
               <td style="font-size: 14">@if(isset($time->shipmentcondition->shipment_condition_name)){{$time->shipmentcondition->shipment_condition_name}}@else Not registered @endif</td>
               <td>
-                @if($time->status != 1) 
+                @if($time->status == null) 
                 <a href="javascript:void(0)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" onclick="editConfirmation('{{ url("edit/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id_checkSheet'] }}'); reason('{{ $time['id_checkSheet'] }}');">Edit</a>
 
 
@@ -134,7 +134,7 @@
             <p id="id_checkSheet_master{{$nomor + 1}}" hidden>{{$time->id_checkSheet}}</p>
           </td>
           <td>
-            @if($time->status == 1)            
+            @if($time->status != null)            
             <span data-toggle="tooltip"  class="badge bg-green"><i class="fa fa-fw fa-check"></i></span>
             @else
             @if($time->destination != "NINGBO")

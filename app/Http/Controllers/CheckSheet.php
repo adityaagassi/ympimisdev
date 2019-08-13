@@ -611,10 +611,10 @@ public function save(Request $request){
      $id_user = Auth::id();
      $master = MasterChecksheet::where('id_checksheet','=', $request->get('id'))       
      ->first();
-     if($master->status != 1){
+     if($master->status != null){
           self::mailStuffing($master->Stuffing_date);
      }
-     $master->status = $request->get('status');
+     $master->status = date('Y-m-d H:i:s');
      $master->check_by = $id_user;
      $master->save();
 
@@ -633,7 +633,7 @@ public function mailStuffing($st_date){
      ->select('email')
      ->get();
 
-     $query = "select if(master_checksheets.`status` = 1, 'Departed', if(actual_stuffing.total_actual > 0, 'Loading', '-')) as remark, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+     $query = "select if(master_checksheets.`status` is not null, 'Departed', if(actual_stuffing.total_actual > 0, 'Loading', '-')) as remark, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
      left join
      (
      select id_checkSheet, if(min(min_update) = '9999-99-99', '-', min(min_update)) as started_at, if(max(max_update) = '0000-00-00', '-', max(max_update)) as last_update, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
