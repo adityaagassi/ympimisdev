@@ -235,16 +235,21 @@
             <option value="{{ $carier->shipment_condition_code }}" > {{$carier->shipment_condition_name}}</option>
             @endforeach
           </select>
-
           <label>ON OR ABOUT</label>
           <input type="text" name="etd_sub" class="form-control" ID= "etd_sub" required>
+
+
+          
         </div>
 
         <div class="col-xs-4">
           <label>INVOICE NO.</label>
           <input type="text" name="invoice" class="form-control" id="invoice" required>
+
           <label>DATE</label>
           <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" required>
+
+          
           <label>PAYMENT</label>
           <select class="form-control select2" name="payment" id="payment"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
 
@@ -252,6 +257,7 @@
             <option value="D/P AT SIGHT">D/P AT SIGHT</option>
             <option value="D/A 60 DAYS AFTER BL DATE">D/A 60 DAYS AFTER BL DATE</option>
           </select>
+
           <label>SHIPPER</label>
           <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
         </div>
@@ -259,7 +265,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
+        <button id="modalImportButton" type="button" class="btn btn-success" onclick="cektgl()">Import</button>
       </div>
     </form>
   </div>
@@ -551,6 +557,23 @@ function addInspection(id){
         console.log(result);
         console.log(xhr);
       });
+    }
+
+    function cektgl() {
+     var date =  $('#Stuffing_date').val();
+     var on_or = $('#etd_sub').val();
+
+     var start = new Date(date),
+    end   = new Date(on_or),
+    diff  = new Date(end - start),
+    days  = diff/1000/60/60/24;
+    if (days >= 1) {
+      
+      document.getElementById("importForm").submit();
+    }else{
+      alert('Please Check Date Invoice And Date ON OR ABOUT');
+
+    }
     }
   </script>
 
