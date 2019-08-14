@@ -472,10 +472,26 @@ public function update(Request $request){
      $DetailChecksheet->confirm = $request->get('confirm');
      $DetailChecksheet->diff = $request->get('diff');
      $DetailChecksheet->save();
+
+     $start = MasterChecksheet::where('id_checkSheet','=',$DetailChecksheet->id_checkSheet)->select('id','start_stuffing')
+          ->first();
+
+          if ($start->start_stuffing == null) {
+               $start2 = MasterChecksheet::find($start->id);
+               $start2->start_stuffing = date('Y-m-d H:i:s');
+               $start2->save();
+          }
+
+          $start2 = MasterChecksheet::find($start->id);
+               $start2->finish_stuffing = date('Y-m-d H:i:s');
+               $start2->save();
+
      $response = array(
           'status' => true,
           'message' => 'Update Success',
+          'start' => $start->start_stuffing,
      );
+       return Response::json($response);
 
 }
 
@@ -548,6 +564,20 @@ public function bara(Request $request){
      $Inspection->bara = $request->get('isi');
      $Inspection->created_by = $id_user;
      $Inspection->save();
+
+     $start = MasterChecksheet::where('id_checkSheet','=',$Inspection->id_checkSheet)->select('id','start_stuffing')
+          ->first();
+
+          if ($start->start_stuffing == null) {
+               $start2 = MasterChecksheet::find($start->id);
+               $start2->start_stuffing = date('Y-m-d H:i:s');
+               $start2->save();
+          }
+
+          $start2 = MasterChecksheet::find($start->id);
+               $start2->finish_stuffing = date('Y-m-d H:i:s');
+               $start2->save();
+               
      $response = array(
           'status' => true,
           'message' => 'Update Success',

@@ -32,6 +32,8 @@ class CreateMasterChecksheetsTable extends Migration
             $table->string('reason');
             $table->integer('check_by')->default('0');
             $table->integer('created_by');
+            $table->datetime('start_stuffing');
+            $table->datetime('finish_stuffing');
             $table->softDeletes();
             $table->timestamps();
         });
