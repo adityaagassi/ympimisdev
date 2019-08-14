@@ -13,6 +13,7 @@ use App\BreakTime;
 use App\Overtime;
 use App\OvertimeDetail;
 use App\OrganizationStructure;
+use App\Mutationlog;
 use PDF;
 use Dompdf\Dompdf;
 
@@ -55,7 +56,7 @@ class OvertimeController extends Controller
 
 		return view('overtimes.reports.overtime_section', array(
 			'title' => 'Overtime by Section',
-			'title_jp' => '??',
+			'title_jp' => '残業 課別',
 			'cost_center' => $cc))->with('page', 'Overtime by Section');
 	}
 
@@ -93,7 +94,7 @@ class OvertimeController extends Controller
 
 	public function indexOvertimeData(){
 		$title = 'Overtime Data';
-		$title_jp = '(?)';
+		$title_jp = '残業データ';
 
 		$code;
 		$cost_center = db::select('select cost_center from ympimis.cost_centers group by cost_center');
@@ -1103,9 +1104,23 @@ public function fetchDoubleSPL(Request $request)
 
 public function fetchOvertime()
 {
-	$get_overtime = Overtime::whereNull('deleted_at')
-	->select('overtime_date','overtime_id','division','department','section','subsection','group')
-	->get();
+	$username = Auth::user()->username;
+
+	$bagian = Mutationlog::where("employee_id","=",$username)
+	->whereNull("valid_to")
+	->select("department")
+	->first();
+
+	if($bagian) {
+		$get_overtime = Overtime::whereNull('deleted_at')
+		->where("department","=",$bagian->department)
+		->select('overtime_date','overtime_id','department','section','subsection','group')
+		->get();
+	} else {
+		$get_overtime = Overtime::whereNull('deleted_at')
+		->select('overtime_date','overtime_id','department','section','subsection','group')
+		->get();
+	}
 
 	return DataTables::of($get_overtime)
 	->addColumn('action', function($get_overtime){
@@ -1116,7 +1131,11 @@ public function fetchOvertime()
 		&nbsp;
 		<a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="delete_ot(this.id)" id="'.$get_overtime->overtime_id.'"><i class="fa fa-trash"></i></a>';
 	})
-	->rawColumns(['action' => 'action'])
+	->addColumn('libur', function($get_overtime){
+		return '
+		<button class="btn btn-xs btn-success" onClick="multi('.$get_overtime->overtime_id.')" id="add'.$get_overtime->overtime_id.'">Add <i class="fa fa-level-up"></i></button>';
+	})
+	->rawColumns(['action' => 'action', 'libur' => 'libur'])
 	->make(true);
 }
 
@@ -1326,5 +1345,31 @@ public function fetchReportSection(Request $request)
 	);
 
 	return Response::json($response);
+}
+
+public function fetchOvertimeHead(Request $request)
+{
+	if ($request->get('tgl') == "") {
+		$tgl2 = date('Y-m');
+		$tgl = date('Y-m-d',strtotime($tgl2."-01"));
+	} else {
+		$tgl2 = date('Y-m',strtotime($request->get('tgl')));
+		$tgl = date('Y-m-d',strtotime($tgl2."-01"));
+	}
+
+	$ot_grup = Overtime::leftJoin('overtime_details','overtime_details.overtime_id','=','overtimes.overtime_id')
+	->whereIn('overtime_id', $request->get('id'))
+	->select('overtime_date','overtime_id',db::raw('concat(section," - ",subsection," - ",group) as bagian'),'remark')
+	->get();
+
+	$response = array(
+		'status' => true,
+		'datas' => $ot_grup
+	);
+}
+
+public function indexPrintHead()
+{
+	
 }
 }

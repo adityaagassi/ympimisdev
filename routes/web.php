@@ -509,9 +509,11 @@ Route::group(['nav' => 'S14', 'middleware' => 'permission'], function(){
 	Route::post('save/overtime_detail', 'OvertimeController@saveOvertimeDetail');
 	Route::post('edit/overtime_detail', 'OvertimeController@editOvertimeDetail');
 	Route::get('index/overtime/print/{id}', 'OvertimeController@indexPrint');
+	Route::get('print/overtime/group', 'OvertimeController@indexPrintHead');
 	Route::post('fetch/report/overtime_graph', 'OvertimeController@graphPrint');
 	Route::get('fetch/overtime', 'OvertimeController@fetchOvertime');
 	Route::get('fetch/overtime/detail', 'OvertimeController@fetchOvertimeDetail');
+	Route::get('fetch/overtime/head', 'OvertimeController@fetchOvertimeHead');
 	Route::post('delete/overtime', 'OvertimeController@deleteOvertime');
 	Route::get('index/overtime/edit/{id}', 'OvertimeController@fetchOvertimeEdit');
 });

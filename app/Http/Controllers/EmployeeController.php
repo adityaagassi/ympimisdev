@@ -473,7 +473,7 @@ public function fetchpromotion(Request $request)
   ->take(1)
   ->get();
 
-  $pos = Position::get();
+  $pos = Position::orderBy('id', 'asc')->get();
   $grd = Grade::get();
 
   $response = array(
@@ -627,7 +627,7 @@ public function indexReportGender()
 {
   return view('employees.report.manpower_by_gender',array(
     'title' => 'Report Employee by Gender',
-    'title_jp' => '??'
+    'title_jp' => '従業員報告 男女別'
   ))->with('page', 'Manpower by Gender');
 }
 
@@ -860,7 +860,7 @@ public function indexReportStatus()
 {
   return view('employees.report.employee_status',  array(
     'title' => 'Report Employee by Status Kerja',
-    'title_jp' => '??'
+    'title_jp' => '従業員報告 ステータス別'
   ))->with('page', 'Manpower by Status Kerja');
 }
 
@@ -868,7 +868,7 @@ public function indexReportGrade()
 {
   return view('employees.report.employee_status',  array(
     'title' => 'Report Employee by Grade',
-    'title_jp' => '??'
+    'title_jp' => '従業員報告 グレード別'
   ))->with('page', 'Manpower by Grade');
 }
 
@@ -876,7 +876,7 @@ public function indexReportDepartment()
 {
   return view('employees.report.employee_status',  array(
     'title' => 'Report Employee by Department',
-    'title_jp' => '??'
+    'title_jp' => '従業員報告 部門別'
   ))->with('page', 'Manpower by Department');
 }
 
@@ -884,7 +884,7 @@ public function indexReportJabatan()
 {
   return view('employees.report.employee_status',  array(
     'title' => 'Report Employee by Jabatan',
-    'title_jp' => '??'
+    'title_jp' => '従業員報告 役職別'
   ))->with('page', 'Manpower by jabatan');
 }
 

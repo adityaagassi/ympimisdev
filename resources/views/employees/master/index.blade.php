@@ -474,6 +474,7 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				}
 			});
+
 			jQuery(document).ready(function() {
 
 				$('#datebegin').datepicker({
@@ -496,7 +497,8 @@
 					filter:filter
 				};
 
-
+				// $('#masteremp thead').empty();
+				$('#masteremp tfoot th').empty();
 
 				$('#masteremp tfoot th').each( function () {
 					var title = $(this).text();
@@ -505,7 +507,7 @@
 
 				$('#masteremp').DataTable().destroy();
 				
-				var table = $('#masteremp').DataTable({
+				table = $('#masteremp').DataTable({
 					'dom': 'Bfrtip',
 					'responsive': true,
 					'lengthMenu': [

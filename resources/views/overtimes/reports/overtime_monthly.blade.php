@@ -88,7 +88,7 @@
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="tot_budget"></span>
 									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Budget<br><span >総予算</span></span>   
+									<span class="description-text" style="font-size: 35px;">Total Budget<br><span >単月予算</span></span>   
 								</div>
 							</div>
 
@@ -97,7 +97,7 @@
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="tot_day_budget"></span>
 									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span >累計見込み</span></span>   
+									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span >単月見込み</span></span>   
 								</div>
 							</div>
 
@@ -106,7 +106,7 @@
 									<h5 class="description-header" style="font-size: 50px; ">
 										<span class="description-percentage" id="tot_act"></span>
 									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Actual<br><span >総実績</span></span>   
+									<span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
 								</div>
 							</div>
 							<div class="col-md-2">
@@ -249,7 +249,7 @@
     var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
-    $("#tot_budget").text(tot_budget);
+    $("#tot_budget").text(tot_budget2);
     $("#tot_day_budget").text(tot_day_budget2);
     $("#tot_act").text(tot_act2);
 
