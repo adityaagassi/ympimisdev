@@ -87,21 +87,21 @@
                                 <i class="fa fa-caret-right"></i> Manpower Overtime (勤怠管理)
                             </a><br> --}}
                             <a href="{{ url("/index/employee_information") }}">
-                                <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
+                                <i class="fa fa-caret-right"></i> Manpower & Overtime Information (人工・残業の情報)
                             </a><br>
                             {{-- <a href="http://172.17.128.4/myhris/management_mp" target="blank">
                                 <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
                             </a><br> --}}
-                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
-                                <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
-                            </a>
-                            <br>
                             <a href="{{ url("index/report/total_meeting") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
                             </a>
                             <br>
                             <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
                                 <i class="fa fa-caret-right"></i> Clinic Information (保健室利用状況)
+                            </a>
+                            <br>
+                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
+                                <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
                             </a>
                         </td>
                     </tr>

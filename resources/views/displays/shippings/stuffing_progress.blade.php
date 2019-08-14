@@ -21,6 +21,7 @@
 	}
 	.content{
 		color: white;
+		font-weight: bold;
 	}
 	.progress {
 		height: 20px;
@@ -34,18 +35,17 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<table id="stuffingTable" class="table table-bordered">
-				<thead style="background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 28px;">
+				<thead style="background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 24px;">
 					<tr>
 						{{-- <th style="width: 2%;">Status</th> --}}
-						<th style="width: 1%;">ID</th>
-						<th style="width: 2%;">Destination</th>
-						<th style="width: 2%;">By</th>
-						<th style="width: 2%;">Plan</th>
-						<th style="width: 2%;">Actual</th>
-						<th style="width: 7%;">Progress</th>
-						<th style="width: 1%;">Start</th>
-						<th style="width: 1%;">Finish</th>
-						<th style="width: 3%;">Note</th>
+						<th style="width: 1%;">#</th>
+						<th style="width: 2%;">Status</th>
+						<th style="width: 2%;">Progress<br>(進捗)</th>
+						<th style="width: 1%;">Container ID</th>
+						<th style="width: 5%;">Port<br>(港先)</th>
+						<th style="width: 3%;">Shipping Qty<br>(出荷予定台数)</th>
+						<th style="width: 3%;">Loading Qty<br>(積み込み台数)</th>
+						<th style="width: 1%;">Time</th>
 					</tr>
 				</thead>
 				<tbody id="stuffingTableBody" style="font-size: 26px">
@@ -58,7 +58,7 @@
 					<tr>
 						<th style="width: 1%;" rowspan="2">Next Shipment<br>ETD YMPI</th>
 						<th style="width: 1%;" colspan="3">Total Container</th>
-						<th style="width: 1%;" rowspan="2">Shipping Qty</th>
+						<th style="width: 1%;" rowspan="2">Shipping Qty<br>(出荷予定台数)</th>
 					</tr>
 					<tr>
 						<th style="width: 1%;">SEA</th>
@@ -85,8 +85,20 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
-		setInterval(fillTable, 10000);
+		// setInterval(fillTable, 10000);
 	});
+
+	$.time = function(dateObject) {
+		var d = new Date(dateObject);
+
+		var h = d.getHours();
+		var i = d.getMinutes() + 1;
+		var s = d.getSeconds();
+
+		var time = h + ":" + i + ":" + s;
+
+		return time;
+	};
 
 	function fillTable(){
 		$.get('{{ url("fetch/display/stuffing_progress") }}', function(result, status, xhr){
@@ -94,127 +106,43 @@
 				var stuffingTableBody = "";
 				$('#stuffingTableBody').html("");
 
-
-				if(result.stuffing_progress.length != 0){
-					stuffingTableBody += '<tr style="background-color: rgb(255,255,204); color: red;">';
-					stuffingTableBody += '<td colspan="9" style="padding: 0;">LOADING</td>';
-					stuffingTableBody += '</tr>';
-				}
 				$.each(result.stuffing_progress, function(index, value){
-					if(value.stats == 'LOADING'){
-						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
-						stuffingTableBody += '<tr style="background-color: rgb(255,255,204); color: red;">';
-						stuffingTableBody += '<td>'+value.id_checkSheet.substr(2,7)+'</td>';
-						stuffingTableBody += '<td>'+value.destination+'</td>';
-						stuffingTableBody += '<td>'+value.shipment_condition_name+'</td>';
-						stuffingTableBody += '<td>'+value.total_plan+'</td>';
-						stuffingTableBody += '<td>'+value.total_actual+'</td>';
-						stuffingTableBody += '<td>';
-						stuffingTableBody += '<div class="progress active" style="height: 35px;">';
-						stuffingTableBody += '<div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="'+progress+'" aria-valuemin="0" aria-valuemax="100" style="width: '+progress+'; font-size: 30px; font-weight: bold; line-height: 32px;">'+progress+'';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</td>';
-						stuffingTableBody += '<td>'+value.started_at+'</td>';
-						stuffingTableBody += '<td>-</td>';
-						var reason = '-';
-						if(value.reason != null){
-							var reason = value.reason;
-						}
-						stuffingTableBody += '<td style="font-size: 16px; padding: 0;">'+reason+'</td>';
-						stuffingTableBody += '</tr>';
+					var status = "";
+					var finished = "-";
+					if(value.stats == "DEPARTED"){
+						size=22;
+						style = "style='background-color:rgb(6, 115, 82); color:white; font-size:"+size+"px'";
+						finished = value.finished_at;
 					}
-				});
-
-				if(result.stuffing_progress.length != 0){
-					stuffingTableBody += '<tr style="background-color: rgb(255,204,255); color: black;">';
-					stuffingTableBody += '<td colspan="9" style="padding: 0;">INSPECTION</td>';
-					stuffingTableBody += '</tr>';
-				}
-				$.each(result.stuffing_progress, function(index, value){
-					if(value.stats == 'INSPECTION'){
-						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
-						stuffingTableBody += '<tr style="background-color: rgb(255,204,255); color: black;">';
-						stuffingTableBody += '<td>'+value.id_checkSheet.substr(2,7)+'</td>';
-						stuffingTableBody += '<td>'+value.destination+'</td>';
-						stuffingTableBody += '<td>'+value.shipment_condition_name+'</td>';
-						stuffingTableBody += '<td>'+value.total_plan+'</td>';
-						stuffingTableBody += '<td>'+value.total_actual+'</td>';
-						stuffingTableBody += '<td>';
-						stuffingTableBody += '<div class="progress active" style="height: 35px;">';
-						stuffingTableBody += '<div class="progress-bar progress-bar-yellow progress-bar-striped" role="progressbar" aria-valuenow="'+progress+'" aria-valuemin="0" aria-valuemax="100" style="width: '+progress+'; font-size: 30px; font-weight: bold; line-height: 32px;">'+progress+'';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</td>';
-						stuffingTableBody += '<td>'+value.started_at+'</td>';
-						stuffingTableBody += '<td>-</td>';
-						var reason = '-';
-						if(value.reason != null){
-							var reason = value.reason;
-						}
-						stuffingTableBody += '<td style="font-size: 16px; padding: 0;">'+reason+'</td>';
-						stuffingTableBody += '</tr>';
+					if(value.stats == "LOADING"){
+						size=48;
+						style = "style='background-color:yellow; color: #cc1305; font-size:"+size+"px'";
+						finished = "-";
 					}
-				});
-
-				if(result.stuffing_progress.length != 0){
-					stuffingTableBody += '<tr>';
-					stuffingTableBody += '<td colspan="9" style="padding: 0;">WAITING</td>';
-					stuffingTableBody += '</tr>';
-				}
-				$.each(result.stuffing_progress, function(index, value){
-					if(value.stats == '-'){
-						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
-						stuffingTableBody += '<tr>';
-						stuffingTableBody += '<td>'+value.id_checkSheet.substr(2,7)+'</td>';
-						stuffingTableBody += '<td>'+value.destination+'</td>';
-						stuffingTableBody += '<td>'+value.shipment_condition_name+'</td>';
-						stuffingTableBody += '<td>'+value.total_plan+'</td>';
-						stuffingTableBody += '<td>'+value.total_actual+'</td>';
-						stuffingTableBody += '<td>'+progress+'</td>';
-						stuffingTableBody += '<td>'+value.started_at+'</td>';
-						stuffingTableBody += '<td>-</td>';
-						var reason = '-';
-						if(value.reason != null){
-							var reason = value.reason;
-						}
-						stuffingTableBody += '<td style="font-size: 16px; padding: 0;">'+reason+'</td>';
-						stuffingTableBody += '</tr>';
+					if(value.stats == "-"){				
+						size=28;
+						style = "style='background-color:white; color: black; font-size:"+size+"px'";
+						finished = "-";
 					}
-				});
+					var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
 
-				if(result.stuffing_progress.length != 0){
-					stuffingTableBody += '<tr style="background-color: rgb(204,255,255); color: green;">';
-					stuffingTableBody += '<td colspan="9" style="padding: 0;">DEPARTED</td>';
-					stuffingTableBody += '</tr>';
-				}
-				$.each(result.stuffing_progress, function(index, value){
-					if(value.stats == 'DEPARTED'){
-						var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
-						stuffingTableBody += '<tr style="background-color: rgb(204,255,255); color: green;">';
-						stuffingTableBody += '<td>'+value.id_checkSheet.substr(2,7)+'</td>';
-						stuffingTableBody += '<td>'+value.destination+'</td>';
-						stuffingTableBody += '<td>'+value.shipment_condition_name+'</td>';
-						stuffingTableBody += '<td>'+value.total_plan+'</td>';
-						stuffingTableBody += '<td>'+value.total_actual+'</td>';
-						stuffingTableBody += '<td>';
-						stuffingTableBody += '<div class="progress" style="height: 35px;">';
-						stuffingTableBody += '<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="'+progress+'" aria-valuemin="0" aria-valuemax="100" style="width: '+progress+'; font-size: 30px; font-weight: bold; line-height: 32px;">'+progress+'';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</div>';
-						stuffingTableBody += '</td>';
-						stuffingTableBody += '<td>'+value.started_at+'</td>';
-						stuffingTableBody += '<td>'+value.finished_at+'</td>';
-						var reason = '-';
-						if(value.reason != null){
-							var reason = value.reason;
-						}
-						stuffingTableBody += '<td style="font-size: 16px; padding: 0;">'+reason+'</td>';
-						stuffingTableBody += '</tr>';
+					stuffingTableBody += "<tr "+style+">";
+					stuffingTableBody += "<td>"+parseInt(index+1)+"</td>";
+					stuffingTableBody += "<td>"+value.stats+"</td>";
+					stuffingTableBody += "<td>"+progress+"</td>";
+					stuffingTableBody += "<td>"+value.id_checkSheet.substr(2,7)+"</td>";
+					stuffingTableBody += "<td>"+value.destination+"</td>";
+					stuffingTableBody += "<td>"+value.total_plan+"</td>";
+					stuffingTableBody += "<td>"+value.total_actual+"</td>";
+					if(value.start_stuffing != null){
+						stuffingTableBody += "<td>"+$.time(Date.parse(value.start_stuffing))+"</td>";
 					}
-				});
+					else{
+						stuffingTableBody += "<td>-</td>";						
+					}
+					stuffingTableBody += "</tr>";
 
-				// $('#stuffingTableBody').append(stuffingTableBody);
+				});
 
 				$('#resumeTableBody').html("");
 				var resumeTableBody = "";
@@ -241,6 +169,6 @@
 				alert('Attempt to retrieve data failed.');
 			}
 		});
-}
+	}
 </script>
 @endsection

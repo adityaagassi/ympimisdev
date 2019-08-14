@@ -49,17 +49,17 @@ class DisplayController extends Controller
 		$now = date('Y-m-d');
 		// $now = '2019-08-12';
 
-		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual<actual_stuffing.total_plan and actual_stuffing.total_actual>0, 'LOADING', if(actual_stuffing.total_actual>=actual_stuffing.total_plan, 'INSPECTION', '-'))) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at, master_checksheets.reason from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual<actual_stuffing.total_plan and actual_stuffing.total_actual>0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
 		left join
 		(
-		select id_checkSheet, if(min(min_update) = '9999-99-99', '-', min(min_update)) as started_at, if(max(max_update) = '0000-00-00', '-', max(max_update)) as last_update, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
-		select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '9999-99-99') as min_update, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '0000-00-00') as max_update from detail_checksheets
+		select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
+		select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets
 		) as stuffings
 		group by id_checkSheet
 		) as actual_stuffing
 		on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
 		where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date = '".$now."'
-		order by started_at desc";
+		order by field(stats, 'LOADING', 'INSPECTION', '-', 'DEPARTED')";
 
 		$stuffing_progress = db::select($query);
 

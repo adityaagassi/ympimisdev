@@ -474,24 +474,24 @@ public function update(Request $request){
      $DetailChecksheet->save();
 
      $start = MasterChecksheet::where('id_checkSheet','=',$DetailChecksheet->id_checkSheet)->select('id','start_stuffing')
-          ->first();
+     ->first();
 
-          if ($start->start_stuffing == null) {
-               $start2 = MasterChecksheet::find($start->id);
-               $start2->start_stuffing = date('Y-m-d H:i:s');
-               $start2->save();
-          }
-
+     if ($start->start_stuffing == null) {
           $start2 = MasterChecksheet::find($start->id);
-               $start2->finish_stuffing = date('Y-m-d H:i:s');
-               $start2->save();
+          $start2->start_stuffing = date('Y-m-d H:i:s');
+          $start2->save();
+     }
+
+     $start2 = MasterChecksheet::find($start->id);
+     $start2->finish_stuffing = date('Y-m-d H:i:s');
+     $start2->save();
 
      $response = array(
           'status' => true,
           'message' => 'Update Success',
           'start' => $start->start_stuffing,
      );
-       return Response::json($response);
+     return Response::json($response);
 
 }
 
@@ -566,18 +566,18 @@ public function bara(Request $request){
      $Inspection->save();
 
      $start = MasterChecksheet::where('id_checkSheet','=',$Inspection->id_checkSheet)->select('id','start_stuffing')
-          ->first();
+     ->first();
 
-          if ($start->start_stuffing == null) {
-               $start2 = MasterChecksheet::find($start->id);
-               $start2->start_stuffing = date('Y-m-d H:i:s');
-               $start2->save();
-          }
-
+     if ($start->start_stuffing == null) {
           $start2 = MasterChecksheet::find($start->id);
-               $start2->finish_stuffing = date('Y-m-d H:i:s');
-               $start2->save();
-               
+          $start2->start_stuffing = date('Y-m-d H:i:s');
+          $start2->save();
+     }
+
+     $start2 = MasterChecksheet::find($start->id);
+     $start2->finish_stuffing = date('Y-m-d H:i:s');
+     $start2->save();
+
      $response = array(
           'status' => true,
           'message' => 'Update Success',
@@ -587,42 +587,42 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
-    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
-    ->select('reason')     
-    ->first();
+ $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+ ->select('reason')     
+ ->first();
 
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
-      'reason' => $reason
- );
-    return Response::json($response);
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+    'reason' => $reason
+);
+ return Response::json($response);
 }
 
 public function edit(Request $request){
-    $id_user = Auth::id();
-    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
-    ->first();
+ $id_user = Auth::id();
+ $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+ ->first();
 
-    $master->countainer_number = $request->get('countainer_numberE');
-    $master->seal_number = $request->get('seal_numberE');
-    $master->no_pol = $request->get('nopolE');
-    $master->invoice = $request->get('invoiceE');
-    $master->destination = strtoupper($request->get('destinationE'));
-    $master->shipped_to = $request->get('shipped_toE');
-    $master->Stuffing_date = $request->get('Stuffing_dateE');
-    $master->etd_sub = $request->get('etd_subE');
-    $master->carier = $request->get('carierE');
-    $master->payment = $request->get('paymentE');
-    $master->reason = $request->get('reason');
-    $master->created_by = $id_user;
-    $master->save();
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
- );
+ $master->countainer_number = $request->get('countainer_numberE');
+ $master->seal_number = $request->get('seal_numberE');
+ $master->no_pol = $request->get('nopolE');
+ $master->invoice = $request->get('invoiceE');
+ $master->destination = strtoupper($request->get('destinationE'));
+ $master->shipped_to = $request->get('shipped_toE');
+ $master->Stuffing_date = $request->get('Stuffing_dateE');
+ $master->etd_sub = $request->get('etd_subE');
+ $master->carier = $request->get('carierE');
+ $master->payment = $request->get('paymentE');
+ $master->reason = $request->get('reason');
+ $master->created_by = $id_user;
+ $master->save();
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+);
 
-    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+ return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -651,8 +651,6 @@ public function save(Request $request){
      $master->check_by = $id_user;
      $master->save();
 
-
-
      return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been saved.')->with('page', 'Check Sheet');
 
 }
@@ -666,17 +664,17 @@ public function mailStuffing($st_date){
      ->select('email')
      ->get();
 
-     $query = "select if(master_checksheets.`status` is not null, 'Departed', if(actual_stuffing.total_actual > 0, 'Loading', '-')) as remark, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, if(actual_stuffing.started_at = '-', '-', date_format(actual_stuffing.started_at, '%H:%i')) as started_at, if(actual_stuffing.last_update = '-', '-', date_format(actual_stuffing.last_update, '%H:%i')) as finished_at from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+     $query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual<actual_stuffing.total_plan and actual_stuffing.total_actual>0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
      left join
      (
-     select id_checkSheet, if(min(min_update) = '9999-99-99', '-', min(min_update)) as started_at, if(max(max_update) = '0000-00-00', '-', max(max_update)) as last_update, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
-     select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '9999-99-99') as min_update, if((qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) > 0, updated_at, '0000-00-00') as max_update from detail_checksheets
+     select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
+     select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets
      ) as stuffings
      group by id_checkSheet
      ) as actual_stuffing
      on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
      where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date = '".$st_date."'
-     order by finished_at desc";
+     order by field(stats, 'LOADING', 'INSPECTION', '-', 'DEPARTED')";
 
      $stuffings = db::select($query);
 
