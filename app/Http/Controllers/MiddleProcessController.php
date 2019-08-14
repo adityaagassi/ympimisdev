@@ -769,7 +769,7 @@ class MiddleProcessController extends Controller
 
 	public function printMiddleBarrel(Request $request){
 		$count = BarrelQueue::count();
-		if($count >= 64 && ($count-count($request->get('tag'))) <= 64){
+		if($count >= 64 && ($count-count($request->get('tag'))) < 64){
 			self::sendEmailMinQueue();
 		}
 

@@ -27,11 +27,11 @@
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 4%; border:1px solid black;">Tag</th>
+						<th style="width: 1%; border:1px solid black;">Tag</th>
 						<th style="width: 2%; border:1px solid black;">Material</th>
-						<th style="width: 1%; border:1px solid black;">Model</th>
-						<th style="width: 1%; border:1px solid black;">Key</th>
-						<th style="width: 1%; border:1px solid black;">Surface</th>
+						<th style="width: 2%; border:1px solid black;">Model</th>
+						<th style="width: 2%; border:1px solid black;">Key</th>
+						<th style="width: 2%; border:1px solid black;">Surface</th>
 						<th style="width: 3%; border:1px solid black;">Qty</th>
 						<th style="width: 4%; border:1px solid black;">Created At</th>
 						<th style="width: 3%; border:1px solid black;">Remark</th>
