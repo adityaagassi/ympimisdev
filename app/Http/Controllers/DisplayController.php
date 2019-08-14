@@ -47,9 +47,8 @@ class DisplayController extends Controller
 
 	public function fetchStuffingProgress(){
 		$now = date('Y-m-d');
-		// $now = '2019-08-12';
 
-		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual<actual_stuffing.total_plan and actual_stuffing.total_actual>0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
+		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual > 0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
 		left join
 		(
 		select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
