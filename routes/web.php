@@ -799,3 +799,4 @@ Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingPr
 
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
+Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');

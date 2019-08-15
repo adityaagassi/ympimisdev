@@ -34,7 +34,7 @@
 			</div>
 		</div>
 		<div class="col-md-12">
-			<div id="presence" style="width: 850pt;"></div>
+			<div id="presence" style="width: 100%; height: 550px;"></div>
 		</div>
 	</div>
 
@@ -100,8 +100,7 @@
 	});
 
 	$('.datepicker').datepicker({
-		autoclose: true,
-		format: "dd-mm-yyyy"
+		autoclose: true
 	});
 
 	function drawChart(){
@@ -112,67 +111,7 @@
 		}
 
 		$.get('{{ url("fetch/report/presence") }}', data, function(result, status, xhr) {
-			console.log(result);
-			console.log(status);
-			console.log(xhr);
 
-			var shift = [];
-			var hadir = [];
-			var titleChart = result.tgl;
-
-			for (var i = 0; i < result.presence.length; i++) {
-				shift.push(parseInt(result.presence[i].shift));
-				hadir.push(parseInt(result.presence[i].jml));
-			}
-
-			Highcharts.chart('presence', {
-				chart: {
-					type: 'column'
-				},
-				title: {
-					text: titleChart
-				},
-				xAxis: {
-					categories: shift
-				},
-				yAxis: {
-					title: {
-						text: 'Total Absent'
-					}
-				},
-				legend : {
-					enabled: false
-				},
-				tooltip: {
-					headerFormat: '',
-					pointFormat: '<span style="color:{point.color}">Shift {point.name}</span>: <b>{point.y}</b> <br/>'
-				},
-				plotOptions: {
-					series: {
-						cursor: 'pointer',
-						point: {
-							events: {
-								click: function (event) {
-									alert(event.point.category);
-								}
-							}
-						},
-						borderWidth: 0,
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}'
-						}
-					}
-				},
-				series: [
-				{
-					"name": "By Shift",
-					"colorByPoint": true,
-					name: 'By Absent',
-					data: hadir,
-				}
-				]
-			});
 
 		});
 
