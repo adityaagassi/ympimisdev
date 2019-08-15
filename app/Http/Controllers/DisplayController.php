@@ -56,9 +56,13 @@ class DisplayController extends Controller
 		))->with('page', 'Display FG Accuracy')->with('head', 'Display');		
 	}
 
-	public function fetchStuffingProgress(){
-		$now = date('Y-m-d');
-		$now = '2019-08-12';
+	public function fetchStuffingProgress(Request $request){
+		if ($request->get('date') == "") {
+			$now = date('Y-m-d');
+			$now = '2019-08-12';
+		} else {
+			$now = $request->get('date');
+		}
 
 		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual > 0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
 		left join

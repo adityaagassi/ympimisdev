@@ -1121,7 +1121,7 @@ public function indexPresence()
 
 public function fetchPresence(Request $request)
 {
-  $tgl = $request->get("tgl");
+  $tgl = date('d-m-Y', strtotime($request->get('tgl')));
   $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' GROUP BY shift";
 
   $presence = db::connection('mysql3')->select($query);
@@ -1129,10 +1129,10 @@ public function fetchPresence(Request $request)
   $response = array(
     'status' => true,
     'presence' => $presence,
+    'tgl' => $tgl
 
   );
   return Response::json($response);
-
 
 }
 //------------- End 
