@@ -1069,4 +1069,74 @@ catch (QueryException $e){
 
 }
 
+//------------- Start DailyAttendance
+public function indexDailyAttendance()
+{
+  return view('employees.report.daily_attendance');
+}
+
+public function fetchDailyAttendance(Request $request){
+
+  if(strlen($request->get('tgl')) > 0){
+    $tgl = $request->get("tgl");
+  }else{
+    $tgl = date("m-Y");
+  }
+
+  $queryAttendance = "SELECT  DATE_FORMAT(hadir.tanggal,'%d %b %Y') as tanggal, hadir.jml as hadir, tdk.jml as tdk from (SELECT tanggal, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' GROUP BY tanggal ) as hadir LEFT JOIN (SELECT tanggal, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' GROUP BY tanggal) as tdk on hadir.tanggal = tdk.tanggal";
+
+  $attendanceData = db::connection('mysql3')->select($queryAttendance);
+
+  $tgl = '01-'.$tgl;
+  $titleChart = 'Attendance in '.date("F Y", strtotime($tgl));
+
+
+  $response = array(
+    'status' => true,
+    'titleChart' => $titleChart,
+    'attendanceData' => $attendanceData,
+
+  );
+  return Response::json($response);
+
+}
+
+public function detailDailyAttendance(Request $request){
+  $tgl = date('d-m-Y', strtotime($request->get('tgl')));
+  $query = "SELECT presensi.tanggal, presensi.nik, ympimis.employees.`name` as nama, ympimis.mutation_logs.section as section, presensi.masuk, presensi.keluar, presensi.shift from presensi 
+  LEFT JOIN ympimis.employees ON presensi.nik = ympimis.employees.employee_id
+  LEFT JOIN ympimis.mutation_logs ON presensi.nik = ympimis.mutation_logs.employee_id
+  WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' and ympimis.mutation_logs.valid_to is null ORDER BY presensi.nik";
+  $detail = db::connection('mysql3')->select($query);
+
+  return DataTables::of($detail)->make(true);
+}
+//------------- End DailyAttendance
+
+//------------- Start Presence
+public function indexPresence()
+{
+  return view('employees.report.presence');
+}
+
+public function fetchPresence(Request $request)
+{
+  $tgl = $request->get("tgl");
+  $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' GROUP BY shift";
+
+  $presence = db::connection('mysql3')->select($query);
+
+  $response = array(
+    'status' => true,
+    'presence' => $presence,
+
+  );
+  return Response::json($response);
+
+
+}
+//------------- End 
+
+
+
 }

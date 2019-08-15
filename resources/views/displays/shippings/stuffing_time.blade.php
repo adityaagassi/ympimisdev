@@ -24,7 +24,9 @@
 		font-weight: bold;
 	}
 	.progress {
-		height: 20px;
+		height: 40px;
+		background-color: rgba(0,0,0,0);
+		border: 2px solid white;
 	}
 </style>
 @endsection
@@ -40,33 +42,14 @@
 						{{-- <th style="width: 2%;">Status</th> --}}
 						<th style="width: 1%;">#</th>
 						<th style="width: 2%;">Status</th>
-						<th style="width: 2%;">Progress<br>(進捗)</th>
 						<th style="width: 1%;">Container ID</th>
 						<th style="width: 5%;">Port<br>(港先)</th>
-						<th style="width: 3%;">Shipping Qty<br>(出荷予定台数)</th>
-						<th style="width: 3%;">Loading Qty<br>(積み込み台数)</th>
-						<th style="width: 1%;">Time</th>
+						<th style="width: 5%;">Loading Time<br>(Target Max.60 Minutes)</th>
+						<th style="width: 3%;">Start</th>
+						<th style="width: 3%;">End</th>
 					</tr>
 				</thead>
 				<tbody id="stuffingTableBody" style="font-size: 26px">
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
-			<table id="resumeTable" class="table table-bordered pull-right" style="width: 45%;">
-				<thead style="background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 20px;">
-					<tr>
-						<th style="width: 1%;" rowspan="2">Next Shipment<br>ETD YMPI</th>
-						<th style="width: 1%;" colspan="3">Total Container</th>
-						<th style="width: 1%;" rowspan="2">Shipping Qty<br>(出荷予定台数)</th>
-					</tr>
-					<tr>
-						<th style="width: 1%;">SEA</th>
-						<th style="width: 1%;">AIR</th>
-						<th style="width: 1%;">LAND</th>
-					</tr>
-				</thead>
-				<tbody id="resumeTableBody" style="font-size: 20px">
 				</tbody>
 				<tfoot>
 				</tfoot>
@@ -107,56 +90,53 @@
 				$('#stuffingTableBody').html("");
 
 				$.each(result.stuffing_progress, function(index, value){
-					var status = "";
-					var finished = "-";
-					if(value.stats == "DEPARTED"){
-						size=22;
-						style = "style='background-color:rgb(6, 115, 82); color:white; font-size:"+size+"px'";
-						finished = value.finished_at;
-					}
-					if(value.stats == "LOADING"){
-						size=48;
-						style = "style='background-color:yellow; color: #cc1305; font-size:"+size+"px'";
-						finished = "-";
-					}
-					if(value.stats == "-"){				
-						size=28;
-						style = "style='background-color:white; color: black; font-size:"+size+"px'";
-						finished = "-";
-					}
-					var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
+					var dif = "";
+					var start = "-";
+					var finish = "-";
 
-					stuffingTableBody += "<tr "+style+">";
+					if (value.stats == "LOADING") {
+						if(value.total_plan == value.total_actual) {
+							var d2 = new Date(value.finish_stuffing);
+							finish = d2.getHours() + ":" + d2.getMinutes();
+						} else {
+							var d2 = new Date();
+						}
+						var d1 = new Date(value.start_stuffing);
+						dif = diff_minutes(d1, d2);
+
+						start = d1.getHours() + ":" + d1.getMinutes();
+					} else if (value.stats == "DEPARTED") {
+						var d2 = new Date(value.finish_stuffing);
+						var d1 = new Date(value.start_stuffing);
+						dif = diff_minutes(d1, d2);
+
+						start = d1.getHours() + ":" + d1.getMinutes();
+						finish = d2.getHours() + ":" + d2.getMinutes();
+					}
+
+					var progress = dif / 60 * 100;
+					var style = 'green';
+					var st = '';
+
+					if (progress > 100) { progress = 100; style = 'red';}
+
+					if(progress == 0) {dif = "";}
+
+					stuffingTableBody += "<tr>";
 					stuffingTableBody += "<td>"+parseInt(index+1)+"</td>";
 					stuffingTableBody += "<td>"+value.stats+"</td>";
-					stuffingTableBody += "<td>"+progress+"</td>";
 					stuffingTableBody += "<td>"+value.id_checkSheet.substr(2,7)+"</td>";
 					stuffingTableBody += "<td>"+value.destination+"</td>";
-					stuffingTableBody += "<td>"+value.total_plan+"</td>";
-					stuffingTableBody += "<td>"+value.total_actual+"</td>";
-					if(value.start_stuffing != null){
-						stuffingTableBody += "<td>"+$.time(Date.parse(value.start_stuffing))+"</td>";
-					}
-					else{
-						stuffingTableBody += "<td>-</td>";						
-					}
+					stuffingTableBody += '<td><div class="progress">';
+					stuffingTableBody += '<div class="progress-bar progress-bar-'+style+'" role="progressbar" aria-valuenow="'+dif+'" aria-valuemin="0" aria-valuemax="60" style="width: '+progress+'%"; >';
+					stuffingTableBody += "<span style='line-height:36px; font-size:30px';>"+dif+"</span>";
+					stuffingTableBody += '</div></td>';
+					stuffingTableBody += "<td>"+start+"</td>";
+					stuffingTableBody += "<td>"+finish+"</td>";
 					stuffingTableBody += "</tr>";
 
-				});
 
-				$('#resumeTableBody').html("");
-				var resumeTableBody = "";
-
-				$.each(result.stuffing_resume, function(index, value){
-					resumeTableBody += "<tr>";
-					resumeTableBody += "<td>"+value.stuffing_date+"</td>";
-					resumeTableBody += "<td>"+value.sea+"</td>";
-					resumeTableBody += "<td>"+value.air+"</td>";
-					resumeTableBody += "<td>"+value.truck+"</td>";
-					resumeTableBody += "<td>"+value.total_plan+"</td>";
-					resumeTableBody += "</tr>";
 				});
-				$('#resumeTableBody').append(resumeTableBody);
 
 				if(result.stuffing_progress.length == 0){
 					stuffingTableBody += "<tr>";
@@ -169,6 +149,15 @@
 				alert('Attempt to retrieve data failed.');
 			}
 		});
-	}
-</script>
-@endsection
+			}
+
+			function diff_minutes(dt2, dt1) 
+			{
+
+				var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+				diff /= 60;
+				return Math.abs(Math.round(diff));
+
+			}
+		</script>
+		@endsection

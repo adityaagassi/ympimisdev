@@ -17,9 +17,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-Route::get('/tes', function () {
-	return view('displays.shippings.stuffing_progress');
-});
+Route::get('tes', 'TrialController@tes');
 
 
 
@@ -136,6 +134,13 @@ Route::get('index/employee/service', 'EmployeeController@indexEmployeeService');
 Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
 Route::get('fetch/cc/budget', 'OvertimeController@fetchCostCenterBudget');
 Route::get('fetch/chart/control/detail', 'OvertimeController@overtimeDetail');
+// DailyAttendanceControl
+Route::get('index/report/daily_attendance', 'EmployeeController@indexDailyAttendance');
+Route::get('fetch/report/daily_attendance', 'EmployeeController@fetchDailyAttendance');
+Route::get('fetch/report/detail_daily_attendance', 'EmployeeController@detailDailyAttendance');
+// Presence
+Route::get('index/report/presence', 'EmployeeController@indexPresence');
+Route::get('fetch/report/presence', 'EmployeeController@fetchPresence');
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -790,4 +795,8 @@ Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentPr
 
 //DISPLAY STUFFING PROGRESS
 Route::get('index/display/stuffing_progress', 'DisplayController@indexStuffingProgress');
+Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');
+
+//DISPLAY STUFFING TIME
+Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
 Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');

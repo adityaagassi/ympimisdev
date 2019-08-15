@@ -1357,19 +1357,24 @@ public function fetchOvertimeHead(Request $request)
 		$tgl = date('Y-m-d',strtotime($tgl2."-01"));
 	}
 
+	$spl = explode(",", $request->get('id'));
+
 	$ot_grup = Overtime::leftJoin('overtime_details','overtime_details.overtime_id','=','overtimes.overtime_id')
-	->whereIn('overtime_id', $request->get('id'))
-	->select('overtime_date','overtime_id',db::raw('concat(section," - ",subsection," - ",group) as bagian'),'remark')
+	->whereIn('overtimes.overtime_id', $spl)
+	->select('overtime_date','overtimes.overtime_id',db::raw('concat(section," - ",subsection," - ",`group`) as bagian'),db::raw('GROUP_CONCAT(DISTINCT remark) as reason'), db::raw('count(employee_id) as count_member'), db::raw('sum(final_hour) as total_hour'))
+	->groupBy('overtimes.overtime_id', 'overtime_date', 'section', 'subsection', 'group')
 	->get();
 
 	$response = array(
 		'status' => true,
 		'datas' => $ot_grup
 	);
+	return Response::json($response);
 }
 
-public function indexPrintHead()
+public function indexPrintHead(Request $request)
 {
-	
+	return view('overtimes.index_print_head', array(
+	'ids' => $request->get('id')));
 }
 }

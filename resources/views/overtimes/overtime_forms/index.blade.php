@@ -60,7 +60,7 @@
             <label for="inputEmail3" class="col-sm-2 control-label">Weekend SPL Group : </label>
 
             <div class="col-sm-9">
-              <input type="text" class="form-control tags" id="noSPL" name="noSPL">
+              <input type="text" class="form-control tags" id="noSPL2" name="noSPL2">
             </div>
             <div class="col-sm-1">
               <input type="submit" onclick="openModal3()" value="Make" class="btn bg-purple">
@@ -404,11 +404,11 @@
   }
 
   function multi(id) {
-    var tag = $('#noSPL').val();
+    var tag = $('#noSPL2').val();
     if (tag.search(id) !=-1) {
       alert("SPL already exist")
     }else{
-      $('#noSPL').addTag(id);
+      $('#noSPL2').addTag(id);
     }
 
     console.log(id);
@@ -429,12 +429,14 @@
   function openModal3() {
     $('#myModal3').modal('show');
     var tanggal = $("#tanggal").val();
-    var id =  $('#NoSpl').val();
+    var id = $("#noSPL2").val();
 
     $("#id2").val(id);
     $("#tgl2").val(tanggal);
 
-    var no =1;
+    console.log(id);
+
+    var no = 1;
 
     var data = {
       tgl:tanggal,
@@ -445,54 +447,26 @@
       if (result.status) {
         $("#p2").prop('disabled',false);
         $("#isi2").empty();
-        $.each(result.datas, function(i, item) {
-          if ( item[0] != "-"){
-            var newdiv1 = $( "<tr>"+                  
-              "<td>"+no+"</td><td>"+item[1]+"</td>"+
-              "<td>"+item[0]+"</td><td>"+item[4]+' - '+item[5]+' - '+item[6]+"</td><td>"+item[2]+"</td>"+
-              "<td>"+item[3]+"</td><td>"+item[7]+"</td>"+
-              "</tr>");
-            no+=1;
 
-            $("#isi2").append(newdiv1);
-          }
+        if (result.datas.length > 0) {
+         $.each(result.datas, function(i, item) {
+          var newdiv1 = $( "<tr>"+                  
+            "<td>"+no+"</td><td>"+item.overtime_date+"</td>"+
+            "<td>"+item.overtime_id+"</td><td>"+item.bagian+"</td><td>"+item.count_member+"</td>"+
+            "<td>"+item.total_hour+"</td><td>"+item.reason+"</td>"+
+            "</tr>");
+          no+=1;
+
+          $("#isi2").append(newdiv1);
         });
-      } else {
+       } else {
         $("#isi2").empty();
         $("#p2").prop('disabled',true);
       }
-    })
+    }
+  })
 
-    // $.ajax({
-    //   url: "",
-    //   type : "POST",
-    //   data: {
-    //     tgl:tanggal,
-    //     id:id
-    //   },
-    //   dataType: 'json',
-    //   success: function(data){
-    //     $("#p2").prop('disabled',false);
-    //     $("#isi2").empty();
-    //     $.each(data, function(i, item) {
-    //       if ( item[0] !="-"){
-    //         var newdiv1 = $( "<tr>"+                  
-    //           "<td>"+no+"</td><td>"+item[1]+"</td>"+
-    //           "<td>"+item[0]+"</td><td>"+item[4]+' - '+item[5]+' - '+item[6]+"</td><td>"+item[2]+"</td>"+
-    //           "<td>"+item[3]+"</td><td>"+item[7]+"</td>"+
-    //           "</tr>");
-    //         no+=1;
-
-    //         $("#isi2").append(newdiv1);
-    //       }
-    //     });
-
-    //   },
-    //   error: function (data) {
-    //     $("#isi2").empty();
-    //     $("#p2").prop('disabled',true);
-    //   }
-    // })
+    
   }
 
   function edit(id) {

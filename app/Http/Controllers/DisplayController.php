@@ -27,6 +27,17 @@ class DisplayController extends Controller
 		))->with('page', 'Display Stuffing Progress')->with('head', 'Display');
 	}
 
+	public function indexStuffingTime()
+	{
+		$title = 'Container Stuffing Time';
+		$title_jp = 'Japanese';
+
+		return view('displays.shippings.stuffing_time', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display Stuffing Time')->with('head', 'Display');
+	}
+
 	public function indexShipmentProgress(){
 		return view('displays.shipment_progress')->with('page', 'Display Shipment Result')->with('head', 'Display');
 	}
@@ -47,6 +58,7 @@ class DisplayController extends Controller
 
 	public function fetchStuffingProgress(){
 		$now = date('Y-m-d');
+		$now = '2019-08-12';
 
 		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual > 0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.start_stuffing, master_checksheets.finish_stuffing from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier 
 		left join

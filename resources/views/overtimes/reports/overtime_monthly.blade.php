@@ -10,49 +10,49 @@
     display: block;
   }
 
-	thead>tr>th{
-		text-align:center;
-		overflow:hidden;
+  thead>tr>th{
+    text-align:center;
+    overflow:hidden;
     padding: 3px;
-	}
-	tbody>tr>td{
-		text-align:center;
-	}
-	tfoot>tr>th{
-		text-align:center;
-	}
-	th:hover {
-		overflow: visible;
-	}
-	td:hover {
-		overflow: visible;
-	}
-	table.table-bordered{
-		border:1px solid black;
-	}
-	table.table-bordered > thead > tr > th{
-		border:1px solid black;
-	}
-	table.table-bordered > tbody > tr > td{
-		border:1px solid black;
-		vertical-align: middle;
-		padding:0;
-	}
-	table.table-bordered > tfoot > tr > th{
-		border:1px solid black;
-		padding:0;
-	}
-	td{
-		overflow:hidden;
-		text-overflow: ellipsis;
-	}
-	.dataTable > thead > tr > th[class*="sort"]:after{
-		content: "" !important;
-	}
-	#queueTable.dataTable {
-		margin-top: 0px!important;
-	}
-	#loading, #error { display: none; }
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  th:hover {
+    overflow: visible;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+    vertical-align: middle;
+    padding:0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid black;
+    padding:0;
+  }
+  td{
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .dataTable > thead > tr > th[class*="sort"]:after{
+    content: "" !important;
+  }
+  #queueTable.dataTable {
+    margin-top: 0px!important;
+  }
+  #loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -115,7 +115,7 @@
 										<span class="description-percentage" id="tot_diff"></span>
 									</h5>      
 									<span class="description-text" style="font-size: 35px;">Difference</span>
-									<br><span class="description-text" style="font-size: 18px">(FQ-ACT)</span>
+									<br><span class="description-text" style="font-size: 18px">(ACT-FQ)</span>
 									<br><span class="description-text" style="font-size: 35px;">差異</span>   
 								</div>
 							</div>
@@ -161,26 +161,26 @@
 										<tbody id="tabelDetail"></tbody>
 										<tfoot>
 											
-												<th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
-												<th id="tot" style="font-weight: bold; size: 25px"></th>
-                        <th  style="font-weight: bold; size: 25px"></th>
-											
-										</tfoot>
-									</table>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
+                      <th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
+                      <th id="tot" style="font-weight: bold; size: 25px"></th>
+                      <th  style="font-weight: bold; size: 25px"></th>
 
-		</div>
-	</div>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+             <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+           </div>
+         </div>
+         <!-- /.modal-content -->
+       </div>
+       <!-- /.modal-dialog -->
+     </div>
+
+   </div>
+ </div>
 
 </section>
 @endsection
@@ -237,7 +237,7 @@
     	}
     }
 
-    tot_diff = tot_day_budget - tot_act;
+    tot_diff = tot_act - tot_day_budget;
 
     tot_budget = Math.round(tot_budget * 100) / 100;
     tot_day_budget = Math.round(tot_day_budget * 100) / 100;
@@ -254,11 +254,11 @@
     $("#tot_act").text(tot_act2);
 
     if (tot_diff > 0) {
-    	$('#diff_text').removeClass('text-red').addClass('text-green');
-    	$("#tot_diff").html(tot_diff2);
+    	$('#diff_text').removeClass('text-green').addClass('text-red');
+    	$("#tot_diff").html("+ "+tot_diff2);
     }
     else {
-    	$('#diff_text').removeClass('text-green').addClass('text-red');
+    	$('#diff_text').removeClass('text-red').addClass('text-green');
     	$("#tot_diff").html(tot_diff2);
     }
 
@@ -372,7 +372,7 @@
     		data: budgetHarian
     	}]
     });
-});
+  });
 }
 
 function total_budget(costCenter, date) {
@@ -426,7 +426,7 @@ function modalTampil(costCenter, date) {
           var no = 1;
 
           for (var i = 0; i <   data.datas.length; i++) {
-            
+
             dataT += '<tr>';
             dataT += '<td>'+ no++; +'</td>';
             dataT += '<td>'+ data.datas[i].nik +'</td>';
@@ -438,7 +438,7 @@ function modalTampil(costCenter, date) {
           }
           $("#tabelDetail").append(dataT);
 
-            
+
 
       		// $.each(data, function(i, item) {
       		// 	if (item[0] != ""){
@@ -453,70 +453,70 @@ function modalTampil(costCenter, date) {
       		// 	}
       		// });
 
-      
-
-      $('.more').each(function() {
-          var content = $(this).html();
 
 
+          $('.more').each(function() {
+            var content = $(this).html();
 
-          if(content.length > showChar) {
 
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar, content.length - showChar);
 
-            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+            if(content.length > showChar) {
 
-            $(this).html(html);
-          }
+              var c = content.substr(0, showChar);
+              var h = content.substr(showChar, content.length - showChar);
 
-        });
+              var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
 
-        $(".morelink").click(function(){
-          if($(this).hasClass("less")) {
-            $(this).removeClass("less");
-            $(this).html(moretext);
-          } else {
-            $(this).addClass("less");
-            $(this).html(lesstext);
-          }
-          $(this).parent().prev().toggle();
-          $(this).prev().toggle();
-          return false;
-        });
+              $(this).html(html);
+            }
 
-      		$("#tot").text(jml);
-      	}
+          });
+
+          $(".morelink").click(function(){
+            if($(this).hasClass("less")) {
+              $(this).removeClass("less");
+              $(this).html(moretext);
+            } else {
+              $(this).addClass("less");
+              $(this).html(lesstext);
+            }
+            $(this).parent().prev().toggle();
+            $(this).prev().toggle();
+            return false;
+          });
+
+          $("#tot").text(jml);
+        }
       })
-  }
+    }
 
-  $('#tgl').datepicker({
-  	<?php $tgl_max = date('d-m-Y') ?>
-  	autoclose: true,
-  	format: "dd-mm-yyyy",
-  	endDate: '<?php echo $tgl_max ?>',
-  });
+    $('#tgl').datepicker({
+     <?php $tgl_max = date('d-m-Y') ?>
+     autoclose: true,
+     format: "dd-mm-yyyy",
+     endDate: '<?php echo $tgl_max ?>',
+   });
 
-  function openSuccessGritter(title, message){
-  	jQuery.gritter.add({
-  		title: title,
-  		text: message,
-  		class_name: 'growl-success',
-  		image: '{{ url("images/image-screen.png") }}',
-  		sticky: false,
-  		time: '3000'
-  	});
-  }
+    function openSuccessGritter(title, message){
+     jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-success',
+      image: '{{ url("images/image-screen.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+   }
 
-  function openErrorGritter(title, message) {
-  	jQuery.gritter.add({
-  		title: title,
-  		text: message,
-  		class_name: 'growl-danger',
-  		image: '{{ url("images/image-stop.png") }}',
-  		sticky: false,
-  		time: '3000'
-  	});
-  }	
-</script>
-@endsection
+   function openErrorGritter(title, message) {
+     jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-danger',
+      image: '{{ url("images/image-stop.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+   }	
+ </script>
+ @endsection
