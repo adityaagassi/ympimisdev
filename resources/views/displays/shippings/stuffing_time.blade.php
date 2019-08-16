@@ -124,7 +124,8 @@
 						if (value.total_plan == value.total_actual) {
 							d2 = new Date(value.finish_stuffing);
 							cls = "";
-							cls2 = '';
+							cls2 = "";
+							finish = d2.getHours() + ":" + ('0' + d2.getMinutes()).slice(-2);
 						}
 						
 						var d1 = new Date(value.start_stuffing);
@@ -137,7 +138,7 @@
 						dif = diff_minutes(d1, d2);
 
 						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
-						finish = d2.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
+						finish = d2.getHours() + ":" + ('0' + d2.getMinutes()).slice(-2);
 					}
 
 					var progress = dif / 60 * 100;
