@@ -163,7 +163,7 @@
 					stuffingTableBody += '<td style="line-height:1"><div class="progress '+cls+'">';
 					stuffingTableBody += '<div class="progress-bar progress-bar-'+style+' '+cls2+'" role="progressbar" aria-valuenow="'+dif+'" aria-valuemin="0" aria-valuemax="60" style="width: '+progress+'%"; >';
 					stuffingTableBody += "<span style='line-height:36px; font-size:30px';>"+dif+"</span>";
-					stuffingTableBody += '</div></div><span style="color:#dd4b39; font-size:20px; font-weight: normal;">'+reason+'</span></td>';
+					stuffingTableBody += '</div></div><span style="color:#dd4b39; font-size:16px; font-weight: normal;">'+reason+'</span></td>';
 					stuffingTableBody += "<td>"+start+"</td>";
 					stuffingTableBody += "<td>"+finish+"</td>";
 					stuffingTableBody += "</tr>";
