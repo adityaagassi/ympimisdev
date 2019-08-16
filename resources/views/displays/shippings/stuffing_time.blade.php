@@ -117,13 +117,18 @@
 					var reason = "";
 
 					if (value.stats == "LOADING") {
-						
 						var d2 = new Date();
+						cls = "active";
+						cls2 = "progress-bar-striped";
+
+						if (value.total_plan == value.total_actual) {
+							d2 = new Date(value.finish_stuffing);
+							cls = "";
+							cls2 = '';
+						}
 						
 						var d1 = new Date(value.start_stuffing);
 						dif = diff_minutes(d1, d2);
-						cls = "active";
-						cls2 = "progress-bar-striped";
 
 						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
 					} else if (value.stats == "DEPARTED") {
