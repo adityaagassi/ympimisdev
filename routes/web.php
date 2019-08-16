@@ -116,6 +116,8 @@ Route::get('index/report/overtime_section', 'OvertimeController@indexReportSecti
 Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
 Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
 Route::get('fetch/report/overtime_data', 'OvertimeController@fetchOvertimeData');
+Route::get('index/report/overtime_outsource', 'OvertimeController@indexReportOutsouce');
+Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchOvertimeOutsource');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -141,6 +143,12 @@ Route::get('fetch/report/detail_daily_attendance', 'EmployeeController@detailDai
 // Presence
 Route::get('index/report/presence', 'EmployeeController@indexPresence');
 Route::get('fetch/report/presence', 'EmployeeController@fetchPresence');
+Route::get('fetch/report/detail_presence', 'EmployeeController@detailPresence');
+// Absence
+Route::get('index/report/absence', 'EmployeeController@indexAbsence');
+Route::get('fetch/report/absence', 'EmployeeController@fetchAbsence');
+Route::get('fetch/report/detail_absence', 'EmployeeController@detailAbsence');
+
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');

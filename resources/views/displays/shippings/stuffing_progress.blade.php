@@ -101,7 +101,12 @@
 	};
 
 	function fillTable(){
-		$.get('{{ url("fetch/display/stuffing_progress") }}', function(result, status, xhr){
+		var data = {
+			date: ""
+		}
+		
+		$.get('{{ url("fetch/display/stuffing_progress") }}', data, function(result, status, xhr){
+
 			if(result.status){
 				var stuffingTableBody = "";
 				$('#stuffingTableBody').html("");

@@ -36,6 +36,14 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-sm-1" style="font-size: 25px">DATE :</label>
+
+				<div class="col-sm-2">
+					<input type="text" class="form-control datepicker" id="date" placeholder="Enter Date . . ." style="background-color: rgba(0,0,0,0); color: white;font-size: 25px; text-align: center" onchange="fillTable()">
+				</div>
+			</div>
+
 			<table id="stuffingTable" class="table table-bordered">
 				<thead style="background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 24px;">
 					<tr>
@@ -69,6 +77,12 @@
 	jQuery(document).ready(function(){
 		fillTable();
 		// setInterval(fillTable, 10000);
+
+		$('#date').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd"
+		});
+
 	});
 
 	$.time = function(dateObject) {
@@ -84,7 +98,12 @@
 	};
 
 	function fillTable(){
-		$.get('{{ url("fetch/display/stuffing_progress") }}', function(result, status, xhr){
+		var data = {
+			date: $("#date").val()
+		}
+
+		$.get('{{ url("fetch/display/stuffing_progress") }}', data, function(result, status, xhr){
+
 			if(result.status){
 				var stuffingTableBody = "";
 				$('#stuffingTableBody').html("");
@@ -93,32 +112,40 @@
 					var dif = "";
 					var start = "-";
 					var finish = "-";
+					var cls = "";
+					var cls2 = "";
+					var reason = "";
 
 					if (value.stats == "LOADING") {
-						if(value.total_plan == value.total_actual) {
-							var d2 = new Date(value.finish_stuffing);
-							finish = d2.getHours() + ":" + d2.getMinutes();
-						} else {
-							var d2 = new Date();
-						}
+						
+						var d2 = new Date(value.finish_stuffing);
+						
 						var d1 = new Date(value.start_stuffing);
 						dif = diff_minutes(d1, d2);
+						cls = "active";
+						cls2 = "progress-bar-striped";
 
-						start = d1.getHours() + ":" + d1.getMinutes();
+						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
 					} else if (value.stats == "DEPARTED") {
 						var d2 = new Date(value.finish_stuffing);
 						var d1 = new Date(value.start_stuffing);
 						dif = diff_minutes(d1, d2);
 
-						start = d1.getHours() + ":" + d1.getMinutes();
-						finish = d2.getHours() + ":" + d2.getMinutes();
+						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
+						finish = d2.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
 					}
 
 					var progress = dif / 60 * 100;
 					var style = 'green';
 					var st = '';
 
-					if (progress > 100) { progress = 100; style = 'red';}
+					if (progress > 100) { 
+						progress = 100; style = 'red'; 
+
+						if (value.reason) {
+							reason = "* "+value.reason;
+						}
+					}
 
 					if(progress == 0) {dif = "";}
 
@@ -127,15 +154,13 @@
 					stuffingTableBody += "<td>"+value.stats+"</td>";
 					stuffingTableBody += "<td>"+value.id_checkSheet.substr(2,7)+"</td>";
 					stuffingTableBody += "<td>"+value.destination+"</td>";
-					stuffingTableBody += '<td><div class="progress">';
-					stuffingTableBody += '<div class="progress-bar progress-bar-'+style+'" role="progressbar" aria-valuenow="'+dif+'" aria-valuemin="0" aria-valuemax="60" style="width: '+progress+'%"; >';
+					stuffingTableBody += '<td style="line-height:1"><div class="progress '+cls+'">';
+					stuffingTableBody += '<div class="progress-bar progress-bar-'+style+' '+cls2+'" role="progressbar" aria-valuenow="'+dif+'" aria-valuemin="0" aria-valuemax="60" style="width: '+progress+'%"; >';
 					stuffingTableBody += "<span style='line-height:36px; font-size:30px';>"+dif+"</span>";
-					stuffingTableBody += '</div></td>';
+					stuffingTableBody += '</div></div><span style="color:#dd4b39; font-size:20px; font-weight: normal;">'+reason+'</span></td>';
 					stuffingTableBody += "<td>"+start+"</td>";
 					stuffingTableBody += "<td>"+finish+"</td>";
 					stuffingTableBody += "</tr>";
-
-
 				});
 
 				if(result.stuffing_progress.length == 0){
@@ -149,15 +174,13 @@
 				alert('Attempt to retrieve data failed.');
 			}
 		});
-			}
+	}
 
-			function diff_minutes(dt2, dt1) 
-			{
-
-				var diff =(dt2.getTime() - dt1.getTime()) / 1000;
-				diff /= 60;
-				return Math.abs(Math.round(diff));
-
-			}
-		</script>
-		@endsection
+	function diff_minutes(dt2, dt1) 
+	{
+		var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+		diff /= 60;
+		return Math.abs(Math.round(diff));
+	}
+</script>
+@endsection
