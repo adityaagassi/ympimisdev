@@ -262,7 +262,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/stuffing_time") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Stuffing Time (コンテナ荷積み時間)
+                                <i class="fa fa-caret-right"></i> Stuffing Time (荷積み時間)
                             </a>
                         </td>
                     </tr>
