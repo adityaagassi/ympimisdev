@@ -118,7 +118,7 @@
 
 					if (value.stats == "LOADING") {
 						
-						var d2 = new Date(value.finish_stuffing);
+						var d2 = new Date();
 						
 						var d1 = new Date(value.start_stuffing);
 						dif = diff_minutes(d1, d2);
