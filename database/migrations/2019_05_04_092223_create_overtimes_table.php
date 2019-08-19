@@ -18,6 +18,8 @@ class CreateOvertimesTable extends Migration
             $table->string('overtime_id')->unique();
             $table->date('overtime_date');
             $table->string('day_status');
+            $table->string('remark')->nullable();;
+            $table->string('shift');
             $table->string('division');
             $table->string('department');
             $table->string('section');
