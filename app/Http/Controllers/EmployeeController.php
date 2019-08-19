@@ -1121,22 +1121,81 @@ public function indexPresence()
 
 public function fetchPresence(Request $request)
 {
-  $tgl = $request->get("tgl");
+  if(strlen($request->get('tgl')) > 0){
+    $tgl = date('d-m-Y',strtotime($request->get("tgl")));
+  }else{
+    $tgl = date("d-m-Y");
+  }
+
   $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' GROUP BY shift";
 
   $presence = db::connection('mysql3')->select($query);
+  $titleChart = "Presence in ".date('j F Y',strtotime($request->get("tgl")));
 
   $response = array(
     'status' => true,
     'presence' => $presence,
-
+    'titleChart' => $titleChart,
+    'tgl' => $tgl
   );
   return Response::json($response);
-
-
 }
-//------------- End 
 
+public function detailPresence(Request $request){
+  $tgl = date('d-m-Y', strtotime($request->get('tgl')));
+  $shift = $request->get('shift');
+
+  $query = "SELECT presensi.tanggal, presensi.nik, ympimis.employees.`name` as nama, ympimis.mutation_logs.section as section, presensi.masuk, presensi.keluar, presensi.shift from presensi 
+  LEFT JOIN ympimis.employees ON presensi.nik = ympimis.employees.employee_id
+  LEFT JOIN ympimis.mutation_logs ON presensi.nik = ympimis.mutation_logs.employee_id
+  WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' and ympimis.mutation_logs.valid_to is null and shift = '".$shift."' ORDER BY presensi.nik";
+  $detail = db::connection('mysql3')->select($query);
+
+  return DataTables::of($detail)->make(true);
+}
+//------------- End Presence
+
+//------------- Start Absence
+public function indexAbsence()
+{
+  return view('employees.report.absence');
+}
+
+public function fetchAbsence(Request $request)
+{
+  if(strlen($request->get('tgl')) > 0){
+    $tgl = date('d-m-Y',strtotime($request->get("tgl")));
+  }else{
+    $tgl = date("d-m-Y");
+  }
+  
+  $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
+
+  $absence = db::connection('mysql3')->select($query);
+  $titleChart = "Absence in ".date('j F Y',strtotime($request->get("tgl")));
+
+  $response = array(
+    'status' => true,
+    'absence' => $absence,
+    'titleChart' => $titleChart,
+    'tgl' => $tgl
+  );
+  return Response::json($response);
+}
+
+public function detailAbsence(Request $request){
+  $tgl = date('d-m-Y', strtotime($request->get('tgl')));
+  $shift = $request->get('shift');
+
+  $query = "SELECT presensi.tanggal, presensi.nik, ympimis.employees.`name` as nama, ympimis.mutation_logs.section as section, presensi.shift as absensi from presensi 
+  LEFT JOIN ympimis.employees ON presensi.nik = ympimis.employees.employee_id
+  LEFT JOIN ympimis.mutation_logs ON presensi.nik = ympimis.mutation_logs.employee_id
+  WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and ympimis.mutation_logs.valid_to is null and shift = '".$shift."' ORDER BY presensi.nik";
+  $detail = db::connection('mysql3')->select($query);
+
+  return DataTables::of($detail)->make(true);
+}
+//------------- End Absence
 
 
 }
