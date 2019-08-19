@@ -40,63 +40,63 @@
 					<div class="tab-pane active" id="tab_1">
 						<div id="tidak_ada_data"></div>
 						<div id="absence" style="width: 850pt;"></div>
-						<div class="col-md-12">
-							<div id ="container" style ="margin: 0 auto"></div>
-							<br>
-							<table class="table table-striped">
-								<tr>
-									<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
-								</tr>
-								<tr>
-									<td>CT</td>
-									<td>: Cuti Tahunan</td>
-									<td>Sn</td>
-									<td>: Cuti Khusus Saudara Kandung Nikah</td>
-								</tr>
-								<tr>
-									<td>CK</td>
-									<td>: Cuti Khusus Lainnya</td>
-									<td>N</td>
-									<td>: Cuti Khusus Menikah</td>
-								</tr>
-								<tr>
-									<td>Im</td>
-									<td>: Istri Melahirkan</td>
-									<td>SD</td>
-									<td>: Sakit dengan Surat Dokter</td>
-								</tr>
-								<tr>
-									<td>W</td>
-									<td>: W apa</td>
-									<td>S</td>
-									<td>: Sakit belum ada Surat Dokter</td>
-								</tr>
-								<tr>
-									<td>Km</td>
-									<td>: Cuti Khusus Kematian</td>
-									<td>I</td>
-									<td>: Ijin</td>
-								</tr>
-								<tr>
-									<td>K</td>
-									<td>: Cuti Pra-Lahir</td>
-									<td>A</td>
-									<td>: Alpha</td>
-								</tr>
-								<tr>
-									<td>M</td>
-									<td>: Cuti Pasca-Lahir</td>
-									<td>DL</td>
-									<td>: Dinas Luar</td>
-								</tr>
-								<tr bgcolor="#6cadc9">
-									<td>T</td>
-									<td>: Terlambat</td>
-									<td>PC</td>
-									<td>: Pulang Cepat</td>
-								</tr>
-							</table>
-						</div>
+						<div id ="container" style ="margin: 0 auto"></div>
+						<br>
+						<table class="table table-striped">
+							<tr>
+								<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
+							</tr>
+							<tr></tr>
+							<tr>
+								<td>CT</td>
+								<td>: Cuti Tahunan</td>
+								<td>Sn</td>
+								<td>: Cuti Khusus Saudara Kandung Nikah</td>
+							</tr>
+							<tr>
+								<td>CK</td>
+								<td>: Cuti Khusus Lainnya</td>
+								<td>N</td>
+								<td>: Cuti Khusus Menikah</td>
+							</tr>
+							<tr>
+								<td>Im</td>
+								<td>: Istri Melahirkan</td>
+								<td>SD</td>
+								<td>: Sakit dengan Surat Dokter</td>
+							</tr>
+							<tr>
+								<td>Km</td>
+								<td>: Cuti Khusus Kematian</td>
+								<td>S</td>
+								<td>: Sakit Belum Ada Surat Dokter</td>
+							</tr>
+							<tr>
+								<td>K</td>
+								<td>: Cuti Pra-Lahir</td>
+								<td>I</td>
+								<td>: Ijin</td>
+							</tr>
+							<tr>
+								<td>M</td>
+								<td>: Cuti Pasca-Lahir</td>
+								<td>DL</td>
+								<td>: Dinas Luar</td>
+							</tr>
+							<tr>
+								<td>A</td>
+								<td>: Alpha</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr bgcolor="#6cadc9">
+								<td>T</td>
+								<td>: Terlambat</td>
+								<td>PC</td>
+								<td>: Pulang Cepat</td>
+							</tr>
+						</table>
+					
 					</div>
 					<div class="tab-pane" id="tab_2">
 						<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
@@ -167,6 +167,10 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('#myModal').on('hidden.bs.modal', function () {
+			$('#tabel_detail').DataTable().clear();
+		});
 
 		drawChart();
 	});

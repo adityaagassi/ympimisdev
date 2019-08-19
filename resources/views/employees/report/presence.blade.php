@@ -19,23 +19,44 @@
 <section class="content">
 	<div class="col-md-12">
 		<div class="col-md-12">
-			<div class="col-md-2 pull-right">
-				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border-color: #00a65a">
-						<i class="fa fa-calendar"></i>
+			
+		</div>
+		<div class="col-md-12">
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab_1" data-toggle="tab">
+						By Shift 
+						<br><span class="text-purple">シフト別</span>
+					</a></li>
+					<!-- <li><a href="#tab_2" data-toggle="tab">Stat Persentase <span>(%)</span></a></li> -->
+					<div class="col-md-2 pull-right">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border-color: #00a65a">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+						</div>
+						<br>
 					</div>
-					<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+					<li class="pull-right"><label>Date : </label></li>
+				</ul>
+				
+				
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<div id="tidak_ada_data"></div>
+						<div id="presence" style="width: 850pt;"></div>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
+					</div>
+					<!-- /.tab-pane -->
 				</div>
-				<br>
+				<!-- /.tab-content -->
+
 			</div>
-		</div>
-		<div class="col-md-12">
-			<div id="tidak_ada_data">
-			</div>
-		</div>
-		<div class="col-md-12">
-			<div id="presence" style="width: 100%; height: 550px;"></div>
-		</div>
+			
+		</div>		
 	</div>
 
 	<!-- start modal -->
@@ -45,6 +66,7 @@
 				<div class="modal-header">
 					<h4 style="float: right;" id="modal-title"></h4>
 					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+					<br><h4 class="modal-title" id="judul_table"></h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -96,11 +118,17 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
+		$('#myModal').on('hidden.bs.modal', function () {
+			$('#tabel_detail').DataTable().clear();
+		});
+
 		drawChart();
 	});
 
 	$('.datepicker').datepicker({
-		autoclose: true
+		// maxDate: Date.now(),
+		autoclose: true,
+		format: "dd-mm-yyyy"
 	});
 
 	function drawChart(){
@@ -110,16 +138,88 @@
 			tgl:tanggal
 		}
 
-		$.get('{{ url("fetch/report/presence") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/report/presence") }}', data, function(result, status, xhr) {  
+			
+			if(result.presence.length > 0){
+				$('#tidak_ada_data').append().empty();
+				var shift = [];
+				var hadir = [];
+				var titleChart = result.titleChart;
 
+				for (var i = 0; i < result.presence.length; i++) {
+					shift.push(parseInt(result.presence[i].shift));
+					hadir.push(parseInt(result.presence[i].jml));
+				}
+
+				Highcharts.chart('presence', {
+					chart: {
+						type: 'column'
+					},
+					title: {
+						text: titleChart
+					},
+					xAxis: {
+						categories: shift
+					},
+					yAxis: {
+						title: {
+							text: 'Total Absent'
+						}
+					},
+					legend : {
+						enabled: false
+					},
+					tooltip: {
+						headerFormat: '',
+						pointFormat: '<span style="color:{point.color}">Shift {point.category}</span>: <b>{point.y}</b> <br/>'
+					},
+					plotOptions: {
+						series: {
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(event.point.category,result.tgl);
+									}
+								}
+							},
+							borderWidth: 0,
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}'
+							}
+						}
+					},credits: {
+						enabled: false
+					},
+					series: [
+					{
+						"colorByPoint": true,
+						name: 'By Absent',
+						data: hadir,
+					}
+					]
+				});
+
+			}else{
+				$('#presence').append().empty();
+				$('#tidak_ada_data').append().empty();
+				$('#tidak_ada_data').append('<div class="alert alert-warning alert-dismissible" data-dismiss="alert" aria-hidden="true" style="margin-right: 3.3%;margin-left: 2%"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><h4><i class="icon fa fa-warning"></i> Data Hari ini belum diupload!</h4></div>');
+
+			}
 
 		});
 
 	}
 
-	function showDetail(tgl) {
+	function showDetail(shift,tgl) {
 		tabel = $('#tabel_detail').DataTable();
 		tabel.destroy();
+
+		var tanggal = parseInt(tgl.slice(0, 2));
+		var bulan = parseInt(tgl.slice(3, 5));
+		var tahun = tgl.slice(6, 10);
+		var bulanText = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 		$('#myModal').modal('show');
 
@@ -177,8 +277,9 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/report/detail_daily_attendance") }}",
+				"url" : "{{ url("fetch/report/detail_presence") }}",
 				"data" : {
+					shift : shift,
 					tgl : tgl
 				}
 			},
@@ -193,8 +294,11 @@
 			]
 		});
 
-	}
+		$('#judul_table').append().empty();
+		$('#judul_table').append('<center>Presence Shift '+shift+' in '+tanggal+' '+bulanText[bulan-1]+' '+tahun+'<center>');
 
+
+	}
 </script>
 
 

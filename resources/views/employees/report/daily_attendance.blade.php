@@ -96,6 +96,10 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
+		$('#myModal').on('hidden.bs.modal', function () {
+			$('#tabel_detail').DataTable().clear();
+		});
+
 		drawChart();
 	});
 
@@ -201,6 +205,9 @@
 							}
 						}
 					},
+					credits: {
+		            enabled: false
+		          },
 					series: [
 					{
 						name: 'Tidak Hadir',
