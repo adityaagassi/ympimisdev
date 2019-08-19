@@ -1186,7 +1186,7 @@ class PurchaseOrderController extends Controller
 
 		$po_lists = $po_lists->distinct()->get()->toArray();
 
-		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','order_no','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_no');
+		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_no');
 
 		foreach ($po_lists as $key) {
 			$po_array[] = array(
@@ -1211,7 +1211,6 @@ class PurchaseOrderController extends Controller
 				'base_unit_of_measure' => $key['base_unit_of_measure'],
 				'price' => $key['price'],
 				'curr' => $key['curr'],
-				'order_no' => $key['order_no'],
 				'reply_date' => $key['reply_date'],
 				'create_date' => $key['create_date'],
 				'delay' => $key['delay'],
