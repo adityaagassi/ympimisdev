@@ -247,7 +247,7 @@ class OvertimeController extends Controller
 		}
 
 
-		$overtimeData = db::connection('mysql3')->select("select ovr.tanggal, ovr.nik, emp.name, bagian.cost_center, bagian.department, bagian.section, ot, keperluan, code from
+		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, emp.name, bagian.cost_center, bagian.department, bagian.section, ot, keperluan, code from
 			(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
 			where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
 			left join ympimis.employees as emp on emp.employee_id = ovr.nik
@@ -279,6 +279,7 @@ class OvertimeController extends Controller
 		$ot_date = date('Y-m-d',strtotime($request->get('ot_date')));
 		$ot_day = $request->get('ot_day');
 		$shift = $request->get('shift');
+		$remark = $request->get('remark');
 
 		$overtime = new Overtime([
 			'overtime_id' => $ot_id,
@@ -290,6 +291,7 @@ class OvertimeController extends Controller
 			'section' => $section,
 			'subsection' => $sub_section,
 			'group' => $group,
+			'remark' => $remark,
 			'created_by' => 1
 		]);
 		$overtime->save();	
@@ -1368,7 +1370,7 @@ public function fetchOvertimeHead(Request $request)
 
 	$ot_grup = Overtime::leftJoin('overtime_details','overtime_details.overtime_id','=','overtimes.overtime_id')
 	->whereIn('overtimes.overtime_id', $spl)
-	->whereNull('overtime_details')
+	->whereNull('overtime_details.deleted_at')
 	->select('overtime_date','overtimes.overtime_id',db::raw('concat(section," - ",subsection," - ",`group`) as bagian'),db::raw('GROUP_CONCAT(DISTINCT remark) as reason'), db::raw('count(employee_id) as count_member'), db::raw('sum(final_hour) as total_hour'))
 	->groupBy('overtimes.overtime_id', 'overtime_date', 'section', 'subsection', 'group')
 	->get();
@@ -1395,10 +1397,11 @@ public function indexPrintHead(Request $request)
 	$tgl = $anggota[0]->overtime_date;
 	$mon = date('Y-m',strtotime($anggota[0]->overtime_date));
 
-	$cc = "select ovr.cost_center, round(budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date),1) bdg, act, round((budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date)) - act,1) as diff  from
-	(select overtime_date ,cost_center from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where overtimes.overtime_id in (".$request->get('id').") and overtime_details.deleted_at is null group by cost_center, DATE_FORMAT(overtime_date,'%Y-%m')) ovr 
+	$cc = "select DISTINCT ovr.cost_center, cost_centers.cost_center_name, round(budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date),1) bdg, act, round((budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date)) - act,1) as diff  from
+	(select overtime_date ,cost_center from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where overtimes.overtime_id in (".$request->get('id').") and overtime_details.deleted_at is null group by cost_center, overtime_date) ovr 
 	left join budgets on budgets.cost_center = ovr.cost_center and DATE_FORMAT(ovr.overtime_date,'%Y-%m') = DATE_FORMAT(budgets.period,'%Y-%m')
-	left join (select cost_center, SUM(IF(status = 1, final_overtime, final_hour)) as act from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where date_format(overtime_date,'%Y-%m') = '".$mon."' and overtime_date <= '".$tgl."' and overtimes.deleted_at is null and overtime_details.deleted_at is null group by cost_center) as act on act.cost_center = ovr.cost_center";
+	left join (select cost_center, SUM(IF(status = 1, final_overtime, final_hour)) as act from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where date_format(overtime_date,'%Y-%m') = '".$mon."' and overtime_date <= '".$tgl."' and overtimes.deleted_at is null and overtime_details.deleted_at is null group by cost_center) as act on act.cost_center = ovr.cost_center
+	left join cost_centers on cost_centers.cost_center = ovr.cost_center";
 
 	$cost_center = db::select($cc);
 

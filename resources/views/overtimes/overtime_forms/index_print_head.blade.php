@@ -101,16 +101,16 @@
 				foreach ($anggota as $key) { ?>
 					<tr>
 						<td><?php echo $no ?></td>
-						<td><?php echo date('d-m-Y',strtotime($key->tanggal)) ?></td>
-						<td style="text-align: right;"><?php echo $key->id ?></td>
-						<td><?php echo $key->sec." - ".$key->sub." - ".$key->grup ?></td>
-						<td style="text-align: right;"><?php echo $key->jml_org ?></td>
-						<td style="text-align: right;"><?php echo $key->jml_jam ?></td>
-						<td><?php echo $key->keperluan ?></td>
+						<td><?php echo date('d-m-Y',strtotime($key->overtime_date)) ?></td>
+						<td style="text-align: right;"><?php echo $key->overtime_id ?></td>
+						<td><?php echo $key->bagian ?></td>
+						<td style="text-align: right;"><?php echo $key->count_member ?></td>
+						<td style="text-align: right;"><?php echo $key->total_hour ?></td>
+						<td><?php echo $key->reason ?></td>
 					</tr>
 					<?php 
-					$jml += $key->jml_org;
-					$jam += $key->jml_jam;
+					$jml += $key->count_member;
+					$jam += $key->total_hour;
 					$no++; 
 				} ?>
 				<tr class="foot">
@@ -132,11 +132,11 @@
 					</tr>
 					<?php foreach ($cc as $key2) { ?>
 						<tr>
-							<td style="text-align: right"><?php echo $key2->id_cc ?></td>
-							<td><?php echo $key2->name ?></td>
-							<td style="text-align: right"><?php echo $key2->tot ?></td>
+							<td style="text-align: right"><?php echo $key2->cost_center ?></td>
+							<td><?php echo $key2->cost_center_name ?></td>
+							<td style="text-align: right"><?php echo $key2->bdg ?></td>
 							<td style="text-align: right"><?php echo $key2->act ?></td>
-							<?php $diff = $key2->tot - $key2->act; ?>
+							<?php $diff = $key2->bdg - $key2->act; ?>
 							<td style="text-align: right"><?php echo $diff ?></td>
 						</tr>
 					<?php } ?>
@@ -147,8 +147,8 @@
 				<table width="100%" border="1px" id="tb-collapse" style="background-color: #dddddd">
 					<tr>
 						<td width="25%">Diketahui,</td>
-						<td width="25%">Desetujui,</td>
-						<td width="25%">Desetujui,</td>
+						<td width="25%">Disetujui,</td>
+						<td width="25%">Disetujui,</td>
 						<td width="25%">Diketahui,</td>
 					</tr>
 					<tr>

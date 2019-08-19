@@ -434,8 +434,6 @@
     $("#id2").val(id);
     $("#tgl2").val(tanggal);
 
-    console.log(id);
-
     var no = 1;
 
     var data = {

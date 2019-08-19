@@ -39,10 +39,10 @@
     Create Overtime Forms <span class="text-purple">Japanese</span>
   </h1>
   <ol class="breadcrumb">
-{{--  <li>
-<a href="{{ url("create/overtime/overtime_form")}}" class="btn btn-success btn-sm" style="color:white">Create {{ $page }}</a>
-</li> --}}
-</ol>
+    {{--  <li>
+      <a href="{{ url("create/overtime/overtime_form")}}" class="btn btn-success btn-sm" style="color:white">Create {{ $page }}</a>
+    </li> --}}
+  </ol>
 </section>
 @endsection
 
@@ -167,7 +167,7 @@
                     </center>
                   </div>
                 </div>
-                <div class="col-xs-2 offset-xs-1">
+                <div class="col-xs-2">
                   <center>
                     <label>Lembur Awal</label>
                     <div class="input-group date">
@@ -180,6 +180,14 @@
                     <label>Lembur Akhir</label>
                     <div class="input-group date">
                       <label><input type="radio" class="minimal" id="akhir" name="lembur"></label>
+                    </div>
+                  </center>
+                </div>
+                <div class="col-xs-1">
+                  <center>
+                    <label>4G</label>
+                    <div class="input-group">
+                      <input type="checkbox" class="minimal" id="ot_4g">
                     </div>
                   </center>
                 </div>
@@ -442,7 +450,8 @@
           tableBody += '<td><textarea class="form-control" rows="1" style="height: 22px; padding-bottom: 0; padding-top: 0;" placeholder="Enter Remarks" id="ot_remark'+counter+'">' + ot_remark + '</textarea></td>';
           tableBody += '<td><label><input type="radio" class="minimal" id="awal'+counter+'" value="first" name="lembur'+counter+'"></label></td>';
           tableBody += '<td><label><input type="radio" class="minimal" id="akhir'+counter+'" value="last" name="lembur'+counter+'"></label></td>';
-          tableBody += '<td><button class="btn btn-xs btn-danger" onclick="deleteRow(this)" id="ot_delete'+counter+'"><i class="fa fa-minus"></i></button></td>';
+          tableBody += '<td>';
+          tableBody += '<button class="btn btn-xs btn-danger" onclick="deleteRow(this)" id="ot_delete'+counter+'"><i class="fa fa-minus"></i></button></td>';
           tableBody += '</tr>';
 
           $('#tableBody').append(tableBody).find('.timepicker').timepicker({
@@ -584,9 +593,14 @@ function hour_to(id)
 
   function save_print() {
     var ot_id = document.getElementById('ot_id').value;
-    var tgl = document.getElementById('ot_date').value;    
+    var tgl = document.getElementById('ot_date').value;
     var sec = $('#section').find(':selected')[0].text;
     var subsec = $('#sub_section').find(':selected')[0].text;
+    var four_group = "";
+
+    if ($("#ot_4g").is(':checked')) {
+      four_group = "4Group";
+    }
 
     if($('#group').val() != null){
       var group = $('#group').find(':selected')[0].text;
@@ -614,7 +628,8 @@ function hour_to(id)
       section:sec,
       sub_section:subsec,
       group:group,
-      shift:shift
+      shift:shift,
+      remark:four_group
     }
 
     for (var i = 1; i < counter; i++) {
