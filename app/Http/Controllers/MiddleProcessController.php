@@ -35,6 +35,15 @@ class MiddleProcessController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function indexStockMonitoring(){
+		$title = 'Middle Process Stock Monitoring';
+		$title_jp = '';
+		return view('processes.middle.display.stock_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('head', 'Middle Process');
+	}
+
 	public function indexBarrelLog(){
 
 		$title = 'Barrel Log';
@@ -696,7 +705,7 @@ class MiddleProcessController extends Controller
 			->where('materials.surface', 'like', '%PLT')
 			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
 			->orderBy('barrel_queues.created_at', 'asc')
-			->limit(30)
+			->limit(60)
 			->get();
 			$code = 'PLT';
 		}
