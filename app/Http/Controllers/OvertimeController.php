@@ -51,7 +51,7 @@ class OvertimeController extends Controller
 
 	public function indexReportSection(){
 
-		$query = "select cost_center, cost_center_name from cost_centers order by cost_center_name ASC";
+		$query = "select cost_center, cost_center_name from cost_centers group by cost_center, cost_center_name order by cost_center_name ASC";
 		$cc = db::select($query);
 
 		return view('overtimes.reports.overtime_section', array(
@@ -65,6 +65,13 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.overtime_monthly', array(
 			'title' => 'Monthly Overtime Control',
 			'title_jp' => ' 月次残業管理'))->with('page', 'Overtime Monthly Control');
+	}
+
+	public function indexReportOutsouce()
+	{
+		return view('overtimes.reports.overtime_outsource', array(
+			'title' => 'Overtime Outsource Employee',
+			'title_jp' => '??'))->with('page', 'Overtime Outsource Employee');
 	}
 
 	public function indexPrint($id)
@@ -1361,6 +1368,7 @@ public function fetchOvertimeHead(Request $request)
 
 	$ot_grup = Overtime::leftJoin('overtime_details','overtime_details.overtime_id','=','overtimes.overtime_id')
 	->whereIn('overtimes.overtime_id', $spl)
+	->whereNull('overtime_details')
 	->select('overtime_date','overtimes.overtime_id',db::raw('concat(section," - ",subsection," - ",`group`) as bagian'),db::raw('GROUP_CONCAT(DISTINCT remark) as reason'), db::raw('count(employee_id) as count_member'), db::raw('sum(final_hour) as total_hour'))
 	->groupBy('overtimes.overtime_id', 'overtime_date', 'section', 'subsection', 'group')
 	->get();
@@ -1374,7 +1382,47 @@ public function fetchOvertimeHead(Request $request)
 
 public function indexPrintHead(Request $request)
 {
-	return view('overtimes.index_print_head', array(
-	'ids' => $request->get('id')));
+	$ids = explode(",", $request->get('id'));
+
+	$anggota = Overtime::leftJoin('overtime_details','overtime_details.overtime_id','=','overtimes.overtime_id')
+	->whereIn('overtimes.overtime_id', $ids)
+	->whereNull('overtime_details.deleted_at')
+	->select('overtime_date','overtimes.overtime_id',db::raw('concat(section," - ",subsection," - ",`group`) as bagian'),db::raw('GROUP_CONCAT(DISTINCT remark) as reason'), db::raw('count(employee_id) as count_member'), db::raw('sum(final_hour) as total_hour'))
+	->groupBy('overtimes.overtime_id', 'overtime_date', 'section', 'subsection', 'group')
+	->orderBy('overtime_date')
+	->get();
+
+	$tgl = $anggota[0]->overtime_date;
+	$mon = date('Y-m',strtotime($anggota[0]->overtime_date));
+
+	$cc = "select ovr.cost_center, round(budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date),1) bdg, act, round((budget / DAY(LAST_DAY(ovr.overtime_date)) * DAY(ovr.overtime_date)) - act,1) as diff  from
+	(select overtime_date ,cost_center from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where overtimes.overtime_id in (".$request->get('id').") and overtime_details.deleted_at is null group by cost_center, DATE_FORMAT(overtime_date,'%Y-%m')) ovr 
+	left join budgets on budgets.cost_center = ovr.cost_center and DATE_FORMAT(ovr.overtime_date,'%Y-%m') = DATE_FORMAT(budgets.period,'%Y-%m')
+	left join (select cost_center, SUM(IF(status = 1, final_overtime, final_hour)) as act from overtimes left join overtime_details on overtimes.overtime_id = overtime_details.overtime_id where date_format(overtime_date,'%Y-%m') = '".$mon."' and overtime_date <= '".$tgl."' and overtimes.deleted_at is null and overtime_details.deleted_at is null group by cost_center) as act on act.cost_center = ovr.cost_center";
+
+	$cost_center = db::select($cc);
+
+	return view('overtimes.overtime_forms.index_print_head', array(
+		'anggota' => $anggota,
+		'cc' => $cost_center
+	));
+}
+
+public function fetchOvertimeOutsource(Request $request)
+{
+
+	$ot_outsource_q = "select dt.bulan, emp_os.nik, emp_os.namaKaryawan, COALESCE(jam,0) jam from (select DATE_FORMAT(week_date,'%Y-%m') as bulan from ympimis.weekly_calendars where fiscal_year = '".$request->get("fy")."' group by DATE_FORMAT(week_date,'%Y-%m') order by week_date ASC) as dt
+	cross join (select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp_os
+	left join (select DATE_FORMAT(tanggal,'%Y-%m') bulan, nik, SUM(IF(status = 0,jam, final)) jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot 
+	where deleted_at is null and jam_aktual = 0 and nik like 'os%'
+	group by nik, DATE_FORMAT(tanggal,'%Y-%m')) ovr on ovr.nik = emp_os.nik and ovr.bulan = dt.bulan";
+
+	$ot_outsource = db::connection('mysql3')->select($ot_outsource_q);
+
+	$response = array(
+		'status' => true,
+		'datas' => $ot_outsource
+	);
+	return Response::json($response);
 }
 }
