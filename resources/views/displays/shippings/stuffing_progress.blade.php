@@ -99,7 +99,7 @@
 		var d = new Date(dateObject);
 
 		var h = addZero(d.getHours());
-		var i = addZero(d.getMinutes() + 1);
+		var i = addZero(d.getMinutes());
 		var s = addZero(d.getSeconds());
 
 		var time = h + ":" + i + ":" + s;

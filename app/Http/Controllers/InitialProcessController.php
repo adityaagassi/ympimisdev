@@ -16,12 +16,14 @@ class InitialProcessController extends Controller
 
 		if($id == 'mpro'){
 			$location = "'FLA0','CLA0','SXA0','VNA0'";
+			$locs = ["'FLA0'","'CLA0'","'SXA0'","'VNA0'"];
 		}
 
 		return view('processes.initial.display.stock_monitoring', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'location' => $location
+			'location' => $location,
+			'locs' => $locs
 		))->with('head', 'Initial Process');
 	}
 
@@ -29,7 +31,7 @@ class InitialProcessController extends Controller
 		$now = date('Y-m');
 		$query = "select stock, category, count(material_number) as material from
 		(
-		select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, if(ceiling(inventories.quantity/stocks.quantity)<9,ceiling(inventories.quantity/stocks.quantity),9) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(ceiling(inventories.quantity/stocks.quantity)=1, '<1Days', if(ceiling(inventories.quantity/stocks.quantity)=2, '<2Days', if(ceiling(inventories.quantity/stocks.quantity)=3, '<3Days', if(ceiling(inventories.quantity/stocks.quantity)=4, '<4Days', if(ceiling(inventories.quantity/stocks.quantity)=5, '<5Days', if(ceiling(inventories.quantity/stocks.quantity)=6, '<6Days', if(ceiling(inventories.quantity/stocks.quantity)=7, '<7Days', if(ceiling(inventories.quantity/stocks.quantity)=8, '<8Days', '>9Days'))))))))) as category from
+		select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, if(ceiling(inventories.quantity/stocks.quantity)<9,ceiling(inventories.quantity/stocks.quantity),9) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(ceiling(inventories.quantity/stocks.quantity)=1, '<1Days', if(ceiling(inventories.quantity/stocks.quantity)=2, '<2Days', if(ceiling(inventories.quantity/stocks.quantity)=3, '<3Days', if(ceiling(inventories.quantity/stocks.quantity)=4, '<4Days', if(ceiling(inventories.quantity/stocks.quantity)=5, '<5Days', if(ceiling(inventories.quantity/stocks.quantity)=6, '<6Days', if(ceiling(inventories.quantity/stocks.quantity)=7, '<7Days', if(ceiling(inventories.quantity/stocks.quantity)=8, '<8Days', '>8Days'))))))))) as category from
 		(
 		select kitto.inventories.material_number, kitto.materials.description, sum(kitto.inventories.lot) as quantity from kitto.inventories left join kitto.materials on kitto.materials.material_number = kitto.inventories.material_number where kitto.materials.location in (".$request->get('location').") group by kitto.inventories.material_number, kitto.materials.description
 		) as inventories
@@ -50,7 +52,7 @@ class InitialProcessController extends Controller
 
 	public function fetchStockMonitoringDetail(Request $request){
 		$now = date('Y-m');
-		$query = "select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, if(ceiling(inventories.quantity/stocks.quantity)<9,ceiling(inventories.quantity/stocks.quantity),9) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(ceiling(inventories.quantity/stocks.quantity)=1, '<1Days', if(ceiling(inventories.quantity/stocks.quantity)=2, '<2Days', if(ceiling(inventories.quantity/stocks.quantity)=3, '<3Days', if(ceiling(inventories.quantity/stocks.quantity)=4, '<4Days', if(ceiling(inventories.quantity/stocks.quantity)=5, '<5Days', if(ceiling(inventories.quantity/stocks.quantity)=6, '<6Days', if(ceiling(inventories.quantity/stocks.quantity)=7, '<7Days', if(ceiling(inventories.quantity/stocks.quantity)=8, '<8Days', '>9Days'))))))))) as category, inventories.quantity/stocks.quantity as days from
+		$query = "select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, if(ceiling(inventories.quantity/stocks.quantity)<9,ceiling(inventories.quantity/stocks.quantity),9) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(ceiling(inventories.quantity/stocks.quantity)=1, '<1Days', if(ceiling(inventories.quantity/stocks.quantity)=2, '<2Days', if(ceiling(inventories.quantity/stocks.quantity)=3, '<3Days', if(ceiling(inventories.quantity/stocks.quantity)=4, '<4Days', if(ceiling(inventories.quantity/stocks.quantity)=5, '<5Days', if(ceiling(inventories.quantity/stocks.quantity)=6, '<6Days', if(ceiling(inventories.quantity/stocks.quantity)=7, '<7Days', if(ceiling(inventories.quantity/stocks.quantity)=8, '<8Days', '>8Days'))))))))) as category, inventories.quantity/stocks.quantity as days from
 		(
 		select kitto.inventories.material_number, kitto.materials.description, sum(kitto.inventories.lot) as quantity from kitto.inventories left join kitto.materials on kitto.materials.material_number = kitto.inventories.material_number where kitto.materials.location in (".$request->get('location').") group by kitto.inventories.material_number, kitto.materials.description
 		) as inventories

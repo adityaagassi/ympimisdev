@@ -513,7 +513,7 @@
 					},
 
 					title: {
-						text: 'Shipment Progress',
+						text: 'Shipment Progress By Production',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'

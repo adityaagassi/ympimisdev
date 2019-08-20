@@ -32,9 +32,23 @@
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<input type="hidden" id="location" value="{{ $location }}">
 	<div class="row">
+		<div class="col-xs-12" style="padding-bottom: 5px;">
+			<div class="row">
+				<div class="col-xs-2" style="padding-right: 0;">
+					<select class="form-control select2" multiple="multiple" id='locs' data-placeholder="Select Products" style="width: 100%;">
+						@foreach($locs as $loc)
+						<option value="{{$loc}}">{{ trim($loc, "'")}}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-info" onclick="fillChart()">Update Chart</button>
+				</div>
+			</div>
+		</div>
 		<div class="col-xs-12">
-			<input type="hidden" id="location" value="{{ $location }}">
 			<div id="container" style="height: 690px;"></div>
 		</div>
 	</div>
@@ -83,6 +97,8 @@
 	});
 
 	jQuery(document).ready(function(){
+		$('#locs').val('');
+		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 10000);
 	});
@@ -310,8 +326,12 @@
 	}
 
 	function fillChart(){
+		var location = $('#location').val();
+		if($('#locs').val() != ""){
+			location = $('#locs').val().toString();
+		}
 		var data = {
-			location : $('#location').val(),
+			location : location,
 		}
 		$.get('{{ url("fetch/initial/stock_monitoring") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -369,7 +389,6 @@
 								}
 							},
 							animation: false,
-							// minPointLength: 2,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
@@ -405,8 +424,12 @@
 		$('#loading').show();
 		$('#modalDetailTitle').html("");
 		$('#tableDetail').hide();
+		var location = $('#location').val();
+		if($('#locs').val() != ""){
+			location = $('#locs').val().toString();
+		}
 		var data = {
-			location : $('#location').val(),
+			location : location,
 			category:category
 		}
 		$.get('{{ url("fetch/initial/stock_monitoring_detail") }}', data, function(result, status, xhr){
