@@ -70,10 +70,10 @@
 			<table style="width: 100%;" border="1">
 				<tbody>
 					<tr>
-						<td style="width: 1%; font-weight: bold; background-color: rgb(220,220,220);">Model</td>
-						<td id="model" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
-						<td style="width: 1%; font-weight: bold; background-color: rgb(220,220,220);">Key</td>
-						<td id="key" style="width: 3%; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
+						<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Model</td>
+						<td id="model" style="width: 4%; font-size: 18px; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
+						<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Key</td>
+						<td id="key" style="width: 4%; font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"></td>
 						<input type="hidden" id="material_tag">
 						<input type="hidden" id="material_number">
 						<input type="hidden" id="material_quantity">
@@ -86,16 +86,7 @@
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 				<thead>
 					<tr>
-						<th style="width:1%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Operator</th>					
-					</tr>
-					<tr>
-						<th style="width: 3%; background-color: #fffcb7; text-align: center; color: #000000; font-size: 1vw;" id="op">-</th>
-					</tr>
-				</thead>
-			</table>
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
-				<thead>
-					<tr>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Operator</th>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Result</th>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Not Good</th>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate</th>
@@ -103,6 +94,7 @@
 				</thead>
 				<tbody>
 					<tr>
+						<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-weight: bold; font-size:1vw;" id="op">-</td>
 						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="result">0</td>
 						<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="notGood">0</td>
 						<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="ngRate">0%</td>
@@ -198,7 +190,7 @@
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
 						$('#modalOperator').modal('hide');
-						$('#op').html(result.employee.employee_id+' '+result.employee.name);
+						$('#op').html(result.employee.employee_id+'<br>'+result.employee.name.split(' ')[0]+' '+result.employee.name.split(' ')[1]);
 						$('#employee_id').val(result.employee.employee_id);
 						fillResult();
 						$('#tag').focus();

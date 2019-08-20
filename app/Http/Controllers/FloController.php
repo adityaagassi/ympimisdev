@@ -177,7 +177,7 @@ class FloController extends Controller
 		}
 
 		if(strlen($request->get('material_number')) > 0){
-			$flo_detailsTable = $flo_detailsTable->where('shipment_schedules.material_number', '=', $request->get('material_number'));
+			$flo_detailsTable = $flo_detailsTable->where('flo_details.material_number', '=', $request->get('material_number'));
 		}
 
 		if(strlen($request->get('serial_number')) > 0){

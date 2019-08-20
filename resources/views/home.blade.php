@@ -145,18 +145,45 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">WIP Monitoring (仕掛品監視)</span>
+                            <span style="font-weight: bold;">INITIAL Process (イニシアル工程)</span>
                             <br>
-                            <a href="{{ url("/index/process_assy_fl") }}">
-                                <i class="fa fa-caret-right"></i> FL Subassy-Assembly (フルート仮組~組立)
+                            <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
+                                <i class="fa fa-caret-right"></i> M-PRO Stock Monitoring (部品加工の仕掛品監視)
                             </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">WELDING Process (溶接工程)</span>
+                            <br>
+                            <a href="{{ url("") }}">
+                                <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">MIDDLE Process (中間工程)</span>
                             <br>
                             <a href="{{ url("/index/process_middle_sx") }}">
-                                <i class="fa fa-caret-right"></i> SX Surface Treatment (サックス表面処理)
+                                <i class="fa fa-caret-right"></i> Saxophone (サックス表面処理)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/middle/stock_monitoring") }}">
+                                <i class="fa fa-caret-right"></i>Middle Stock Monitoring (中間工程の仕掛品監視)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">FINAL Process (最終工程)</span>
+                            <br>
+                            <a href="{{ url("/index/process_assy_fl") }}">
+                                <i class="fa fa-caret-right"></i> Flute (フルート仮組~組立)
                             </a>
                             <br>
                             <a href="{{ url("/index/Pianica") }}">
-                                <i class="fa fa-caret-right"></i> PN Assembly (ピアニカ組立)
+                                <i class="fa fa-caret-right"></i> Pianica (ピアニカ組立)
                             </a>
                         </td>
                     </tr>

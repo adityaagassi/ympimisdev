@@ -108,6 +108,7 @@ Route::get('index/report/grade', 'EmployeeController@indexReportGrade');
 Route::get('index/report/department', 'EmployeeController@indexReportDepartment');
 Route::get('index/report/jabatan', 'EmployeeController@indexReportJabatan');
 Route::get('fetch/report/stat', 'EmployeeController@fetchReport');
+Route::get('fetch/report/detail_stat', 'EmployeeController@detailReport');
 Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 
 //OVERTIME
@@ -118,6 +119,8 @@ Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData')
 Route::get('fetch/report/overtime_data', 'OvertimeController@fetchOvertimeData');
 Route::get('index/report/overtime_outsource', 'OvertimeController@indexReportOutsouce');
 Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchOvertimeOutsource');
+Route::get('index/report/overtime_outsource_data', 'OvertimeController@indexOvertimeOutsource');
+Route::get('fetch/report/overtime_data_outsource', 'OvertimeController@fetchOvertimeDataOutsource');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -469,6 +472,8 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::post('post/middle_return/return_inventory', 'MiddleProcessController@postReturnInventory');
 	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
+
+
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
@@ -490,6 +495,14 @@ Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddl
 Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
 Route::get('index/middle/barrel_log', 'MiddleProcessController@indexBarrelLog');
 Route::get('fetch/middle/barrel_log', 'MiddleProcessController@fetchBarrelLog');
+Route::get('index/middle/stock_monitoring', 'MiddleProcessController@indexStockMonitoring');
+
+Route::group(['nav' => 'S19', 'middleware' => 'permission'], function(){
+
+});
+Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');
+Route::get('fetch/initial/stock_monitoring', 'InitialProcessController@fetchStockMonitoring');
+Route::get('fetch/initial/stock_monitoring_detail', 'InitialProcessController@fetchStockMonitoringDetail');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');
