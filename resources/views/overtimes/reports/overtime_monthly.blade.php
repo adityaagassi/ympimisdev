@@ -491,10 +491,8 @@ function modalTampil(costCenter, date) {
     }
 
     $('#tgl').datepicker({
-     <?php $tgl_max = date('d-m-Y') ?>
      autoclose: true,
      format: "dd-mm-yyyy",
-     endDate: '<?php echo $tgl_max ?>',
    });
 
     function openSuccessGritter(title, message){
