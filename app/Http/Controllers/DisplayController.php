@@ -70,7 +70,7 @@ class DisplayController extends Controller
 	public function fetchStuffingProgress(Request $request){
 
 		if ($request->get('date') == "") {
-			$now = date('Y-m-d',strtotime('2019-08-14'));
+			$now = date('Y-m-d');
 		} else {
 			$now = $request->get('date');
 		}
