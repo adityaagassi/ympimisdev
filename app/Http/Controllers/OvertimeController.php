@@ -74,6 +74,13 @@ class OvertimeController extends Controller
 			'title_jp' => '??'))->with('page', 'Overtime Outsource Employee');
 	}
 
+	public function indexOvertimeOutsource()
+	{
+		return view('overtimes.reports.overtime_data_outsource', array(
+			'title' => 'Overtime Outsource Data',
+			'title_jp' => '??'))->with('page', 'Overtime Outsource');
+	}
+
 	public function indexPrint($id)
 	{
 		$ot = Overtime::leftJoin("overtime_details","overtimes.overtime_id","=","overtime_details.overtime_id")
@@ -108,7 +115,7 @@ class OvertimeController extends Controller
 		$department = db::select("select child_code from organization_structures where remark = '".'department'."'");
 		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
 
-		return view('employees.report.overtime_data', array(
+		return view('overtime.report.overtime_data', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'cost_centers' => $cost_center,
@@ -271,7 +278,7 @@ class OvertimeController extends Controller
 			on sec.parent_name = dep.status
 			join (SELECT child_code, status FROM `organization_structures` where remark='division') divs
 			on divs.status = dep.parent_name
-			where sec.child_code = 'secretary admin'");
+			where sec.child_code = '".$request->get('section')."'");
 
 		$section = $request->get('section');
 		$sub_section = $request->get('sub_section');
@@ -1412,19 +1419,45 @@ public function indexPrintHead(Request $request)
 }
 
 public function fetchOvertimeOutsource(Request $request)
-{
+{	
+	$tgl = $request->get('bulan');
 
-	$ot_outsource_q = "select dt.bulan, emp_os.nik, emp_os.namaKaryawan, COALESCE(jam,0) jam from (select DATE_FORMAT(week_date,'%Y-%m') as bulan from ympimis.weekly_calendars where fiscal_year = '".$request->get("fy")."' group by DATE_FORMAT(week_date,'%Y-%m') order by week_date ASC) as dt
-	cross join (select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp_os
-	left join (select DATE_FORMAT(tanggal,'%Y-%m') bulan, nik, SUM(IF(status = 0,jam, final)) jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot 
+	$ot_outsource_q = "select DAY(cal.week_date) tanggal, emp.nik, namaKaryawan, COALESCE(jam,0) jam, reason from (select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp
+	cross join (select week_date from ympimis.weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$tgl."') as cal
+	left join (
+	select tanggal, nik, SUM(IF(status = 0,jam, final)) jam, GROUP_CONCAT(keperluan) reason from over_time left join over_time_member on over_time.id = over_time_member.id_ot 
 	where deleted_at is null and jam_aktual = 0 and nik like 'os%'
-	group by nik, DATE_FORMAT(tanggal,'%Y-%m')) ovr on ovr.nik = emp_os.nik and ovr.bulan = dt.bulan";
+	group by nik, tanggal 
+) ovr on ovr.nik = emp.nik and ovr.tanggal = cal.week_date";
 
-	$ot_outsource = db::connection('mysql3')->select($ot_outsource_q);
+$ot_outsource = db::connection('mysql3')->select($ot_outsource_q);
+
+$response = array(
+	'status' => true,
+	'datas' => $ot_outsource
+);
+return Response::json($response);
+}
+
+public function fetchOvertimeDataOutsource(Request $request)
+{
+	$dateto = date('Y-m-d');
+	$datefrom = $request->get('datefrom');
+
+	if ($request->get('dateto') != "") {
+		$dateto = $request->get('dateto');
+	}
+
+	$query = "select ovr.tanggal, ovr.nik, karyawan.namaKaryawan, jam, reason from (select tanggal, nik, SUM(IF(status = 0,jam, final)) jam, GROUP_CONCAT(keperluan) reason from over_time left join over_time_member on over_time.id = over_time_member.id_ot 
+	where deleted_at is null and jam_aktual = 0 and nik like 'os%'
+	group by nik, tanggal) ovr
+	left join karyawan on ovr.nik = karyawan.nik";
+
+	$os_ot = db::connection('mysql3')->select($query);
 
 	$response = array(
 		'status' => true,
-		'datas' => $ot_outsource
+		'datas' => $os_ot
 	);
 	return Response::json($response);
 }

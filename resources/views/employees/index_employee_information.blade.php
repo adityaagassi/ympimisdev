@@ -31,6 +31,7 @@
 			<a href="{{ url("index/report/overtime_section")}}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">by Section</a>
 			<a href="http://172.17.128.4/myhris/management/ot_report2" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">by Employee</a>
 			<a href="{{ url("index/report/overtime_data") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Data</a>
+			<a href="{{ url("index/report/overtime_outsource_data") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Outsource Data</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Attendance Information<i class="fa fa-angle-double-down"></i></span>

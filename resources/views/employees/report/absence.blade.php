@@ -1,15 +1,62 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-@endsection
+<style type="text/css">
+
+  .morecontent span {
+    display: none;
+  }
+  .morelink {
+    display: block;
+  }
+
+  thead>tr>th{
+    text-align:center;
+    overflow:hidden;
+    padding: 3px;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  th:hover {
+    overflow: visible;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+    vertical-align: middle;
+    padding:0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid black;
+    padding:0;
+  }
+  td{
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .dataTable > thead > tr > th[class*="sort"]:after{
+    content: "" !important;
+  }
+  #queueTable.dataTable {
+    margin-top: 0px!important;
+  }
+  #loading, #error { display: none; }
+</style>
+@stop
 @section('header')
 <section class="content-header">
-	<h1>
-		Absence Data <span class="text-purple">  欠勤データ </span>
-	</h1>
-	
-	<ol class="breadcrumb">
-	</ol>
 </section>
 @endsection
 
@@ -17,99 +64,97 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div class="col-md-12">
+	<div class="row">
 		<div class="col-md-12">
-			
-		</div>
-		<div class="col-md-12">
-			<div class="nav-tabs-custom">
-				<ul class="nav nav-tabs">
-					<div class="col-md-2 pull-right">
-						<div class="input-group date">
-							<div class="input-group-addon bg-green" style="border-color: #00a65a">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+			<div class="col-md-12">
+				<div class="col-md-2 pull-right">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
 						</div>
-						<br>
+						<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
 					</div>
-					<li class="pull-right"><label>Date : </label></li>
-				</ul>
-				
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
-						<div id="tidak_ada_data"></div>
-						<div id="absence" style="width: 850pt;"></div>
-						<div id ="container" style ="margin: 0 auto"></div>
-						<br>
-						<table class="table table-striped">
-							<tr>
-								<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
-							</tr>
-							<tr></tr>
-							<tr>
-								<td>CT</td>
-								<td>: Cuti Tahunan</td>
-								<td>Sn</td>
-								<td>: Cuti Khusus Saudara Kandung Nikah</td>
-							</tr>
-							<tr>
-								<td>CK</td>
-								<td>: Cuti Khusus Lainnya</td>
-								<td>N</td>
-								<td>: Cuti Khusus Menikah</td>
-							</tr>
-							<tr>
-								<td>Im</td>
-								<td>: Istri Melahirkan</td>
-								<td>SD</td>
-								<td>: Sakit dengan Surat Dokter</td>
-							</tr>
-							<tr>
-								<td>Km</td>
-								<td>: Cuti Khusus Kematian</td>
-								<td>S</td>
-								<td>: Sakit Belum Ada Surat Dokter</td>
-							</tr>
-							<tr>
-								<td>K</td>
-								<td>: Cuti Pra-Lahir</td>
-								<td>I</td>
-								<td>: Ijin</td>
-							</tr>
-							<tr>
-								<td>M</td>
-								<td>: Cuti Pasca-Lahir</td>
-								<td>DL</td>
-								<td>: Dinas Luar</td>
-							</tr>
-							<tr>
-								<td>A</td>
-								<td>: Alpha</td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr bgcolor="#6cadc9">
-								<td>T</td>
-								<td>: Terlambat</td>
-								<td>PC</td>
-								<td>: Pulang Cepat</td>
-							</tr>
-						</table>
-					
-					</div>
-					<div class="tab-pane" id="tab_2">
-						<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
-					</div>
-
-					
-					<!-- /.tab-pane -->
+					<br>
 				</div>
-				<!-- /.tab-content -->
 			</div>
-			
-		</div>		
+			<div class="col-md-12">
+				<div class="nav-tabs-custom">
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_1">
+							<div id="tidak_ada_data"></div>
+							<div id="absence" style="width: 99%;"></div>
+							<div id ="container" style ="margin: 0 auto"></div>
+							<br>
+							<table class="table table-striped">
+								<tr>
+									<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
+								</tr>
+								<tr></tr>
+								<tr>
+									<td>CT</td>
+									<td>: Cuti Tahunan</td>
+									<td>Sn</td>
+									<td>: Cuti Khusus Saudara Kandung Nikah</td>
+								</tr>
+								<tr>
+									<td>CK</td>
+									<td>: Cuti Khusus Lainnya</td>
+									<td>N</td>
+									<td>: Cuti Khusus Menikah</td>
+								</tr>
+								<tr>
+									<td>Im</td>
+									<td>: Istri Melahirkan</td>
+									<td>SD</td>
+									<td>: Sakit dengan Surat Dokter</td>
+								</tr>
+								<tr>
+									<td>Km</td>
+									<td>: Cuti Khusus Kematian</td>
+									<td>S</td>
+									<td>: Sakit Belum Ada Surat Dokter</td>
+								</tr>
+								<tr>
+									<td>K</td>
+									<td>: Cuti Pra-Lahir</td>
+									<td>I</td>
+									<td>: Ijin</td>
+								</tr>
+								<tr>
+									<td>M</td>
+									<td>: Cuti Pasca-Lahir</td>
+									<td>DL</td>
+									<td>: Dinas Luar</td>
+								</tr>
+								<tr>
+									<td>A</td>
+									<td>: Alpha</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr bgcolor="#6cadc9">
+									<td>T</td>
+									<td>: Terlambat</td>
+									<td>PC</td>
+									<td>: Pulang Cepat</td>
+								</tr>
+							</table>
+
+						</div>
+						<div class="tab-pane" id="tab_2">
+							<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
+						</div>
+
+						
+						<!-- /.tab-pane -->
+					</div>
+					<!-- /.tab-content -->
+				</div>
+				
+			</div>		
+		</div>
 	</div>
+	
 
 	<!-- start modal -->
 	<div class="modal fade" id="myModal">
@@ -124,7 +169,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<table id="tabel_detail" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead>
+								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Tanggal</th>
 										<th>NIK</th>
@@ -151,7 +196,7 @@
 </section>
 
 
-@stop
+@endsection
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -176,8 +221,10 @@
 	});
 
 	$('.datepicker').datepicker({
+		<?php $tgl_max = date('d-m-Y') ?>
 		autoclose: true,
-		format: "dd-mm-yyyy"
+		format: "dd-mm-yyyy",
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
 	function drawChart(){
@@ -205,14 +252,15 @@
 						type: 'column'
 					},
 					title: {
-						text: titleChart
+						text: '<span style="font-size: 18pt;">Absence Data</span><br><center><span style="color: rgba(96, 92, 168);">'+ titleChart +'</center></span>',
+						useHTML: true
 					},
 					xAxis: {
 						categories: shift
 					},
 					yAxis: {
 						title: {
-							text: 'Total Absence'
+							text: 'Total Manpower'
 						}
 					},
 					legend : {
@@ -254,7 +302,7 @@
 			}else{
 				$('#absence').append().empty();
 				$('#tidak_ada_data').append().empty();
-				$('#tidak_ada_data').append('<div class="alert alert-warning alert-dismissible" data-dismiss="alert" aria-hidden="true" style="margin-right: 3.3%;margin-left: 2%"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><h4><i class="icon fa fa-warning"></i> Data Hari ini belum diupload!</h4></div>');
+				$('#tidak_ada_data').append('<br><div class="alert alert-warning alert-dismissible" data-dismiss="alert" aria-hidden="true" style="margin-right: 3.3%;margin-left: 2%"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><h4><i class="icon fa fa-warning"></i> Data Hari ini belum diupload!</h4></div>');
 			}		
 
 		});

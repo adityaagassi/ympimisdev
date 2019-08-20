@@ -1,51 +1,93 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-@endsection
+<style type="text/css">
+
+  .morecontent span {
+    display: none;
+  }
+  .morelink {
+    display: block;
+  }
+
+  thead>tr>th{
+    text-align:center;
+    overflow:hidden;
+    padding: 3px;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  th:hover {
+    overflow: visible;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid black;
+    vertical-align: middle;
+    padding:0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid black;
+    padding:0;
+  }
+  td{
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+  .dataTable > thead > tr > th[class*="sort"]:after{
+    content: "" !important;
+  }
+  #queueTable.dataTable {
+    margin-top: 0px!important;
+  }
+  #loading, #error { display: none; }
+</style>
+@stop
 @section('header')
-<section class="content-header">
-	<h1>
-		Presence Data <span class="text-purple">  出勤データ </span>
-	</h1>
-	
-	<ol class="breadcrumb">
-	</ol>
+<section class="content-header" style="padding-top: 0; padding-bottom: 0;">
+
 </section>
 @endsection
-
-
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div class="col-md-12">
+	<div class="row">
 		<div class="col-md-12">
-			
-		</div>
-		<div class="col-md-12">
-			<div class="nav-tabs-custom">
-				<ul class="nav nav-tabs">
+			<div class="col-md-12">
+				<div class="col-md-2 pull-right">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+					</div>
+					<br>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="nav-tabs-custom">
+				<!-- <ul class="nav nav-tabs">
 					<li class="active"><a href="#tab_1" data-toggle="tab">
 						By Shift 
 						<br><span class="text-purple">シフト別</span>
 					</a></li>
-					<!-- <li><a href="#tab_2" data-toggle="tab">Stat Persentase <span>(%)</span></a></li> -->
-					<div class="col-md-2 pull-right">
-						<div class="input-group date">
-							<div class="input-group-addon bg-green" style="border-color: #00a65a">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
-						</div>
-						<br>
-					</div>
-					<li class="pull-right"><label>Date : </label></li>
-				</ul>
-				
-				
+				</ul> -->
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1">
 						<div id="tidak_ada_data"></div>
-						<div id="presence" style="width: 850pt;"></div>
+						<div id="presence" style="width: 99%;"></div>
 					</div>
 					<div class="tab-pane" id="tab_2">
 						<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
@@ -53,49 +95,49 @@
 					<!-- /.tab-pane -->
 				</div>
 				<!-- /.tab-content -->
-
 			</div>
-			
 		</div>		
 	</div>
+</div>
 
-	<!-- start modal -->
-	<div class="modal fade" id="myModal">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 style="float: right;" id="modal-title"></h4>
-					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-					<br><h4 class="modal-title" id="judul_table"></h4>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<table id="tabel_detail" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead>
-									<tr>
-										<th>Tanggal</th>
-										<th>NIK</th>
-										<th>Nama karyawan</th>
-										<th>Section</th>
-										<th>Check-in</th>
-										<th>Check-out</th>
-										<th>Shift</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
-						</div>
+
+<!-- start modal -->
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 style="float: right;" id="modal-title"></h4>
+				<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+				<br><h4 class="modal-title" id="judul_table"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table id="tabel_detail" class="table table-striped table-bordered" style="width: 100%;"> 
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th>Tanggal</th>
+									<th>NIK</th>
+									<th>Nama karyawan</th>
+									<th>Section</th>
+									<th>Check-in</th>
+									<th>Check-out</th>
+									<th>Shift</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 			</div>
 		</div>
-		<!-- end modal -->
 	</div>
+	<!-- end modal -->
+</div>
 
 
 </section>
@@ -126,9 +168,10 @@
 	});
 
 	$('.datepicker').datepicker({
-		// maxDate: Date.now(),
+		<?php $tgl_max = date('d-m-Y') ?>
 		autoclose: true,
-		format: "dd-mm-yyyy"
+		format: "dd-mm-yyyy",
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
 	function drawChart(){
@@ -156,14 +199,16 @@
 						type: 'column'
 					},
 					title: {
-						text: titleChart
+						text: titleChart,
+						text: '<span style="font-size: 18pt;">Presence by Shift</span><br><center><span style="color: rgba(96, 92, 168);">'+ titleChart +'</center></span>',
+						useHTML: true
 					},
 					xAxis: {
 						categories: shift
 					},
 					yAxis: {
 						title: {
-							text: 'Total Absent'
+							text: 'Total Manpower'
 						}
 					},
 					legend : {
@@ -204,7 +249,7 @@
 			}else{
 				$('#presence').append().empty();
 				$('#tidak_ada_data').append().empty();
-				$('#tidak_ada_data').append('<div class="alert alert-warning alert-dismissible" data-dismiss="alert" aria-hidden="true" style="margin-right: 3.3%;margin-left: 2%"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><h4><i class="icon fa fa-warning"></i> Data Hari ini belum diupload!</h4></div>');
+				$('#tidak_ada_data').append('<br><div class="alert alert-warning alert-dismissible" data-dismiss="alert" aria-hidden="true" style="margin-right: 3.3%;margin-left: 2%"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><h4><i class="icon fa fa-warning"></i> Data Hari ini belum diupload!</h4></div>');
 
 			}
 

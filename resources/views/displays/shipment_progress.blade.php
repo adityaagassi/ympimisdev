@@ -522,6 +522,9 @@
 					legend:{
 						enabled: false
 					},
+					credits:{
+						enabled:false
+					},
 					xAxis: {
 						categories: xCategories,
 						type: 'category',

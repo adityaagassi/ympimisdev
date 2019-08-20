@@ -65,12 +65,13 @@
 							<div class="modal-header">
 								<h4 style="float: right;" id="modal-title"></h4>
 								<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+								<br><h4 class="modal-title" id="judul_table"></h4>
 							</div>
 							<div class="modal-body">
 								<div class="row">
 									<div class="col-md-12">
 										<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
-											<thead>
+											<thead style="background-color: rgba(126,86,134,.7);">
 												<tr>
 													<th>Employee ID</th>
 													<th>Employee Name</th>
@@ -80,7 +81,6 @@
 													<th>Sub Section</th>
 													<th>Entry Date</th>
 													<th>Employee Status</th>
-													<th>Status</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -117,6 +117,10 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('#myModal').on('hidden.bs.modal', function () {
+			$('#example2').DataTable().clear();
+		});
 
 		drawChart();
 	});
@@ -164,7 +168,7 @@
 								point: {
 									events: {
 										click: function () {
-											ShowModal(this.category);
+											ShowModal(this.category, result.ctg);
 										}
 									}
 								},
@@ -200,9 +204,87 @@
 		})
 	}
 
-	function ShowModal(name) {
+	function ShowModal(kondisi, by) {
+		tabel = $('#example2').DataTable();
+		tabel.destroy();
+
 		$("#myModal").modal("show");
-		// alert(name);
+
+		var table = $('#example2').DataTable({
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+					// text: '<i class="fa fa-print"></i> Show',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/report/detail_stat") }}",
+				"data" : {
+					kondisi : kondisi,
+					by : by
+				}
+			},
+			"columns": [
+			{ "data": "employee_id" },
+			{ "data": "name" },
+			{ "data": "division" },
+			{ "data": "department" },
+			{ "data": "section" },
+			{ "data": "sub_section" },
+			{ "data": "hire_date" },
+			{ "data": "status"}
+			]
+		});
+
+		$('#judul_table').append().empty();
+		$('#judul_table').append('<center>'+by+' '+kondisi+'<center>');
+		
 	}
 
 	function openSuccessGritter(title, message){

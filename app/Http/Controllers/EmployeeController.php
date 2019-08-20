@@ -812,7 +812,6 @@ public function indexEmployeeService()
   $title = 'Employment Services';
   $title_jp = '???';
   $emp_id = Auth::user()->username;
-  $status = true;
   
   $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
   left join 
@@ -833,11 +832,11 @@ public function indexEmployeeService()
   where employees.employee_id = '".$emp_id."'";
 
   $absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
-  (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '19014987'
+  (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
   group by DATE_FORMAT(tanggal,'%b %Y') 
   order by tanggal asc) abs
   left join (
-  select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '19014987'
+  select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
   group by DATE_FORMAT(tanggal,'%b %Y')
 ) ovr on ovr.period = abs.period";
 
@@ -845,14 +844,20 @@ $absences = db::connection('mysql3')->select($absence);
 
 $datas = db::select($query);
 
-return view('employees.service.indexEmploymentService', array(
-  'status' => $status,
-  'title' => $title,
-  'title_jp' => $title_jp,
-  'emp_id' => $emp_id,
-  'profil' => $datas,
-  'absences' => $absences
-))->with('page', 'Employment Services');
+if($datas) {
+  return view('employees.service.indexEmploymentService', array(
+    'status' => true,
+    'title' => $title,
+    'title_jp' => $title_jp,
+    'emp_id' => $emp_id,
+    'profil' => $datas,
+    'absences' => $absences
+  ))->with('page', 'Employment Services');
+} else {
+  return view('home')->with('page', 'Dashboard');
+}
+
+
 }
 // -------------------------  End Employee Service --------------------
 
@@ -926,9 +931,43 @@ else if ($request->get("ctg") == 'Report Employee by Department') {
 $response = array(
   'status' => true,
   'datas' => $emp,
+  'ctg' => $request->get("ctg")
 );
 
 return Response::json($response); 
+}
+
+public function detailReport(Request $request){
+  $kondisi = $request->get("kondisi");
+
+  if($request->get("by") == 'Report Employee by Status Kerja'){
+    $query = "select employment_logs.employee_id, employees.`name`, mutation_logs.division, mutation_logs.department, mutation_logs.section, mutation_logs.sub_section, employees.hire_date, employment_logs.`status` from employment_logs
+    LEFT JOIN mutation_logs ON employment_logs.employee_id = mutation_logs.employee_id
+    LEFT JOIN employees ON employment_logs.employee_id = employees.employee_id
+    where employees.end_date is null and employment_logs.valid_to is null and mutation_logs.valid_to is null and employment_logs.`status` = '".$kondisi."'";
+  }elseif ($request->get("by") == 'Report Employee by Department') {
+    $query = "select employment_logs.employee_id, employees.`name`, mutation_logs.division, mutation_logs.department, mutation_logs.section, mutation_logs.sub_section, employees.hire_date, employment_logs.`status` from employment_logs
+    LEFT JOIN mutation_logs ON employment_logs.employee_id = mutation_logs.employee_id
+    LEFT JOIN employees ON employment_logs.employee_id = employees.employee_id
+    where employees.end_date is null and employment_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department = '".$kondisi."'";
+  }elseif ($request->get("by") == 'Report Employee by Grade') {
+    $query = "select employment_logs.employee_id, employees.`name`, mutation_logs.division, mutation_logs.department, mutation_logs.section, mutation_logs.sub_section, employees.hire_date, employment_logs.`status` from employment_logs
+    LEFT JOIN mutation_logs ON employment_logs.employee_id = mutation_logs.employee_id
+    LEFT JOIN employees ON employment_logs.employee_id = employees.employee_id
+    LEFT JOIN promotion_logs ON employment_logs.employee_id = promotion_logs.employee_id
+    where employees.end_date is null and employment_logs.valid_to is null and mutation_logs.valid_to is null and promotion_logs.valid_to is null and promotion_logs.grade_code = '".$kondisi."'";
+  }elseif ($request->get("by") == 'Report Employee by Jabatan') {
+    $query = "select employment_logs.employee_id, employees.`name`, mutation_logs.division, mutation_logs.department, mutation_logs.section, mutation_logs.sub_section, employees.hire_date, employment_logs.`status` from employment_logs
+    LEFT JOIN mutation_logs ON employment_logs.employee_id = mutation_logs.employee_id
+    LEFT JOIN employees ON employment_logs.employee_id = employees.employee_id
+    LEFT JOIN promotion_logs ON employment_logs.employee_id = promotion_logs.employee_id
+    where employees.end_date is null and employment_logs.valid_to is null and mutation_logs.valid_to is null and promotion_logs.valid_to is null and promotion_logs.position = '".$kondisi."'";
+  }
+
+  $detail = db::select($query);
+
+  return DataTables::of($detail)->make(true);
+
 }
 
 public function exportBagian()
@@ -1072,7 +1111,9 @@ catch (QueryException $e){
 //------------- Start DailyAttendance
 public function indexDailyAttendance()
 {
-  return view('employees.report.daily_attendance');
+  return view('employees.report.daily_attendance',array(
+    'title' => 'Attendance Rate',
+    'title_jp' => '出勤率'))->with('page', 'Daily Attendance');
 }
 
 public function fetchDailyAttendance(Request $request){
@@ -1088,7 +1129,7 @@ public function fetchDailyAttendance(Request $request){
   $attendanceData = db::connection('mysql3')->select($queryAttendance);
 
   $tgl = '01-'.$tgl;
-  $titleChart = 'Attendance in '.date("F Y", strtotime($tgl));
+  $titleChart = date("F Y", strtotime($tgl));
 
 
   $response = array(
@@ -1116,7 +1157,9 @@ public function detailDailyAttendance(Request $request){
 //------------- Start Presence
 public function indexPresence()
 {
-  return view('employees.report.presence');
+  return view('employees.report.presence', array(
+    'title' => 'Presence',
+    'title_jp' => '出勤'))->with('page', 'Presence Data');
 }
 
 public function fetchPresence(Request $request)
@@ -1130,7 +1173,7 @@ public function fetchPresence(Request $request)
   $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift  REGEXP '^[1-9]+$' GROUP BY shift";
 
   $presence = db::connection('mysql3')->select($query);
-  $titleChart = "Presence in ".date('j F Y',strtotime($request->get("tgl")));
+  $titleChart = date('j F Y',strtotime($tgl));
 
   $response = array(
     'status' => true,
@@ -1158,7 +1201,9 @@ public function detailPresence(Request $request){
 //------------- Start Absence
 public function indexAbsence()
 {
-  return view('employees.report.absence');
+  return view('employees.report.absence',array(
+    'title' => 'Absence',
+    'title_jp' => '欠勤'))->with('page', 'Absence Data');
 }
 
 public function fetchAbsence(Request $request)
@@ -1172,7 +1217,7 @@ public function fetchAbsence(Request $request)
   $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
 
   $absence = db::connection('mysql3')->select($query);
-  $titleChart = "Absence in ".date('j F Y',strtotime($request->get("tgl")));
+  $titleChart = date('j F Y',strtotime($tgl));
 
   $response = array(
     'status' => true,
