@@ -84,6 +84,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
+		setInterval(fillChart, 10000);
 	});
 
 	Highcharts.createElement('link', {
