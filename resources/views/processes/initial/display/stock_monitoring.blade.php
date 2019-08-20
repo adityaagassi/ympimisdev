@@ -291,6 +291,24 @@
 	};
 	Highcharts.setOptions(Highcharts.theme);
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+	
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
 	function fillChart(){
 		var data = {
 			location : $('#location').val(),
@@ -315,7 +333,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Last Update: ',
+						text: 'Last Update: '+getActualFullDate(),
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'

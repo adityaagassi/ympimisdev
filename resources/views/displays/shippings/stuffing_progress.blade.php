@@ -88,12 +88,19 @@
 		setInterval(fillTable, 10000);
 	});
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
 	$.time = function(dateObject) {
 		var d = new Date(dateObject);
 
-		var h = d.getHours();
-		var i = d.getMinutes() + 1;
-		var s = d.getSeconds();
+		var h = addZero(d.getHours());
+		var i = addZero(d.getMinutes() + 1);
+		var s = addZero(d.getSeconds());
 
 		var time = h + ":" + i + ":" + s;
 
