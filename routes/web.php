@@ -19,8 +19,6 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('tes', 'TrialController@tes');
 
-
-
 Route::get('/trial', function () {
 	return view('trial');
 });
@@ -135,7 +133,7 @@ Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlR
 Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
-Route::get('index/employee/service', 'EmployeeController@indexEmployeeService');
+Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
 Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
 Route::get('fetch/cc/budget', 'OvertimeController@fetchCostCenterBudget');
 Route::get('fetch/chart/control/detail', 'OvertimeController@overtimeDetail');
@@ -820,4 +818,6 @@ Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingPr
 
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
-Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');
+
+//DISPLAY STUFFING MONITORING
+Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffingMonitoring');

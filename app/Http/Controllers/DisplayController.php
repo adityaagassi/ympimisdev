@@ -38,6 +38,17 @@ class DisplayController extends Controller
 		))->with('page', 'Display Stuffing Time')->with('head', 'Display');
 	}
 
+	public function indexStuffingMonitoring()
+	{
+		$title = 'Container Stuffing Monitoring';
+		$title_jp = 'コンテナ荷積み監視';
+
+		return view('displays.shippings.stuffing_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display Stuffing Monitoring')->with('head', 'Display');
+	}
+
 	public function indexShipmentProgress(){
 		return view('displays.shipment_progress')->with('page', 'Display Shipment Result')->with('head', 'Display');
 	}
@@ -59,7 +70,7 @@ class DisplayController extends Controller
 	public function fetchStuffingProgress(Request $request){
 
 		if ($request->get('date') == "") {
-			$now = date('Y-m-d');
+			$now = date('Y-m-d',strtotime('2019-08-14'));
 		} else {
 			$now = $request->get('date');
 		}
