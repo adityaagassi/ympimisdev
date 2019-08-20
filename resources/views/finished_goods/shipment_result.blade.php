@@ -32,7 +32,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Shipment Result <span class="text-purple">出荷結果</span>
+		Finished Goods Achievement For Shipment <span class="text-purple">出荷用の完成品生産高</span>
 		<small>Based on ETD YMPI <span class="text-purple">YMPIのETDベース</span></small>
 	</h1>
 	<ol class="breadcrumb" id="last_update">

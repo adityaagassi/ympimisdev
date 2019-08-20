@@ -513,7 +513,7 @@
 					},
 
 					title: {
-						text: 'Shipment Progress By Production',
+						text: 'Finished Goods Achievement For Shipment Progress',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
