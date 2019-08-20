@@ -32,7 +32,8 @@
 						<th style="width: 4%; border:1px solid black;">Plan</th>
 						<th style="width: 4%; border:1px solid black;">Actual</th>
 						<th style="width: 4%; border:1px solid black;">Diff</th>
-						<th style="width: 2%; border:1px solid black;">Time</th>
+						<th style="width: 2%; border:1px solid black;">Start</th>
+						<th style="width: 2%; border:1px solid black;">Finish</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -62,6 +63,11 @@
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->total_actual-$col->total_plan}}</td>
 						<?php if($col->start_stuffing != null ){ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{date('H:i:s', strtotime($col->start_stuffing))}}</td>
+						<?php }else{ ?>
+						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
+						<?php } ?>
+						<?php if($col->start == 'DEPARTED' ){ ?>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{date('H:i:s', strtotime($col->finish_stuffing))}}</td>
 						<?php }else{ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
 						<?php } ?>

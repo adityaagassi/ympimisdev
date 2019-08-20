@@ -37,7 +37,7 @@ class MiddleProcessController extends Controller
 
 	public function indexStockMonitoring(){
 		$title = 'Middle Process Stock Monitoring';
-		$title_jp = '';
+		$title_jp = '中間工程の在庫監視';
 		return view('processes.middle.display.stock_monitoring', array(
 			'title' => $title,
 			'title_jp' => $title_jp
