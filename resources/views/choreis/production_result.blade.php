@@ -112,10 +112,26 @@
 					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">EI Weekly Shipment<br><span class="text-purple">EI週次出荷</span></a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
+					<div class="tab-pane active" id="tab_1" style="height: 560px;">
+						<div class="col-md-12">
+							<div class="progress-group" id="progress_div">
+								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production1" style="font-size: 12px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production1" style="height: 30px; padding-top: 4px;"></div>
+								</div>
+							</div>
+						</div>
 						<div id="container1" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_2">
+					<div class="tab-pane" id="tab_2" style="height: 570px;">
+						<div class="col-md-12">
+							<div class="progress-group" id="progress_div">
+								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production2" style="font-size: 12px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production2" style="height: 30px; padding-top: 4px;"></div>
+								</div>
+							</div>
+						</div>
 						<div id="container2" style="width:100%; height:530px;"></div>
 					</div>
 					<div class="tab-pane" id="tab_3">
@@ -124,7 +140,15 @@
 					{{-- <div class="tab-pane" id="tab_4">
 						<div id="container4" style="width:100%; height:520px;"></div>
 					</div> --}}
-					<div class="tab-pane" id="tab_5">
+					<div class="tab-pane" id="tab_5" style="height: 570px;">
+						<div class="col-md-12">
+							<div class="progress-group" id="progress_div">
+								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production3" style="font-size: 12px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production3" style="height: 30px; padding-top: 4px;"></div>
+								</div>
+							</div>
+						</div>
 						<div id="container5" style="width:100%; height:530px;"></div>
 					</div>
 					<div class="tab-pane" id="tab_6">
@@ -323,6 +347,11 @@
 		}
 
 		function fillChart(id){
+			var now = new Date();
+			var now_tgl = addZero(now.getFullYear())+'-'+addZero(now.getMonth()+1)+'-'+addZero(now.getDate());
+			var req = new Date(id);
+			var req_tgl = addZero(req.getFullYear())+'-'+addZero(req.getMonth()+1)+'-'+addZero(req.getDate());
+
 			if(id != 0){
 				$('#dateHidden').val(id);
 			}
@@ -330,12 +359,64 @@
 			var data = {
 				date:date,
 			};
+
 			$.get('{{ url("fetch/daily_production_result") }}', data, function(result, status, xhr){
 				console.log(status);
 				console.log(result);
 				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
+						for (var i = 1; i < 4; i++) {
+							if(now_tgl == req_tgl){
+								if(now.getHours() < 7){
+									$('#progress_bar_production'+i).append().empty();
+									$('#progress_text_production'+i).html("Today's Working Time : 0%");
+									$('#progress_bar_production'+i).css('width', '0%');
+									$('#progress_bar_production'+i).css('color', 'white');
+									$('#progress_bar_production'+i).css('font-weight', 'bold');
+								}
+								else if(now.getHours() >= 16){
+									$('#progress_text_production'+i).append().empty();
+									$('#progress_bar_production'+i).html("Today's Working Time : 100%");
+									$('#progress_bar_production'+i).css('width', '100%');
+									$('#progress_bar_production'+i).css('color', 'white');
+									$('#progress_bar_production'+i).css('font-weight', 'bold');
+									$('#progress_bar_production'+i).removeClass('active');
+								}
+								else{
+									$('#progress_text_production'+i).append().empty();
+									var total = 540;
+									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+									var persen = (now_menit/total) * 100;
+									if(persen > 13){
+										$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+									}
+									else{
+										$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
+									}
+									$('#progress_bar_production'+i).css('width', persen+'%');
+									$('#progress_bar_production'+i).css('color', 'white');
+									$('#progress_bar_production'+i).css('font-weight', 'bold');
+									$('#progress_bar_production'+i).addClass('active');
+								}
+							}
+							else if(now > req){
+								$('#progress_text_production'+i).append().empty();
+								$('#progress_bar_production'+i).html("Today's Working Time : 100%");
+								$('#progress_bar_production'+i).css('width', '100%');
+								$('#progress_bar_production'+i).css('color', 'white');
+								$('#progress_bar_production'+i).css('font-weight', 'bold');
+								$('#progress_bar_production'+i).removeClass('active');
+							}
+							else{
+								$('#progress_bar_production'+i).append().empty();
+								$('#progress_text_production'+i).html("Today's Working Time : 0%");
+								$('#progress_bar_production'+i).css('width', '0%');
+								$('#progress_bar_production'+i).css('color', 'white');
+								$('#progress_bar_production'+i).css('font-weight', 'bold');
+							}							
+						}
+						
 						$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 						var data = result.chartResult1;
 						var xAxis = []
