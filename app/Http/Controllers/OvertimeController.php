@@ -115,7 +115,7 @@ class OvertimeController extends Controller
 		$department = db::select("select child_code from organization_structures where remark = '".'department'."'");
 		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
 
-		return view('overtime.report.overtime_data', array(
+		return view('overtimes.reports.overtime_data', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'cost_centers' => $cost_center,
