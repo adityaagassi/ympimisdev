@@ -445,7 +445,7 @@
 					resultData += '<td>'+ value.material_number +'</td>';
 					resultData += '<td>'+ value.description +'</td>';
 					resultData += '<td>'+ value.safety.toLocaleString() +'</td>';
-					resultData += '<td>'+ value.quantity.toLocaleString() +'</td>';
+					resultData += '<td>'+ parseInt(value.quantity).toLocaleString() +'</td>';
 					resultData += '<td>'+ value.days.toFixed(2) +' Day(s)</td>';
 					resultData += '</tr>';
 					index += 1;
