@@ -98,11 +98,12 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
-		// setInterval(fillTable, 10000);
+		setInterval(fillTable, 10000);
 
 		$('#date').datepicker({
 			autoclose: true,
-			format: "yyyy-mm-dd"
+			format: "yyyy-mm-dd",
+			todayHighlight: true
 		});
 	});
 
@@ -244,12 +245,12 @@
 				alert('Attempt to retrieve data failed.');
 			}
 		});
-	}
-	function diff_minutes(dt2, dt1) 
-	{
-		var diff =(dt2.getTime() - dt1.getTime()) / 1000;
-		diff /= 60;
-		return Math.abs(Math.round(diff));
-	}
+}
+function diff_minutes(dt2, dt1) 
+{
+	var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+	diff /= 60;
+	return Math.abs(Math.round(diff));
+}
 </script>
 @endsection
