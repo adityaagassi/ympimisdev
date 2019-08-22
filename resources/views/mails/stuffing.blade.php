@@ -66,7 +66,7 @@
 						<?php }else{ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
 						<?php } ?>
-						<?php if($col->start == 'DEPARTED' ){ ?>
+						<?php if($col->stats == 'DEPARTED' ){ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{date('H:i:s', strtotime($col->finish_stuffing))}}</td>
 						<?php }else{ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
