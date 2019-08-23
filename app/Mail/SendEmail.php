@@ -44,5 +44,9 @@ class SendEmail extends Mailable
         if($this->remark == 'min_queue'){
             return $this->from('ympimis@gmail.com')->subject('MIS Kanban Queue Information')->view('mails.min_queue');
         }
+
+        if($this->remark == 'duobleserialnumber'){
+            return $this->from('ympimis@gmail.com')->subject('MIS Double Serial Number Information')->view('mails.duobleserialnumber');
+        }
     }
 }
