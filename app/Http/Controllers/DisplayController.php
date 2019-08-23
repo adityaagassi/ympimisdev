@@ -79,7 +79,7 @@ class DisplayController extends Controller
 		left join
 		(
 		select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
-		select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets
+		select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets where deleted_at is null
 		) as stuffings
 		group by id_checkSheet
 		) as actual_stuffing
@@ -92,7 +92,7 @@ class DisplayController extends Controller
 		$query2 = "select master_checksheets.stuffing_date, count(if(master_checksheets.carier = 'C1', 1, null)) as 'sea', count(if(master_checksheets.carier = 'C2', 1, null)) as 'air', count(if(master_checksheets.carier = 'C4' or master_checksheets.carier = 'TR', 1, null)) as 'truck', sum(stuffings.total_plan) as total_plan from master_checksheets
 		left join
 		(
-		select id_checkSheet, sum(qty_qty) as total_plan from detail_checksheets group by id_checkSheet
+		select id_checkSheet, sum(qty_qty) as total_plan from detail_checksheets where deleted_at is null group by id_checkSheet
 		) as stuffings 
 		on stuffings.id_checkSheet = master_checksheets.id_checkSheet where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date > '".$now."' group by master_checksheets.Stuffing_date";
 
