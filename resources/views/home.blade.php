@@ -152,7 +152,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
-                                <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の????)
+                                <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
                             </a>
                         </td>
                     </tr>
