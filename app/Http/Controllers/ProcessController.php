@@ -20,6 +20,12 @@ use App\StampInventory;
 use App\StampSchedule;
 use App\Material;
 use App\Process;
+use App\ErrorLog;
+
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class ProcessController extends Controller
 {
@@ -472,6 +478,14 @@ class ProcessController extends Controller
 		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $stamp->serial_number)
 		->where('stamp_inventories.model', '=', $stamp->model);
 
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Hapus'.$stamp->model.'-'.$stamp->serial_number, 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
 		$log_process->forceDelete();
 		$stamp_inventory->forceDelete();
 
@@ -585,7 +599,8 @@ class ProcessController extends Controller
 							'manpower' => $request->get('manPower'),
 							'quantity' => 1,
 							'created_by' => $id,
-							'created_at' => date('Y-m-d H:i:s')
+							'created_at' => date('Y-m-d H:i:s'),
+							'remark' =>$request->get('category'),
 						]
 					);
 
@@ -716,7 +731,8 @@ class ProcessController extends Controller
 							'manpower' => $request->get('manPower'),
 							'quantity' => 1,
 							'created_by' => $id,
-							'created_at' => date('Y-m-d H:i:s')
+							'created_at' => date('Y-m-d H:i:s'),
+							'remark' =>$request->get('category'),
 						]
 					);
 
@@ -1228,7 +1244,6 @@ SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_numbe
 
 
 // print saxophone
-
 public function getsnsax(Request $request)
 {
 	$sn = StampInventory::where('process_code', '=', $request->get('code'))
@@ -1243,13 +1258,16 @@ public function getsnsax(Request $request)
 	->select('model', 'serial_number')
 	->first();
 
+	$code="";
 
-	if ($sn != null) {
+	if ($sn != null) {	
+
 		$response = array(
 			'status' => true,
 			'message' => '1',
 			'model' => $sn->model,
 			'sn' => $sn->serial_number,
+
 		);
 		return Response::json($response);
 	}elseif ($sn2 != null) {
@@ -1260,10 +1278,26 @@ public function getsnsax(Request $request)
 			'sn' => $sn2->serial_number,
 		);
 		return Response::json($response);
+
 	}else{
+		$logProcess = logProcess::where('process_code', '=', '2')
+		->where('origin_group_code','=' ,$request->get('origin'))
+		->where('serial_number','=' ,$request->get('sn'))
+		->select('model', 'serial_number')
+		->first();
+
+		if ($logProcess == null) {
+			$code = "input";
+		}else{
+			$code = "update";
+			$id = Auth::id();
+			self::mailSax($request->get('sn'), $request->get('model'),$id,'2');
+		}
+
 		$response = array(
 			'status' => false,
 			'message' => 'Serial Number not registered',
+			'code' => $code,
 		);
 		return Response::json($response);
 	}
@@ -2316,5 +2350,30 @@ public function fetchStampPlanFL5(Request $request){
 }
 
 // end print label fl
+
+// email double serial sax
+
+public function mailSax($sn, $model, $id,$log){
+     $mail_to = db::table('send_emails')
+     ->where('remark', '=', 'ali')
+     ->select('email')
+     ->get();
+
+     $query = "SELECT a.*, users.`name` as user3, '".$log."' as log from (
+     SELECT serial_number, model, log_processes.updated_at, NOW() as input, '".$model."' as model2, users.`name` as user1 , '".$id."' as user2
+     from log_processes 
+     LEFT JOIN users on log_processes.created_by = users.id
+     WHERE serial_number='".$sn."' and process_code='".$log."'
+      ) a
+		 LEFT JOIN users on a.user2 = users.id";
+
+     $datas = db::select($query);
+
+     if($datas != null){
+          Mail::to('anton.budi.santoso@music.yamaha.com')->send(new SendEmail($datas, 'duobleserialnumber'));
+     }
+}
+
+//end email
 
 }
