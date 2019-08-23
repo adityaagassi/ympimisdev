@@ -12,7 +12,7 @@ class InitialProcessController extends Controller
 {
 	public function indexStockMonitoring($id){
 		$title = 'Initial Process Stock Monitoring';
-		$title_jp = 'イニシアル工程の在庫監視';
+		$title_jp = '最初工程の在庫監視';
 
 		if($id == 'mpro'){
 			$location = "'FLA0','CLA0','SXA0','VNA0'";
@@ -29,7 +29,7 @@ class InitialProcessController extends Controller
 
 	public function indexStockTrend($id){
 		$title = 'Initial Process Stock Trend';
-		$title_jp = 'イニシアル工程の????';
+		$title_jp = '最初工程の在庫トレンド';
 
 		if($id == 'mpro'){
 			$location = "'FLA0','CLA0','SXA0','VNA0'";
