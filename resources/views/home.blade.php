@@ -150,6 +150,10 @@
                             <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
                                 <i class="fa fa-caret-right"></i> M-PRO Stock Monitoring (部品加工の仕掛品監視)
                             </a>
+                            <br>
+                            <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
+                                <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の????)
+                            </a>
                         </td>
                     </tr>
                     <tr>

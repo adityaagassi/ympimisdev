@@ -134,6 +134,9 @@ Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
+Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
+Route::post('post/chat/comment', 'EmployeeController@postComment');
+Route::post('post/hrqa', 'EmployeeController@postChat');
 Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
 Route::get('fetch/cc/budget', 'OvertimeController@fetchCostCenterBudget');
 Route::get('fetch/chart/control/detail', 'OvertimeController@overtimeDetail');
@@ -495,12 +498,17 @@ Route::get('index/middle/barrel_log', 'MiddleProcessController@indexBarrelLog');
 Route::get('fetch/middle/barrel_log', 'MiddleProcessController@fetchBarrelLog');
 Route::get('index/middle/stock_monitoring', 'MiddleProcessController@indexStockMonitoring');
 
-Route::group(['nav' => 'S19', 'middleware' => 'permission'], function(){
-
+Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
+	Route::get('index/qnaHR', 'EmployeeController@indexHRQA');
+	Route::get('fetch/hr/hrqa', 'EmployeeController@fetchMasterQuestion');
+	Route::get('fetch/hr/hrqa/detail', 'EmployeeController@fetchDetailQuestion');
 });
 Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');
+Route::get('index/initial/stock_trend/{id}', 'InitialProcessController@indexStockTrend');
 Route::get('fetch/initial/stock_monitoring', 'InitialProcessController@fetchStockMonitoring');
+Route::get('fetch/initial/stock_trend', 'InitialProcessController@fetchStockTrend');
 Route::get('fetch/initial/stock_monitoring_detail', 'InitialProcessController@fetchStockMonitoringDetail');
+Route::get('fetch/initial/stock_trend_detail', 'InitialProcessController@fetchStockTrendDetail');
 
 Route::group(['nav' => 'S13', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_order/po_list', 'PurchaseOrderController@indexPoList');

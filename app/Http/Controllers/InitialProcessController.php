@@ -27,6 +27,54 @@ class InitialProcessController extends Controller
 		))->with('head', 'Initial Process');
 	}
 
+	public function indexStockTrend($id){
+		$title = 'Initial Process Stock Trend';
+		$title_jp = 'イニシアル工程の????';
+
+		if($id == 'mpro'){
+			$location = "'FLA0','CLA0','SXA0','VNA0'";
+			$locs = ["'FLA0'","'CLA0'","'SXA0'","'VNA0'"];
+		}
+
+		return view('processes.initial.display.stock_trend', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'location' => $location,
+			'locs' => $locs
+		))->with('head', 'Initial Process');
+	}
+
+	public function fetchStockTrend(Request $request){
+
+		$query = "select final_2.date_stock, final_2.category, final_2.material, round((final_2.material/total.material)*100, 2) as percentage from
+		(
+		select date_stock, category, count(material_number) as material from
+		(
+		select daily_stocks.material_number, date(daily_stocks.created_at) as date_stock, initial_safety_stocks.quantity as safety_stock, daily_stocks.quantity as actual_stock, round(daily_stocks.quantity/initial_safety_stocks.quantity,2) as stock, if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=0 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 0.4, '0 - 0.3 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2) >= 0.4 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 1, '0.3 - 1 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=1 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 2, '1 - 2 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=2 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2)<3, '2 - 3 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=3 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2)<4, '3 - 4 Days', '4 - Up Days'))))) as category from daily_stocks inner join initial_safety_stocks on initial_safety_stocks.material_number = daily_stocks.material_number and DATE_FORMAT(initial_safety_stocks.valid_date, '%Y-%m') = DATE_FORMAT(daily_stocks.created_at, '%Y-%m') where initial_safety_stocks.quantity > 0 and daily_stocks.location in (".$request->get('location').")
+		) as final group by date_stock, category
+		) as final_2
+		left join
+		(
+		select date_stock, count(material_number) as material from
+		(
+		select daily_stocks.material_number, date(daily_stocks.created_at) as date_stock from daily_stocks inner join initial_safety_stocks on initial_safety_stocks.material_number = daily_stocks.material_number and DATE_FORMAT(initial_safety_stocks.valid_date, '%Y-%m') = DATE_FORMAT(daily_stocks.created_at, '%Y-%m') where initial_safety_stocks.quantity > 0 and daily_stocks.location in (".$request->get('location').")) as final group by date_stock) as total on total.date_stock = final_2.date_stock";
+
+		$stocks = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'stocks' => $stocks,
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchStockTrendDetail(Request $request){
+
+		$query = "select daily_stocks.material_number, date(daily_stocks.created_at) as date_stock, initial_safety_stocks.quantity as safety_stock, daily_stocks.quantity as actual_stock, round(daily_stocks.quantity/initial_safety_stocks.quantity,2) as stock, if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=0 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 0.4, '0 - 0.3 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2) >= 0.4 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 1, '0.4 - 1 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=1 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2) < 2, '1.1 - 2 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=2 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2)<3, '2.1 - 3 Days', if(round(daily_stocks.quantity/initial_safety_stocks.quantity,2)>=3 and round(daily_stocks.quantity/initial_safety_stocks.quantity,2)<4, '3.1 - 4 Days', '> 4 Days'))))) as category from daily_stocks inner join initial_safety_stocks on initial_safety_stocks.material_number = daily_stocks.material_number and DATE_FORMAT(initial_safety_stocks.valid_date, '%Y-%m') = DATE_FORMAT(daily_stocks.created_at, '%Y-%m') where initial_safety_stocks.quantity > 0 and daily_stocks.location in ('CLA0', 'SXA0', 'FLA0', 'VNA0')";
+
+	}
+
 	public function fetchStockMonitoring(Request $request){
 		$now = date('Y-m');
 		$query = "select stock, category, count(material_number) as material from
