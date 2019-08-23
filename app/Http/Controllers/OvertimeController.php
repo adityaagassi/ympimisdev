@@ -810,9 +810,9 @@ public function overtimeOver(Request $request)
 	select department, count(nik) as emptblas_jam from
 	(select s.nik, department from
 	(select nik, sum(jam) jam, week_name from
-	(select tanggal, nik, sum(final) as jam, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+	(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = 'N'
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and jam_aktual = 0 and hari = 'N'
 	group by nik, tanggal) m
 	group by nik, week_name) s
 	left join 
@@ -833,9 +833,9 @@ public function overtimeOver(Request $request)
 	select employee.department, count(c.nik) as tiga_patblas_jam from 
 	( select z.nik from 
 	( select d.nik from
-	(select tanggal, nik, sum(final) as jam from ftm.over_time
+	(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam from ftm.over_time
 	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = 'N'
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and jam_aktual = 0 and hari = 'N'
 	group by nik, tanggal) d 
 	where jam > 3
 	group by d.nik ) z
@@ -844,9 +844,9 @@ public function overtimeOver(Request $request)
 
 	(select s.nik from
 	(select nik, sum(jam) jam, week_name from
-	(select tanggal, nik, sum(final) as jam, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+	(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = 'N'
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and jam_aktual = 0 and hari = 'N'
 	group by nik, tanggal) m
 	group by nik, week_name) s
 	where jam > 14
@@ -867,9 +867,9 @@ public function overtimeOver(Request $request)
 	(
 	select department, count(nik) as limanam_jam from
 	( select d.nik, sum(jam) as jam, employee.department from
-	(select tanggal, nik, sum(final) as jam from ftm.over_time
+	(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam from ftm.over_time
 	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = 'N'
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and jam_aktual = 0 and hari = 'N'
 	group by nik, tanggal) d
 	left join 
 	(
@@ -959,25 +959,25 @@ public function overtimeReportDetail(Request $request)
 	if($ctg == '3 hour(s) / day'){
 		$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, `group` from
 		(select d.nik, round(avg(jam),2) as avg from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
-		group by nik, tanggal, hari) d 
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
+	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+	group by nik, tanggal, hari) d 
 		where jam > 3
 		group by d.nik ) s
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = s.nik
 		where department = "'.$department.'"';
 		
 
 		$lebih_detail = 'select d.nik, jam, null week_name, keperluan, tanggal from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, group_concat(keperluan) as keperluan from ftm.over_time
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, group_concat(keperluan) as keperluan from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 		group by nik, tanggal, hari) d 
 		where jam > 3';
 
@@ -986,15 +986,15 @@ public function overtimeReportDetail(Request $request)
 	if($ctg == '14 hour(s) / week'){
 		$query = 'SELECT s.nik, avg(jam) as avg, name, section, department, `group` from
 		(select nik, sum(jam) jam, week_name from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 		group by nik, tanggal, hari) m
 		group by nik, week_name) s
 		left join employees on employees.employee_id = s.nik
 		left join 
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" 
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null" 
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = s.nik
 		where jam > 14 and department = "'.$department.'"
@@ -1006,9 +1006,9 @@ public function overtimeReportDetail(Request $request)
 	if($ctg == '3 & 14 hour(s) / week'){
 		$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
 		( select d.nik, round(avg(jam),2) as avg from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 		group by nik, tanggal, hari) d 
 		where jam > 3
 		group by d.nik ) z
@@ -1017,9 +1017,9 @@ public function overtimeReportDetail(Request $request)
 
 		( select s.nik, avg(jam) as avg from
 		(select nik, sum(jam) jam, week_name from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 		group by nik, tanggal, hari) m
 		group by nik, week_name) s
 		where jam > 14
@@ -1028,7 +1028,7 @@ public function overtimeReportDetail(Request $request)
 		left join employees on employees.employee_id = c.nik
 		left join
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = c.nik
 		where department = "'.$department.'"';
@@ -1039,16 +1039,16 @@ public function overtimeReportDetail(Request $request)
 		$query = 'select semua.nik, employees.name, department, section, `group`, avg from
 		(select c.nik, c.jam as avg from
 		(select d.nik, sum(jam) as jam from
-		(select tanggal, nik, sum(final) as jam, ftm.over_time.hari from ftm.over_time
+		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
 		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = "N"
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
 		group by nik, tanggal, hari) d
 		group by d.nik) c
 		where jam > 56) semua
 		left join employees on employees.employee_id = semua.nik
 		left join
 		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'"
+		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = semua.nik
 		where department = "'.$department.'"';

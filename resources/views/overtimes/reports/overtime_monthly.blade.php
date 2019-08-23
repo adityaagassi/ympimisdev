@@ -200,7 +200,9 @@
 		$('body').toggleClass("sidebar-collapse");
 
 		drawChart();
-	});
+
+    setInterval(drawChart, 3000);
+});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
