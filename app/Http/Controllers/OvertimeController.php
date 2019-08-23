@@ -787,9 +787,9 @@ public function overtimeOver(Request $request)
 	left join
 	( select department, count(nik) tiga_jam from (
 	select d.nik, karyawan.department from
-	(select tanggal, nik, sum(final) as jam from ftm.over_time
+	(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam from ftm.over_time
 	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and ftm.over_time_member.status = 1 and hari = 'N'
+	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, '%Y-%m') = '".$tanggal."' and nik IS NOT NULL and jam_aktual = 0 and hari = 'N'
 	group by nik, tanggal) d 
 	left join 
 	(
