@@ -524,6 +524,9 @@
 
 					}
 					else{
+
+					if (result.code =="input") {
+
 						$('#snmodel').val('Not Found');
 						$('#btnprint').prop('disabled',true);
 						//modal
@@ -531,6 +534,16 @@
 						$('#btnprintmodal').css({'display':'block'});
 						$('#btnprintmodal').prop('disabled',false);
 						$('#btnprint2').css({'display':'none'});
+					}else{
+						$('#snmodel').val('SN Double');
+						$('#btnprint').prop('disabled',true);
+						//modal
+						$('#btnprint').css({'display':'none'});
+						$('#btnprintmodal').css({'display':'none'});
+						$('#btnprintmodal').prop('disabled',true);
+						$('#btnprint2').css({'display':'none'});
+						// alert("Serial Number Double");
+					}
 
 					}
 				}
