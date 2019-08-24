@@ -15,6 +15,8 @@ use App\Position;
 use App\CostCenter;
 use App\PromotionLog;
 use App\Mutationlog;
+use App\HrQuestionLog;
+use App\HrQuestionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -75,6 +77,19 @@ class EmployeeController extends Controller
   public function indexEmployeeInformation()
   {
     return view('employees.index_employee_information');
+  }
+
+  public function indexHRQA()
+  {
+
+    $notif = '
+    <span class="pull-right-container">
+    <span class="label label-danger pull-right">4</span>
+    </span>';
+
+    return view('employees.master.hrquestion', array(
+      'title' => 'Question & Answer',
+      'title_jp' => '??'))->with('page', 'qna')->with('notif', $notif);
   }
 
   public function updateEmp($id){
@@ -856,8 +871,56 @@ if($datas) {
 } else {
   return view('home')->with('page', 'Dashboard');
 }
+}
 
+public function fetchChat(Request $request)
+{
+  $data = HrQuestionLog::leftJoin('hr_question_details','hr_question_details.message_id','=','hr_question_logs.id')
+  ->where('hr_question_logs.created_by','=' , $request->get('employee_id'))
+  ->select('hr_question_logs.id', 'hr_question_logs.message', 'hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), db::raw('hr_question_details.message as message_detail'), db::raw('hr_question_details.created_by as dari'), db::raw('hr_question_details.created_at as reply_date'))
+  ->orderBy('hr_question_logs.updated_at','desc')
+  ->get();
 
+  $response = array(
+    'status' => true,
+    'chats' => $data,
+  );
+
+  return Response::json($response); 
+}
+
+public function postChat(Request $request)
+{
+  $quest = new HrQuestionLog([
+    'message' => $request->get('message'),
+    'category' =>  $request->get('category'),
+    'created_by' => Auth::user()->username
+  ]);
+
+  $quest->save();
+
+  $response = array(
+    'status' => true
+  );
+
+  return Response::json($response); 
+}
+
+public function postComment(Request $request)
+{
+  $questDetail = new HrQuestionDetail([
+    'message' => $request->get('message'),
+    'message_id' =>  $request->get('id'),
+    'created_by' => $request->get("from")
+  ]);
+
+  $questDetail->save();
+
+  $response = array(
+    'status' => true
+  );
+
+  return Response::json($response); 
 }
 // -------------------------  End Employee Service --------------------
 
@@ -1240,7 +1303,43 @@ public function detailAbsence(Request $request){
 
   return DataTables::of($detail)->make(true);
 }
-//------------- End Absence
+
+
+public function fetchMasterQuestion(Request $request)
+{
+  $filter = $request->get("filter");
+
+  $getQuestion = HrQuestionLog::select('message','category', 'created_at', db::raw('date_format(created_at, "%b %d, %H:%i") as created_at_new'), 'created_by')
+  ->whereRaw('id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
+
+  if($filter != "") {
+    $getQuestion = $getQuestion->whereRaw('created_by like "%'.$filter.'%"');
+  }
+
+  $getQuestion = $getQuestion->orderBy('created_at')
+  ->get();
+
+  $response = array(
+    'status' => true,
+    'question' => $getQuestion
+  );
+  return Response::json($response);
+}
+
+public function fetchDetailQuestion(Request $request)
+{
+  $getQuestionDetail = HrQuestionLog::select('message','category', 'created_at', 'created_by')
+  ->where('created_by','=',$request->get('employee_id'))
+  ->orderBy('created_at','desc')
+  ->get();
+
+  $response = array(
+    'status' => true,
+    'questionDetails' => $getQuestionDetail
+  );
+  return Response::json($response);
+}
+//------------- End Absence ------
 
 
 }

@@ -262,81 +262,88 @@
   </li>
   @endif
 
-  @if(in_array('S18', $navs))
+  @if(in_array('S17', $navs))
   @if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
     <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
   </li>
   @endif
 
-  @if(in_array('S18', $navs))
-  @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
-    <a href="#">
-      <i class="fa fa-tv"></i> <span>NG-Rate</span>
-     <span class="pull-right-container">
-      <i class="fa fa-angle-left pull-right"></i>
-    </span>
-  </a>
-  <ul class="treeview-menu">
-   @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
-  </li>
-
-</ul>
-</li>
-@endif
-
-@if(in_array('S13', $navs))
-@if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-    <i class="fa fa-list-alt"></i> <span>Purchase Order Material</span>
-    <span class="pull-right-container">
-      <i class="fa fa-angle-left pull-right"></i>
-    </span>
-  </a>
-  <ul class="treeview-menu">
-    @if(isset($page) && $page == "Purchase Order Archive")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/purchase_order/po_archive") }}"><i class="fa fa-list-alt"></i> Archives</a>
+  @if(in_array('S20', $navs))
+  @if(isset($page) && $page == "qna")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/qnaHR") }}"><i class="fa fa-comments-o"></i> <span>Q & A HR</span>
+      <?php if(isset($notif)) echo $notif ?></a>
     </li>
-    @if(isset($page) && $page == "Purchase Order List")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/purchase_order/po_list") }}"><i class="fa fa-list-alt"></i> Purchase Order List</a>
-    </li>
-    @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
-      <a href="#"><i class="fa fa-print"></i> Purchase Order Create
+    @endif
+
+    @if(in_array('S18', $navs))
+    @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
+      <a href="#">
+        <i class="fa fa-tv"></i> <span>NG-Rate</span>
         <span class="pull-right-container">
           <i class="fa fa-angle-left pull-right"></i>
         </span>
       </a>
       <ul class="treeview-menu">
-        <li><a href="{{ url("index/purchase_order/po_create") }}"><i class="fa fa-circle-o"></i> Create Purchase Order</a></li>
-        <li><a href="{{ url("index/purchase_order/po_revise") }}"><i class="fa fa-circle-o"></i> Revise Purchase Order</a></li>
-      </ul>
+       @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
+      </li>
+
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S13', $navs))
+  @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-list-alt"></i> <span>Purchase Order Material</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Purchase Order Archive")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_order/po_archive") }}"><i class="fa fa-list-alt"></i> Archives</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Order List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_order/po_list") }}"><i class="fa fa-list-alt"></i> Purchase Order List</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
+        <a href="#"><i class="fa fa-print"></i> Purchase Order Create
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url("index/purchase_order/po_create") }}"><i class="fa fa-circle-o"></i> Create Purchase Order</a></li>
+          <li><a href="{{ url("index/purchase_order/po_revise") }}"><i class="fa fa-circle-o"></i> Revise Purchase Order</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S10', $navs))
+  @if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+     <i class="fa fa-tv"></i> <span>Assembly Process</span>
+     <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+    @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
+    </li>
+
+    @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
+    </li>
+
+
+    @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
     </li>
   </ul>
-</li>
-@endif
-
-@if(in_array('S10', $navs))
-@if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-   <i class="fa fa-tv"></i> <span>Assembly Process</span>
-   <span class="pull-right-container">
-    <i class="fa fa-angle-left pull-right"></i>
-  </span>
-</a>
-<ul class="treeview-menu">
-  @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
-  </li>
-
-  @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
-  </li>
-
-
-  @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
-  </li>
-</ul>
 </li>
 @endif
 
@@ -491,64 +498,64 @@
 @endif
 
 {{-- @if(in_array('R4', $navs))
-      @if(isset($head) && $head == "Chorei")<li class="treeview active">@else<li class="treeview">@endif
-        <a href="#">
-          <i class="fa fa-tv"></i> <span>Chorei</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-line-chart"></i> Production Result</a>
-          </li>
-        </ul>
-      </li>
-      @endif --}}
-
-      @if(in_array('R5', $navs))
-      @if(isset($head) && $head == "Display")<li class="treeview active">@else<li class="treeview">@endif
-      	<a href="#">
-      		<i class="fa fa-tv"></i> <span>Display</span>
-      		<span class="pull-right-container">
-      			<i class="fa fa-angle-left pull-right"></i>
-      		</span>
-      	</a>
-      	<ul class="treeview-menu">
-          @if(isset($page) && $page == "Display Finished Goods Accuracy")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/dp_fg_accuracy") }}"><i class="fa fa-line-chart"></i> FG Accuracy</a>
-          </li>
-          @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
-           <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> FG Production Result</a>
-         </li>
-         @if(isset($page) && $page == "Display Stuffing Progress")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/display/stuffing_progress") }}"><i class="fa fa-line-chart"></i> Stuffing Progress</a>
-        </li>
-      </ul>
-    </li>
-    @endif
-
-    @if(in_array('R4', $navs))
+@if(isset($head) && $head == "Chorei")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+    <i class="fa fa-tv"></i> <span>Chorei</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
     @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
-     <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
-   </li>
-   @endif
-        {{-- <li class="header">Trial Menu</li>
-        <li>
-          <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
-        </li>
-        <li>
-          <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
-        </li>
-        <li>
-          <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
-        </li>
-        <li>
-          <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
-        </li>
-        <li>
-          <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
-        </li> --}}
-      </ul>
-    </section>
-  </aside>
+      <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-line-chart"></i> Production Result</a>
+    </li>
+  </ul>
+</li>
+@endif --}}
+
+@if(in_array('R5', $navs))
+@if(isset($head) && $head == "Display")<li class="treeview active">@else<li class="treeview">@endif
+ <a href="#">
+  <i class="fa fa-tv"></i> <span>Display</span>
+  <span class="pull-right-container">
+   <i class="fa fa-angle-left pull-right"></i>
+ </span>
+</a>
+<ul class="treeview-menu">
+  @if(isset($page) && $page == "Display Finished Goods Accuracy")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/dp_fg_accuracy") }}"><i class="fa fa-line-chart"></i> FG Accuracy</a>
+  </li>
+  @if(isset($page) && $page == "Display Production Result")<li class="active">@else<li>@endif
+   <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> FG Production Result</a>
+ </li>
+ @if(isset($page) && $page == "Display Stuffing Progress")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/display/stuffing_progress") }}"><i class="fa fa-line-chart"></i> Stuffing Progress</a>
+</li>
+</ul>
+</li>
+@endif
+
+@if(in_array('R4', $navs))
+@if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
+ <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
+</li>
+@endif
+{{-- <li class="header">Trial Menu</li>
+<li>
+  <a href="{{ url("/index/flo_view/sn") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+</li>
+<li>
+  <a href="{{ url("/index/flo_view/pd") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Educational Inst.</span></a>
+</li>
+<li>
+  <a href="{{ url("/index/trial_export") }}"><i class="fa fa-download"></i> <span>Export production</span></a>
+</li>
+<li>
+  <a href="{{ url("/index/flo_view/detail") }}"><i class="fa fa-info-circle"></i> <span>FLO  <i class="fa fa-angle-right"></i> Detail</span></a>
+</li>
+<li>
+  <a href="{{ url("/index/dp_production_result") }}"><i class="fa fa-line-chart"></i> Display Production Result</a>
+</li> --}}
+</ul>
+</section>
+</aside>

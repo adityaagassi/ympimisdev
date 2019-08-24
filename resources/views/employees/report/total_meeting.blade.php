@@ -1109,7 +1109,7 @@ function drawChartOvertimeControl() {
     var tot_day_budget = 0, tot_diff;
 
     for(var i = 0; i < result.report_control.length; i++){
-      ctg = result.report_control[i].name;
+      ctg = result.report_control[i].cost_center_name;
       tot_act += result.report_control[i].act;
       tot_day_budget += result.report_control[i].jam_harian;
 

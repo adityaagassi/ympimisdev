@@ -44,6 +44,13 @@
 		margin-top: 0px!important;
 	}
 	#loading, #error { display: none; }
+	.post .user-block {
+		margin-bottom: 5px
+	}
+	#chat {
+		height:480px;
+		overflow-y: scroll;
+	}
 </style>
 @stop
 @section('header')
@@ -60,15 +67,17 @@
 {{-- </section> --}}
 @endsection
 @section('content')
+@php
+$avatar = 'images/avatar/'.Auth::user()->avatar;
+@endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0px;">
 	<div class="row">
 		<div class="col-md-3">
-
 			<!-- Profile Image -->
 			<div class="box">
 				<div class="box-body box-profile">
-					<img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+					<img class="profile-user-img img-responsive img-circle" src="{{ url($avatar) }}" alt="User profile picture">
 
 					<h3 class="profile-username text-center">{{ $profil[0]->name }}</h3>
 
@@ -84,7 +93,7 @@
 						@endif
 						<li class="list-group-item">
 							<b>Personal Leave Left</b> <a class="pull-right">
-								<span class="label label-danger">5 / 12</span>
+								<span class="label label-danger">- / -</span>
 							</a>
 						</li>
 					</ul>
@@ -130,8 +139,12 @@
 			<!-- /.box -->
 		</div>
 		<!-- /.col -->
+		<div class="col-md-9" style="margin-bottom: 10px">
+			<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
+			<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
+		</div>
 		<div class="col-md-9">
-			<div class="box">
+			<div class="box" id="boxing">
 				<div class="box-header">
 					<h3 class="box-title">Attendance and Overtime</h3>
 					<div class="pull-right">
@@ -221,6 +234,44 @@
 				</div>
 				<!-- /.box-body -->
 			</div>
+
+			<!-- QUESTION & ANSWER -->
+
+			<div class="box" id="question" style="display: none;">
+				<div class="box-header">
+					<h3 class="box-title">Question & Answer</h3>
+				</div>
+				<div class="box-body">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-2">
+								<select class="form-control select2" style="width: 100%" id="category">
+									<option disabled selected value="">Category</option>
+									<option value="Absensi">Absensi</option>
+									<option value="Lembur">Lembur</option>
+									<option value="Cuti">Cuti</option>
+									<option value="PKB">PKB</option>
+									<option value="Penggajian">Penggajian</option>
+									<option value="Kesehatan">Kesehatan</option>
+								</select>
+							</div>
+							<div class="col-xs-10">
+								<div class="input-group input-group">
+									<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<hr>
+						<div id="chat">
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- /.col -->
 	</div>
@@ -235,6 +286,10 @@
 		}
 	});
 
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var chat = 0;
+	var name = "";
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
@@ -245,10 +300,155 @@
 				}
 			}
 		});
+		name = "{{ $profil[0]->name }}";
 
+		fill_chat();
+
+		setInterval(check_chart, 10000);
 	});
 
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	function check_chart() {
+		if (!$(".komen").is(':focus') && chat == 1) {
+			fill_chat();
+		}
+	}
+
+	function fill_chat() {
+		var data = {
+			employee_id: '{{ $emp_id }}_'+name.split(" ").pop()
+		}
+
+		$.get('{{ url("fetch/chat/hrqa") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#chat").empty();
+				var xCategories2 = [];
+
+				for(var i = 0; i < result.chats.length; i++){
+					ctg = result.chats[i].id+"_"+result.chats[i].message+"_"+result.chats[i].category+"_"+result.chats[i].created_at_new;
+
+					if(xCategories2.indexOf(ctg) === -1){
+						xCategories2[xCategories2.length] = ctg;
+					}
+				}
+
+
+				$.each(xCategories2, function(index, value){
+					var chat_history = "";
+					var chats = value.split("_");
+					chat_history += '<div class="post">';
+					chat_history += '<div class="user-block">'
+					chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
+					chat_history += '<span class="username">{{ $emp_id }}_'+name.split(" ").pop()+'</span>';
+					chat_history += '<span class="description">'+chats[3]+'</span></div>';
+					chat_history += '<p>'+chats[1]+'</p>';
+
+					var stat = 0;
+					var rev = 0;
+
+					$.each(result.chats, function(index2, value2){
+						if (chats[0] == value2.id) { 
+							if (value2.message_detail) {
+								if (stat == 0) {
+									chat_history += '<div style="margin-left: 30px">';
+								} else {
+									chat_history += '<div>';
+								}
+
+								chat_history += '<div class="post">'
+								chat_history += '<div class="user-block">';
+								chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
+								chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
+								chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
+								chat_history += '<span class="description" style="color:#666">'+value2.message_detail+'</span></div>';
+								// chat_history += '<p>'+value2.message_detail+'</p>';
+
+								stat = 1;
+
+								if (typeof result.chats[index2+1] === 'undefined') {
+									rev = 1;
+									chat_history += '<input class="form-control input-sm komen" type="text" placeholder="Type a comment" id="comment_'+value2.id+'"></div>';
+								} else {
+									if (result.chats[index2].id != result.chats[index2+1].id) {
+										rev = 1;
+										chat_history += '<input class="form-control input-sm komen" type="text" placeholder="Type a comment" id="comment_'+value2.id+'"></div>';
+									}
+								}
+							} else {
+								if (rev == 0) {
+									chat_history += '<input class="form-control input-sm komen" type="text" placeholder="Type a comment" id="comment_'+value2.id+'">';	
+								}
+							}
+						}
+
+					})
+					chat_history += '</div>';
+
+					$("#chat").append(chat_history);
+				})
+
+				$(".komen").keypress(function() {
+					var keycode = (event.keyCode ? event.keyCode : event.which);
+					if(keycode == '13'){
+						if (this.value != "") {
+							var id2 = this.id.split("_")[1];
+							// alert(id+" "+this.value+" HR");
+							var data = {
+								id:id2,
+								message:this.value,
+								from:"{{ $emp_id }}_"+name.split(" ").pop()
+							}
+
+							$.post('{{ url("post/chat/comment") }}', data, function(result, status, xhr){
+								fill_chat();
+							})
+						} else {
+							alert('Komentar tidak boleh kosong'); 
+						}
+					}
+				});
+			}
+		})
+	}
+
+	function posting() {
+		var msg = $("#msg").val();
+		var cat = $("#category").val();
+
+		if (msg == "" && cat == "") {
+			openErrorGritter('Error!','Pesan harus diisi');
+			return false;
+		}
+
+		console.log();
+		
+		var data = {
+			message:msg,
+			category:cat
+		}
+
+		$.post('{{ url("post/hrqa") }}', data, function(result, status, xhr){
+			openSuccessGritter('Success','');
+			$("#msg").val("");
+			fill_chat();
+		})
+	}
+
+	function questionForm() {
+		$("#boxing").hide();
+		$("#question").show();
+		$("#btnTanya").hide();
+		$("#btnKembali").show();
+		chat = 1;
+	}
+
+	function kembali() {
+		$("#boxing").show();
+		$("#question").hide();
+		$("#btnKembali").hide();
+		$("#btnTanya").show();
+		chat = 0;
+	}
+
 
 
 	function openSuccessGritter(title, message){

@@ -26,7 +26,7 @@ class LoginController extends Controller
      * @var string
      */
 
-        protected $redirectTo = '/home';
+        // protected $redirectTo = '/home';
 
 
     /**
@@ -42,5 +42,13 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
+    }
+
+    public function authenticated($request , $user){
+        if($user->role_code != 'emp-srv'){
+            return redirect()->route('home');
+        }else {
+            return redirect()->route('emp_service') ;
+        }
     }
 }
