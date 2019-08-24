@@ -79,19 +79,17 @@ class EmployeeController extends Controller
     return view('employees.index_employee_information');
   }
 
+  public function getNotif()
+  {
+    $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
+    return $ntf->ntf;
+  }
+
   public function indexHRQA()
   {
-
-    $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
-
-    $notif = '
-    <span class="pull-right-container">
-    <span class="label label-danger pull-right">'.$ntf->ntf.'</span>
-    </span>';
-
     return view('employees.master.hrquestion', array(
       'title' => 'HR Question & Answer',
-      'title_jp' => '??'))->with('page', 'qna')->with('notif', $notif);
+      'title_jp' => '??'))->with('page', 'qna');
   }
 
   public function updateEmp($id){
@@ -879,7 +877,7 @@ public function fetchChat(Request $request)
 {
   $data = HrQuestionLog::leftJoin('hr_question_details','hr_question_details.message_id','=','hr_question_logs.id')
   ->where('hr_question_logs.created_by','=' , $request->get('employee_id'))
-  ->select('hr_question_logs.id', 'hr_question_logs.message', 'hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), db::raw('hr_question_details.message as message_detail'), db::raw('hr_question_details.created_by as dari'), db::raw('hr_question_details.created_at as reply_date'))
+  ->select('hr_question_logs.id', 'hr_question_logs.message', 'hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), db::raw('hr_question_details.message as message_detail'), db::raw('hr_question_details.created_by as dari'), db::raw('hr_question_details.created_at as reply_date'), db::raw('SPLIT_STRING(IF(hr_question_details.created_by is null, hr_question_logs.created_by, hr_question_details.created_by) ,"_",1) as avatar'))
   ->orderBy('hr_question_logs.updated_at','desc')
   ->orderBy('hr_question_details.created_at','asc')
   ->get();
@@ -887,6 +885,7 @@ public function fetchChat(Request $request)
   $response = array(
     'status' => true,
     'chats' => $data,
+    'base_avatar' => url('images/avatar/')
   );
 
   return Response::json($response); 
@@ -898,7 +897,7 @@ public function postChat(Request $request)
     'message' => $request->get('message'),
     'category' =>  $request->get('category'),
     'created_by' => $request->get('from'),
-    'remark' => 0
+    'remark' => 1
   ]);
 
   $quest->save();
@@ -912,25 +911,29 @@ public function postChat(Request $request)
 
 public function postComment(Request $request)
 {
-  $remark = 0;
+  // $remark = 0;
+  $id = $request->get('id');
 
-  if($request->get("from") != "HR")
+  if($request->get("from") == "HR") {
+    $remark = 0;
+  } else {
     $remark = 1;
+  }
 
   $questDetail = new HrQuestionDetail([
     'message' => $request->get('message'),
-    'message_id' =>  $request->get('id'),
+    'message_id' =>  $id,
     'created_by' => $request->get("from")
   ]);
 
   $questDetail->save();
 
-  HrQuestionLog::where('id', $request->get('id'))
-  ->take(1)
+  HrQuestionLog::where('id', $id)
   ->update(['remark' => $remark]);
 
   $response = array(
-    'status' => true
+    'status' => true,
+    'remark' => $remark
   );
 
   return Response::json($response); 

@@ -271,79 +271,84 @@
   @if(in_array('S20', $navs))
   @if(isset($page) && $page == "qna")<li class="active">@else<li>@endif
     <a href="{{ url("/index/qnaHR") }}"><i class="fa fa-comments-o"></i> <span>Q & A HR</span>
-      <?php if(isset($notif)) echo $notif ?></a>
-    </li>
-    @endif
-
-    @if(in_array('S18', $navs))
-    @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
-      <a href="#">
-        <i class="fa fa-tv"></i> <span>NG-Rate</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
-        </span>
-      </a>
-      <ul class="treeview-menu">
-       @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
-      </li>
-
-    </ul>
+      @if(isset($notif)) 
+      <span class="pull-right-container">
+        <span class="label label-danger pull-right">{{$notif}}</span>
+      </span>
+      @endif
+    </a>
   </li>
   @endif
 
-  @if(in_array('S13', $navs))
-  @if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
+  @if(in_array('S18', $navs))
+  @if(isset($head) && $head == "Pianica")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-list-alt"></i> <span>Purchase Order Material</span>
+      <i class="fa fa-tv"></i> <span>NG-Rate</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
     </a>
     <ul class="treeview-menu">
-      @if(isset($page) && $page == "Purchase Order Archive")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/purchase_order/po_archive") }}"><i class="fa fa-list-alt"></i> Archives</a>
-      </li>
-      @if(isset($page) && $page == "Purchase Order List")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/purchase_order/po_list") }}"><i class="fa fa-list-alt"></i> Purchase Order List</a>
-      </li>
-      @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
-        <a href="#"><i class="fa fa-print"></i> Purchase Order Create
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li><a href="{{ url("index/purchase_order/po_create") }}"><i class="fa fa-circle-o"></i> Create Purchase Order</a></li>
-          <li><a href="{{ url("index/purchase_order/po_revise") }}"><i class="fa fa-circle-o"></i> Revise Purchase Order</a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  @endif
+     @if(isset($page) && $page == "Bensuki")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/Pianica") }}"><i class="fa fa-list-ol"></i>Pianica</a>
+    </li>
 
-  @if(in_array('S10', $navs))
-  @if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
-    <a href="#">
-     <i class="fa fa-tv"></i> <span>Assembly Process</span>
-     <span class="pull-right-container">
+  </ul>
+</li>
+@endif
+
+@if(in_array('S13', $navs))
+@if(isset($head) && $head == "Purchase Order")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+    <i class="fa fa-list-alt"></i> <span>Purchase Order Material</span>
+    <span class="pull-right-container">
       <i class="fa fa-angle-left pull-right"></i>
     </span>
   </a>
   <ul class="treeview-menu">
-    @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
+    @if(isset($page) && $page == "Purchase Order Archive")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/purchase_order/po_archive") }}"><i class="fa fa-list-alt"></i> Archives</a>
     </li>
-
-    @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
+    @if(isset($page) && $page == "Purchase Order List")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/purchase_order/po_list") }}"><i class="fa fa-list-alt"></i> Purchase Order List</a>
     </li>
-
-
-    @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
+    @if(isset($page) && $page == "Purchase Order Create")<li class="treeview active">@else<li class="treeview">@endif
+      <a href="#"><i class="fa fa-print"></i> Purchase Order Create
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li><a href="{{ url("index/purchase_order/po_create") }}"><i class="fa fa-circle-o"></i> Create Purchase Order</a></li>
+        <li><a href="{{ url("index/purchase_order/po_revise") }}"><i class="fa fa-circle-o"></i> Revise Purchase Order</a></li>
+      </ul>
     </li>
   </ul>
+</li>
+@endif
+
+@if(in_array('S10', $navs))
+@if(isset($head) && $head == "Assembly Process")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-tv"></i> <span>Assembly Process</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+  @if(isset($page) && $page == "Process Stamp CL")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/process_stamp_cl") }}"><i class="fa fa-list-ol"></i> Clarinet</a>
+  </li>
+
+  @if(isset($page) && $page == "Process Assy FL")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/process_assy_fl") }}"><i class="fa fa-list-ol"></i> Flute</a>
+  </li>
+
+
+  @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
+  </li>
+</ul>
 </li>
 @endif
 

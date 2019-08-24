@@ -23,15 +23,23 @@ Route::get('/trial', function () {
 	return view('trial');
 });
 
+Auth::routes();
+
 Route::get('/', function () {
-	return view('auth.login');
+	if (Auth::check()) {
+		if (Auth::user()->role_code == 'emp-srv') {
+			return redirect()->action('EmployeeController@indexEmployeeService');
+		} else {
+			return view('home');
+		}
+	} else {
+		return view('auth.login');
+	}
 });
 
 Route::get('404', function() {
 	return view('404');
 });
-
-Auth::routes();
 
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
@@ -689,6 +697,8 @@ Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('persen/CheckSheet/{id}', 'CheckSheet@persen');
 	Route::get('fill/reason', 'CheckSheet@getReason');
 
+	Route::get('delete/deleteReimport', 'CheckSheet@deleteReimport');
+
 });
 Route::get('stamp/stamp', 'ProcessController@stamp');
 Route::post('reprint/stamp', 'ProcessController@reprint_stamp');
@@ -823,9 +833,17 @@ Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentPr
 //DISPLAY STUFFING PROGRESS
 Route::get('index/display/stuffing_progress', 'DisplayController@indexStuffingProgress');
 Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');
+Route::get('fetch/display/stuffing_detail', 'DisplayController@fetchStuffingDetail');
+
 
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
 
 //DISPLAY STUFFING MONITORING
 Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffingMonitoring');
+
+View::composer('*', function ($view) {
+	$controller = new \App\Http\Controllers\EmployeeController;
+    $notif = $controller->getNotif();
+    $view->with('notif', $notif);
+});

@@ -51,6 +51,7 @@
 		height:480px;
 		overflow-y: scroll;
 	}
+	
 </style>
 @stop
 @section('header')
@@ -81,7 +82,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 					<h3 class="profile-username text-center">{{ $profil[0]->name }}</h3>
 
-					<p class="text-muted text-center">{{ $emp_id }}</p>
+					<p class="text-muted text-center" style="text-transform: lowercase;">{{ $emp_id }}</p>
 
 					<ul class="list-group list-group-unbordered">
 						<li class="list-group-item">
@@ -92,7 +93,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						</li>
 						<li class="list-group-item">
 							<b>Penugasan</b> <a class="pull-right">
-								<span class="label label-danger">-</span>
+								<span class="label label-success">-</span>
 							</a>
 						</li>
 					</ul>
@@ -251,7 +252,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									<option value="Cuti">Cuti</option>
 									<option value="PKB">PKB</option>
 									<option value="Penggajian">Penggajian</option>
-									<option value="Kesehatan">Kesehatan</option>
+									<option value="BPJS Kes">BPJS Kes</option>
+									<option value="BPJS TK">BPJS TK</option>
 								</select>
 							</div>
 							<div class="col-xs-10">
@@ -355,7 +357,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 								chat_history += '<div class="post">'
 								chat_history += '<div class="user-block">';
-								chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
+								chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.png" alt="image">';
 								chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
 								chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
 								chat_history += '<span class="description" style="color:#666">'+value2.message_detail+'</span></div>';

@@ -176,14 +176,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 				}
 
-				// console.log(xCategories2);
-
 				$.each(xCategories2, function(index, value){
 					var chat_history = "";
 					var chats = value.split("_");
 					chat_history += '<div class="post">';
 					chat_history += '<div class="user-block">'
-					chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
+					chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+id.split("_")[0]+'.png" alt="image">';
 					chat_history += '<span class="username">'+id+'</span>';
 					chat_history += '<span class="description"><b>'+chats[2]+'</b> - '+chats[3]+'</span></div>';
 					chat_history += '<p>'+chats[1]+'</p>';
@@ -202,7 +200,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 								chat_history += '<div class="post">'
 								chat_history += '<div class="user-block">';
-								chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
+								chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.png" alt="image">';
 								chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
 								chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
 								chat_history += '<span class="description" style="color:#666; font-size:14px">'+value2.message_detail+'</span></div>';

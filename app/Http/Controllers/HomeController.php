@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use File;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use App\HrQuestionLog;
 use Response;
 
 class HomeController extends Controller
@@ -27,7 +28,11 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        return view('home')->with('page', 'Dashboard');
+        if (Auth::user()->role_code == 'emp-srv') {
+            return redirect()->action('EmployeeController@indexEmployeeService');
+        } else {
+            return view('home')->with('page', 'Dashboard');
+        }
     }
 
     public function indexAboutMIS(){
