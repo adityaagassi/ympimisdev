@@ -84,16 +84,15 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<p class="text-muted text-center">{{ $emp_id }}</p>
 
 					<ul class="list-group list-group-unbordered">
-						@if ($profil[0]->position != "-")
-						<li class="list-group-item" style="background-color: #605ca8">
-							<center>
-								<h4 style="margin:0px; font-weight: bold; color:white">{{$profil[0]->position}}</h4>
-							</center>
-						</li>
-						@endif
 						<li class="list-group-item">
-							<b>Personal Leave Left</b> <a class="pull-right">
-								<span class="label label-danger">- / -</span>
+							<b>Sisa Cuti</b> <a class="pull-right">
+								<span class="label label-danger">-</span>/
+								<span class="label label-danger">-</span>
+							</a>
+						</li>
+						<li class="list-group-item">
+							<b>Penugasan</b> <a class="pull-right">
+								<span class="label label-danger">-</span>
 							</a>
 						</li>
 					</ul>
@@ -105,11 +104,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			<!-- About Me Box -->
 			<div class="box">
 				<div class="box-header with-border">
-					<h3 class="box-title">About Me</h3>
+					<h3 class="box-title">Tentang Saya</h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">
-					<strong><i class="fa fa-briefcase margin-r-5"></i> Division</strong>
+					<strong><i class="fa fa-briefcase margin-r-5"></i> Bagian</strong>
 
 					<p class="text-muted">
 						{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->sub_section}} - {{$profil[0]->group}}
@@ -123,7 +122,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 					<hr>
 
-					<strong><i class="fa fa-calendar margin-r-5"></i> Join Date</strong>
+					<strong><i class="fa fa-calendar margin-r-5"></i> Tanggal Masuk</strong>
 
 					<p class="text-muted">{{$profil[0]->hire_date}}</p>
 
@@ -146,7 +145,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		<div class="col-md-9">
 			<div class="box" id="boxing">
 				<div class="box-header">
-					<h3 class="box-title">Attendance and Overtime</h3>
+					<h3 class="box-title">Resume Absensi & Lembur</h3>
 					<div class="pull-right">
 						<select class="form-control select2">
 							<option>2019</option>
@@ -158,15 +157,15 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<table class="table table-bordered table-striped">
 						<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 							<tr>
-								<th style="width: 10%">Period</th>
-								<th style="width: 10%">Absent</th>
-								<th style="width: 10%">Permit</th>
-								<th style="width: 10%">Sick</th>
-								<th style="width: 10%">Late</th>
-								<th style="width: 10%">Home Early</th>
-								<th style="width: 10%">Personal Leave</th>
-								<th style="width: 10%">Disiplinary Allowance</th>
-								<th style="width: 10%">Overtime (hour)</th>
+								<th style="width: 10%">Periode</th>
+								<th style="width: 10%">Mangkir</th>
+								<th style="width: 10%">Izin</th>
+								<th style="width: 10%">Sakit</th>
+								<th style="width: 10%">Terlambat</th>
+								<th style="width: 10%">Pulang Cepat</th>
+								<th style="width: 10%">Cuti</th>
+								<th style="width: 10%">Tunjangan Disiplin</th>
+								<th style="width: 10%">Lembur (Jam)</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -202,7 +202,7 @@
 		drawChart();
 
     setInterval(drawChart, 3000);
-});
+  });
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
@@ -459,8 +459,6 @@ function modalTampil(costCenter, date) {
 
           $('.more').each(function() {
             var content = $(this).html();
-
-
 
             if(content.length > showChar) {
 

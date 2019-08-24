@@ -18,6 +18,7 @@ class CreateHrQuestionLogsTable extends Migration
             $table->string('message');
             $table->string('category');
             $table->integer('created_by');
+            $table->integer('remark');
             $table->softDeletes();
             $table->timestamps();
         });

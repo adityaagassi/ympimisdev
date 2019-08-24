@@ -10,7 +10,7 @@ class HrQuestionLog extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'message','category','created_by','updated_at'
+		'message','category','created_by','remark','updated_at'
 	];
 
 	public function user()

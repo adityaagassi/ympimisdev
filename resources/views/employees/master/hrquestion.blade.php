@@ -88,18 +88,34 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	});
 
 	var emp = "";
+	var saringan = "";
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		getMasterQuestion("");
 
-		$( "#search" ).keypress(function() {
+		$("#search").keypress(function() {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if(keycode == '13'){
 				getMasterQuestion(this.value);
+				saringan = this.value;
 			}
 		});
+
+		setInterval(check_chart, 10000);
 	});
+
+	function check_chart() {
+		if (!$(".komen").is(':focus')) {
+			getMasterQuestion(saringan);
+
+			if (emp != "") {
+				getDetailQuestion(emp);
+				$("#"+emp).css("background-color","#ddd");
+			}
+
+		}
+	}
 
 	function getMasterQuestion(cat) {
 		var data = {
@@ -114,7 +130,18 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					masterQuestion += '<tr onclick="select(this)" class="chat" id="'+value.created_by+'" style="border-bottom:1px solid black">';
 					masterQuestion += '<td>';
 					masterQuestion += '<h5>'+value.created_by+' <span class="pull-right">'+value.created_at_new+'</span></h5>';
-					masterQuestion+= '<span style="color: #666">'+value.message+'</span>'
+
+					var truncated = value.message;
+
+					if (value.message.length > 35) {
+						truncated = truncated.substr(0,35) + '...';
+					}
+
+
+					masterQuestion += '<span style="color: #666">'+truncated+'</span>';
+					if (value.notif != 0) {
+						masterQuestion += '<span class="pull-right badge bg-purple">'+value.notif+'</span>';
+					}
 					masterQuestion += '</td></tr>';
 				})
 
@@ -149,7 +176,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 				}
 
-				console.log(xCategories2);
+				// console.log(xCategories2);
 
 				$.each(xCategories2, function(index, value){
 					var chat_history = "";
