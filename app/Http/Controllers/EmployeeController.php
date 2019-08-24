@@ -82,13 +82,15 @@ class EmployeeController extends Controller
   public function indexHRQA()
   {
 
+    $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
+
     $notif = '
     <span class="pull-right-container">
-    <span class="label label-danger pull-right">4</span>
+    <span class="label label-danger pull-right">'.$ntf->ntf.'</span>
     </span>';
 
     return view('employees.master.hrquestion', array(
-      'title' => 'Question & Answer',
+      'title' => 'HR Question & Answer',
       'title_jp' => '??'))->with('page', 'qna')->with('notif', $notif);
   }
 
@@ -879,6 +881,7 @@ public function fetchChat(Request $request)
   ->where('hr_question_logs.created_by','=' , $request->get('employee_id'))
   ->select('hr_question_logs.id', 'hr_question_logs.message', 'hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), db::raw('hr_question_details.message as message_detail'), db::raw('hr_question_details.created_by as dari'), db::raw('hr_question_details.created_at as reply_date'))
   ->orderBy('hr_question_logs.updated_at','desc')
+  ->orderBy('hr_question_details.created_at','asc')
   ->get();
 
   $response = array(
@@ -894,7 +897,8 @@ public function postChat(Request $request)
   $quest = new HrQuestionLog([
     'message' => $request->get('message'),
     'category' =>  $request->get('category'),
-    'created_by' => $request->get('from')
+    'created_by' => $request->get('from'),
+    'remark' => 0
   ]);
 
   $quest->save();
@@ -908,6 +912,11 @@ public function postChat(Request $request)
 
 public function postComment(Request $request)
 {
+  $remark = 0;
+
+  if($request->get("from") != "HR")
+    $remark = 1;
+
   $questDetail = new HrQuestionDetail([
     'message' => $request->get('message'),
     'message_id' =>  $request->get('id'),
@@ -915,6 +924,10 @@ public function postComment(Request $request)
   ]);
 
   $questDetail->save();
+
+  HrQuestionLog::where('id', $request->get('id'))
+  ->take(1)
+  ->update(['remark' => $remark]);
 
   $response = array(
     'status' => true
@@ -1303,20 +1316,23 @@ public function detailAbsence(Request $request){
 
   return DataTables::of($detail)->make(true);
 }
+//------------- End Absence
 
 
 public function fetchMasterQuestion(Request $request)
 {
   $filter = $request->get("filter");
 
-  $getQuestion = HrQuestionLog::select('message','category', 'created_at', db::raw('date_format(created_at, "%b %d, %H:%i") as created_at_new'), 'created_by')
-  ->whereRaw('id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
+  $getQuestion = HrQuestionLog::leftJoin(db::raw('hr_question_logs as hr'),'hr.created_by' ,'=','hr_question_logs.created_by')
+  ->select('hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
+  ->whereRaw('hr_question_logs.id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
 
   if($filter != "") {
-    $getQuestion = $getQuestion->whereRaw('created_by like "%'.$filter.'%"');
+    $getQuestion = $getQuestion->whereRaw('hr_question_logs.created_by like "%'.$filter.'%"');
   }
 
-  $getQuestion = $getQuestion->orderBy('created_at')
+  $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
+  ->orderBy('hr_question_logs.created_at', 'desc')
   ->get();
 
   $response = array(
