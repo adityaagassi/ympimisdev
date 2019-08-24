@@ -480,7 +480,7 @@ class ProcessController extends Controller
 
 		$id = Auth::id();
 		$err = new ErrorLog([
-			'error_message' => 'Hapus'.$stamp->model.'-'.$stamp->serial_number, 
+			'error_message' => 'Hapus - '.$stamp->model.'-'.$stamp->serial_number.'-'.$stamp->origin_group_code, 
 			'created_by' => $id,
 		]);
 
