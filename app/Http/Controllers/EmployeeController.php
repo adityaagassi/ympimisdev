@@ -894,7 +894,7 @@ public function postChat(Request $request)
   $quest = new HrQuestionLog([
     'message' => $request->get('message'),
     'category' =>  $request->get('category'),
-    'created_by' => Auth::user()->username
+    'created_by' => $request->get('from')
   ]);
 
   $quest->save();

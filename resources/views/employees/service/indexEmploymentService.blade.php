@@ -418,12 +418,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			openErrorGritter('Error!','Pesan harus diisi');
 			return false;
 		}
-
-		console.log();
 		
 		var data = {
 			message:msg,
-			category:cat
+			category:cat,
+			from:"{{ $emp_id }}_"+name.split(" ").pop()
 		}
 
 		$.post('{{ url("post/hrqa") }}', data, function(result, status, xhr){
