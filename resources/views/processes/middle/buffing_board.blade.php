@@ -175,7 +175,7 @@
 						}
 
 						buffingTableBody += '<tr '+color+'>';
-						buffingTableBody += '<td '+color2+'>'+value.ws.split("-")[1]+'-'+value.ws.split("-")[2]+'</td>';
+						buffingTableBody += '<td '+color2+'>'+value.ws.split("-")[1]+'</td>';
 						buffingTableBody += '<td '+color2+'>'+value.employee_id+'<br>'+value.employee_name.split(' ')[0]+'</td>';
 						buffingTableBody += '<td>'+value.sedang+'</td>';
 						buffingTableBody += '<td '+color2+'>'+value.akan+'</td>';
