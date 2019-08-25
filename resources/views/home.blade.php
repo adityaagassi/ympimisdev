@@ -101,7 +101,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Employement Service (従業員サービス)
+                                <i class="fa fa-caret-right"></i> Employment Service (従業員サービス)
                             </a>
                         </td>
                     </tr>
@@ -160,7 +160,7 @@
                         <td>
                             <span style="font-weight: bold;">WELDING Process (溶接工程)</span>
                             <br>
-                            <a href="{{ url("") }}">
+                            <a href="{{ url("/index/process_stamp_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
                             </a>
                         </td>

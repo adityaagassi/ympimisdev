@@ -7,6 +7,8 @@ use Response;
 use App\OriginGroup;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use DataTables;
+
 
 class DisplayController extends Controller
 {
@@ -102,6 +104,18 @@ class DisplayController extends Controller
 			'status' => true,
 			'stuffing_progress' => $stuffing_progress,
 			'stuffing_resume' => $stuffing_resume
+		);
+		return Response::json($response);
+	}
+
+	public function fetchStuffingDetail(Request $request){
+		$id_checkSheet = $request->get('id');
+		$query = "select id_checkSheet, invoice, gmc, goods, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets where deleted_at is null and id_checkSheet = '".$id_checkSheet."'";
+		$stuffing_detail = db::select($query);
+		// return DataTables::of($stuffing_detail)->make(true);
+		$response = array(
+			'status' => true,
+			'stuffing_detail' => $stuffing_detail
 		);
 		return Response::json($response);
 	}

@@ -134,7 +134,15 @@
 						</div>
 						<div id="container2" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_3">
+					<div class="tab-pane" id="tab_3" style="height: 570px;">
+						<div class="col-md-12">
+							<div class="progress-group" id="progress_div">
+								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_week1" style="font-size: 12px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped active" id="progress_bar_week1" style="height: 30px; padding-top: 4px;"></div>
+								</div>
+							</div>
+						</div>
 						<div id="container3" style="width:100%; height:530px;"></div>
 					</div>
 					{{-- <div class="tab-pane" id="tab_4">
@@ -151,7 +159,15 @@
 						</div>
 						<div id="container5" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_6">
+					<div class="tab-pane" id="tab_6" style="height: 570px;">
+						<div class="col-md-12">
+							<div class="progress-group" id="progress_div">
+								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_week2" style="font-size: 12px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_week2" style="height: 30px; padding-top: 4px;"></div>
+								</div>
+							</div>
+						</div>
 						<div id="container6" style="width:100%; height:530px;"></div>
 					</div>
 				</div>
@@ -346,12 +362,16 @@
 			return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 		}
 
+		function getWeekProgres() {
+			
+		}
+
 		function fillChart(id){
 			var now = new Date();
 			var now_tgl = addZero(now.getFullYear())+'-'+addZero(now.getMonth()+1)+'-'+addZero(now.getDate());
 			var req = new Date(id);
 			var req_tgl = addZero(req.getFullYear())+'-'+addZero(req.getMonth()+1)+'-'+addZero(req.getDate());
-
+			
 			if(id != 0){
 				$('#dateHidden').val(id);
 			}
@@ -366,6 +386,38 @@
 				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
+
+						// Progres bar hari kerja/minggu
+						for (var i = 1; i < 3; i++) {
+							if(req.getDay() == 4){
+								var persen = 20;
+								$('#progress_bar_week'+i).addClass('active');		
+							}
+							else if((req.getDay() == 0) || (req.getDay() > 4)){
+								var persen = 40;
+								$('#progress_bar_week'+i).addClass('active');		
+							}
+							else if(req.getDay() == 1){
+								var persen = 60;
+								$('#progress_bar_week'+i).addClass('active');		
+							}
+							else if(req.getDay() == 2){
+								var persen = 80;
+								$('#progress_bar_week'+i).addClass('active');		
+							}
+							else if(req.getDay() == 3){
+								var persen = 100;
+								$('#progress_bar_week'+i).removeClass('active');
+							}
+
+							$('#progress_bar_week'+i).html("Week's Working Time : "+persen+"%");
+							$('#progress_bar_week'+i).css('width', persen+'%');
+							$('#progress_bar_week'+i).css('color', 'white');
+							$('#progress_bar_week'+i).css('font-weight', 'bold');
+							
+						}
+
+						// Progres bar jam kerja/hari
 						for (var i = 1; i < 4; i++) {
 							if(now_tgl == req_tgl){
 								if(now.getHours() < 7){
@@ -375,13 +427,38 @@
 									$('#progress_bar_production'+i).css('color', 'white');
 									$('#progress_bar_production'+i).css('font-weight', 'bold');
 								}
-								else if(now.getHours() >= 16){
+								else if((now.getHours() >= 16) && (now.getDay() != 5)){
 									$('#progress_text_production'+i).append().empty();
 									$('#progress_bar_production'+i).html("Today's Working Time : 100%");
 									$('#progress_bar_production'+i).css('width', '100%');
 									$('#progress_bar_production'+i).css('color', 'white');
 									$('#progress_bar_production'+i).css('font-weight', 'bold');
 									$('#progress_bar_production'+i).removeClass('active');
+								}
+								else if(now.getDay() == 5){
+									$('#progress_text_production'+i).append().empty();
+									var total = 570;
+									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+									var persen = (now_menit/total) * 100;
+									if(now.getHours() >= 7 && now_menit < total){
+										if(persen > 13){
+											$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+										}
+										else{
+											$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
+										}
+										$('#progress_bar_production'+i).css('width', persen+'%');
+										$('#progress_bar_production'+i).addClass('active');
+
+									}
+									else if(now_menit >= total){
+										$('#progress_bar_production'+i).html("Today's Working Time : 100%");
+										$('#progress_bar_production'+i).css('width', '100%');
+										$('#progress_bar_production'+i).removeClass('active');
+
+									}
+									$('#progress_bar_production'+i).css('color', 'white');
+									$('#progress_bar_production'+i).css('font-weight', 'bold');
 								}
 								else{
 									$('#progress_text_production'+i).append().empty();

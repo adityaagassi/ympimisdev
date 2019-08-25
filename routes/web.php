@@ -127,6 +127,7 @@ Route::get('index/report/overtime_outsource', 'OvertimeController@indexReportOut
 Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchOvertimeOutsource');
 Route::get('index/report/overtime_outsource_data', 'OvertimeController@indexOvertimeOutsource');
 Route::get('fetch/report/overtime_data_outsource', 'OvertimeController@fetchOvertimeDataOutsource');
+Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });

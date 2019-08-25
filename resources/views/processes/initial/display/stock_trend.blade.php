@@ -310,6 +310,22 @@
 		// setInterval(fillChart, 10000);
 	});
 
+	$.date = function(dateObject) {
+		var d = new Date(dateObject);
+		var day = d.getDate();
+		var month = d.getMonth() + 1;
+		var year = d.getFullYear();
+		if (day < 10) {
+			day = "0" + day;
+		}
+		if (month < 10) {
+			month = "0" + month;
+		}
+		var date = year + "-" + month + "-" + day;
+
+		return date;
+	};
+
 
 	function addZero(i) {
 		if (i < 10) {
@@ -402,6 +418,14 @@
 							lineWidth: 2,
 							label: {
 								connectorAllowed: false
+							},
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										fetchModal($.date(this.category), this.series.name);
+									}
+								}
 							}
 						},
 						line: {
@@ -487,7 +511,7 @@
 
 	}
 
-	function fetchModal(category){
+	function fetchModal(date_stock, category){
 		$('#modalDetail').modal('show');
 		$('#loading').show();
 		$('#modalDetailTitle').html("");
@@ -497,8 +521,9 @@
 			location = $('#locs').val().toString();
 		}
 		var data = {
+			date_stock : date_stock,
 			location : location,
-			category:category
+			category : category
 		}
 		$.get('{{ url("fetch/initial/stock_trend_detail") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -512,14 +537,14 @@
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.material_number +'</td>';
 					resultData += '<td>'+ value.description +'</td>';
-					resultData += '<td>'+ value.safety.toLocaleString() +'</td>';
-					resultData += '<td>'+ value.quantity.toLocaleString() +'</td>';
-					resultData += '<td>'+ value.days.toFixed(2) +' Day(s)</td>';
+					resultData += '<td>'+ value.safety_stock.toLocaleString() +'</td>';
+					resultData += '<td>'+ value.actual_stock.toLocaleString() +'</td>';
+					resultData += '<td>'+ value.stock.toFixed(2) +' Day(s)</td>';
 					resultData += '</tr>';
 					index += 1;
 				});
 				$('#tableDetailBody').append(resultData);
-				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+category+"</span></center>");
+				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Date : "+date_stock+"Stock: "+category+"</span></center>");
 				$('#loading').hide();
 				$('#tableDetail').show();
 			}

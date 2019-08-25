@@ -117,10 +117,10 @@ public function check($id)
      // ->get();
      $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
      SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-     ) cek
+      and deleted_at is null) cek
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
-) as inv on cek.gmc = inv.material_number";
+) as inv on cek.gmc = inv.material_number ORDER BY cek.id asc";
 $container = AreaInspection::orderBy('id','ASC')
 ->get();
 $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
@@ -192,7 +192,7 @@ public function checkmarking($id)
      // ->get();
      $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
      SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-     ) cek
+     and deleted_at is null) cek
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number";
@@ -368,7 +368,8 @@ public function import(Request $request)
                'payment' => $request->get('payment'),
                'etd_sub' => $request->get('etd_sub'),
                'no_pol' => $request->get('nopol'),
-               'Stuffing_date' => $request->get('Stuffing_date'),
+               'Stuffing_date' => $request->get('Stuffing_date'),               
+               'invoice_date' => $request->get('invoice_date'),
                'created_by' => $id
           ]);
 
@@ -424,25 +425,38 @@ public function import(Request $request)
 }
 
 public function importDetail(Request $request)
-{
-     if($request->hasFile('check_sheet_import')){
-// st_assemblies::truncate();
+{    
+     $id = Auth::id();
 
-          $id = Auth::id();
+      $Inspection = new Inspection([
+               'id_checksheet' => $request->get('idcs2'),
+               'created_by' => $id
+          ]);
+          $Inspection->save();
+     if($request->hasFile('check_sheet_import2')){
 
-          $file = $request->file('check_sheet_import');
+          
+
+          $file = $request->file('check_sheet_import2');
           $data = file_get_contents($file);
-          $code_master = $request->get('master_id');
+          $code_master = $request->get('idcs2');
           $rows = explode("\r\n", $data);
           foreach ($rows as $row)
           {
                if (strlen($row) > 0) {
                     $row1 = explode("\t", $row);
+                     if ($row1[0] != '' && $row1[0] !='CONSIGNEE & ADDRESS'){
+                         if ( $row1[5] =='' ) {
+                              $row1[5] = '-';
+                         }
+                         if ( $row1[6] =='' ) {
+                              $row1[6] = '-';
+                         }
+
                     $detail = new DetailChecksheet([
                          'id_checkSheet' =>$code_master,
                          'destination' => $row1[0],
                          'invoice' => $row1[1],
-// 'countainer_number' => $row1[2],
                          'gmc' => $row1[2],
                          'goods' => $row1[3],
                          'marking' => $row1[4],
@@ -457,7 +471,9 @@ public function importDetail(Request $request)
                     $detail->save();
                }
           }
-          return redirect('/index/CheckSheet')->with('status', 'New Check Sheet has been imported.')->with('page', 'Check Sheet');
+          }
+
+          return redirect('/index/CheckSheet')->with('status', 'Re - Import Success')->with('page', 'Check Sheet');
 
      }
      else
@@ -588,7 +604,7 @@ public function bara(Request $request){
 public function getReason(Request $request)
 {
  $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
- ->select('reason')     
+ ->select('reason','invoice_date')     
  ->first();
 
  $response = array(
@@ -611,6 +627,7 @@ public function edit(Request $request){
  $master->destination = strtoupper($request->get('destinationE'));
  $master->shipped_to = $request->get('shipped_toE');
  $master->Stuffing_date = $request->get('Stuffing_dateE');
+ $master->invoice_date = $request->get('invoice_dateE');
  $master->etd_sub = $request->get('etd_subE');
  $master->carier = $request->get('carierE');
  $master->payment = $request->get('paymentE');
@@ -711,8 +728,7 @@ public function delete($id){
 public function persen($id){
 
 
-     $ceksheet = DB::table('detail_checksheets')    
-     ->where('id_checkSheet', '=', $id);
+     $ceksheet = DetailChecksheet::where('id_checkSheet', '=', $id);
 
      $total = $ceksheet->sum('detail_checksheets.package_qty');
      $cek = $ceksheet->sum('detail_checksheets.confirm');
@@ -724,6 +740,23 @@ public function persen($id){
           'cek' => $cek,
      );
      return Response::json($response);
+}
+
+public function deleteReimport(Request $request)
+{
+     $detail = DetailChecksheet::where('id_checkSheet','=' ,$request->get('id'))
+     ->delete();
+
+     $Inspection = Inspection::where('id_checkSheet','=' ,$request->get('id'))
+     ->delete();
+
+
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+    'reason' => 'ok'
+);
+ return Response::json($response);
 }
 
 }

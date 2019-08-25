@@ -32,7 +32,7 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
   }
-  #loading, #error { display: none; }
+  /*#loading, #error { display: none; }*/
 </style>
 @stop
 @section('header')
@@ -117,6 +117,8 @@
               <td>
                 @if($time->status == null) 
                 <a href="javascript:void(0)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editModal" onclick="editConfirmation('{{ url("edit/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id_checkSheet'] }}'); reason('{{ $time['id_checkSheet'] }}');">Edit</a>
+
+                <a data-toggle="modal" data-target="#importModal3" class="btn btn-success btn-xs" style="color:white" onclick="getid('{{ $time['id_checkSheet'] }}');"><i class="fa fa-folder-open-o"></i> Re - Import</a>
 
 
                 <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("delete/CheckSheet") }}', '{{ $time['destination'] }}', '{{ $time['id'] }}');">Delete</a>
@@ -246,7 +248,10 @@
           <label>INVOICE NO.</label>
           <input type="text" name="invoice" class="form-control" id="invoice" required>
 
-          <label>DATE</label>
+          <label>INVOICE DATE</label>
+          <input type="text" name="invoice_date" class="form-control" id="invoice_date" required>
+
+          <label>STUFFING DATE</label>
           <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" required>
 
           
@@ -316,7 +321,10 @@
           <div class="col-xs-4">
             <label>INVOICE NO.</label>
             <input type="text" name="invoiceE" class="form-control" id="invoiceE" required>
-            <label>DATE</label>
+            <label>INVOICE DATE</label>
+          <input type="text" name="invoice_dateE" class="form-control" id="invoice_dateE" required>
+
+            <label>STUFFING DATE</label>
             <input type="text" name="Stuffing_dateE" class="form-control" id="Stuffing_dateE" required>
             <label>PAYMENT</label>
             <select class="form-control select2" name="paymentE" id="paymentE"  data-placeholder="Choose a Payment ..." style="width: 100%;" >
@@ -345,6 +353,61 @@
 </div>
 
 
+<div class="modal fade" id="importModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
+                                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                               <div class="modal-header">Re - Import Data        </div>
+                                <div class="">
+                                  <div class="modal-body">
+                                     Are you sure to Re - Import?<br>
+                                     All Data Will be Delete and Re - Import
+
+                                     <center>
+            <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+          </center>
+                                    <input type="text" name="idcs" id="idcs" hidden="">
+                                    <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button id="modalImportButton" type="button" class="btn btn-success" onclick="deleteReimport()">Re - Import</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+<div class="modal fade" id="importModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
+                                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                               <div class="modal-header">
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+          <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
+          Format: [Destination][Invoice][GMC][Goods][Marking No][Package Qty][Package Set][Qty Qty][Qty Set]<br>
+          Sample: <a href="{{ url('download/manual/import_check_sheet_detail.txt') }}">import_check_sheet_detail.txt</a> Code: #Truncate
+        </div>
+                                <div class="">
+                                  <div class="modal-body">
+                                    <center><input type="file" name="check_sheet_import2" id="InputFile" accept="text/plain" required=""></center>
+                                    <input type="text" name="idcs2" id="idcs2" hidden="">
+                                    <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+                                    <button id="modalImportButton" type="submit" class="btn btn-success" >Import</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
 
 </section>
 @stop
@@ -360,18 +423,35 @@
   $('#etd_sub').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
+    todayHighlight: true
   })
   $('#Stuffing_date').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
+    todayHighlight: true
   })
+
+  $('#invoice_date').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    todayHighlight: true
+  })
+
+  $('#invoice_dateE').datepicker({
+    autoclose: true,
+    format: 'yyyy-mm-dd',
+    todayHighlight: true
+  })
+
   $('#etd_subE').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
+    todayHighlight: true
   })
   $('#Stuffing_dateE').datepicker({
     autoclose: true,
     format: 'yyyy-mm-dd',
+    todayHighlight: true
   })
   jQuery(document).ready(function() {
 
@@ -527,6 +607,7 @@
     if(xhr.status == 200){
       if(result.status){
        $('#reason').val(result.reason.reason);
+       $('#invoice_dateE').val(result.reason.invoice_date);
      }
      else{
       alert('Attempt to retrieve data failed');
@@ -571,10 +652,51 @@ function addInspection(id){
       
       document.getElementById("importForm").submit();
     }else{
-      alert('Please Check Date Invoice And Date ON OR ABOUT');
+      alert('Please Check Stuffing Date And Date ON OR ABOUT');
 
     }
   }
+
+  function getid(id) {
+    var id_chek;
+    id_chek = $("#"+id+" td:nth-child(1)").text();
+    $('#idcs').val(id_chek);
+    $('#idcs2').val(id_chek);
+    $('#loading').hide();
+   // alert(id_chek);
+  }
+
+  function deleteReimport() {  
+   var id = $('#idcs').val();
+   // alert(id);
+   var data = {
+    id:id
+  }
+  $.get('{{ url("delete/deleteReimport") }}', data, function(result, status, xhr){
+    console.log(status);
+    console.log(result);
+    console.log(xhr);
+    if(xhr.status == 200){
+      if(result.status){
+        $('#loading').show();
+        setTimeout(function() {
+   $('#importModal2').modal({backdrop: 'static', keyboard: false});
+         $('#importModal2').modal('show');
+        }, 2000);
+        
+
+         
+     }
+     else{
+      alert('Attempt to retrieve data failed');
+    }
+  }
+  else{
+    alert('Disconnected from server');
+  }
+});
+  
+}
 </script>
 
 @stop
