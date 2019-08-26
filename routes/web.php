@@ -128,6 +128,10 @@ Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchOv
 Route::get('index/report/overtime_outsource_data', 'OvertimeController@indexOvertimeOutsource');
 Route::get('fetch/report/overtime_data_outsource', 'OvertimeController@fetchOvertimeDataOutsource');
 Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
+Route::get('index/report/overtime_by_employee', 'OvertimeController@indexOvertimeByEmployee');
+Route::get('fetch/report/overtime_by_employee', 'OvertimeController@fetchOvertimeByEmployee');
+Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvertimeByEmployee');
+
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -842,6 +846,10 @@ Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime')
 
 //DISPLAY STUFFING MONITORING
 Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffingMonitoring');
+
+//ASSY PICKING
+Route::get('index/display/assy', 'AssyProcessController@indexDisplayAssy');
+Route::get('fetch/display/assy', 'AssyProcessController@fetchPicking');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

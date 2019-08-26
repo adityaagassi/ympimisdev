@@ -74,6 +74,13 @@ class OvertimeController extends Controller
 			'title_jp' => '??'))->with('page', 'Overtime Outsource Employee');
 	}
 
+	public function indexMonthlyResume()
+	{
+		return view('overtimes.reports.overtime_resume', array(
+			'title' => 'Overtime Monthly Resume',
+			'title_jp' => '??'))->with('page', 'Overtime Monthly Resume');
+	}
+
 	public function indexOvertimeOutsource()
 	{
 		return view('overtimes.reports.overtime_data_outsource', array(
@@ -122,6 +129,25 @@ class OvertimeController extends Controller
 			'departments' => $department,
 			'sections' => $section
 		));
+	}
+
+	public function indexOvertimeByEmployee(){
+		$title = 'Employee Monthly Overtime';
+		$title_jp = '社員番号別残業管理';
+		$department = db::select("select child_code from organization_structures where remark = '".'department'."'");
+		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
+		$nik = db::select("SELECT employee_id from employees where end_date is null");
+
+
+		return view('overtimes.reports.overtime_by_employee', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'departments' => $department,
+			'sections' => $section,
+			'niks' => $nik
+		));
+
+		
 	}
 
 	public function createOvertimeForm(){
@@ -960,9 +986,9 @@ public function overtimeReportDetail(Request $request)
 		$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, `group` from
 		(select d.nik, round(avg(jam),2) as avg from
 		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
-	left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-	where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-	group by nik, tanggal, hari) d 
+		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+		group by nik, tanggal, hari) d 
 		where jam > 3
 		group by d.nik ) s
 		left join employees on employees.employee_id = s.nik
@@ -1461,4 +1487,89 @@ public function fetchOvertimeDataOutsource(Request $request)
 	);
 	return Response::json($response);
 }
+
+public function fetchOvertimeByEmployee(Request $request){
+	$adddepartment = '';
+	$addsection = '';
+	$addnik = '';
+
+	if(strlen($request->get('datefrom')) > 0){
+		$tanggal = "and DATE_FORMAT(tanggal,'%m-%Y') >= '".$request->get('datefrom')."' ";
+		if(strlen($request->get('dateto')) > 0){
+			$tanggal = $tanggal."and DATE_FORMAT(tanggal,'%m-%Y') <= '".$request->get('dateto')."' ";
+		}
+	}
+
+	if($request->get('department') != null) {
+		$departments = $request->get('department');
+		$department = "";
+		for($x = 0; $x < count($departments); $x++) {
+			$department = $department."'".$departments[$x]."'";
+			if($x != count($departments)-1){
+				$department = $department.",";
+			}
+		}
+		$adddepartment = "and bagian.department in (".$department.") ";
+	}
+
+	if($request->get('section') != null) {
+		$sections = $request->get('section');
+		$section = "";
+		for($x = 0; $x < count($sections); $x++) {
+			$section = $section."'".$sections[$x]."'";
+			if($x != count($sections)-1){
+				$section = $section.",";
+			}
+		}
+		$addsection = "and bagian.section in (".$section.") ";
+	}
+
+	if($request->get('nik') != null) {
+		$niks = $request->get('nik');
+		$nik = "";
+		for($x = 0; $x < count($niks); $x++) {
+			$nik = $nik."'".$niks[$x]."'";
+			if($x != count($niks)-1){
+				$nik = $nik.",";
+			}
+		}
+		$addnik = "and ovr.nik in (".$nik.") ";
+	}
+
+	$query = "select DATE_FORMAT(tanggal,'%m-%Y') as period, ovr.nik, emp.name, bagian.department, bagian.section, SUM(ot) as total from (select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time_member left join over_time on over_time.id = over_time_member.id_ot
+	where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
+	left join ympimis.employees as emp on emp.employee_id = ovr.nik
+	left join (select employee_id, department, section from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
+	where ot > 0 ".$addsection."".$addnik."".$adddepartment."
+	group by period, nik, ympimis.emp.name
+	order by period, total asc";
+
+	$data = db::connection('mysql3')->select($query);
+
+	return DataTables::of($data)
+	->addColumn('detail', function($data){
+		return '<input type="button" class="btn btn-success btn-sm" id="detail+' . $data->nik . '+' .$data->period .'" onclick="showModal( \'' . $data->nik . '\', \'' . $data->period . '\', \'' . $data->name . '\')" value="Detail">';
+	})
+	->rawColumns(['action' => 'detail'])
+	->make(true);
+	
+}
+
+public function detailOvertimeByEmployee(Request $request){
+	$query = "select distinct ovr.tanggal, ovr.nik, emp.name, bagian.department, bagian.section, ot, ovr.keperluan from
+	(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
+	where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%m-%Y') = '".$request->get('period')."' group by tanggal, nik) ovr
+	left join ympimis.employees as emp on emp.employee_id = ovr.nik
+	left join (select employee_id, department, section from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
+	where ot > 0 and nik = '".$request->get('nik')."'
+	order by ovr.tanggal asc";
+
+	$data = db::connection('mysql3')->select($query);
+
+	return DataTables::of($data)->make(true);
+
+}
+
+
+
 }
