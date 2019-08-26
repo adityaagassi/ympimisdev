@@ -511,6 +511,14 @@ class ProcessController extends Controller
 		$stamp_inventory->update(['model' => $request->get('model')]);
 		$log_process->save();
 
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Edit - '.$stamp->model.'-'.$stamp->serial_number.'-'.$stamp->origin_group_code.'- To - '.$request->get('model'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
 		$response = array(
 			'status' => true,
 			'message' => 'Update Success',
