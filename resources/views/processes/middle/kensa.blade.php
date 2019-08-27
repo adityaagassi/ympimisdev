@@ -56,90 +56,93 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
 	<input type="hidden" id="loc" value="{{ $loc }}">
-	<div class="col-xs-6" style="padding-right: 0; padding-left: 0">
-		<div class="input-group">
-			<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-				<i class="glyphicon glyphicon-qrcode"></i>
+	<div class="row" style="margin-left: 1%; margin-right: 1%;">
+		<div class="col-xs-6" style="padding-right: 0; padding-left: 0">
+			<div class="input-group">
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+					<i class="glyphicon glyphicon-qrcode"></i>
+				</div>
+				<input type="text" style="text-align: center; border-color: black;" class="form-control" id="tag" name="tag" placeholder="Scan ID Slip..." required>
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
+					<i class="glyphicon glyphicon-qrcode"></i>
+				</div>
 			</div>
-			<input type="text" style="text-align: center; border-color: black;" class="form-control" id="tag" name="tag" placeholder="Scan ID Slip..." required>
-			<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
-				<i class="glyphicon glyphicon-qrcode"></i>
+			<div style="padding-top: 5px;">
+				<table style="width: 100%;" border="1">
+					<tbody>
+						<tr>
+							<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Model</td>
+							<td id="model" style="width: 4%; font-size: 18px; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Key</td>
+							<td id="key" style="width: 4%; font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"></td>
+							<input type="hidden" id="material_tag">
+							<input type="hidden" id="material_number">
+							<input type="hidden" id="material_quantity">
+							<input type="hidden" id="employee_id">
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div style="padding-top: 5px;">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
+					<thead>
+						<tr>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Operator aaaa</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Result</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Not Good</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-weight: bold; font-size:1vw;" id="op">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="result">0</td>
+							<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="notGood">0</td>
+							<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="ngRate">0%</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		<div style="padding-top: 5px;">
-			<table style="width: 100%;" border="1">
-				<tbody>
-					<tr>
-						<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Model</td>
-						<td id="model" style="width: 4%; font-size: 18px; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
-						<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Key</td>
-						<td id="key" style="width: 4%; font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"></td>
-						<input type="hidden" id="material_tag">
-						<input type="hidden" id="material_number">
-						<input type="hidden" id="material_quantity">
-						<input type="hidden" id="employee_id">
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div style="padding-top: 5px;">
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
+		<div class="col-xs-6" style="padding-right: 0;">
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Operator</th>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Result</th>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Not Good</th>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate</th>
+						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
+						<th style="width: 65%; background-color: rgb(220,220,220); padding:0;">NG Name</th>
+						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
+						<th style="width: 15%; background-color: rgb(220,220,220); padding:0;">Count</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-weight: bold; font-size:1vw;" id="op">-</td>
-						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="result">0</td>
-						<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="notGood">0</td>
-						<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="ngRate">0%</td>
+					<?php $no = 1; ?>
+					@foreach($ng_lists as $nomor => $ng_list)
+					<?php if ($no % 2 === 0 ) {
+						$color = 'style="background-color: #fffcb7"';
+					} else {
+						$color = 'style="background-color: #ffd8b7"';
+					}
+					?>
+					<input type="hidden" id="loop" value="{{$loop->count}}">
+					<tr <?php echo $color ?>>
+						<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">-</td>
+						<td id="ng{{$nomor+1}}" style="font-size: 12px;">{{ $ng_list->ng_name }} </td>
+						<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">+</td>
+						<td style="font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
 					</tr>
+					<?php $no+=1; ?>
+					@endforeach
 				</tbody>
 			</table>
+			<div>
+				<center>
+					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 30%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 69%" onclick="conf()" class="btn btn-success">CONFIRM</button>
+				</center>
+			</div>
 		</div>
 	</div>
-	<div class="col-xs-6" style="padding-right: 0;">
-		<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
-			<thead>
-				<tr>
-					<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
-					<th style="width: 65%; background-color: rgb(220,220,220); padding:0;">NG Name</th>
-					<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
-					<th style="width: 15%; background-color: rgb(220,220,220); padding:0;">Count</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php $no = 1; ?>
-				@foreach($ng_lists as $nomor => $ng_list)
-				<?php if ($no % 2 === 0 ) {
-					$color = 'style="background-color: #fffcb7"';
-				} else {
-					$color = 'style="background-color: #ffd8b7"';
-				}
-				?>
-				<input type="hidden" id="loop" value="{{$loop->count}}">
-				<tr <?php echo $color ?>>
-					<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">-</td>
-					<td id="ng{{$nomor+1}}" style="font-size: 12px;">{{ $ng_list->ng_name }} </td>
-					<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">+</td>
-					<td style="font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
-				</tr>
-				<?php $no+=1; ?>
-				@endforeach
-			</tbody>
-		</table>
-		<div>
-			<center>
-				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 30%" onclick="canc()" class="btn btn-danger">CANCEL</button>
-				<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 69%" onclick="conf()" class="btn btn-success">CONFIRM</button>
-			</center>
-		</div>
-	</div>
+	
 </section>
 
 <div class="modal fade" id="modalOperator">
@@ -238,14 +241,28 @@
 		});
 	}
 
+	function disabledButton() {
+		if($('#tag').val() != ""){
+		var btn = document.getElementById('conf1');
+        btn.disabled = true;
+        btn.innerText = 'Posting...'
+        // alert('aaaa');			
+		return false;
+		}
+	}
+
+
 	function conf(){
 		if($('#tag').val() == ""){
 			openErrorGritter('Error!', 'Tag is empty');
 			audio_error.play();
 			$("#tag").val("");
 			$("#tag").focus();
+
 			return false;
 		}
+
+		
 
 		var tag = $('#tag_material').val();
 		var loop = $('#loop').val();
@@ -272,9 +289,15 @@
 			count_text: count_text,
 			// total_ng: total,
 		}
+		disabledButton();
 
 		$.post('{{ url("input/middle/kensa") }}', data, function(result, status, xhr){
+			
+			
 			if(result.status){
+				var btn = document.getElementById('conf1');
+        		btn.disabled = false;
+        		btn.innerText = 'CONFIRM';
 				openSuccessGritter('Success!', result.message);
 				for (var i = 1; i <= loop; i++) {
 					$('#count'+i).text(0);
@@ -288,8 +311,13 @@
 				$('#tag').prop('disabled', false);
 				fillResult();
 				$('#tag').focus();
+				
+				
 			}
 			else{
+				var btn = document.getElementById('conf1');
+        		btn.disabled = false;
+        		btn.innerText = 'CONFIRM';
 				audio_error.play();
 				openErrorGritter('Error!', result.message);
 			}
@@ -297,6 +325,10 @@
 	}
 
 	function canc(){
+		var loop = $('#loop').val();
+		for (var i = 1; i <= loop; i++) {
+					$('#count'+i).text(0);
+				};
 		$('#model').text("");
 		$('#key').text("");
 		$('#material_tag').val("");
@@ -305,6 +337,7 @@
 		$('#tag').val("");
 		$('#tag').prop('disabled', false);
 		$('#tag').focus();
+
 	}
 
 	function plus(id){
