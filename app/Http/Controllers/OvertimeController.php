@@ -1537,7 +1537,7 @@ public function fetchOvertimeByEmployee(Request $request){
 		$addnik = "and ovr.nik in (".$nik.") ";
 	}
 
-	$query = "select DATE_FORMAT(tanggal,'%m-%Y') as period, ovr.nik, emp.name, bagian.department, bagian.section, SUM(ot) as total from (select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time_member left join over_time on over_time.id = over_time_member.id_ot
+	$query = "select DATE_FORMAT(tanggal,'%m-%Y') as period, ovr.nik, emp.name, bagian.department, bagian.section, SUM(ot) as total from (select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time left join over_time_member on over_time.id = over_time_member.id_ot
 	where deleted_at is null and jam_aktual = 0 ".$tanggal." group by nik, tanggal) ovr
 	left join ympimis.employees as emp on emp.employee_id = ovr.nik
 	left join (select employee_id, department, section from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
