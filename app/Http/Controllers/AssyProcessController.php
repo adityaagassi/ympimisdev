@@ -12,7 +12,7 @@ class AssyProcessController extends Controller
 	public function indexDisplayAssy()
 	{
 		$title = 'SX Sub-Assy Picking Monitor';
-		$title_jp = '??';
+		$title_jp = '';
 
 		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
 

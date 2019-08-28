@@ -132,7 +132,7 @@
 					if ((value.picking - value.total_plan) < 0) {
 						style = "style='background-color:#f24b4b'";
 					} else {
-						style = "style='background-color:#4af753'";
+						style = "style='background-color:#7fde62'";
 					}
 
 					model += "<th>"+value.model+" "+value.key+" "+value.surface+"</th>";
