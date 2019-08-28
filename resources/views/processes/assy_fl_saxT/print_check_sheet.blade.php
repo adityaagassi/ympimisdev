@@ -3505,7 +3505,7 @@ tags will be replaced.-->
 
      // defineCustomPaperSize();
 
-     setTimeout(asd,2000);
+     setTimeout(asd,4000);
 
 
      
