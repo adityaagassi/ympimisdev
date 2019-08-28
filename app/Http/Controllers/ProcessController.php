@@ -22,6 +22,8 @@ use App\Material;
 use App\Process;
 use App\ErrorLog;
 
+use App\ImageSax;
+
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -1376,24 +1378,24 @@ public function print_sax(Request $request){
 			
 			$log_process->save();
 
-			$printer_name = 'Barcode Printer Sax';
+			// $printer_name = 'Barcode Printer Sax';
 
-			$connector = new WindowsPrintConnector($printer_name);
-			$printer = new Printer($connector);
+			// $connector = new WindowsPrintConnector($printer_name);
+			// $printer = new Printer($connector);
 
-			$printer->setJustification(Printer::JUSTIFY_CENTER);
-			$printer->setBarcodeWidth(2);
-			$printer->setBarcodeHeight(64);
-			$printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
-				// $printer->qrCode($request->get('sn'));
-			$printer->setTextSize(3, 1);
-			$printer->text($request->get('sn')."\n");
-			$printer->feed(1);
-			$printer->text($model."\n");
-			$printer->setTextSize(1, 1);
-			$printer->text(date("d-M-Y H:i:s")."\n");
-			$printer->cut();
-			$printer->close();
+			// $printer->setJustification(Printer::JUSTIFY_CENTER);
+			// $printer->setBarcodeWidth(2);
+			// $printer->setBarcodeHeight(64);
+			// $printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
+			// 	// $printer->qrCode($request->get('sn'));
+			// $printer->setTextSize(3, 1);
+			// $printer->text($request->get('sn')."\n");
+			// $printer->feed(1);
+			// $printer->text($model."\n");
+			// $printer->setTextSize(1, 1);
+			// $printer->text(date("d-M-Y H:i:s")."\n");
+			// $printer->cut();
+			// $printer->close();
 
 		}else{
 			$invent = new StampInventory([
@@ -1418,24 +1420,24 @@ public function print_sax(Request $request){
 			$invent->save();
 			$log->save();
 
-			$printer_name = 'Barcode Printer Sax';
+			// $printer_name = 'Barcode Printer Sax';
 
-			$connector = new WindowsPrintConnector($printer_name);
-			$printer = new Printer($connector);
+			// $connector = new WindowsPrintConnector($printer_name);
+			// $printer = new Printer($connector);
 
-			$printer->setJustification(Printer::JUSTIFY_CENTER);
-			$printer->setBarcodeWidth(2);
-			$printer->setBarcodeHeight(64);
-			$printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
-				// $printer->qrCode($request->get('sn'));
-			$printer->setTextSize(3, 1);
-			$printer->text($request->get('sn')."\n");
-			$printer->feed(1);
-			$printer->text($request->get('snmodel')."\n");
-			$printer->setTextSize(1, 1);
-			$printer->text(date("d-M-Y H:i:s")."\n");
-			$printer->cut();
-			$printer->close();
+			// $printer->setJustification(Printer::JUSTIFY_CENTER);
+			// $printer->setBarcodeWidth(2);
+			// $printer->setBarcodeHeight(64);
+			// $printer->barcode($request->get('sn'), Printer::BARCODE_CODE39);
+			// 	// $printer->qrCode($request->get('sn'));
+			// $printer->setTextSize(3, 1);
+			// $printer->text($request->get('sn')."\n");
+			// $printer->feed(1);
+			// $printer->text($request->get('snmodel')."\n");
+			// $printer->setTextSize(1, 1);
+			// $printer->text(date("d-M-Y H:i:s")."\n");
+			// $printer->cut();
+			// $printer->close();
 		}
 
 		$response = array(
@@ -1538,6 +1540,16 @@ public function reprint_stamp2(Request $request)
 // end print saxophone
 
 // print saxophone label
+
+public function indexProcessAssyFLSaxTCheck(){
+	$model2 = StampInventory::where('origin_group_code','=','043')->orderBy('created_at', 'desc')
+	->get();
+	return view('processes.assy_fl_saxT.print2',array(
+		'model2' => $model2,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+
 public function indexProcessAssyFLSaxT2(){
 	$model2 = StampInventory::where('origin_group_code','=','043')->orderBy('created_at', 'desc')
 	->get();
@@ -2383,5 +2395,29 @@ public function mailSax($sn, $model, $id,$log){
 }
 
 //end email
+
+
+// start Ambil Gambar Checksheet Sax
+public function indexProcessAssyFLSaxT4($model, $sn){
+	
+	return view('processes.assy_fl_saxT.print_check_sheet',array(
+		'model' => $model,
+		'sn' => $sn,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+public function fetchImageSax(Request $request)
+{
+
+	$model = $request->get('modelp');
+	$img = ImageSax::where('model', '=', $model)			
+	->first();
+	$response = array(
+		'status' => true,
+		'img' => $img,
+
+	);
+	return Response::json($response);
+}
+// end Ambil Gambar Checksheet Sax 
 
 }

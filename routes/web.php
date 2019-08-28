@@ -798,6 +798,17 @@ Route::get('index/label_des_fl/{id}', 'ProcessController@label_des_fl');
 
 //end label flute
 
+// check sheet sax
+
+Route::get('index/process_stamp_sx_4/{model}/{sn}', 'ProcessController@indexProcessAssyFLSaxT4');
+Route::get('fetch/image_sax', 'ProcessController@fetchImageSax');
+
+Route::get('index/process_stamp_sx_check', 'ProcessController@indexProcessAssyFLSaxTCheck');
+
+
+
+// end check sheet sax
+
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');
 Route::get('fetch/maedaoshi', 'MaedaoshiController@fetch_maedaoshi');

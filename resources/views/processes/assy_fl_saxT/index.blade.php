@@ -20,6 +20,7 @@
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_stamp_sx_1") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp <b><i>IoT</i></b></a>
 			<a href="{{ url("index/process_stamp_sx_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print</a>
+			<a href="{{ url("index/process_stamp_sx_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Check Sheet</a>
 			<a href="{{ url("index/process_stamp_sx_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Label</a>
 			{{-- 
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
