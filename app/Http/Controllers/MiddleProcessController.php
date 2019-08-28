@@ -263,6 +263,7 @@ class MiddleProcessController extends Controller
 		$work_stations = db::connection('digital_kanban')->table('dev_list')
 		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
 		->where('enable_antrian', '=', 'YES')
+		->orderBy('dev_name', 'asc')
 		->get();
 
 		$boards = array();
