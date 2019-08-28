@@ -130,9 +130,9 @@
 
 				$.each(result.picking, function(index, value){
 					if ((value.picking - value.total_plan) < 0) {
-						style = "style='background-color:#f24b4b'";
+						style = "style='background-color:#f24b4b';";
 					} else {
-						style = "style='background-color:#7fde62'";
+						style = "style='background-color:#7fde62'; color:black";
 					}
 
 					model += "<th>"+value.model+" "+value.key+" "+value.surface+"</th>";
