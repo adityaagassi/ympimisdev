@@ -262,6 +262,7 @@ class MiddleProcessController extends Controller
 
 		$work_stations = db::connection('digital_kanban')->table('dev_list')
 		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
+		->where('enable_antrian', '=', 'YES')
 		->get();
 
 		$boards = array();
@@ -570,7 +571,7 @@ class MiddleProcessController extends Controller
 						$printer->initialize();
 						$printer->setTextSize(1,1);
 						$printer->text("GMC : ".$barrel->material_number."\n");
-						$printer->text("DESC: ".$barrel->material_description."\n");	
+						$printer->text("DESC: ".$barrel->material_description."\n");
 						$printer->text("QTY : ".$barrel->quantity." PC(S)                 MACHINE: FLANEL\n");
 						$printer->cut(Printer::CUT_PARTIAL, 50);
 						$printer->close();

@@ -40,7 +40,7 @@ class RecordDailyStocks extends Command
      */
     public function handle()
     {
-        $query = "select material_number, issue_location, sum(lot) as quantity from kitto.inventories where lot > 0 group by material_number, issue_location";
+        $query = "select material_number, issue_location, sum(lot) as quantity from kitto.inventories group by material_number, issue_location";
 
         $inventories = db::select($query);
 

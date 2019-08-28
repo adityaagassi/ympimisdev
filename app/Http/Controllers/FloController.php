@@ -59,6 +59,7 @@ class FloController extends Controller
 		$flos = Flo::orderBy('flo_number', 'asc')
 		->whereIn('status', ['1', '2'])
 		->get();
+		
 		return view('flos.flo_delivery', array(
 			'flos' => $flos
 		))->with('page', 'FLO Delivery');

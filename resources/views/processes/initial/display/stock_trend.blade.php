@@ -49,11 +49,11 @@
 			</div>
 		</div>
 		<div class="col-xs-12">
-			<div id="container1" style="height: 400px;"></div>
+			<div id="container1" style="height: 550px;"></div>
 		</div>
-		<div class="col-xs-12">
+		{{-- <div class="col-xs-12">
 			<div id="container2" style="height: 400px;"></div>			
-		</div>
+		</div> --}}
 	</div>
 </section>
 
@@ -358,7 +358,7 @@
 
 				var names = [];
 				var dataCount = [];
-				var dataPercentage = [];
+				// var dataPercentage = [];
 				var cat;
 
 				$.each(result.stocks, function(key, value) {
@@ -370,11 +370,11 @@
 
 				$.each(names, function(key, name){
 					var series = [];
-					var series2 = [];
+					// var series2 = [];
 					$.each(result.stocks, function(i, value) {
 						if(value.category == name){
 							series.push([Date.parse(value.date_stock), parseFloat(value.material)]);
-							series2.push([Date.parse(value.date_stock), parseFloat(value.percentage)]);
+							// series2.push([Date.parse(value.date_stock), parseFloat(value.percentage)]);
 						}
 					});
 
@@ -383,14 +383,14 @@
 						data:series
 					};
 
-					dataPercentage[key] = {
-						name:name,
-						data:series2
-					};
+					// dataPercentage[key] = {
+					// 	name:name,
+					// 	data:series2
+					// };
 				});
 
 				window.chart = Highcharts.stockChart('container1', {
-					colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
+					// colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
 					rangeSelector: {
 						selected: 0
 					},
@@ -450,59 +450,59 @@
 					series: dataCount
 				});
 
-				window.chart = Highcharts.stockChart('container2', {
-					colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
-					rangeSelector: {
-						selected: 0
-					},
-					navigator:{
-						enabled:false
-					},
-					yAxis: {
-						title: {
-							text: 'Percentage (%)'
-						}
-					},
-					title: {
-						text: 'M-PRO Daily Stock By Percentage',
-						style: {
-							fontSize: '20px',
-							fontWeight: 'bold'
-						}
-					},
-					xAxis:{
-						type: 'datetime',
-						tickInterval: 24 * 3600 * 1000
-					},
-					plotOptions: {
-						series: {
-							lineWidth: 2,
-							label: {
-								connectorAllowed: false
-							}
-						},
-						line: {
-							dataLabels: {
-								enabled: true
-							}
-						}
-					},
-					legend: {
-						enabled: true,
-						itemStyle: {
-							fontSize:'20px'
-						}
-					},
-					credits:{
-						enabled:false
-					},
-					tooltip: {
-						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b> <br/>',
-						valueDecimals: 2,
-						split: true
-					},
-					series: dataPercentage
-				});
+				// window.chart = Highcharts.stockChart('container2', {
+				// 	// colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
+				// 	rangeSelector: {
+				// 		selected: 0
+				// 	},
+				// 	navigator:{
+				// 		enabled:false
+				// 	},
+				// 	yAxis: {
+				// 		title: {
+				// 			text: 'Percentage (%)'
+				// 		}
+				// 	},
+				// 	title: {
+				// 		text: 'M-PRO Daily Stock By Percentage',
+				// 		style: {
+				// 			fontSize: '20px',
+				// 			fontWeight: 'bold'
+				// 		}
+				// 	},
+				// 	xAxis:{
+				// 		type: 'datetime',
+				// 		tickInterval: 24 * 3600 * 1000
+				// 	},
+				// 	plotOptions: {
+				// 		series: {
+				// 			lineWidth: 2,
+				// 			label: {
+				// 				connectorAllowed: false
+				// 			}
+				// 		},
+				// 		line: {
+				// 			dataLabels: {
+				// 				enabled: true
+				// 			}
+				// 		}
+				// 	},
+				// 	legend: {
+				// 		enabled: true,
+				// 		itemStyle: {
+				// 			fontSize:'20px'
+				// 		}
+				// 	},
+				// 	credits:{
+				// 		enabled:false
+				// 	},
+				// 	tooltip: {
+				// 		pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b> <br/>',
+				// 		valueDecimals: 2,
+				// 		split: true
+				// 	},
+				// 	series: dataPercentage
+				// });
 			}
 			else{
 				alert('Attempt to retrieve data failed.');
@@ -538,7 +538,7 @@
 					resultData += '<td>'+ value.material_number +'</td>';
 					resultData += '<td>'+ value.description +'</td>';
 					resultData += '<td>'+ value.safety_stock.toLocaleString() +'</td>';
-					resultData += '<td>'+ value.actual_stock.toLocaleString() +'</td>';
+					resultData += '<td>'+ value.act_stock.toLocaleString() +'</td>';
 					resultData += '<td>'+ value.stock.toFixed(2) +' Day(s)</td>';
 					resultData += '</tr>';
 					index += 1;
