@@ -189,6 +189,11 @@
                             <a href="{{ url("/index/Pianica") }}">
                                 <i class="fa fa-caret-right"></i> Pianica (ピアニカ組立)
                             </a>
+                            <br>
+                            <?php $dt = date('Y-m-d'); ?>
+                            <a href="{{ url("/index/display/sub_assy?date=".$dt."&surface=&key2=") }}">
+                                <i class="fa fa-caret-right"></i> SX Sub-Assy Picking Monitor
+                            </a>
                         </td>
                     </tr>
                     <tr>

@@ -124,14 +124,14 @@ Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchRepo
 Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
 Route::get('fetch/report/overtime_data', 'OvertimeController@fetchOvertimeData');
 Route::get('index/report/overtime_outsource', 'OvertimeController@indexReportOutsouce');
-Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchOvertimeOutsource');
+Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchReportOutsource');
+Route::get('fetch/report/overtime_detail_outsource', 'OvertimeController@fetchDetailOutsource');
 Route::get('index/report/overtime_outsource_data', 'OvertimeController@indexOvertimeOutsource');
 Route::get('fetch/report/overtime_data_outsource', 'OvertimeController@fetchOvertimeDataOutsource');
 Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 Route::get('index/report/overtime_by_employee', 'OvertimeController@indexOvertimeByEmployee');
 Route::get('fetch/report/overtime_by_employee', 'OvertimeController@fetchOvertimeByEmployee');
 Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvertimeByEmployee');
-
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -848,8 +848,9 @@ Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime')
 Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffingMonitoring');
 
 //ASSY PICKING
-Route::get('index/display/assy', 'AssyProcessController@indexDisplayAssy');
-Route::get('fetch/display/assy', 'AssyProcessController@fetchPicking');
+Route::get('index/display/sub_assy', 'AssyProcessController@indexDisplayAssy');
+Route::get('fetch/display/sub_assy', 'AssyProcessController@fetchPicking');
+Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
