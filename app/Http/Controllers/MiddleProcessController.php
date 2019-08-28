@@ -1785,13 +1785,13 @@ class MiddleProcessController extends Controller
 		->where('materials.category', '=', 'WIP')
 		->where('materials.mrpc', '=', $request->get('mrpc'))
 		->whereIn('materials.hpl', $request->get('hpl'))
-		->where('surface','like','%'.$request->get('surface'))
-		->where('hpl', $request->get('key'))
-		->where(db::raw("DATE_FORMAT(created_at,'%Y-%m-%d')"),"=", $now)
-		->where(db::raw("DATE_FORMAT(created_at,'%H:%i:%s')"), '>=', $awal)
-		->where(db::raw("DATE_FORMAT(created_at,'%H:%i:%s')"), '<', $akhir)
-		->select('model','key', db::raw("SUM(IF(`status`='set',qty,0)) as `set`"), db::raw("SUM(IF(`status`='reset',qty,0)) as `reset`"), db::raw("SUM(IF(`status`='plt',qty,0)) as `plt`"))
-		->groupBy('model','key')
+		->where('materials.surface','like','%'.$request->get('surface'))
+		->where('materials.hpl', $request->get('key'))
+		->where(db::raw("DATE_FORMAT(barrel_logs.created_at,'%Y-%m-%d')"),"=", $now)
+		->where(db::raw("DATE_FORMAT(barrel_logs.created_at,'%H:%i:%s')"), '>=', $awal)
+		->where(db::raw("DATE_FORMAT(barrel_logs.created_at,'%H:%i:%s')"), '<', $akhir)
+		->select('materials.model','materials.key', db::raw("SUM(IF(barrel_logs.`status`='set',qty,0)) as `set`"), db::raw("SUM(IF(barrel_logs.`status`='reset',qty,0)) as `reset`"), db::raw("SUM(IF(barrel_logs.`status`='plt',qty,0)) as `plt`"))
+		->groupBy('materials.model','materials.key')
 		->get();
 
 		$response = array(
