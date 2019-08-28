@@ -58,7 +58,7 @@
 			</form>
 		</div>
 		<div class="col-xs-12">
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; width: 100%">
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; width: 100%; margin-bottom: 0px">
 				<tr id="model">
 				</tr>
 				<tr id="plan">
