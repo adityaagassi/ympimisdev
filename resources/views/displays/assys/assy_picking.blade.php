@@ -16,7 +16,9 @@
 		text-align: center;
 		color: black;
 		background-color: white;
-
+	}
+	.table > tbody > tr > td {
+		text-align: right;
 	}
 </style>
 @endsection
@@ -38,7 +40,7 @@
 					<br>
 				</div>
 				<div class="col-xs-2">
-					<select class="form-control select2" multiple="multiple" id="key" onchange="change()">
+					<select class="form-control select2" multiple="multiple" id="key" onchange="change()" data-placeholder="Select Key">
 						@foreach($keys as $key)
 						<option value="{{ $key->key }}">{{ $key->key }}</option>
 						@endforeach
@@ -46,10 +48,19 @@
 					<input type="text" name="key2" id="dd" hidden>
 				</div>
 				<div class="col-xs-2">
+					<select class="form-control select2" multiple="multiple" id="modelselect" onchange="changeModel()" data-placeholder="Select Model">
+						@foreach($models as $model)
+						<option value="{{ $model->model }}">{{ $model->model }}</option>
+						@endforeach
+					</select>
+					<input type="text" name="model2" id="model2" hidden>
+				</div>
+				<div class="col-xs-2">
 					<select class="form-control select2" name="surface">
 						<option value="">Select Surface</option>
 						<option value="PLT" <?php if (isset($_GET['surface']) && $_GET['surface'] == "PLT"): echo "selected"; endif ?>>Plating</option>
 						<option value="LCQ" <?php if (isset($_GET['surface']) && $_GET['surface'] == "LCQ"): echo "selected"; endif ?>>Lacquering</option>
+						<option value="W" <?php if (isset($_GET['surface']) && $_GET['surface'] == "W"): echo "selected"; endif ?>>Washed</option>
 					</select>
 				</div>
 				<div class="col-xs-1">
@@ -108,10 +119,15 @@
 		$("#dd").val($("#key").val());
 	}
 
+	function changeModel() {
+		$("#model2").val($("#modelselect").val());
+	}
+
 	function fill_table() {
 		var data = {
 			tanggal:"{{$_GET['date']}}",
 			key:"{{$_GET['key2']}}",
+			model:"{{$_GET['model2']}}",
 			surface:"{{$_GET['surface']}}"
 		}
 
@@ -135,7 +151,7 @@
 						style = "style='background-color:#00a65a';";
 					}
 
-					model += "<th>"+value.model+" "+value.key+" "+value.surface+"</th>";
+					model += "<th>"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
 					totplan += "<td>"+value.total_plan.toLocaleString()+"</td>";
 					picking += "<td>"+value.picking.toLocaleString()+"</td>";
 					diff += "<td "+style+">"+(value.picking - value.total_plan).toLocaleString()+"</td>";
@@ -155,6 +171,7 @@
 		var data = {
 			tanggal:"{{$_GET['date']}}",
 			key:"{{$_GET['key2']}}",
+			model:"{{$_GET['model2']}}",
 			surface:"{{$_GET['surface']}}"
 		}
 
