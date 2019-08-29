@@ -190,7 +190,7 @@
                                 <i class="fa fa-caret-right"></i> Pianica (ピアニカ組立)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=") }}">
+                            <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=model2=") }}">
                                 <i class="fa fa-caret-right"></i> SX Sub-Assy Picking Monitor
                             </a>
                         </td>
