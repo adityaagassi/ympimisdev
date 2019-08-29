@@ -1259,31 +1259,46 @@ public function getsnsax(Request $request)
 	$sn = StampInventory::where('process_code', '=', $request->get('code'))
 	->where('origin_group_code','=' ,$request->get('origin'))
 	->where('serial_number','=' ,$request->get('sn'))
-	->select('model', 'serial_number')
+	->select('model', 'serial_number','status')
 	->first();
 
-	$sn2 = StampInventory::where('process_code', '=', '2')
-	->where('origin_group_code','=' ,$request->get('origin'))
+	$sn2 = StampInventory::where('origin_group_code','=' ,$request->get('origin'))
 	->where('serial_number','=' ,$request->get('sn'))
-	->select('model', 'serial_number')
+	->whereIn('process_code', ['2', '3'])
+	->select('model', 'serial_number','status')
 	->first();
 
 	$code="";
 
-	if ($sn != null) {	
+	if ($sn != null) {
+
+		if ($sn->status =="return") {
+				$msg ="3";
+			}
+			else{
+				$msg ="1";
+			}	
 
 		$response = array(
 			'status' => true,
-			'message' => '1',
+			'message' => $msg,
 			'model' => $sn->model,
 			'sn' => $sn->serial_number,
 
 		);
 		return Response::json($response);
 	}elseif ($sn2 != null) {
+
+		if ($sn2->status =="return") {
+				$msg ="3";
+			}
+			else{
+				$msg ="2";
+			}
+
 		$response = array(
 			'status' => true,
-			'message' => '2',
+			'message' => $msg,
 			'model' => $sn2->model,
 			'sn' => $sn2->serial_number,
 		);
@@ -1324,6 +1339,25 @@ public function print_sax(Request $request){
 	->where('origin_group_code','=' ,$request->get('origin'))
 	->where('serial_number','=' ,$request->get('sn'))
 	->first();
+
+	$return = StampInventory::where('origin_group_code','=' ,$request->get('origin'))
+	->where('serial_number','=' ,$request->get('sn'))
+	->first();
+
+	if ($return->status =='return') {
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Return - Back - '.$request->get('sn').'-'.$return->model.'-'.$request->get('origin'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$inventoryReturn = StampInventory::where('origin_group_code','=' ,$request->get('origin'))
+			->where('serial_number','=' ,$request->get('sn'));
+		$inventoryReturn->update(['status' => null]);
+	}
 
 
 	try{
@@ -1439,6 +1473,7 @@ public function print_sax(Request $request){
 			$printer->cut();
 			$printer->close();
 		}
+
 
 		$response = array(
 			'status' => true,
@@ -2419,5 +2454,67 @@ public function fetchImageSax(Request $request)
 	return Response::json($response);
 }
 // end Ambil Gambar Checksheet Sax 
+
+// return sax
+
+public function indexRepairSx(){
+		return view('processes.assy_fl_saxT.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+	}
+
+public function returnfgStamp(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'return']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+	public function fetchReturnTableSx(){
+		$stamp_inventories = StampInventory::where('origin_group_code', '=', '043')
+		->where('status', '=', 'return')
+		->orderBy('updated_at', 'desc')
+		->get();
+
+		return DataTables::of($stamp_inventories)
+		->make(true);
+	}
+
+	public function scanSerialNumberReturnSx(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'return']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+
+// end return sax
 
 }

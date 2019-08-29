@@ -128,10 +128,11 @@ Route::get('fetch/report/overtime_report_outsource', 'OvertimeController@fetchRe
 Route::get('fetch/report/overtime_detail_outsource', 'OvertimeController@fetchDetailOutsource');
 Route::get('index/report/overtime_outsource_data', 'OvertimeController@indexOvertimeOutsource');
 Route::get('fetch/report/overtime_data_outsource', 'OvertimeController@fetchOvertimeDataOutsource');
-Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 Route::get('index/report/overtime_by_employee', 'OvertimeController@indexOvertimeByEmployee');
 Route::get('fetch/report/overtime_by_employee', 'OvertimeController@fetchOvertimeByEmployee');
 Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvertimeByEmployee');
+Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
+Route::get('fetch/report/overtime_resume', 'OvertimeController@fetchMonthlyResume');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
@@ -467,12 +468,18 @@ Route::group(['nav' => 'S9', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('input/process_assy_fl', 'ProcessController@inputProcessAssyFL');
 	Route::post('scan/serial_number_return_fl', 'ProcessController@scanSerialNumberReturnFl');
+
 	Route::post('stamp/adjustSerial', 'ProcessController@adjustSerial');
 	Route::get('stamp/adjust', 'ProcessController@adjust');
 	Route::post('stamp/adjust', 'ProcessController@adjustUpdate');
 	Route::get('edit/stamp', 'ProcessController@editStamp');
 	Route::post('edit/stamp', 'ProcessController@updateStamp');
 	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
+
+	// return sax
+	Route::post('returnfg/stamp', 'ProcessController@returnfgStamp');
+	Route::post('scan/serial_number_return_Sx', 'ProcessController@scanSerialNumberReturnSx');
+	// end return sax
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -716,6 +723,11 @@ Route::get('index/process_assy_fl_3', 'ProcessController@indexProcessAssyFL3');
 Route::get('index/process_assy_fl_4', 'ProcessController@indexProcessAssyFL4');
 Route::get('index/displayWipFl', 'ProcessController@indexDisplayWipFl');
 Route::get('index/repairFl', 'ProcessController@indexRepairFl');
+
+// return sax
+Route::get('index/repairSx', 'ProcessController@indexRepairSx');
+Route::get('fetch/returnTableSx', 'ProcessController@fetchReturnTableSx');
+// end return sax
 
 Route::get('fetch/wipflallstock', 'ProcessController@fetchwipflallstock');
 Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');

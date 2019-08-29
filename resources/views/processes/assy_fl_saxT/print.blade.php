@@ -187,7 +187,9 @@
 				</center>
 			</div>
 			<div class="modal-footer">
-				<button type="button" onclick="destroyStamp()" class="btn btn-danger pull-left">Delete</button>
+				<!-- <button type="button" onclick="destroyStamp()" class="btn btn-danger pull-left">Delete</button> -->
+
+				<!-- <button type="button" onclick="returnfg()" class="btn btn-warning pull-left">Return</button> -->
 				<button type="button" onclick="updateStamp()" class="btn btn-primary">Confirm</button>
 			</div>
 		</div>
@@ -512,8 +514,15 @@
 						if(result.message =="2"){
 							$('#btnprint2').css({'display':'block'});
 							$('#btnprint').css({'display':'none'});	
-							$('#btnprint2').prop('disabled',false);						
-						}else{
+							$('#btnprint2').prop('disabled',false);	
+							$('#btnprint2').text('Reprint');					
+						}else if(result.message =="3"){
+							$('#btnprint2').css({'display':'block'});
+							$('#btnprint').css({'display':'none'});	
+							$('#btnprint2').prop('disabled',false);
+							$('#btnprint2').text('Return');						
+						}
+						else{
 							$('#btnprint').css({'display':'block'});	
 							$('#btnprint2').css({'display':'none'});
 						}
@@ -700,6 +709,47 @@
 		}
 		if(confirm("Are you sure you want to delete this data?")){
 			$.post('{{ url("destroy/stamp") }}', data, function(result, status, xhr){
+				console.log(status);
+				console.log(result);
+				console.log(xhr);
+				if(xhr.status == 200){
+					if(result.status){
+						$('#idStamp').val('');
+						$('#modelText').val('');
+						$('#serialNumberText').val('');
+						$('#editModal').modal('hide');
+						openSuccessGritter('Success!', result.message);					
+						fillResult();
+						
+						fillPlan();
+						fillPlan2();
+					}
+					else{
+						audio_error.play();
+						alert('Attempt to retrieve data failed');	
+					}
+				}
+				else{
+					audio_error.play();
+					alert('Disconnected from sever');
+				}
+			});
+		}
+	}
+
+
+	function returnfg(){
+		var id = $('#serialNumberText').val();
+		var model = $('#modelText').val();
+		alert(model);
+		var data = {
+			id:id,
+			originGroupCode:'043',
+			model:model,
+			
+		}
+		if(confirm("Are you sure you want to Return this product?")){
+			$.post('{{ url("returnfg/stamp") }}', data, function(result, status, xhr){
 				console.log(status);
 				console.log(result);
 				console.log(xhr);
