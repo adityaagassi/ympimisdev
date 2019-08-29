@@ -87,10 +87,10 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Operator aaaa</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Result</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Not Good</th>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;">Rate</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Operator</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Result</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Not Good</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Rate</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -108,10 +108,10 @@
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 				<thead>
 					<tr>
-						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
-						<th style="width: 65%; background-color: rgb(220,220,220); padding:0;">NG Name</th>
-						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;">#</th>
-						<th style="width: 15%; background-color: rgb(220,220,220); padding:0;">Count</th>
+						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
+						<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
+						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
+						<th style="width: 15%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Count</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -125,10 +125,10 @@
 					?>
 					<input type="hidden" id="loop" value="{{$loop->count}}">
 					<tr <?php echo $color ?>>
-						<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">-</td>
-						<td id="ng{{$nomor+1}}" style="font-size: 12px;">{{ $ng_list->ng_name }} </td>
-						<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 18px; cursor: pointer;" class="unselectable">+</td>
-						<td style="font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
+						<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">-</td>
+						<td id="ng{{$nomor+1}}" style="font-size: 20px;">{{ $ng_list->ng_name }} </td>
+						<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">+</td>
+						<td style="font-weight: bold; font-size: 45px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
 					</tr>
 					<?php $no+=1; ?>
 					@endforeach
