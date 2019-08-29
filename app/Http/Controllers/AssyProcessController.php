@@ -26,7 +26,12 @@ class AssyProcessController extends Controller
 
 	public function fetchPicking(Request $request)
 	{
-		$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		}
+
 		$where = "";
 		$where1 = "";
 		$minus = "0";
@@ -96,7 +101,12 @@ class AssyProcessController extends Controller
 public function chartPicking(Request $request)
 {
 	$where = "";
-	$date = $request->get('tanggal');
+	
+	if ($request->get('tanggal') == "") {
+		$date = date('Y-m-d');
+	} else {
+		$date = date('Y-m-d',strtotime($request->get('tanggal')));
+	}
 
 	if ($request->get('key') != "" OR $request->get('surface') != "") {
 		$where = "WHERE ";
