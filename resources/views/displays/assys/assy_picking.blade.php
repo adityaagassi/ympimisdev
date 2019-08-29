@@ -73,7 +73,7 @@
 			</table>
 		</div>
 		<div class="col-xs-12">
-			<div id="picking_chart" style="width: 100%"></div>
+			<div id="picking_chart" style="width: 100%; margin: auto"></div>
 		</div>
 	</div>
 
