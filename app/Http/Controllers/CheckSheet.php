@@ -117,7 +117,7 @@ public function check($id)
      // ->get();
      $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
      SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-      and deleted_at is null) cek
+     and deleted_at is null) cek
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number ORDER BY cek.id asc";
@@ -163,7 +163,7 @@ public function print_check_surat($id)
 
      $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
      SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-     ) cek
+      and deleted_at is null) cek
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number";
@@ -428,14 +428,14 @@ public function importDetail(Request $request)
 {    
      $id = Auth::id();
 
-      $Inspection = new Inspection([
-               'id_checksheet' => $request->get('idcs2'),
-               'created_by' => $id
-          ]);
-          $Inspection->save();
+     $Inspection = new Inspection([
+          'id_checksheet' => $request->get('idcs2'),
+          'created_by' => $id
+     ]);
+     $Inspection->save();
      if($request->hasFile('check_sheet_import2')){
 
-          
+
 
           $file = $request->file('check_sheet_import2');
           $data = file_get_contents($file);
@@ -445,7 +445,7 @@ public function importDetail(Request $request)
           {
                if (strlen($row) > 0) {
                     $row1 = explode("\t", $row);
-                     if ($row1[0] != '' && $row1[0] !='CONSIGNEE & ADDRESS'){
+                    if ($row1[0] != '' && $row1[0] !='CONSIGNEE & ADDRESS'){
                          if ( $row1[5] =='' ) {
                               $row1[5] = '-';
                          }
@@ -453,24 +453,24 @@ public function importDetail(Request $request)
                               $row1[6] = '-';
                          }
 
-                    $detail = new DetailChecksheet([
-                         'id_checkSheet' =>$code_master,
-                         'destination' => $row1[0],
-                         'invoice' => $row1[1],
-                         'gmc' => $row1[2],
-                         'goods' => $row1[3],
-                         'marking' => $row1[4],
-                         'package_qty' => $row1[5],
-                         'package_set' => $row1[6],
-                         'qty_qty' => $row1[7],
-                         'qty_set' => $row1[8],
-                         'created_by' => $id
+                         $detail = new DetailChecksheet([
+                              'id_checkSheet' =>$code_master,
+                              'destination' => $row1[0],
+                              'invoice' => $row1[1],
+                              'gmc' => $row1[2],
+                              'goods' => $row1[3],
+                              'marking' => $row1[4],
+                              'package_qty' => $row1[5],
+                              'package_set' => $row1[6],
+                              'qty_qty' => $row1[7],
+                              'qty_set' => $row1[8],
+                              'created_by' => $id
 
-                    ]); 
+                         ]); 
 
-                    $detail->save();
+                         $detail->save();
+                    }
                }
-          }
           }
 
           return redirect('/index/CheckSheet')->with('status', 'Re - Import Success')->with('page', 'Check Sheet');
@@ -603,43 +603,43 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
- $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
- ->select('reason','invoice_date')     
- ->first();
+    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+    ->select('reason','invoice_date')     
+    ->first();
 
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-    'reason' => $reason
-);
- return Response::json($response);
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => $reason
+ );
+    return Response::json($response);
 }
 
 public function edit(Request $request){
- $id_user = Auth::id();
- $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
- ->first();
+    $id_user = Auth::id();
+    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+    ->first();
 
- $master->countainer_number = $request->get('countainer_numberE');
- $master->seal_number = $request->get('seal_numberE');
- $master->no_pol = $request->get('nopolE');
- $master->invoice = $request->get('invoiceE');
- $master->destination = strtoupper($request->get('destinationE'));
- $master->shipped_to = $request->get('shipped_toE');
- $master->Stuffing_date = $request->get('Stuffing_dateE');
- $master->invoice_date = $request->get('invoice_dateE');
- $master->etd_sub = $request->get('etd_subE');
- $master->carier = $request->get('carierE');
- $master->payment = $request->get('paymentE');
- $master->reason = $request->get('reason');
- $master->created_by = $id_user;
- $master->save();
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-);
+    $master->countainer_number = $request->get('countainer_numberE');
+    $master->seal_number = $request->get('seal_numberE');
+    $master->no_pol = $request->get('nopolE');
+    $master->invoice = $request->get('invoiceE');
+    $master->destination = strtoupper($request->get('destinationE'));
+    $master->shipped_to = $request->get('shipped_toE');
+    $master->Stuffing_date = $request->get('Stuffing_dateE');
+    $master->invoice_date = $request->get('invoice_dateE');
+    $master->etd_sub = $request->get('etd_subE');
+    $master->carier = $request->get('carierE');
+    $master->payment = $request->get('paymentE');
+    $master->reason = $request->get('reason');
+    $master->created_by = $id_user;
+    $master->save();
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+ );
 
- return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -689,7 +689,7 @@ public function mailStuffing($st_date){
      (
      select id_checkSheet, sum(plan_loading) as total_plan, sum(actual_loading) as total_actual from (
      select id_checkSheet, qty_qty as plan_loading, (qty_qty/if(package_qty = '-' or package_qty is null, 1, package_qty))*if(confirm = 0 and bara = 0, 1, confirm) as actual_loading from detail_checksheets
-     ) as stuffings
+     where deleted_at is null) as stuffings
      group by id_checkSheet
      ) as actual_stuffing
      on actual_stuffing.id_checkSheet = master_checksheets.id_checkSheet
@@ -751,12 +751,12 @@ public function deleteReimport(Request $request)
      ->delete();
 
 
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-    'reason' => 'ok'
-);
- return Response::json($response);
+     $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => 'ok'
+ );
+     return Response::json($response);
 }
 
 }
