@@ -692,7 +692,7 @@
 								resultData += '<tr>';
 								resultData += '<td>'+ value.serial_number +'</td>';
 								resultData += '<td>'+ value.model +'</td>';
-								resultData += '<td>'+ value.created_at +'</td>';
+								resultData += '<td>'+ value.updated_at +'</td>';
 								resultData += '<td><button class="btn btn-xs btn-danger" id="'+value.id+'" onclick="editStamp(id)"><span class="fa fa-edit"></span></button></td>';
 								resultData += '</tr>';
 							});
