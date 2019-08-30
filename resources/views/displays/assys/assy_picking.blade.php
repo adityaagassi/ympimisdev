@@ -1,11 +1,6 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
-	thead input {
-		width: 100%;
-		padding: 3px;
-		box-sizing: border-box;
-	}
 	table.table-bordered{
 		border:1px solid black;
 		/*background-color: white;*/
@@ -108,19 +103,17 @@
 								<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
 									<thead style="background-color: rgba(126,86,134,.7);">
 										<tr>
-											<th width="1%">TAG</th>
-											<th width="1%">GMC</th>
+											<th>Tag</th>
+											<th>GMC</th>
 											<th>Description</th>
-											<th width="2%">Quantity</th>
+											<th>Quantity</th>
 										</tr>
 									</thead>
 									<tbody>
 									</tbody>
-									<tfoot>
+									<tfoot style="background-color: rgba(126,86,134,.7);">
 										<tr>
-											<th></th>
-											<th></th>
-											<th></th>
+											<th colspan="3" style="text-align:right">Total : </th>
 											<th></th>
 										</tr>
 									</tfoot>
@@ -346,36 +339,51 @@
 			"bJQueryUI": false,
 			"bAutoWidth": false,
 			"processing": true,
-			"serverSide": true,
+			"serverSide": false,
 			"ajax": {
 				"type" : "get",
 				"url" : "{{ url("fetch/detail/sub_assy") }}",
 				"data" : data
 			},
 			"columns": [
-			{ "data": "tag" },
-			{ "data": "material_number" },
-			{ "data": "material_description" },
-			{ "data": "quantity" }
+			{ "data": "tag", "width" : "10%" },
+			{ "data": "material_number", "width" : "10%" },
+			{ "data": "material_description", "width" : "70%" },
+			{ "data": "quantity", "width" : "10%", "className": "text-right"}
 			],
-		});
+			"footerCallback": function ( row, data, start, end, display ) {
+				var api = this.api(), data;
 
-		$('#detailTabel tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
-		});
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+            	return typeof i === 'string' ?
+            	i.replace(/[\$,]/g, '')*1 :
+            	typeof i === 'number' ?
+            	i : 0;
+            };
 
-		table.columns().every( function () {
-			var that = this;
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
-		$('#detailTabel tfoot tr').appendTo('#detailTabel thead');
+            // Total over all pages
+            total = api
+            .column( 3 )
+            .data()
+            .reduce( function (a, b) {
+            	return intVal(a) + intVal(b);
+            }, 0 );
+
+            // Total over this page
+            pageTotal = api
+            .column( 3, { page: 'current'} )
+            .data()
+            .reduce( function (a, b) {
+            	return intVal(a) + intVal(b);
+            }, 0 );
+
+            // Update footer
+            $( api.column( 3 ).footer() ).html(
+            	total
+            	);
+        }
+    });
 
 	}
 
