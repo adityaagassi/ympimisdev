@@ -141,10 +141,14 @@ table.table-bordered > tfoot > tr > th{
 								<span style="font-size: 24px">Model:</span><br>
 								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YTS" disabled>
 
-								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> INDONESIA</button>
-								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px;" class="btn"   value="FG" name="category" id="category" readonly>
-								<button type="button" style="width: 40%; margin-top: 5px;" class="btn btn-info" id="KD" onclick="category(id)"> CHINA</button>
-								<br><br>
+								<button type="button" style="width: 48%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> INDONESIA</button>
+								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px; display: none" class="btn"   value="FG" name="category" id="category" readonly >
+								<button type="button" style="width: 48%; margin-top: 5px;" class="btn btn-warning" id="KD" onclick="category(id)"> CHINA</button>
+								
+								<br>
+								<button type="button" style="width: 99%; font-weight: bold; height:  100%;margin-top: 10px;margin-bottom: 15px; font-size: 40px; padding: 0;" class="btn btn-warning" id="idn"></button>
+								<br>
+
 								<div id="listModel2">
 								</div><br>
 								<div id="listModel">
@@ -161,6 +165,7 @@ table.table-bordered > tfoot > tr > th{
 									<th style="width: 20%">Serial Number</th>
 									<th style="width: 25%">Model</th>
 									<th style="width: 40%">Stamped At</th>
+									<th style="width: 40%">Stamped By</th>
 									<th style="width: 15%">#</th>
 								</thead>
 								<tbody id="resultTableBody">
@@ -276,6 +281,9 @@ table.table-bordered > tfoot > tr > th{
 		fillPlan();
 		fillSerialNumber();
 		fillResult();
+
+		var id = $("#category").val();
+		category(id);
 		
 	});
 
@@ -556,6 +564,7 @@ table.table-bordered > tfoot > tr > th{
 						resultData += '<td>'+ value.serial_number +'</td>';
 						resultData += '<td>'+ value.model +'</td>';
 						resultData += '<td>'+ value.created_at +'</td>';
+						resultData += '<td>'+ value.name +'</td>';
 						resultData += '<td><button class="btn btn-xs btn-danger" id="'+value.id+'" onclick="editStamp(id)"><span class="fa fa-edit"></span></button></td>';
 						resultData += '</tr>';
 					});
@@ -749,6 +758,14 @@ table.table-bordered > tfoot > tr > th{
 	}
 	function category(id){
 		$("#category").val(id);
+		if (id =='KD') {
+		$("#idn").text('C H I N A');
+		$('#idn').removeClass('btn-warning').addClass('btn-warning');
+		}else{
+		$("#idn").text('I N D O N E S I A');
+		$('#idn').removeClass('btn-warning').addClass('btn-info');
+		}
+
 	}
 </script>
-@endsection
+@endsection	

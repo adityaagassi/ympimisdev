@@ -1047,11 +1047,13 @@ class ProcessController extends Controller
 			$log_processes = db::select($query);
 
 		}elseif($id =="YTS"){
-			$query="SELECT * FROM (
-			SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1' 
+			$query="SELECT a.*, users.`name` FROM (
+			SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1' 
 			UNION ALL
-			SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1'
-		) A ORDER BY created_at DESC";
+			SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1'
+		) A 
+		LEFT JOIN users on a.created_by = users.id			
+		ORDER BY serial_number DESC";
 		$log_processes = db::select($query);
 	}elseif($id =="YTS2"){
 		$query="SELECT * FROM (
