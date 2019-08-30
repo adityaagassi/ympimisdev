@@ -96,7 +96,7 @@
 		</div>
 
 		<div class="modal fade" id="myModal">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 style="float: right; " id="modal-title"></h4> 
@@ -108,10 +108,10 @@
 								<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
 									<thead style="background-color: rgba(126,86,134,.7);">
 										<tr>
-											<th width="5%">TAG</th>
-											<th width="5%">GMC</th>
+											<th width="1%">TAG</th>
+											<th width="1%">GMC</th>
 											<th>Description</th>
-											<th width="5%">Quantity</th>
+											<th width="2%">Quantity</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -144,8 +144,6 @@
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -345,7 +343,7 @@
 			'info': true,
 			'autoWidth': true,
 			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
+			"bJQueryUI": false,
 			"bAutoWidth": false,
 			"processing": true,
 			"serverSide": true,
