@@ -1067,7 +1067,7 @@ class ProcessController extends Controller
 	SELECT * FROM stamp_inventories WHERE model LIKE 'YTS%' and process_code ='3' 
 	UNION ALL
 	SELECT * FROM stamp_inventories WHERE model LIKE 'YAS%'  and process_code ='3'
-) A ORDER BY created_at DESC";
+) A ORDER BY updated_at DESC";
 $log_processes = db::select($query);
 }else{
 	$log_processes = db::table('log_processes')
