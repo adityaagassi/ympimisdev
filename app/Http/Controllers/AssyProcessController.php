@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DataTables;
 use Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -219,5 +220,41 @@ public function chartPicking(Request $request)
 		'picking' => $picking_assy,
 	);
 	return Response::json($response);
+}
+
+public function fetchPickingDetail(Request $request)
+{
+	$key = $request->get("key");
+	$model = $request->get("model");
+	$surface = $request->get("surface");
+
+	$loc = $request->get("location");
+
+	if ($loc == "Welding") {
+		$query = "select inventories.barcode_number as tag,inventories.material_number, inventories.description as material_description , inventories.lot as quantity from
+		(select distinct ympimis.bom_components.material_child, parent.key, parent.model, parent.surface from
+		(select bom_components.material_child, materials.key, materials.model, materials.surface from ympimis.materials left join ympimis.bom_components on bom_components.material_parent = ympimis.materials.material_number where materials.hpl in ('ASKEY', 'TSKEY') and materials.key is not null and mrpc in ('S51')
+		) as parent
+		left join ympimis.bom_components on ympimis.bom_components.material_parent = parent.material_child
+		where parent.key = '".$key."' AND parent.model = '".$model."' AND parent.surface = '".$surface."'
+		) as welding
+		left join inventories on inventories.material_number = welding.material_child ";
+
+} else if ($loc == "Middle") {
+	$query = "select stok.tag ,stok.material_number, ympimis.materials.material_description, stok.quantity from
+	(select tag, ympimis.middle_inventories.material_number, ympimis.middle_inventories.quantity from ympimis.middle_inventories) stok
+	left join ympimis.materials on ympimis.materials.material_number = stok.material_number
+	where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
+
+} else if ($loc == "Stockroom") {
+	$query = "select tag, stok.material_number, ympimis.materials.material_description, stok.quantity from
+	(select inventories.barcode_number as tag, inventories.material_number, lot as quantity from inventories where inventories.issue_location like 'SX51') stok
+	left join ympimis.materials on ympimis.materials.material_number = stok.material_number
+	where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
+}
+
+$detailData = db::connection('mysql2')->select($query);
+
+return DataTables::of($detailData)->make(true);
 }
 }

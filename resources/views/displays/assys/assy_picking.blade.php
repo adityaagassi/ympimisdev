@@ -1,6 +1,11 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
 	table.table-bordered{
 		border:1px solid black;
 		/*background-color: white;*/
@@ -17,8 +22,11 @@
 		color: black;
 		background-color: white;
 	}
-	.table > tbody > tr > td {
+	#assyTable > tbody > tr > td {
 		text-align: right;
+	}
+	#detailTabel {
+		color: black;
 	}
 </style>
 @endsection
@@ -86,6 +94,48 @@
 		<div class="col-xs-12">
 			<div id="picking_chart" style="width: 100%; margin: auto"></div>
 		</div>
+
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 style="float: right; " id="modal-title"></h4> 
+						<h4 class="modal-title"><b id="titel"></b></h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
+									<thead style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th width="5%">TAG</th>
+											<th width="5%">GMC</th>
+											<th>Description</th>
+											<th width="5%">Quantity</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+									<tfoot>
+										<tr>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
 	</div>
 
 </section>
@@ -94,6 +144,8 @@
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -233,14 +285,20 @@
 								enabled: true,
 								color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
 							},
-							animation: false
+							animation: false,
 						},
 						series: {
-							pointPadding: -0.2
+							cursor: 'pointer',
+							pointPadding: -0.2,
+							events: {
+								click: function(event) {
+									openModal(event.point.category, this.name)
+								}
+							}
 						}
 					},
 					credits :{
-						enabled: false
+						enabled: false,
 					},
 					series: [{
 						name: 'Welding',
@@ -257,6 +315,70 @@
 				
 			}
 		})
+	}
+
+	function openModal(kunci, lokasi) {
+		$("#myModal").modal("show");
+		$("#titel").text(kunci+" ("+lokasi+")");
+
+		$('#detailTabel').DataTable().destroy();
+
+		var data = {
+			model:kunci.split(" ")[0],
+			key:kunci.split(" ")[1],
+			surface:kunci.split(" ")[2],
+			location:lokasi
+		}
+
+		var table = $('#detailTabel').DataTable({
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/detail/sub_assy") }}",
+				"data" : data
+			},
+			"columns": [
+			{ "data": "tag" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "quantity" }
+			],
+		});
+
+		$('#detailTabel tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
+		});
+
+		table.columns().every( function () {
+			var that = this;
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#detailTabel tfoot tr').appendTo('#detailTabel thead');
+
 	}
 
 </script>

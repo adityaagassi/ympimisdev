@@ -475,10 +475,9 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::get('edit/stamp', 'ProcessController@editStamp');
 	Route::post('edit/stamp', 'ProcessController@updateStamp');
 	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
-
 	// return sax
 	Route::post('returnfg/stamp', 'ProcessController@returnfgStamp');
-	Route::post('scan/serial_number_return_Sx', 'ProcessController@scanSerialNumberReturnSx');
+	Route::post('scan/serial_number_return_fl', 'ProcessController@scanSerialNumberReturnFl');
 	// end return sax
 });
 
@@ -874,6 +873,7 @@ Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffing
 Route::get('index/display/sub_assy', 'AssyProcessController@indexDisplayAssy');
 Route::get('fetch/display/sub_assy', 'AssyProcessController@fetchPicking');
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
+Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
