@@ -76,9 +76,15 @@ class OvertimeController extends Controller
 
 	public function indexMonthlyResume()
 	{
+		$fiscal_years = db::select("select DISTINCT fiscal_year from weekly_calendars order by fiscal_year asc");
+		$costcenters = db::select("select DISTINCT cost_center, cost_center_name from ympimis.cost_centers order by cost_center asc");
+
 		return view('overtimes.reports.overtime_resume', array(
-			'title' => 'Overtime Monthly Resume',
-			'title_jp' => '??'))->with('page', 'Overtime Monthly Resume');
+			'title' => 'Overtime Resume',
+			'title_jp' => '??',
+			'fiscal_years' => $fiscal_years,
+			'costcenters' => $costcenters
+		))->with('page', 'Overtime Monthly Resume');
 	}
 
 	public function indexOvertimeOutsource()
@@ -181,6 +187,139 @@ class OvertimeController extends Controller
 		$response = array(
 			'status' => true,
 			'hierarchies' => $hierarchies,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMonthlyResume(Request $request){
+		$fy = '';
+		$cc_ot = '';
+		$cc_all = '';
+
+		if($request->get('fy') != null){
+			$fy =  $request->get('fy');
+		}else{
+			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
+			foreach ($get_fy as $key) {
+				$fy = $key->fiscal_year;
+			}
+		}
+
+		if($request->get('cc') != null) {
+			$ccs = $request->get('cc');
+			$cc = "";
+
+			for($x = 0; $x < count($ccs); $x++) {
+				$cc = $cc."'".$ccs[$x]."'";
+				if($x != count($ccs)-1){
+					$cc = $cc.",";
+				}
+			}
+			$cc_ot = "and ml.cost_center in (".$cc.") ";
+			$cc_all = "where cost_center in (".$cc.") ";
+		}
+
+		$query1 = "select wc.period, ot.total from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(select DISTINCT DATE_FORMAT(ovr.tanggal,'%m-%Y') as period, sum(ovr.ot) as total from
+		(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time
+		left join over_time_member on over_time.id = over_time_member.id_ot
+		where deleted_at is null and jam_aktual = 0 and nik not like 'osd%' group by tanggal, nik) ovr
+		left join
+		(select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
+		on ovr.nik = ml.employee_id
+		left join
+		(select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
+		where ml.cost_center is not null ".$cc_ot."
+		group by period
+		order by period asc) ot
+		on wc.period = ot.period";
+
+		$ot_actual = db::connection('mysql3')->select($query1);
+
+		$query2 = "select wc.period, bg.total_budget from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(select DATE_FORMAT(period,'%m-%Y') as period, sum(budget) as total_budget
+		from budgets ".$cc_all."
+		group by period
+		order by budgets.period asc) bg
+		on wc.period = bg.period";
+		$ot_budget = db::select($query2);
+
+		$query3 = "select wc.period, fc.total_forecast from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(select DATE_FORMAT(date,'%m-%Y') as period, sum(hour) as total_forecast
+		from forecasts ".$cc_all."
+		group by period
+		order by date asc) fc
+		on wc.period = fc.period";
+		$ot_forecast = db::select($query3);
+
+		$query4 = "select wc.period, mp.emp from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%Y-%m') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(	
+		select count(c.employee_id) as emp, mon from
+		(select * from 
+		(
+		select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+		cross join (
+		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy."' group by date_format(week_date, '%Y-%m')) s
+		) m
+		where hire_month <= mon and (mon < end_month OR end_month is null)
+		) as b
+		left join
+		(
+		select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from employment_logs 
+		WHERE id IN (
+		SELECT MAX(id)
+		FROM employment_logs
+		GROUP BY employment_logs.employee_id, date_format(employment_logs.valid_from, '%Y-%m')
+		)
+		) as c on b.employee_id = c.employee_id
+		left join
+		(select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
+		on c.employee_id = ml.employee_id
+		left join
+		(select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
+		where mon_from <= mon and mon_to >= mon and ml.cost_center is not null ".$cc_ot."
+		group by mon
+		) mp
+		on wc.period = mp.mon";
+		$mp_actual = db::select($query4);
+
+		$query5 = "select wc.period, bg.total_budget_mp from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(select DATE_FORMAT(period,'%m-%Y') as period, sum(budget_mp) as total_budget_mp
+		from manpower_budgets ".$cc_all."
+		group by period
+		order by manpower_budgets.period asc) bg
+		on wc.period = bg.period;";
+		$mp_budget = db::select($query5);
+
+		$query6 = "select wc.period, fc.total_forecast_mp from
+		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		left join
+		(select DATE_FORMAT(period,'%m-%Y') as period, sum(forecast_mp) as total_forecast_mp
+		from manpower_forecasts ".$cc_all."
+		group by period
+		order by manpower_forecasts.period asc) fc
+		on wc.period = fc.period";
+		$mp_forecast = db::select($query6);
+
+		$response = array(
+			'status' => true,
+			'ot_actual' => $ot_actual,
+			'ot_budget' => $ot_budget,
+			'ot_forecast' => $ot_forecast,
+			'mp_actual' => $mp_actual,
+			'mp_budget' => $mp_budget,
+			'mp_forecast' => $mp_forecast,
+			'fy' => $fy
 		);
 		return Response::json($response);
 	}
@@ -933,7 +1072,7 @@ public function overtimeControl(Request $request)
 	}
 	// -------------- CHART REPORT CONTROL -----------
 
-	$ot_control = "	SELECT datas.cost_center, datas.cost_center_name, datas.act, datas.tot, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal, round(coalesce(d.jam_harian,0),2) as jam_harian FROM
+	$ot_control = "SELECT datas.cost_center, datas.cost_center_name, datas.act, datas.tot, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal, round(coalesce(d.jam_harian,0),2) as jam_harian FROM
 	(	SELECT n.cost_center, cc.cost_center_name , sum( n.act ) AS act, sum( budget_tot ) AS tot, sum( budget_tot ) - sum( n.act ) AS diff FROM
 	( SELECT l.cost_center, d.tanggal, COALESCE ( act, 0 ) act, l.budget_tot FROM
 	( SELECT cost_center, ROUND( ( budget / DATE_FORMAT( LAST_DAY( '".$tanggal1."' ), '%d' ) ), 1 ) budget_tot FROM ympimis.budgets WHERE DATE_FORMAT( period, '%Y-%m' ) = '".$tanggal."') AS l
@@ -1444,25 +1583,56 @@ public function indexPrintHead(Request $request)
 	));
 }
 
-public function fetchOvertimeOutsource(Request $request)
+public function fetchReportOutsource(Request $request)
 {	
-	$tgl = $request->get('bulan');
+	if(strlen($request->get('bulan')) > 0){
+		$tgl = $request->get("bulan");
+	}else{
+		$tgl = date("m-Y");
+	}
 
-	$ot_outsource_q = "select DAY(cal.week_date) tanggal, emp.nik, namaKaryawan, COALESCE(jam,0) jam, reason from (select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp
-	cross join (select week_date from ympimis.weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$tgl."') as cal
-	left join (
-	select tanggal, nik, SUM(IF(status = 0,jam, final)) jam, GROUP_CONCAT(keperluan) reason from over_time left join over_time_member on over_time.id = over_time_member.id_ot 
-	where deleted_at is null and jam_aktual = 0 and nik like 'os%'
-	group by nik, tanggal 
-) ovr on ovr.nik = emp.nik and ovr.tanggal = cal.week_date";
 
-$ot_outsource = db::connection('mysql3')->select($ot_outsource_q);
+	$ot_outsource_q = "select ovr.period, ovr.nik, emp.namaKaryawan, ovr.jam from
+	(select DATE_FORMAT(tanggal,'%m-%Y') as period, nik, SUM(IF(status = 0,jam, final)) jam
+	from over_time left join over_time_member
+	on over_time.id = over_time_member.id_ot 
+	where deleted_at is null and jam_aktual = 0 and nik like 'os%' and DATE_FORMAT(tanggal,'%m-%Y') = '".$tgl."'
+	group by period, nik) ovr
+	left join
+	(select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp
+	on ovr.nik = emp.nik";
 
-$response = array(
-	'status' => true,
-	'datas' => $ot_outsource
-);
-return Response::json($response);
+	$ot_outsource = db::connection('mysql3')->select($ot_outsource_q);
+
+	$response = array(
+		'status' => true,
+		'datas' => $ot_outsource,
+		'bulan' => $tgl
+	);
+	return Response::json($response);
+}
+
+public function fetchDetailOutsource(Request $request)
+{
+	$period = $request->get("period");
+	$nama = $request->get("nama");
+
+	$query = "select ovr.tanggal, ovr.nik, emp.namaKaryawan, ovr.ot, ovr.reason from
+	(select tanggal, nik, SUM(IF(status = 0,jam, final)) ot, GROUP_CONCAT(keperluan) reason
+	from over_time left join over_time_member
+	on over_time.id = over_time_member.id_ot 
+	where deleted_at is null and jam_aktual = 0 and nik like 'os%' and DATE_FORMAT(tanggal,'%m-%Y') = '".$period."'
+	group by tanggal, nik) ovr
+	left join
+	(select nik, namaKaryawan from karyawan where nik like 'os%' and tanggalKeluar is null) emp
+	on ovr.nik = emp.nik
+	where namaKaryawan = '".$nama."'";
+
+	$detail = db::connection('mysql3')->select($query);
+
+	return DataTables::of($detail)->make(true);
+
+	
 }
 
 public function fetchOvertimeDataOutsource(Request $request)
@@ -1485,7 +1655,7 @@ public function fetchOvertimeDataOutsource(Request $request)
 		'status' => true,
 		'datas' => $os_ot
 	);
-	return Response::json($response);
+	return DataTables::of($os_ot)->make(true);
 }
 
 public function fetchOvertimeByEmployee(Request $request){

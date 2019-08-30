@@ -27,7 +27,7 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Manpower Overtime <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/report/overtime_monthly") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Overtime Control</a>
 			<a href="http://172.17.128.4/myhris/management/overtime_control" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Control</a>
-			<a href="#" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Resume</a>
+			<a href="{{ url("index/report/overtime_resume") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Monthly Resume</a>
 			<a href="{{ url("index/report/overtime_outsource") }}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Overtime Outsources</a>
 			<a href="{{ url("index/report/overtime_section")}}" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">by Section</a>
 			<!-- <a href="http://172.17.128.4/myhris/management/ot_report2" target="_blank" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">by Employee</a> -->

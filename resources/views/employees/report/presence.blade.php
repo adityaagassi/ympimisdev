@@ -3,56 +3,56 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-  .morecontent span {
-    display: none;
-  }
-  .morelink {
-    display: block;
-  }
+	.morecontent span {
+		display: none;
+	}
+	.morelink {
+		display: block;
+	}
 
-  thead>tr>th{
-    text-align:center;
-    overflow:hidden;
-    padding: 3px;
-  }
-  tbody>tr>td{
-    text-align:center;
-  }
-  tfoot>tr>th{
-    text-align:center;
-  }
-  th:hover {
-    overflow: visible;
-  }
-  td:hover {
-    overflow: visible;
-  }
-  table.table-bordered{
-    border:1px solid black;
-  }
-  table.table-bordered > thead > tr > th{
-    border:1px solid black;
-  }
-  table.table-bordered > tbody > tr > td{
-    border:1px solid black;
-    vertical-align: middle;
-    padding:0;
-  }
-  table.table-bordered > tfoot > tr > th{
-    border:1px solid black;
-    padding:0;
-  }
-  td{
-    overflow:hidden;
-    text-overflow: ellipsis;
-  }
-  .dataTable > thead > tr > th[class*="sort"]:after{
-    content: "" !important;
-  }
-  #queueTable.dataTable {
-    margin-top: 0px!important;
-  }
-  #loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+		overflow:hidden;
+		padding: 3px;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+		vertical-align: middle;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	.dataTable > thead > tr > th[class*="sort"]:after{
+		content: "" !important;
+	}
+	#queueTable.dataTable {
+		margin-top: 0px!important;
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -136,8 +136,9 @@
 			</div>
 		</div>
 	</div>
-	<!-- end modal -->
 </div>
+<!-- end modal -->
+
 
 
 </section>
