@@ -286,7 +286,7 @@
 
 								<div class="form-group">
 									<label for="cs">Cost Center<span class="text-red">*</span></label>
-									<input type="text" name="cs" class="form-control" id="cs" readonly required>
+									<input type="text" name="cs" class="form-control" id="cs" required>
 									{{-- <select id="cs" class="form-control select2" name="cs" required>
 										@foreach($cc as $nomor => $cc)
 										<option value="{{ $cc->cost_center }}" > {{$cc->cost_center}}</option>
