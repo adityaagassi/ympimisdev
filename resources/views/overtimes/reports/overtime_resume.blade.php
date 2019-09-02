@@ -53,6 +53,15 @@
 		margin-top: 0px!important;
 	}
 	#loading, #error { display: none; }
+
+	.loading {
+		margin-top: 8%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
 </style>
 @stop
 @section('header')
@@ -90,15 +99,22 @@
 				</div>
 			</div>
 			<div class="col-md-12">
-				<div class="nav-tabs-custom">
+				<div id="wait" class="loading">
+					<div>
+						<center>
+							<i class="fa fa-spinner fa-5x fa-spin" style="color: white;"></i><br>
+							<h2 style="margin: 0px; color: white;">Loading . . .</h2>
+						</center>
+					</div>
+				</div>
+				<div class="nav-tabs-custom" id="tab-ot">
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab_1">
 							<div id="ot" style="width: 99%;"></div>
-							
 						</div>
 					</div>
 				</div>
-				<div class="nav-tabs-custom">
+				<div class="nav-tabs-custom" id="tab-mp">
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab_1">
 							<div id="mp" style="width: 99%;"></div>
@@ -135,180 +151,188 @@
 	});
 
 	function drawChart(){
+		$("#wait").show();
+		$("#tab-ot").hide();
+		$("#tab-mp").hide();
 
 		var fy = $('#fiscal_year').val();
 		var cc = $('#costcenter').val();
-
 		var data = {
 			fy:fy,
 			cc:cc
 		}
 		
-
 		$.get('{{ url("fetch/report/overtime_resume") }}', data, function(result, status, xhr) {
-			if(result.ot_actual.length > 0){
-				var period = [];
-				var avg_ot_actual = [];
-				var avg_ot_forecast = [];
-				var avg_ot_budget = [];
+			$("#wait").hide();
+			if(result.status){
+				$("#tab-ot").show();
+				$("#tab-mp").show();
+				// ----------------  OVERTIME ----------------------
+				if(result.ot_actual.length > 0){
+					var period = [];
+					var avg_ot_actual = [];
+					var avg_ot_forecast = [];
+					var avg_ot_budget = [];
 
-				var total_ot_actual = [];
-				var total_ot_forecast = [];
-				var total_ot_budget = [];
+					var total_ot_actual = [];
+					var total_ot_forecast = [];
+					var total_ot_budget = [];
 
-				var mov_ot_actual = [];
-				var mov_ot_forecast = [];
-				var mov_ot_budget = [];
+					var mov_ot_actual = [];
+					var mov_ot_forecast = [];
+					var mov_ot_budget = [];
 
-				for (var i = 0; i < result.ot_actual.length; i++) {
-					period.push(result.ot_actual[i].period);
-					avg_ot_actual.push(result.ot_actual[i].total/result.mp_actual[i].emp);
-					avg_ot_budget.push(result.ot_budget[i].total_budget/result.mp_actual[i].emp);
-					avg_ot_forecast.push(result.ot_forecast[i].total_forecast/result.mp_actual[i].emp);
-					
-					avg_ot_actual[i] = avg_ot_actual[i] || 0; 
-					avg_ot_forecast[i] = avg_ot_forecast[i] || 0; 
-					avg_ot_budget[i] = avg_ot_budget[i] || 0; 
+					for (var i = 0; i < result.ot_actual.length; i++) {
+						period.push(result.ot_actual[i].period);
+						avg_ot_actual.push(result.ot_actual[i].total/result.mp_actual[i].emp);
+						avg_ot_budget.push(result.ot_budget[i].total_budget/result.mp_actual[i].emp);
+						avg_ot_forecast.push(result.ot_forecast[i].total_forecast/result.mp_actual[i].emp);
 
-					if(i == 0){
-						total_ot_actual.push(avg_ot_actual[i]);
-						total_ot_forecast.push(avg_ot_forecast[i]); 
-						total_ot_budget.push(avg_ot_budget[i]);  
-					}
-					else{
-						total_ot_actual.push(total_ot_actual[i-1] + avg_ot_actual[i]);
-						total_ot_forecast.push(total_ot_forecast[i-1] + avg_ot_forecast[i]);
-						total_ot_budget.push(total_ot_budget[i-1] + avg_ot_budget[i]);
-					}
+						avg_ot_actual[i] = avg_ot_actual[i] || 0; 
+						avg_ot_forecast[i] = avg_ot_forecast[i] || 0; 
+						avg_ot_budget[i] = avg_ot_budget[i] || 0; 
 
-					mov_ot_actual.push(total_ot_actual[i] / (i+1));
-					mov_ot_forecast.push(total_ot_forecast[i] / (i+1));	
-					mov_ot_budget.push(total_ot_budget[i] / (i+1));
-
-				}
-
-				Highcharts.chart('ot', {
-					chart: {
-						type: 'column'
-					},
-					title: {
-						text: 'Overtime Monthly Resume in '+result.fy
-					},
-					xAxis: {
-						categories: period,
-						crosshair: true
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							text: 'Total'
+						if(i == 0){
+							total_ot_actual.push(avg_ot_actual[i]);
+							total_ot_forecast.push(avg_ot_forecast[i]); 
+							total_ot_budget.push(avg_ot_budget[i]);  
 						}
-					},
-					legend : {
-						enabled: false
-					},
-					tooltip: {
-						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-						'<td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
-						footerFormat: '</table>',
-						shared: true,
-						useHTML: true
-					},
-					plotOptions: {
-						series: {
-							pointPadding: 0.95,
-							groupPadding: 0.95,
-							borderWidth: 0.95,
-							shadow: false,
-							cursor: 'pointer',
-							point: {
+						else{
+							total_ot_actual.push(total_ot_actual[i-1] + avg_ot_actual[i]);
+							total_ot_forecast.push(total_ot_forecast[i-1] + avg_ot_forecast[i]);
+							total_ot_budget.push(total_ot_budget[i-1] + avg_ot_budget[i]);
+						}
+
+						mov_ot_actual.push(total_ot_actual[i] / (i+1));
+						mov_ot_forecast.push(total_ot_forecast[i] / (i+1));	
+						mov_ot_budget.push(total_ot_budget[i] / (i+1));
+
+					}
+
+					Highcharts.chart('ot', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'Overtime Monthly Resume in '+result.fy
+						},
+						xAxis: {
+							categories: period,
+							crosshair: true
+						},
+						yAxis: {
+							title: {
+								text: 'Total'
+							}
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+							pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							'<td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
+							footerFormat: '</table>',
+							shared: true,
+							useHTML: true
+						},
+						plotOptions: {
+							series: {
+								groupPadding: 0,
+								shadow: false,
+								cursor: 'pointer',
+								borderWidth: 0
+							},
+							column: {
+								minPointLength: 1,
+								pointPadding: 0.1,
+								pointWidth: 26,
+								borderWidth: 0,
 								events: {
-									click: function (event) {
-										Alert('A');
+									legendItemClick: function () {
+										return false; 
+									}
+								},
+								animation:{
+									duration:0
+								},
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2);
 									}
 								}
 							},
-							borderWidth: 0
+							spline: {
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2);
+									}
+								}
+
+							}
 						},
-						column: {
-							minPointLength: 1,
-							pointPadding: 0.1,
-							pointWidth: 25,
-							borderWidth: 0,
-							events: {
-								legendItemClick: function () {
-									return false; 
-								}
-							},
-							animation:{
-								duration:0
-							},
-							dataLabels: {
-								enabled: true,
-								formatter: function () {
-									return Highcharts.numberFormat(this.y,2);
-								}
+						credits: {
+							enabled: false
+						},
+						legend : {
+							align: 'center',
+							verticalAlign: 'bottom',
+							x: 0,
+							y: 0,
+
+							backgroundColor: (
+								Highcharts.theme && Highcharts.theme.background2) || 'white',
+							borderColor: '#CCC',
+							borderWidth: 1,
+							shadow: false
+						},
+						series: [
+						{
+							name: 'Budget',
+							data: avg_ot_budget,
+						},
+						{
+							name: 'Forecast',
+							data: avg_ot_forecast,
+						},
+						{
+							name: 'Actual',
+							data: avg_ot_actual,
+						},
+						{
+							name: 'Mov. Budget',
+							type: 'spline',
+							data: mov_ot_budget,
+							marker: {
+								enabled: true
+							}
+						},
+						{
+							name: 'Mov. Forecast',
+							type: 'spline',
+							data: mov_ot_forecast,
+							marker: {
+								enabled: true
+							}
+						},
+						{
+							name: 'Mov. Actual',
+							type: 'spline',
+							data: mov_ot_actual,
+							marker: {
+								enabled: true
 							}
 						}
-					},
-					credits: {
-						enabled: false
-					},
-					legend : {
-						align: 'center',
-						verticalAlign: 'bottom',
-						x: 0,
-						y: 0,
+						]
 
-						backgroundColor: (
-							Highcharts.theme && Highcharts.theme.background2) || 'white',
-						borderColor: '#CCC',
-						borderWidth: 1,
-						shadow: false
-					},
-					series: [
-					{
-						name: 'Budget',
-						data: avg_ot_budget,
-					},
-					{
-						name: 'Forecast',
-						data: avg_ot_forecast,
-					},
-					{
-						name: 'Actual',
-						data: avg_ot_actual,
-					},
-					{
-						name: 'Mov. Budget',
-						type: 'spline',
-						data: mov_ot_budget,
-						marker: {
-							enabled: true
-						}
-					},
-					{
-						name: 'Mov. Forecast',
-						type: 'spline',
-						data: mov_ot_forecast,
-						marker: {
-							enabled: true
-						}
-					},
-					{
-						name: 'Mov. Actual',
-						type: 'spline',
-						data: mov_ot_actual,
-						marker: {
-							enabled: true
-						}
-					}
-					]
-					
-				});
+					});
 
-			}
+				}
+
+			// ----------------  MANPOWER ----------------------
+			var min = 0;
 
 			if(result.mp_actual.length > 0){
 				var period = [];
@@ -316,48 +340,17 @@
 				var mp_forecast = [];
 				var mp_budget = [];
 
-				var total_mp_actual = [];
-				var total_mp_forecast = [];
-				var total_mp_budget = [];
-
-				var mov_mp_actual = [];
-				var mov_mp_forecast = [];
-				var mov_mp_budget = [];
-
 				for (var i = 0; i < result.mp_actual.length; i++) {
-					period.push(result.mp_actual[i].period);
+					period.push(result.ot_actual[i].period);
+
+					if (parseInt(result.mp_actual[i].emp) > 1500) {
+						min = 1500;
+					}
+
 					mp_actual.push(parseInt(result.mp_actual[i].emp));
 					mp_budget.push(parseInt(result.mp_budget[i].total_budget_mp));
 					mp_forecast.push(parseInt(result.mp_forecast[i].total_forecast_mp));
-					
-					mp_actual[i] = mp_actual[i] || 0; 
-					mp_forecast[i] = mp_forecast[i] || 0; 
-					mp_budget[i] = mp_budget[i] || 0; 
-
-					if(i == 0){
-						total_mp_actual.push(mp_actual[i]);
-						total_mp_forecast.push(mp_forecast[i]); 
-						total_mp_budget.push(mp_budget[i]);  
-					}
-					else{
-						total_mp_actual.push(total_mp_actual[i-1] + mp_actual[i]);
-						total_mp_forecast.push(total_mp_forecast[i-1] + mp_forecast[i]);
-						total_mp_budget.push(total_mp_budget[i-1] + mp_budget[i]);
-					}
-
-					mov_mp_actual.push(total_mp_actual[i] / (i+1));
-					mov_mp_forecast.push(total_mp_forecast[i] / (i+1));	
-					mov_mp_budget.push(total_mp_budget[i] / (i+1));
 				}
-
-
-				console.log(mp_actual);
-				console.log(mp_budget);
-				console.log(mp_forecast);
-
-				console.log(mov_mp_actual);
-				console.log(mov_mp_budget);
-				console.log(mov_mp_forecast);
 
 				Highcharts.chart('mp', {
 					chart: {
@@ -371,7 +364,7 @@
 						crosshair: true
 					},
 					yAxis: {
-						min: 0,
+						min : min,
 						title: {
 							text: 'Total'
 						}
@@ -389,24 +382,15 @@
 					},
 					plotOptions: {
 						series: {
-							pointPadding: 0.95,
-							groupPadding: 0.95,
-							borderWidth: 0.95,
+							groupPadding: 0,
 							shadow: false,
 							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										Alert('A');
-									}
-								}
-							},
 							borderWidth: 0
 						},
 						column: {
 							minPointLength: 1,
 							pointPadding: 0.1,
-							pointWidth: 25,
+							pointWidth: 26,
 							borderWidth: 0,
 							events: {
 								legendItemClick: function () {
@@ -451,30 +435,6 @@
 					{
 						name: 'Actual',
 						data: mp_actual,
-					},
-					{
-						name: 'Mov. Budget',
-						type: 'spline',
-						data: mov_mp_budget,
-						marker: {
-							enabled: true
-						}
-					},
-					{
-						name: 'Mov. Forecast',
-						type: 'spline',
-						data: mov_mp_forecast,
-						marker: {
-							enabled: true
-						}
-					},
-					{
-						name: 'Mov. Actual',
-						type: 'spline',
-						data: mov_mp_actual,
-						marker: {
-							enabled: true
-						}
 					}
 					]
 					
@@ -482,8 +442,8 @@
 
 			}
 
-
-		});
+		}
+	});
 
 }
 

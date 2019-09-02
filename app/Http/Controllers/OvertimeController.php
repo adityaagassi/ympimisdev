@@ -77,7 +77,7 @@ class OvertimeController extends Controller
 	public function indexMonthlyResume()
 	{
 		$fiscal_years = db::select("select DISTINCT fiscal_year from weekly_calendars order by fiscal_year asc");
-		$costcenters = db::select("select DISTINCT cost_center, cost_center_name from ympimis.cost_centers order by cost_center asc");
+		$costcenters = db::select("select DISTINCT cost_center, cost_center_name from ympimis.cost_centers order by cost_center_name asc");
 
 		return view('overtimes.reports.overtime_resume', array(
 			'title' => 'Overtime Resume',
@@ -273,7 +273,7 @@ class OvertimeController extends Controller
 		) as b
 		left join
 		(
-		select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format(now(), '%Y-%m')) as mon_to from employment_logs 
+		select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format((select max(week_date) from weekly_calendars), '%Y-%m')) as mon_to from employment_logs 
 		WHERE id IN (
 		SELECT MAX(id)
 		FROM employment_logs
