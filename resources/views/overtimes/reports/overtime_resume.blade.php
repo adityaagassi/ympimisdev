@@ -238,16 +238,13 @@
 						},
 						plotOptions: {
 							series: {
-								groupPadding: 0,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
 								shadow: false,
 								cursor: 'pointer',
 								borderWidth: 0
 							},
 							column: {
-								minPointLength: 1,
-								pointPadding: 0.1,
-								pointWidth: 26,
-								borderWidth: 0,
 								events: {
 									legendItemClick: function () {
 										return false; 
@@ -268,6 +265,11 @@
 									enabled: true,
 									formatter: function () {
 										return Highcharts.numberFormat(this.y,2);
+									},
+									color: (Highcharts.theme && Highcharts.theme.dataLabelsColor)
+									|| 'white',
+									style: {
+										textShadow: '0 0 3px black'
 									}
 								}
 
@@ -332,7 +334,6 @@
 				}
 
 			// ----------------  MANPOWER ----------------------
-			var min = 0;
 
 			if(result.mp_actual.length > 0){
 				var period = [];
@@ -342,10 +343,6 @@
 
 				for (var i = 0; i < result.mp_actual.length; i++) {
 					period.push(result.ot_actual[i].period);
-
-					if (parseInt(result.mp_actual[i].emp) > 1500) {
-						min = 1500;
-					}
 
 					mp_actual.push(parseInt(result.mp_actual[i].emp));
 					mp_budget.push(parseInt(result.mp_budget[i].total_budget_mp));
@@ -364,7 +361,17 @@
 						crosshair: true
 					},
 					yAxis: {
-						min : min,
+						tickPositioner: function () {
+
+							var Dev6 = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin))*1.05);
+							var Dev5 = Math.floor(Math.min(Math.abs(this.dataMax), Math.abs(this.dataMin))*1);
+							var Dev4 = Math.floor(Math.min(Math.abs(this.dataMax), Math.abs(this.dataMin))*0.95);
+							var Dev3 = Math.floor(Math.min(Math.abs(this.dataMax), Math.abs(this.dataMin))*0.9);
+							var Dev2 = Math.floor(Math.min(Math.abs(this.dataMax), Math.abs(this.dataMin))*0.85);
+							var Dev1 = Math.floor(Math.min(Math.abs(this.dataMax), Math.abs(this.dataMin))*0.8);
+
+							return [Dev1, Dev2, Dev3, Dev4, Dev5, Dev6];
+						},
 						title: {
 							text: 'Total'
 						}
@@ -382,16 +389,13 @@
 					},
 					plotOptions: {
 						series: {
-							groupPadding: 0,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
 							shadow: false,
 							cursor: 'pointer',
 							borderWidth: 0
 						},
 						column: {
-							minPointLength: 1,
-							pointPadding: 0.1,
-							pointWidth: 26,
-							borderWidth: 0,
 							events: {
 								legendItemClick: function () {
 									return false; 
@@ -400,7 +404,7 @@
 							animation:{
 								duration:0
 							},
-							dataLabels: {
+							dataLabels: {	
 								enabled: true,
 								formatter: function () {
 									return Highcharts.numberFormat(this.y,2);
