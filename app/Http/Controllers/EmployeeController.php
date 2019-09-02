@@ -693,15 +693,23 @@ public function fetchReportGender()
   return Response::json($response); 
 }
 
-public function fetchReportGender2()
+public function fetchReportGender2(Request $request)
 {
-  $gender = "select gender, count(employee_id) as jml from employees where end_date is null group by gender";
+
+  if(strlen($request->get('tgl')) > 0){
+    $tgl = $request->get("tgl");
+  }else{
+    $tgl = date("Y-m");
+  }
+  $gender = "select gender, count(employee_id) as jml from employees where DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null group by gender";
 
   $get_manpower = db::select($gender);
+  $monthTitle = date("F Y", strtotime($tgl));
 
   $response = array(
     'status' => true,
     'manpower_by_gender' => $get_manpower,
+    'monthTitle' => $monthTitle
   );
 
   return Response::json($response);
@@ -974,43 +982,66 @@ public function indexReportJabatan()
 
 public function fetchReport(Request $request)
 {
+
+  if(strlen($request->get('tgl')) > 0){
+    $tgl = $request->get("tgl");
+  }else{
+    $tgl = date("Y-m");
+  }
+
   if ($request->get("ctg") == 'Report Employee by Status Kerja') {
-   $emp = Employee::leftJoin(db::raw("(select employee_id, status from employment_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
-   ->whereNull("end_date")
-   ->select("status", db::raw("count(employees.employee_id) as jml"))
-   ->groupBy("emp_log.status")
-   ->get();
+   $emp = db::select("select count(emp.employee_id) jml, log.`status` from
+    (select employee_id from employees
+    WHERE DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null) emp
+    left join
+    (SELECT id, employee_id, `status` FROM employment_logs
+    WHERE id IN (SELECT MAX(id) FROM employment_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' GROUP BY employee_id)) log
+    on emp.employee_id = log.employee_id
+    GROUP BY log.`status`");
  } 
  else if ($request->get("ctg") == 'Report Employee by Grade') 
  {
-  $emp = Employee::leftJoin(db::raw("(select employee_id, grade_code as status from promotion_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
-  ->whereNull("end_date")
-  ->select("status", db::raw("count(employees.employee_id) as jml"))
-  ->groupBy("emp_log.status")
-  ->orderBy(db::raw('FIELD(emp_log.status, "E0", "E1", "E2","E3", "E4", "E5","E6", "E7", "E8","L1", "L2", "L3","L4", "M1", "M2","M3", "M4","D3")'))
-  ->get();
+  $emp = db::select("select count(emp.employee_id) jml, log.grade_code as `status` from
+    (select employee_id from employees
+    WHERE DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null) emp
+    left join
+    (SELECT id, employee_id, grade_code FROM promotion_logs
+    WHERE id IN (SELECT MAX(id) FROM promotion_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' GROUP BY employee_id)) log
+    on emp.employee_id = log.employee_id
+    GROUP BY log.grade_code
+    Order By FIELD(status, '-', 'E0', 'E1', 'E2','E3', 'E4', 'E5','E6', 'E7', 'E8','L1', 'L2', 'L3','L4', 'M1', 'M2','M3', 'M4','D3')");
 }
 else if ($request->get("ctg") == 'Report Employee by Department') {
-  $emp = Employee::leftJoin(db::raw("(select employee_id, department as status from mutation_logs where valid_to is null) as emp_log"),"emp_log.employee_id","=","employees.employee_id")
-  ->whereNull("end_date")
-  ->select("status", db::raw("count(employees.employee_id) as jml"))
-  ->groupBy("emp_log.status")
-  ->orderBy("jml","asc")
-  ->get();
+  $emp = db::select("select count(emp.employee_id) jml, log.department as status from
+    (select employee_id from employees
+    WHERE DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null) emp
+    left join
+    (SELECT id, employee_id, department FROM mutation_logs
+    WHERE id IN (SELECT MAX(id) FROM mutation_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' GROUP BY employee_id)) log
+    on emp.employee_id = log.employee_id
+    GROUP BY log.department
+    ORDER BY jml asc");
 } else if ($request->get("ctg") == 'Report Employee by Jabatan') {
-  $emp = Employee::leftJoin(db::raw("(select employee_id, position as status from promotion_logs where valid_to is null and position <> '-') as emp_log"),"emp_log.employee_id","=","employees.employee_id")
-  ->whereNull("end_date")
-  ->whereNotNull("status")
-  ->select("status", db::raw("count(employees.employee_id) as jml"))
-  ->groupBy("emp_log.status")
-  ->orderBy("jml","asc")
-  ->get();
+  $emp = db::select("select count(emp.employee_id) jml, log.position as `status` from
+    (select employee_id from employees
+    WHERE DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null) emp
+    left join
+    (SELECT id, employee_id, position FROM promotion_logs
+    WHERE id IN (SELECT MAX(id) FROM promotion_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' and position <> '-' GROUP BY employee_id)) log
+    on emp.employee_id = log.employee_id
+    GROUP BY log.position
+    ORDER BY jml, `status` asc");
 }
+
+$monthTitle = date("F Y", strtotime($tgl));
+
 
 $response = array(
   'status' => true,
   'datas' => $emp,
-  'ctg' => $request->get("ctg")
+  'ctg' => $request->get("ctg"),
+  'monthTitle' => $monthTitle
+
 );
 
 return Response::json($response); 

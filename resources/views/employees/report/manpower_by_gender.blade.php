@@ -53,14 +53,32 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px;">
+<section class="content" style="padding-left: 0px; padding-right: 0px;">	
 	<div class="row">
-		<div class="col-xs-12">
-			<div id="chart" style="height: 500px"></div>
+		<div class="col-md-12">
+			<div class="col-md-12">
+				<div class="col-md-2 pull-right">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+					</div>
+					<br>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="nav-tabs-custom">
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_1">
+							<div id="chart" style="width: 99%;"></div>
+						</div>
 
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-
 </section>
 @endsection
 @section('scripts')
@@ -81,17 +99,32 @@
 		drawChart();
 	});
 
+	$('.datepicker').datepicker({
+		// <?php $tgl_max = date('m-Y') ?>
+		autoclose: true,
+		format: "yyyy-mm",
+		startView: "months", 
+		minViewMode: "months",
+		autoclose: true,
+		
+		// endDate: '<?php echo $tgl_max ?>'
+
+	});
+
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function drawChart() {
+		var tgl = $('#tgl').val();
 		var data = {
-			ctg:'{{$title}}'
+			ctg:'{{$title}}',
+			tgl: tgl
 		};
 
 		$.get('{{ url("fetch/report/gender2") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					var seriesL, seriesP;
+					var month = result.monthTitle;
 
 					$.each(result.manpower_by_gender, function(key, value) {
 						if (value.gender == "L") {
@@ -109,7 +142,7 @@
 							type: 'pie'
 						},
 						title: {
-							text: '{{$title}}'
+							text: '{{$title}} in '+month
 						},
 						tooltip: {
 							pointFormat: '<b>{point.percentage:.1f}%</b>'

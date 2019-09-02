@@ -54,51 +54,69 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-left: 0px; padding-right: 0px;">
-	<div class="col-xs-12">
-		<div class="row">
-			<div class="col-xs-12">
-				<div id="chart" style="height: 500px"></div>
-
-				<div class="modal fade" id="myModal">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 style="float: right;" id="modal-title"></h4>
-								<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-								<br><h4 class="modal-title" id="judul_table"></h4>
-							</div>
-							<div class="modal-body">
-								<div class="row">
-									<div class="col-md-12">
-										<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
-											<thead style="background-color: rgba(126,86,134,.7);">
-												<tr>
-													<th>Employee ID</th>
-													<th>Employee Name</th>
-													<th>Division</th>
-													<th>Department</th>
-													<th>Section</th>
-													<th>Sub Section</th>
-													<th>Entry Date</th>
-													<th>Employee Status</th>
-												</tr>
-											</thead>
-											<tbody>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-							</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-12">
+				<div class="col-md-2 pull-right">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border-color: #00a65a">
+							<i class="fa fa-calendar"></i>
 						</div>
-						<!-- /.modal-content -->
+						<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
 					</div>
-					<!-- /.modal-dialog -->
+					<br>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="nav-tabs-custom">
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_1">
+							<div id="chart" style="width: 99%;"></div>
+						</div>
+
+					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="float: right;" id="modal-title"></h4>
+					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+					<br><h4 class="modal-title" id="judul_table"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="example2" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Employee ID</th>
+										<th>Employee Name</th>
+										<th>Division</th>
+										<th>Department</th>
+										<th>Section</th>
+										<th>Sub Section</th>
+										<th>Entry Date</th>
+										<th>Employee Status</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
 	</div>
 
 </section>
@@ -125,17 +143,33 @@
 		drawChart();
 	});
 
+	$('.datepicker').datepicker({
+		// <?php $tgl_max = date('m-Y') ?>
+		autoclose: true,
+		format: "yyyy-mm",
+		startView: "months", 
+		minViewMode: "months",
+		autoclose: true,
+		
+		// endDate: '<?php echo $tgl_max ?>'
+
+	});
+
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function drawChart() {
+		var tgl = $('#tgl').val();
+
 		var data = {
-			ctg:'{{$title}}'
+			ctg:'{{$title}}',
+			tgl: tgl
 		};
 
 		$.get('{{ url("fetch/report/stat") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					var ctg = [], series = [];
+					var month = result.monthTitle;
 
 					$.each(result.datas, function(key, value) {
 						ctg.push(value.status);
@@ -147,7 +181,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '{{$title}}'
+							text: '{{$title}} in '+month
 						},
 						xAxis: {
 							type: 'category',
