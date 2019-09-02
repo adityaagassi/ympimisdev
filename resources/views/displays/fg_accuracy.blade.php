@@ -137,7 +137,7 @@
 					]
 				},
 				style: {
-					fontFamily: '\'Unica One\', sans-serif'
+					fontFamily: 'sans-serif'
 				},
 				plotBorderColor: '#606063'
 			},
