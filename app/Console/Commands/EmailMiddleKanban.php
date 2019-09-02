@@ -66,9 +66,8 @@ class EmailMiddleKanban extends Command
             'jml' => $dataJml
         ];
 
-
         if(count($dataKanban) > 0){
             Mail::to($mail_to)->send(new SendEmail($data, 'middle_kanban'));
-        }        
+        }
     }
 }

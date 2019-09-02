@@ -47,9 +47,11 @@ class SendEmail extends Mailable
         if($this->remark == 'middle_kanban'){
             return $this->from('ympimis@gmail.com')->subject('MIS Kanban WIP Information')->view('mails.middle_kanban');
         }
-
         if($this->remark == 'duobleserialnumber'){
             return $this->from('ympimis@gmail.com')->subject('MIS Double Serial Number Information')->view('mails.duobleserialnumber');
+        }
+        if($this->remark == 'confirmation_overtime'){
+            return $this->from('ympimis@gmail.com')->subject('MIS Unconfirmed Overtime')->view('mails.confirmation_overtime');
         }
     }
 }

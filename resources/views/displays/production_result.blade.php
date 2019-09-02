@@ -178,7 +178,12 @@
 							enabled: false
 						},
 						legend: {
-							enabled: false
+							enabled: true,
+							itemStyle: {
+								fontSize:'16px',
+								font: '16pt Trebuchet MS, Verdana, sans-serif',
+								color: '#000000'
+							}
 						},
 						tooltip: {
 							shared: true
