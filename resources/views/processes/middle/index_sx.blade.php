@@ -23,12 +23,12 @@
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-flanel") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Flanel</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_kensa", "lcq-incoming") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check</a>
-			<a href="{{ url("index/process_middle_kensa", "incoming-lcq2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check (After Treatment)</a>
+			<a href="{{ url("index/process_middle_kensa", "lcq-incoming2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check (After Treatment)</a>
 			{{-- <a href="{{ url("index/process_middle_kensa", "incoming-lcq-body") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">IC LCQ Body</a> --}}
-			<a href="{{ url("index/process_middle_kensa", "kensa-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
+			<a href="{{ url("index/process_middle_kensa", "lcq-kensa") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Plating <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/process_middle_kensa", "incoming-plt-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check</a>
-			<a href="{{ url("index/process_middle_kensa", "kensa-plt-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
+			<a href="{{ url("index/process_middle_kensa", "plt-incoming-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Incoming Check</a>
+			<a href="{{ url("index/process_middle_kensa", "plt-kensa-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Repair <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_return", "buffing") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Repair/Return to Buffing</a>
 		</div>
