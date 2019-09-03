@@ -2,27 +2,18 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-
-  .morecontent span {
-    display: none;
+  thead input {
+    padding: 3px;
+    box-sizing: border-box;
   }
-  .morelink {
-    display: block;
-  }
-
   thead>tr>th{
     text-align:center;
-    overflow:hidden;
-    padding: 3px;
   }
   tbody>tr>td{
     text-align:center;
   }
   tfoot>tr>th{
     text-align:center;
-  }
-  th:hover {
-    overflow: visible;
   }
   td:hover {
     overflow: visible;
@@ -34,25 +25,11 @@
     border:1px solid black;
   }
   table.table-bordered > tbody > tr > td{
-    border:1px solid black;
-    vertical-align: middle;
-    padding:0;
+    border:1px solid rgb(211,211,211);
   }
   table.table-bordered > tfoot > tr > th{
-    border:1px solid black;
-    padding:0;
+    border:1px solid rgb(211,211,211);
   }
-  td{
-    overflow:hidden;
-    text-overflow: ellipsis;
-  }
-  .dataTable > thead > tr > th[class*="sort"]:after{
-    content: "" !important;
-  }
-  #queueTable.dataTable {
-    margin-top: 0px!important;
-  }
-  #loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -71,21 +48,65 @@
             <div class="input-group-addon bg-purple" style="border-color: #605ca8">
               <i class="fa fa-calendar"></i>
             </div>
-            <select class="form-control" id="fy" onchange="drawChart()" style="border-color: #605ca8">
-              <option value="FY196">FY196</option>
-              <option value="FY195">FY195</option>
-            </select>
+
+            <input type="text" id="bulan" onchange="drawChart()" style="border-color: #605ca8" class="form-control datepicker" placeholder="select Month">
           </div>
           <br>
         </div>
       </div>
 
       <div class="col-md-12">
-        <div id="over_control" style="width: 100%; height: 550px;"></div>
-      </div> 
-
+        <div class="nav-tabs-custom"> 
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+              <div id="tidak_ada_data"></div>
+              <div id="over_control" style="width: 99%;"></div>
+            </div>
+            <!-- /.tab-pane -->
+          </div>
+          <!-- /.tab-content -->
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- start modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="tabel_detail" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th style="width: 8%;">Date</th>
+                    <th style="width: 10%;">Employee ID</th>
+                    <th style="width: 15%;">Name</th>
+                    <th style="width: 3%;">Overtime (hour)</th>
+                    <th style="width: 20%;">Reason</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end modal -->
 
 </section>
 @endsection
@@ -104,108 +125,184 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
-		drawChart();
-	});
+    drawChart();
+  });
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+  var bulanText = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+
 	function drawChart() {
-    var fy = $("#fy").val();
+    var bulan = $("#bulan").val();
 
     var data = {
-      fy: fy
+      bulan: bulan
     }
 
     $.get('{{ url("fetch/report/overtime_report_outsource") }}', data, function(result) {
 
-    // -------------- CHART OVERTIME REPORT CONTROL ----------------------
-    var seriesData = [];
-    var xCategories = [];
-    var seriesDataFirst = [];
-    var uniqueNames = [];
-    var newData = [];
-    var i, cat;
-    var title = fy;
-    var check = 0;
+      if(result.datas.length > 0){
+        $('#tidak_ada_data').append().empty();
 
-    for(var z = 0; z < result.datas.length; z++){
-      cat = result.datas[z].bulan;
-      
-      if(xCategories.indexOf(cat) === -1){
-        xCategories[xCategories.length] = cat;
-      }
-    }
-    console.log(xCategories);
+        var nama = [];
+        var jam = [];
+        var titleChart = result.bulan;
 
-    for(i = 0; i < result.datas.length; i++){
-      if(seriesData){
-        var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.datas[i].nik+"-"+result.datas[i].namaKaryawan;});
-        if(currSeries.length === 0){
-          seriesData[seriesData.length] = currSeries = {name: result.datas[i].nik+"-"+result.datas[i].namaKaryawan, data: []};
+        
+        for (var i = 0; i < result.datas.length; i++) {
+          nama.push(result.datas[i].namaKaryawan);
+          jam.push(result.datas[i].jam);
         }
-        else {
-          currSeries = currSeries[0];
-        }
-        var index = currSeries.data.length;
-        currSeries.data[index] = result.datas[i].jam;
-      }
-      else {
-        seriesData[0] = {name: result.datas[i].jam, data: [intVal(result.datas[i].jam)]}
-      }
-    }       
 
-    $('#over_control').highcharts({
-      chart: {
-        type: 'spline'
-      },
-      title: {
-        text: 'YEAR '+title
-      },
-      xAxis: {
-        categories: xCategories
-      },
-      yAxis: {
-        title: {
-          text: 'Total Jam'
-        }
-      },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        formatter: function () {
-          return this.series.name +
-          ' : ' + this.y + 'hour(s)';
-        }
-      },
-      plotOptions: {
-        line: {
-          dataLabels: {
+        Highcharts.chart('over_control', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: '<span style="font-size: 18pt;">Overtime Outsource</span><br><center><span style="color: rgba(96, 92, 168);">'+bulanText[parseInt(titleChart.slice(0,2))-1]+' '+titleChart.slice(3,7)+'</center></span>',
+            useHTML: true
+          },
+          xAxis: {
+            categories: nama
+          },
+          yAxis: {
+            title: {
+              text: 'Total Overtime'
+            }
+          },
+          legend : {
             enabled: false
           },
-          enableMouseTracking: true
-        },
-        series: {
-          marker: {
+          tooltip: {
+            headerFormat: '',
+            pointFormat: '<span style="color:{point.color}">Overtime {point.category}</span>: <b>{point.y}</b> <br/>'
+          },
+          plotOptions: {
+            series: {
+              cursor: 'pointer',
+              point: {
+                events: {
+                  click: function (event) {
+                    showDetail(event.point.category, result.bulan);
+                  }
+                }
+              },
+              borderWidth: 0,
+              dataLabels: {
+                enabled:true,
+                formatter:function() {
+                  var pcnt = this.y;
+                  return Highcharts.numberFormat(pcnt);
+                }
+              }
+            }
+          },credits: {
             enabled: false
           },
-          lineWidth: 1
-        }
-      },
-      credits:{
-        enabled:false
-      },
-      series: seriesData
+          series: [
+          {
+            colorByPoint : true,
+            data: jam,
+          }
+          ]
+        });
+      }else{
+        $('#over_control').append().empty();
+        $('#tidak_ada_data').append().empty();
+        $('#tidak_ada_data').append("<br><div class='alert alert-warning alert-dismissible' data-dismiss='alert' aria-hidden='true' style='margin-right: 3.3%;margin-left: 2%'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><h4><i class='icon fa fa-warning'></i> This month's overtime is empty!</h4></div>");
+      }
+
     });
-  });
+  }
+
+  function showDetail(nama,period) {
+    tabel = $('#tabel_detail').DataTable();
+    tabel.destroy();
+
+    $('#myModal').modal('show');
+
+    var table = $('#tabel_detail').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("fetch/report/overtime_detail_outsource") }}",
+        "data" : {
+          nama : nama,
+          period : period
+        }
+      },
+      "columns": [
+      { "data": "tanggal", "width": "15%" },
+      { "data": "nik", "width": "15%" },
+      { "data": "namaKaryawan", "width": "20%" },
+      { "data": "ot", "width": "5%" },
+      { "data": "reason", "width": "45%" }
+      ]
+    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center>Overtime '+nama+' in '+bulanText[parseInt(period.slice(0,2))-1]+' '+period.slice(3,7)+'<center>');
+
+
   }
 
   $('#bulan').datepicker({
-   autoclose: true,
-   format: "yyyy-mm",
-   startView: "months", 
-   minViewMode: "months"
- });
+    autoclose: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
 
   function openSuccessGritter(title, message){
    jQuery.gritter.add({

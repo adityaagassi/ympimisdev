@@ -60,7 +60,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom" name="dateFrom">
+									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
 								</div>
 							</div>
 						</div>
@@ -71,7 +71,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto" name="dateTo">
+									<input type="text" class="form-control pull-right" id="dateto" name="dateto">
 								</div>
 							</div>
 						</div>
@@ -91,8 +91,6 @@
 										<th style="width: 8%">Date</th>
 										<th style="width: 10%">Employee ID</th>
 										<th style="width: 15%">Name</th>
-										<th style="width: 15%">Department</th>
-										<th style="width: 15%">Section</th>
 										<th style="width: 3%">Overtime (hour)</th>
 										<th style="width: 20%">Reason</th>
 									</tr>
@@ -101,8 +99,6 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th></th>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -161,10 +157,6 @@
 
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
-		var code = $('#code').val();
-		var costcenter = $('#costcenter').val();
-		var section = $('#section').val();
-		var department = $('#department').val();
 		
 		var data = {
 			datefrom:datefrom,
@@ -231,13 +223,9 @@
 			"columns": [
 			{ "data": "tanggal" },
 			{ "data": "nik" },
-			{ "data": "name" },
-			{ "data": "department" },
-			{ "data": "section" },
-			{ "data": "cost_center" },
-			{ "data": "ot" },
-			{ "data": "keperluan" },
-			{ "data": "code" }
+			{ "data": "namaKaryawan" },
+			{ "data": "jam" },
+			{ "data": "reason" }
 			],
 		});
 

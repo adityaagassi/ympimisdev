@@ -218,6 +218,8 @@
 						},
 						xAxis: {
 							categories: period,
+							gridLineWidth: 3,
+							gridLineColor: 'RGB(204,255,255)',
 							crosshair: true
 						},
 						yAxis: {
@@ -292,16 +294,16 @@
 						},
 						series: [
 						{
-							name: 'Budget',
-							data: avg_ot_budget,
+							name: 'Actual',
+							data: avg_ot_actual,
 						},
 						{
 							name: 'Forecast',
 							data: avg_ot_forecast,
 						},
 						{
-							name: 'Actual',
-							data: avg_ot_actual,
+							name: 'Budget',
+							data: avg_ot_budget,
 						},
 						{
 							name: 'Mov. Budget',
@@ -358,6 +360,8 @@
 					},
 					xAxis: {
 						categories: period,
+						gridLineWidth: 3,
+						gridLineColor: 'RGB(204,255,255)',
 						crosshair: true
 					},
 					yAxis: {
@@ -429,16 +433,16 @@
 					},
 					series: [
 					{
-						name: 'Budget',
-						data: mp_budget,
+						name: 'Actual',
+						data: mp_actual,
 					},
 					{
 						name: 'Forecast',
 						data: mp_forecast,
 					},
 					{
-						name: 'Actual',
-						data: mp_actual,
+						name: 'Budget',
+						data: mp_budget,
 					}
 					]
 					
