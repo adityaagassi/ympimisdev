@@ -178,19 +178,19 @@ class MiddleProcessController extends Controller
 			$title = 'I.C. Saxophone Key Lacquering';
 			$title_jp= '?';
 		}
-		if($id == 'incoming-lcq2'){
+		if($id == 'lcq-incoming2'){
 			$title = 'I.C. Saxophone Key After Treatment Lacquering';
 			$title_jp= '?';
 		}
-		if($id == 'incoming-plt-sx'){
+		if($id == 'plt-incoming-sx'){
 			$title = 'I.C. Saxophone Key Plating';
 			$title_jp= '?';
 		}
-		if($id == 'kensa-lcq'){
+		if($id == 'lcq-kensa'){
 			$title = 'Kensa Saxophone Key Lacquering';
 			$title_jp= '?';
 		}
-		if($id == 'kensa-plt-sx'){
+		if($id == 'plt-kensa-sx'){
 			$title = 'Kensa Saxophone Key Plating';
 			$title_jp= '?';
 		}
