@@ -428,7 +428,7 @@ class MiddleProcessController extends Controller
 	}
 
 	public function scanMiddleOperator(Request $request){
-		$employee = db::table('employees')->where('employee_id', '=', $request->get('employee_id'))->first();
+		$employee = db::table('employees')->where('employee_id', 'like', '%'.$request->get('employee_id').'%')->first();
 
 		if(count($employee) > 0 ){
 			$response = array(
