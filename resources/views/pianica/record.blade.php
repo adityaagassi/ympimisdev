@@ -33,7 +33,8 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Pianica Inventories <span class="text-purple">???</span>
+		Pianica Inventories <span class="text-purple"> ピアニカの在庫
+</span>
 		
 	</h1>
 	<ol class="breadcrumb">

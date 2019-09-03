@@ -39,7 +39,8 @@
 <section class="content-header">
   <h1>
    {{ $page }}
-   <span class="text-purple"> ???</span>
+   <span class="text-purple"> ピアニカの月次報告
+</span>
  </h1>
  <ol class="breadcrumb">
   <!-- <li><a onclick="addOP()" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->

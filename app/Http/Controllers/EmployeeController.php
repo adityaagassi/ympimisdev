@@ -832,8 +832,8 @@ public function indexEmployment()
 // -------------------------  Start Employee Service ------------------
 public function indexEmployeeService()
 {
-  $title = 'Employment Services';
-  $title_jp = '???';
+  $title = 'Employee Self Services';
+  $title_jp = '従業員の情報サービス';
   $emp_id = Auth::user()->username;
   
   $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 

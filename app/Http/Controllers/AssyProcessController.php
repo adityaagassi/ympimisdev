@@ -12,8 +12,8 @@ class AssyProcessController extends Controller
 {
 	public function indexDisplayAssy()
 	{
-		$title = 'SX Sub-Assy Picking Monitor';
-		$title_jp = '';
+		$title = 'Saxophone Picking Monitor';
+		$title_jp = 'サックスのピッキング監視';
 
 		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
 		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");

@@ -101,7 +101,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Employment Service (従業員サービス)
+                                <i class="fa fa-caret-right"></i> Employee Self Services (従業員の情報サービス)
                             </a>
                         </td>
                     </tr>
@@ -191,7 +191,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=&model2=") }}">
-                                <i class="fa fa-caret-right"></i> SX Sub-Assy Picking Monitor
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                         </td>
                     </tr>

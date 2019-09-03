@@ -70,8 +70,8 @@ class OvertimeController extends Controller
 	public function indexReportOutsouce()
 	{
 		return view('overtimes.reports.overtime_outsource', array(
-			'title' => 'Overtime Outsource Employee',
-			'title_jp' => '??'))->with('page', 'Overtime Outsource Employee');
+			'title' => 'Overtime Outsource Control',
+			'title_jp' => '派遣社員の残業管理'))->with('page', 'Overtime Outsource Employee');
 	}
 
 	public function indexMonthlyResume()
@@ -81,7 +81,7 @@ class OvertimeController extends Controller
 
 		return view('overtimes.reports.overtime_resume', array(
 			'title' => 'Overtime Resume',
-			'title_jp' => '??',
+			'title_jp' => '残業のまとめ',
 			'fiscal_years' => $fiscal_years,
 			'costcenters' => $costcenters
 		))->with('page', 'Overtime Monthly Resume');
@@ -91,7 +91,7 @@ class OvertimeController extends Controller
 	{
 		return view('overtimes.reports.overtime_data_outsource', array(
 			'title' => 'Overtime Outsource Data',
-			'title_jp' => '??'))->with('page', 'Overtime Outsource');
+			'title_jp' => '派遣社員の残業データ'))->with('page', 'Overtime Outsource');
 	}
 
 	public function indexPrint($id)
