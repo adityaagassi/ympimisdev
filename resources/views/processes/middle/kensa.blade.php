@@ -71,10 +71,10 @@
 				<table style="width: 100%;" border="1">
 					<tbody>
 						<tr>
-							<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Model</td>
-							<td id="model" style="width: 4%; font-size: 18px; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
-							<td style="width: 1%; font-weight: bold; font-size: 18px; background-color: rgb(220,220,220);">Key</td>
-							<td id="key" style="width: 4%; font-weight: bold; font-size: 18px; background-color: rgb(100,100,100); color: yellow;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 25px; background-color: rgb(220,220,220);">Model</td>
+							<td id="model" style="width: 4%; font-size: 25px; font-weight: bold; background-color: rgb(100,100,100); color: yellow;"></td>
+							<td style="width: 1%; font-weight: bold; font-size: 25px; background-color: rgb(220,220,220);">Key</td>
+							<td id="key" style="width: 4%; font-weight: bold; font-size: 25px; background-color: rgb(100,100,100); color: yellow;"></td>
 							<input type="hidden" id="material_tag">
 							<input type="hidden" id="material_number">
 							<input type="hidden" id="material_quantity">
@@ -87,7 +87,25 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Operator</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="2">Operator</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:2vw; width: 30%;" id="op">-</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="op2">-</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="padding-top: 30px;">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
+					<thead>
+						<tr>
+							<th colspan="3" style="background-color: #ffff66; text-align: center; color: black; font-weight: bold; font-size:2vw;">ALTO</th>
+						</tr>
+						<tr>
 							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Result</th>
 							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Not Good</th>
 							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Rate</th>
@@ -95,10 +113,31 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-weight: bold; font-size:1vw;" id="op">-</td>
-							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="result">0</td>
-							<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="notGood">0</td>
-							<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="ngRate">0%</td>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="ASresult">0</td>
+							<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="ASnotGood">0</td>
+							<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="ASngRate">0%</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div style="padding-top: 5px;">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
+					<thead>
+						<tr>
+							<th colspan="3" style="background-color: rgb(157, 255, 105); text-align: center; color: black; font-weight: bold; font-size:2vw;">TENOR</th>
+						</tr>
+						<tr>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Result</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Not Good</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">Rate</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 2vw;" id="TSresult">0</td>
+							<td style="background-color: rgb(255,204,255); text-align: center; color: #000000; font-size: 2vw;" id="TSnotGood">0</td>
+							<td style="background-color: rgb(255,255,102); text-align: center; color: #000000; font-size: 2vw;" id="TSngRate">0%</td>
 						</tr>
 					</tbody>
 				</table>
@@ -193,7 +232,8 @@
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
 						$('#modalOperator').modal('hide');
-						$('#op').html(result.employee.employee_id+'<br>'+result.employee.name.split(' ')[0]+' '+result.employee.name.split(' ')[1]);
+						$('#op').html(result.employee.employee_id);
+						$('#op2').html(result.employee.name);
 						$('#employee_id').val(result.employee.employee_id);
 						fillResult();
 						$('#tag').focus();
@@ -234,38 +274,56 @@
 			employee_id : $("#operator").val(),
 		}
 		$.get('{{ url("fetch/middle/kensa") }}', data, function(result, status, xhr){
+			var asQty = 0, tsQty = 0;
 
-			$('#result').text(result.result);
-			$('#notGood').text(result.ng);
-			$('#ngRate').text(Math.round((result.ng/result.result)*100, 2)+'%');
+			$.each(result.result, function(index, value) {
+				if (value.hpl == 'ASKEY') {
+					$('#ASresult').text(value.qty);
+					asQty = value.qty;
+				} else if (value.hpl == 'TSKEY'){
+					$('#TSresult').text(value.qty);
+					tsQty = value.qty;
+				}
+			})
+
+			$.each(result.ng, function(index, value) {
+				if (value.hpl == 'ASKEY') {
+					$('#ASnotGood').text(value.qty);
+					$('#ASngRate').text(Math.round((value.qty/asQty)*100, 2)+'%');
+				} else if (value.hpl == 'TSKEY'){
+					$('#TSnotGood').text(value.qty);
+					$('#TSngRate').text(Math.round((value.qty/tsQty)*100, 2)+'%');
+				}
+
+			})
 		});
 	}
 
 	function disabledButton() {
 		if($('#tag').val() != ""){
-		var btn = document.getElementById('conf1');
-        btn.disabled = true;
-        btn.innerText = 'Posting...'
+			var btn = document.getElementById('conf1');
+			btn.disabled = true;
+			btn.innerText = 'Posting...'
         // alert('aaaa');			
+        return false;
+    }
+}
+
+
+function conf(){
+	if($('#tag').val() == ""){
+		openErrorGritter('Error!', 'Tag is empty');
+		audio_error.play();
+		$("#tag").val("");
+		$("#tag").focus();
+
 		return false;
-		}
 	}
 
 
-	function conf(){
-		if($('#tag').val() == ""){
-			openErrorGritter('Error!', 'Tag is empty');
-			audio_error.play();
-			$("#tag").val("");
-			$("#tag").focus();
 
-			return false;
-		}
-
-		
-
-		var tag = $('#tag_material').val();
-		var loop = $('#loop').val();
+	var tag = $('#tag_material').val();
+	var loop = $('#loop').val();
 		// var total = 0;
 		var count_ng = 0;
 		var ng = [];
@@ -296,8 +354,8 @@
 			
 			if(result.status){
 				var btn = document.getElementById('conf1');
-        		btn.disabled = false;
-        		btn.innerText = 'CONFIRM';
+				btn.disabled = false;
+				btn.innerText = 'CONFIRM';
 				openSuccessGritter('Success!', result.message);
 				for (var i = 1; i <= loop; i++) {
 					$('#count'+i).text(0);
@@ -316,8 +374,8 @@
 			}
 			else{
 				var btn = document.getElementById('conf1');
-        		btn.disabled = false;
-        		btn.innerText = 'CONFIRM';
+				btn.disabled = false;
+				btn.innerText = 'CONFIRM';
 				audio_error.play();
 				openErrorGritter('Error!', result.message);
 			}
@@ -327,8 +385,8 @@
 	function canc(){
 		var loop = $('#loop').val();
 		for (var i = 1; i <= loop; i++) {
-					$('#count'+i).text(0);
-				};
+			$('#count'+i).text(0);
+		};
 		$('#model').text("");
 		$('#key').text("");
 		$('#material_tag').val("");
