@@ -477,7 +477,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('destroy/stamp', 'ProcessController@destroyStamp');
 	// return sax
 	Route::post('returnfg/stamp', 'ProcessController@returnfgStamp');
-	Route::post('scan/serial_number_return_fl', 'ProcessController@scanSerialNumberReturnFl');
+	Route::post('scan/serial_number_return_Sx', 'ProcessController@scanSerialNumberReturnSx');
 	// end return sax
 });
 
