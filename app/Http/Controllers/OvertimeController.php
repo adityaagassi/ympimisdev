@@ -235,13 +235,12 @@ class OvertimeController extends Controller
 		group by period
 		order by period asc) ot
 		on wc.period = ot.period";
-
 		$ot_actual = db::connection('mysql3')->select($query1);
 
 		$query2 = "select wc.period, bg.total_budget from
 		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
 		left join
-		(select DATE_FORMAT(period,'%m-%Y') as period, sum(budget) as total_budget
+		(select DATE_FORMAT(period,'%m-%Y') as period, ROUND(sum(budget),2) as total_budget
 		from budgets ".$cc_all."
 		group by period
 		order by budgets.period asc) bg
@@ -251,7 +250,7 @@ class OvertimeController extends Controller
 		$query3 = "select wc.period, fc.total_forecast from
 		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
 		left join
-		(select DATE_FORMAT(date,'%m-%Y') as period, sum(hour) as total_forecast
+		(select DATE_FORMAT(date,'%m-%Y') as period, ROUND(sum(hour),2) as total_forecast
 		from forecasts ".$cc_all."
 		group by period
 		order by date asc) fc
@@ -803,13 +802,15 @@ class OvertimeController extends Controller
 		SELECT
 		over_time_member.nik,
 		over_time.tanggal,
-		sum( over_time_member.jam ) AS jam 
+		sum(IF(status = 0, jam, final)) AS jam 
 		FROM
 		over_time
 		LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
 		WHERE
 		DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$tgl2."' 
 		AND over_time_member.nik IS NOT NULL and over_time.deleted_at is null
+		and jam_aktual = 0
+		and nik not like '%os%'
 		GROUP BY
 		over_time_member.nik,
 		over_time.tanggal
@@ -1069,7 +1070,7 @@ public function overtimeControl(Request $request)
 	}else{
 		$tanggal1 = date('Y-m-d');
 		$tanggal = date('Y-m');
-	}
+	}	
 	// -------------- CHART REPORT CONTROL -----------
 
 	$ot_control = "SELECT datas.cost_center, datas.cost_center_name, datas.act, datas.tot, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal, round(coalesce(d.jam_harian,0),2) as jam_harian FROM
@@ -1082,7 +1083,7 @@ public function overtimeControl(Request $request)
 	( SELECT over_time_member.nik, over_time.tanggal, sum( IF ( STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam FROM
 	over_time LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
 	WHERE DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$tanggal."'  AND over_time_member.nik IS NOT NULL AND over_time.deleted_at IS NULL 
-	AND jam_aktual = 0
+	AND jam_aktual = 0 and nik not like '%os%'
 	GROUP BY over_time_member.nik, over_time.tanggal 
 	) d
 	LEFT JOIN (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) karyawan ON karyawan.employee_id = d.nik 
