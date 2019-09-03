@@ -2,6 +2,11 @@
 @section('stylesheets')
 {{-- <link href="{{ url("css/jquery-ui.css") }}" rel="stylesheet"> --}}
 <style type="text/css">
+	.progres-bar {
+		font-size: 20px;
+		height: 50px;
+	}
+
 	.picker {
 		text-align: center;
 	}
@@ -65,7 +70,7 @@
 @stop
 @section('content')
 <section class="content" style="padding-top: 0">
-	<div class="col-xs-10">
+	<!-- <div class="col-xs-10">
 		<div class="col-md-12 picker" id="weekResult">
 		</div>
 		<div class="col-md-12">
@@ -75,13 +80,13 @@
 		<div class="col-md-12">
 			<br>
 		</div>
-	</div>
-	<div class="col-xs-2">
-		<div class="row">
+	</div> -->
+	<div class="col-xs-3" style="margin-left: 2%; margin-bottom: 1%;">
+		<!-- <div class="row">
 			<span class="text-red"><i class="fa fa-info-circle"></i> Select Other Date</span>
-		</div>
+		</div> -->
 		<div class="row">
-			<div class="col-xs-7">
+			<div class="col-xs-8">
 				<div class="row">
 					<div class="input-group date">
 						<div class="input-group-addon bg-olive">
@@ -91,7 +96,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-5">
+			<div class="col-xs-2">
 				<button id="search" onClick="searchDate()" class="btn bg-olive">Search</button>
 			</div>
 		</div>
@@ -112,34 +117,34 @@
 					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">EI Weekly Shipment<br><span class="text-purple">EI週次出荷</span></a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1" style="height: 560px;">
+					<div class="tab-pane active" id="tab_1" style="height: 580px;">
 						<div class="col-md-12">
 							<div class="progress-group" id="progress_div">
-								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
-									<span class="progress-text" id="progress_text_production1" style="font-size: 12px;"></span>
-									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production1" style="height: 30px; padding-top: 4px;"></div>
+								<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production1" style="font-size: 25px; padding-top: 10px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production1" style="font-size: 30px; padding-top: 10px;"></div>
 								</div>
 							</div>
 						</div>
 						<div id="container1" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_2" style="height: 570px;">
+					<div class="tab-pane" id="tab_2" style="height: 580px;">
 						<div class="col-md-12">
 							<div class="progress-group" id="progress_div">
-								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
-									<span class="progress-text" id="progress_text_production2" style="font-size: 12px;"></span>
-									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production2" style="height: 30px; padding-top: 4px;"></div>
+								<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production2" style="font-size: 25px; padding-top: 10px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production2" style="font-size: 30px; padding-top: 10px;"></div>
 								</div>
 							</div>
 						</div>
 						<div id="container2" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_3" style="height: 570px;">
+					<div class="tab-pane" id="tab_3" style="height: 580px;">
 						<div class="col-md-12">
 							<div class="progress-group" id="progress_div">
-								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
-									<span class="progress-text" id="progress_text_week1" style="font-size: 12px;"></span>
-									<div class="progress-bar progress-bar-success progress-bar-striped active" id="progress_bar_week1" style="height: 30px; padding-top: 4px;"></div>
+								<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_week1" style="font-size: 25px; padding-top: 10px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped active" id="progress_bar_week1" style="font-size: 30px; padding-top: 10px;"></div>
 								</div>
 							</div>
 						</div>
@@ -148,23 +153,23 @@
 					{{-- <div class="tab-pane" id="tab_4">
 						<div id="container4" style="width:100%; height:520px;"></div>
 					</div> --}}
-					<div class="tab-pane" id="tab_5" style="height: 570px;">
+					<div class="tab-pane" id="tab_5" style="height: 580px;">
 						<div class="col-md-12">
 							<div class="progress-group" id="progress_div">
-								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
-									<span class="progress-text" id="progress_text_production3" style="font-size: 12px;"></span>
-									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production3" style="height: 30px; padding-top: 4px;"></div>
+								<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_production3" style="font-size: 25px; padding-top: 10px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production3" style="font-size: 30px; padding-top: 10px;"></div>
 								</div>
 							</div>
 						</div>
 						<div id="container5" style="width:100%; height:530px;"></div>
 					</div>
-					<div class="tab-pane" id="tab_6" style="height: 570px;">
+					<div class="tab-pane" id="tab_6" style="height: 580px;">
 						<div class="col-md-12">
 							<div class="progress-group" id="progress_div">
-								<div class="progress" style="height: 30px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
-									<span class="progress-text" id="progress_text_week2" style="font-size: 12px;"></span>
-									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_week2" style="height: 30px; padding-top: 4px;"></div>
+								<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;">
+									<span class="progress-text" id="progress_text_week2" style="font-size: 25px; padding-top: 10px;"></span>
+									<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_week2" style="font-size: 30px; padding-top: 10px;"></div>
 								</div>
 							</div>
 						</div>
@@ -389,28 +394,40 @@
 
 						// Progres bar hari kerja/minggu
 						for (var i = 1; i < 3; i++) {
+							var persen = 0;
 							if(req.getDay() == 4){
-								var persen = 20;
+								persen = 20;
+								$('#progress_bar_week'+i).css('font-size', '25px');
 								$('#progress_bar_week'+i).addClass('active');		
 							}
 							else if((req.getDay() == 0) || (req.getDay() > 4)){
-								var persen = 40;
+								persen = 40;
+								$('#progress_bar_week'+i).css('font-size', '30px');
 								$('#progress_bar_week'+i).addClass('active');		
 							}
 							else if(req.getDay() == 1){
-								var persen = 60;
+								persen = 60;
+								$('#progress_bar_week'+i).css('font-size', '30px');
 								$('#progress_bar_week'+i).addClass('active');		
 							}
 							else if(req.getDay() == 2){
-								var persen = 80;
+								persen = 80;
+								$('#progress_bar_week'+i).css('font-size', '30px');
 								$('#progress_bar_week'+i).addClass('active');		
 							}
 							else if(req.getDay() == 3){
-								var persen = 100;
+								persen = 100;
+								$('#progress_bar_week'+i).css('font-size', '30px');
 								$('#progress_bar_week'+i).removeClass('active');
 							}
 
-							$('#progress_bar_week'+i).html("Week's Working Time : "+persen+"%");
+							if(persen <= 20){
+								$('#progress_bar_week'+i).html("Working Time : "+persen+"%");
+							}
+							else{
+								$('#progress_bar_week'+i).html("Week's Working Time : "+persen+"%");
+							}
+
 							$('#progress_bar_week'+i).css('width', persen+'%');
 							$('#progress_bar_week'+i).css('color', 'white');
 							$('#progress_bar_week'+i).css('font-weight', 'bold');
@@ -441,8 +458,13 @@
 									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
 									if(now.getHours() >= 7 && now_menit < total){
-										if(persen > 13){
-											$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+										if(persen > 24){
+											if(persen > 32){
+												$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+											}
+											else{
+												$('#progress_bar_production'+i).html("Working Time : "+persen.toFixed(2)+"%");
+											}	
 										}
 										else{
 											$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
@@ -465,8 +487,13 @@
 									var total = 540;
 									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
-									if(persen > 13){
-										$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+									if(persen > 24){
+										if(persen > 32){
+											$('#progress_bar_production'+i).html("Today's Working Time : "+persen.toFixed(2)+"%");
+										}
+										else{
+											$('#progress_bar_production'+i).html("Working Time : "+persen.toFixed(2)+"%");
+										}	
 									}
 									else{
 										$('#progress_bar_production'+i).html(persen.toFixed(2)+"%");
