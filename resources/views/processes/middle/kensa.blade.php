@@ -235,7 +235,7 @@
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
 						$('#employee_id').val(result.employee.employee_id);
-						fillResult();
+						fillResult(result.employee.employee_id);
 						$('#tag').focus();
 					}
 					else{
@@ -268,10 +268,10 @@
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	function fillResult(){
+	function fillResult(emp_id){
 		var data = {
 			location: $('#loc').val(),
-			employee_id : $("#operator").val(),
+			employee_id : emp_id,
 		}
 		$.get('{{ url("fetch/middle/kensa") }}', data, function(result, status, xhr){
 			var asQty = 0, tsQty = 0;
