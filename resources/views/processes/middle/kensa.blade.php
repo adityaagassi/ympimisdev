@@ -373,7 +373,7 @@ function conf(){
 				$('#material_quantity').val("");
 				$('#tag').val("");
 				$('#tag').prop('disabled', false);
-				fillResult();
+				fillResult($('#employee_id').val());
 				$('#tag').focus();
 				
 				
