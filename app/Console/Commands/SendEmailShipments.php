@@ -69,7 +69,7 @@ public function handle(){
 
 	$data = db::select($query);
 
-	if(count($data) > 0){
+	if($data != null){
 		Mail::to($mail_to)->send(new SendEmail($data, 'shipment'));
 	}
 }
