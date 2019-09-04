@@ -30,7 +30,11 @@
         {{-- <div class="container"> --}}
           <div class="navbar-header">
             <a href="{{ url("/home") }}" class="logo">
-              <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
+              <?php if(Auth::user()->role_code == 'emp-srv') { ?>
+                <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>HR Qu</b></span>
+              <?php } else { ?>
+                <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
+              <?php } ?>
             </a>
           </div>
           <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
