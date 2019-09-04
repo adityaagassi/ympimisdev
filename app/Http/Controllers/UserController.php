@@ -122,7 +122,7 @@ class UserController extends Controller
     public function setting(Request $request){
       try{
         $user = User::find(Auth::id());
-        if(strlen($request->get('oldPassword'))>0 && strlen($request->get('newPassword')>0) && strlen($request->get('confirmPassword')>0)){
+        if(strlen($request->get('oldPassword'))>0 && strlen($request->get('newPassword'))>0 && strlen($request->get('confirmPassword'))>0){
           if(Hash::check($request->get('oldPassword'), Auth::user()->password)){
             if($request->get('newPassword') == $request->get('confirmPassword')){
               $user->name = ucwords($request->get('name'));
