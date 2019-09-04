@@ -46,6 +46,10 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
+	#ngList {
+		height:450px;
+		overflow-y: scroll;
+	}
 	#loading, #error { display: none; }
 
 </style>
@@ -144,35 +148,37 @@
 			</div>
 		</div>
 		<div class="col-xs-6" style="padding-right: 0;">
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
-				<thead>
-					<tr>
-						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
-						<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
-						<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
-						<th style="width: 15%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Count</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php $no = 1; ?>
-					@foreach($ng_lists as $nomor => $ng_list)
-					<?php if ($no % 2 === 0 ) {
-						$color = 'style="background-color: #fffcb7"';
-					} else {
-						$color = 'style="background-color: #ffd8b7"';
-					}
-					?>
-					<input type="hidden" id="loop" value="{{$loop->count}}">
-					<tr <?php echo $color ?>>
-						<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">-</td>
-						<td id="ng{{$nomor+1}}" style="font-size: 20px;">{{ $ng_list->ng_name }} </td>
-						<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">+</td>
-						<td style="font-weight: bold; font-size: 45px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
-					</tr>
-					<?php $no+=1; ?>
-					@endforeach
-				</tbody>
-			</table>
+			<div id="ngList">
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
+					<thead>
+						<tr>
+							<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
+							<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
+							<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
+							<th style="width: 15%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $no = 1; ?>
+						@foreach($ng_lists as $nomor => $ng_list)
+						<?php if ($no % 2 === 0 ) {
+							$color = 'style="background-color: #fffcb7"';
+						} else {
+							$color = 'style="background-color: #ffd8b7"';
+						}
+						?>
+						<input type="hidden" id="loop" value="{{$loop->count}}">
+						<tr <?php echo $color ?>>
+							<td id="minus" onclick="minus({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">-</td>
+							<td id="ng{{$nomor+1}}" style="font-size: 20px;">{{ $ng_list->ng_name }} </td>
+							<td id="plus" onclick="plus({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">+</td>
+							<td style="font-weight: bold; font-size: 45px; background-color: rgb(100,100,100); color: yellow;"><span id="count{{$nomor+1}}">0</span></td>
+						</tr>
+						<?php $no+=1; ?>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
 			<div>
 				<center>
 					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 30%" onclick="canc()" class="btn btn-danger">CANCEL</button>
