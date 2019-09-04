@@ -1398,13 +1398,15 @@ class MiddleProcessController extends Controller
 		// ->whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'. date('Y-m-d') .'"')
 		// ->sum('quantity');
 
+		$emp = $request->get('employee_id');
+
 		$result = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_logs where employee_id = '19014987' and DATE_FORMAT(created_at,'%Y-%m-%d') = '2019-09-03' group by material_number) as base
+			(select material_number, sum(quantity) as quantity from middle_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' group by material_number) as base
 			left join materials on materials.material_number = base.material_number
 			group by hpl");
 
 		$ng = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_ng_logs where employee_id = '19014987' and DATE_FORMAT(created_at,'%Y-%m-%d') = '2019-09-03' group by material_number) as base
+			(select material_number, sum(quantity) as quantity from middle_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' group by material_number) as base
 			left join materials on materials.material_number = base.material_number
 			group by hpl");
 
