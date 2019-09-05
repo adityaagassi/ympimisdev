@@ -12,6 +12,9 @@
 		/*overflow-y: scroll;*/
 		height:610px;
 	}
+	html {
+		zoom: 150%;
+	}
 </style>
 @endsection
 
