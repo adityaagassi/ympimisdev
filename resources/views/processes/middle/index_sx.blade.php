@@ -38,12 +38,18 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Machine Activity</a>
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span>
+			<a href="" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">WIP Monitoring</a>
+			<!-- {{ url("index/middle/wip_monitoring?tanggal=&location=") }} -->
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Barrel<i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/report_middle", "slip-fulfillment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">ID Slip Fulfillment</a>
 			<a href="{{ url("index/middle/barrel_log") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Barrel Log</a>
 			<a href="{{ url("index/middle/stock_monitoring") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Stock Monitoring</a>
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/report_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Not Good</a>
+			<a href="{{ url("index/middle/report_production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 		</div>
 	</div>
 </section>
