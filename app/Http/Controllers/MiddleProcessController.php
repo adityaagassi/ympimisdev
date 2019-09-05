@@ -328,6 +328,7 @@ class MiddleProcessController extends Controller
 			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime(date("Y-m-d")))."-1 month" ));
 
 		}
+		$tanggal = "where DATE_FORMAT(week_date,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$tgl_to."' ";
 		$tanggal1 = "and DATE_FORMAT(n.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(n.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
 		$tanggal2 = "and DATE_FORMAT(g.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(g.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
 
@@ -345,40 +346,40 @@ class MiddleProcessController extends Controller
 			}
 			$addlocation = "and location in (".$location.") ";
 		}
-		
-		$query1 = "SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
+
+		$query1 = "SELECT a.tgl, b.ng_as, c.g_as FROM
+		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars  where DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-08-05' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '2019-09-05') a
+		left join
+		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
 		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal1."
-		GROUP BY tgl, m.hpl
-		ORDER BY n.created_at asc";
-		$ng_askey = db::select($query1);
-
-		$query2 = "SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
+		GROUP BY tgl, m.hpl) b on a.tgl = b.tgl
+		left join		
+		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
 		left join materials m on m.material_number = g.material_number
 		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal2."
-		GROUP BY tgl, m.hpl
-		ORDER BY g.created_at asc";
-		$askey = db::select($query2);
+		GROUP BY tgl, m.hpl) c on a.tgl = c.tgl";
+		$askey = db::select($query1);
 
-		$query3 = "SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
+		$query2 = "SELECT a.tgl, b.ng_ts, c.g_ts FROM
+		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars  where DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-08-05' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '2019-09-05') a
+		left join
+		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_ts from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
 		where m.hpl = 'TSKEY' ".$addlocation."".$tanggal1."
 		GROUP BY tgl, m.hpl
-		ORDER BY n.created_at asc";
-		$ng_tskey = db::select($query3);
-
-		$query4 = "SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
+		ORDER BY n.created_at asc) b on a.tgl = b.tgl
+		left join		
+		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_ts from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where  m.hpl = 'TSKEY' ".$addlocation."".$tanggal2."
+		where  m.hpl = 'TSKEY ".$addlocation."".$tanggal2."
 		GROUP BY tgl, m.hpl
-		ORDER BY g.created_at asc";
-		$tskey = db::select($query4);
+		ORDER BY g.created_at asc) c on a.tgl = c.tgl";
+		$tskey = db::select($query2);
 
 		$response = array(
 			'status' => true,
-			'ng_askey' => $ng_askey,
 			'askey' => $askey,
-			'ng_tskey' => $ng_tskey,
 			'tskey' => $tskey,
 			'query1' => $query1,
 			'query2' => $query2,
@@ -909,7 +910,7 @@ class MiddleProcessController extends Controller
 			->where('materials.surface', 'like', '%PLT')
 			->select('barrel_queues.tag', 'materials.key', 'materials.model', 'materials.surface', 'bom_components.material_child', 'bom_components.material_description', 'barrel_queues.quantity', 'barrel_queues.created_at')
 			->orderBy('barrel_queues.created_at', 'asc')
-			->limit(60)
+			// ->limit(60)
 			->get();
 			$code = 'PLT';
 		}
