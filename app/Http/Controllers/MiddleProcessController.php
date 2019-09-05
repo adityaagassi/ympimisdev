@@ -33,6 +33,44 @@ class MiddleProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
+		$this->location = [
+			'lcq-incoming',
+			'kensa-lcq',
+		];
+	}
+
+	public function indexWipMonitoring(){
+		$locations = $this->location;
+
+		return view('processes.middle.display.wip_monitoring', array(
+			'title' => 'WIP Monitoring',
+			'title_jp' => '??',
+			'locations' => $locations
+		))->with('page', 'WIP Monitoring');
+	}
+
+	public function indexReportNG(){
+		$title = 'Not Good';
+		$title_jp = '(??)';
+		$locations = $this->location;
+
+		return view('processes.middle.report.not_good', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('head', 'Middle Process');
+	}
+
+	public function indexReportProductionResult(){
+		$title = 'Production Result';
+		$title_jp = '(??)';
+		$locations = $this->location;
+
+		return view('processes.middle.report.production_result', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('head', 'Middle Process');
 	}
 
 	public function indexStockMonitoring(){
@@ -45,7 +83,6 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBarrelLog(){
-
 		$title = 'Barrel Log';
 		$title_jp = '(?)';
 
@@ -229,6 +266,171 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function fetchWipMonitoring(Request $request){
+
+		$tgl="";
+		if(strlen($request->get('tgl')) > 0){
+			$tgl = date('d-m-Y',strtotime($request->get("tgl")));
+		}else{
+			$tgl = date("d-m-Y");
+		}
+		$tanggal = "and DATE_FORMAT(l.created_at,'%d-%m-%Y') = '".$tgl."' ";
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and l.location in (".$location.") ";
+		}
+
+		$query = "select a.ng_name, COALESCE(b.jml_as,0) as jml_as, COALESCE(c.jml_ts,0) as jml_ts from
+		(select DISTINCT ng_name from middle_ng_logs) a
+		left join
+		(select l.ng_name, m.hpl, count(l.id) as jml_as from middle_ng_logs l
+		left join materials m on l.material_number = m.material_number
+		where m.hpl = 'ASKEY' ".$tanggal."".$addlocation." group by l.ng_name, m.hpl) b
+		on a.ng_name = b.ng_name
+		left join
+		(select l.ng_name, m.hpl, count(l.id) as jml_ts from middle_ng_logs l
+		left join materials m on l.material_number = m.material_number
+		where m.hpl = 'TSKEY' ".$tanggal."".$addlocation." group by l.ng_name, m.hpl) c
+		on a.ng_name = c.ng_name
+		order by a.ng_name asc";
+
+		$ng = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+			'tgl' => $tgl,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchNGRate(Request $request){
+
+		$tgl_to = "";
+		$tgl_from = "";
+		if(strlen($request->get('tgl')) > 0){
+			$tgl_to = date('Y-m-d',strtotime($request->get("tgl")));
+			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime($request->get("tgl")))."-1 month" ));
+		}else{
+			$tgl_to = date("d-m-Y");
+			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime(date("Y-m-d")))."-1 month" ));
+
+		}
+		$tanggal1 = "and DATE_FORMAT(n.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(n.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
+		$tanggal2 = "and DATE_FORMAT(g.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(g.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
+
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and location in (".$location.") ";
+		}
+		
+		$query1 = "SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number
+		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal1."
+		GROUP BY tgl, m.hpl
+		ORDER BY n.created_at asc";
+		$ng_askey = db::select($query1);
+
+		$query2 = "SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
+		left join materials m on m.material_number = g.material_number
+		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal2."
+		GROUP BY tgl, m.hpl
+		ORDER BY g.created_at asc";
+		$askey = db::select($query2);
+
+		$query3 = "SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number
+		where m.hpl = 'TSKEY' ".$addlocation."".$tanggal1."
+		GROUP BY tgl, m.hpl
+		ORDER BY n.created_at asc";
+		$ng_tskey = db::select($query3);
+
+		$query4 = "SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
+		left join materials m on m.material_number = g.material_number
+		where  m.hpl = 'TSKEY' ".$addlocation."".$tanggal2."
+		GROUP BY tgl, m.hpl
+		ORDER BY g.created_at asc";
+		$tskey = db::select($query4);
+
+		$response = array(
+			'status' => true,
+			'ng_askey' => $ng_askey,
+			'askey' => $askey,
+			'ng_tskey' => $ng_tskey,
+			'tskey' => $tskey,
+			'query1' => $query1,
+			'query2' => $query2,
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchReportNG(Request $request){
+		$report = MiddleNgLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_ng_logs.employee_id')
+		->leftJoin('materials', 'materials.material_number', '=', 'middle_ng_logs.material_number');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$report = $report->where(db::raw('date_format(middle_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+		}
+
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$report = $report->where(db::raw('date_format(middle_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+		}
+
+		if($request->get('location') != null){
+			$report = $report->whereIn('middle_ng_logs.location', $request->get('location'));
+		}
+
+		$report = $report->select('middle_ng_logs.employee_id', 'employees.name', 'middle_ng_logs.tag', 'middle_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_ng_logs.ng_name', 'middle_ng_logs.quantity', 'middle_ng_logs.location', 'middle_ng_logs.created_at')->get();
+
+		return DataTables::of($report)->make(true);
+	}
+
+	public function fetchReportProductionResult(Request $request){
+		$report = MiddleLog::leftJoin('employees', 'employees.employee_id', '=', 'middle_logs.employee_id')
+		->leftJoin('materials', 'materials.material_number', '=', 'middle_logs.material_number');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$report = $report->where(db::raw('date_format(middle_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+		}
+
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$report = $report->where(db::raw('date_format(middle_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+		}
+
+		if($request->get('location') != null){
+			$report = $report->whereIn('middle_logs.location', $request->get('location'));
+		}
+
+		$report = $report->select('middle_logs.employee_id', 'employees.name', 'middle_logs.tag', 'middle_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'middle_logs.quantity', 'middle_logs.location', 'middle_logs.created_at')->get();
+
+		return DataTables::of($report)->make(true);
 	}
 
 	public function fetchBarrelLog(Request $request){
