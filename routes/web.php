@@ -20,7 +20,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 Route::get('tes', 'TrialController@tes');
 
 Route::get('/trial', function () {
-	return view('trial');
+	return view('rooms.meetingroom1');
 });
 
 Auth::routes();
@@ -899,6 +899,11 @@ Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
-    $notif = $controller->getNotif();
-    $view->with('notif', $notif);
+	$notif = $controller->getNotif();
+	$view->with('notif', $notif);
+});
+
+//ROOMS
+Route::get('/meetingroom1', function () {
+	return view('rooms.meetingroom1');
 });
