@@ -27,10 +27,10 @@ class VisitorController extends Controller
 
 	public function registration()
 	{
-		$employees = "SELECT employees.employee_id,employees.`name`,mutation_logs.department, cost_centers.department as shortname from employees
+		$employees = "SELECT DISTINCT( employees.employee_id) as employee_id,employees.`name`,mutation_logs.department, cost_centers.department as shortname from employees
 LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
 LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
-WHERE mutation_logs.valid_to is null and employees.end_date is null ORDER BY mutation_logs.department asc";
+WHERE mutation_logs.valid_to is null and employees.end_date is null  ORDER BY mutation_logs.department asc";
 $employee = DB::select($employees);
 		return view('visitors.registration', array(
 			'employee' => $employee,
@@ -131,7 +131,7 @@ $employee = DB::select($employees);
 			$where="";
 		}
 
-		$op="SELECT *,count(total1) as total from (
+		$op="SELECT *,count(DISTINCT(total1)) as total from (
 		select visitors.created_at,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark from visitors
 		left join visitor_details on visitors.id = visitor_details.id_visitor
 		LEFT JOIN employees on visitors.employee = employees.employee_id
@@ -160,7 +160,7 @@ public function editlist(Request $request)
 {
 	$id = $request->get('id');
 	$id_list = VisitorDetail::where('id_visitor', '=', $request->get('id'))->get();
-	$header_lists = "select visitors.id,company,name,mutation_logs.department,cost_centers.department as shortname from visitors LEFT JOIN employees on visitors.employee = employees.employee_id 
+	$header_lists = "select DISTINCT( visitors.id),company,name,mutation_logs.department,cost_centers.department as shortname from visitors LEFT JOIN employees on visitors.employee = employees.employee_id 
 	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
 	LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
 	where visitors.id='".$id."'";
@@ -178,7 +178,7 @@ public function inputtag(Request $request){
 	try {
 		$id = $request->get('id');
 		$intime = date('H:i:s');
-		$visitordetail = VisitorDetail::where('id','=', $id)
+		$visitordetail = VisitorDetail::where('id','=', str_replace("V","",$id))
 		->withTrashed()       
 		->first();
 
@@ -211,6 +211,11 @@ public function inputtag(Request $request){
 public function confirmation()
 {
 	return view('visitors.confirmation')->with('page', 'Visitor Confirmation');
+}
+
+public function confirmation2()
+{
+	return view('visitors.confirmationSatpam')->with('page', 'Visitor Confirmation');
 }
 
 public function updateremark(Request $request){
@@ -303,7 +308,7 @@ public function getvisit(Request $request)
 
 {
 	$id = $request->get('id');
-	$op = "SELECT visitor_details.tag,visitors.company,visitors.remark, visitor_details.id_number,visitor_details.full_name, visitor_details.in_time, employees.name, mutation_logs.department from visitors
+	$op = "SELECT DISTINCT( visitor_details.tag),visitors.company,visitors.remark, visitor_details.id_number,visitor_details.full_name, visitor_details.in_time, employees.name, mutation_logs.department from visitors
 	left join visitor_details on visitors.id = visitor_details.id_visitor
 	left join employees on visitors.employee = employees.employee_id 
 	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id

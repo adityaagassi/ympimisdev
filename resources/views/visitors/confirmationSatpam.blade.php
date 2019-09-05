@@ -70,67 +70,16 @@
 @endif
 
 <div class="row">
-	<div class="col-xs-12">
-		{{-- <div class="box"> --}}
+	
 			
-			{{-- TELP --}}
-			<div class="col-xs-6">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="form-group">					
-									<div  class="col-xs-11">
-										<div class="input-group ">
-											<div class="input-group-btn">
-												<button type="button" class="btn btn-warning"><i class="fa fa-search"></i>&nbsp;Search</button>
-											</div>
-											<!-- /btn-group -->
-											<input type="text" id="telp" class="form-control" placeholder="Search Telephone" onclick="emptytlp()">
-										</div>
-										<!-- /input-group -->
-										
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="row" id="telpon">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="table-responsive">
-									<table id="telponlist" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">											
-											<tr>
-												<th >Person</th>
-												<th >Department</th>
-												<th >Telephone</th>												
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-										{{-- <tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>								
-											</tr>
-										</tfoot> --}}
-									</table>									
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 
 			{{-- CONFIRMATION --}}
-			<div class="col-xs-6">
-				<div class="row">
+			<div class="col-xs-12">
+				<h1>
+		<center>	<span style="color: white; font-weight: bold; font-size: 28px; text-align: center;">YMPI Visitor Confirmation</span></center>
+		
+	</h1>
+		<!-- 		<div class="row">
 					<div class="col-xs-12">
 						<div class="box">
 							<div class="box-body">
@@ -146,7 +95,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="row" style="display: none" id="tabelvisior">
 					<div class="col-xs-12">
@@ -156,24 +105,28 @@
 									<table id="visitorlist" class="table table-bordered table-striped table-hover">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr id="total">
-												<th colspan="6"><b id="totalvi"></b></th>								
+												<th colspan="8"><b id="totalvi"></b></th>								
 												<th colspan="2">Action</th>
 											</tr>
 											<tr>
-												<th >Id</th>
+												<th >Id</th>	
+												<th >Employee</th>
+												<th >Department</th>
 												<th >Company</th>
 												<th >Full Name</th>
 												<th >Total</th>
 												<th >Purpose</th>
 												<th >Status</th>								
 												<th >Remark</th>
-												<th>Input Tag</th>
+												<th>Confirmation</th>
 											</tr>
 										</thead>
 										<tbody>
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -272,7 +225,9 @@
 			$('#nikkaryawan').keyboard();
 			$('#telp').keyboard();
 			// $('#nikkaryawan').val('asd');
-			filltelpon();
+			// filltelpon();
+			filllist('asd');
+			$('#tabelvisior').css({'display':'block'})
 
 			$('.select2').select2({
 				dropdownAutoWidth : true,
@@ -305,6 +260,8 @@
 		}
 
 		function filllist(nik){
+			var table = $('#visitorlist').DataTable();
+			table.destroy();
 
 			$('#visitorlist tfoot th').each( function () {
 				var title = $(this).text();
@@ -366,7 +323,7 @@
 					"url" : "{{ url("visitor_filllist") }}/"+nik+"",
 				},				
 				"columnDefs": [ {
-					"targets": [6],
+					"targets": [8],
 					"createdCell": function (td, cellData, rowData, row, col) {
 						if ( cellData =='Unconfirmed' ) {
 							$(td).css('background-color', 'RGB(255,204,255)')
@@ -387,7 +344,7 @@
 					};
 					var api = this.api();
 
-					var total_diff = api.column(3).data().reduce(function (a, b) {
+					var total_diff = api.column(5).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
 					$('#totalvi').html("Visitor ( "+total_diff.toLocaleString()+" )");
@@ -395,6 +352,8 @@
 
 				"columns": [
 				{ "data": "id"},
+				{ "data": "name"},
+				{ "data": "department"},
 				{ "data": "company"},
 				{ "data": "full_name"},
 				{ "data": "total"},
@@ -600,6 +559,7 @@
 
 			$('#visitorlist').DataTable().ajax.reload();
 			$('#modal-default').modal('hide');
+			filllist('asd');
 
 		}
 

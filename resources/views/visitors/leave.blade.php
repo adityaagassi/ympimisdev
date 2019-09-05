@@ -1,4 +1,4 @@
-@extends('layouts.display')
+@extends('layouts.visitor')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">

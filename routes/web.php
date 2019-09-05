@@ -69,6 +69,8 @@ Route::get('visitor_display', 'VisitorController@display');
 Route::get('visitor_filldisplay/{nik}', 'VisitorController@filldisplay');
 Route::get('visitor_getchart', 'VisitorController@getchart');
 
+Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
+
 //end visitor control 
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -405,6 +407,19 @@ Route::group(['nav' => 'M16', 'middleware' => 'permission'], function(){
 	Route::post('import/employee', 'EmployeeController@importKaryawan');
 });
 
+
+Route::group(['nav' => 'M17', 'middleware' => 'permission'], function(){
+	Route::get('index/assy_schedule', 'AssyProcessController@indexSchedule');
+	Route::get('fetch/assy_schedule', 'AssyProcessController@fetchSchedule');
+	Route::post('create/assy_schedule', 'AssyProcessController@createSchedule');
+	Route::post('delete/assy_schedule', 'AssyProcessController@delete');
+	// Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
+	// Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
+	// Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
+	// Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');
+	Route::post('import/assy_schedule', 'AssyProcessController@import');
+});
+
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
 	Route::get('create/code_generator', 'CodeGeneratorController@create');
@@ -515,7 +530,14 @@ Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddl
 Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
 Route::get('index/middle/barrel_log', 'MiddleProcessController@indexBarrelLog');
 Route::get('fetch/middle/barrel_log', 'MiddleProcessController@fetchBarrelLog');
-Route::get('index/middle/stock_monitoring', 'MiddleProcessController@indexStockMonitoring');
+Route::get('index/middle/report_ng', 'MiddleProcessController@indexReportNG');
+Route::get('index/middle/report_production_result', 'MiddleProcessController@indexReportProductionResult');
+Route::get('fetch/middle/report_ng', 'MiddleProcessController@fetchReportNG');
+Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fetchReportProductionResult');
+Route::get('index/middle/wip_monitoring', 'MiddleProcessController@indexWipMonitoring');
+Route::get('fetch/middle/wip_monitoring', 'MiddleProcessController@fetchWipMonitoring');
+Route::get('fetch/middle/fetchNGRate', 'MiddleProcessController@fetchNGRate');
+
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 	Route::get('index/qnaHR', 'EmployeeController@indexHRQA');

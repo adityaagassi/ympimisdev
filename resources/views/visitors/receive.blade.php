@@ -1,4 +1,4 @@
-@extends('layouts.display')
+@extends('layouts.visitor')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
@@ -470,7 +470,7 @@
 							}); 				
 
 							$.each(result.id_list, function(key, value) {
-								$('#apenlist').append('<div class="col-sm-2" style="padding-right: 0;"><input type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-4" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus onkeydown="inputag(this.id,this.name)"" "></div>	<br><br>');
+								$('#apenlist').append('<div class="col-sm-2" style="padding-right: 0;"><input type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-4" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input type="text" class="form-control" id="V'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus onkeydown="inputag(this.id,this.name)"" "></div>	<br><br>');
 								no++;
 							});
 
@@ -492,6 +492,7 @@
 				var tag = parseInt(name)+1;
 				if (event.keyCode == 13 || event.keyCode == 9) {
 					var idtag = $('#'+id).val();
+					// alert(idtag);
 				// var table = $('#visitorlist').DataTable();
 				var data = {
 					id:id,
