@@ -11,9 +11,9 @@
 	iframe {
 		/*overflow-y: scroll;*/
 		height:610px;
-	}
-	html {
-		zoom: 150%;
+		zoom: 2; 
+		-moz-transform: scale(2);
+		-moz-transform-origin: 0 0; 
 	}
 </style>
 @endsection
