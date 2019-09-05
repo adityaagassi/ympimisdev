@@ -9,7 +9,7 @@
 		margin: 0px;
 	}
 	iframe {
-		overflow-y: scroll;
+		/*overflow-y: scroll;*/
 		height:610px;
 	}
 </style>
@@ -18,18 +18,6 @@
 @section('content')
 <center>
 	<span style="color: white; font-size: 4vw; font-weight: bold;">MEETING ROOM 1</span>
-	<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule"></iframe>
+	<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule" scrolling="yes"></iframe>
 </center>
 @endsection
-
-<script type="text/javascript">
-
-	jQuery(document).ready(function() {
-		window.setInterval("reloadIFrame();", 10000);
-	})
-
-	function reloadIFrame() {
-		document.getElementById("schedule").src="https://outlook.office365.com/calendar/view/day/";	
-	}
-
-</script>
