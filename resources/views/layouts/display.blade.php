@@ -30,11 +30,15 @@
         {{-- <div class="container"> --}}
           <div class="navbar-header">
             <a href="{{ url("/home") }}" class="logo">
-              <?php if(Auth::user()->role_code == 'emp-srv') { ?>
-                <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>HR Qu</b></span>
-              <?php } else { ?>
-                <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
-              <?php } ?>
+              @if(isset($page))
+              @if($page == "Employment Services")
+              <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>HR-Qu</b></span>
+              @else
+              <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
+              @endif
+              @else
+              <span style="font-size: 35px"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="45px" style="margin-bottom: 6px;">&nbsp;<b>M I R A I</b></span>
+              @endif
             </a>
           </div>
           <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
@@ -89,7 +93,7 @@
         @endif
       </nav>
     </header>
-    <div class="content-wrapper" style="background-color: rgb(60,60,60); padding-top: 10px;">
+    <div class="content-wrapper" style="background-color: rgb(60,60,60); padding-top: 0px;">
       @yield('content')
     </div>
     @include('layouts.footer')
