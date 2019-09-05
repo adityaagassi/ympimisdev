@@ -205,10 +205,10 @@
 												Full Name												
 											</div>
 											<div class="col-sm-2" style="padding-left: 1; padding-right: 0;">
-												No Hp												
+												Status											
 											</div>
-											<div class="col-sm-1">												
-												Status
+											<div class="col-sm-2">												
+												No Hp	
 											</div>
 											<div class="col-sm-2">
 												Tag Number												
