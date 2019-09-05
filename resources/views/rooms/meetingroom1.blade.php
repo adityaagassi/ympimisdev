@@ -13,17 +13,20 @@
 		position: fixed;
 		top: 0;
 		width: 100%;
-		background-color: #333333;
+		background-color: #605ca8;
 		z-index: 100;
 	}
 
 	#schedule {
 		overflow-y: scroll;
 		height: 610px;
-		margin-top: 10px;
+		/*margin-top: -60px;*/
 		zoom: 1.5;
 		-moz-transform: scale(1.5);
 		-moz-transform-origin: 0 0;
+		position:absolute; 
+		clip:rect(100px,1110px,800px,50px);
+		top:-73px; left:-80px;
 	}
 	
 </style>
@@ -40,3 +43,10 @@
 </center>
 @endsection
 
+<!-- <div id="content">
+	<div style="height:800px;">
+		<iframe id="optomaFeed" src="http://www.optomausa.com/company/press-releases/" scrolling="no"
+		frameborder="0" height="100%" width="100%" style="position:absolute; clip:rect(190px,1100px,800px,250px);
+		top:-160px; left:-160px;"></iframe>
+	</div>
+</div> -->
