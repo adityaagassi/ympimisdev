@@ -35,7 +35,7 @@ class MiddleProcessController extends Controller
 		$this->middleware('auth');
 		$this->location = [
 			'lcq-incoming',
-			'kensa-lcq',
+			'lcq-kensa',
 		];
 	}
 
