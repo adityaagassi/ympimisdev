@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Response;
+use App\AssyPickingSchedule;
+use App\OriginGroup;
+use App\Material;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +28,24 @@ class AssyProcessController extends Controller
 			'title_jp' => $title_jp,
 			'keys' => $keys,
 			'models' => $models
-		))->with('page', 'Assy Picking')->with('head', 'Display');
+		))->with('page', 'Assy Schedule')->with('head', '');
+	}
+
+	public function indexSchedule()
+	{
+		$title = 'Saxophone Picking Monitor';
+		$title_jp = 'サックスのピッキング監視';
+
+		$materials = Material::orderBy('material_number', 'ASC')->get();
+
+		$origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
+
+		return view('assy_schedules.index', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $materials,
+			'origin_groups' => $origin_groups
+		))->with('page', 'Assy Picking Schedule');
 	}
 
 	public function fetchPicking(Request $request)
@@ -40,7 +61,7 @@ class AssyProcessController extends Controller
 		$where2 = "";
 		$minus = "0";
 
-		if ($tanggal != "2019-08-01") {
+		if (date('d', strtotime($tanggal)) != "01") {
 			$minus = " COALESCE(minus,0) ";
 		}
 
@@ -240,21 +261,203 @@ public function fetchPickingDetail(Request $request)
 		) as welding
 		left join inventories on inventories.material_number = welding.material_child ";
 
-} else if ($loc == "Middle") {
-	$query = "select stok.tag ,stok.material_number, ympimis.materials.material_description, stok.quantity from
-	(select tag, ympimis.middle_inventories.material_number, ympimis.middle_inventories.quantity from ympimis.middle_inventories) stok
-	left join ympimis.materials on ympimis.materials.material_number = stok.material_number
-	where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
+	} else if ($loc == "Middle") {
+		$query = "select stok.tag ,stok.material_number, ympimis.materials.material_description, stok.quantity from
+		(select tag, ympimis.middle_inventories.material_number, ympimis.middle_inventories.quantity from ympimis.middle_inventories) stok
+		left join ympimis.materials on ympimis.materials.material_number = stok.material_number
+		where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
 
-} else if ($loc == "Stockroom") {
-	$query = "select tag, stok.material_number, ympimis.materials.material_description, stok.quantity from
-	(select inventories.barcode_number as tag, inventories.material_number, lot as quantity from inventories where inventories.issue_location like 'SX51') stok
-	left join ympimis.materials on ympimis.materials.material_number = stok.material_number
-	where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
+	} else if ($loc == "Stockroom") {
+		$query = "select tag, stok.material_number, ympimis.materials.material_description, stok.quantity from
+		(select inventories.barcode_number as tag, inventories.material_number, lot as quantity from inventories where inventories.issue_location like 'SX51') stok
+		left join ympimis.materials on ympimis.materials.material_number = stok.material_number
+		where ympimis.materials.key = '".$key."' AND ympimis.materials.model = '".$model."' AND ympimis.materials.surface = '".$surface."'";
+	}
+
+	$detailData = db::connection('mysql2')->select($query);
+
+	return DataTables::of($detailData)->make(true);
 }
 
-$detailData = db::connection('mysql2')->select($query);
+public function fetchSchedule()
+{
+	$assy_schedules = AssyPickingSchedule::leftJoin("materials","materials.material_number","=","assy_picking_schedules.material_number")
+	->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
+	->select('assy_picking_schedules.id','assy_picking_schedules.material_number','assy_picking_schedules.due_date','assy_picking_schedules.quantity','materials.material_description','origin_groups.origin_group_name')
+	->orderByRaw('due_date DESC', 'assy_picking_schedules.material_number ASC')
+	->get();
 
-return DataTables::of($detailData)->make(true);
+	return DataTables::of($assy_schedules)
+	->addColumn('action', function($assy_schedules){
+		return '
+		<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Delete" onclick="modalView('.$assy_schedules->id.')">View</button>
+		<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Delete" onclick="modalEdit('.$assy_schedules->id.')">Edit</button>
+		<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$assy_schedules->id.')">Delete</button>';
+	})
+
+	->rawColumns(['action' => 'action'])
+	->make(true);
+}
+
+public function import(Request $request)
+{
+	try{
+		if($request->hasFile('assy_schedule')){
+                // ProductionSchedule::truncate();
+
+			$id = Auth::id();
+
+			$file = $request->file('assy_schedule');
+			$data = file_get_contents($file);
+
+			$rows = explode("\r\n", $data);
+			foreach ($rows as $row)
+			{
+				if (strlen($row) > 0) {
+					$row = explode("\t", $row);
+					$assy_schedule = new AssyPickingSchedule([
+						'material_number' => $row[0],
+						'due_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+						'quantity' => $row[2],
+						'created_by' => $id,
+					]);
+
+					$assy_schedule->save();
+				}
+			}
+			return redirect('/index/assy_schedule')->with('status', 'New assy schedule has been imported.')->with('page', 'Assy Schedule');
+		}
+		else
+		{
+			return redirect('/index/assy_schedule')->with('error', 'Please select a file.')->with('page', 'Assy Schedule');
+		}
+	}
+
+	catch (QueryException $e){
+		$error_code = $e->errorInfo[1];
+		if($error_code == 1062){
+			return back()->with('error', 'Assy schedule with preferred due date already exist.')->with('page', 'Assy Schedule');
+		}
+		else{
+			return back()->with('error', $e->getMessage())->with('page', 'Assy Schedule');
+		}
+
+	}
+}
+
+public function createSchedule(Request $request)
+{
+	$due_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('due_date'))));
+
+	try
+	{
+		$id = Auth::id();
+		$assy_schedule = new AssyPickingSchedule([
+			'material_number' => $request->get('material_number'),
+			'due_date' => $due_date,
+			'quantity' => $request->get('quantity'),
+			'created_by' => $id
+		]);
+
+		$assy_schedule->save();  
+
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
+	}
+	catch (QueryException $e){
+		$error_code = $e->errorInfo[1];
+		if($error_code == 1062){
+			$response = array(
+				'status' => false,
+				'Message'=> 'already exist'
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
+	}
+}
+
+public function delete(Request $request)
+{
+	$assy_schedule = AssyPickingSchedule::where('id', '=', $request->get("id"))
+	->forceDelete();
+
+	$response = array(
+		'status' => true
+	);
+	
+	return Response::json($response);
+}
+
+public function edit(Request $request)
+{
+	$head = AssyPickingSchedule::where('id', '=', $request->get('id'))
+	->first();
+
+	$head->quantity = $request->get('quantity');
+	$head->save();
+
+	$response = array(
+		'status' => true
+	);
+	
+	return Response::json($response);
+}
+
+public function fetchEdit(Request $request)
+{
+	$assy_schedule = AssyPickingSchedule::where('id', '=', $request->get("id"))
+	->first();
+
+	$response = array(
+		'status' => true,
+		'datas' => $assy_schedule
+	);
+	
+	return Response::json($response);
+}
+
+
+public function destroy(Request $request)
+{
+	$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+	$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+
+	$materials = Material::whereIn('origin_group_code', $request->get('origin_group'))->select('material_number')->get();
+
+	$AssyPickingSchedule = AssyPickingSchedule::where('due_date', '>=', $date_from)
+	->where('due_date', '<=', $date_to)
+	->whereIn('material_number', $materials)
+	->forceDelete();
+
+	return redirect('/index/assy_schedule')
+	->with('status', 'Assy schedules has been deleted.')
+	->with('page', 'Assy Picking Schedule');
+}
+
+public function view(Request $request)
+{
+	$query = "select assy.material_number, assy.due_date, assy.quantity, users.`name`, material_description, origin_group_name, assy.created_at, assy.updated_at from
+	(select material_number, due_date, quantity, created_by, created_at, updated_at from assy_picking_schedules where id = ".$request->get('id').") as assy
+	left join materials on materials.material_number = assy.material_number
+	left join origin_groups on origin_groups.origin_group_code = materials.origin_group_code
+	left join users on assy.created_by = users.id";
+
+	$assy_schedule = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'datas' => $assy_schedule
+	);
+	
+	return Response::json($response);
+
 }
 }

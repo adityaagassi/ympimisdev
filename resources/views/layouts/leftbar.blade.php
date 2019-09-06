@@ -144,6 +144,12 @@
     </li>
     @endif
 
+    @if(in_array('M17', $navs))
+    @if(isset($page) && $page == "Assy Picking Schedule")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/assy_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Assy Picking Schedule</span></a>
+    </li>
+    @endif
+
     @if(in_array('M8', $navs))
     @if(isset($page) && $page == "Shipment Condition")<li class="active">@else<li>@endif
       <a href="{{ url("/index/shipment_condition") }}"><i class="fa fa-ship"></i> <span>Shipment Condition</span></a>

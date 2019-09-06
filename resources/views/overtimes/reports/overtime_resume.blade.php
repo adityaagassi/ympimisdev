@@ -95,7 +95,7 @@
 			</div>
 			<div class="col-md-1">
 				<div class="form-group">
-					<button class="btn btn-success" type="submit" onClick="drawChart()">Cari</button>
+					<button class="btn btn-success" type="submit" onClick="drawChart()">Search</button>
 				</div>
 			</div>
 			<div class="col-md-12">

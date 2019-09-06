@@ -317,7 +317,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 		function fill_chat() {
 			var data = {
-				employee_id: '{{ $emp_id }}_'+name.split(" ").pop()
+				employee_id: '{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')
 			}
 
 			$.get('{{ url("fetch/chat/hrqa") }}', data, function(result, status, xhr){
@@ -339,8 +339,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						var chats = value.split("_");
 						chat_history += '<div class="post">';
 						chat_history += '<div class="user-block">'
-						chat_history += '<img class="img-circle img-bordered-sm" src="{{ url($avatar) }}" alt="image">';
-						chat_history += '<span class="username">{{ $emp_id }}_'+name.split(" ").pop()+'</span>';
+						chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/{{ $emp_id }}.png" alt="image">';
+						chat_history += '<span class="username">{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')+'</span>';
 						chat_history += '<span class="description">'+chats[3]+'</span></div>';
 						chat_history += '<p>'+chats[1]+'</p>';
 
@@ -397,7 +397,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							var data = {
 								id:id2,
 								message:this.value,
-								from:"{{ $emp_id }}_"+name.split(" ").pop()
+								from:"{{ $emp_id }}_"+name.split(' ').slice(0,2).join('-')
 							}
 
 							$.post('{{ url("post/chat/comment") }}', data, function(result, status, xhr){
@@ -424,7 +424,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			var data = {
 				message:msg,
 				category:cat,
-				from:"{{ $emp_id }}_"+name.split(" ").pop()
+				from:"{{ $emp_id }}_"+name.split(' ').slice(0,2).join('-')
 			}
 
 			$.post('{{ url("post/hrqa") }}', data, function(result, status, xhr){

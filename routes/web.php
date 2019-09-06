@@ -413,10 +413,10 @@ Route::group(['nav' => 'M17', 'middleware' => 'permission'], function(){
 	Route::get('fetch/assy_schedule', 'AssyProcessController@fetchSchedule');
 	Route::post('create/assy_schedule', 'AssyProcessController@createSchedule');
 	Route::post('delete/assy_schedule', 'AssyProcessController@delete');
-	// Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
-	// Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
-	// Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
-	// Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');
+	Route::post('edit/assy_schedule', 'AssyProcessController@edit');
+	Route::get('edit/assy_schedule', 'AssyProcessController@fetchEdit');
+	Route::get('destroy/assy_schedule', 'AssyProcessController@destroy');
+	Route::get('view/assy_schedule', 'AssyProcessController@view');
 	Route::post('import/assy_schedule', 'AssyProcessController@import');
 });
 
@@ -535,8 +535,9 @@ Route::get('index/middle/report_production_result', 'MiddleProcessController@ind
 Route::get('fetch/middle/report_ng', 'MiddleProcessController@fetchReportNG');
 Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fetchReportProductionResult');
 Route::get('index/middle/wip_monitoring', 'MiddleProcessController@indexWipMonitoring');
-Route::get('fetch/middle/wip_monitoring', 'MiddleProcessController@fetchWipMonitoring');
-Route::get('fetch/middle/fetchNGRate', 'MiddleProcessController@fetchNGRate');
+Route::get('fetch/middle/lcq_ng', 'MiddleProcessController@fetchLcqNg');
+Route::get('fetch/middle/lcq_ng_rate', 'MiddleProcessController@fetchLcqNgRate');
+Route::get('fetch/middle/middle_log', 'MiddleProcessController@fetchMiddleLog');
 
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){

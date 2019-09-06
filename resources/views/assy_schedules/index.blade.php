@@ -81,6 +81,7 @@
               <tr>
                 <th>Material Number</th>
                 <th>Material Description</th>
+                <th>Origin group</th>
                 <th>Due Date</th>
                 <th>Qty</th>
                 <th>Action</th>
@@ -90,6 +91,7 @@
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -107,7 +109,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id ="importForm" method="get" action="{{ url('delete/assy_schedule') }}" enctype="multipart/form-data">
+      <form id ="importForm" method="get" action="{{ url('destroy/assy_schedule') }}">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -142,14 +144,19 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Origin Group</label>
-                
+                <select class="form-control select2" multiple="multiple" name="origin_group[]" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;" required>
+                  <option></option>
+                  @foreach($origin_groups as $origin_group)
+                  <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this production schedule?');" class="btn btn-danger">Delete</button>
+          <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this assy schedule?');" class="btn btn-danger">Delete</button>
         </div>
       </form>
     </div>
@@ -186,7 +193,7 @@
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <div class="form-group row" align="right">
             <label class="col-sm-4">Material<span class="text-red">*</span></label>
-            <div class="col-sm-8" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="material_number" style="width: 100%;" data-placeholder="Choose a Material Number..." required>
                 <option value=""></option>
                 @foreach($materials as $material)
@@ -197,7 +204,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
-            <div class="col-sm-8">
+            <div class="col-sm-6">
              <div class="input-group date">
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
@@ -208,7 +215,7 @@
         </div>
         <div class="form-group row" align="right">
           <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
-          <div class="col-sm-8">
+          <div class="col-sm-6">
             <div class="input-group">
               <input min="1" type="number" class="form-control" id="quantity" placeholder="Enter Quantity" required>
               <span class="input-group-addon">pc(s)</span>
@@ -223,6 +230,109 @@
     </div>
   </div>
 </div>
+</div>
+
+<div class="modal fade" id="EditModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create {{$page}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Material<span class="text-red">*</span></label>
+            <div class="col-sm-6" align="left">
+              <select class="form-control select2" id="material_number_edit" style="width: 100%;" data-placeholder="Choose a Material Number..." required disabled>
+                <option value=""></option>
+                @foreach($materials as $material)
+                <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
+            <div class="col-sm-6">
+             <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right" id="due_date_edit" name="due_date" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input min="1" type="number" class="form-control" id="quantity_edit" placeholder="Enter Quantity" required>
+              <input type="hidden" id="id_edit">
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>    
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      <button type="button" onclick="edit()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="ViewModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create {{$page}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Material Number</label>
+            <div class="col-sm-6" align="left" id="material_number_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Material Description</label>
+            <div class="col-sm-6" align="left" id="material_description_view"></div>
+          </div>          
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Origin Group</label>
+            <div class="col-sm-6" align="left" id="origin_group_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Due Date</label>
+            <div class="col-sm-6" align="left" id="due_date_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Quantity</label>
+            <div class="col-sm-6" align="left" id="quantity_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Created By</label>
+            <div class="col-sm-6" align="left" id="created_by_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Last Update</label>
+            <div class="col-sm-6" align="left" id="last_updated_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Created At</label>
+            <div class="col-sm-6" align="left" id="created_at_view"></div>
+          </div>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -337,7 +447,8 @@
       },
       "columns": [
       { "data": "material_number" },
-      { "data": "material_description" },
+      { "data": "material_description"},
+      { "data": "origin_group_name" },
       { "data": "due_date" },
       { "data": "quantity" },
       { "data": "action" }
@@ -370,7 +481,7 @@
     };
 
     $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
-      if (status == true) {
+      if (result.status == true) {
         openSuccessGritter("Success","New Assy schedule has been created.");
       } else {
         openErrorGritter("Error","Assy schedule not created.");
@@ -378,63 +489,104 @@
     })
   }
 
-  function deleteAssy() {
-    // $.post('{{ url("delete/assy_schedule") }}', data, function(result, status, xhr){
+  function modalEdit(id) {
+    $('#EditModal').modal("show");
 
-    // })
-  }
-
-  function modalDelete(mat_num, due_date) {
-    var data = {
-      material_number: mat_num,
-      due_date: due_date
+    var data  = {
+      id:id
     };
 
-    if (!confirm("Are you sure want to delete '"+mat_num+"' in "+due_date+" ?")) {
-      return false;
-    }
-
-    $.post('{{ url("delete/assy_schedule") }}', data, function(result, status, xhr){
-      draw_table();
-      openSuccessGritter("Success","Delete '"+mat_num+"' in "+due_date+" ?");
+    $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+      $("#id_edit").val(id);
+      $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
+      $("#due_date_edit").val(result.datas.due_date);
+      $("#quantity_edit").val(result.datas.quantity);
     })
   }
 
-  $(function () {
-    $('#datefrom').datepicker({
-      autoclose: true
-    });
-    $('#dateto').datepicker({
-      autoclose: true
-    });
+  function edit() {
+   var data = {
+    id: $("#id_edit").val(),
+    quantity: $("#quantity_edit").val()
+  };
+
+  $.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+    if (result.status == true) {
+      openSuccessGritter("Success","New Assy schedule has been edited.");
+    } else {
+      openErrorGritter("Error","Failed to edit.");
+    }
   })
+}
 
-  function deleteConfirmation(url, name, id) {
-    jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-    jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+function modalView(id) {
+  $("#ViewModal").modal("show");
+  var data = {
+    id:id
   }
 
-  function openSuccessGritter(title, message){
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-success',
-      image: '{{ url("images/image-screen.png") }}',
-      sticky: false,
-      time: '3000'
-    });
+  $.get('{{ url("view/assy_schedule") }}', data, function(result, status, xhr){
+    $("#material_number_view").text(result.datas[0].material_number);
+    $("#material_description_view").text(result.datas[0].material_description);
+    $("#origin_group_view").text(result.datas[0].origin_group_name);
+    $("#due_date_view").text(result.datas[0].due_date);
+    $("#quantity_view").text(result.datas[0].quantity);
+    $("#created_by_view").text(result.datas[0].name);
+    $("#last_updated_view").text(result.datas[0].updated_at);
+    $("#created_at_view").text(result.datas[0].created_at);
+  })
+}
+
+function modalDelete(id) {
+  var data = {
+    id: id
+  };
+
+  if (!confirm("Are you sure want to delete Material schedule ?")) {
+    return false;
   }
 
-  function openErrorGritter(title, message) {
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-danger',
-      image: '{{ url("images/image-stop.png") }}',
-      sticky: false,
-      time: '3000'
-    });
-  }
+  $.post('{{ url("delete/assy_schedule") }}', data, function(result, status, xhr){
+      // draw_table();
+      openSuccessGritter("Success","Delete Material Schedule");
+    })
+}
+
+$(function () {
+  $('#datefrom').datepicker({
+    autoclose: true
+  });
+  $('#dateto').datepicker({
+    autoclose: true
+  });
+})
+
+function deleteConfirmation(url, name, id) {
+  jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+  jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+}
+
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}
+
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}
 </script>
 
 @stop

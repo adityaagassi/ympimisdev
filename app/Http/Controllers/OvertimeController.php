@@ -774,7 +774,7 @@ class OvertimeController extends Controller
 
 		$query = "SELECT datas.*, DATE_FORMAT('".$tgl."','%d %M %Y') as tanggal, d.jam_harian from
 		( SELECT  n.id_cc, master_cc.NAME,
-		sum( n.act ) AS act, sum( budget_tot ) AS tot, sum( budget_tot ) - sum( n.act ) AS diff FROM
+		sum( n.act ) AS act, ROUND( sum( budget_tot ), 1) AS tot, ROUND( sum( budget_tot ) - sum( n.act ), 1) AS diff FROM
 		(
 		SELECT
 		l.id_cc,
@@ -785,7 +785,7 @@ class OvertimeController extends Controller
 		(
 		SELECT
 		id_cc,
-		ROUND( ( budget_total / DATE_FORMAT( LAST_DAY( '".$tgl."' ), '%d' ) ), 1 ) budget_tot 
+		( budget_total / DATE_FORMAT( LAST_DAY( '".$tgl."' ), '%d' ) ) budget_tot 
 		FROM
 		cost_center_budget 
 		WHERE
