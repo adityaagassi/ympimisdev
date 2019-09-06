@@ -183,14 +183,20 @@ class ProcessController extends Controller
 
 		$next_process = $request->get('processCode')+1;
 
-		$query = "select model, sum(plan) as plan, sum(actual) as actual from
+		$query = "select model, sum(plan) as plan, sum(out_item) as out_item, sum(in_item) as in_item from
 		(
-		select model, quantity as plan, 0 as actual from stamp_schedules where due_date = '" . $now . "'
+		select model, quantity as plan, 0 as out_item, 0 as in_item from stamp_schedules where due_date = '" . $now . "'
 
 		union all
 
-		select model, 0 as plan, quantity as actual from log_processes 
+		select model, 0 as plan, quantity as out_item, 0 as in_item from log_processes 
 		where process_code = '" . $next_process . "' and date(created_at) = '" . $now . "'
+
+		union all
+
+		select model, 0 as plan, 0 as out_item, quantity as in_item from log_processes 
+		where process_code = '" . $request->get('processCode') . "' and date(created_at) = '" . $now . "'
+
 		) as plan
 		group by model
 		having model like 'YFL%'";

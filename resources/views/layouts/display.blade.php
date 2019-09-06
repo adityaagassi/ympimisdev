@@ -93,7 +93,7 @@
         @endif
       </nav>
     </header>
-    <div class="content-wrapper" style="background-color: rgb(60,60,60); padding-top: 0px;">
+    <div class="content-wrapper" style="background-color: rgb(60,60,60); padding-top: 10px;">
       @yield('content')
     </div>
     @include('layouts.footer')

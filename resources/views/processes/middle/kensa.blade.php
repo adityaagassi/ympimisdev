@@ -234,6 +234,7 @@
 				var data = {
 					employee_id : $("#operator").val()
 				}
+				
 				$.get('{{ url("scan/middle/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);

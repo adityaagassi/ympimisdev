@@ -3,39 +3,39 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-	padding: 1px;
-}
-table.table-bordered{
-	border:1px solid black;
-	margin-top:20px;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid black;
-}
-.outer .chart-container {
-	width: 100%;
-	float: right;
-	height: 250px;
-}
-.highcharts-yaxis-grid .highcharts-grid-line {
-	display: none;
-}
-
-@media (max-width: 100%) {
-	.outer {
-		width: 100%;
-		height: 400px;
+	.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+		padding: 1px;
+	}
+	table.table-bordered{
+		border:1px solid black;
+		margin-top:20px;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
 	}
 	.outer .chart-container {
 		width: 100%;
 		float: right;
-		/*margin: 0 auto;*/
+		height: 250px;
 	}
-}
+	.highcharts-yaxis-grid .highcharts-grid-line {
+		display: none;
+	}
+
+	@media (max-width: 100%) {
+		.outer {
+			width: 100%;
+			height: 400px;
+		}
+		.outer .chart-container {
+			width: 100%;
+			float: right;
+			/*margin: 0 auto;*/
+		}
+	}
 </style>
 @stop
 @section('header')
@@ -337,40 +337,33 @@ table.table-bordered > tbody > tr > td{
 					});
 
 					var totalPlan = 0;
-					var totalActual = 0;
+					var totalIn = 0;
+					var totalOut = 0;
+					
 					$.each(result.chartData, function(key, value) {
 						totalPlan += value.plan;
-						totalActual += value.actual;
+						totalIn += value.in_item;
+						totalOut += value.out_item;
 					});
-
-					if(totalActual-totalPlan < 0){
-						totalCaret = '<span class="text-red"><i class="fa fa-caret-down"></i>';
-					}
-					if(totalActual-totalPlan > 0){
-						totalCaret = '<span class="text-yellow"><i class="fa fa-caret-up"></i>';
-					}
-					if(totalActual-totalPlan == 0){
-						totalCaret = '<span class="text-green">&#9679;';
-					}
 
 					$('#resume').html("");
 					var resumeData = '';
 					resumeData += '<div class="col-sm-4 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
 					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan.toLocaleString() +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan<br><span class="text-purple">計画の集計</span></span>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Plan<br><span class="text-purple">計画の集計</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					resumeData += '	<div class="col-sm-4 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual.toLocaleString() +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual<br><span class="text-purple">実績の集計</span></span>';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-orange">'+ totalIn.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">In<br><span class="text-orange">受入数</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					resumeData += '	<div class="col-sm-4 col-xs-6">';
-					resumeData += '		<div class="description-block">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +Math.abs(totalActual-totalPlan).toLocaleString() +'</span></h5>';
-					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference<br><span class="text-purple">差異</span></span>';
+					resumeData += '		<div class="description-block border-right">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-olive">'+ totalOut.toLocaleString() +'</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Out<br><span class="text-olive">流し数</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
 					$('#resume').append(resumeData);

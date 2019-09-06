@@ -81,7 +81,7 @@
 			<br>
 		</div>
 	</div> -->
-	<div class="col-xs-3" style="margin-left: 2%; margin-bottom: 1%;">
+	<div class="col-xs-3" style="margin-left: 2%; margin: 0.5%;">
 		<!-- <div class="row">
 			<span class="text-red"><i class="fa fa-info-circle"></i> Select Other Date</span>
 		</div> -->
