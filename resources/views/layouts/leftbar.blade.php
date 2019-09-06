@@ -168,6 +168,12 @@
     </li>
     @endif
 
+    @if(in_array('M18', $navs))
+    @if(isset($page) && $page == "Safety Stock")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/safety_stock") }}"><i class="fa fa-cubes"></i> <span>Initial Safety Stock</span></a>
+    </li>
+    @endif
+
     @if(in_array('M16', $navs))
     @if(isset($head) && $head == "Employees Data")<li class="treeview active">@else<li class="treeview">@endif
       <a href="#">

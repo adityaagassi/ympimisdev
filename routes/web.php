@@ -420,6 +420,18 @@ Route::group(['nav' => 'M17', 'middleware' => 'permission'], function(){
 	Route::post('import/assy_schedule', 'AssyProcessController@import');
 });
 
+Route::group(['nav' => 'M18', 'middleware' => 'permission'], function(){
+	Route::get('index/safety_stock', 'InitialProcessController@indexStockMaster');
+	Route::get('fetch/safety_stock', 'InitialProcessController@fetchStockMaster');
+	Route::get('view/safety_stock', 'InitialProcessController@view');
+	Route::post('edit/safety_stock', 'InitialProcessController@edit');
+	Route::get('edit/safety_stock', 'InitialProcessController@fetchEdit');
+	Route::post('import/safety_stock', 'InitialProcessController@import');
+	Route::post('create/safety_stock', 'InitialProcessController@createInitial');
+	Route::post('delete/safety_stock', 'InitialProcessController@delete');
+	Route::get('destroy/safety_stock', 'InitialProcessController@destroy');
+});
+
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
 	Route::get('create/code_generator', 'CodeGeneratorController@create');

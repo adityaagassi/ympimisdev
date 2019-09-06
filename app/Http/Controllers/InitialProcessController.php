@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 use Response;
+use App\OriginGroup;
+use App\Material;
 use Carbon\Carbon;
+use App\InitialSafetyStock;
+use Illuminate\Support\Facades\Auth;
 
 class InitialProcessController extends Controller
 {
@@ -42,6 +47,22 @@ class InitialProcessController extends Controller
 			'location' => $location,
 			'locs' => $locs
 		))->with('head', 'Initial Process');
+	}
+
+	public function indexStockMaster()
+	{
+		$title = 'Initial Process Stock';
+		$title_jp = '?';
+
+		$materials = Material::orderBy('material_number', 'ASC')->get();
+		$origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
+
+		return view('initial_safety.index', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $materials,
+			'origin_groups' => $origin_groups
+		))->with('page', 'Safety Stock');
 	}
 
 	public function fetchStockTrend(Request $request){
@@ -149,5 +170,185 @@ class InitialProcessController extends Controller
 			'stocks' => $stocks,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchStockMaster()
+	{
+		$initial_safety = InitialSafetyStock::leftJoin("materials","materials.material_number","=","initial_safety_stocks.material_number")
+		->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
+		->select('initial_safety_stocks.id','initial_safety_stocks.material_number','initial_safety_stocks.valid_date','initial_safety_stocks.quantity','materials.material_description','origin_groups.origin_group_name')
+		->orderByRaw('valid_date DESC', 'initial_safety_stocks.material_number ASC')
+		->get();
+
+		return DataTables::of($initial_safety)
+		->addColumn('action', function($initial_safety){
+			return '
+			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Delete" onclick="modalView('.$initial_safety->id.')">View</button>
+			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Delete" onclick="modalEdit('.$initial_safety->id.')">Edit</button>
+			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$initial_safety->id.',\''.$initial_safety->material_number.'\',\''.$initial_safety->valid_date.'\')">Delete</button>';
+		})
+
+		->rawColumns(['action' => 'action'])
+		->make(true);
+	}
+
+	public function view(Request $request)
+	{
+		$query = "select initial_stock.material_number, initial_stock.valid_date, initial_stock.quantity, users.`name`, material_description, origin_group_name, initial_stock.created_at, initial_stock.updated_at from
+		(select material_number, valid_date, quantity, created_by, created_at, updated_at from initial_safety_stocks where id = "
+		.$request->get('id').") as initial_stock
+		left join materials on materials.material_number = initial_stock.material_number
+		left join origin_groups on origin_groups.origin_group_code = materials.origin_group_code
+		left join users on initial_stock.created_by = users.id";
+
+		$intial_stock = DB::select($query);
+
+		$response = array(
+			'status' => true,
+			'datas' => $intial_stock
+		);
+
+		return Response::json($response);
+	}
+
+	public function fetchEdit(Request $request)
+	{
+		$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
+		->first();
+
+		$response = array(
+			'status' => true,
+			'datas' => $intial_stock
+		);
+
+		return Response::json($response);
+	}
+
+	public function edit(Request $request)
+	{
+		$head = InitialSafetyStock::where('id', '=', $request->get('id'))
+		->first();
+
+		$head->quantity = $request->get('quantity');
+		$head->save();
+
+		$response = array(
+			'status' => true
+		);
+
+		return Response::json($response);
+	}
+
+	public function import(Request $request)
+	{
+		try{
+			if($request->hasFile('intial_stock')){
+                // ProductionSchedule::truncate();
+
+				$id = Auth::id();
+
+				$file = $request->file('intial_stock');
+				$data = file_get_contents($file);
+
+				$rows = explode("\r\n", $data);
+				foreach ($rows as $row)
+				{
+					if (strlen($row) > 0) {
+						$row = explode("\t", $row);
+						$intial_stock = new InitialSafetyStock([
+							'material_number' => $row[0],
+							'valid_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+							'quantity' => $row[2],
+							'created_by' => $id,
+						]);
+
+						$intial_stock->save();
+					}
+				}
+				return redirect('/index/safety_stock')->with('status', 'New Initial Safety Stock has been imported.')->with('page', 'Safety Stock');
+			}
+			else
+			{
+				return redirect('/index/safety_stock')->with('error', 'Please select a file.')->with('page', 'Safety Stock');
+			}
+		}
+
+		catch (QueryException $e){
+			$error_code = $e->errorInfo[1];
+			if($error_code == 1062){
+				return back()->with('error', 'Initial Safety Stock with preferred due date already exist.')->with('page', 'Safety Stock');
+			}
+			else{
+				return back()->with('error', $e->getMessage())->with('page', 'Safety Stock');
+			}
+
+		}
+	}
+
+	public function createInitial(Request $request)
+	{
+		$valid_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('valid_date'))));
+
+		try
+		{
+			$id = Auth::id();
+			$intial_stock = new InitialSafetyStock([
+				'material_number' => $request->get('material_number'),
+				'valid_date' => $valid_date,
+				'quantity' => $request->get('quantity'),
+				'created_by' => $id
+			]);
+
+			$intial_stock->save();  
+
+			$response = array(
+				'status' => true
+			);
+			return Response::json($response);
+		}
+		catch (QueryException $e){
+			$error_code = $e->errorInfo[1];
+			if($error_code == 1062){
+				$response = array(
+					'status' => false,
+					'Message'=> 'already exist'
+				);
+				return Response::json($response);
+			}
+			else{
+				$response = array(
+					'status' => false
+				);
+				return Response::json($response);
+			}
+		}
+	}
+
+	public function delete(Request $request)
+	{
+		$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
+		->forceDelete();
+
+		$response = array(
+			'status' => true
+		);
+
+		return Response::json($response);
+	}
+
+	public function destroy(Request $request)
+	{
+		$valid_date = date('Y-m-d', strtotime('01-'.$request->get('valid_date2')));
+
+		$materials = Material::whereIn('origin_group_code', $request->get('origin_group2'))
+		->select('material_number')->get();
+
+		$intial_stock = InitialSafetyStock::where('valid_date', '=', $valid_date)
+		->whereIn('material_number', $materials)
+		->forceDelete();
+
+		return redirect('/index/safety_stock')
+		->with('status', 'Initial Safety Stock has been deleted.')
+		->with('page', 'Safety Stock');
 	}
 }

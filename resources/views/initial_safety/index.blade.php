@@ -82,7 +82,7 @@
                 <th>Material Number</th>
                 <th>Material Description</th>
                 <th>Origin group</th>
-                <th>Due Date</th>
+                <th>Valid Date</th>
                 <th>Qty</th>
                 <th>Action</th>
               </tr>
@@ -109,7 +109,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id ="importForm" method="get" action="{{ url('destroy/assy_schedule') }}">
+      <form id ="importForm" method="get" action="{{ url('destroy/safety_stock') }}">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -119,23 +119,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label>From</label>
+                <label>Valid Date</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="datefrom" name="datefrom" required>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>To</label>
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input type="text" class="form-control pull-right" id="dateto" name="dateto" required>
+                  <input type="text" class="form-control pull-right" id="valid_date2" name="valid_date2" required>
                 </div>
               </div>
             </div>
@@ -144,7 +133,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Origin Group</label>
-                <select class="form-control select2" multiple="multiple" name="origin_group[]" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;" required>
+                <select class="form-control select2" multiple="multiple" name="origin_group2[]" id='origin_group2' data-placeholder="Select Origin Group" style="width: 100%;" required>
                   <option></option>
                   @foreach($origin_groups as $origin_group)
                   <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
@@ -156,7 +145,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this assy schedule?');" class="btn btn-danger">Delete</button>
+          <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this Initial Safety Stock?');" class="btn btn-danger">Delete</button>
         </div>
       </form>
     </div>
@@ -203,13 +192,13 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
+            <label class="col-sm-4">Valid Date<span class="text-red">*</span></label>
             <div class="col-sm-6">
              <div class="input-group date">
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" id="due_date" name="due_date">
+              <input type="text" class="form-control pull-right" id="valid_date" name="valid_date">
             </div>
           </div>
         </div>
@@ -254,13 +243,13 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
+            <label class="col-sm-4">Valid Date<span class="text-red">*</span></label>
             <div class="col-sm-6">
              <div class="input-group date">
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" id="due_date_edit" name="due_date" readonly>
+              <input type="text" class="form-control pull-right" id="valid_date_edit" name="valid_date" readonly>
             </div>
           </div>
         </div>
@@ -307,8 +296,8 @@
             <div class="col-sm-6" align="left" id="origin_group_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Due Date</label>
-            <div class="col-sm-6" align="left" id="due_date_view"></div>
+            <label class="col-sm-4">Valid Date</label>
+            <div class="col-sm-6" align="left" id="valid_date_view"></div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Quantity</label>
@@ -338,17 +327,17 @@
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id ="importForm" method="post" action="{{ url('import/assy_schedule') }}" enctype="multipart/form-data">
+      <form id ="importForm" method="post" action="{{ url('import/safety_stock') }}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
-          Format: [Material Number][Due Date][Quantity]<br>
-          Sample: <a href="{{ url('download/manual/import_assy_schedule.txt') }}">import_assy_schedule.txt</a>
+          Format: [Material Number][Valid Date][Quantity]<br>
+          Sample: <a href="{{ url('download/manual/import_initial_safety_stock.txt') }}">import_initial_safety_stock.txt</a>
         </div>
         <div class="">
           <div class="modal-body">
-            <center><input type="file" name="assy_schedule" id="InputFile" accept="text/plain"></center>
+            <center><input type="file" name="intial_stock" id="InputFile" accept="text/plain"></center>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
@@ -380,7 +369,7 @@
   jQuery(document).ready(function() {
     draw_table();
 
-    $('#due_date').datepicker({
+    $('#valid_date').datepicker({
       autoclose: true,
       format: "dd/mm/yyyy"
     });
@@ -443,13 +432,13 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("fetch/assy_schedule") }}"
+        "url" : "{{ url("fetch/safety_stock") }}"
       },
       "columns": [
       { "data": "material_number" },
       { "data": "material_description"},
       { "data": "origin_group_name" },
-      { "data": "due_date" },
+      { "data": "valid_date" },
       { "data": "quantity" },
       { "data": "action" }
       ],
@@ -476,15 +465,15 @@
   function create() {
     var data = {
       material_number: $("#material_number").val(),
-      due_date: $("#due_date").val(),
+      valid_date: $("#valid_date").val(),
       quantity: $("#quantity").val()
     };
 
-    $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
+    $.post('{{ url("create/safety_stock") }}', data, function(result, status, xhr){
       if (result.status == true) {
-        openSuccessGritter("Success","New Assy schedule has been created.");
+        openSuccessGritter("Success","New Initial Safety Stock has been created.");
       } else {
-        openErrorGritter("Error","Assy schedule not created.");
+        openErrorGritter("Error","Initial safety stock not created.");
       }
     })
   }
@@ -496,10 +485,10 @@
       id:id
     };
 
-    $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+    $.get('{{ url("edit/safety_stock") }}', data, function(result, status, xhr){
       $("#id_edit").val(id);
       $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
-      $("#due_date_edit").val(result.datas.due_date);
+      $("#valid_date_edit").val(result.datas.valid_date);
       $("#quantity_edit").val(result.datas.quantity);
     })
   }
@@ -510,11 +499,11 @@
     quantity: $("#quantity_edit").val()
   };
 
-  $.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+  $.post('{{ url("edit/safety_stock") }}', data, function(result, status, xhr){
     if (result.status == true) {
-      openSuccessGritter("Success","New Assy schedule has been edited.");
+      openSuccessGritter("Success","Initial Safety Stock has been edited.");
     } else {
-      openErrorGritter("Error","Failed to edit.");
+      openErrorGritter("Error","Failed to edit initial safety stock.");
     }
   })
 }
@@ -523,13 +512,13 @@ function modalView(id) {
   $("#ViewModal").modal("show");
   var data = {
     id:id
-  }
+  };
 
-  $.get('{{ url("view/assy_schedule") }}', data, function(result, status, xhr){
+  $.get('{{ url("view/safety_stock") }}', data, function(result, status, xhr){
     $("#material_number_view").text(result.datas[0].material_number);
     $("#material_description_view").text(result.datas[0].material_description);
     $("#origin_group_view").text(result.datas[0].origin_group_name);
-    $("#due_date_view").text(result.datas[0].due_date);
+    $("#valid_date_view").text(result.datas[0].valid_date);
     $("#quantity_view").text(result.datas[0].quantity);
     $("#created_by_view").text(result.datas[0].name);
     $("#last_updated_view").text(result.datas[0].updated_at);
@@ -537,27 +526,27 @@ function modalView(id) {
   })
 }
 
-function modalDelete(id) {
+function modalDelete(id, material_number, valid_date) {
   var data = {
     id: id
   };
 
-  if (!confirm("Are you sure want to delete Material schedule ?")) {
+  if (!confirm("Are you sure want to delete Material ' "+material_number+" ' in "+valid_date+" ?")) {
     return false;
   }
 
-  $.post('{{ url("delete/assy_schedule") }}', data, function(result, status, xhr){
+  $.post('{{ url("delete/safety_stock") }}', data, function(result, status, xhr){
       // draw_table();
-      openSuccessGritter("Success","Delete Material Schedule");
+      openSuccessGritter("Success","Material ' "+material_number+" ' in "+valid_date+" has been deleted.");
     })
 }
 
 $(function () {
-  $('#datefrom').datepicker({
-    autoclose: true
-  });
-  $('#dateto').datepicker({
-    autoclose: true
+  $('#valid_date2').datepicker({
+    autoclose: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
   });
 })
 
