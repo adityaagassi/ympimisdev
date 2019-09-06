@@ -15,14 +15,15 @@
 		width: 100%;
 		background-color: #605ca8;
 		z-index: 100;
+		padding: 5px 0 5px 0;
 	}
 
 	#schedule {
 		overflow-y: scroll;
 		height: 610px;
 		/*margin-top: -60px;*/
-		zoom: 1.5;
-		-moz-transform: scale(1.5);
+		zoom: 1.7;
+		-moz-transform: scale(1.7);
 		-moz-transform-origin: 0 0;
 		position:absolute; 
 		clip:rect(100px,1110px,800px,50px);
@@ -43,10 +44,10 @@
 </center>
 @endsection
 
-<!-- <div id="content">
-	<div style="height:800px;">
-		<iframe id="optomaFeed" src="http://www.optomausa.com/company/press-releases/" scrolling="no"
-		frameborder="0" height="100%" width="100%" style="position:absolute; clip:rect(190px,1100px,800px,250px);
-		top:-160px; left:-160px;"></iframe>
-	</div>
-</div> -->
+<script type="text/javascript">
+	window.setInterval("reloadIFrame();", 1800000);
+
+	function reloadIFrame() {
+		document.getElementById("schedule").src="https://outlook.office365.com/calendar/view/day/";	}
+
+	</script>
