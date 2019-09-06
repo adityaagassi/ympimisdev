@@ -410,8 +410,9 @@
 							},
 							dataLabels: {	
 								enabled: true,
+								rotation: -65,
 								formatter: function () {
-									return Highcharts.numberFormat(this.y);
+									return Highcharts.numberFormat(this.y,0);
 								}
 							}
 						}
