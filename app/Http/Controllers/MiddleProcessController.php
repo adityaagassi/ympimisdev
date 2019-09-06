@@ -268,7 +268,58 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
-	public function fetchWipMonitoring(Request $request){
+	public function fetchMiddleLog(Request $request){
+		$tgl="";
+		if(strlen($request->get('tgl')) > 0){
+			$tgl = date('Y-m-d',strtotime($request->get("tgl")));
+		}else{
+			$tgl = date("Y-m-d");
+		}
+		$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tgl."' and";
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and l.location in (".$location.") ";
+		}
+
+		$query3 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' ".$addlocation."
+		GROUP BY m.`key`, m.model";
+		$shift3 = db::select($query3);
+
+		$query1 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' ".$addlocation."
+		GROUP BY m.`key`, m.model";
+		$shift1 = db::select($query1);
+
+		$query2 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' ".$addlocation."
+		GROUP BY m.`key`, m.model";
+		$shift2 = db::select($query2);
+
+		$response = array(
+			'status' => true,
+			'shift1' => $shift1,
+			'shift2' => $shift2,
+			'shift3' => $shift3,
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchLcqNg(Request $request){
 
 		$tgl="";
 		if(strlen($request->get('tgl')) > 0){
@@ -305,18 +356,23 @@ class MiddleProcessController extends Controller
 		where m.hpl = 'TSKEY' ".$tanggal."".$addlocation." group by l.ng_name, m.hpl) c
 		on a.ng_name = c.ng_name
 		order by a.ng_name asc";
-
 		$ng = db::select($query);
+
+		$lokasi = "";
+		if($request->get('location') != null) {
+			$lokasi = "in ".$request->get('location');
+		}
 
 		$response = array(
 			'status' => true,
 			'ng' => $ng,
 			'tgl' => $tgl,
+			'lokasi' => $lokasi
 		);
 		return Response::json($response);
 	}
 
-	public function fetchNGRate(Request $request){
+	public function fetchLcqNgRate(Request $request){
 
 		$tgl_to = "";
 		$tgl_from = "";
@@ -324,10 +380,10 @@ class MiddleProcessController extends Controller
 			$tgl_to = date('Y-m-d',strtotime($request->get("tgl")));
 			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime($request->get("tgl")))."-1 month" ));
 		}else{
-			$tgl_to = date("d-m-Y");
+			$tgl_to = date("Y-m-d");
 			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime(date("Y-m-d")))."-1 month" ));
-
 		}
+
 		$tanggal = "where DATE_FORMAT(week_date,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$tgl_to."' ";
 		$tanggal1 = "and DATE_FORMAT(n.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(n.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
 		$tanggal2 = "and DATE_FORMAT(g.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(g.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
@@ -361,6 +417,7 @@ class MiddleProcessController extends Controller
 		GROUP BY tgl, m.hpl) c on a.tgl = c.tgl";
 		$askey = db::select($query1);
 
+
 		$query2 = "SELECT a.tgl, b.ng_ts, c.g_ts FROM
 		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars  where DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-08-05' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '2019-09-05') a
 		left join
@@ -372,17 +429,21 @@ class MiddleProcessController extends Controller
 		left join		
 		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_ts from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where  m.hpl = 'TSKEY ".$addlocation."".$tanggal2."
+		where  m.hpl = 'TSKEY' ".$addlocation."".$tanggal2."
 		GROUP BY tgl, m.hpl
 		ORDER BY g.created_at asc) c on a.tgl = c.tgl";
 		$tskey = db::select($query2);
+
+		$lokasi = "";
+		if($request->get('location') != null) {
+			$lokasi = "in ".$request->get('location');
+		}
 
 		$response = array(
 			'status' => true,
 			'askey' => $askey,
 			'tskey' => $tskey,
-			'query1' => $query1,
-			'query2' => $query2,
+			'lokasi' => $lokasi,
 		);
 		return Response::json($response);
 
@@ -1604,12 +1665,12 @@ class MiddleProcessController extends Controller
 		$emp = $request->get('employee_id');
 
 		$result = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' group by material_number) as base
+			(select material_number, sum(quantity) as quantity from middle_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
 			left join materials on materials.material_number = base.material_number
 			group by hpl");
 
 		$ng = DB::select("select SUM(quantity) as qty, hpl from
-			(select material_number, sum(quantity) as quantity from middle_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' group by material_number) as base
+			(select material_number, sum(quantity) as quantity from middle_ng_logs where employee_id = '".$emp."' and DATE_FORMAT(created_at,'%Y-%m-%d') = '".date('Y-m-d')."' and location = '".$request->get('location')."' group by material_number) as base
 			left join materials on materials.material_number = base.material_number
 			group by hpl");
 
