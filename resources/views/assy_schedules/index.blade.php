@@ -155,7 +155,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
           <button id="modalImportButton" type="submit" onclick="return confirm('Are you sure you want to delete this assy schedule?');" class="btn btn-danger">Delete</button>
         </div>
       </form>
@@ -351,7 +351,7 @@
             <center><input type="file" name="assy_schedule" id="InputFile" accept="text/plain"></center>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
             <button id="modalImportButton" type="submit" class="btn btn-success">Import</button>
           </div>
         </form>
