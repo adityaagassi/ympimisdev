@@ -80,7 +80,7 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
 							<div class="form-group">
-								<select class="form-control select2" multiple="multiple" data-placeholder="Select Location" name="code" id="code" style="width: 100%;">
+								<select class="form-control select2" multiple="multiple" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
 									@foreach($locations as $location) 
 									<option value="{{ $location }}">{{ $location }}</option>
 									@endforeach
