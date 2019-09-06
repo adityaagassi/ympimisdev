@@ -275,7 +275,7 @@
 					for (i = 0; i < data.length; i++) {
 						xAxis.push(data[i].model);
 						planCount.push(data[i].plan);
-						actualCount.push(data[i].actual);
+						actualCount.push(data[i].out_item);
 					}
 
 					Highcharts.chart('container', {
