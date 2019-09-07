@@ -920,3 +920,15 @@ View::composer('*', function ($view) {
 Route::get('/meetingroom1', function () {
 	return view('rooms.meetingroom1');
 });
+Route::get('/fillingroom', function () {
+	return view('rooms.fillingroom');
+});
+Route::get('/trainingroom1', function () {
+	return view('rooms.trainingroom1');
+});
+Route::get('/trainingroom2', function () {
+	return view('rooms.trainingroom2');
+});
+Route::get('/trainingroom3', function () {
+	return view('rooms.trainingroom3');
+});
