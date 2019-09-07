@@ -154,6 +154,5 @@ class CodeGeneratorController extends Controller
         return redirect('/index/code_generator')
         ->with('status', 'Code generator has been deleted.')
         ->with('page', 'Code Generator');
-        //
     }
 }
