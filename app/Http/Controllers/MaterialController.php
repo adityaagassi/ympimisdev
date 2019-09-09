@@ -55,6 +55,7 @@ class MaterialController extends Controller
      'TSNECK',
      'TSPART',
      'VENOVA',
+     'SX'
    ];
    $this->category = [
      'FG',
