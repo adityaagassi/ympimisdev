@@ -79,12 +79,7 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
 							<div class="form-group">
-								<select class="form-control select2" data-placeholder="Select Process Code" name="code" id="code" style="width: 100%;">
-									<option value="">All</option>
-									@foreach($code as $code) 
-									<option value="{{ $code->process_code }}">{{ $code->process_code }} - {{ $code->process_name }}</option>
-									@endforeach
-								</select>
+								
 							</div>
 							<div class="form-group pull-right">
 								<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
