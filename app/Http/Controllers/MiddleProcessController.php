@@ -39,6 +39,14 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexDisplayLcqNg(){
+		return view('processes.middle.display.ng_lacquering', array(
+			'title' => 'NG Lacquering',
+			'title_jp' => '??'
+		))->with('page', 'NG Lacquering');
+	}
+
+	
 	public function indexDisplayProductionResult(){
 		$locations = $this->location;
 
@@ -375,53 +383,38 @@ class MiddleProcessController extends Controller
 
 	public function fetchLcqNg(Request $request){
 
-		$tgl="";
-		if(strlen($request->get('tgl')) > 0){
-			$tgl = date('d-m-Y',strtotime($request->get("tgl")));
-		}else{
-			$tgl = date("d-m-Y");
-		}
-		$tanggal = "and DATE_FORMAT(l.created_at,'%d-%m-%Y') = '".$tgl."' ";
-
-		$addlocation = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			$location = "";
-
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location."'".$locations[$x]."'";
-				if($x != count($locations)-1){
-					$location = $location.",";
-				}
+		$tanggal="";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and tanggal >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and tanggal <= '".$dateto."' ";
 			}
-			$addlocation = "and l.location in (".$location.") ";
 		}
 
-		$query = "select a.ng_name, COALESCE(b.jml_as,0) as jml_as, COALESCE(c.jml_ts,0) as jml_ts from
-		(select DISTINCT ng_name from middle_ng_logs) a
-		left join
-		(select l.ng_name, m.hpl, count(l.id) as jml_as from middle_ng_logs l
+		// $addlocation = "";
+		// if($request->get('location') != null) {
+		// 	$locations = explode(",", $request->get('location'));
+		// 	$location = "";
+
+		// 	for($x = 0; $x < count($locations); $x++) {
+		// 		$location = $location."'".$locations[$x]."'";
+		// 		if($x != count($locations)-1){
+		// 			$location = $location.",";
+		// 		}
+		// 	}
+		// 	$addlocation = "and l.location in (".$location.") ";
+		// }
+
+		$query = "select l.ng_name, count(l.id) as jml from middle_ng_logs l
 		left join materials m on l.material_number = m.material_number
-		where m.hpl = 'ASKEY' ".$tanggal."".$addlocation." group by l.ng_name, m.hpl) b
-		on a.ng_name = b.ng_name
-		left join
-		(select l.ng_name, m.hpl, count(l.id) as jml_ts from middle_ng_logs l
-		left join materials m on l.material_number = m.material_number
-		where m.hpl = 'TSKEY' ".$tanggal."".$addlocation." group by l.ng_name, m.hpl) c
-		on a.ng_name = c.ng_name
-		order by a.ng_name asc";
+		where DATE_FORMAT(l.created_at,'%d-%m-%Y') >= '01-09-2019' and DATE_FORMAT(l.created_at,'%d-%m-%Y') <= '04-09-2019' and l.location = 'lcq-incoming' group by l.ng_name order by jml desc";
 		$ng = db::select($query);
-
-		$lokasi = "";
-		if($request->get('location') != null) {
-			$lokasi = "in ".$request->get('location');
-		}
 
 		$response = array(
 			'status' => true,
-			'ng' => $ng,
-			'tgl' => $tgl,
-			'lokasi' => $lokasi
+			'ng' => $ng
 		);
 		return Response::json($response);
 	}

@@ -183,8 +183,8 @@ class InitialProcessController extends Controller
 		return DataTables::of($initial_safety)
 		->addColumn('action', function($initial_safety){
 			return '
-			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Delete" onclick="modalView('.$initial_safety->id.')">View</button>
-			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Delete" onclick="modalEdit('.$initial_safety->id.')">Edit</button>
+			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$initial_safety->id.')">View</button>
+			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$initial_safety->id.')">Edit</button>
 			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$initial_safety->id.',\''.$initial_safety->material_number.'\',\''.$initial_safety->valid_date.'\')">Delete</button>';
 		})
 

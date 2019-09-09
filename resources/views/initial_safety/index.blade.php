@@ -226,7 +226,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Create {{$page}}</h4>
+        <h4 class="modal-title" id="myModalLabel">Edit {{$page}}</h4>
       </div>
       <div class="modal-body">
         <div class="box-body">
@@ -284,35 +284,35 @@
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Material Number</label>
+            <label class="col-sm-6">Material Number</label>
             <div class="col-sm-6" align="left" id="material_number_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Material Description</label>
+            <label class="col-sm-6">Material Description</label>
             <div class="col-sm-6" align="left" id="material_description_view"></div>
           </div>          
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Origin Group</label>
+            <label class="col-sm-6">Origin Group</label>
             <div class="col-sm-6" align="left" id="origin_group_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Valid Date</label>
+            <label class="col-sm-6">Valid Date</label>
             <div class="col-sm-6" align="left" id="valid_date_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Quantity</label>
+            <label class="col-sm-6">Quantity</label>
             <div class="col-sm-6" align="left" id="quantity_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Created By</label>
+            <label class="col-sm-6">Created By</label>
             <div class="col-sm-6" align="left" id="created_by_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Last Update</label>
+            <label class="col-sm-6">Last Update</label>
             <div class="col-sm-6" align="left" id="last_updated_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Created At</label>
+            <label class="col-sm-6">Created At</label>
             <div class="col-sm-6" align="left" id="created_at_view"></div>
           </div>
         </div>    
@@ -372,7 +372,8 @@
 
     $('#valid_date').datepicker({
       autoclose: true,
-      format: "dd/mm/yyyy"
+      format: "dd/mm/yyyy",
+      todayHighlight: true
     });
 
     $('.select2').select2();
@@ -472,6 +473,7 @@
 
     $.post('{{ url("create/safety_stock") }}', data, function(result, status, xhr){
       if (result.status == true) {
+        $('#example1').DataTable().ajax.reload(null, false);
         openSuccessGritter("Success","New Initial Safety Stock has been created.");
       } else {
         openErrorGritter("Error","Initial safety stock not created.");
@@ -502,6 +504,7 @@
 
   $.post('{{ url("edit/safety_stock") }}', data, function(result, status, xhr){
     if (result.status == true) {
+      $('#example1').DataTable().ajax.reload(null, false);
       openSuccessGritter("Success","Initial Safety Stock has been edited.");
     } else {
       openErrorGritter("Error","Failed to edit initial safety stock.");
@@ -537,9 +540,9 @@ function modalDelete(id, material_number, valid_date) {
   }
 
   $.post('{{ url("delete/safety_stock") }}', data, function(result, status, xhr){
-      // draw_table();
-      openSuccessGritter("Success","Material ' "+material_number+" ' in "+valid_date+" has been deleted.");
-    })
+    $('#example1').DataTable().ajax.reload(null, false);
+    openSuccessGritter("Success","Material ' "+material_number+" ' in "+valid_date+" has been deleted.");
+  })
 }
 
 $(function () {

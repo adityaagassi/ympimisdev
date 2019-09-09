@@ -1,38 +1,39 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -47,7 +48,7 @@ table.table-bordered > tfoot > tr > th{
       &nbsp;
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;
-      <a href="{{ url("create/production_schedule")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
+      <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a>
     </li>
   </ol>
 </section>
@@ -87,36 +88,6 @@ table.table-bordered > tfoot > tr > th{
               </tr>
             </thead>
             <tbody>
-              @foreach($production_schedules as $production_schedule)
-              <tr>
-                <td style="width: 5%">{{$production_schedule->material_number}}</td>
-                <td>
-                  @if(isset($production_schedule->material->material_description))
-                  {{$production_schedule->material->material_description}}
-                  @else
-                  Not registered
-                  @endif
-                </td>
-                <td style="width: 8%">
-                  @if(isset($production_schedule->material->origin_group_code))
-                  {{$production_schedule->material->origingroup->origin_group_name  }}
-                  @else
-                  Not registered
-                  @endif
-                </td>
-                <td style="width: 10%">{{date('d-M-Y', strtotime($production_schedule->due_date))}}</td>
-                <td style="width: 8%">{{$production_schedule->quantity}}</td>
-                <td>
-                  <center>
-                    <a class="btn btn-info btn-xs" href="{{url('show/production_schedule', $production_schedule['id'])}}">View</a>
-                    <a href="{{url('edit/production_schedule', $production_schedule['id'])}}" class="btn btn-warning btn-xs">Edit</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("destroy/production_schedule") }}', '{{$production_schedule->material_number}}', '{{ $production_schedule['id'] }}');">
-                      Delete
-                    </a>
-                  </center>
-                </td>
-              </tr>
-              @endforeach
             </tbody>
             <tfoot>
               <tr>
@@ -134,6 +105,160 @@ table.table-bordered > tfoot > tr > th{
     </div>
   </div>
 </section>
+
+<div class="modal fade" id="createModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create {{$page}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Material<span class="text-red">*</span></label>
+            <div class="col-sm-6" align="left">
+              <select class="form-control select2" name="material_number" id="material_number" style="width: 100%;" data-placeholder="Choose a Material Number..." required>
+                <option value=""></option>
+                @foreach($materials as $material)
+                <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
+            <div class="col-sm-6">
+             <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right" id="due_date" name="due_date">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input min="1" type="number" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>    
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      <button type="button" onclick="create()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="ViewModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Detail {{$page}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Material Number</label>
+            <div class="col-sm-6" align="left" id="material_number_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Material Description</label>
+            <div class="col-sm-6" align="left" id="material_description_view"></div>
+          </div>          
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Origin Group</label>
+            <div class="col-sm-6" align="left" id="origin_group_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Due Date</label>
+            <div class="col-sm-6" align="left" id="due_date_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Quantity</label>
+            <div class="col-sm-6" align="left" id="quantity_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Created By</label>
+            <div class="col-sm-6" align="left" id="created_by_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Last Update</label>
+            <div class="col-sm-6" align="left" id="last_updated_view"></div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-6">Created At</label>
+            <div class="col-sm-6" align="left" id="created_at_view"></div>
+          </div>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="EditModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create {{$page}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Material<span class="text-red">*</span></label>
+            <div class="col-sm-6" align="left">
+              <select class="form-control select2" id="material_number_edit" style="width: 100%;" data-placeholder="Choose a Material Number..." required disabled>
+                <option value=""></option>
+                @foreach($materials as $material)
+                <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Due Date<span class="text-red">*</span></label>
+            <div class="col-sm-6">
+             <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right" id="due_date_edit" name="due_date" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Quantity<span class="text-red">*</span></label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input min="1" type="number" class="form-control" id="quantity_edit" placeholder="Enter Quantity" required>
+              <input type="hidden" id="id_edit">
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>    
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      <button type="button" onclick="edit()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+    </div>
+  </div>
+</div>
+</div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -238,6 +363,7 @@ table.table-bordered > tfoot > tr > th{
 @stop
 
 @section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
@@ -245,7 +371,25 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
   jQuery(document).ready(function() {
+    $('#due_date').datepicker({
+      autoclose: true,
+      format: "dd/mm/yyyy",
+      todayHighlight: true
+    });
+
+    $('.select2').select2();
+
+    drawTable();
+  });
+
+  function drawTable() {
     $('#example1 tfoot th').each( function () {
       var title = $(this).text();
       $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="16"/>' );
@@ -257,6 +401,30 @@ table.table-bordered > tfoot > tr > th{
       'lengthMenu': [
       [ 10, 25, 50, -1 ],
       [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("fetch/production_schedule") }}"
+      },
+      "columns": [
+      { "data": "material_number" },
+      { "data": "material_description"},
+      { "data": "origin_group_name" },
+      { "data": "due_date" },
+      { "data": "quantity" },
+      { "data": "action" }
       ],
       'buttons': {
         buttons:[
@@ -305,22 +473,126 @@ table.table-bordered > tfoot > tr > th{
     } );
 
     $('#example1 tfoot tr').appendTo('#example1 thead');
-
-  });
-
-  $(function () {
-    $('#datefrom').datepicker({
-      autoclose: true
-    });
-    $('#dateto').datepicker({
-      autoclose: true
-    });
-    $('.select2').select2();
-  })
-  function deleteConfirmation(url, name, id) {
-    jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
-    jQuery('#modalDeleteButton').attr("href", url+'/'+id);
   }
+
+  function create() {
+    var data = {
+      material_number: $("#material_number").val(),
+      due_date: $("#due_date").val(),
+      quantity: $("#quantity").val()
+    };
+
+    $.post('{{ url("create/production_schedule") }}', data, function(result, status, xhr){
+      if (result.status == true) {
+        $('#example1').DataTable().ajax.reload(null, false);
+        openSuccessGritter("Success","New Production schedule has been created.");
+      } else {
+        openErrorGritter("Error","Production schedule not created.");
+      }
+    })
+  }
+
+  function modalView(id) {
+    $("#ViewModal").modal("show");
+    var data = {
+      id:id
+    }
+
+    $.get('{{ url("view/production_schedule") }}', data, function(result, status, xhr){
+      $("#material_number_view").text(result.datas[0].material_number);
+      $("#material_description_view").text(result.datas[0].material_description);
+      $("#origin_group_view").text(result.datas[0].origin_group_name);
+      $("#due_date_view").text(result.datas[0].due_date);
+      $("#quantity_view").text(result.datas[0].quantity);
+      $("#created_by_view").text(result.datas[0].name);
+      $("#last_updated_view").text(result.datas[0].updated_at);
+      $("#created_at_view").text(result.datas[0].created_at);
+    })
+  }
+
+  function modalDelete(id) {
+    var data = {
+      id: id
+    };
+
+    if (!confirm("Are you sure want to delete Material schedule ?")) {
+      return false;
+    }
+
+    $.post('{{ url("delete/production_schedule") }}', data, function(result, status, xhr){
+      $('#example1').DataTable().ajax.reload(null, false);
+      openSuccessGritter("Success","Delete Material Schedule");
+    })
+  }
+
+
+  function modalEdit(id) {
+    $('#EditModal').modal("show");
+
+    var data = {
+      id:id
+    };
+
+    $.get('{{ url("edit/production_schedule") }}', data, function(result, status, xhr){
+      $("#id_edit").val(id);
+      $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
+      $("#due_date_edit").val(result.datas.due_date);
+      $("#quantity_edit").val(result.datas.quantity);
+    })
+  }
+
+  function edit() {
+   var data = {
+    id: $("#id_edit").val(),
+    quantity: $("#quantity_edit").val()
+  };
+
+  $.post('{{ url("edit/production_schedule") }}', data, function(result, status, xhr){
+    if (result.status == true) {
+      $('#example1').DataTable().ajax.reload(null, false);
+      openSuccessGritter("Success","New Production schedule has been edited.");
+    } else {
+      openErrorGritter("Error","Failed to edit.");
+    }
+  })
+}
+
+$(function () {
+  $('#datefrom').datepicker({
+    autoclose: true
+  });
+  $('#dateto').datepicker({
+    autoclose: true
+  });
+  $('.select2').select2();
+})
+
+function deleteConfirmation(url, name, id) {
+  jQuery('#modalDeleteBody').text("Are you sure want to delete '" + name + "'");
+  jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+}
+
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}
+
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}
 </script>
 
 @stop

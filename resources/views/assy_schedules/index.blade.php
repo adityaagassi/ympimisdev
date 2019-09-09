@@ -295,35 +295,35 @@
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Material Number</label>
+            <label class="col-sm-6">Material Number</label>
             <div class="col-sm-6" align="left" id="material_number_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Material Description</label>
+            <label class="col-sm-6">Material Description</label>
             <div class="col-sm-6" align="left" id="material_description_view"></div>
           </div>          
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Origin Group</label>
+            <label class="col-sm-6">Origin Group</label>
             <div class="col-sm-6" align="left" id="origin_group_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Due Date</label>
+            <label class="col-sm-6">Due Date</label>
             <div class="col-sm-6" align="left" id="due_date_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Quantity</label>
+            <label class="col-sm-6">Quantity</label>
             <div class="col-sm-6" align="left" id="quantity_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Created By</label>
+            <label class="col-sm-6">Created By</label>
             <div class="col-sm-6" align="left" id="created_by_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Last Update</label>
+            <label class="col-sm-6">Last Update</label>
             <div class="col-sm-6" align="left" id="last_updated_view"></div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Created At</label>
+            <label class="col-sm-6">Created At</label>
             <div class="col-sm-6" align="left" id="created_at_view"></div>
           </div>
         </div>    
@@ -382,7 +382,8 @@
 
     $('#due_date').datepicker({
       autoclose: true,
-      format: "dd/mm/yyyy"
+      format: "dd/mm/yyyy",
+      todayHighlight: true
     });
 
     $('.select2').select2();
@@ -482,6 +483,7 @@
 
     $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
       if (result.status == true) {
+        $('#example1').DataTable().ajax.reload(null, false);
         openSuccessGritter("Success","New Assy schedule has been created.");
       } else {
         openErrorGritter("Error","Assy schedule not created.");
@@ -512,6 +514,7 @@
 
   $.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
     if (result.status == true) {
+      $('#example1').DataTable().ajax.reload(null, false);
       openSuccessGritter("Success","New Assy schedule has been edited.");
     } else {
       openErrorGritter("Error","Failed to edit.");
@@ -547,9 +550,9 @@ function modalDelete(id) {
   }
 
   $.post('{{ url("delete/assy_schedule") }}', data, function(result, status, xhr){
-      // draw_table();
-      openSuccessGritter("Success","Delete Material Schedule");
-    })
+    $('#example1').DataTable().ajax.reload(null, false);
+    openSuccessGritter("Success","Delete Material Schedule");
+  })
 }
 
 $(function () {

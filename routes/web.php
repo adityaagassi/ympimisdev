@@ -324,9 +324,9 @@ Route::group(['nav' => 'M4', 'middleware' => 'permission'], function(){
 	// Route::get('create/material', 'MaterialController@create');
 	Route::get('fetch/material', 'MaterialController@fetchMaterial');
 	Route::post('create/material', 'MaterialController@create');
-	Route::get('delete/material', 'MaterialController@delete');
+	Route::post('delete/material', 'MaterialController@delete');
 	Route::get('edit/material', 'MaterialController@fetchEdit');
-	Route::post('edit/material/{id}', 'MaterialController@update');
+	Route::post('edit/material', 'MaterialController@edit');
 	Route::get('view/material', 'MaterialController@view');
 	Route::post('import/material', 'MaterialController@import');
 });
@@ -555,6 +555,8 @@ Route::get('fetch/middle/report_ng', 'MiddleProcessController@fetchReportNG');
 Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fetchReportProductionResult');
 Route::get('index/middle/display_production_result', 'MiddleProcessController@indexDisplayProductionResult');
 Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fetchDisplayProductionResult');
+
+Route::get('index/middle/display_lcq_ng', 'MiddleProcessController@indexDisplayLcqNg');
 Route::get('fetch/middle/lcq_ng', 'MiddleProcessController@fetchLcqNg');
 Route::get('fetch/middle/lcq_ng_rate', 'MiddleProcessController@fetchLcqNgRate');
 
