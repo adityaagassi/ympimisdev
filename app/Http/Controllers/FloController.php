@@ -453,7 +453,7 @@ class FloController extends Controller
 		->where('actual', '>', 0)
 		->first();
 
-		if($maedaoshi_check != ""){
+		if($maedaoshi_check != "" && $request->get('ymj') != 'true'){
 			$response = array(
 				'status' => false,
 				'message' => "There is maedaoshi items, please use menu after maedaoshi if shipment schedule available."
