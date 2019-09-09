@@ -333,7 +333,8 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
           Format: [Material Number][Valid Date][Quantity]<br>
-          Sample: <a href="{{ url('download/manual/import_initial_safety_stock.txt') }}">import_initial_safety_stock.txt</a>
+          Rule: One file one date <br>
+          Sample: <a href="{{ url('download/manual/import_initial_safety_stock.txt') }}">1910_import_initial_safety_stock.txt</a>
         </div>
         <div class="">
           <div class="modal-body">
