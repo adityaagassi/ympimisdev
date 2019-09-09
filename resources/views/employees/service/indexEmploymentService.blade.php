@@ -339,7 +339,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						var chats = value.split("_");
 						chat_history += '<div class="post">';
 						chat_history += '<div class="user-block">'
-						chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/{{ $emp_id }}.png" alt="image">';
+						chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/{{ $emp_id }}.jpg" alt="image">';
 						chat_history += '<span class="username">{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')+'</span>';
 						chat_history += '<span class="description">'+chats[3]+'</span></div>';
 						chat_history += '<p>'+chats[1]+'</p>';
@@ -358,7 +358,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 									chat_history += '<div class="post">'
 									chat_history += '<div class="user-block">';
-									chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.png" alt="image">';
+									chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.jpg" alt="image">';
 									chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
 									chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
 									chat_history += '<span class="description" style="color:#666">'+value2.message_detail+'</span></div>';
