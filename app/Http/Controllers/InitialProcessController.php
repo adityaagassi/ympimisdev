@@ -251,6 +251,13 @@ class InitialProcessController extends Controller
 				$data = file_get_contents($file);
 
 				$rows = explode("\r\n", $data);
+
+				$first = explode("\t", $rows[0]);
+				$date =  date('Y-m-d' , strtotime(str_replace('/','-',$first[1])));
+
+				$delete = InitialSafetyStock::where('valid_date', '=', $date)
+				->forceDelete();
+
 				foreach ($rows as $row)
 				{
 					if (strlen($row) > 0) {
