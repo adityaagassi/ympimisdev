@@ -263,7 +263,7 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id ="importForm" method="get" action="{{ url('delete/production_schedule') }}" enctype="multipart/form-data">
+      <form id ="importForm" method="get" action="{{ url('destroy/production_schedule') }}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
