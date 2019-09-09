@@ -321,12 +321,13 @@ Route::group(['nav' => 'M6', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'M4', 'middleware' => 'permission'], function(){
 	Route::get('index/material', 'MaterialController@index');
-	Route::get('create/material', 'MaterialController@create');
-	Route::post('create/material', 'MaterialController@store');
-	Route::get('destroy/material/{id}', 'MaterialController@destroy');
-	Route::get('edit/material/{id}', 'MaterialController@edit');
+	// Route::get('create/material', 'MaterialController@create');
+	Route::get('fetch/material', 'MaterialController@fetchMaterial');
+	Route::post('create/material', 'MaterialController@create');
+	Route::get('delete/material', 'MaterialController@delete');
+	Route::get('edit/material', 'MaterialController@fetchEdit');
 	Route::post('edit/material/{id}', 'MaterialController@update');
-	Route::get('show/material/{id}', 'MaterialController@show');
+	Route::get('view/material', 'MaterialController@view');
 	Route::post('import/material', 'MaterialController@import');
 });
 
@@ -552,10 +553,10 @@ Route::get('index/middle/report_ng', 'MiddleProcessController@indexReportNG');
 Route::get('index/middle/report_production_result', 'MiddleProcessController@indexReportProductionResult');
 Route::get('fetch/middle/report_ng', 'MiddleProcessController@fetchReportNG');
 Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fetchReportProductionResult');
-Route::get('index/middle/wip_monitoring', 'MiddleProcessController@indexWipMonitoring');
+Route::get('index/middle/display_production_result', 'MiddleProcessController@indexDisplayProductionResult');
+Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fetchDisplayProductionResult');
 Route::get('fetch/middle/lcq_ng', 'MiddleProcessController@fetchLcqNg');
 Route::get('fetch/middle/lcq_ng_rate', 'MiddleProcessController@fetchLcqNgRate');
-Route::get('fetch/middle/middle_log', 'MiddleProcessController@fetchMiddleLog');
 
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){

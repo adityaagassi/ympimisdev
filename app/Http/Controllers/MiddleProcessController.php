@@ -39,14 +39,14 @@ class MiddleProcessController extends Controller
 		];
 	}
 
-	public function indexWipMonitoring(){
+	public function indexDisplayProductionResult(){
 		$locations = $this->location;
 
-		return view('processes.middle.display.wip_monitoring', array(
-			'title' => 'WIP Monitoring',
+		return view('processes.middle.display.production_result', array(
+			'title' => 'Production Result',
 			'title_jp' => '??',
 			'locations' => $locations
-		))->with('page', 'WIP Monitoring');
+		))->with('page', 'Production Result');
 	}
 
 	public function indexReportNG(){
@@ -268,7 +268,7 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
-	public function fetchMiddleLog(Request $request){
+	public function fetchDisplayProductionResult(Request $request){
 		$tgl="";
 		if(strlen($request->get('tgl')) > 0){
 			$tgl = date('Y-m-d',strtotime($request->get("tgl")));
@@ -349,14 +349,16 @@ class MiddleProcessController extends Controller
 		$location = "";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
-
 			for($x = 0; $x < count($locations); $x++) {
 				$location = $location." ".$locations[$x]." ";
 				if($x != count($locations)-1){
 					$location = $location."&";
 				}
 			}
+		}else{
+			$location = "lcq-incoming & lcq-kensa";
 		}
+		$location = strtoupper($location);
 
 		$response = array(
 			'status' => true,
