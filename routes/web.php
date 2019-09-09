@@ -506,6 +506,11 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('returnfg/stamp', 'ProcessController@returnfgStamp');
 	Route::post('scan/serial_number_return_Sx', 'ProcessController@scanSerialNumberReturnSx');
 	// end return sax
+
+	// return cl
+	Route::post('returncl/stamp', 'ProcessController@returnclStamp');
+	Route::post('scan/serial_number_return_Cl', 'ProcessController@scanSerialNumberReturnCl');
+	// end return cl
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -762,6 +767,11 @@ Route::get('index/repairFl', 'ProcessController@indexRepairFl');
 Route::get('index/repairSx', 'ProcessController@indexRepairSx');
 Route::get('fetch/returnTableSx', 'ProcessController@fetchReturnTableSx');
 // end return sax
+
+// return cl
+Route::get('index/repairCl', 'ProcessController@indexRepairCl');
+Route::get('fetch/returnTableCl', 'ProcessController@fetchReturnTableCl');
+// end return cl
 
 Route::get('fetch/wipflallstock', 'ProcessController@fetchwipflallstock');
 Route::get('fetch/wipflallchart', 'ProcessController@fetchwipflallchart');

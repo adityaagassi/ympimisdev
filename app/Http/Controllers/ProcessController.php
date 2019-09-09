@@ -587,7 +587,7 @@ class ProcessController extends Controller
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='042') {
 				$plc = new ActMLEasyIf(3);
-				$datas = $plc->read_data('D0', 5);
+				$datas = $plc->read_data('D20', 5);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='043') {
 				$plc = new ActMLEasyIf(0);
@@ -2525,4 +2525,66 @@ public function returnfgStamp(Request $request){
 
 // end return sax
 
+
+// return cl
+
+public function indexRepairCl(){
+		return view('processes.assy_fl_cla.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+	}
+
+public function returnClStamp(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'return']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+	public function fetchReturnTableCl(){
+		$stamp_inventories = StampInventory::where('origin_group_code', '=', '042')
+		->where('status', '=', 'return')
+		->orderBy('updated_at', 'desc')
+		->get();
+
+		return DataTables::of($stamp_inventories)
+		->make(true);
+	}
+
+	public function scanSerialNumberReturnCl(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'return']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+
+// end return cl
 }
