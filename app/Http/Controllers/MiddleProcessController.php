@@ -35,7 +35,7 @@ class MiddleProcessController extends Controller
 		$this->middleware('auth');
 		$this->location = [
 			'lcq-incoming',
-			'lcq-kensa',
+			'lcq-kensa'
 		];
 	}
 
@@ -291,29 +291,81 @@ class MiddleProcessController extends Controller
 			$addlocation = "and l.location in (".$location.") ";
 		}
 
-		$query3 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
+		$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+		(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`) a
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' ".$addlocation."
-		GROUP BY m.`key`, m.model";
-		$shift3 = db::select($query3);
+		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s3
+		on a.keymodel = s3.keymodel
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s1
+		on a.keymodel = s1.keymodel
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s2
+		on a.keymodel = s2.keymodel
+		ORDER BY `key`";
+		$alto = db::select($query1);
 
-		$query1 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
+		$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+		(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by `key`) a
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' ".$addlocation."
-		GROUP BY m.`key`, m.model";
-		$shift1 = db::select($query1);
+		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s3
+		on a.keymodel = s3.keymodel
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s1
+		on a.keymodel = s1.keymodel
+		left join
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		left join materials m on l.material_number = m.material_number
+		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' ".$addlocation."
+		GROUP BY m.`key`, m.model) s2
+		on a.keymodel = s2.keymodel
+		ORDER BY `key`";
+		$tenor = db::select($query2);
 
-		$query2 = "select m.`key`, m.model, sum(l.quantity) as total from middle_logs l 
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' ".$addlocation."
-		GROUP BY m.`key`, m.model";
-		$shift2 = db::select($query2);
+		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`";
+		$key =  db::select($query3);
+
+		$query4 = "select distinct model from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by model";
+		$model_alto =  db::select($query4);
+
+		$query5 = "select distinct model from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by model";
+		$model_tenor =  db::select($query5);
+
+		$location = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location." ".$locations[$x]." ";
+				if($x != count($locations)-1){
+					$location = $location."&";
+				}
+			}
+		}
 
 		$response = array(
 			'status' => true,
-			'shift1' => $shift1,
-			'shift2' => $shift2,
-			'shift3' => $shift3,
+			'alto' => $alto,
+			'tenor' => $tenor,
+			'key' => $key,
+			'model_tenor' => $model_tenor,
+			'model_alto' => $model_alto,
+			'title' => $location
 		);
 		return Response::json($response);
 
@@ -713,16 +765,6 @@ class MiddleProcessController extends Controller
 
 	public function printMiddleBarrelReprint(Request $request){
 
-		if(Auth::user()->role_code == "OP-Barrel-SX"){
-			$printer_name = 'Barrel-Printer';
-		}
-		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
-			$printer_name = 'MIS';
-		}
-
-		$connector = new WindowsPrintConnector($printer_name);
-		$printer = new Printer($connector);
-
 		if($request->get('id') == 'PLT'){
 			if($request->get('tagMaterial') == null){
 				$response = array(
@@ -749,32 +791,9 @@ class MiddleProcessController extends Controller
 			}
 
 			foreach ($middle_inventories as $middle_inventory) {
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(1,1);
-				$printer->text('ID SLIP '. date('d-M-Y H:i:s')." Reprint\n");
-				$printer->setTextSize(4,4);
-				$printer->setUnderline(true);
-				$printer->text('PLATING'."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->setTextSize(5,2);
-				if($middle_inventory->hpl == 'TSKEY'){
-					$printer->setEmphasis(true);
-					$printer->setReverseColors(true);					
-				}
-				$printer->text($middle_inventory->model." ".$middle_inventory->key."\n");
-				$printer->text($middle_inventory->surface."\n\n");
-				$printer->initialize();
-				$printer->setJustification(Printer::JUSTIFY_CENTER);
-				$printer->qrCode($middle_inventory->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-				$printer->text($middle_inventory->tag."\n\n");
-				$printer->initialize();
-				$printer->setTextSize(1,1);
-				$printer->text("GMC : ".$middle_inventory->material_number."\n");
-				$printer->text("DESC: ".$middle_inventory->material_description."\n");
-				$printer->text("QTY : ".$middle_inventory->quantity." PC(S)"."\n");
-				$printer->cut(Printer::CUT_PARTIAL, 50);
-				$printer->close();
+
+				self::printSlipMaterial('PLATING', $middle_inventory->hpl, 'Reprint', $middle_inventory->model, $middle_inventory->key, $middle_inventory->surface, $middle_inventory->tag, $middle_inventory->material_number, $middle_inventory->material_description, $middle_inventory->quantity, '-', '-', '-');
+
 			}
 
 			$response = array(
@@ -814,60 +833,14 @@ class MiddleProcessController extends Controller
 			if($request->get('id') == 'material'){
 				foreach ($barrels as $barrel) {
 					if($barrel->machine == 'FLANEL'){
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." Reprint\n");
-						$printer->setTextSize(4,4);
-						$printer->setUnderline(true);
-						$printer->text('LACQUERING'."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(5,2);
-						if($barrel->hpl == 'TSKEY'){
-							$printer->setEmphasis(true);
-							$printer->setReverseColors(true);					
-						}
-						$printer->text($barrel->model." ".$barrel->key."\n");
-						$printer->text($barrel->surface."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel->tag."\n\n");
-						$printer->initialize();
-						$printer->setTextSize(1,1);
-						$printer->text("GMC : ".$barrel->material_number."\n");
-						$printer->text("DESC: ".$barrel->material_description."\n");
-						$printer->text("QTY : ".$barrel->quantity." PC(S)                 MACHINE: FLANEL\n");
-						$printer->cut(Printer::CUT_PARTIAL, 50);
-						$printer->close();
+
+						self::printSlipMaterial('LACQUERING', $barrel->hpl, 'Reprint', $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', 'FLANEL', '-');
+
 					}
 					else{
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." Reprint\n");
-						$printer->setTextSize(4,4);
-						$printer->setUnderline(true);
-						$printer->text('LACQUERING'."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(5,2);
-						if($barrel->hpl == 'TSKEY'){
-							$printer->setEmphasis(true);
-							$printer->setReverseColors(true);					
-						}
-						$printer->text($barrel->model." ".$barrel->key."\n");
-						$printer->text($barrel->surface."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel->tag."\n\n");
-						$printer->initialize();
-						$printer->setTextSize(1,1);
-						$printer->text("GMC : ".$barrel->material_number."                           ".$barrel->remark."\n");
-						$printer->text("DESC: ".$barrel->material_description."\n");	
-						$printer->text("QTY : ".$barrel->quantity." PC(S)                 MACHINE: ".$barrel->machine." JIG: ".$barrel->jig."\n");	
-						$printer->cut(Printer::CUT_PARTIAL, 50);
-						$printer->close();
+
+						self::printSlipMaterial('LACQUERING', $barrel->hpl, 'Reprint', $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, $barrel->remark, $barrel->machine, $barrel->jig);
+
 					}
 				}
 				$response = array(
@@ -880,16 +853,7 @@ class MiddleProcessController extends Controller
 				$m = array();
 				foreach ($barrels as $barrel) {
 					if(!in_array($barrel->remark, $m) && $barrel->remark != 'FLANEL'){
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(4,4);
-						$printer->text('BARREL'."\n");
-						$printer->text("MACHINE_".$barrel->machine."\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel->remark, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel->remark."\n\n");
-						$printer->cut();
-						$printer->close();
+						self::printSlipMachine($machine, $barrel->remark);
 						array_push($m, $barrel->remark);
 					}
 				}
@@ -1186,9 +1150,6 @@ class MiddleProcessController extends Controller
 							'quantity' => $barrel_queue->quantity,
 							'location' => 'barrel',
 						];
-
-						$footer = EscposImage::load(public_path('mirai.jpg'));
-						// $printer->bitImage($footer);
 
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
@@ -1654,14 +1615,6 @@ class MiddleProcessController extends Controller
 
 	public function fetchMiddleKensa(Request $request){
 
-		// $result = MiddleLog::where('employee_id', '=', $request->get('employee_id'))
-		// ->whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'. date('Y-m-d') .'"')
-		// ->sum('quantity');
-
-		// $ng = MiddleNgLog::where('employee_id', '=', $request->get('employee_id'))
-		// ->whereRaw('DATE_FORMAT(created_at,"%Y-%m-%d") = "'. date('Y-m-d') .'"')
-		// ->sum('quantity');
-
 		$emp = $request->get('employee_id');
 
 		$result = DB::select("select SUM(quantity) as qty, hpl from
@@ -1777,54 +1730,6 @@ class MiddleProcessController extends Controller
 				return Response::json($response);
 			}
 		}
-
-		// $tag_material = TagMaterial::where('tag_materials.tag', '=', $request->get('tag'))
-		// ->first();
-
-		// $ngName = $request->get('ng_name');
-		// $ngQty = $request->get('ng_qty');
-		// $count_text = $request->get('count_text');
-		// $prodDate = \DateTime::createFromFormat('d/m/Y', $request->get('prodDate'))->format('Y-m-d');
-		// $id = Auth::id();
-
-		// for ($i=0; $i < count($ngName); $i++) {
-		// 	try{
-		// 		$log_ng_middle = new LogNgMiddle([
-		// 			'group_code' => $request->get('group'),
-		// 			'op_kensa' => $request->get('opKensa'),
-		// 			'prod_date' => $prodDate,
-		// 			'tag' => $request->get('tag'),
-		// 			'material_number' => $tag_material->material_number,
-		// 			'location' => $request->get('location'),
-		// 			'ng_name' => $ngName[$i],
-		// 			'qty' => $ngQty[$i],
-		// 			'op_prod' => $tag_material->op_prod,
-		// 			'created_by' => $id,
-		// 		]);
-		// 		$log_ng_middle->save();
-		// 		$success_count[] = $count_text[$i];
-		// 	}
-		// 	catch (QueryException $e){
-		// 		$fail_count[] = $count_text[$i];
-		// 	}
-		// }
-
-		// if(isset($fail_count)){
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'fail_count' => $fail_count,
-		// 		'message' => 'Material NG has some errors',
-		// 	);
-		// 	return Response::json($response);
-		// }
-		// else{
-		// 	$response = array(
-		// 		'status' => true,
-		// 		'success_count' => $success_count,
-		// 		'message' => 'Material NG has been inputted',
-		// 	);
-		// 	return Response::json($response);
-		// }
 	}
 
 	public function fetchProcessBarrelMachine()
@@ -2186,5 +2091,68 @@ class MiddleProcessController extends Controller
 		];
 
 		Mail::to($mail_to)->send(new SendEmail($queues, 'min_queue'));
+	}
+
+	function printSlipMaterial($location, $hpl, $remark, $model, $key, $surface, $tag, $material_number, $material_description, $quantity, $qr_machine, $machine, $jig){
+		if(Auth::user()->role_code == "OP-Barrel-SX"){
+			$printer_name = 'Barrel-Printer';
+		}
+		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
+			$printer_name = 'MIS';
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setTextSize(1,1);
+		$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$remark."\n");
+		$printer->setTextSize(4,4);
+		$printer->setUnderline(true);
+		$printer->text($location."\n\n");
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setTextSize(5,2);
+		if($hpl == 'TSKEY'){
+			$printer->setEmphasis(true);
+			$printer->setReverseColors(true);					
+		}
+		$printer->text($model." ".$key."\n");
+		$printer->text($barrel_queue->surface."\n\n");
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->text($tag."\n\n");
+		$printer->initialize();
+		$printer->setTextSize(1,1);
+		$printer->text("GMC : ".$material_number."                           ".$qr_machine."\n");
+		$printer->text("DESC: ".$material_description."\n");	
+		$printer->text("QTY : ".$quantity." PC(S)                 MACHINE: ".$machine." JIG: ".$jig."\n");
+		$printer->cut(Printer::CUT_PARTIAL, 50);
+		$printer->close();
+	}
+
+	function printSlipMachine($machine, $qr_machine){
+
+		if(Auth::user()->role_code == "OP-Barrel-SX"){
+			$printer_name = 'Barrel-Printer';
+		}
+		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
+			$printer_name = 'MIS';
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setTextSize(4,4);
+		$printer->text('BARREL'."\n");
+		$printer->text("MACHINE_".$barrel->machine."\n");
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($qr_machine, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->text($qr_machine."\n\n");
+		$printer->cut();
+		$printer->close();
 	}
 }

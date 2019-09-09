@@ -5,5 +5,5 @@
   		YMPI Management Information System
   	</div>
   	<!-- Default to the left -->
-  	<strong>Copyright &copy; 2018 <a href="{{ url("/home") }}"><img src="{{ url("images/logo_mirai_bundar.png")}}" height="15px"> MIRAI <img src="{{ url("images/logo_mirai_bundar.png")}}" height="15px"></a>.</strong> All rights reserved.
+  	<strong>Copyright &copy; 2018 <a href="{{ url("/home") }}">MIRAI <img src="{{ url("images/logo_mirai_bundar.png")}}" height="15px"></a>.</strong> All rights reserved.
   </footer>

@@ -354,13 +354,14 @@ Route::group(['nav' => 'M2', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::get('index/production_schedule', 'ProductionScheduleController@index');
-	Route::get('create/production_schedule', 'ProductionScheduleController@create');
+	Route::get('fetch/production_schedule', 'ProductionScheduleController@fetchSchedule');
+	// Route::get('create/production_schedule', 'ProductionScheduleController@create');
 	Route::post('create/production_schedule', 'ProductionScheduleController@store');
-	Route::get('destroy/production_schedule/{id}', 'ProductionScheduleController@destroy');
-	Route::get('delete/production_schedule', 'ProductionScheduleController@delete');
-	Route::get('edit/production_schedule/{id}', 'ProductionScheduleController@edit');
-	Route::post('edit/production_schedule/{id}', 'ProductionScheduleController@update');
-	Route::get('show/production_schedule/{id}', 'ProductionScheduleController@show');
+	Route::get('destroy/production_schedule', 'ProductionScheduleController@destroy');
+	Route::post('delete/production_schedule', 'ProductionScheduleController@delete');
+	Route::get('edit/production_schedule', 'ProductionScheduleController@fetchEdit');
+	Route::post('edit/production_schedule', 'ProductionScheduleController@edit');
+	Route::get('view/production_schedule', 'ProductionScheduleController@show');
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
 });
 
