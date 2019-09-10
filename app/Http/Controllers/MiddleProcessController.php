@@ -43,7 +43,7 @@ class MiddleProcessController extends Controller
 		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
 
 		return view('processes.middle.display.ng_lacquering', array(
-			'title' => 'NG Lacquering',
+			'title' => 'Report NG Lacquering',
 			'title_jp' => '??',
 			'fys' => $fys
 		))->with('page', 'NG Lacquering');
@@ -54,7 +54,7 @@ class MiddleProcessController extends Controller
 		$locations = $this->location;
 
 		return view('processes.middle.display.production_result', array(
-			'title' => 'Production Result',
+			'title' => 'Production Result ',
 			'title_jp' => '??',
 			'locations' => $locations
 		))->with('page', 'Production Result');
@@ -217,6 +217,21 @@ class MiddleProcessController extends Controller
 				'hpl' => $hpl,
 			))->with('page', 'Process Middle SX')->with('head', 'Middle Process');
 		}
+	}
+
+	public function indexProcessBuffingKensa($id){
+		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
+
+		$title = 'Buffing Kensa';
+		$title_jp = "";
+		
+		return view('processes.middle.buffing_kensa', array(
+			'ng_lists' => $ng_lists,
+			'loc' => $id,
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Buffing Kensa')->with('head', 'Middle Process');
+		
 	}
 
 	public function indexProcessMiddleKensa($id){
@@ -395,12 +410,12 @@ class MiddleProcessController extends Controller
 		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from 
 		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
 		left join
-		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, count(n.id) ng from middle_ng_logs n
+		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
 		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) b on a.week_date = b.tgl
 		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, count(g.id) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) c on a.week_date = c.tgl
@@ -436,12 +451,12 @@ class MiddleProcessController extends Controller
 		$query = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
 		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
 		left join
-		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, count(n.id) ng from middle_ng_logs n
+		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
 		where location = 'lcq-incoming' and m.surface not like '%PLT%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, count(g.id) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = 'lcq-incoming' and m.surface not like '%PLT%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
@@ -480,7 +495,7 @@ class MiddleProcessController extends Controller
 			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
 		}
 
-		$query = "select l.ng_name, count(l.id) as jml from middle_ng_logs l
+		$query = "select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
 		left join materials m on l.material_number = m.material_number
 		where ".$bulan." l.location = 'lcq-incoming' and m.surface not like '%PLT%' group by l.ng_name order by jml desc";
 		$ng = db::select($query);
@@ -513,11 +528,11 @@ class MiddleProcessController extends Controller
 		$query = "SELECT a.tgl, b.ng, c.g FROM
 		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 		left join
-		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, count(n.id) as ng from middle_ng_logs n
+		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
-		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, count(g.id) as g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
 		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$daily = db::select($query);
@@ -1235,7 +1250,7 @@ class MiddleProcessController extends Controller
 				catch(\Exception $e){
 					$response = array(
 						'status' => false,
-						'message' => $e->getMessage(),
+						'message' => "ERROR : ".$e->getMessage(),
 					);
 					return Response::json($response);
 				}
