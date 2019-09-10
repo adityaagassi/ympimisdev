@@ -125,37 +125,37 @@
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <div class="form-group row" align="right">
             <label class="col-sm-4">Material Number<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="material_number" placeholder="Enter Material Number" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Material Description<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="material_description" placeholder="Enter Material Description" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Base Unit<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="base_unit" placeholder="Enter Base Unit" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Issue Storage Location<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="issue_storage_location" placeholder="Enter Issue Storage Location" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">MRPC<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="mrpc" placeholder="MRPC" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Valuation Class<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="valcl" style="width: 100%;" data-placeholder="Choose a Valuation Class..." required>
                 <option value=""></option>
                 @foreach($valcls as $valcl)
@@ -166,7 +166,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="origin_group_code" style="width: 100%;" data-placeholder="Choose an Origin Group..." required>
                 <option value=""></option>
                 @foreach($origin_groups as $origin_group)
@@ -177,7 +177,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">HPL<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="hpl" style="width: 100%;" data-placeholder="Choose a HPL..." required>
                 <option value=""></option>
                 @foreach($hpls as $hpl)
@@ -188,7 +188,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Category<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="category" style="width: 100%;" data-placeholder="Choose a Category..." required>
                 <option value=""></option>
                 @foreach($categories as $category)
@@ -199,7 +199,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Model<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="model" placeholder="Enter Model" required>
             </div>
           </div>
@@ -292,37 +292,37 @@
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <div class="form-group row" align="right">
             <label class="col-sm-4">Material Number<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="material_number_edit" placeholder="Enter Material Number" required readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Material Description<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="material_description_edit" placeholder="Enter Material Description" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Base Unit<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="base_unit_edit" placeholder="Enter Base Unit" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Issue Storage Location<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="issue_storage_location_edit" placeholder="Enter Issue Storage Location" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">MRPC<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="mrpc_edit" placeholder="MRPC" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Valuation Class<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="valcl_edit" style="width: 100%;" data-placeholder="Choose a Valuation Class..." required>
                 <option value=""></option>
                 @foreach($valcls as $valcl)
@@ -333,7 +333,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Origin Group<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="origin_group_code_edit" style="width: 100%;" data-placeholder="Choose an Origin Group..." required>
                 <option value=""></option>
                 @foreach($origin_groups as $origin_group)
@@ -344,7 +344,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">HPL<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="hpl_edit" style="width: 100%;" data-placeholder="Choose a HPL..." required>
                 <option value=""></option>
                 @foreach($hpls as $hpl)
@@ -355,7 +355,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Category<span class="text-red">*</span></label>
-            <div class="col-sm-4" align="left">
+            <div class="col-sm-6" align="left">
               <select class="form-control select2" id="category_edit" style="width: 100%;" data-placeholder="Choose a Category..." required>
                 <option value=""></option>
                 @foreach($categories as $category)
@@ -366,7 +366,7 @@
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Model<span class="text-red">*</span></label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
               <input type="text" class="form-control" id="model_edit" placeholder="Enter Model" required>
             </div>
           </div>
