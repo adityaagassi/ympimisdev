@@ -39,10 +39,13 @@ class MiddleProcessController extends Controller
 		];
 	}
 
-	public function indexDisplayLcqNg(){
+	public function indexReportLcqNg(){
+		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+
 		return view('processes.middle.display.ng_lacquering', array(
 			'title' => 'NG Lacquering',
-			'title_jp' => '??'
+			'title_jp' => '??',
+			'fys' => $fys
 		))->with('page', 'NG Lacquering');
 	}
 
@@ -381,116 +384,149 @@ class MiddleProcessController extends Controller
 
 	}
 
-	public function fetchLcqNg(Request $request){
-
-		$tanggal="";
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$tanggal = "and tanggal >= '".$datefrom."' ";
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-				$tanggal = $tanggal."and tanggal <= '".$dateto."' ";
-			}
+	public function fetchLcqNgRateWeekly(Request $request){
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}else{
+			$bulan = date('m-Y');
 		}
 
-		// $addlocation = "";
-		// if($request->get('location') != null) {
-		// 	$locations = explode(",", $request->get('location'));
-		// 	$location = "";
-
-		// 	for($x = 0; $x < count($locations); $x++) {
-		// 		$location = $location."'".$locations[$x]."'";
-		// 		if($x != count($locations)-1){
-		// 			$location = $location.",";
-		// 		}
-		// 	}
-		// 	$addlocation = "and l.location in (".$location.") ";
-		// }
-
-		$query = "select l.ng_name, count(l.id) as jml from middle_ng_logs l
-		left join materials m on l.material_number = m.material_number
-		where DATE_FORMAT(l.created_at,'%d-%m-%Y') >= '01-09-2019' and DATE_FORMAT(l.created_at,'%d-%m-%Y') <= '04-09-2019' and l.location = 'lcq-incoming' group by l.ng_name order by jml desc";
-		$ng = db::select($query);
+		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from 
+		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
+		left join
+		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, count(n.id) ng from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number
+		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
+		GROUP BY tgl) b on a.week_date = b.tgl
+		left join
+		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, count(g.id) g from middle_logs g
+		left join materials m on m.material_number = g.material_number
+		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
+		GROUP BY tgl) c on a.week_date = c.tgl
+		GROUP BY a.week_name";
+		$weekly = db::select($query);
 
 		$response = array(
 			'status' => true,
-			'ng' => $ng
+			'weekly' => $weekly,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+	}
+
+
+	public function fetchLcqNgRateMonthly(Request $request){
+		$fy = '';
+		if($request->get('fy') != null){
+			$fys =  explode(",", $request->get('fy'));
+			for ($i=0; $i < count($fys); $i++) { 
+				$fy = $fy."'".$fys[$i]."'";
+				if($i != (count($fys)-1)){
+					$fy = $fy.',';
+				}
+			}
+		}else{
+			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
+			foreach ($get_fy as $key) {
+				$fy = "'".$key->fiscal_year."'";
+			}
+		}
+
+		$query = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
+		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
+		left join
+		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, count(n.id) ng from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number
+		where location = 'lcq-incoming' and m.surface not like '%PLT%'
+		GROUP BY tgl) b on a.tgl = b.tgl
+		left join		
+		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, count(g.id) g from middle_logs g
+		left join materials m on m.material_number = g.material_number
+		where location = 'lcq-incoming' and m.surface not like '%PLT%'
+		GROUP BY tgl) c on a.tgl = c.tgl";
+		$monthly = db::select($query);
+
+		$fy = "";
+		if($request->get('fy') != null) {
+			$fys = explode(",", $request->get('fy'));
+			for($x = 0; $x < count($fys); $x++) {
+				$fy = $fy." ".$fys[$x]." ";
+				if($x != count($fys)-1){
+					$fy = $fy."&";
+				}
+			}
+		}else{
+			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
+			foreach ($get_fy as $key) {
+				$fy = $key->fiscal_year;
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'monthly' => $monthly,
+			'fy' => $fy
+		);
+		return Response::json($response);
+	}
+
+	public function fetchLcqNg(Request $request){
+
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".$request->get('bulan')."' and ";
+		}else{
+			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
+		}
+
+		$query = "select l.ng_name, count(l.id) as jml from middle_ng_logs l
+		left join materials m on l.material_number = m.material_number
+		where ".$bulan." l.location = 'lcq-incoming' and m.surface not like '%PLT%' group by l.ng_name order by jml desc";
+		$ng = db::select($query);
+		$bulan = substr($bulan,37,7);
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+			'bulan' => $bulan
 		);
 		return Response::json($response);
 	}
 
 	public function fetchLcqNgRate(Request $request){
 
-		$tgl_to = "";
-		$tgl_from = "";
-		if(strlen($request->get('tgl')) > 0){
-			$tgl_to = date('Y-m-d',strtotime($request->get("tgl")));
-			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime($request->get("tgl")))."-1 month" ));
+		$bulan = "";
+		$bulan1 = "";
+		$bulan2 = "";
+
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".$request->get('bulan')."' ";
+			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
+			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".$request->get('bulan')."' ";				
 		}else{
-			$tgl_to = date("Y-m-d");
-			$tgl_from = date("Y-m-d",strtotime(date("Y-m-d",strtotime(date("Y-m-d")))."-1 month" ));
+			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".date('m-Y')."' ";
+			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".date('m-Y')."' ";
+			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".date('m-Y')."' ";
 		}
 
-		$tanggal = "where DATE_FORMAT(week_date,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '".$tgl_to."' ";
-		$tanggal1 = "and DATE_FORMAT(n.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(n.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
-		$tanggal2 = "and DATE_FORMAT(g.created_at,'%Y-%m-%d') >='".$tgl_from."' and DATE_FORMAT(g.created_at,'%Y-%m-%d') <= '".$tgl_to."' ";
-
-
-		$addlocation = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			$location = "";
-
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location."'".$locations[$x]."'";
-				if($x != count($locations)-1){
-					$location = $location.",";
-				}
-			}
-			$addlocation = "and location in (".$location.") ";
-		}
-
-		$query1 = "SELECT a.tgl, b.ng_as, c.g_as FROM
-		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars  where DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-08-05' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '2019-09-05') a
+		$query = "SELECT a.tgl, b.ng, c.g FROM
+		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 		left join
-		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_as from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal1."
-		GROUP BY tgl, m.hpl) b on a.tgl = b.tgl
+		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, count(n.id) as ng from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%'
+		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
-		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_as from middle_logs g
-		left join materials m on m.material_number = g.material_number
-		where m.hpl = 'ASKEY' ".$addlocation."".$tanggal2."
-		GROUP BY tgl, m.hpl) c on a.tgl = c.tgl";
-		$askey = db::select($query1);
-
-
-		$query2 = "SELECT a.tgl, b.ng_ts, c.g_ts FROM
-		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars  where DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-08-05' and DATE_FORMAT(week_date,'%Y-%m-%d') <= '2019-09-05') a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, count(n.id) ng_ts from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number
-		where m.hpl = 'TSKEY' ".$addlocation."".$tanggal1."
-		GROUP BY tgl, m.hpl
-		ORDER BY n.created_at asc) b on a.tgl = b.tgl
-		left join		
-		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, count(g.id) as g_ts from middle_logs g
-		left join materials m on m.material_number = g.material_number
-		where  m.hpl = 'TSKEY' ".$addlocation."".$tanggal2."
-		GROUP BY tgl, m.hpl
-		ORDER BY g.created_at asc) c on a.tgl = c.tgl";
-		$tskey = db::select($query2);
-
-		$lokasi = "";
-		if($request->get('location') != null) {
-			$lokasi = "in ".$request->get('location');
-		}
+		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, count(g.id) as g from middle_logs g
+		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%'
+		GROUP BY tgl) c on a.tgl = c.tgl";
+		$daily = db::select($query);
+		$bulan = substr($bulan,39,7);
 
 		$response = array(
 			'status' => true,
-			'askey' => $askey,
-			'tskey' => $tskey,
-			'lokasi' => $lokasi,
+			'daily' => $daily,
+			'bulan' => $bulan
 		);
 		return Response::json($response);
 
@@ -1089,7 +1125,7 @@ class MiddleProcessController extends Controller
 							],
 							$insert_inventory
 						);
-						
+
 						DB::transaction(function() use ($barrel, $delete_queue){
 							$barrel->save();
 							$delete_queue->forceDelete();
@@ -1385,7 +1421,7 @@ class MiddleProcessController extends Controller
 
 	public function scanMiddleBarrel(Request $request){	
 		$id = Auth::id();
-		
+
 		if(Auth::user()->role_code == "OP-Barrel-SX"){
 			$printer_name = 'Barrel-Printer';
 		}
@@ -1817,7 +1853,7 @@ class MiddleProcessController extends Controller
 		]);
 
 		DB::table('middle_inventories')->where('tag', '=', $tag)->delete();
-		
+
 		try{
 			DB::table('barrels')->where('tag', '=', $tag)->delete();
 		}
@@ -1990,7 +2026,7 @@ class MiddleProcessController extends Controller
 		} catch (Exception $e) {
 			$status = false;
 		}
-		
+
 
 		$response = array(
 			'status' => $status

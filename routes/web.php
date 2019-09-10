@@ -379,10 +379,12 @@ Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'M9', 'middleware' => 'permission'], function(){
 	Route::get('index/shipment_schedule', 'ShipmentScheduleController@index');
-	Route::get('create/shipment_schedule', 'ShipmentScheduleController@create');
-	Route::post('create/shipment_schedule', 'ShipmentScheduleController@store');
+	Route::get('fetch/shipment_schedule', 'ShipmentScheduleController@fetchShipment');
+	// Route::get('create/shipment_schedule', 'ShipmentScheduleController@create');
+	Route::post('create/shipment_schedule', 'ShipmentScheduleController@create');
+	Route::get('view/shipment_schedule', 'ShipmentScheduleController@view');
 	Route::get('destroy/shipment_schedule/{id}', 'ShipmentScheduleController@destroy');
-	Route::get('edit/shipment_schedule/{id}', 'ShipmentScheduleController@edit');
+	Route::get('edit/shipment_schedule', 'ShipmentScheduleController@fetchEdit');
 	Route::post('edit/shipment_schedule/{id}', 'ShipmentScheduleController@update');
 	Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
 	Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');
@@ -556,7 +558,9 @@ Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fet
 Route::get('index/middle/display_production_result', 'MiddleProcessController@indexDisplayProductionResult');
 Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fetchDisplayProductionResult');
 
-Route::get('index/middle/display_lcq_ng', 'MiddleProcessController@indexDisplayLcqNg');
+Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
+Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');
+Route::get('fetch/middle/lcq_ng_rate_weekly', 'MiddleProcessController@fetchLcqNgRateWeekly');
 Route::get('fetch/middle/lcq_ng', 'MiddleProcessController@fetchLcqNg');
 Route::get('fetch/middle/lcq_ng_rate', 'MiddleProcessController@fetchLcqNgRate');
 
