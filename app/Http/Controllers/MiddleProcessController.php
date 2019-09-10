@@ -2149,7 +2149,7 @@ class MiddleProcessController extends Controller
 			$printer->setReverseColors(true);					
 		}
 		$printer->text($model." ".$key."\n");
-		$printer->text($barrel_queue->surface."\n\n");
+		$printer->text($surface."\n\n");
 		$printer->initialize();
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->qrCode($tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
