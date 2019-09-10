@@ -40,20 +40,20 @@
 			<form class="form-horizontal" method="get" action="{{ url('simpan') }}">				
 				<div class="box-body">
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Company</label>
+						<label for="inputEmail3" class="col-sm-2 control-label">Asal Perusahaan</label>
 						<div class="col-sm-9">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<input type="text" class="form-control" id="company" name="company" placeholder="Enter Company Name" required>
+							<input type="text" class="form-control" id="company" name="company" placeholder="Input Asal Perusahaan" required>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Purpose</label>
+						<label for="inputEmail3" class="col-sm-2 control-label">Tujuan</label>
 						<div class="col-sm-9">
-							<textarea class="form-control" id="purpose" name="purpose" placeholder="Enter Purposes" required></textarea>
+							<textarea class="form-control" id="purpose" name="purpose" placeholder="Input Tujuan" required></textarea>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Transportation Type</label>
+						<label for="inputEmail3" class="col-sm-2 control-label">Jenis Kendaraan</label>
 						<div class="col-sm-9">
 							{{-- <input type="text" name="lop2" id="lop2" hidden> --}}
 							<select class="form-control select2" id="kendaraan" name="kendaraan" required>								
@@ -66,9 +66,9 @@
 						</div>
 					</div>
 						<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">No Pol</label>
+						<label for="inputEmail3" class="col-sm-2 control-label">Nomor Kendaraan</label>
 						<div class="col-sm-9">
-							<input class="form-control" id="pol" name="pol" placeholder="Enter No Pol" required></input>
+							<input class="form-control" id="pol" name="pol" placeholder="Input Nomor Kendaraan" required></input>
 						</div>
 					</div>
 					<div class="form-group">
@@ -82,11 +82,11 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Employee</label>
+						<label for="inputEmail3" class="col-sm-2 control-label">Karyawan YMPI</label>
 						<div class="col-sm-9">
 							<input type="text" name="lop" id="lop" hidden>
 							<select class="form-control select2" id="status" name="employee" required>
-								<option value="">Select Employee</option>
+								<option value="">Pilih Karyawan YMPI</option>
 								@foreach($employee as $nomor => $employee)
 								<option value="{{$employee->employee_id}}">{{$employee->name}} - ( {{$employee->department}} - {{$employee->shortname}} )</option>
 								@endforeach
@@ -94,7 +94,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">ID/Name <b id="total">(1)</b></label>
+						<label for="inputEmail3" class="col-sm-2 control-label">ID/Nama <b id="total">(1)</b></label>
 						<input type="text" name="lop" id="lop" value="1" hidden>
 
 						<div class="col-sm-2" style="padding-right: 0;">
