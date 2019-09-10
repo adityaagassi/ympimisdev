@@ -383,10 +383,10 @@ Route::group(['nav' => 'M9', 'middleware' => 'permission'], function(){
 	// Route::get('create/shipment_schedule', 'ShipmentScheduleController@create');
 	Route::post('create/shipment_schedule', 'ShipmentScheduleController@create');
 	Route::get('view/shipment_schedule', 'ShipmentScheduleController@view');
-	Route::get('destroy/shipment_schedule/{id}', 'ShipmentScheduleController@destroy');
+	Route::get('delete/shipment_schedule', 'ShipmentScheduleController@delete');
 	Route::get('edit/shipment_schedule', 'ShipmentScheduleController@fetchEdit');
-	Route::post('edit/shipment_schedule/{id}', 'ShipmentScheduleController@update');
-	Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
+	Route::post('edit/shipment_schedule', 'ShipmentScheduleController@edit');
+	// Route::get('show/shipment_schedule/{id}', 'ShipmentScheduleController@show');
 	Route::post('import/shipment_schedule', 'ShipmentScheduleController@import');
 });
 

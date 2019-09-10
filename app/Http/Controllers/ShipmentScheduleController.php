@@ -8,6 +8,8 @@ use App\Material;
 use App\Destination;
 use App\ShipmentCondition;
 use App\ShipmentSchedule;
+use DataTables;
+use Response;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
@@ -52,6 +54,7 @@ class ShipmentScheduleController extends Controller
             'TSNECK',
             'TSPART',
             'VENOVA',
+            'SX'
         ];
     }
     /**
@@ -63,31 +66,42 @@ class ShipmentScheduleController extends Controller
     {
         $shipment_schedules = ShipmentSchedule::orderByRaw('st_date DESC', 'material_number ASC')
         ->get();
+        $materials = Material::orderBy('material_number', 'ASC')->get();
+        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
+        $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();        
 
         return view('shipment_schedules.index', array(
-            'shipment_schedules' => $shipment_schedules
+            'shipment_schedules' => $shipment_schedules,
+            'materials' => $materials,
+            'destinations' => $destinations,
+            'shipment_conditions' => $shipment_conditions,
+            'hpls' => $this->hpl
         ))->with('page', 'Shipment Schedule');
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function fetchShipment()
     {
-        $hpls = $this->hpl;
-        $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();
-        $materials = Material::orderBy('material_number', 'ASC')->get();
-        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
-        return view('shipment_schedules.create', array(
-            'destinations' => $destinations,
-            'materials' => $materials,
-            'shipment_conditions' => $shipment_conditions,
-            'hpls' => $hpls
-        ))->with('page', 'Shipment Schedule');
-        //
+        $shipment_schedules = ShipmentSchedule::leftJoin("materials","materials.material_number","=","shipment_schedules.material_number")
+        ->leftJoin("shipment_conditions","shipment_conditions.shipment_condition_code","=","shipment_schedules.shipment_condition_code")
+        ->leftJoin("destinations","destinations.destination_code","=","shipment_schedules.destination_code")
+        ->leftJoin("weekly_calendars","weekly_calendars.week_date","=","shipment_schedules.st_date")
+        ->select('shipment_schedules.id','shipment_schedules.quantity','shipment_schedules.sales_order','materials.material_description','shipment_conditions.shipment_condition_name',"shipment_schedules.hpl","shipment_schedules.st_date","shipment_schedules.bl_date", DB::raw("DATE_FORMAT(shipment_schedules.st_month, '%b-%Y') as st_month"), "destinations.destination_shortname", "shipment_schedules.material_number", "weekly_calendars.week_name")
+        ->orderByRaw('st_date DESC', 'shipment_schedules.material_number ASC')
+        ->get();
+
+        return DataTables::of($shipment_schedules)
+        ->addColumn('action', function($shipment_schedules){
+            return '
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$shipment_schedules->id.')">View</button>
+            <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$shipment_schedules->id.')">Edit</button>';
+
+            // --- DELETE BUTTON
+            // <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$shipment_schedules->id.',\''.$shipment_schedules->material_number.'\',\''.$shipment_schedules->st_date.'\')">Delete</button>
+        })
+
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
     }
 
     /**
@@ -96,7 +110,7 @@ class ShipmentScheduleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function create(Request $request)
     {
         try
         {
@@ -116,16 +130,31 @@ class ShipmentScheduleController extends Controller
                 'created_by' => $id
             ]);
 
-            $shipment_schedule->save();    
-            return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been created.')->with('page', 'Shipment Schedule');
+            $shipment_schedule->save();
+
+            $response = array(
+                'status' => true
+            );
+
+            return Response::json($response);
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-                return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
+                $response = array(
+                    'status' => false,
+                    'message' => "already exist"
+                );
+
+                return Response::json($response);
             }
             else{
-                return back()->with('error', $e->getMessage())->with('page', 'Shipment Schedule');
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage()
+                );
+
+                return Response::json($response);
             }
         }
     }
@@ -147,27 +176,45 @@ class ShipmentScheduleController extends Controller
         //
     }
 
+    public function view(Request $request)
+    {
+        $query = "select st_month, st_date, sales_order, CONCAT(shipment.material_number,' - ',material_description) material, shipment.quantity, users.`name`, material_description, CONCAT(materials.origin_group_code,' - ',origin_group_name) as origin_group, CONCAT(destinations.destination_code,' - ',destinations.destination_name) as destination, CONCAT(shipment_conditions.shipment_condition_code,' - ',shipment_conditions.shipment_condition_name) shipment_condition, bl_date, weekly_calendars.week_name, shipment.created_at, shipment.hpl, shipment.updated_at from
+        (select st_month, sales_order, shipment_condition_code, destination_code, material_number, hpl, st_date, bl_date, quantity, created_by, created_at, updated_at from shipment_schedules where id = "
+        .$request->get('id').") as shipment
+        left join materials on materials.material_number = shipment.material_number
+        left join destinations on shipment.destination_code = destinations.destination_code
+        left join shipment_conditions on shipment.shipment_condition_code = shipment_conditions.shipment_condition_code
+        left join weekly_calendars on shipment.st_date = weekly_calendars.week_date
+        left join origin_groups on origin_groups.origin_group_code = materials.origin_group_code
+        left join users on shipment.created_by = users.id";
+
+        $shipment = DB::select($query);
+
+        $response = array(
+            'status' => true,
+            'datas' => $shipment
+        );
+
+        return Response::json($response);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function fetchEdit(Request $request)
     {
-        $hpls = $this->hpl;
-        $shipment_conditions = ShipmentCondition::orderBy('shipment_condition_code', 'ASC')->get();
-        $materials = Material::orderBy('material_number', 'ASC')->get();
-        $destinations = Destination::orderBy('destination_code', 'ASC')->get();
-        $shipment_schedule = ShipmentSchedule::find($id);
-        return view('shipment_schedules.edit', array(
-            'destinations' => $destinations,
-            'materials' => $materials,
-            'shipment_conditions' => $shipment_conditions,
-            'shipment_schedule' => $shipment_schedule,
-            'hpls' => $hpls
-        ))->with('page', 'Shipment Schedule');
-        //
+        $shipment_schedule = ShipmentSchedule::select(db::raw("DATE_FORMAT(st_month,'%m/%Y') st_month"),"sales_order","shipment_condition_code","destination_code","material_number","hpl",db::raw("DATE_FORMAT(st_date,'%d/%m/%Y') st_date"),db::raw("DATE_FORMAT(bl_date,'%d/%m/%Y') bl_date"),"quantity")
+        ->find($request->get("id"));
+
+        $response = array(
+            'status' => true,
+            'datas' => $shipment_schedule
+        );
+
+        return Response::json($response);
     }
 
     /**
@@ -177,12 +224,12 @@ class ShipmentScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function edit(Request $request)
     {
         try
         {
             $st_month = date('Y-m-d', strtotime(str_replace('/','-','01/' . $request->get('st_month'))));
-            $shipment_schedule = ShipmentSchedule::find($id);
+            $shipment_schedule = ShipmentSchedule::find($request->get("id"));
 
             $shipment_schedule->st_month = $st_month;
             $shipment_schedule->sales_order = $request->get('sales_order');
@@ -195,15 +242,30 @@ class ShipmentScheduleController extends Controller
             $shipment_schedule->quantity = $request->get('quantity');
             $shipment_schedule->save();
             
-            return redirect('/index/shipment_schedule')->with('status', 'New shipment schedule has been updated.')->with('page', 'Shipment Schedule');
+            $response = array(
+                'status' => true,
+                'datas' => $shipment_schedule
+            );
+
+            return Response::json($response);
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-                return back()->with('error', 'Shipment schedule for preferred data already exist.')->with('page', 'Shipment Schedule');
+                $response = array(
+                    'status' => true,
+                    'datas' => "Shipment Scedule already exist"
+                );
+
+                return Response::json($response);
             }
             else{
-                return back()->with('error', $e->getMessage())->with('page', 'Shipment Schedule');
+                $response = array(
+                    'status' => true,
+                    'datas' => $e->getMessage()
+                );
+
+                return Response::json($response);
             }
         }
     }
@@ -214,20 +276,21 @@ class ShipmentScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Request $request)
     {
         $shipment_schedule = ShipmentSchedule::find($id);
         $shipment_schedule->delete();
 
-        return redirect('/index/shipment_schedule')
-        ->with('status', 'Shipment schedule has been deleted.')
-        ->with('page', 'Shipment Schedule');
-        //
+        $response = array(
+            'status' => true
+        );
+
+        return Response::json($response);
     }
 
     public function import(Request $request)
     {
-     if($request->hasFile('shipment_schedule')){
+       if($request->hasFile('shipment_schedule')){
 
         $id = Auth::id();
 
