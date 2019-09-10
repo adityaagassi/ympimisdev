@@ -240,7 +240,7 @@ table.table-bordered > tfoot > tr > th{
               <h5 class="description-header" style="font-size: 60px;">
                 <span class="description-percentage" id="tot_budget"></span>
               </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span >フォーキャスト累計</span></span>   
+              <span class="description-text" style="font-size: 35px;">Total Budget<br><span>単月予算</span></span>   
             </div>
           </div>
           <div class="col-md-4">
@@ -1106,12 +1106,13 @@ function drawChartOvertimeControl() {
     var seriesDataAktual = [];
     var budgetHarian = [];
     var ctg, tot_act = 0, avg = 0;
-    var tot_day_budget = 0, tot_diff;
+    var tot_day_budget = 0, tot = 0, tot_diff;
 
     for(var i = 0; i < result.report_control.length; i++){
       ctg = result.report_control[i].cost_center_name;
       tot_act += result.report_control[i].act;
       tot_day_budget += result.report_control[i].jam_harian;
+      tot += result.report_control[i].tot;
 
       seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
       seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
@@ -1121,17 +1122,19 @@ function drawChartOvertimeControl() {
      }
    }
 
-   tot_diff = tot_day_budget - tot_act;
+   tot_diff = tot - tot_act;
 
    tot_day_budget = Math.round(tot_day_budget * 100) / 100;
+   tot = Math.round(tot * 100) / 100;
    tot_act = Math.round(tot_act * 100) / 100;
    tot_diff = Math.round(tot_diff * 100) / 100;
 
    var tot_day_budget2 = tot_day_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+   var tot2 = tot.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
    var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
    var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
-   $("#tot_budget").text(tot_day_budget2);
+   $("#tot_budget").text(tot2);
    $("#tot_act").text(tot_act2);
 
    if (tot_diff > 0) {
