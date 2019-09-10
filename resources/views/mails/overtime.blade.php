@@ -93,7 +93,7 @@
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/myhris/management/overtime_control">Overtime By Budget</a><br>
-			<a href="{{ url("/index/report/overtime_section") }}">Overtime By Section</a><br>
+			<a href="http://172.17.128.4/mirai/public/index/report/overtime_section">Overtime By Section</a><br>
 			<a href="http://172.17.128.4/myhris/management/ot_report2">Overtime By All</a>
 		</center>
 	</div>
