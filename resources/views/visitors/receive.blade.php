@@ -99,7 +99,7 @@
 							{{-- <center><b>Visitor List</b></center> --}}<br><br>
 
 							<div class="form-group" >
-								<div class="col-sm-1">
+								<div class="col-sm-2">
 									<b style="font-size: 20px">	ID Number </b>
 								</div>
 								<div class="col-sm-2" >
@@ -114,7 +114,7 @@
 								<div class="col-sm-2" >
 									<b style="font-size: 20px">	Employee </b>
 								</div>
-								<div class="col-sm-2" >
+								<div class="col-sm-1" >
 									<b style="font-size: 20px">	Department </b>
 								</div>
 								<div class="col-sm-2 " >
@@ -144,12 +144,13 @@
 					<table id="visitorlist" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr id="total">
-								<th colspan="6"><b id="totalvi"></b></th>
+								<th colspan="7"><b id="totalvi"></b></th>
 								<th colspan="2">Employee</th>
 								<th colspan="4">Action</th>
 							</tr>
 							<tr>
 								<th >Id</th>
+								<th >Date</th>
 								<th >Company</th>
 								<th >Full Name</th>
 								<th >Total</th>
@@ -167,6 +168,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
+								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -383,7 +385,7 @@
 						"url" : "{{ url("visitor_filllist") }}/asd",
 					},				
 					"columnDefs": [ {
-						"targets": [10],
+						"targets": [11],
 						"createdCell": function (td, cellData, rowData, row, col) {
 							if ( cellData =='Unconfirmed' ) {
 								$(td).css('background-color', 'RGB(255,204,255)')
@@ -404,7 +406,7 @@
 						};
 						var api = this.api();
 
-						var total_diff = api.column(3).data().reduce(function (a, b) {
+						var total_diff = api.column(4).data().reduce(function (a, b) {
 							return intVal(a)+intVal(b);
 						}, 0)
 						$('#totalvi').html("Visitor ( "+total_diff.toLocaleString()+" )");
@@ -412,6 +414,7 @@
 
 					"columns": [
 					{ "data": "id"},
+					{ "data": "created_at2"},
 					{ "data": "company"},
 					{ "data": "full_name"},
 					{ "data": "total"},
@@ -557,7 +560,7 @@
 							$.each(result.ops, function(key, value) {
 
 								if(value.remark =="Unconfirmed"){												 
-									$('#apen').append('<div class="col-xs-12" > <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.id_number +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.full_name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.in_time +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.company +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.name +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.department +'</b> </div> <div class="col-sm-2 " > <div class="input-group margin"> <input type="text" class="form-control" id="'+ value.tag +'" name="visitor_id0" placeholder="Reschedule" required value=""> <span class="input-group-btn"> <button type="button" class="btn btn-success btn-flat" onclick="out('+'\''+ id + '\''+')"><i class="glyphicon glyphicon-calendar"> Input</i> </button> </span> </div> </div> </div>');
+									$('#apen').append('<div class="col-xs-12" > <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.id_number +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.full_name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.in_time +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.company +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.department +'</b> </div> <div class="col-sm-2 " > <div class="input-group margin"> <input type="text" class="form-control" id="'+ value.tag +'" name="visitor_id0" placeholder="Reschedule" required value=""> <span class="input-group-btn"> <button type="button" class="btn btn-success btn-flat" onclick="out('+'\''+ id + '\''+')"><i class="glyphicon glyphicon-calendar"> Input</i> </button> </span> </div> </div> </div>');
 									openErrorGritter('Error!', 'Meet Unconfirmed');
 								}
 								else if(value.remark =="Confirmed"){

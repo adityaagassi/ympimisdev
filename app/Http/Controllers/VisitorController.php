@@ -120,11 +120,11 @@ $employee = DB::select($employees);
 
 	public function filllist($nik)
 	{
+		$id = Auth::id();
 		$date = date('Y-m-d');
-
-		if ($nik !="") {
-			// $where = "where employee = '".$nik."' and DATE_FORMAT(created_at,'%Y-%m-%d')='".$date."'";
-			$where = "where employee = '".$nik."'";
+		if ($nik !="") {			
+			// $where = "where employee = '".$nik."'";
+			$where=" where employee in ( SELECT employee_id from mutation_logs WHERE department in ( SELECT department from mutation_logs WHERE employee_id ='".$nik."' and valid_to is null ) and valid_to is null)";
 		}
 
 		if($nik =="asd"){
@@ -132,7 +132,7 @@ $employee = DB::select($employees);
 		}
 
 		$op="SELECT *,count(DISTINCT(total1)) as total from (
-		select visitors.created_at,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark from visitors
+		select DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark from visitors
 		left join visitor_details on visitors.id = visitor_details.id_visitor
 		LEFT JOIN employees on visitors.employee = employees.employee_id
 		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
