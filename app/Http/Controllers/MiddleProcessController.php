@@ -42,7 +42,7 @@ class MiddleProcessController extends Controller
 	public function indexReportLcqNg(){
 		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
 
-		return view('processes.middle.display.ng_lacquering', array(
+		return view('processes.middle.report.ng_lacquering', array(
 			'title' => 'Report NG Lacquering',
 			'title_jp' => '塗装不良率',
 			'fys' => $fys

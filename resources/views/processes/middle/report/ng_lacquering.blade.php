@@ -357,7 +357,7 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 100,
+							max: 30,
 							min: 0
 						},
 						legend : {
@@ -496,7 +496,7 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 100,
+							max: 30,
 							min: 0
 						},
 						legend : {
