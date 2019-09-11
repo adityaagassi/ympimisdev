@@ -27,7 +27,7 @@
 		-moz-transform-origin: 0 0;
 		position:absolute; 
 		clip:rect(100px,1110px,800px,50px);
-		top:-120px; left:-105px;
+		top:-80px; left:-105px;
 	}
 	
 </style>
