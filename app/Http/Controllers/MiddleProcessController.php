@@ -44,7 +44,7 @@ class MiddleProcessController extends Controller
 
 		return view('processes.middle.display.ng_lacquering', array(
 			'title' => 'Report NG Lacquering',
-			'title_jp' => '??',
+			'title_jp' => '塗装不良率',
 			'fys' => $fys
 		))->with('page', 'NG Lacquering');
 	}
@@ -54,15 +54,15 @@ class MiddleProcessController extends Controller
 		$locations = $this->location;
 
 		return view('processes.middle.display.production_result', array(
-			'title' => 'Production Result ',
-			'title_jp' => '??',
+			'title' => 'Middle Production Result',
+			'title_jp' => '中間工程生産実績',
 			'locations' => $locations
 		))->with('page', 'Production Result');
 	}
 
 	public function indexReportNG(){
-		$title = 'Not Good';
-		$title_jp = '(??)';
+		$title = 'Not Good Record';
+		$title_jp = '不良内容';
 		$locations = $this->location;
 
 		return view('processes.middle.report.not_good', array(
@@ -73,8 +73,8 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexReportProductionResult(){
-		$title = 'Production Result';
-		$title_jp = '(??)';
+		$title = 'Production Result Record';
+		$title_jp = '生産実績';
 		$locations = $this->location;
 
 		return view('processes.middle.report.production_result', array(
@@ -529,11 +529,11 @@ class MiddleProcessController extends Controller
 		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%'
+		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
 		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
-		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%'
+		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$daily = db::select($query);
 		$bulan = substr($bulan,39,7);
@@ -1104,6 +1104,15 @@ class MiddleProcessController extends Controller
 							'location' => 'barrel',
 						];
 
+						// DB::connection("digital_kanban")
+						// ->table('buffing_queues')
+						// ->insert(
+						// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
+						// 		'material_num' => $barrel_queue->material_number,
+						// 		'created_by' => $id,
+						// 		'material_qty' => $barrel_queue->quantity)
+						// );
+
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
 						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
@@ -1197,6 +1206,15 @@ class MiddleProcessController extends Controller
 							'location' => 'barrel',
 						];
 
+						// DB::connection("digital_kanban")
+						// ->table('buffing_queues')
+						// ->insert(
+						// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
+						// 		'material_num' => $barrel_queue->material_number,
+						// 		'created_by' => $id,
+						// 		'material_qty' => $barrel_queue->quantity)
+						// );
+
 						$printer->setJustification(Printer::JUSTIFY_CENTER);
 						$printer->setTextSize(1,1);
 						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
@@ -1286,6 +1304,15 @@ class MiddleProcessController extends Controller
 						'location' => 'barrel',
 					];
 
+					// DB::connection("digital_kanban")
+					// ->table('buffing_queues')
+					// ->insert(
+					// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
+					// 		'material_num' => $barrel_queue->material_number,
+					// 		'created_by' => $id,
+					// 		'material_qty' => $barrel_queue->quantity)
+					// );
+
 					$barrel_log = new BarrelLog($insert_log);
 					$delete_queue = BarrelQueue::where('tag', '=', $queue->tag);
 
@@ -1372,6 +1399,15 @@ class MiddleProcessController extends Controller
 						'quantity' => $barrel_queue->quantity,
 						'location' => 'barrel',
 					];
+
+					// DB::connection("digital_kanban")
+					// ->table('buffing_queues')
+					// ->insert(
+					// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
+					// 		'material_num' => $barrel_queue->material_number,
+					// 		'created_by' => $id,
+					// 		'material_qty' => $barrel_queue->quantity)
+					// );
 
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setTextSize(1,1);
@@ -2200,5 +2236,25 @@ class MiddleProcessController extends Controller
 		$printer->text($qr_machine."\n\n");
 		$printer->cut();
 		$printer->close();
+	}
+
+	public function fetchBuffing(Request $request)
+	{
+		$tags = db::connection('digital_kanban')
+		->table('buffing_inventories')
+		->select('material_num','operator_id')
+		->where('material_tag_id','=', $request->get("tag"))
+		->first();
+
+		$material = Material::select("model","key")
+		->where("material_number","=",$tags->material_num)
+		->first();
+
+		$response = array(
+			'status' => true,
+			'datas' => $tags,
+			'material' => $material
+		);
+		return Response::json($response);
 	}
 }

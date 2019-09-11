@@ -174,7 +174,7 @@
 		$('.select2').select2();
 
 		drawChart();
-		// setInterval(drawChart, 18000);
+		setInterval(drawChart, 60000);
 	});
 
 	function change() {
@@ -209,6 +209,7 @@
 		$.get('{{ url("fetch/middle/lcq_ng_rate_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					$('#body_monthly').append().empty();
 					var fy = result.fy;
 					var tgl = [];
 					var target = [];
@@ -256,7 +257,7 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 100,
+							max: 30,
 							min: 0
 						},
 						legend : {
@@ -281,7 +282,8 @@
 							line: {
 								marker: {
 									enabled: false
-								}
+								},
+								dashStyle: 'ShortDash'
 							}
 						},credits: {
 							enabled: false
@@ -307,6 +309,7 @@
 		$.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					$('#body_weekly').append().empty();
 					var bulan = result.bulan;
 					var week_name = [];
 					var ng = [];
@@ -328,10 +331,6 @@
 						ng_rate_weekly.push(ng_rate[i]);
 					}
 
-					console.log(ng);
-					console.log(perolehan);
-					console.log(ng_rate);
-
 					var body = "";
 					for (var i = 0; i < result.weekly.length; i++) {
 						body += "<tr>";
@@ -341,9 +340,7 @@
 						body += "<td>"+ng_rate_weekly[i].toFixed(2)+"%</td>";
 						body += "</tr>";
 					}
-					$('#body_weekly').append(body);
-
-					console.log(body);		
+					$('#body_weekly').append(body);	
 
 					Highcharts.chart('chart1', {
 						chart: {

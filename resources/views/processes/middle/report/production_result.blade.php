@@ -48,7 +48,7 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-header">
-					<h3 class="box-title">Production Result Filters <span class="text-purple">(?)</span></h3>
+					<h3 class="box-title">Filters <span class="text-purple"></span></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
