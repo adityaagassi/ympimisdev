@@ -10,7 +10,7 @@ class Barrel extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'machine', 'jig', 'tag', 'material_number', 'qty', 'status', 'finish_racking', 'finish_queue', 'remark', 'created_by', 'key'
+		'machine', 'jig', 'tag', 'material_number', 'qty', 'status', 'finish_racking', 'finish_queue', 'remark', 'created_by', 'key', 'remark2'
 	];
 
 	public function user()
