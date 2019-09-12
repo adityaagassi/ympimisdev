@@ -78,6 +78,16 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
+			<div class="progress-group" id="progress_div">
+				<div class="progress" style="height: 50px; border-style: solid;border-width: 1px;padding: 1px; border-color: #d3d3d3;margin-bottom: 0.5%">
+					<span class="progress-text" id="progress_text_production" style="font-size: 25px; padding-top: 10px;"></span>
+					<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_production" style="font-size: 30px; padding-top: 10px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
 			<div class="box box-widget">
 				<div class="box-footer">
 					<div class="row" id="resume"></div>
@@ -125,6 +135,9 @@
 	}
 
 	function fillChart(){
+		var now = new Date();
+		var now_tgl = addZero(now.getFullYear())+'-'+addZero(now.getMonth()+1)+'-'+addZero(now.getDate());
+
 		var hpl = $('#hpl').val();
 		var data = {
 			hpl:hpl,
@@ -135,6 +148,75 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
+
+					// Progres bar jam kerja/hari
+					if(now.getHours() < 7){
+						$('#progress_bar_production').append().empty();
+						$('#progress_text_production').html("Today's Working Time : 0%");
+						$('#progress_bar_production').css('width', '0%');
+						$('#progress_bar_production').css('color', 'white');
+						$('#progress_bar_production').css('font-weight', 'bold');
+					}
+					else if((now.getHours() >= 16) && (now.getDay() != 5)){
+						$('#progress_text_production').append().empty();
+						$('#progress_bar_production').html("Today's Working Time : 100%");
+						$('#progress_bar_production').css('width', '100%');
+						$('#progress_bar_production').css('color', 'white');
+						$('#progress_bar_production').css('font-weight', 'bold');
+						$('#progress_bar_production').removeClass('active');
+					}
+					else if(now.getDay() == 5){
+						$('#progress_text_production').append().empty();
+						var total = 570;
+						var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+						var persen = (now_menit/total) * 100;
+						if(now.getHours() >= 7 && now_menit < total){
+							if(persen > 24){
+								if(persen > 32){
+									$('#progress_bar_production').html("Today's Working Time : "+persen.toFixed(2)+"%");
+								}
+								else{
+									$('#progress_bar_production').html("Working Time : "+persen.toFixed(2)+"%");
+								}	
+							}
+							else{
+								$('#progress_bar_production').html(persen.toFixed(2)+"%");
+							}
+							$('#progress_bar_production').css('width', persen+'%');
+							$('#progress_bar_production').addClass('active');
+
+						}
+						else if(now_menit >= total){
+							$('#progress_bar_production').html("Today's Working Time : 100%");
+							$('#progress_bar_production').css('width', '100%');
+							$('#progress_bar_production').removeClass('active');
+
+						}
+						$('#progress_bar_production').css('color', 'white');
+						$('#progress_bar_production').css('font-weight', 'bold');
+					}
+					else{
+						$('#progress_text_production').append().empty();
+						var total = 540;
+						var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
+						var persen = (now_menit/total) * 100;
+						if(persen > 24){
+							if(persen > 32){
+								$('#progress_bar_production').html("Today's Working Time : "+persen.toFixed(2)+"%");
+							}
+							else{
+								$('#progress_bar_production').html("Working Time : "+persen.toFixed(2)+"%");
+							}	
+						}
+						else{
+							$('#progress_bar_production').html(persen.toFixed(2)+"%");
+						}
+						$('#progress_bar_production').css('width', persen+'%');
+						$('#progress_bar_production').css('color', 'white');
+						$('#progress_bar_production').css('font-weight', 'bold');
+						$('#progress_bar_production').addClass('active');
+					}
+					
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					var data = result.tableData;
 					var xAxis = []
@@ -257,34 +339,45 @@
 
 					if(totalActual-totalPlan < 0){
 						totalCaret = '<span class="text-red"><i class="fa fa-caret-down"></i>';
+						persenColor = '<span class="text-red">';
 					}
 					if(totalActual-totalPlan > 0){
 						totalCaret = '<span class="text-yellow"><i class="fa fa-caret-up"></i>';
+						persenColor = '<span class="text-yellow">';
 					}
 					if(totalActual-totalPlan == 0){
 						totalCaret = '<span class="text-green">&#9679;';
+						persenColor = '<span class="text-green">&#9679;';
 					}
 
 					$('#resume').html("");
 					var resumeData = '';
-					resumeData += '<div class="col-sm-4 col-xs-6">';
+					resumeData += '<div class="col-sm-3 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
 					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-blue">'+ totalPlan.toLocaleString() +'</span></h5>';
 					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Plan<br><span class="text-purple">計画の集計</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
-					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '	<div class="col-sm-3 col-xs-6">';
 					resumeData += '		<div class="description-block border-right">';
 					resumeData += '			<h5 class="description-header" style="font-size: 60px;"><span class="description-percentage text-purple">'+ totalActual.toLocaleString() +'</span></h5>';
 					resumeData += '			<span class="description-text" style="font-size: 35px;">Total Actual<br><span class="text-purple">実績の集計</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
-					resumeData += '	<div class="col-sm-4 col-xs-6">';
+					resumeData += '	<div class="col-sm-3 col-xs-6">';
 					resumeData += '		<div class="description-block">';
 					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ totalCaret + '' +Math.abs(totalActual-totalPlan).toLocaleString() +'</span></h5>';
 					resumeData += '			<span class="description-text" style="font-size: 35px;">Difference<br><span class="text-purple">差異</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
+					// start add percentage
+					resumeData += '	<div class="col-sm-3 col-xs-6">';
+					resumeData += '		<div class="description-block">';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ persenColor + ''+ Math.abs((totalActual/totalPlan)*100).toLocaleString() +'%</span></h5>';
+					resumeData += '			<span class="description-text" style="font-size: 35px;">Percentage(%)<br><span class="text-purple">差異実績</span></span>';
+					resumeData += '		</div>';
+					resumeData += '	</div>';
+					// end add percentage
 					$('#resume').append(resumeData);
 					setTimeout(fillChart, 1000);
 				}
