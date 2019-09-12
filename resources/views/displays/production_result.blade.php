@@ -373,7 +373,7 @@
 					// start add percentage
 					resumeData += '	<div class="col-sm-3 col-xs-6">';
 					resumeData += '		<div class="description-block">';
-					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ persenColor + ''+ Math.abs((totalActual/totalPlan)*100).toLocaleString() +'%</span></h5>';
+					resumeData += '			<h5 class="description-header" style="font-size: 60px;">'+ persenColor + ''+ Math.abs((totalActual/totalPlan)*100).toFixed(2) +'%</span></h5>';
 					resumeData += '			<span class="description-text" style="font-size: 35px;">Percentage(%)<br><span class="text-purple">差異実績</span></span>';
 					resumeData += '		</div>';
 					resumeData += '	</div>';
