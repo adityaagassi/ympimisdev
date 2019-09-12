@@ -39,6 +39,13 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexReportBuffingNg(){
+		return view('processes.middle.report.ng_buffing', array(
+			'title' => 'Report NG Buffing',
+			'title_jp' => '(??)'
+		))->with('page', 'NG Buffing');	
+	}
+
 	public function indexReportLcqNg(){
 		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
 
@@ -412,12 +419,12 @@ class MiddleProcessController extends Controller
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
+		where m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) b on a.week_date = b.tgl
 		left join
 		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
+		where m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) c on a.week_date = c.tgl
 		GROUP BY a.week_name";
 		$weekly = db::select($query);
@@ -453,12 +460,12 @@ class MiddleProcessController extends Controller
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%'
+		where m.surface not like '%PLT%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
 		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where location = 'lcq-incoming' and m.surface not like '%PLT%'
+		where m.surface not like '%PLT%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$monthly = db::select($query);
 
@@ -497,7 +504,7 @@ class MiddleProcessController extends Controller
 
 		$query = "select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
 		left join materials m on l.material_number = m.material_number
-		where ".$bulan." l.location = 'lcq-incoming' and m.surface not like '%PLT%' group by l.ng_name order by jml desc";
+		where ".$bulan." m.surface not like '%PLT%' group by l.ng_name order by jml desc";
 		$ng = db::select($query);
 		$bulan = substr($bulan,37,7);
 
@@ -529,11 +536,11 @@ class MiddleProcessController extends Controller
 		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
+		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join		
 		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
-		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
+		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$daily = db::select($query);
 		$bulan = substr($bulan,39,7);
@@ -1053,419 +1060,27 @@ class MiddleProcessController extends Controller
 	}
 
 	public function printMiddleBarrel(Request $request){
-		$count = BarrelQueue::count();
-		if($count >= 64 && ($count-count($request->get('tag'))) < 64){
-			try{
-				self::sendEmailMinQueue();				
-			}
-			catch(\Exception $e){
-			}
-		}
-
 		$id = Auth::id();
-
-		if(Auth::user()->role_code == "OP-Barrel-SX"){
-			$printer_name = 'Barrel-Printer';
-		}
-		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
-			$printer_name = 'MIS';
-		}
-
-		$connector = new WindowsPrintConnector($printer_name);
-		$printer = new Printer($connector);
+		$tags = $request->get('tag');
 
 		if($request->get('surface') == 'LCQ'){
-			if($request->get('code') == 'FLANEL'){
-				try{
-					$tags = $request->get('tag');
-
-					foreach ($tags as $tag) {
-						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.hpl', 'materials.model', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
-						->first();
-
-						$insert_jig = [
-							'machine' => $request->get('code'),
-							'jig' => 0,
-							'key' => $barrel_queue->key,
-							'tag' => $tag[0],
-							'material_number' => $barrel_queue->material_number,
-							'qty' => $barrel_queue->quantity,
-							'status' => $request->get('code'),
-							'remark' => $request->get('code'),
-							'created_by' => $id
-						];
-
-						$insert_inventory = [
-							'tag' => $tag[0],
-							'material_number' => $barrel_queue->material_number,
-							'quantity' => $barrel_queue->quantity,
-							'location' => 'barrel',
-						];
-
-						// DB::connection("digital_kanban")
-						// ->table('buffing_queues')
-						// ->insert(
-						// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
-						// 		'material_num' => $barrel_queue->material_number,
-						// 		'created_by' => $id,
-						// 		'material_qty' => $barrel_queue->quantity)
-						// );
-
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
-						$printer->setTextSize(4,4);
-						$printer->setUnderline(true);
-						$printer->text('LACQUERING'."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(5,2);
-						if($barrel_queue->hpl == 'TSKEY'){
-							$printer->setEmphasis(true);
-							$printer->setReverseColors(true);					
-						}
-						$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
-						$printer->text($barrel_queue->surface."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel_queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel_queue->tag."\n\n");
-						$printer->initialize();
-						$printer->setTextSize(1,1);
-						$printer->text("GMC : ".$barrel_queue->material_number."\n");
-						$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('code')."\n");
-						$printer->cut(Printer::CUT_PARTIAL, 50);
-						$printer->close();
-
-						$barrel = new Barrel($insert_jig);
-						$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
-
-						$middle_inventory = MiddleInventory::firstOrcreate(
-							[
-								'tag' => $tag[0]
-							],
-							$insert_inventory
-						);
-
-						DB::transaction(function() use ($barrel, $delete_queue){
-							$barrel->save();
-							$delete_queue->forceDelete();
-						});
-
-					}
-
-					$response = array(
-						'status' => true,
-						'message' => 'New kanban has been printed',
-						'tes' => $tags,
-					);
-					return Response::json($response);
-				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => $e->getMessage(),
-					);
-					return Response::json($response);
-				}
-			}
-			else{
-				$code_generator = CodeGenerator::where('note','=','barrel_machine')->first();
-				$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
-				$qr_machine = $code_generator->prefix . $number;
-				try{
-					$tags = $request->get('tag');
-					$code_generator->index = $code_generator->index+1;
-					$code_generator->save();
-
-					foreach ($tags as $tag) {
-						$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-						->where('barrel_queues.tag', '=', $tag[0])
-						->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.surface', 'materials.hpl', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
-						->first();
-
-						$insert_jig = [
-							'machine' => $request->get('no_machine'),
-							'jig' => $tag[1],
-							'key' => $barrel_queue->key,
-							'tag' => $tag[0],
-							'material_number' => $barrel_queue->material_number,
-							'qty' => $barrel_queue->quantity,
-							'status' => 'racking',
-							'remark' => $qr_machine,
-							'created_by' => $id
-						];
-
-						$insert_inventory = [
-							'tag' => $tag[0],
-							'material_number' => $barrel_queue->material_number,
-							'quantity' => $barrel_queue->quantity,
-							'location' => 'barrel',
-						];
-
-						// DB::connection("digital_kanban")
-						// ->table('buffing_queues')
-						// ->insert(
-						// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
-						// 		'material_num' => $barrel_queue->material_number,
-						// 		'created_by' => $id,
-						// 		'material_qty' => $barrel_queue->quantity)
-						// );
-
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(1,1);
-						$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
-						$printer->setTextSize(4,4);
-						$printer->setUnderline(true);
-						$printer->text('LACQUERING'."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(5,2);
-						if($barrel_queue->hpl == 'TSKEY'){
-							$printer->setEmphasis(true);
-							$printer->setReverseColors(true);					
-						}
-						$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
-						$printer->text($barrel_queue->surface."\n\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel_queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel_queue->tag."\n\n");
-						$printer->initialize();
-						$printer->setTextSize(1,1);
-						$printer->text("GMC : ".$barrel_queue->material_number."                           ".$qr_machine."\n");
-						$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-						$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('no_machine')." JIG: ".$tag[1]."\n");
-						$printer->cut(Printer::CUT_PARTIAL, 50);
-						$printer->close();
-
-						$barrel = new Barrel($insert_jig);
-						$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
-
-						$middle_inventory = MiddleInventory::firstOrcreate(
-							[
-								'tag' => $tag[0]
-							],
-							$insert_inventory
-						);
-
-						DB::transaction(function() use ($barrel, $delete_queue){
-							$barrel->save();
-							$delete_queue->forceDelete();
-						});
-
-					}
-
-					$response = array(
-						'status' => true,
-						'message' => 'New id slip for lacquering has been printed',
-					);
-					return Response::json($response);
-				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => "ERROR : ".$e->getMessage(),
-					);
-					return Response::json($response);
-				}
-			}
 		}
 		elseif($request->get('surface') == 'PLT'){
-			$tags = $request->get('tag');
-
-			try{
-
-				foreach ($tags as $tag) {
-
-					$queue = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
-					->where('barrel_queues.tag', '=', $tag[0])
-					// ->whereIn('barrel_queues.tag', $request->get('tag'))
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.hpl', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
-					->first();
-
-					$insert_log = [
-						'machine' => 'PLT',
-						'tag' => $queue->tag,
-						'material' => $queue->material_number,
-						'qty' => $queue->quantity,
-						'status' => 'plt',
-						'started_at' => date('Y-m-d H:i:s'),
-						'created_by' => $id,
-					];
-
-					$insert_inventory = [
-						'tag' => $queue->tag,
-						'material_number' => $queue->material_number,
-						'quantity' => $queue->quantity,
-						'location' => 'barrel',
-					];
-
-					// DB::connection("digital_kanban")
-					// ->table('buffing_queues')
-					// ->insert(
-					// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
-					// 		'material_num' => $barrel_queue->material_number,
-					// 		'created_by' => $id,
-					// 		'material_qty' => $barrel_queue->quantity)
-					// );
-
-					$barrel_log = new BarrelLog($insert_log);
-					$delete_queue = BarrelQueue::where('tag', '=', $queue->tag);
-
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '. date('d-M-Y H:i:s')." ".$queue->remark."\n");
-					$printer->setTextSize(4,4);
-					$printer->setUnderline(true);
-					$printer->text('PLATING'."\n\n");
-					$printer->initialize();
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setTextSize(5,2);
-					if($queue->hpl == 'TSKEY'){
-						$printer->setEmphasis(true);
-						$printer->setReverseColors(true);					
-					}
-					$printer->text($queue->model." ".$queue->key."\n");
-					$printer->text($queue->surface."\n\n");
-					$printer->initialize();
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->qrCode($queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-					$printer->text($queue->tag."\n\n");
-					$printer->initialize();
-					$printer->setTextSize(1,1);
-					$printer->text("GMC : ".$queue->material_number."\n");
-					$printer->text("DESC: ".$queue->material_description."\n");
-					$printer->text("QTY : ".$queue->quantity." PC(S)"."\n");
-					$printer->cut(Printer::CUT_PARTIAL, 50);
-					$printer->close();
-
-					$middle_inventory = MiddleInventory::firstOrcreate(
-						[
-							'tag' => $queue->tag
-						],
-						$insert_inventory
-					);
-
-					DB::transaction(function() use ($barrel_log, $delete_queue){
-						$barrel_log->save();
-						$delete_queue->forceDelete();
-					});
-				}
-
-				$response = array(
-					'status' => true,
-					'message' => 'New ID slip for plating has been printed',
-				);
-				return Response::json($response);
-			}
-			catch(\Exception $e){
-				$response = array(
-					'status' => false,
-					'message' => $e->getMessage(),
-				);
-				return Response::json($response);
-			}			
 		}
-
 		elseif($request->get('surface') == 'FLANEL'){
-			try{
-				$tags = $request->get('tag');
-
-				foreach ($tags as $tag) {
-					$barrel_queue = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')
-					->where('barrel_queues.tag', '=', $tag[0])
-					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.key', 'materials.model', 'materials.hpl', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
-					->first();
-
-					$insert_jig = [
-						'machine' => $request->get('code'),
-						'jig' => 0,
-						'key' => $barrel_queue->key,
-						'tag' => $tag[0],
-						'material_number' => $barrel_queue->material_number,
-						'qty' => $barrel_queue->quantity,
-						'status' => $request->get('code'),
-						'remark' => $request->get('code'),
-						'created_by' => $id
-					];
-
-					$insert_inventory = [
-						'tag' => $tag[0],
-						'material_number' => $barrel_queue->material_number,
-						'quantity' => $barrel_queue->quantity,
-						'location' => 'barrel',
-					];
-
-					// DB::connection("digital_kanban")
-					// ->table('buffing_queues')
-					// ->insert(
-					// 	array('rack' => 'SXKEY-'.substr($barrel_queue->key, 0, 1),
-					// 		'material_num' => $barrel_queue->material_number,
-					// 		'created_by' => $id,
-					// 		'material_qty' => $barrel_queue->quantity)
-					// );
-
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setTextSize(1,1);
-					$printer->text('ID SLIP '.date('d-M-Y H:i:s')." ".$barrel_queue->remark."\n");
-					$printer->setTextSize(4,4);
-					$printer->setUnderline(true);
-					$printer->text('LACQUERING'."\n\n");
-					$printer->initialize();
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->setTextSize(5,2);
-					if($barrel_queue->hpl == 'TSKEY'){
-						$printer->setEmphasis(true);
-						$printer->setReverseColors(true);					
-					}
-					$printer->text($barrel_queue->model." ".$barrel_queue->key."\n");
-					$printer->text($barrel_queue->surface."\n\n");
-					$printer->initialize();
-					$printer->setJustification(Printer::JUSTIFY_CENTER);
-					$printer->qrCode($barrel_queue->tag, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-					$printer->text($barrel_queue->tag."\n\n");
-					$printer->initialize();
-					$printer->setTextSize(1,1);
-					$printer->text("GMC : ".$barrel_queue->material_number."\n");
-					$printer->text("DESC: ".$barrel_queue->material_description."\n");	
-					$printer->text("QTY : ".$barrel_queue->quantity." PC(S)                 MACHINE: ".$request->get('code')."\n");
-					$printer->cut(Printer::CUT_PARTIAL, 50);
-					$printer->close();
-
-					$barrel = new Barrel($insert_jig);
-					$delete_queue = BarrelQueue::where('tag', '=', $tag[0]);
-
-					$middle_inventory = MiddleInventory::firstOrcreate(
-						[
-							'tag' => $tag[0]
-						],
-						$insert_inventory
-					);
-
-					DB::transaction(function() use ($barrel, $delete_queue){
-						$barrel->save();
-						$delete_queue->forceDelete();
-					});
-
-				}
-
-				$response = array(
-					'status' => true,
-					'message' => 'New kanban has been printed',
-					'tes' => $tags,
-				);
-				return Response::json($response);
+			foreach ($tags as $tag) {
+				$barrel = new Barrel([
+					'machine' => $request->get('code'),
+					'jig' => 0,
+					'tag' => $tag[0],
+					'status' => $request->get('code'),
+					'remark' => $request->get('code'),
+					'created_by' => $id
+				]);
+				$barrel->save();
 			}
-			catch(\Exception $e){
-				$response = array(
-					'status' => false,
-					'message' => $e->getMessage(),
-				);
-				return Response::json($response);
+			foreach ($tags as $tag) {
+				DB::statement("update barrels left join barrel_queues on barrel_queues.tag = '".$tag[0]."'");
 			}
 		}
 	}
@@ -2242,7 +1857,7 @@ class MiddleProcessController extends Controller
 	{
 		$tags = db::connection('digital_kanban')
 		->table('buffing_inventories')
-		->select('material_num','operator_id')
+		->select('material_num','operator_id',"material_tag_id")
 		->where('material_tag_id','=', $request->get("tag"))
 		->first();
 
@@ -2250,11 +1865,54 @@ class MiddleProcessController extends Controller
 		->where("material_number","=",$tags->material_num)
 		->first();
 
+		$operator = Employee::select("name")
+		->where("employee_id","=",$tags->operator_id)
+		->first();
+
 		$response = array(
 			'status' => true,
 			'datas' => $tags,
-			'material' => $material
+			'material' => $material,
+			'operator' => $operator
 		);
 		return Response::json($response);
+	}
+
+	public function inputBuffingKensa(Request $request)
+	{
+		if($request->get('ng')){
+			foreach ($request->get('ng') as $ng) {
+				$middle_ng_log = new MiddleNgLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
+					'material_number' => $request->get('material_number'),
+					'ng_name' => $ng[0],
+					'quantity' => $ng[1],
+					'location' => $request->get('loc'),
+				]);
+
+				try{
+					$middle_ng_log->save();
+				}
+				catch(\Exception $e){
+					$response = array(
+						'status' => false,
+						'message' => $e->getMessage(),
+					);
+					return Response::json($response);
+				}
+			}
+			$response = array(
+				'status' => true,
+				'message' => 'NG has been recorded.',
+			);
+			return Response::json($response);
+		} else {
+			$response = array(
+				'status' => true,
+				'message' => 'NG Kosong'
+			);
+			return Response::json($response);
+		}
 	}
 }

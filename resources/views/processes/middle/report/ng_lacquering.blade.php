@@ -257,7 +257,6 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 30,
 							min: 0
 						},
 						legend : {
@@ -357,7 +356,6 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 30,
 							min: 0
 						},
 						legend : {
@@ -416,8 +414,8 @@
 							categories: ng_name,
 							labels: {
 								style: {
-									textOverflow: 'ellipsis'
-								}
+									textOverflow: 'ellipsis',
+								},
 							}
 						},
 						yAxis: {
@@ -429,8 +427,8 @@
 							enabled: false
 						},
 						tooltip: {
-							headerFormat: '',
-							pointFormat: '<span style="color:{point.color}">Not Good {point.category}</span>: <b>{point.y}</b> <br/>'
+							headerFormat: '<span>Not Good</span><br/>',
+							pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y}</b> <br/>'
 						},
 						plotOptions: {
 							series: {
@@ -496,7 +494,6 @@
 							title: {
 								text: 'NG Rate (%)'
 							},
-							max: 30,
 							min: 0
 						},
 						legend : {
