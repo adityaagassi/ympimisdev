@@ -393,7 +393,7 @@ public function filldisplay($nik)
 		$where=" WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='".$kurang."' and DATE_FORMAT(created_at,'%Y-%m-%d')<='".$tgl2."' ";
 	}
 
-	$op="SELECT *,count(total1) as total from (
+	$op="SELECT *,count(DISTINCT(total1)) as total from (
 	select visitors.reason,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark, visitors.created_at, DATE_FORMAT(visitors.created_at,'%Y-%m-%d')as tgl from visitors
 	left join visitor_details on visitors.id = visitor_details.id_visitor
 	LEFT JOIN employees on visitors.employee = employees.employee_id
