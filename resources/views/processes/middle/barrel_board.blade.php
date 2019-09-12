@@ -514,10 +514,10 @@
 				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 1){
 					tslcqreset1 += parseInt(value.qty);
 				}
-				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 1){
+				if(value.hpl == 'ASKEY' && value.status.toLowerCase() == 'plt' && value.shift == 1){
 					aspltreset1 += parseInt(value.qty);
 				}
-				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 1){
+				if(value.hpl == 'TSKEY' && value.status.toLowerCase() == 'plt' && value.shift == 1){
 					tspltreset1 += parseInt(value.qty);
 				}
 
@@ -527,10 +527,10 @@
 				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 2){
 					tslcqreset2 += parseInt(value.qty);
 				}
-				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 2){
+				if(value.hpl == 'ASKEY' && value.status.toLowerCase() == 'plt' && value.shift == 2){
 					aspltreset2 += parseInt(value.qty);
 				}
-				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 2){
+				if(value.hpl == 'TSKEY' && value.status.toLowerCase() == 'plt' && value.shift == 2){
 					tspltreset2 += parseInt(value.qty);
 				}
 
@@ -540,10 +540,10 @@
 				if(value.hpl == 'TSKEY' && value.status == 'reset' && value.shift == 3){
 					tslcqreset3 += parseInt(value.qty);
 				}
-				if(value.hpl == 'ASKEY' && value.status == 'plt' && value.shift == 3){
+				if(value.hpl == 'ASKEY' && value.status.toLowerCase() == 'plt' && value.shift == 3){
 					aspltreset3 += parseInt(value.qty);
 				}
-				if(value.hpl == 'TSKEY' && value.status == 'plt' && value.shift == 3){
+				if(value.hpl == 'TSKEY' && value.status.toLowerCase() == 'plt' && value.shift == 3){
 					tspltreset3 += parseInt(value.qty);
 				}
 			});
