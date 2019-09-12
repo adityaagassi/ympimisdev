@@ -419,6 +419,7 @@
 							}
 						},
 						yAxis: {
+							type: 'logarithmic',
 							title: {
 								text: 'Total Not Good'
 							}
