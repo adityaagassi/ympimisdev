@@ -27,6 +27,7 @@ use App\MiddleLog;
 use App\Material;
 use App\Employee;
 use App\Mail\SendEmail;
+use App\RfidBuffingInventory;
 use Illuminate\Support\Facades\Mail;
 
 class MiddleProcessController extends Controller
@@ -43,7 +44,7 @@ class MiddleProcessController extends Controller
 		return view('processes.middle.report.ng_buffing', array(
 			'title' => 'Report NG Buffing',
 			'title_jp' => '(??)'
-		))->with('page', 'NG Buffing');	
+		))->with('page', 'NG Buffing');
 	}
 
 	public function indexReportLcqNg(){
@@ -56,7 +57,7 @@ class MiddleProcessController extends Controller
 		))->with('page', 'NG Lacquering');
 	}
 
-	
+
 	public function indexDisplayProductionResult(){
 		$locations = $this->location;
 
@@ -120,7 +121,7 @@ class MiddleProcessController extends Controller
 	public function indexProcessBarrelMachine(){
 		$title = 'Saxophone Barrel Machine';
 		$title_jp = 'サックスのバレル機';
-		
+
 		return view('processes.middle.barrel_machine', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -135,7 +136,7 @@ class MiddleProcessController extends Controller
 			$mrpc = 'S51';
 			$hpl = 'ASKEY,TSKEY';
 		}
-		
+
 		return view('processes.middle.barrel_board', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -231,14 +232,14 @@ class MiddleProcessController extends Controller
 
 		$title = 'Buffing Kensa';
 		$title_jp = "";
-		
+
 		return view('processes.middle.buffing_kensa', array(
 			'ng_lists' => $ng_lists,
 			'loc' => $id,
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Buffing Kensa')->with('head', 'Middle Process');
-		
+
 	}
 
 	public function indexProcessMiddleKensa($id){
@@ -279,7 +280,7 @@ class MiddleProcessController extends Controller
 		$title_jp = '??';
 		$mrpc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
-		
+
 		return view('processes.middle.barrel_adjustment', array(
 			'title' => $title,
 			'mrpc' => $mrpc,
@@ -293,7 +294,7 @@ class MiddleProcessController extends Controller
 		$title_jp = '??';
 		$mrpc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
-		
+
 		return view('processes.middle.wip_adjustment', array(
 			'title' => $title,
 			'mrpc' => $mrpc,
@@ -333,13 +334,13 @@ class MiddleProcessController extends Controller
 		GROUP BY m.`key`, m.model) s3
 		on a.keymodel = s3.keymodel
 		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
 		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' ".$addlocation."
 		GROUP BY m.`key`, m.model) s1
 		on a.keymodel = s1.keymodel
 		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
 		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' ".$addlocation."
 		GROUP BY m.`key`, m.model) s2
@@ -356,13 +357,13 @@ class MiddleProcessController extends Controller
 		GROUP BY m.`key`, m.model) s3
 		on a.keymodel = s3.keymodel
 		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
 		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' ".$addlocation."
 		GROUP BY m.`key`, m.model) s1
 		on a.keymodel = s1.keymodel
 		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l 
+		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 		left join materials m on l.material_number = m.material_number
 		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' ".$addlocation."
 		GROUP BY m.`key`, m.model) s2
@@ -414,17 +415,17 @@ class MiddleProcessController extends Controller
 			$bulan = date('m-Y');
 		}
 
-		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from 
+		$query = "SELECT a.week_name, sum(b.ng) as ng, sum(c.g) as g from
 		(SELECT week_name, week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
-		where m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
+		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) b on a.week_date = b.tgl
 		left join
 		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
+		where location = 'lcq-incoming' and m.surface not like '%PLT%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) c on a.week_date = c.tgl
 		GROUP BY a.week_name";
 		$weekly = db::select($query);
@@ -442,7 +443,7 @@ class MiddleProcessController extends Controller
 		$fy = '';
 		if($request->get('fy') != null){
 			$fys =  explode(",", $request->get('fy'));
-			for ($i=0; $i < count($fys); $i++) { 
+			for ($i=0; $i < count($fys); $i++) {
 				$fy = $fy."'".$fys[$i]."'";
 				if($i != (count($fys)-1)){
 					$fy = $fy.',';
@@ -455,19 +456,33 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$query = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
+		$query1 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
 		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
 		left join materials m on m.material_number = n.material_number
-		where m.surface not like '%PLT%'
+		where location = 'lcq-incoming' and m.surface not like '%PLT%'
 		GROUP BY tgl) b on a.tgl = b.tgl
-		left join		
+		left join
 		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
 		left join materials m on m.material_number = g.material_number
-		where m.surface not like '%PLT%'
+		where location = 'lcq-incoming' and m.surface not like '%PLT%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
-		$monthly = db::select($query);
+		$monthly_ic = db::select($query1);
+
+		$query2 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
+		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
+		left join
+		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
+		left join materials m on m.material_number = n.material_number
+		where location = 'lcq-kensa' and m.surface not like '%PLT%'
+		GROUP BY tgl) b on a.tgl = b.tgl
+		left join
+		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
+		left join materials m on m.material_number = g.material_number
+		where location = 'lcq-kensa' and m.surface not like '%PLT%'
+		GROUP BY tgl) c on a.tgl = c.tgl";
+		$monthly_kensa = db::select($query2);
 
 		$fy = "";
 		if($request->get('fy') != null) {
@@ -487,7 +502,8 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
-			'monthly' => $monthly,
+			'monthly_ic' => $monthly_ic,
+			'monthly_kensa' => $monthly_kensa,
 			'fy' => $fy
 		);
 		return Response::json($response);
@@ -502,15 +518,36 @@ class MiddleProcessController extends Controller
 			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
 		}
 
-		$query = "select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
-		left join materials m on l.material_number = m.material_number
-		where ".$bulan." m.surface not like '%PLT%' group by l.ng_name order by jml desc";
-		$ng = db::select($query);
+		$totalCekIC = db::select("select (a.g+b.ng) as total from
+			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming') a
+			cross join
+			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming') b");
+
+		$totalCekKensa = db::select("select (a.g+b.ng) as total from
+			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa') a
+			cross join
+			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa') b");
+
+		$ngIC = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' group by l.ng_name order by jml desc");
+
+		$ngKensa = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by l.ng_name order by jml desc;");
+
 		$bulan = substr($bulan,37,7);
 
 		$response = array(
 			'status' => true,
-			'ng' => $ng,
+			'ngIC' => $ngIC,
+			'totalCekIC' => $totalCekIC,
+			'ngKensa' => $ngKensa,
+			'totalCekKensa' => $totalCekKensa, 
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -525,7 +562,7 @@ class MiddleProcessController extends Controller
 		if(strlen($request->get('bulan')) > 0){
 			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".$request->get('bulan')."' ";
 			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
-			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".$request->get('bulan')."' ";				
+			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".$request->get('bulan')."' ";
 		}else{
 			$bulan = "where DATE_FORMAT(week_date,'%m-%Y') ='".date('m-Y')."' ";
 			$bulan1 = "where DATE_FORMAT(n.created_at,'%m-%Y') ='".date('m-Y')."' ";
@@ -536,11 +573,11 @@ class MiddleProcessController extends Controller
 		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%'
+		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
 		GROUP BY tgl) b on a.tgl = b.tgl
-		left join		
+		left join
 		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
-		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%'
+		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$daily = db::select($query);
 		$bulan = substr($bulan,39,7);
@@ -703,7 +740,7 @@ class MiddleProcessController extends Controller
 		->get();
 
 
-		for ($i=0; $i < count($boards); $i++) { 
+		for ($i=0; $i < count($boards); $i++) {
 			foreach ($materials as $material) {
 				if ($boards[$i]['sedang'] == $material->material_number) {
 					$boards[$i]['sedang'] = $material->isi;
@@ -816,6 +853,26 @@ class MiddleProcessController extends Controller
 		}
 	}
 
+	public function scanMiddleOperatorKensa(Request $request){
+		$employee = db::table('employees')->where('tag', '=', $request->get('employee_id'))->first();
+
+		if(count($employee) > 0 ){
+			$response = array(
+				'status' => true,
+				'message' => 'Logged In',
+				'employee' => $employee,
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Employee Tag Invalid',
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function printMiddleBarrelReprint(Request $request){
 
 		if($request->get('id') == 'PLT'){
@@ -824,7 +881,7 @@ class MiddleProcessController extends Controller
 					'status' => false,
 					'message' => 'No material selected',
 				);
-				return Response::json($response);	
+				return Response::json($response);
 			}
 
 			$middle_inventories = MiddleInventory::leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
@@ -862,7 +919,7 @@ class MiddleProcessController extends Controller
 					'status' => false,
 					'message' => 'No material or machine selected',
 				);
-				return Response::json($response);	
+				return Response::json($response);
 			}
 
 			$barrels = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number');
@@ -886,14 +943,10 @@ class MiddleProcessController extends Controller
 			if($request->get('id') == 'material'){
 				foreach ($barrels as $barrel) {
 					if($barrel->machine == 'FLANEL'){
-
 						self::printSlipMaterial('LACQUERING', $barrel->hpl, 'Reprint', $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', 'FLANEL', '-');
-
 					}
 					else{
-
 						self::printSlipMaterial('LACQUERING', $barrel->hpl, 'Reprint', $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, $barrel->remark, $barrel->machine, $barrel->jig);
-
 					}
 				}
 				$response = array(
@@ -1064,39 +1117,223 @@ class MiddleProcessController extends Controller
 		$tags = $request->get('tag');
 
 		if($request->get('surface') == 'LCQ'){
+			if($request->get('code') == 'FLANEL'){
+				try{
+					foreach ($tags as $tag) {
+						$barrel = new Barrel([
+							'machine' => $request->get('code'),
+							'jig' => 0,
+							'tag' => $tag[0],
+							'status' => $request->get('code'),
+							'remark' => $request->get('code'),
+							'created_by' => $id
+						]);
+						$barrel->save();
+					}
+					foreach ($tags as $tag) {
+						DB::statement("update barrels left join barrel_queues on barrel_queues.tag = barrels.tag left join materials on materials.material_number = barrel_queues.material_number set barrels.key = materials.key, barrels.material_number = barrel_queues.material_number, barrels.qty = barrel_queues.quantity, barrels.remark2 = barrel_queues.remark where barrels.tag = '".$tag[0]."'");
+					}
+					foreach ($tags as $tag) {
+						$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
+						->where('barrels.tag', '=', $tag[0])
+						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity')
+						->first();
+
+						MiddleInventory::firstOrcreate([
+							'tag' => $tag[0]
+						],
+						[
+							'tag' => $tag[0],
+							'material_number' => $barrel->material_number,
+							'quantity' => $barrel->quantity,
+							'location' => 'barrel',
+						]);
+
+						self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', $request->get('code'), '-');
+					}
+					foreach ($tags as $tag) {
+						BarrelQueue::where('tag', '=', $tag[0])->forceDelete();
+					}
+
+					$response = array(
+						'status' => true,
+						'message' => 'ID Slip for FLANEL has been printed',
+					);
+					return Response::json($response);
+				}
+				catch(\Exception $e){
+					$error_log = new ErrorLog([
+						'error_message' => $e->getMessage(),
+						'created_by' => $id
+					]);
+					$error_log->save();
+				}
+			}
+			else{
+				$code_generator = CodeGenerator::where('note','=','barrel_machine')->first();
+				$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+				$qr_machine = $code_generator->prefix . $number;
+				$code_generator->index = $code_generator->index+1;
+				$code_generator->save();
+
+				try{
+
+					foreach ($tags as $tag) {
+						$barrel = new Barrel([
+							'machine' => $request->get('no_machine'),
+							'jig' => $tag[1],
+							'tag' => $tag[0],
+							'status' => 'racking',
+							'remark' => $qr_machine,
+							'created_by' => $id
+						]);
+						$barrel->save();
+					}
+
+					foreach ($tags as $tag) {
+						$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
+						->where('barrels.tag', '=', $tag[0])
+						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity', 'barrels.remark', 'barrels.machine', 'barrels.jig')
+						->first();
+
+						MiddleInventory::firstOrcreate([
+							'tag' => $tag[0]
+						],
+						[
+							'tag' => $tag[0],
+							'material_number' => $barrel->material_number,
+							'quantity' => $barrel->quantity,
+							'location' => 'barrel',
+						]);
+
+						self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, $barrel->remark, $barrel->machine, $barrel->jig);
+					}
+
+					foreach ($tags as $tag) {
+						BarrelQueue::where('tag', '=', $tag[0])->forceDelete();
+					}
+
+					$response = array(
+						'status' => true,
+						'message' => 'ID Slip for LACUQERING has been printed',
+					);
+					return Response::json($response);
+					
+				}
+				catch(\Exception $e){
+					$error_log = new ErrorLog([
+						'error_message' => $e->getMessage(),
+						'created_by' => $id
+					]);
+					$error_log->save();
+				}
+			}
 		}
 		elseif($request->get('surface') == 'PLT'){
-		}
-		elseif($request->get('surface') == 'FLANEL'){
-			foreach ($tags as $tag) {
-				$barrel = new Barrel([
-					'machine' => $request->get('code'),
-					'jig' => 0,
-					'tag' => $tag[0],
-					'status' => $request->get('code'),
-					'remark' => $request->get('code'),
+			try{
+				foreach ($tags as $tag) {
+					$barrel = BarrelQueue::leftJoin('materials', 'materials.material_number', 'barrel_queues.material_number')
+					->where('barrel_queues.tag', '=', $tag[0])
+					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.hpl', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
+					->first();
+
+					$barrel_log = new BarrelLog([
+						'machine' => $request->get('surface'),
+						'tag' => $tag[0],
+						'material' => $queue->material_number,
+						'qty' => $queue->quantity,
+						'status' => $request->get('surface'),
+						'started_at' => date('Y-m-d H:i:s'),
+						'created_by' => $id,
+					]);
+					$barrel_log->save();
+
+					MiddleInventory::firstOrcreate([
+						'tag' => $tag[0]
+					],
+					[
+						'tag' => $tag[0],
+						'material_number' => $barrel->material_number,
+						'quantity' => $barrel->quantity,
+						'location' => 'barrel',
+					]);
+
+					self::printSlipMaterial('PLATING', $barrel->hpl, $barrel->remark, $barrel->model, $barrel->key, $barrel->surface, $tag[0], $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', '-', '-');
+				}
+				foreach ($tags as $tag) {
+					BarrelQueue::where('tag', '=', $tag[0])->forceDelete();
+				}
+
+				$response = array(
+					'status' => true,
+					'message' => 'ID Slip for PLATING has been printed',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
 					'created_by' => $id
 				]);
-				$barrel->save();
+				$error_log->save();
 			}
-			foreach ($tags as $tag) {
-				DB::statement("update barrels left join barrel_queues on barrel_queues.tag = '".$tag[0]."'");
+		}
+		elseif($request->get('surface') == 'FLANEL'){
+			try{
+				foreach ($tags as $tag) {
+					$barrel = new Barrel([
+						'machine' => $request->get('code'),
+						'jig' => 0,
+						'tag' => $tag[0],
+						'status' => $request->get('code'),
+						'remark' => $request->get('code'),
+						'created_by' => $id
+					]);
+					$barrel->save();
+				}
+				foreach ($tags as $tag) {
+					DB::statement("update barrels left join barrel_queues on barrel_queues.tag = barrels.tag left join materials on materials.material_number = barrel_queues.material_number set barrels.key = materials.key, barrels.material_number = barrel_queues.material_number, barrels.qty = barrel_queues.quantity, barrels.remark2 = barrel_queues.remark where barrels.tag = '".$tag[0]."'");
+				}
+				foreach ($tags as $tag) {
+					$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
+					->where('barrels.tag', '=', $tag[0])
+					->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity')
+					->first();
+
+					MiddleInventory::firstOrcreate([
+						'tag' => $tag[0]
+					],
+					[
+						'tag' => $tag[0],
+						'material_number' => $barrel->material_number,
+						'quantity' => $barrel->quantity,
+						'location' => 'barrel',
+					]);
+
+					self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', $request->get('code'), '-');
+				}
+				foreach ($tags as $tag) {
+					BarrelQueue::where('tag', '=', $tag[0])->forceDelete();
+				}
+
+				$response = array(
+					'status' => true,
+					'message' => 'ID Slip for FLANEL has been printed',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
 			}
 		}
 	}
 
-	public function scanMiddleBarrel(Request $request){	
+	public function scanMiddleBarrel(Request $request){
 		$id = Auth::id();
-
-		if(Auth::user()->role_code == "OP-Barrel-SX"){
-			$printer_name = 'Barrel-Printer';
-		}
-		if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){
-			$printer_name = 'MIS';
-		}
-
-		$connector = new WindowsPrintConnector($printer_name);
-		$printer = new Printer($connector);
 
 		if(substr($request->get('qr'),0,3) == 'MCB' || substr($request->get('qr'),0,3) == 'mcb'){
 			$barrels = Barrel::where('remark', '=', $request->get('qr'))->get();
@@ -1161,7 +1398,7 @@ class MiddleProcessController extends Controller
 							$barrel_log = new BarrelLog($insert_log);
 
 							$delete_barrel = Barrel::where('tag', '=', $barrel->tag)->where('machine', '=', $barrel->machine)->forceDelete();
-							$barrel_log->save();					
+							$barrel_log->save();
 						}
 
 						$update_barrel_machine = BarrelMachine::where('machine', '=', $barrels[0]->machine)->update([
@@ -1189,7 +1426,7 @@ class MiddleProcessController extends Controller
 						'message' => 'Machine status invalid.',
 					);
 					return Response::json($response);
-				}	
+				}
 			}
 			else{
 				$response = array(
@@ -1236,16 +1473,7 @@ class MiddleProcessController extends Controller
 
 					if($check_barrels->count() == 0){
 
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->setTextSize(4,4);
-						$printer->text('BARREL'."\n");
-						$printer->text("MACHINE_".$barrel->machine."\n");
-						$printer->initialize();
-						$printer->setJustification(Printer::JUSTIFY_CENTER);
-						$printer->qrCode($barrel->remark, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-						$printer->text($barrel->remark."\n\n");
-						$printer->cut();
-						$printer->close();
+						self::printSlipMachine($barrel->machine, $barrel->remark);
 
 						$response = array(
 							'status' => true,
@@ -1470,7 +1698,7 @@ class MiddleProcessController extends Controller
 		->orderBy('jig','asc')
 		->get();
 
-		$barrel_machine = DB::table('barrel_machines')		
+		$barrel_machine = DB::table('barrel_machines')
 		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'), DB::raw('hour(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as jam_cd'), DB::raw('minute(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as menit_cd'), DB::raw('second(TIMEDIFF(DATE_ADD(updated_at, INTERVAL 3 HOUR),now())) as detik_cd'))
 		->get();
 
@@ -1484,7 +1712,7 @@ class MiddleProcessController extends Controller
 
 	public function fetchMachine()
 	{
-		$barrel_machine = DB::table('barrel_machines')		
+		$barrel_machine = DB::table('barrel_machines')
 		->select('machine', 'status', DB::raw('hour(TIMEDIFF(now(),updated_at)) as jam'), DB::raw('minute(TIMEDIFF(now(),updated_at)) as menit'),DB::raw('SECOND(TIMEDIFF(now(),updated_at)) as detik'))
 		->get();
 
@@ -1498,7 +1726,7 @@ class MiddleProcessController extends Controller
 	public function postProcessMiddleReturn(Request $request)
 	{
 		$tag = $request->get('qr');
-		$barrel_inventories = DB::table('middle_inventories')		
+		$barrel_inventories = DB::table('middle_inventories')
 		->select('tag', 'material_number','location','quantity')
 		->where('tag','=', $tag)
 		->get();
@@ -1631,7 +1859,7 @@ class MiddleProcessController extends Controller
 					'created_at' => $datas['created_at'][$i],
 					'updated_at' => date('Y-m-d H:i:s')
 				]);
-			} 
+			}
 		}
 
 		$response = array(
@@ -1722,7 +1950,7 @@ class MiddleProcessController extends Controller
 				}
 			}
 			return redirect('/index/middle/barrel_adjustment')->with('status', 'New Inactive materials has been imported.')->with('page', 'Middle Process');
-		} 
+		}
 		else
 		{
 			return redirect('/index/middle/barrel_adjustment')->with('error', 'Please select a file.')->with('page', 'Middle Process');
@@ -1812,7 +2040,7 @@ class MiddleProcessController extends Controller
 		$printer->setTextSize(5,2);
 		if($hpl == 'TSKEY'){
 			$printer->setEmphasis(true);
-			$printer->setReverseColors(true);					
+			$printer->setReverseColors(true);
 		}
 		$printer->text($model." ".$key."\n");
 		$printer->text($surface."\n\n");
@@ -1823,7 +2051,7 @@ class MiddleProcessController extends Controller
 		$printer->initialize();
 		$printer->setTextSize(1,1);
 		$printer->text("GMC : ".$material_number."                           ".$qr_machine."\n");
-		$printer->text("DESC: ".$material_description."\n");	
+		$printer->text("DESC: ".$material_description."\n");
 		$printer->text("QTY : ".$quantity." PC(S)                 MACHINE: ".$machine." JIG: ".$jig."\n");
 		$printer->cut(Printer::CUT_PARTIAL, 50);
 		$printer->close();
@@ -1844,7 +2072,7 @@ class MiddleProcessController extends Controller
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setTextSize(4,4);
 		$printer->text('BARREL'."\n");
-		$printer->text("MACHINE_".$barrel->machine."\n");
+		$printer->text("MACHINE_".$machine."\n");
 		$printer->initialize();
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->qrCode($qr_machine, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
@@ -1908,9 +2136,18 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		} else {
+			$middle_ng_log = new MiddleNgLog([
+				'employee_id' => $request->get('employee_id'),
+				'tag' => $request->get('tag'),
+				'material_number' => $request->get('material_number'),
+				'ng_name' => $ng[0],
+				'quantity' => $ng[1],
+				'location' => $request->get('loc'),
+			]);
+
 			$response = array(
 				'status' => true,
-				'message' => 'NG Kosong'
+				'message' => 'No NG'
 			);
 			return Response::json($response);
 		}

@@ -357,8 +357,6 @@ function conf(){
 		disabledButton();
 
 		$.post('{{ url("input/middle/kensa") }}', data, function(result, status, xhr){
-			
-			
 			if(result.status){
 				var btn = document.getElementById('conf1');
 				btn.disabled = false;

@@ -278,6 +278,7 @@
 	}
 
 	function printJob(element){	
+
 		if($('#code').val() == 'BARREL'){
 			if ($("#machine").text() == "") {
 				openErrorGritter('Error', 'No Machine Selected');
