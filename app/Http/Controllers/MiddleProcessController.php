@@ -24,6 +24,7 @@ use App\BarrelMachineLog;
 use App\CodeGenerator;
 use App\MiddleNgLog;
 use App\MiddleLog;
+use App\ErrorLog;
 use App\Material;
 use App\Employee;
 use App\Mail\SendEmail;
@@ -38,6 +39,16 @@ class MiddleProcessController extends Controller
 			'lcq-incoming',
 			'lcq-kensa'
 		];
+	}
+
+	public function indexReportHourlyLcq(){
+		$locations = $this->location;
+
+		return view('processes.middle.report.hourly_report', array(
+			'title' => 'Hourly Report',
+			'title_jp' => '(??)',
+			'locations' => $locations
+		))->with('page', 'Hourly Report');
 	}
 
 	public function indexReportBuffingNg(){
@@ -407,6 +418,62 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function fetchReportHourlyLcq(Request $request){
+		$tanggal = '';
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') >= '".$datefrom."' and ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."DATE_FORMAT(l.created_at,'%Y-%m-%d') <= '".$dateto."' and ";
+			}
+		}else{		
+			$date = date('Y-m-d');
+			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' and ";
+		}
+
+		$jam = [
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '01:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '01:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '03:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '03:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '05:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '05:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '07:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '09:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '09:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '11:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '11:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '14:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '14:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '16:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '18:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '18:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '20:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '22:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '00:00:00'"
+		];
+
+		$query = [];
+		$dataShift1 = [];
+		for ($i=0; $i <= 3 ; $i++) {
+			$query[$i] = "(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml
+			from middle_logs l left join materials m on l.material_number = m.material_number
+			left join employees e on l.employee_id = e.employee_id
+			where ".$tanggal." ".$jam[$i]." and m.hpl = 'ASKEY'
+			GROUP BY tgl, e.`name`, m.hpl
+			ORDER BY e.`name`)
+			union
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml
+			from middle_logs l left join materials m on l.material_number = m.material_number
+			left join employees e on l.employee_id = e.employee_id
+			where ".$tanggal." ".$jam[$i]." and m.hpl = 'TSKEY'
+			GROUP BY tgl, e.`name`, m.hpl
+			ORDER BY e.`name`)";
+			$dataShift1[$i] = db::select($query[$i]); 
+		}
+
+		$response = array(
+			'status' => true,
+			'dataShift1' => $dataShift1
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchLcqNgRateWeekly(Request $request){
 		$bulan="";
 		if(strlen($request->get('bulan')) > 0){
@@ -540,6 +607,10 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by l.ng_name order by jml desc;");
 
+		$ngKensaKey = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by m.`key` order by jml desc;");
+
 		$bulan = substr($bulan,37,7);
 
 		$response = array(
@@ -547,7 +618,8 @@ class MiddleProcessController extends Controller
 			'ngIC' => $ngIC,
 			'totalCekIC' => $totalCekIC,
 			'ngKensa' => $ngKensa,
-			'totalCekKensa' => $totalCekKensa, 
+			'totalCekKensa' => $totalCekKensa,
+			'ngKensaKey' => $ngKensaKey,
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -569,22 +641,47 @@ class MiddleProcessController extends Controller
 			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".date('m-Y')."' ";
 		}
 
-		$query = "SELECT a.tgl, b.ng, c.g FROM
-		(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
-		left join
-		(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
-		left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
-		GROUP BY tgl) b on a.tgl = b.tgl
-		left join
-		(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
-		left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
-		GROUP BY tgl) c on a.tgl = c.tgl";
-		$daily = db::select($query);
+		$dailyIC = db::select("SELECT a.tgl, b.ng, c.g FROM
+			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+			left join
+			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
+			GROUP BY tgl) b on a.tgl = b.tgl
+			left join
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
+			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
+			GROUP BY tgl) c on a.tgl = c.tgl");
+
+
+		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (b.ng+c.g) as total FROM
+			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+			left join
+			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
+			GROUP BY tgl, hpl) b on a.tgl = b.tgl
+			left join		
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
+			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
+
+		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (b.ng+c.g) as total FROM
+			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
+			left join
+			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY'
+			GROUP BY tgl, hpl) b on a.tgl = b.tgl
+			left join		
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY'
+			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
+
 		$bulan = substr($bulan,39,7);
 
 		$response = array(
 			'status' => true,
-			'daily' => $daily,
+			'dailyIC' => $dailyIC,
+			'dailyKensaAlto' => $dailyKensaAlto,
+			'dailyKensaTenor' => $dailyKensaTenor,
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -1191,9 +1288,13 @@ class MiddleProcessController extends Controller
 					}
 
 					foreach ($tags as $tag) {
+						DB::statement("update barrels left join barrel_queues on barrel_queues.tag = barrels.tag left join materials on materials.material_number = barrel_queues.material_number set barrels.key = materials.key, barrels.material_number = barrel_queues.material_number, barrels.qty = barrel_queues.quantity, barrels.remark2 = barrel_queues.remark where barrels.tag = '".$tag[0]."'");
+					}
+
+					foreach ($tags as $tag) {
 						$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
 						->where('barrels.tag', '=', $tag[0])
-						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity', 'barrels.remark', 'barrels.machine', 'barrels.jig')
+						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.qty', 'barrels.remark', 'barrels.machine', 'barrels.jig')
 						->first();
 
 						MiddleInventory::firstOrcreate([
@@ -1202,11 +1303,11 @@ class MiddleProcessController extends Controller
 						[
 							'tag' => $tag[0],
 							'material_number' => $barrel->material_number,
-							'quantity' => $barrel->quantity,
+							'quantity' => $barrel->qty,
 							'location' => 'barrel',
 						]);
 
-						self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, $barrel->remark, $barrel->machine, $barrel->jig);
+						self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->qty, $barrel->remark, $barrel->machine, $barrel->jig);
 					}
 
 					foreach ($tags as $tag) {
@@ -1240,8 +1341,8 @@ class MiddleProcessController extends Controller
 					$barrel_log = new BarrelLog([
 						'machine' => $request->get('surface'),
 						'tag' => $tag[0],
-						'material' => $queue->material_number,
-						'qty' => $queue->quantity,
+						'material' => $barrel->material_number,
+						'qty' => $barrel->quantity,
 						'status' => $request->get('surface'),
 						'started_at' => date('Y-m-d H:i:s'),
 						'created_by' => $id,
@@ -1297,7 +1398,7 @@ class MiddleProcessController extends Controller
 				foreach ($tags as $tag) {
 					$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
 					->where('barrels.tag', '=', $tag[0])
-					->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity')
+					->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.qty')
 					->first();
 
 					MiddleInventory::firstOrcreate([
@@ -1306,11 +1407,11 @@ class MiddleProcessController extends Controller
 					[
 						'tag' => $tag[0],
 						'material_number' => $barrel->material_number,
-						'quantity' => $barrel->quantity,
+						'quantity' => $barrel->qty,
 						'location' => 'barrel',
 					]);
 
-					self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->quantity, '-', $request->get('code'), '-');
+					self::printSlipMaterial('LACQUERING', $barrel->hpl, $barrel->remark2, $barrel->model, $barrel->key, $barrel->surface, $barrel->tag, $barrel->material_number, $barrel->material_description, $barrel->qty, '-', $request->get('code'), '-');
 				}
 				foreach ($tags as $tag) {
 					BarrelQueue::where('tag', '=', $tag[0])->forceDelete();
@@ -2058,7 +2159,6 @@ class MiddleProcessController extends Controller
 	}
 
 	function printSlipMachine($machine, $qr_machine){
-
 		if(Auth::user()->role_code == "OP-Barrel-SX"){
 			$printer_name = 'Barrel-Printer';
 		}
@@ -2096,6 +2196,10 @@ class MiddleProcessController extends Controller
 		$operator = Employee::select("name")
 		->where("employee_id","=",$tags->operator_id)
 		->first();
+
+		$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+			'lokasi' => 'BUFFING-KENSA',
+		]);
 
 		$response = array(
 			'status' => true,
@@ -2136,13 +2240,8 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		} else {
-			$middle_ng_log = new MiddleNgLog([
-				'employee_id' => $request->get('employee_id'),
-				'tag' => $request->get('tag'),
-				'material_number' => $request->get('material_number'),
-				'ng_name' => $ng[0],
-				'quantity' => $ng[1],
-				'location' => $request->get('loc'),
+			$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+				'lokasi' => 'BUFFING-AFTER',
 			]);
 
 			$response = array(
