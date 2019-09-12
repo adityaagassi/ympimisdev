@@ -272,6 +272,11 @@
 
 	function filllist(){
 
+		$('#visitorlist tfoot th').each( function () {
+				var title = $(this).text();
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+			});
+
 		var table = $('#visitorlist').DataTable({
 			'dom': 'Bfrtip',
 			'responsive': true,
@@ -311,7 +316,7 @@
 				},
 				]
 			},
-			'paging'        : true,
+			'paging'        : false,
 			'lengthChange'  : false,
 			'searching'     : true,
 			'ordering'      : true,
@@ -347,11 +352,11 @@
 					typeof i === 'number' ?
 					i : 0;
 				};
-				var api = this.api();
+				var api = this.api(), data;
 
 				var total_diff = api.column(4).data().reduce(function (a, b) {
 					return intVal(a)+intVal(b);
-				}, 0)
+				}, 0);
 				$('#totalvi').html("Visitor ( "+total_diff.toLocaleString()+" )");
 			},
 
