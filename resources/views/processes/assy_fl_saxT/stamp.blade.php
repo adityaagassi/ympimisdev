@@ -162,11 +162,12 @@ table.table-bordered > tfoot > tr > th{
 							</center>
 							<table id="resultTable" name="resultTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
-									<th style="width: 20%">Serial Number</th>
-									<th style="width: 25%">Model</th>
-									<th style="width: 40%">Stamped At</th>
-									<th style="width: 40%">Stamped By</th>
-									<th style="width: 15%">#</th>
+									<th >Serial Number</th>
+									<th >Model</th>
+									<th >Stamped At</th>
+									<th >Stamped By</th>
+									<th >Remark</th>
+									<th >#</th>
 								</thead>
 								<tbody id="resultTableBody">
 								</tbody>
@@ -565,6 +566,7 @@ table.table-bordered > tfoot > tr > th{
 						resultData += '<td>'+ value.model +'</td>';
 						resultData += '<td>'+ value.created_at +'</td>';
 						resultData += '<td>'+ value.name +'</td>';
+						resultData += '<td>'+ value.remark +'</td>';
 						resultData += '<td><button class="btn btn-xs btn-danger" id="'+value.id+'" onclick="editStamp(id)"><span class="fa fa-edit"></span></button></td>';
 						resultData += '</tr>';
 					});

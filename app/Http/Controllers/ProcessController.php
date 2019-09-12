@@ -1046,6 +1046,8 @@ class ProcessController extends Controller
 
 
 	public function fetchResult($id){
+		$now = date('Y-m-d');
+		$yesterday = date('Y-m-01', strtotime("-1 months",strtotime($now)));
 		$id_all = $id."%";
 		$now = date('Y-m-d');
 		if($id =="YCL"){
@@ -1054,18 +1056,18 @@ class ProcessController extends Controller
 
 		}elseif($id =="YTS"){
 			$query="SELECT a.*, users.`name` FROM (
-			SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1' 
+			SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1'  AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
 			UNION ALL
-			SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1'
+			SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
 		) A 
 		LEFT JOIN users on a.created_by = users.id			
 		ORDER BY serial_number DESC";
 		$log_processes = db::select($query);
 	}elseif($id =="YTS2"){
 		$query="SELECT * FROM (
-		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' 
+		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
 		UNION ALL
-		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='2'
+		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
 	) A ORDER BY created_at DESC";
 	$log_processes = db::select($query);
 }elseif($id =="YTS3"){
