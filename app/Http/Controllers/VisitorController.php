@@ -399,7 +399,7 @@ public function filldisplay($nik)
 	LEFT JOIN employees on visitors.employee = employees.employee_id
 	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
 
-) a ".$where." GROUP BY a.id";
+) a ".$where." GROUP BY a.id  order by a.id desc";
 $ops = DB::select($op);
 return DataTables::of($ops)
 

@@ -178,17 +178,7 @@
 						},
 						title: {
 							text: ''
-						},
-						legend: {
-							layout: 'vertical',
-							align: 'right',
-							verticalAlign: 'top',
-							x: -50,
-							y: 10,
-							floating: true,
-							borderWidth: 1,
-							backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-						},
+						},						
 						xAxis: {
 							categories: tgl,
 							// plotBands: [{ 
@@ -211,10 +201,15 @@
 						},
 						plotOptions: {
 							areaspline: {
-								fillOpacity: 0.5
+								fillOpacity: 0.5,
+								  dataLabels: {
+					                	enabled: true
+					            },
+					            enableMouseTracking: false
 							}
 						},
-						series: [{
+						series: 
+						[{
 							name: 'Vendor',
 							data: vendor
 						}, {
