@@ -364,6 +364,8 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::post('edit/production_schedule', 'ProductionScheduleController@edit');
 	Route::get('view/production_schedule', 'ProductionScheduleController@show');
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
+	Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
+	Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
 });
 
 Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
@@ -515,6 +517,11 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('returncl/stamp', 'ProcessController@returnclStamp');
 	Route::post('scan/serial_number_return_Cl', 'ProcessController@scanSerialNumberReturnCl');
 	// end return cl
+
+	// ng sax
+	Route::post('ngfg/stamp', 'ProcessController@ngsxStamp');
+	Route::post('scan/serial_number_ng_Sx', 'ProcessController@scanSerialNumberngSx');
+	// end ng sax
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -531,6 +538,8 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
+Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
+Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
@@ -557,12 +566,20 @@ Route::get('fetch/middle/report_ng', 'MiddleProcessController@fetchReportNG');
 Route::get('fetch/middle/report_production_result', 'MiddleProcessController@fetchReportProductionResult');
 Route::get('index/middle/display_production_result', 'MiddleProcessController@indexDisplayProductionResult');
 Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fetchDisplayProductionResult');
-
+Route::get('index/process_buffing_kensa/{id}', 'MiddleProcessController@indexProcessBuffingKensa');
+Route::post('input/middle/buffing/kensa', 'MiddleProcessController@inputBuffingKensa');
+// Report Middle LCQ
 Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
 Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');
 Route::get('fetch/middle/lcq_ng_rate_weekly', 'MiddleProcessController@fetchLcqNgRateWeekly');
 Route::get('fetch/middle/lcq_ng', 'MiddleProcessController@fetchLcqNg');
 Route::get('fetch/middle/lcq_ng_rate', 'MiddleProcessController@fetchLcqNgRate');
+Route::get('index/middle/report_hourly_lcq', 'MiddleProcessController@indexReportHourlyLcq');
+Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchReportHourlyLcq');
+// Report Middle Buffing
+Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
+
+
 
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
@@ -776,6 +793,11 @@ Route::get('index/repairSx', 'ProcessController@indexRepairSx');
 Route::get('fetch/returnTableSx', 'ProcessController@fetchReturnTableSx');
 // end return sax
 
+// ng sax
+Route::get('index/ngSx', 'ProcessController@indexngSx');
+Route::get('fetch/ngTableSx', 'ProcessController@fetchngTableSx');
+// end ng sax
+
 // return cl
 Route::get('index/repairCl', 'ProcessController@indexRepairCl');
 Route::get('fetch/returnTableCl', 'ProcessController@fetchReturnTableCl');
@@ -834,6 +856,7 @@ Route::get('index/getdatareprintAll2', 'ProcessController@getModelReprintAll2');
 
 Route::get('index/process_stamp_cl', 'ProcessController@indexProcessStampCl');
 Route::get('index/process_stamp_sx', 'ProcessController@indexProcessStampSX');
+Route::get('index/process_stamp_sx_assy', 'ProcessController@indexProcessStampSXassy');
 Route::get('stamp/resumes_cl', 'ProcessController@indexResumesCl');
 Route::post('stamp/stamp_detail_cl', 'ProcessController@filter_stamp_detail_cl');
 Route::get('stamp/resumes_sx', 'ProcessController@indexResumesSX');
@@ -870,8 +893,11 @@ Route::get('fetch/image_sax', 'ProcessController@fetchImageSax');
 Route::get('index/process_stamp_sx_check', 'ProcessController@indexProcessAssyFLSaxTCheck');
 
 
-
 // end check sheet sax
+
+// new sax result
+Route::get('fetch/fetchResultSaxnew', 'ProcessController@fetchResultSaxnew');
+//end new sax result 
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');
