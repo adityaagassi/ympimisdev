@@ -53,6 +53,7 @@
 			<a href="{{ url("index/middle/report_production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_lcq_ng?bulan=&fy=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: purple;">Resume</a>
+			<a href="{{ url("index/middle/report_hourly_lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Hourly Report</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 

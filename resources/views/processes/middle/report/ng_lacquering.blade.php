@@ -298,7 +298,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key LCQ in '+fy+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key on '+fy+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -389,7 +389,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate Sax Key LCQ in '+fy+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate Kensa Sax Key on '+fy+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -488,7 +488,7 @@
 							type: 'line'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key Weekly in '+bulanText(bulan)+'</span>',
+							text: '<span style="font-size: 18pt;">Weekly NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -551,7 +551,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Terbesar IC Sax Key LCQ in '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+							text: '<span style="font-size: 18pt;">Highest NG IC Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -614,7 +614,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Terbesar IC Sax Key LCQ in '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+							text: '<span style="font-size: 18pt;">Highest NG Kensa Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -674,7 +674,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Highest NG Sax Key LCQ in '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+							text: '<span style="font-size: 18pt;">Highest Key NG Kensa Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -751,7 +751,7 @@
 							type: 'line'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Daily IC Sax Key LCQ in '+bulanText(bulan)+'</span>',
+							text: '<span style="font-size: 18pt;">Daily NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -829,7 +829,7 @@
 							type: 'line'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Daily IC Sax Key LCQ in '+bulanText(bulan)+'</span>',
+							text: '<span style="font-size: 18pt;">Daily NG Rate Kensa Sax Key on '+bulanText(bulan)+'</span>',
 							useHTML: true
 						},
 						xAxis: {
