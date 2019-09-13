@@ -420,17 +420,29 @@ class MiddleProcessController extends Controller
 
 	public function fetchReportHourlyLcq(Request $request){
 		$tanggal = '';
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') >= '".$datefrom."' and ";
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-				$tanggal = $tanggal."DATE_FORMAT(l.created_at,'%Y-%m-%d') <= '".$dateto."' and ";
-			}
+		if(strlen($request->get('date')) > 0){
+			$date = date('Y-m-d', strtotime($request->get('date')));
+			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' and ";
 		}else{		
 			$date = date('Y-m-d');
 			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' and ";
 		}
+
+		$OPS3 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
+			from middle_logs l left join employees e on l.employee_id = e.employee_id
+			where ".$tanggal."
+			DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '07:00:00'
+			ORDER BY e.`name`");
+		$OPS1 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
+			from middle_logs l left join employees e on l.employee_id = e.employee_id
+			where ".$tanggal."
+			DATE_FORMAT(l.created_at,'%H:%m:%s') > '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '16:00:00'
+			ORDER BY e.`name`");
+		$OPS2 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
+			from middle_logs l left join employees e on l.employee_id = e.employee_id
+			where ".$tanggal."
+			DATE_FORMAT(l.created_at,'%H:%m:%s') > '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '23:59:59'
+			ORDER BY e.`name`");
 
 		$jam = [
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '01:00:00'",
@@ -446,29 +458,65 @@ class MiddleProcessController extends Controller
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '22:00:00'",
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '00:00:00'"
 		];
-
-		$query = [];
+		
+		$dataShift3 = [];
 		$dataShift1 = [];
+		$dataShift2 = [];
+
+		$z3 = [];
+		$z1 = [];
+		$z2 = [];
+
+		$push_data = [];
+		$push_data_z = [];
+
 		for ($i=0; $i <= 3 ; $i++) {
-			$query[$i] = "(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml
-			from middle_logs l left join materials m on l.material_number = m.material_number
-			left join employees e on l.employee_id = e.employee_id
-			where ".$tanggal." ".$jam[$i]." and m.hpl = 'ASKEY'
-			GROUP BY tgl, e.`name`, m.hpl
-			ORDER BY e.`name`)
-			union
-			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml
-			from middle_logs l left join materials m on l.material_number = m.material_number
-			left join employees e on l.employee_id = e.employee_id
-			where ".$tanggal." ".$jam[$i]." and m.hpl = 'TSKEY'
-			GROUP BY tgl, e.`name`, m.hpl
-			ORDER BY e.`name`)";
-			$dataShift1[$i] = db::select($query[$i]); 
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			array_push($dataShift3, $push_data[$i]);
+			
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z'
+				GROUP BY tgl, m.model");
+			array_push($z3, $push_data_z[$i]);
 		}
+
+		for ($i=4; $i <= 7 ; $i++) {
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			array_push($dataShift1, $push_data[$i]);
+			
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z'
+				GROUP BY tgl, m.model");
+			array_push($z1, $push_data_z[$i]);
+		}
+
+		for ($i=8; $i <= 11 ; $i++) {
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			array_push($dataShift2, $push_data[$i]);
+			
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z'
+				GROUP BY tgl, m.model");
+			array_push($z2, $push_data_z[$i]);
+		}
+
+		$tanggal = substr($tanggal,40,10);
 
 		$response = array(
 			'status' => true,
-			'dataShift1' => $dataShift1
+			'tanggal' => $tanggal,
+			'OPS3' => $OPS3,
+			'OPS1' => $OPS1,
+			'OPS2' => $OPS2,
+			'dataShift3' => $dataShift3,
+			'dataShift1' => $dataShift1,
+			'dataShift2' => $dataShift2,
+			'z3' => $z3, 
+			'z1' => $z1, 
+			'z2' => $z2, 
 		);
 		return Response::json($response);
 

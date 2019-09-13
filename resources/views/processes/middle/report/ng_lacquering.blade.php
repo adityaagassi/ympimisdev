@@ -84,8 +84,8 @@
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="col-xs-3">
-											<table id="table_monthly" class="table table-bordered" style="margin:0">
-												<thead id="head_monthly">
+											<table id="table_monthly_ic" class="table table-bordered" style="margin:0">
+												<thead id="head_monthly_ic">
 													<tr>
 														<th style="padding: 0px;">Month</th>
 														<th style="padding: 0px;">NG Rate</th>
@@ -94,12 +94,12 @@
 														<th style="padding: 0px;">Total Check</th>
 													</tr>
 												</thead>
-												<tbody id="body_monthly">
+												<tbody id="body_monthly_ic">
 												</tbody>
 											</table>
 										</div>
 										<div class="col-xs-9">
-											<div id="chart" style="width: 99%;"></div>			
+											<div id="chart_ic_1" style="width: 99%;"></div>			
 										</div>
 									</div>
 								</div>
@@ -126,7 +126,7 @@
 											</table>
 										</div>
 										<div class="col-xs-9">
-											<div id="chart1" style="width: 99%;"></div>			
+											<div id="chart_ic_2" style="width: 99%;"></div>			
 										</div>
 									</div>
 								</div>
@@ -136,17 +136,68 @@
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
-								<div id="chart2" style="width: 99%;"></div>
+								<div id="chart_ic_3" style="width: 99%;"></div>
 							</div>
 						</div>
 					</div>
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
-								<div id="chart3" style="width: 99%;"></div>
+								<div id="chart_ic_4" style="width: 99%;"></div>
 							</div>
 						</div>
 					</div>
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="col-xs-3">
+											<table id="table_monthly_kensa" class="table table-bordered" style="margin:0">
+												<thead id="head_monthly_kensa">
+													<tr>
+														<th style="padding: 0px;">Month</th>
+														<th style="padding: 0px;">NG Rate</th>
+														<th style="padding: 0px;">Target</th>
+														<th style="padding: 0px;">Total NG</th>
+														<th style="padding: 0px;">Total Check</th>
+													</tr>
+												</thead>
+												<tbody id="body_monthly_kensa">
+												</tbody>
+											</table>
+										</div>
+										<div class="col-xs-9">
+											<div id="chart_kensa_1" style="width: 99%;"></div>			
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1">
+								<div id="chart_kensa_2" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1">
+								<div id="chart_kensa_3" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1">
+								<div id="chart_kensa_4" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+
+
 				</div>
 			</div>		
 		</div>
@@ -174,7 +225,7 @@
 		$('.select2').select2();
 
 		drawChart();
-		setInterval(drawChart, 60000);
+		// setInterval(drawChart, 60000);
 	});
 
 	function change() {
@@ -209,7 +260,7 @@
 		$.get('{{ url("fetch/middle/lcq_ng_rate_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					$('#body_monthly').append().empty();
+					$('#body_monthly_ic').append().empty();
 					var fy = result.fy;
 					var tgl = [];
 					var target = [];
@@ -218,11 +269,11 @@
 					var ng_rate = [];
 					var ng_rate_monthly = [];
 
-					for (var i = 0; i < result.monthly.length; i++) {
-						tgl.push(result.monthly[i].tgl);
+					for (var i = 0; i < result.monthly_ic.length; i++) {
+						tgl.push(result.monthly_ic[i].tgl);
 						target.push(8.37);
-						ng.push(result.monthly[i].ng);
-						total.push(result.monthly[i].total);
+						ng.push(result.monthly_ic[i].ng);
+						total.push(result.monthly_ic[i].total);
 						total[i] = total[i] || 0;
 
 						ng_rate[i] = (ng[i] / total[i]) * 100;
@@ -231,7 +282,7 @@
 					}
 
 					var body = "";
-					for (var i = 0; i < result.monthly.length; i++) {
+					for (var i = 0; i < result.monthly_ic.length; i++) {
 						body += "<tr>";
 						body += "<td>"+tgl[i]+"</td>";
 						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
@@ -240,14 +291,14 @@
 						body += "<td>"+total[i]+"</td>";
 						body += "</tr>";
 					}
-					$('#body_monthly').append(body);
+					$('#body_monthly_ic').append(body);
 
-					Highcharts.chart('chart', {
+					Highcharts.chart('chart_ic_1', {
 						chart: {
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">NG Rate %IC Sax Key LCQ in '+fy+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key LCQ in '+fy+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -274,7 +325,98 @@
 								dataLabels: {
 									enabled: true,
 									formatter: function () {
-										return Highcharts.numberFormat(this.y,2);
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
+								}
+							},
+							line: {
+								marker: {
+									enabled: false
+								},
+								dashStyle: 'ShortDash'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							name: 'NG Rate',
+							data: ng_rate_monthly
+						},
+						{
+							name: 'Target',
+							type: 'line',
+							data: target,
+							color: '#FF0000',
+						}
+						]
+					});
+
+					$('#body_monthly_kensa').append().empty();
+					var tgl = [];
+					var target = [];
+					var ng = [];
+					var total = [];		
+					var ng_rate = [];
+					var ng_rate_monthly = [];
+
+					for (var i = 0; i < result.monthly_kensa.length; i++) {
+						tgl.push(result.monthly_kensa[i].tgl);
+						target.push(4.45);
+						ng.push(result.monthly_kensa[i].ng);
+						total.push(result.monthly_kensa[i].total);
+						total[i] = total[i] || 0;
+
+						ng_rate[i] = (ng[i] / total[i]) * 100;
+						ng_rate[i] = ng_rate[i] || 0;
+						ng_rate_monthly.push(ng_rate[i]);
+					}
+
+					var body = "";
+					for (var i = 0; i < result.monthly_kensa.length; i++) {
+						body += "<tr>";
+						body += "<td>"+tgl[i]+"</td>";
+						body += "<td>"+ng_rate_monthly[i].toFixed(2)+"%</td>";
+						body += "<td>"+target[i]+"%</td>";
+						body += "<td>"+ng[i]+"</td>";
+						body += "<td>"+total[i]+"</td>";
+						body += "</tr>";
+					}
+					$('#body_monthly_kensa').append(body);
+
+					Highcharts.chart('chart_kensa_1', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">NG Rate Sax Key LCQ in '+fy+'</span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: tgl
+						},
+						yAxis: {
+							title: {
+								text: 'NG Rate (%)'
+							},
+							min: 0
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+
+						},
+						plotOptions: {
+							column: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
 									}
 								}
 							},
@@ -341,12 +483,12 @@
 					}
 					$('#body_weekly').append(body);	
 
-					Highcharts.chart('chart1', {
+					Highcharts.chart('chart_ic_2', {
 						chart: {
 							type: 'line'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">%NG Rate Weekly in '+bulanText(bulan)+'</span>',
+							text: '<span style="font-size: 18pt;">NG Rate IC Sax Key Weekly in '+bulanText(bulan)+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -373,7 +515,7 @@
 								dataLabels: {
 									enabled: true,
 									formatter: function () {
-										return Highcharts.numberFormat(this.y,2);
+										return Highcharts.numberFormat(this.y,2)+'%';
 									}
 								}
 							}
@@ -396,13 +538,15 @@
 				if(result.status){
 					var ng_name = [];
 					var jml = [];			
-					for (var i = 0; i < result.ng.length; i++) {
-						ng_name.push(result.ng[i].ng_name);
-						jml.push(parseInt(result.ng[i].jml));
+					var ng_rate = [];			
+					for (var i = 0; i < result.ngIC.length; i++) {
+						ng_name.push(result.ngIC[i].ng_name);
+						jml.push(parseInt(result.ngIC[i].jml));
+						ng_rate.push((jml[i]/result.totalCekIC[0].total)*100);
 					}
 					var bulan = result.bulan;
 
-					Highcharts.chart('chart2', {
+					Highcharts.chart('chart_ic_3', {
 						chart: {
 							type: 'column'
 						},
@@ -413,6 +557,7 @@
 						xAxis: {
 							categories: ng_name,
 							labels: {
+								padding: 30,
 								style: {
 									textOverflow: 'ellipsis',
 								},
@@ -421,7 +566,7 @@
 						yAxis: {
 							type: 'logarithmic',
 							title: {
-								text: 'Total Not Good'
+								text: 'NG Rate (%)'
 							}
 						},
 						legend : {
@@ -437,7 +582,9 @@
 								borderWidth: 0,
 								dataLabels: {
 									enabled: true,
-									format: '{point.y}'
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
 								}
 							}
 						},credits: {
@@ -447,13 +594,132 @@
 						{
 							"colorByPoint": true,
 							name: 'NG',
+							data: ng_rate,
+						}
+						]
+					});
+
+					var ng_name = [];
+					var jml = [];			
+					var ng_rate = [];			
+					for (var i = 0; i < result.ngKensa.length; i++) {
+						ng_name.push(result.ngKensa[i].ng_name);
+						jml.push(parseInt(result.ngKensa[i].jml));
+						ng_rate.push((jml[i]/result.totalCekKensa[0].total)*100);
+					}
+					var bulan = result.bulan;
+
+					Highcharts.chart('chart_kensa_2', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">NG Terbesar IC Sax Key LCQ in '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: ng_name,
+							labels: {
+								padding: 30,
+								style: {
+									textOverflow: 'ellipsis',
+								},
+							}
+						},
+						yAxis: {
+							type: 'logarithmic',
+							title: {
+								text: 'NG Rate (%)'
+							}
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>Not Good</span><br/>',
+							pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y}</b> <br/>'
+						},
+						plotOptions: {
+							series: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
+								}
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							"colorByPoint": true,
+							name: 'NG',
+							data: ng_rate,
+						}
+						]
+					});
+
+					var key = [];
+					var jml = [];			
+					for (var i = 0; i < result.ngKensaKey.length; i++) {
+						key.push(result.ngKensaKey[i].key);
+						jml.push(parseInt(result.ngKensaKey[i].jml));
+					}
+					
+					Highcharts.chart('chart_kensa_3', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">Highest NG Sax Key LCQ in '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: key,
+							labels: {
+								padding: 30,
+								style: {
+									textOverflow: 'ellipsis',
+								},
+							}
+						},
+						yAxis: {
+							type: 'logarithmic',
+							title: {
+								text: 'Total Not Good'
+							}
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>Not Good</span><br>',
+							pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
+						},
+						plotOptions: {
+							series: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true
+								}
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							"colorByPoint": true,
+							name: 'Key',
 							data: jml,
 						}
 						]
 					});
 				}
 			}
-
 
 		});
 
@@ -466,11 +732,11 @@
 					var ng_rate = [];
 					var ng_rate_daily = [];
 
-					for (var i = 0; i < result.daily.length; i++) {
-						tgl.push(result.daily[i].tgl);
+					for (var i = 0; i < result.dailyIC.length; i++) {
+						tgl.push(result.dailyIC[i].tgl);
 
-						ng.push(result.daily[i].ng);
-						g.push(result.daily[i].g);
+						ng.push(result.dailyIC[i].ng);
+						g.push(result.dailyIC[i].g);
 						ng[i] = ng[i] || 0;
 						g[i] = g[i] || 0;
 						ng_rate[i] = (ng[i] / (ng[i]+g[i])) * 100;
@@ -480,12 +746,12 @@
 					var bulan = result.bulan;
 
 
-					Highcharts.chart('chart3', {
+					Highcharts.chart('chart_ic_4', {
 						chart: {
 							type: 'line'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Daily %IC Sax Key LCQ in '+bulanText(bulan)+'</span>',
+							text: '<span style="font-size: 18pt;">Daily IC Sax Key LCQ in '+bulanText(bulan)+'</span>',
 							useHTML: true
 						},
 						xAxis: {
@@ -512,7 +778,7 @@
 								dataLabels: {
 									enabled: true,
 									formatter: function () {
-										return Highcharts.numberFormat(this.y,2);
+										return Highcharts.numberFormat(this.y,2)+'%';
 									}
 								}
 							}
@@ -525,9 +791,93 @@
 						}
 						]
 					});
+
+					var tgl = [];
+					var ng_alto = [];
+					var total_alto = [];
+					var ng_rate_alto = [];
+
+					for (var i = 0; i < result.dailyKensaAlto.length; i++) {
+						tgl.push(result.dailyKensaAlto[i].tgl);
+
+						ng_alto.push(result.dailyKensaAlto[i].ng);
+						total_alto.push(result.dailyKensaAlto[i].total);
+						ng_alto[i] = ng_alto[i] || 0;
+						total_alto[i] = total_alto[i] || 0;
+						ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
+					}
+
+					var tgl = [];
+					var ng_tenor = [];
+					var total_tenor = [];
+					var ng_rate_tenor = [];
+
+					for (var i = 0; i < result.dailyKensaTenor.length; i++) {
+						tgl.push(result.dailyKensaTenor[i].tgl);
+
+						ng_tenor.push(result.dailyKensaTenor[i].ng);
+						total_tenor.push(result.dailyKensaTenor[i].total);
+						ng_tenor[i] = ng_tenor[i] || 0;
+						total_tenor[i] = total_tenor[i] || 0;
+						ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
+					}
+					var bulan = result.bulan;
+
+
+					Highcharts.chart('chart_kensa_4', {
+						chart: {
+							type: 'line'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">Daily IC Sax Key LCQ in '+bulanText(bulan)+'</span>',
+							useHTML: true
+						},
+						xAxis: {
+							categories: tgl
+						},
+						yAxis: {
+							title: {
+								text: 'NG Rate (%)'
+							},
+							min: 0
+						},
+						legend : {
+							enabled: true
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
+
+						},
+						plotOptions: {
+							line: {
+								cursor: 'pointer',
+								borderWidth: 0,
+								dataLabels: {
+									enabled: true,
+									formatter: function () {
+										return Highcharts.numberFormat(this.y,2)+'%';
+									}
+								}
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							name: 'Alto',
+							data: ng_rate_alto
+						},
+						{
+							name: 'Tenor',
+							data: ng_rate_tenor
+						}
+						]
+					});
 				}
 			}
 		});
+
 
 	}
 
