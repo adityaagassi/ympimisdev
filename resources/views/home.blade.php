@@ -28,7 +28,7 @@
     }
     table.table-bordered > tbody > tr > td{
         border:1px solid rgb(180,180,180);
-        font-size: 13px;
+        font-size: 12px;
         background-color: rgb(240,240,240);
     }
     table.table-bordered > tfoot > tr > th{
@@ -48,12 +48,12 @@
 @section('header')
 <section class="content-header" style="padding: 0; margin:0;">
     <div class="marquee">
-        <span style="font-size: 22px;" class="text-purple"><span style="font-size:26px;"><b>M</b></span>anufactur<span style="font-size:27px;"><b>i</b></span>ng <span style="font-size:26px;"><b>R</b></span>ealtime <span style="font-size:26px;"><b>A</b></span>cquisition of <span style="font-size:26px;"><b>I</b></span>nformation</span>
+        <span style="font-size: 16px;" class="text-purple"><span style="font-size:22px;"><b>M</b></span>anufactur<span style="font-size:23px;"><b>i</b></span>ng <span style="font-size:22px;"><b>R</b></span>ealtime <span style="font-size:22px;"><b>A</b></span>cquisition of <span style="font-size:22px;"><b>I</b></span>nformation</span>
         <br>
-        <b><span style="font-size: 26px;" class="text-purple">
-            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="30px">
+        <b><span style="font-size: 20px;" class="text-purple">
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="26px">
             製 造 の リ ア ル タ イ ム 情 報
-            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="30px">
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="26px">
         </span></b>
     </div>
 </section>
@@ -63,9 +63,9 @@
 
 <section class="content" style="padding-top: 0;">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
             <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 16px;">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Production Support<br/>生産支援モニ</th>
                     </tr>
@@ -73,35 +73,89 @@
                 <tbody>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">HR Management (人材管理)</span>
+                            <span style="font-weight: bold;">Overtime Information (残業の情報)</span>
                             <br>
-                            
-                            {{-- @if($employee_service == "")
-                            asdasas
-                            @else
-                            {{$employee_service}}
-                            @endif --}}
-
-                            <a href="{{ url("/index/employee_information") }}">
-                                <i class="fa fa-caret-right"></i> Manpower & Overtime Information (人工・残業の情報)
-                            </a><br>
-                            {{-- <a href="http://172.17.128.4/myhris/management_mp" target="blank">
-                                <i class="fa fa-caret-right"></i> Manpower Information (社員構成)
-                            </a><br> --}}
-                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
+                            <a href="{{ url("index/report/overtime_monthly") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> OT Monitor By CC (??)
                             </a>
                             <br>
-                            <a href="http://172.17.128.114/clinic-new/chart.php" target="_blank">
-                                <i class="fa fa-caret-right"></i> Clinic Information (保健室利用状況)
+                            <a href="http://172.17.128.4/myhris/management/overtime_control" target="_blank">
+                                <i class="fa fa-caret-right"></i> OT Monitor Daily (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_section")}}" target="_blank">
+                                <i class="fa fa-caret-right"></i> OT By CC (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_data") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> OT Data (残業データ)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_resume") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (??)
                             </a>
                             <br>
                             <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
-                                <i class="fa fa-caret-right"></i> Overtime Form (残業申請書)
+                                <i class="fa fa-caret-right"></i> Create OT Form (残業申請書)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Manpower Information (人工の情報)</span>
+                            <br>
+                            <a href="{{ url("index/report/stat") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>By Status (雇用形態別)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/department") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>By Department (部門別)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/grade") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>By Grade (等級別)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/jabatan") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>By Position (役職別)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/gender") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>By Gender (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Presence Information (??)</span>
+                            <br>
+                            <a href="{{ url("index/report/daily_attendance")}}" target="_blank">
+                                <i class="fa fa-caret-right"></i>Attendance (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/gender") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i>Absence (??)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Other Information (??)</span>
+                            <br>
+                            <a href="{{ url("index/report/overtime_outsource") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_outsource_data") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Outsource OT Data (派遣社員の残業データ)
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Employee Self Services (従業員の情報サービス)
+                                <i class="fa fa-caret-right"></i> HRqu - Employee Self Services (従業員の情報サービス)
                             </a>
                         </td>
                     </tr>
@@ -117,18 +171,18 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
             <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 18px;">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Raw Material<br/>素材</th>
                     </tr>
                 </thead>
             </table>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
             <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 18px;">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Work In Process<br/>仕掛品</th>
                     </tr>
@@ -188,6 +242,9 @@
                             <br>
                             <a href="{{ url("/index/Pianica") }}">
                                 <i class="fa fa-caret-right"></i> Pianica (ピアニカ組立)
+                            </a><br>
+                            <a href="{{ url("index/process_stamp_sx_assy") }}">
+                                <i class="fa fa-caret-right"></i> Saxophone (???)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=&model2=") }}">
@@ -197,7 +254,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Cek Dimensi Material (寸法測定結果)</span>
+                            <span style="font-weight: bold;">Check Material Dimensions (寸法測定結果)</span>
                             <br>
                             <a href="http://172.17.128.114/digital-ik-cdm/" target="blank">
                                 <i class="fa fa-caret-right"></i> Work Instruction Digital System<br>(作業手順書デジタル化)
@@ -211,9 +268,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
             <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 18px;">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Finished Goods<br/>完成品</th>
                     </tr>
@@ -223,12 +280,28 @@
                         <td>
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
+                            <a href="{{ url("/index/fg_production_schedule") }}">
+                                <i class="fa fa-caret-right"></i> Production Schedule Data (??)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/dp_production_result") }}">
+                                <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/dp_fg_accuracy") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/fg_production") }}">
                                 <i class="fa fa-caret-right"></i> Production Result (生産実績)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_stock") }}">
                                 <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/fg_traceability") }}">
+                                <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
                             </a>
                         </td>
                     </tr>
@@ -237,8 +310,7 @@
                             <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_shipment_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Shipment Schedule Data
-                                <br>(出荷スケジュール)
+                                <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュール)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_shipment_result") }}">
@@ -252,15 +324,15 @@
                             <a href="{{ url("/index/fg_container_departure") }}">
                                 <i class="fa fa-caret-right"></i> Container Departure (コンテナー出発)
                             </a>
-                            <br>
-                            <a href="{{ url("/index/fg_traceability") }}">
-                                <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
-                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
+                            <br>
+                            <a href="{{ url("/index/display/stuffing_monitoring") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Stuffing Monitoring (荷積み監視)
+                            </a>
                             <br>
                             <a href="{{ url("/index/fg_weekly_summary") }}">
                                 <i class="fa fa-caret-right"></i> Weekly Summary (週次まとめ)
@@ -280,17 +352,9 @@
                             </a>
                         </td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td>
                             <span style="font-weight: bold;">Display (表示)</span>
-                            <br>
-                            <a href="{{ url("/index/dp_production_result") }}">
-                                <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/dp_fg_accuracy") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
-                            </a>
                             <br>
                             <a href="{{ url("/index/display/stuffing_progress") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Stuffing Progress (荷積み進捗)
@@ -299,12 +363,8 @@
                             <a href="{{ url("/index/display/stuffing_time") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Stuffing Time (荷積み時間)
                             </a>
-                            <br>
-                            <a href="{{ url("/index/display/stuffing_monitoring") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Stuffing Monitoring (荷積み監視)
-                            </a>
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
         </div>
