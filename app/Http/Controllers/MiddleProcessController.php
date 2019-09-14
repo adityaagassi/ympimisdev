@@ -1722,6 +1722,7 @@ class MiddleProcessController extends Controller
 
 	public function ScanMiddleKensa(Request $request){
 		$id = Auth::id();
+		$started_at = date('Y-m-d H:i:s');
 
 		$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))
 		->leftJoin('materials', 'materials.material_number', '=', 'middle_inventories.material_number')
@@ -1741,6 +1742,7 @@ class MiddleProcessController extends Controller
 				'status' => true,
 				'message' => 'ID slip found.',
 				'middle_inventory' => $middle_inventory,
+				'started_at' => $started_at,
 			);
 			return Response::json($response);
 		}
@@ -1764,6 +1766,7 @@ class MiddleProcessController extends Controller
 					'ng_name' => $ng[0],
 					'quantity' => $ng[1],
 					'location' => $request->get('loc'),
+					'started_at' => $request->get('started_at'),
 				]);
 
 				try{
@@ -1793,6 +1796,7 @@ class MiddleProcessController extends Controller
 				'material_number' => $request->get('material_number'),
 				'quantity' => $request->get('quantity'),
 				'location' => $request->get('loc'),
+				'started_at' => $request->get('started_at'),
 			]);
 
 			try{
@@ -2242,31 +2246,41 @@ class MiddleProcessController extends Controller
 
 	public function fetchBuffing(Request $request)
 	{
-		$tags = db::connection('digital_kanban')
-		->table('buffing_inventories')
-		->select('material_num','operator_id',"material_tag_id")
-		->where('material_tag_id','=', $request->get("tag"))
-		->first();
+		try{
+			$tags = db::connection('digital_kanban')
+			->table('buffing_inventories')
+			->select('material_num','operator_id',"material_tag_id")
+			->where('material_tag_id','=', $request->get("tag"))
+			->first();
 
-		$material = Material::select("model","key")
-		->where("material_number","=",$tags->material_num)
-		->first();
+			$material = Material::select("model","key")
+			->where("material_number","=", $tags->material_num)
+			->first();
 
-		$operator = Employee::select("name")
-		->where("employee_id","=",$tags->operator_id)
-		->first();
+			$operator = Employee::select("name")
+			->where("employee_id","=",$tags->operator_id)
+			->first();
 
-		$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
-			'lokasi' => 'BUFFING-KENSA',
-		]);
+			$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+				'lokasi' => 'BUFFING-KENSA',
+			]);
 
-		$response = array(
-			'status' => true,
-			'datas' => $tags,
-			'material' => $material,
-			'operator' => $operator
-		);
-		return Response::json($response);
+			$response = array(
+				'status' => true,
+				'datas' => $tags,
+				'material' => $material,
+				'operator' => $operator
+			);
+			return Response::json($response);
+		}
+		catch (\Exception $e){
+			$response = array(
+				'status' => false,
+				'datas' => $e->getMessage(),
+				'message' => 'RFID Invalid'
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function inputBuffingKensa(Request $request)

@@ -240,6 +240,7 @@
 						$('#serialNumber').val('');
 						$('#serialNumber').focus();
 					}
+					fillChartActual();
 				}
 				else{
 					audio_error.play();
@@ -490,7 +491,6 @@
 							}
 						}]
 					}));
-					setTimeout(fillChartActual, 5000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');

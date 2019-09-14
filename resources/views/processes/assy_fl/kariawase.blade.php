@@ -145,6 +145,9 @@
 
 	jQuery(document).ready(function() {
 		fillChartActual();
+		setInterval(function(){
+			fillChartActual();
+		}, 60000);
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -392,7 +395,6 @@
 							}
 						}]
 					}));
-					setTimeout(fillChartActual, 5000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');

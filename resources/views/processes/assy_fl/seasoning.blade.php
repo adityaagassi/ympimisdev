@@ -232,19 +232,21 @@
 					if(result.status){
 						openSuccessGritter('Success', result.message);
 						$('#serialNumber').val('');
-						$('#serialNumber').focus();					}
-						else{
-							audio_error.play();
-							alert(result.message);
-							$('#serialNumber').val('');
-							$('#serialNumber').focus();
-						}
+						$('#serialNumber').focus();					
 					}
 					else{
 						audio_error.play();
-						alert('Disconnected from server');
+						alert(result.message);
+						$('#serialNumber').val('');
+						$('#serialNumber').focus();
 					}
-				});
+					fillChartActual();
+				}
+				else{
+					audio_error.play();
+					alert('Disconnected from server');
+				}
+			});
 		}
 		else{
 			audio_error.play();
@@ -489,7 +491,6 @@
 							}
 						}]
 					}));
-					setTimeout(fillChartActual, 5000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');

@@ -19,7 +19,20 @@
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
-  <style></style>
+  <style>
+    aside{
+      font-size: 12px;
+    }
+    .sidebar-menu > li > a {
+      padding: 7px 5px 7px 15px;
+      display: block;
+    }
+    .treeview-menu > li > a {
+      padding: 3px 5px 3px 15px;
+      display: block;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
   <div class="wrapper">

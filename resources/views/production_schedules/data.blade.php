@@ -375,7 +375,6 @@
 								status2 = true;
 							}
 
-
 							if (status1 == true && status2 == true) {
 								tableData += '<tr>';
 								tableData += '<td>'+ value5.due_date +'</td>';
