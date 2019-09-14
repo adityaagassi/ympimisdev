@@ -60,6 +60,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
 	<input type="hidden" id="loc" value="{{ $loc }}">
+	<input type="hidden" id="started_at">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 0">
 			<div class="input-group">
@@ -310,27 +311,23 @@
 		if($('#tag').val() != ""){
 			var btn = document.getElementById('conf1');
 			btn.disabled = true;
-			btn.innerText = 'Posting...'
-        // alert('aaaa');			
-        return false;
-    }
-}
-
-
-function conf(){
-	if($('#tag').val() == ""){
-		openErrorGritter('Error!', 'Tag is empty');
-		audio_error.play();
-		$("#tag").val("");
-		$("#tag").focus();
-
-		return false;
+			btn.innerText = 'Posting...'	
+			return false;
+		}
 	}
 
+	function conf(){
+		if($('#tag').val() == ""){
+			openErrorGritter('Error!', 'Tag is empty');
+			audio_error.play();
+			$("#tag").val("");
+			$("#tag").focus();
 
+			return false;
+		}
 
-	var tag = $('#tag_material').val();
-	var loop = $('#loop').val();
+		var tag = $('#tag_material').val();
+		var loop = $('#loop').val();
 		// var total = 0;
 		var count_ng = 0;
 		var ng = [];
@@ -350,6 +347,7 @@ function conf(){
 			material_number: $('#material_number').val(),
 			quantity: $('#material_quantity').val(),
 			employee_id: $('#employee_id').val(),
+			started_at: $('#started_at').val(),
 			ng: ng,
 			count_text: count_text,
 			// total_ng: total,
@@ -373,9 +371,7 @@ function conf(){
 				$('#tag').val("");
 				$('#tag').prop('disabled', false);
 				fillResult($('#employee_id').val());
-				$('#tag').focus();
-				
-				
+				$('#tag').focus();				
 			}
 			else{
 				var btn = document.getElementById('conf1');
@@ -447,6 +443,7 @@ function conf(){
 				$('#material_tag').val(result.middle_inventory.tag);
 				$('#material_number').val(result.middle_inventory.material_number);
 				$('#material_quantity').val(result.middle_inventory.quantity);
+				$('#started_at').val(result.started_at);
 			}
 			else{
 				$('#tag').prop('disabled', false);
@@ -494,5 +491,23 @@ function conf(){
 
 		return date;
 	};
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+	}
 </script>
 @endsection
