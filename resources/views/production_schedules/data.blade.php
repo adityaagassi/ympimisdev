@@ -103,10 +103,11 @@
 										<th style="width: 1%;">Date</th>
 										<th style="width: 2%;">Material Number</th>
 										<th style="width: 10%;">Material Description</th>
-										<th style="width: 1%;">Plan<br>(A)</th>
-										<th style="width: 1%;">Packing<br>(B)</th>
+										<th style="width: 1%;">Daily Plan</th>
+										<th style="width: 1%;">Plan Acc<br>(A)</th>
+										<th style="width: 1%;">Packing Acc<br>(B)</th>
 										<th style="width: 1%;">Diff<br>(B-A)</th>
-										<th style="width: 1%;">Actual Delivery<br>(C)</th>
+										<th style="width: 1%;">Actual Delivery Acc<br>(C)</th>
 										<th style="width: 1%;">Diff<br>(C-A)</th>
 									</tr>
 								</thead>
@@ -246,6 +247,7 @@
 					var qty_tmp = 0;
 					var deliv_tmp = 0;
 					var arr_datas = [];
+					var number = 0;
 					
 
 					$.each(result.production_sch, function(key, value) {
@@ -350,8 +352,18 @@
 							}
 						}
 
-						arr_datas.push({ due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), origin_group: value.origin_group_code});
+						if (typeof result.production_sch[key-1] !== 'undefined') {
+							if (result.production_sch[key-1].material_number != result.production_sch[key].material_number) {
+								number += 1;
+							}
+						} else {
+							number = 1;
+						}
+
+						arr_datas.push({ number: number,due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), origin_group: value.origin_group_code, plan_act: value.quantity});
 					});
+
+					console.table(arr_datas);
 
 					$.each(arr_datas, function(key5, value5) {
 						if (value5.due_date.split("-")[2] >= dateFrom.split("-")[2]) {
@@ -376,10 +388,18 @@
 							}
 
 							if (status1 == true && status2 == true) {
-								tableData += '<tr>';
+
+								if (value5.number %2 === 0) {
+									color = 'style = "background-color:#fffcb7"';
+								} else {
+									color = 'style = "background-color:#ffd8b7"';
+								}
+
+								tableData += '<tr '+color+'>';
 								tableData += '<td>'+ value5.due_date +'</td>';
-								tableData += '<td>'+ value5.material_number +'</td>';
-								tableData += '<td>'+ value5.mat_desc +'</td>';
+								tableData += '<td >'+ value5.material_number +'</td>';
+								tableData += '<td >'+ value5.mat_desc +'</td>';
+								tableData += '<td>'+ value5.plan_act +'</td>';
 								tableData += '<td>'+ value5.qty +'</td>';
 								tableData += '<td>'+ value5.pkg +'</td>';
 

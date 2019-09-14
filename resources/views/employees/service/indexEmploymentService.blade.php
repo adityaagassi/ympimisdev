@@ -306,7 +306,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 			fill_chat();
 
-			setInterval(check_chart, 10000);
+			// setInterval(check_chart, 10000);
 		});
 
 		function check_chart() {
