@@ -9,6 +9,7 @@ use App\Material;
 use App\Destination;
 use App\ProductionSchedule;
 use App\OriginGroup;
+use App\FloDetail;
 use DataTables;
 use Response;
 use Illuminate\Database\QueryException;
@@ -272,5 +273,81 @@ class ProductionScheduleController extends Controller
 
       }
             //
+    }
+
+    public function indexProductionData()
+    {
+      $periods = DB::table('shipment_schedules')->select('st_month')->distinct()->get();
+      $origin_groups = DB::table('origin_groups')->get();
+      $materials = Material::orderBy('material_number', 'ASC')->get();
+
+      return view('production_schedules.data', array(
+        'periods' => $periods,
+        'origin_groups' => $origin_groups,
+        'materials' => $materials,
+        'title' => 'Production Schedule Data',
+        'title_jp' => '??'
+      ))->with('page', 'Production Schedule');
+    }
+
+
+    public function fetchProductionData(Request $request)
+    {
+
+      // PRODUCTION SCHEDULE
+
+      $production_sch = ProductionSchedule::leftJoin("materials", "materials.material_number" ,"=" ,"production_schedules.material_number")
+      ->where("due_date", ">=", "2019-09-01")
+      ->where("category", "=", "FG");
+
+      if ($request->get("dateTo")) {
+        $production_sch = $production_sch->where("due_date", "<=", $request->get("dateTo"));
+      }
+
+      $production_sch = $production_sch->select("due_date", "production_schedules.material_number", "material_description", "quantity","origin_group_code")
+      ->get();
+      
+
+      // ACT PACKING
+
+      $flo = FloDetail::leftJoin("materials", "materials.material_number" ,"=" ,"flo_details.material_number")
+      ->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), ">=", "2019-09-01")
+      ->where("category", "=", "FG");
+      
+      if ($request->get("dateTo")) {
+        $flo = $flo->where(db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'), "<=", $request->get("dateTo"));
+      }
+
+      $flo = $flo->select("flo_details.material_number", db::raw('sum(flo_details.quantity) as packing'), db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d") as date'))
+      ->groupBy("flo_details.material_number", db::raw('DATE_FORMAT(flo_details.created_at,"%Y-%m-%d")'))
+      ->get();
+
+
+      // DELIVERY
+
+      if ($request->get("dateTo")) {
+        $where = ' AND DATE_FORMAT(deliv.created_at, "%Y-%m-%d") <= "'.$request->get("dateTo").'"';
+      } else {
+        $where = '';
+      }
+
+
+      $q_deliv = 'select * from (select flomaster.flo_number, flomaster.material_number, sum(flomaster.actual) deliv, flomaster.`status`, DATE_FORMAT(deliv.created_at, "%Y-%m-%d") date from
+      (select flos.flo_number, flos.material_number, actual, `status` from flos where `status` NOT IN (0,1,"m")) as flomaster left join 
+      (select flo_number, created_at from flo_logs where status_code = 2) as deliv on flomaster.flo_number = deliv.flo_number
+      where DATE_FORMAT(deliv.created_at, "%Y-%m-%d") >= "2019-09-01" '. $where .'
+      group by flomaster.material_number, DATE_FORMAT(deliv.created_at, "%Y-%m-%d")) alls
+      left join materials on materials.material_number = alls.material_number
+      where category = "FG"';
+
+      $deliv = db::select($q_deliv);
+
+      $response = array(
+        'status' => true,
+        'production_sch' => $production_sch,
+        'packing' => $flo,
+        'deliv' => $deliv
+      );
+      return Response::json($response);
     }
   }
