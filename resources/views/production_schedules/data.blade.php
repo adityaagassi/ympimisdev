@@ -246,9 +246,7 @@
 					var pkg_tmp = 0;
 					var qty_tmp = 0;
 					var deliv_tmp = 0;
-					var arr_datas = [];
-					var number = 0;
-					
+					var arr_datas = [];					
 
 					$.each(result.production_sch, function(key, value) {
 						var deliv_s = 0;
@@ -352,18 +350,12 @@
 							}
 						}
 
-						if (typeof result.production_sch[key-1] !== 'undefined') {
-							if (result.production_sch[key-1].material_number != result.production_sch[key].material_number) {
-								number += 1;
-							}
-						} else {
-							number = 1;
-						}
-
-						arr_datas.push({ number: number,due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), origin_group: value.origin_group_code, plan_act: value.quantity});
+						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), origin_group: value.origin_group_code, plan_act: value.quantity});
 					});
 
 					console.table(arr_datas);
+
+					number = 0;
 
 					$.each(arr_datas, function(key5, value5) {
 						if (value5.due_date.split("-")[2] >= dateFrom.split("-")[2]) {
@@ -388,8 +380,15 @@
 							}
 
 							if (status1 == true && status2 == true) {
+								if (typeof arr_datas[key5-1] !== 'undefined') {
+									if (arr_datas[key5-1].material_number != arr_datas[key5].material_number) {
+										number += 1;
+									}
+								} else {
+									number = 1;
+								}
 
-								if (value5.number %2 === 0) {
+								if (number %2 === 0) {
 									color = 'style = "background-color:#fffcb7"';
 								} else {
 									color = 'style = "background-color:#ffd8b7"';
