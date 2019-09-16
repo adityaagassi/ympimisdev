@@ -30,6 +30,10 @@
         border:1px solid rgb(180,180,180);
         font-size: 12px;
         background-color: rgb(240,240,240);
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 3px;
+        padding-right: 3px;
     }
     table.table-bordered > tfoot > tr > th{
         border:1px solid rgb(211,211,211);
@@ -41,7 +45,7 @@
         margin: 0px;
         padding: 0px;
         text-align: center;
-        height: 50px;
+        height: 35px;
     }
 </style>
 @stop
@@ -51,9 +55,9 @@
         <span style="font-size: 16px;" class="text-purple"><span style="font-size:22px;"><b>M</b></span>anufactur<span style="font-size:23px;"><b>i</b></span>ng <span style="font-size:22px;"><b>R</b></span>ealtime <span style="font-size:22px;"><b>A</b></span>cquisition of <span style="font-size:22px;"><b>I</b></span>nformation</span>
         <br>
         <b><span style="font-size: 20px;" class="text-purple">
-            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="26px">
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="24px">
             製 造 の リ ア ル タ イ ム 情 報
-            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="26px">
+            <img src="{{ url("images/logo_mirai_bundar.png")}}" height="24px">
         </span></b>
     </div>
 </section>
