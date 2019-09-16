@@ -306,6 +306,7 @@
 							data: avg_ot_budget,
 						},
 						{
+							color: '#90ed7d',
 							name: 'Mov. Budget',
 							type: 'spline',
 							data: mov_ot_budget,
@@ -314,6 +315,7 @@
 							}
 						},
 						{
+							color: '#434348',
 							name: 'Mov. Forecast',
 							type: 'spline',
 							data: mov_ot_forecast,
@@ -322,6 +324,7 @@
 							}
 						},
 						{
+							color: '#7cb5ec',
 							name: 'Mov. Actual',
 							type: 'spline',
 							data: mov_ot_actual,
