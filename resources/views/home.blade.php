@@ -80,15 +80,15 @@
                             <span style="font-weight: bold;">Overtime Information (残業の情報)</span>
                             <br>
                             <a href="{{ url("index/report/overtime_monthly") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> OT Monitor By CC (??)
+                                <i class="fa fa-caret-right"></i> OT Monitor By CC (コストセンターによる残業管理)
                             </a>
                             <br>
                             <a href="http://172.17.128.4/myhris/management/overtime_control" target="_blank">
-                                <i class="fa fa-caret-right"></i> OT Monitor Daily (??)
+                                <i class="fa fa-caret-right"></i> OT Monitor Daily (日次ざんぎぃう管理)
                             </a>
                             <br>
                             <a href="{{ url("index/report/overtime_section")}}" target="_blank">
-                                <i class="fa fa-caret-right"></i> OT By CC (??)
+                                <i class="fa fa-caret-right"></i> OT By CC (コストセンター別の残業)
                             </a>
                             <br>
                             <a href="{{ url("index/report/overtime_data") }}" target="_blank">
@@ -96,7 +96,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/report/overtime_resume") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (??)
+                                <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (月次残業・要員まとめ)
                             </a>
                             <br>
                             <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
@@ -125,7 +125,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/report/gender") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i>By Gender (??)
+                                <i class="fa fa-caret-right"></i>By Gender (性別)
                             </a>
                             <br>
                             <a href="{{ url("index/report/total_meeting") }}" target="_blank">
@@ -135,20 +135,20 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Presence Information (??)</span>
+                            <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                             <br>
                             <a href="{{ url("index/report/daily_attendance")}}" target="_blank">
-                                <i class="fa fa-caret-right"></i>Attendance (??)
+                                <i class="fa fa-caret-right"></i>Attendance (出勤)
                             </a>
                             <br>
                             <a href="{{ url("index/report/gender") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i>Absence (??)
+                                <i class="fa fa-caret-right"></i>Absence (欠勤)
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Other Information (??)</span>
+                            <span style="font-weight: bold;">Other Information (他の情報)</span>
                             <br>
                             <a href="{{ url("index/report/overtime_outsource") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
@@ -248,7 +248,7 @@
                                 <i class="fa fa-caret-right"></i> Pianica (ピアニカ組立)
                             </a><br>
                             <a href="{{ url("index/process_stamp_sx_assy") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone (???)
+                                <i class="fa fa-caret-right"></i> Saxophone (サックス仮組～組立)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=&model2=") }}">
@@ -285,7 +285,7 @@
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_production_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Production Schedule Data (??)
+                                <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                             </a>
                             <br>
                             <a href="{{ url("/index/dp_production_result") }}">
@@ -314,7 +314,7 @@
                             <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_shipment_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュール)
+                                <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)
                             </a>
                             <br>
                             <a href="{{ url("/index/fg_shipment_result") }}">
