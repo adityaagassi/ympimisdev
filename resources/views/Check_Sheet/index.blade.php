@@ -648,7 +648,7 @@ function addInspection(id){
      end   = new Date(on_or),
      diff  = new Date(end - start),
      days  = diff/1000/60/60/24;
-     if (days >= 1) {
+     if (days >= 0) {
       
       document.getElementById("importForm").submit();
     }else{
