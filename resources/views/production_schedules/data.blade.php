@@ -82,6 +82,18 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
 							<div class="form-group">
+								<select class="form-control select2" multiple="multiple" data-placeholder="Select Model" id="model" style="width: 100%;">
+									<option></option>
+									@foreach($models as $model)
+									<option value="{{ $model->model }}">{{ $model->model }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 col-md-offset-3">
+						<div class="col-md-6">
+							<div class="form-group">
 								<select class="form-control select2" multiple="multiple" id="material_number" style="width: 100%;" data-placeholder="Choose a Material Number..." required>
 									<option value=""></option>
 									@foreach($materials as $material)
@@ -223,6 +235,12 @@
 			material = "";
 		}
 
+		if ($('#model').val() != "") {
+			model = $('#model').val();
+		} else {
+			model = "";
+		}
+
 		var data = {
 			dateFrom:dateFrom,
 			dateTo:dateTo
@@ -350,15 +368,23 @@
 							}
 						}
 
-						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), origin_group: value.origin_group_code, plan_act: value.quantity});
+						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), model: value.model, origin_group: value.origin_group_code, plan_act: value.quantity});
 					});
 
 					console.table(arr_datas);
-
-					number = 0;
+					var number = 0;
 
 					$.each(arr_datas, function(key5, value5) {
+						if (typeof arr_datas[key5-1] !== 'undefined') {
+							if (arr_datas[key5-1].material_number != arr_datas[key5].material_number) {
+								number += 1;
+							}
+						} else {
+							number = 1;
+						}
+
 						if (value5.due_date.split("-")[2] >= dateFrom.split("-")[2]) {
+							//JIKA FILTER ORIGIN GROUP
 							if (originGroupCode != "") {
 								if (originGroupCode.indexOf(value5.origin_group) !== -1) {
 									status1 = true;
@@ -368,7 +394,8 @@
 							} else {
 								status1 = true;
 							}
-							
+
+							//JIKA FILTER MATERIAL
 							if (material != "") {
 								if (material.indexOf(value5.material_number) !== -1) {
 									status2 = true;
@@ -379,14 +406,18 @@
 								status2 = true;
 							}
 
-							if (status1 == true && status2 == true) {
-								if (typeof arr_datas[key5-1] !== 'undefined') {
-									if (arr_datas[key5-1].material_number != arr_datas[key5].material_number) {
-										number += 1;
-									}
+							//JIKA FILTER MODEL
+							if (model != "") {
+								if (model.indexOf(value5.model) !== -1) {
+									status3 = true;
 								} else {
-									number = 1;
-								}
+									status3 = false;
+								} 
+							} else {
+								status3 = true;
+							}
+
+							if (status1 == true && status2 == true && status3 == true) {
 
 								if (number %2 === 0) {
 									color = 'style = "background-color:#fffcb7"';
