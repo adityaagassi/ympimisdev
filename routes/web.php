@@ -193,6 +193,8 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_shipment_result', 'FinishedGoodsController@index_fg_shipment_result');
 	Route::get('fetch/fg_shipment_result', 'FinishedGoodsController@fetch_fg_shipment_result');
 	Route::get('fetch/tb_shipment_result', 'FinishedGoodsController@fetch_tb_shipment_result');
+	Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
+	Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
 });
 
 Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
@@ -364,8 +366,6 @@ Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::post('edit/production_schedule', 'ProductionScheduleController@edit');
 	Route::get('view/production_schedule', 'ProductionScheduleController@show');
 	Route::post('import/production_schedule', 'ProductionScheduleController@import');
-	Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
-	Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
 });
 
 Route::group(['nav' => 'M10', 'middleware' => 'permission'], function(){
