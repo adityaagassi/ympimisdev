@@ -133,20 +133,61 @@
 							</div>
 						</div>
 					</div>
-					<div class="nav-tabs-custom">
-						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
-								<div id="chart_ic_3" style="width: 99%;"></div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_ic_3_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_ic_3_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
 							</div>
 						</div>
 					</div>
-					<div class="nav-tabs-custom">
-						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
-								<div id="chart_ic_4" style="width: 99%;"></div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_ic_4_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_ic_4_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
 							</div>
 						</div>
 					</div>
+
+					<div class="nav-tabs-custom">
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1">
+								<div id="chart_ic_5" style="width: 99%;"></div>
+							</div>
+						</div>
+					</div>
+
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
@@ -175,20 +216,52 @@
 							</div>
 						</div>
 					</div>
-					<div class="nav-tabs-custom">
-						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
-								<div id="chart_kensa_2" style="width: 99%;"></div>
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_kensa_2_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_kensa_2_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
 							</div>
 						</div>
 					</div>
-					<div class="nav-tabs-custom">
-						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
-								<div id="chart_kensa_3" style="width: 99%;"></div>
+
+					<div class="row">
+						<div class="col-xs-12" style="padding:0px;">
+							<div class="col-xs-6" style="padding-right: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_kensa_3_alto" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-left: 0.5%;">
+								<div class="nav-tabs-custom">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div id="chart_kensa_3_tenor" style="width: 99%;"></div>
+										</div>
+									</div>
+								</div>	
 							</div>
 						</div>
 					</div>
+
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
@@ -447,439 +520,736 @@
 			}
 		});
 
-		$.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
-					$('#body_weekly').append().empty();
-					var bulan = result.bulan;
-					var week_name = [];
-					var ng = [];
-					var g = [];
-					var perolehan = []
-					var ng_rate = [];
-					var ng_rate_weekly = [];
+$.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, status, xhr) {
+	if(xhr.status == 200){
+		if(result.status){
+			$('#body_weekly').append().empty();
+			var bulan = result.bulan;
+			var week_name = [];
+			var ng = [];
+			var g = [];
+			var perolehan = []
+			var ng_rate = [];
+			var ng_rate_weekly = [];
 
-					for (var i = 0; i < result.weekly.length; i++) {
-						week_name.push(result.weekly[i].week_name);
+			for (var i = 0; i < result.weekly.length; i++) {
+				week_name.push(result.weekly[i].week_name);
 
-						ng.push(parseInt(result.weekly[i].ng));
-						g.push(parseInt(result.weekly[i].g));
-						ng[i] = ng[i] || 0;
-						g[i] = g[i] || 0;
-						perolehan[i] = ng[i] + g[i];
-						ng_rate[i] = (ng[i] / perolehan[i]) * 100;
-						ng_rate[i] = ng_rate[i] || 0;
-						ng_rate_weekly.push(ng_rate[i]);
-					}
-
-					var body = "";
-					for (var i = 0; i < result.weekly.length; i++) {
-						body += "<tr>";
-						body += "<td>"+week_name[i]+"</td>";
-						body += "<td>"+perolehan[i]+"</td>";
-						body += "<td>"+ng[i]+"</td>";
-						body += "<td>"+ng_rate_weekly[i].toFixed(2)+"%</td>";
-						body += "</tr>";
-					}
-					$('#body_weekly').append(body);	
-
-					Highcharts.chart('chart_ic_2', {
-						chart: {
-							type: 'line'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Weekly NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: week_name
-						},
-						yAxis: {
-							title: {
-								text: 'NG Rate (%)'
-							},
-							min: 0
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
-
-						},
-						plotOptions: {
-							line: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y,2)+'%';
-									}
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							data: ng_rate_weekly
-						}
-						]
-					});
-
-				}
-			}
-		});
-
-		$.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
-					var ng_name = [];
-					var jml = [];			
-					var ng_rate = [];			
-					for (var i = 0; i < result.ngIC.length; i++) {
-						ng_name.push(result.ngIC[i].ng_name);
-						jml.push(parseInt(result.ngIC[i].jml));
-						ng_rate.push((jml[i]/result.totalCekIC[0].total)*100);
-					}
-					var bulan = result.bulan;
-
-					Highcharts.chart('chart_ic_3', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Highest NG IC Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: ng_name,
-							labels: {
-								padding: 30,
-								style: {
-									textOverflow: 'ellipsis',
-								},
-							}
-						},
-						yAxis: {
-							type: 'logarithmic',
-							title: {
-								text: 'NG Rate (%)'
-							}
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>Not Good</span><br/>',
-							pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y}</b> <br/>'
-						},
-						plotOptions: {
-							series: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y,2)+'%';
-									}
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'NG',
-							data: ng_rate,
-						}
-						]
-					});
-
-					var ng_name = [];
-					var jml = [];			
-					var ng_rate = [];			
-					for (var i = 0; i < result.ngKensa.length; i++) {
-						ng_name.push(result.ngKensa[i].ng_name);
-						jml.push(parseInt(result.ngKensa[i].jml));
-						ng_rate.push((jml[i]/result.totalCekKensa[0].total)*100);
-					}
-					var bulan = result.bulan;
-
-					Highcharts.chart('chart_kensa_2', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Highest NG Kensa Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: ng_name,
-							labels: {
-								padding: 30,
-								style: {
-									textOverflow: 'ellipsis',
-								},
-							}
-						},
-						yAxis: {
-							type: 'logarithmic',
-							title: {
-								text: 'NG Rate (%)'
-							}
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>Not Good</span><br/>',
-							pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y}</b> <br/>'
-						},
-						plotOptions: {
-							series: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y,2)+'%';
-									}
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'NG',
-							data: ng_rate,
-						}
-						]
-					});
-
-					var key = [];
-					var jml = [];			
-					for (var i = 0; i < result.ngKensaKey.length; i++) {
-						key.push(result.ngKensaKey[i].key);
-						jml.push(parseInt(result.ngKensaKey[i].jml));
-					}
-					
-					Highcharts.chart('chart_kensa_3', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Highest Key NG Kensa Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: key,
-							labels: {
-								padding: 30,
-								style: {
-									textOverflow: 'ellipsis',
-								},
-							}
-						},
-						yAxis: {
-							type: 'logarithmic',
-							title: {
-								text: 'Total Not Good'
-							}
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>Not Good</span><br>',
-							pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
-						},
-						plotOptions: {
-							series: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Key',
-							data: jml,
-						}
-						]
-					});
-				}
+				ng.push(parseInt(result.weekly[i].ng));
+				g.push(parseInt(result.weekly[i].g));
+				ng[i] = ng[i] || 0;
+				g[i] = g[i] || 0;
+				perolehan[i] = ng[i] + g[i];
+				ng_rate[i] = (ng[i] / perolehan[i]) * 100;
+				ng_rate[i] = ng_rate[i] || 0;
+				ng_rate_weekly.push(ng_rate[i]);
 			}
 
-		});
-
-		$.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
-					var tgl = [];
-					var ng = [];
-					var g = [];
-					var ng_rate = [];
-					var ng_rate_daily = [];
-
-					for (var i = 0; i < result.dailyIC.length; i++) {
-						tgl.push(result.dailyIC[i].tgl);
-
-						ng.push(result.dailyIC[i].ng);
-						g.push(result.dailyIC[i].g);
-						ng[i] = ng[i] || 0;
-						g[i] = g[i] || 0;
-						ng_rate[i] = (ng[i] / (ng[i]+g[i])) * 100;
-						ng_rate[i] = ng_rate[i] || 0;
-						ng_rate_daily.push(ng_rate[i]);
-					}
-					var bulan = result.bulan;
-
-
-					Highcharts.chart('chart_ic_4', {
-						chart: {
-							type: 'line'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Daily NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: tgl
-						},
-						yAxis: {
-							title: {
-								text: 'NG Rate (%)'
-							},
-							min: 0
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
-
-						},
-						plotOptions: {
-							line: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y,2)+'%';
-									}
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							data: ng_rate_daily
-						}
-						]
-					});
-
-					var tgl = [];
-					var ng_alto = [];
-					var total_alto = [];
-					var ng_rate_alto = [];
-
-					for (var i = 0; i < result.dailyKensaAlto.length; i++) {
-						tgl.push(result.dailyKensaAlto[i].tgl);
-
-						ng_alto.push(result.dailyKensaAlto[i].ng);
-						total_alto.push(result.dailyKensaAlto[i].total);
-						ng_alto[i] = ng_alto[i] || 0;
-						total_alto[i] = total_alto[i] || 0;
-						ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
-					}
-
-					var tgl = [];
-					var ng_tenor = [];
-					var total_tenor = [];
-					var ng_rate_tenor = [];
-
-					for (var i = 0; i < result.dailyKensaTenor.length; i++) {
-						tgl.push(result.dailyKensaTenor[i].tgl);
-
-						ng_tenor.push(result.dailyKensaTenor[i].ng);
-						total_tenor.push(result.dailyKensaTenor[i].total);
-						ng_tenor[i] = ng_tenor[i] || 0;
-						total_tenor[i] = total_tenor[i] || 0;
-						ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
-					}
-					var bulan = result.bulan;
-
-
-					Highcharts.chart('chart_kensa_4', {
-						chart: {
-							type: 'line'
-						},
-						title: {
-							text: '<span style="font-size: 18pt;">Daily NG Rate Kensa Sax Key on '+bulanText(bulan)+'</span>',
-							useHTML: true
-						},
-						xAxis: {
-							categories: tgl
-						},
-						yAxis: {
-							title: {
-								text: 'NG Rate (%)'
-							},
-							min: 0
-						},
-						legend : {
-							enabled: true
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
-
-						},
-						plotOptions: {
-							line: {
-								cursor: 'pointer',
-								borderWidth: 0,
-								dataLabels: {
-									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y,2)+'%';
-									}
-								}
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							name: 'Alto',
-							data: ng_rate_alto
-						},
-						{
-							name: 'Tenor',
-							data: ng_rate_tenor
-						}
-						]
-					});
-				}
+			var body = "";
+			for (var i = 0; i < result.weekly.length; i++) {
+				body += "<tr>";
+				body += "<td>"+week_name[i]+"</td>";
+				body += "<td>"+perolehan[i]+"</td>";
+				body += "<td>"+ng[i]+"</td>";
+				body += "<td>"+ng_rate_weekly[i].toFixed(2)+"%</td>";
+				body += "</tr>";
 			}
-		});
+			$('#body_weekly').append(body);	
 
+			Highcharts.chart('chart_ic_2', {
+				chart: {
+					type: 'line'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">Weekly NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: week_name
+				},
+				yAxis: {
+					title: {
+						text: 'NG Rate (%)'
+					},
+					min: 0
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
 
+				},
+				plotOptions: {
+					line: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					data: ng_rate_weekly
+				}
+				]
+			});
+
+		}
 	}
+});
+
+$.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
+	if(xhr.status == 200){
+		if(result.status){
+			var ng_name_alto = [];
+			var jml_alto = [];			
+			var ng_rate_alto = [];			
+			for (var i = 0; i < result.ngIC_alto.length; i++) {
+				ng_name_alto.push(result.ngIC_alto[i].ng_name);
+				jml_alto.push(parseInt(result.ngIC_alto[i].jml));
+				ng_rate_alto.push((jml_alto[i]/result.totalCekIC_alto[0].total)*100);
+			}
+			var bulan = result.bulan;
+
+			Highcharts.chart('chart_ic_3_alto', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">Highest NG IC Alto Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: ng_name_alto,
+					labels: {
+						// padding: 50,
+						useHTML: true,
+						style: {
+							maxWidth: '90px',
+							textOverflow: 'ellipsis',
+						},
+					}
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'NG Rate (%)'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Alto Key Not Good</span><br/>',
+					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'NG',
+					data: ng_rate_alto,
+				}
+				]
+			});
+
+			var ng_name_tenor = [];
+			var jml_tenor = [];			
+			var ng_rate_tenor = [];			
+			for (var i = 0; i < result.ngIC_tenor.length; i++) {
+				ng_name_tenor.push(result.ngIC_tenor[i].ng_name);
+				jml_tenor.push(parseInt(result.ngIC_tenor[i].jml));
+				ng_rate_tenor.push((jml_tenor[i]/result.totalCekIC_tenor[0].total)*100);
+			}
+			var bulan = result.bulan;
+
+			Highcharts.chart('chart_ic_3_tenor', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">Highest NG IC Tenor Sax Key on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: ng_name_tenor,
+					labels: {
+						// padding: 30,
+						useHTML: true,
+						style: {
+							maxWidth: '90px',
+							textOverflow: 'ellipsis',
+						},
+					}
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'NG Rate (%)'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Tenor Key Not Good</span><br/>',
+					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'NG',
+					data: ng_rate_tenor,
+				}
+				]
+			});
+
+			var key = [];
+			var jml = [];			
+			for (var i = 0; i < result.ngICKey_alto.length; i++) {
+				key.push(result.ngICKey_alto[i].key);
+				jml.push(parseInt(result.ngICKey_alto[i].jml));
+			}
+
+			Highcharts.chart('chart_ic_4_alto', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">10 Highest Keys NG IC Alto Sax on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: key
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'Total Not Good'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Not Good</span><br>',
+					pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'Key',
+					data: jml,
+				}
+				]
+			});
+
+			var key = [];
+			var jml = [];			
+			for (var i = 0; i < result.ngICKey_tenor.length; i++) {
+				key.push(result.ngICKey_tenor[i].key);
+				jml.push(parseInt(result.ngICKey_tenor[i].jml));
+			}
+
+			Highcharts.chart('chart_ic_4_tenor', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">10 Highest Keys NG IC Tenor Sax on '+bulanText(bulan)+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: key
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'Total Not Good'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Not Good</span><br>',
+					pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'Key',
+					data: jml,
+				}
+				]
+			});
+
+			var ng_name_alto = [];
+			var jml_alto = [];			
+			var ng_rate_alto = [];			
+			for (var i = 0; i < result.ngKensa_alto.length; i++) {
+				ng_name_alto.push(result.ngKensa_alto[i].ng_name);
+				jml_alto.push(parseInt(result.ngKensa_alto[i].jml));
+				ng_rate_alto.push((jml_alto[i]/result.totalCekKensa_alto[0].total)*100);
+			}
+			var bulan = result.bulan;
+
+			Highcharts.chart('chart_kensa_2_alto', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<center><span style="font-size: 18pt;">10 Highest NG Kensa Alto Sax Key on '+bulanText(bulan)+'</center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: ng_name_alto,
+					labels: {
+						// padding: 50,
+						useHTML: true,
+						style: {
+							maxWidth: '90px',
+							textOverflow: 'ellipsis',
+						},
+					}
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'NG Rate (%)'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Alto Key Not Good</span><br/>',
+					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'NG',
+					data: ng_rate_alto,
+				}
+				]
+			});
+
+			var ng_name_tenor = [];
+			var jml_tenor = [];			
+			var ng_rate_tenor = [];			
+			for (var i = 0; i < result.ngKensa_tenor.length; i++) {
+				ng_name_tenor.push(result.ngKensa_tenor[i].ng_name);
+				jml_tenor.push(parseInt(result.ngKensa_tenor[i].jml));
+				ng_rate_tenor.push((jml_tenor[i]/result.totalCekKensa_tenor[0].total)*100);
+			}
+			var bulan = result.bulan;
+
+			Highcharts.chart('chart_kensa_2_tenor', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<center><span style="font-size: 18pt;">10 Highest NG Kensa Tenor Sax Key on '+bulanText(bulan)+'</center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: ng_name_tenor,
+					labels: {
+						// padding: 30,
+						useHTML: true,
+						style: {
+							maxWidth: '90px',
+							textOverflow: 'ellipsis',
+						},
+					}
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'NG Rate (%)'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Tenor Key Not Good</span><br/>',
+					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y:.2f}%</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'NG',
+					data: ng_rate_tenor,
+				}
+				]
+			});
+
+			var key = [];
+			var jml = [];			
+			for (var i = 0; i < result.ngKensaKey_alto.length; i++) {
+				key.push(result.ngKensaKey_alto[i].key);
+				jml.push(parseInt(result.ngKensaKey_alto[i].jml));
+			}
+
+			Highcharts.chart('chart_kensa_3_alto', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<center><span style="font-size: 18pt;">10 Highest Keys NG Kensa Alto Sax on '+bulanText(bulan)+'</center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: key
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'Total Not Good'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Not Good</span><br>',
+					pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'Key',
+					data: jml,
+				}
+				]
+			});
+
+			var key = [];
+			var jml = [];			
+			for (var i = 0; i < result.ngKensaKey_tenor.length; i++) {
+				key.push(result.ngKensaKey_tenor[i].key);
+				jml.push(parseInt(result.ngKensaKey_tenor[i].jml));
+			}
+
+			Highcharts.chart('chart_kensa_3_tenor', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: '<center><span style="font-size: 18pt;">10 Highest Keys NG Kensa Tenor Sax on '+bulanText(bulan)+'</center></span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: key
+				},
+				yAxis: {
+					type: 'logarithmic',
+					title: {
+						text: 'Total Not Good'
+					}
+				},
+				legend : {
+					enabled: false
+				},
+				tooltip: {
+					headerFormat: '<span>Not Good</span><br>',
+					pointFormat: '<span style="color:{point.color}">Key {point.category}</span>: <b>{point.y}</b> <br/>'
+				},
+				plotOptions: {
+					series: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					"colorByPoint": true,
+					name: 'Key',
+					data: jml,
+				}
+				]
+			});
+		}
+	}
+
+});
+
+$.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xhr) {
+	if(xhr.status == 200){
+		if(result.status){
+			var tgl = [];
+			var ng_alto = [];
+			var total_alto = [];
+			var ng_rate_alto = [];
+
+			for (var i = 0; i < result.dailyICAlto.length; i++) {
+				tgl.push(result.dailyICAlto[i].tgl);
+
+				ng_alto.push(result.dailyICAlto[i].ng);
+				total_alto.push(result.dailyICAlto[i].total);
+				ng_alto[i] = ng_alto[i] || 0;
+				total_alto[i] = total_alto[i] || 0;
+				ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
+			}
+
+			var tgl = [];
+			var ng_tenor = [];
+			var total_tenor = [];
+			var ng_rate_tenor = [];
+
+			for (var i = 0; i < result.dailyICTenor.length; i++) {
+				tgl.push(result.dailyICTenor[i].tgl);
+
+				ng_tenor.push(result.dailyICTenor[i].ng);
+				total_tenor.push(result.dailyICTenor[i].total);
+				ng_tenor[i] = ng_tenor[i] || 0;
+				total_tenor[i] = total_tenor[i] || 0;
+				ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
+			}
+			var bulan = result.bulan;
+
+			Highcharts.chart('chart_ic_5', {
+				chart: {
+					type: 'line'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">Daily NG Rate IC Sax Key on '+bulanText(bulan)+'</span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: tgl
+				},
+				yAxis: {
+					title: {
+						text: 'NG Rate (%)'
+					},
+					min: 0
+				},
+				legend : {
+					enabled: true
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
+
+				},
+				plotOptions: {
+					line: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					name: 'Alto',
+					data: ng_rate_alto
+				},
+				{
+					name: 'Tenor',
+					data: ng_rate_tenor
+				}
+				]
+			});
+
+			var tgl = [];
+			var ng_alto = [];
+			var total_alto = [];
+			var ng_rate_alto = [];
+
+			for (var i = 0; i < result.dailyKensaAlto.length; i++) {
+				tgl.push(result.dailyKensaAlto[i].tgl);
+
+				ng_alto.push(result.dailyKensaAlto[i].ng);
+				total_alto.push(result.dailyKensaAlto[i].total);
+				ng_alto[i] = ng_alto[i] || 0;
+				total_alto[i] = total_alto[i] || 0;
+				ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
+			}
+
+			var tgl = [];
+			var ng_tenor = [];
+			var total_tenor = [];
+			var ng_rate_tenor = [];
+
+			for (var i = 0; i < result.dailyKensaTenor.length; i++) {
+				tgl.push(result.dailyKensaTenor[i].tgl);
+
+				ng_tenor.push(result.dailyKensaTenor[i].ng);
+				total_tenor.push(result.dailyKensaTenor[i].total);
+				ng_tenor[i] = ng_tenor[i] || 0;
+				total_tenor[i] = total_tenor[i] || 0;
+				ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
+			}
+			var bulan = result.bulan;
+
+
+			Highcharts.chart('chart_kensa_4', {
+				chart: {
+					type: 'line'
+				},
+				title: {
+					text: '<span style="font-size: 18pt;">Daily NG Rate Kensa Sax Key on '+bulanText(bulan)+'</span>',
+					useHTML: true
+				},
+				xAxis: {
+					categories: tgl
+				},
+				yAxis: {
+					title: {
+						text: 'NG Rate (%)'
+					},
+					min: 0
+				},
+				legend : {
+					enabled: true
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">NG Rate </span>: <b>{point.y:.2f}%</b> <br/>',
+
+				},
+				plotOptions: {
+					line: {
+						cursor: 'pointer',
+						borderWidth: 0,
+						dataLabels: {
+							enabled: true,
+							formatter: function () {
+								return Highcharts.numberFormat(this.y,2)+'%';
+							}
+						}
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					name: 'Alto',
+					data: ng_rate_alto
+				},
+				{
+					name: 'Tenor',
+					data: ng_rate_tenor
+				}
+				]
+			});
+		}
+	}
+});
+
+
+}
 
 </script>
 

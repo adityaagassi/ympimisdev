@@ -181,21 +181,22 @@
 					var head = '';
 					head += '<tr>';
 					head += '<th colspan=2>Shift 3</th>';
-					for (var i = 0; i < result.OPS3.length; i++) {
-						head += '<th colspan=2>'+result.OPS3[i].name+'</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th colspan=2>'+result.key[i].kunci+'</th>';
 					}
-					head += '<th rowspan=2>82Z</th>';
+					head += '<th>82Z</th>';
 					head += '<th colspan=2>Total</th>';
 					head += '</tr>';
 					head += '<tr>';
-					head += '<th>Tanggal</th>';
-					head += '<th>Jam</th>';
-					for (var i = 0; i < result.OPS3.length; i++) {
-						head += '<th valign=middle>ASKEY</th>';
-						head += '<th valign=middle>TSKEY</th>';	
+					head += '<th style="width:11%;">Tanggal</th>';
+					head += '<th style="width:7%;">Jam</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th style="width:4%;" valign=middle>AS</th>';
+						head += '<th style="width:4%;" valign=middle>TS</th>';	
 					}
-					head += '<th valign=middle>ASKEY</th>';
-					head += '<th valign=middle>TSKEY</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>TS</th>';
 					head += '</tr>';
 
 					var body = '';
@@ -208,40 +209,40 @@
 						var sum_as = 0;
 						var sum_ts = 0;
 
-						for (var j = 0; j < result.OPS3.length; j++) {
+						for (var j = 0; j < result.key.length; j++) {
 							//Alto
 							var isAsEmpty =  true;
 							for (var k = 0; k < result.dataShift3[i].length; k++) {
-								if((result.dataShift3[i][k].hpl == 'ASKEY') && (result.OPS3[j].name == result.dataShift3[i][k].name)){
-									body += '<td>'+result.dataShift3[i][k].jml+'</td>';
+								if((result.dataShift3[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift3[i][k].kunci)){
+									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift3[i][k].jml+'</td>';
 									sum_as += result.dataShift3[i][k].jml;
 									isAsEmpty = false;
 								}
 							}
 							if(isAsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: #ffff66;color:black;">0</td>';
 							}
 
 							//Tenor
 							var isTsEmpty =  true;
 							for (var k = 0; k < result.dataShift3[i].length; k++) {
-								if((result.dataShift3[i][k].hpl == 'TSKEY') && (result.OPS3[j].name == result.dataShift3[i][k].name)){
-									body += '<td>'+result.dataShift3[i][k].jml+'</td>';
+								if((result.dataShift3[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift3[i][k].kunci)){
+									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift3[i][k].jml+'</td>';
 									sum_ts += result.dataShift3[i][k].jml;
 									isTsEmpty = false;
 								}
 							}
 							if(isTsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: rgb(157, 255, 105);color:black;">0</td>';
 							}
 
 						}
 
 						if(result.z3[i].length > 0){
-							body += '<td>'+result.z3[i][0].jml+'</td>';
+							body += '<td style="background-color: #434348;color:white;">'+result.z3[i][0].jml+'</td>';
 							sum_as += result.z3[i][0].jml;
 						}else{
-							body += '<td>0</td>';
+							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}
 
 						body += '<td>'+sum_as+'</td>';
@@ -253,25 +254,27 @@
 					$('#body3').append(body);
 					//End Shift 3
 					
+
 					//Start Shift 1
 					var head = '';
 					head += '<tr>';
 					head += '<th colspan=2>Shift 1</th>';
-					for (var i = 0; i < result.OPS1.length; i++) {
-						head += '<th colspan=2>'+result.OPS1[i].name+'</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th colspan=2>'+result.key[i].kunci+'</th>';
 					}
-					head += '<th rowspan=2>82Z</th>';
+					head += '<th>82Z</th>';
 					head += '<th colspan=2>Total</th>';
 					head += '</tr>';
 					head += '<tr>';
-					head += '<th>Tanggal</th>';
-					head += '<th>Jam</th>';
-					for (var i = 0; i < result.OPS1.length; i++) {
-						head += '<th valign=middle>ASKEY</th>';
-						head += '<th valign=middle>TSKEY</th>';	
+					head += '<th style="width:11%;">Tanggal</th>';
+					head += '<th style="width:7%;">Jam</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th style="width:4%;" valign=middle>AS</th>';
+						head += '<th style="width:4%;" valign=middle>TS</th>';	
 					}
-					head += '<th valign=middle>ASKEY</th>';
-					head += '<th valign=middle>TSKEY</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>TS</th>';
 					head += '</tr>';
 
 					var body = '';
@@ -279,45 +282,45 @@
 						body += '<tr>';
 
 						body += '<td>'+result.tanggal+'</td>';
-						body += '<td>'+jam[1][i]+'</td>';
+						body += '<td>'+jam[0][i]+'</td>';
 
 						var sum_as = 0;
 						var sum_ts = 0;
 
-						for (var j = 0; j < result.OPS1.length; j++) {
+						for (var j = 0; j < result.key.length; j++) {
 							//Alto
 							var isAsEmpty =  true;
 							for (var k = 0; k < result.dataShift1[i].length; k++) {
-								if((result.dataShift1[i][k].hpl == 'ASKEY') && (result.OPS1[j].name == result.dataShift1[i][k].name)){
-									body += '<td>'+result.dataShift1[i][k].jml+'</td>';
+								if((result.dataShift1[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift1[i][k].kunci)){
+									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift1[i][k].jml+'</td>';
 									sum_as += result.dataShift1[i][k].jml;
 									isAsEmpty = false;
 								}
 							}
 							if(isAsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: #ffff66;color:black;">0</td>';
 							}
 
 							//Tenor
 							var isTsEmpty =  true;
 							for (var k = 0; k < result.dataShift1[i].length; k++) {
-								if((result.dataShift1[i][k].hpl == 'TSKEY') && (result.OPS1[j].name == result.dataShift1[i][k].name)){
-									body += '<td>'+result.dataShift1[i][k].jml+'</td>';
+								if((result.dataShift1[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift1[i][k].kunci)){
+									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift1[i][k].jml+'</td>';
 									sum_ts += result.dataShift1[i][k].jml;
 									isTsEmpty = false;
 								}
 							}
 							if(isTsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: rgb(157, 255, 105);color:black;">0</td>';
 							}
 
 						}
 
 						if(result.z1[i].length > 0){
-							body += '<td>'+result.z1[i][0].jml+'</td>';
+							body += '<td style="background-color: #434348;color:white;">'+result.z1[i][0].jml+'</td>';
 							sum_as += result.z1[i][0].jml;
 						}else{
-							body += '<td>0</td>';
+							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}
 
 						body += '<td>'+sum_as+'</td>';
@@ -334,21 +337,22 @@
 					var head = '';
 					head += '<tr>';
 					head += '<th colspan=2>Shift 2</th>';
-					for (var i = 0; i < result.OPS2.length; i++) {
-						head += '<th colspan=2>'+result.OPS2[i].name+'</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th colspan=2>'+result.key[i].kunci+'</th>';
 					}
-					head += '<th rowspan=2>82Z</th>';
+					head += '<th>82Z</th>';
 					head += '<th colspan=2>Total</th>';
 					head += '</tr>';
 					head += '<tr>';
-					head += '<th>Tanggal</th>';
-					head += '<th>Jam</th>';
-					for (var i = 0; i < result.OPS2.length; i++) {
-						head += '<th valign=middle>ASKEY</th>';
-						head += '<th valign=middle>TSKEY</th>';	
+					head += '<th style="width:11%;">Tanggal</th>';
+					head += '<th style="width:7%;">Jam</th>';
+					for (var i = 0; i < result.key.length; i++) {
+						head += '<th style="width:4%;" valign=middle>AS</th>';
+						head += '<th style="width:4%;" valign=middle>TS</th>';	
 					}
-					head += '<th valign=middle>ASKEY</th>';
-					head += '<th valign=middle>TSKEY</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>AS</th>';
+					head += '<th style="width:4%;" valign=middle>TS</th>';
 					head += '</tr>';
 
 					var body = '';
@@ -356,45 +360,45 @@
 						body += '<tr>';
 
 						body += '<td>'+result.tanggal+'</td>';
-						body += '<td>'+jam[2][i]+'</td>';
+						body += '<td>'+jam[0][i]+'</td>';
 
 						var sum_as = 0;
 						var sum_ts = 0;
 
-						for (var j = 0; j < result.OPS2.length; j++) {
+						for (var j = 0; j < result.key.length; j++) {
 							//Alto
 							var isAsEmpty =  true;
 							for (var k = 0; k < result.dataShift2[i].length; k++) {
-								if((result.dataShift2[i][k].hpl == 'ASKEY') && (result.OPS2[j].name == result.dataShift2[i][k].name)){
-									body += '<td>'+result.dataShift2[i][k].jml+'</td>';
+								if((result.dataShift2[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift2[i][k].kunci)){
+									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift2[i][k].jml+'</td>';
 									sum_as += result.dataShift2[i][k].jml;
 									isAsEmpty = false;
 								}
 							}
 							if(isAsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: #ffff66;color:black;">0</td>';
 							}
 
 							//Tenor
 							var isTsEmpty =  true;
 							for (var k = 0; k < result.dataShift2[i].length; k++) {
-								if((result.dataShift2[i][k].hpl == 'TSKEY') && (result.OPS2[j].name == result.dataShift2[i][k].name)){
-									body += '<td>'+result.dataShift2[i][k].jml+'</td>';
+								if((result.dataShift2[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift2[i][k].kunci)){
+									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift2[i][k].jml+'</td>';
 									sum_ts += result.dataShift2[i][k].jml;
 									isTsEmpty = false;
 								}
 							}
 							if(isTsEmpty){
-								body += '<td>0</td>';
+								body += '<td style="background-color: rgb(157, 255, 105);color:black;">0</td>';
 							}
 
 						}
 
 						if(result.z2[i].length > 0){
-							body += '<td>'+result.z2[i][0].jml+'</td>';
+							body += '<td style="background-color: #434348;color:white;">'+result.z2[i][0].jml+'</td>';
 							sum_as += result.z2[i][0].jml;
 						}else{
-							body += '<td>0</td>';
+							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}
 
 						body += '<td>'+sum_as+'</td>';
@@ -405,8 +409,6 @@
 					$('#head2').append(head);
 					$('#body2').append(body);
 					//End Shift 2
-
-
 				}
 			}
 
