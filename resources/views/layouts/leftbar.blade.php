@@ -358,7 +358,7 @@
 
 
   @if(isset($page) && $page == "Process Stamp SX")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/process_stamp_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
+    <a href="{{ url("/index/process_stamp_sx_assy") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
   </li>
 </ul>
 </li>
