@@ -2800,7 +2800,7 @@ SELECT x_return.*,
         END) as model2
 from (
 SELECT * from (
-SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='043' and process_code in ('2','3') and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='043' and `status` !='return') 
+SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='043' and process_code in ('2','3') and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='043' and `status` ='return') 
 ) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='043')
 ) x_return
 ) x_return2
@@ -2872,217 +2872,217 @@ select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN
 	}
 
 
-	public function fetchResultSaxnewStamp(Request $request)
-	{
-		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-		}
-		else{
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
-		}
+// 	public function fetchResultSaxnewStamp(Request $request)
+// 	{
+// 		if(date('D')=='Fri' ){
+// 			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+// 		}
+// 		else{
+// 			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+// 		}
 
-		$first = date('Y-m-01');
-		if(date('Y-m-d') != date('Y-m-01')){
-			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
-		}
-		else{
-			$last = date('Y-m-d');
-		}
-		$now = date('Y-m-d');
+// 		$first = date('Y-m-01');
+// 		if(date('Y-m-d') != date('Y-m-01')){
+// 			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
+// 		}
+// 		else{
+// 			$last = date('Y-m-d');
+// 		}
+// 		$now = date('Y-m-d');
 
-		if($first != $now){
-			$debt = "union all
+// 		if($first != $now){
+// 			$debt = "union all
 
-			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-			(
-			select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+// 			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+// 			(
+// 			select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
 
-			union all
+// 			union all
 
-			select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-			) as debt
-			group by material_number";
-		}
-		else{
-			$debt= "";
-		}
+// 			select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+// 			) as debt
+// 			group by material_number";
+// 		}
+// 		else{
+// 			$debt= "";
+// 		}
 
 
-		$query = " select * from (
-		 select * from (
-		select * from ( select * from ( select a.model2, sum(a.debt) as debt, sum(a.plan) as plan, sum(a.actual) as actual  from (
-		select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2 from ( 
+// 		$query = " select * from (
+// 		 select * from (
+// 		select * from ( select * from ( select a.model2, sum(a.debt) as debt, sum(a.plan) as plan, sum(a.actual) as actual  from (
+// 		select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
+//              WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
+//              WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
+//              WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
+//              WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
+//              WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
+//              WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
+//              WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
+//              WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
+//              WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
+//              WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
+//              WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
+//              WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
+//              WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
+//              WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
+//              WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
+//              WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
+//         END) as model2 from ( 
 
-		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
-		(
-		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-		from production_schedules 
-		where due_date = '". $now ."' 
-		group by material_number
+// 		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+// 		(
+// 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+// 		from production_schedules 
+// 		where due_date = '". $now ."' 
+// 		group by material_number
 
-		union all
+// 		union all
 
-		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-		from flo_details 
-		where date(created_at) = '". $now ."'  
-		group by material_number
+// 		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+// 		from flo_details 
+// 		where date(created_at) = '". $now ."'  
+// 		group by material_number
 
-		".$debt."
+// 		".$debt."
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '043'
-		group by result.material_number, materials.material_description
-		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-	) target_packing ) a GROUP by a.model2 ) as packing
+// 		) as result
+// 		left join materials on materials.material_number = result.material_number
+// 		where materials.category = 'FG' and materials.origin_group_code = '043'
+// 		group by result.material_number, materials.material_description
+// 		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
+// 	) target_packing ) a GROUP by a.model2 ) as packing
 
-	LEFT JOIN 
- (
-SELECT model3, sum(total_ng) as total_ng from (
-SELECT model3, sum(quantity) as total_ng from (
-SELECT ng_inv.*, IF(ng_inv.model2 is null,ng_inv.model,ng_inv.model2) as model3 FROM (
-SELECT a.*,(CASE WHEN a.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN a.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN a.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN a.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN a.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN a.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN a.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN a.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN a.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN a.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN a.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN a.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN a.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN a.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN a.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN a.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN a.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2 from (
-SELECT model, quantity, process_code from stamp_inventories WHERE `status` ='ng' and origin_group_code='043'
-) a
-) ng_inv
-) total_ng GROUP BY model3
-UNION all
+// 	LEFT JOIN 
+//  (
+// SELECT model3, sum(total_ng) as total_ng from (
+// SELECT model3, sum(quantity) as total_ng from (
+// SELECT ng_inv.*, IF(ng_inv.model2 is null,ng_inv.model,ng_inv.model2) as model3 FROM (
+// SELECT a.*,(CASE WHEN a.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
+//              WHEN a.model LIKE 'YAS-26%' THEN 'YAS26'
+//              WHEN a.model LIKE 'YAS-280%' THEN 'YAS280'
+//              WHEN a.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
+//              WHEN a.model LIKE 'YAS-380%' THEN 'YAS380'
+//              WHEN a.model LIKE 'YAS-480%' THEN 'YAS480'
+//              WHEN a.model LIKE 'YAS-580%' THEN 'YAS580'
+//              WHEN a.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
+//              WHEN a.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
+//              WHEN a.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
+//              WHEN a.model LIKE 'YTS-26%' THEN 'YTS26'
+//              WHEN a.model LIKE 'YTS-280%' THEN 'YTS280'
+//              WHEN a.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
+//              WHEN a.model LIKE 'YTS-380%' THEN 'YTS380'
+//              WHEN a.model LIKE 'YTS-480%' THEN 'YTS480'
+//              WHEN a.model LIKE 'YTS-580%' THEN 'YTS580'
+//              WHEN a.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
+//         END) as model2 from (
+// SELECT model, quantity, process_code from stamp_inventories WHERE `status` ='ng' and origin_group_code='043'
+// ) a
+// ) ng_inv
+// ) total_ng GROUP BY model3
+// UNION all
 
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
-) total_ng_all GROUP BY model3
-) as ng on packing.model2 = ng.model3 ) as packing_ng
+// SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
+// ) total_ng_all GROUP BY model3
+// ) as ng on packing.model2 = ng.model3 ) as packing_ng
 
-left Join
+// left Join
 
-(
+// (
 
-SELECT model3 as model4,sum(total_return) as total_return from (
-SELECT model3, sum(quantity) as total_return from (
-SELECT x_return2.*, IF(x_return2.model2 is null,x_return2.model,x_return2.model2) as model3 from (
-SELECT x_return.*, 
-(CASE WHEN x_return.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN x_return.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN x_return.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN x_return.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN x_return.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN x_return.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN x_return.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN x_return.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN x_return.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN x_return.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN x_return.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN x_return.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN x_return.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN x_return.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN x_return.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN x_return.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN x_return.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2
-from (
-SELECT * from (
-SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='043' and process_code in ('2','3') and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='043' and `status` !='return') 
-) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='043')
-) x_return
-) x_return2
-) as x_return3 group by model3
-UNION all
+// SELECT model3 as model4,sum(total_return) as total_return from (
+// SELECT model3, sum(quantity) as total_return from (
+// SELECT x_return2.*, IF(x_return2.model2 is null,x_return2.model,x_return2.model2) as model3 from (
+// SELECT x_return.*, 
+// (CASE WHEN x_return.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
+//              WHEN x_return.model LIKE 'YAS-26%' THEN 'YAS26'
+//              WHEN x_return.model LIKE 'YAS-280%' THEN 'YAS280'
+//              WHEN x_return.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
+//              WHEN x_return.model LIKE 'YAS-380%' THEN 'YAS380'
+//              WHEN x_return.model LIKE 'YAS-480%' THEN 'YAS480'
+//              WHEN x_return.model LIKE 'YAS-580%' THEN 'YAS580'
+//              WHEN x_return.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
+//              WHEN x_return.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
+//              WHEN x_return.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
+//              WHEN x_return.model LIKE 'YTS-26%' THEN 'YTS26'
+//              WHEN x_return.model LIKE 'YTS-280%' THEN 'YTS280'
+//              WHEN x_return.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
+//              WHEN x_return.model LIKE 'YTS-380%' THEN 'YTS380'
+//              WHEN x_return.model LIKE 'YTS-480%' THEN 'YTS480'
+//              WHEN x_return.model LIKE 'YTS-580%' THEN 'YTS580'
+//              WHEN x_return.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
+//         END) as model2
+// from (
+// SELECT * from (
+// SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='043' and process_code in ('2','3') and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='043' and `status` !='return') 
+// ) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='043')
+// ) x_return
+// ) x_return2
+// ) as x_return3 group by model3
+// UNION all
 
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
+// SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
 
-) x_return_all GROUP BY model3
+// ) x_return_all GROUP BY model3
 
-) as return2 on packing_ng.model3 = return2.model4 ) as packing_ng_return
+// ) as return2 on packing_ng.model3 = return2.model4 ) as packing_ng_return
 
-left Join
+// left Join
 
-(
-SELECT model, sum(total_perolehan) as total_perolehan from (
-SELECT model,sum(quantity) as total_perolehan from stamp_inventories WHERE process_code  in ('2','3') and origin_group_code ='043' and `status` is null and DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' GROUP BY model
-UNION all
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
-) hasil group by model
-) as hasil on packing_ng_return.model3 = hasil.model
+// (
+// SELECT model, sum(total_perolehan) as total_perolehan from (
+// SELECT model,sum(quantity) as total_perolehan from stamp_inventories WHERE process_code  in ('2','3') and origin_group_code ='043' and `status` is null and DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' GROUP BY model
+// UNION all
+// SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
+// ) hasil group by model
+// ) as hasil on packing_ng_return.model3 = hasil.model
 
-) h1
-left Join
+// ) h1
+// left Join
 
-(
-select * from (
-select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model6 from ( 
+// (
+// select * from (
+// select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
+//              WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
+//              WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
+//              WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
+//              WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
+//              WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
+//              WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
+//              WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
+//              WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
+//              WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
+//              WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
+//              WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
+//              WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
+//              WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
+//              WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
+//              WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
+//              WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
+//         END) as model6 from ( 
 
-		select  materials.material_description as model, sum(result.plan) as planh2 from
-		(
-		select material_number,  sum(quantity) as plan
-		from production_schedules 
-		where due_date = '".$nextday."' 
-		group by material_number
+// 		select  materials.material_description as model, sum(result.plan) as planh2 from
+// 		(
+// 		select material_number,  sum(quantity) as plan
+// 		from production_schedules 
+// 		where due_date = '".$nextday."' 
+// 		group by material_number
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '043'
-		group by result.material_number, materials.material_description
-	) target_packing) as a
-) as h2 on h1.model3 = h2.model6 GROUP by model3 order By model3 asc 
-	";
+// 		) as result
+// 		left join materials on materials.material_number = result.material_number
+// 		where materials.category = 'FG' and materials.origin_group_code = '043'
+// 		group by result.material_number, materials.material_description
+// 	) target_packing) as a
+// ) as h2 on h1.model3 = h2.model6 GROUP by model3 order By model3 asc 
+// 	";
 
-		$tableData = DB::select($query);
+// 		$tableData = DB::select($query);
 		
-		$response = array(
-			'status' => true,
-			'tableData' => $tableData,
-		);
-		return Response::json($response);
-	}
+// 		$response = array(
+// 			'status' => true,
+// 			'tableData' => $tableData,
+// 		);
+// 		return Response::json($response);
+// 	}
 
 }
