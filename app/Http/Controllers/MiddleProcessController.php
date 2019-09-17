@@ -1380,9 +1380,10 @@ class MiddleProcessController extends Controller
 		$id = Auth::id();
 		$tags = $request->get('tag');
 
-
+		$count = 0;
 		foreach ($tags as $tag) {
 			$check = BarrelQueue::where('barrel_queues.tag', '=', $tag[0])->first();
+			$count += 1;
 
 			if($check == null){
 				$response = array(
@@ -1391,6 +1392,12 @@ class MiddleProcessController extends Controller
 				);
 				return Response::json($response);
 			}
+		}
+
+		$check2 = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')->where('materials.surface', 'not like', '%PLT')->count();
+
+		if($check2 >= 64 && ($check2-$count) < 64 ){
+			self::sendEmailMinQueue();
 		}
 
 		if($request->get('surface') == 'LCQ'){
