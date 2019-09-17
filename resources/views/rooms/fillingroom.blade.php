@@ -22,12 +22,12 @@
 		overflow-y: scroll;
 		height: 610px;
 		/*margin-top: -60px;*/
-		zoom: 2;
-		-moz-transform: scale(2);
+		zoom: 2.5;
+		-moz-transform: scale(2.5);
 		-moz-transform-origin: 0 0;
 		position:absolute; 
 		clip:rect(100px,1110px,800px,50px);
-		top:-100px; left:-105px;
+		top:-170px; left:-125px;
 	}
 	
 </style>
