@@ -18,9 +18,10 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('tes', 'TrialController@tes');
+Route::get('happybirthday', 'TrialController@ultah');
 
 Route::get('/trial', function () {
-	return view('rooms.meetingroom1');
+	return view('trial');
 });
 
 Auth::routes();
@@ -193,8 +194,10 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_shipment_result', 'FinishedGoodsController@index_fg_shipment_result');
 	Route::get('fetch/fg_shipment_result', 'FinishedGoodsController@fetch_fg_shipment_result');
 	Route::get('fetch/tb_shipment_result', 'FinishedGoodsController@fetch_tb_shipment_result');
+	//
 	Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
 	Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
+	Route::get('index/fg_production_monitoring', 'ProductionScheduleController@indexProductionMonitoring');
 });
 
 Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
@@ -568,6 +571,7 @@ Route::get('index/middle/display_production_result', 'MiddleProcessController@in
 Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fetchDisplayProductionResult');
 Route::get('index/process_buffing_kensa/{id}', 'MiddleProcessController@indexProcessBuffingKensa');
 Route::post('input/middle/buffing/kensa', 'MiddleProcessController@inputBuffingKensa');
+Route::get('index/middle/display_picking', 'MiddleProcessController@indexDisplayPicking');
 // Report Middle LCQ
 Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
 Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');

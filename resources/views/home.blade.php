@@ -159,7 +159,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}" target="_blank">
-                                <i class="fa fa-caret-right"></i> HRqu - Employee Self Services (従業員の情報サービス)
+                                <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
                             </a>
                         </td>
                     </tr>
@@ -286,6 +286,10 @@
                             <br>
                             <a href="{{ url("/index/fg_production_schedule") }}">
                                 <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/fg_production_monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Production Schedule Monitoring (??)
                             </a>
                             <br>
                             <a href="{{ url("/index/dp_production_result") }}">

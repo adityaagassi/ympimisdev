@@ -97,7 +97,6 @@
 										<th>Model</th>
 										<th>Qty</th>
 										<th>Created At</th>
-
 									</tr>
 								</thead>
 								<tbody>
