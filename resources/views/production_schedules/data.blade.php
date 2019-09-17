@@ -272,6 +272,7 @@
 						var stat = 0;
 						var stat_d = 0;
 						var stat_pkg = 0;
+						var stat_d2 = 0;
 						arr_pkg = [];
 						arr_deliv = [];
 
@@ -319,16 +320,13 @@
 								stat_pkg = 1;
 							} else {
 								if (stat_pkg == 0) {
-									if(arr_pkg.indexOf(value.material_number) !== -1){
-										pkg_s = pkg_tmp;
-									} else {
-										pkg_s = 0;
+									if(arr_pkg[i][1] == value.material_number && arr_pkg[i][0].split("-")[2] > value.due_date.split("-")[2]) {
+										pkg_tmp = 0;
 									}
 								}
 							}
 						}
 
-						
 						$.each(result.deliv, function(key3, value3) {
 							if (typeof result.deliv[key3+1] !== 'undefined') {
 								if (result.deliv[key3].material_number == result.deliv[key3+1].material_number) {
@@ -359,19 +357,16 @@
 								stat_d = 1;
 							} else {
 								if (stat_d == 0) {
-									if(arr_deliv.indexOf(value.material_number) !== -1){
-										deliv_s = deliv_tmp;
-									} else {
-										deliv_s = 0;
+									if(arr_deliv[i][1] == value.material_number && arr_deliv[i][0].split("-")[2] > value.due_date.split("-")[2]) {
+										deliv_tmp = 0;
 									}
 								}
 							}
 						}
 
-						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_s, diff1 : (pkg_s - qty_tmp), deliv: deliv_s, diff2: (deliv_s - qty_tmp), model: value.model, origin_group: value.origin_group_code, plan_act: value.quantity});
+						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_tmp, diff1 : (pkg_tmp - qty_tmp), deliv: deliv_tmp, diff2: (deliv_tmp - qty_tmp), model: value.model, origin_group: value.origin_group_code, plan_act: value.quantity});
 					});
 
-					console.table(arr_datas);
 					var number = 0;
 
 					$.each(arr_datas, function(key5, value5) {

@@ -277,18 +277,16 @@ class ProductionScheduleController extends Controller
 
     public function indexProductionData()
     {
-      $periods = DB::table('shipment_schedules')->select('st_month')->distinct()->get();
       $origin_groups = DB::table('origin_groups')->get();
       $materials = Material::where('category','=','FG')->orderBy('material_number', 'ASC')->get();
       $models = Material::where('category','=','FG')->orderBy('model', 'ASC')->distinct()->select('model')->get();
 
       return view('production_schedules.data', array(
-        'periods' => $periods,
         'origin_groups' => $origin_groups,
         'materials' => $materials,
         'models' => $models,
         'title' => 'Production Schedule Data',
-        'title_jp' => '??'
+        'title_jp' => '生産スケジュールデータ'
       ))->with('page', 'Production Schedule');
     }
 
@@ -341,7 +339,8 @@ class ProductionScheduleController extends Controller
       where DATE_FORMAT(deliv.created_at, "%Y-%m-%d") >= "'.$first.'" '. $where .'
       group by flomaster.material_number, DATE_FORMAT(deliv.created_at, "%Y-%m-%d")) alls
       left join materials on materials.material_number = alls.material_number
-      where category = "FG"';
+      where category = "FG"
+      order by alls.material_number asc, alls.date asc';
 
       $deliv = db::select($q_deliv);
 
@@ -352,5 +351,16 @@ class ProductionScheduleController extends Controller
         'deliv' => $deliv
       );
       return Response::json($response);
+    }
+
+    public function indexProductionMonitoring()
+    {
+      $origin_groups = DB::table('origin_groups')->get();
+
+      return view('production_schedules.monitoring', array(
+        'origin_groups' => $origin_groups,
+        'title' => 'Production Schedule Monitoring',
+        'title_jp' => ''
+      ))->with('page', 'Production Schedule');
     }
   }
