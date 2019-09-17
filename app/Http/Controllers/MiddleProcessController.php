@@ -41,11 +41,27 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexDisplayPicking(){
+		$surfaces = '';
+		
+
+		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
+		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
+
+		return view('processes.middle.display.middle_picking', array(
+			'title' => 'Middle Process Picking Schedule',
+			'title_jp' => '(??)',
+			'surfaces' => $surfaces,
+			'models' => $models,
+			'keys' => $keys,
+		))->with('page', 'Middle Process Picking Schedule');
+	}
+
 	public function indexReportHourlyLcq(){
 		$locations = $this->location;
 
 		return view('processes.middle.report.hourly_report', array(
-			'title' => 'Hourly Report',
+			'title' => 'Hourly Lacquering Report',
 			'title_jp' => '(??)',
 			'locations' => $locations
 		))->with('page', 'Hourly Report');
@@ -442,18 +458,7 @@ class MiddleProcessController extends Controller
 			$addlocation = "and l.location in (".$location.") ";
 		}
 
-		$OPS3 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
-			from middle_logs l left join employees e on l.employee_id = e.employee_id
-			where ".$tanggal." DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '07:00:00' ".$addlocation."
-			ORDER BY e.`name`");
-		$OPS1 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
-			from middle_logs l left join employees e on l.employee_id = e.employee_id
-			where ".$tanggal." DATE_FORMAT(l.created_at,'%H:%m:%s') > '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '16:00:00' ".$addlocation."
-			ORDER BY e.`name`");
-		$OPS2 = db::select("select distinct DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`
-			from middle_logs l left join employees e on l.employee_id = e.employee_id
-			where ".$tanggal." DATE_FORMAT(l.created_at,'%H:%m:%s') > '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '23:59:59' ".$addlocation."
-			ORDER BY e.`name`");
+		$key = db::select("select DISTINCT SUBSTRING(`key`, 1, 1) as kunci from materials where hpl = 'ASKEY' and surface not like '%PLT%' ORDER BY `key` asc");
 
 		$jam = [
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '01:00:00'",
@@ -482,7 +487,19 @@ class MiddleProcessController extends Controller
 		$push_data_z = [];
 
 		for ($i=0; $i <= 3 ; $i++) {
-			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
 			array_push($dataShift3, $push_data[$i]);
 			
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
@@ -493,7 +510,19 @@ class MiddleProcessController extends Controller
 		}
 
 		for ($i=4; $i <= 7 ; $i++) {
-			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
 			array_push($dataShift1, $push_data[$i]);
 			
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
@@ -504,7 +533,19 @@ class MiddleProcessController extends Controller
 		}
 
 		for ($i=8; $i <= 11 ; $i++) {
-			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'ASKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`) union (select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, e.`name`, m.hpl, sum(l.quantity) as jml from middle_logs l left join materials m on l.material_number = m.material_number left join employees e on l.employee_id = e.employee_id where ".$tanggal." ".$jam[$i]." ".$addlocation." and m.hpl = 'TSKEY' and m.model != 'A82Z' GROUP BY tgl, e.`name`, m.hpl ORDER BY e.`name`)");
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from middle_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82Z'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
 			array_push($dataShift2, $push_data[$i]);
 			
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
@@ -519,9 +560,7 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'tanggal' => $tanggal,
-			'OPS3' => $OPS3,
-			'OPS1' => $OPS1,
-			'OPS2' => $OPS2,
+			'key' => $key,
 			'dataShift3' => $dataShift3,
 			'dataShift1' => $dataShift1,
 			'dataShift2' => $dataShift2,
@@ -644,41 +683,93 @@ class MiddleProcessController extends Controller
 			$bulan = "DATE_FORMAT(l.created_at,'%m-%Y') = '".date('m-Y')."' and ";
 		}
 
-		$totalCekIC = db::select("select (a.g+b.ng) as total from
+
+		// IC
+		$totalCekIC_alto = db::select("select (a.g+b.ng) as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming') a
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming') b");
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') b");
 
-		$totalCekKensa = db::select("select (a.g+b.ng) as total from
+		$totalCekIC_tenor = db::select("select (a.g+b.ng) as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa') a
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
-			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa') b");
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY') b");
 
-		$ngIC = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+		$ngIC_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
 			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' group by l.ng_name order by jml desc");
+			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc");
 
-		$ngKensa = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+		$ngIC_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
 			left join materials m on l.material_number = m.material_number
-			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by l.ng_name order by jml desc;");
+			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc");
+
+		$ngICKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
+
+		$ngICKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
+
+
+		// Kensa
+		$totalCekKensa_alto = db::select("select (a.g+b.ng) as total from
+			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') a
+			cross join
+			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') b");
+
+		$totalCekKensa_tenor = db::select("select (a.g+b.ng) as total from
+			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY') a
+			cross join
+			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
+			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY') b");
+
+		$ngKensa_alto = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
+
+		$ngKensa_tenor = db::select("select l.ng_name, m.hpl, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by l.ng_name, m.hpl order by jml desc limit 10");
 
 		$ngKensaKey = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' group by m.`key` order by jml desc;");
 
+		$ngKensaKey_alto = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
+
+		$ngKensaKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
+
 		$bulan = substr($bulan,37,7);
 
 		$response = array(
 			'status' => true,
-			'ngIC' => $ngIC,
-			'totalCekIC' => $totalCekIC,
-			'ngKensa' => $ngKensa,
-			'totalCekKensa' => $totalCekKensa,
-			'ngKensaKey' => $ngKensaKey,
+			
+			'ngIC_alto' => $ngIC_alto,
+			'ngIC_tenor' => $ngIC_tenor,
+			'totalCekIC_alto' => $totalCekIC_alto,
+			'totalCekIC_tenor' => $totalCekIC_tenor,
+			'ngICKey_alto' => $ngICKey_alto,	
+			'ngICKey_tenor' => $ngICKey_tenor,
+
+			'ngKensa_alto' => $ngKensa_alto,
+			'ngKensa_tenor' => $ngKensa_tenor,
+			'totalCekKensa_alto' => $totalCekKensa_alto,
+			'totalCekKensa_tenor' => $totalCekKensa_tenor,
+			'ngKensaKey_alto' => $ngKensaKey_alto,
+			'ngKensaKey_tenor' => $ngKensaKey_tenor,
+
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -700,19 +791,32 @@ class MiddleProcessController extends Controller
 			$bulan2 = "where DATE_FORMAT(g.created_at,'%m-%Y') ='".date('m-Y')."' ";
 		}
 
-		$dailyIC = db::select("SELECT a.tgl, b.ng, c.g FROM
+		// IC
+		$dailyICAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, sum(n.quantity) as ng from middle_ng_logs n
-			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming'
-			GROUP BY tgl) b on a.tgl = b.tgl
+			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY'
+			GROUP BY tgl, hpl) b on a.tgl = b.tgl
+			left join		
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY'
+			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
+
+		$dailyICTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
+			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, sum(g.quantity) as g from middle_logs g
-			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming'
-			GROUP BY tgl) c on a.tgl = c.tgl");
+			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number ".$bulan1." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY'
+			GROUP BY tgl, hpl) b on a.tgl = b.tgl
+			left join		
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY'
+			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
 
 
-		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (b.ng+c.g) as total FROM
+		// Kensa
+		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -723,7 +827,7 @@ class MiddleProcessController extends Controller
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
 
-		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (b.ng+c.g) as total FROM
+		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -738,9 +842,13 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
-			'dailyIC' => $dailyIC,
+			
+			'dailyICAlto' => $dailyICAlto,
+			'dailyICTenor' => $dailyICTenor,
+
 			'dailyKensaAlto' => $dailyKensaAlto,
 			'dailyKensaTenor' => $dailyKensaTenor,
+			
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -1115,7 +1223,7 @@ class MiddleProcessController extends Controller
 				$m = array();
 				foreach ($barrels as $barrel) {
 					if(!in_array($barrel->remark, $m) && $barrel->remark != 'FLANEL'){
-						self::printSlipMachine($machine, $barrel->remark);
+						self::printSlipMachine($barrel->machine, $barrel->remark);
 						array_push($m, $barrel->remark);
 					}
 				}
@@ -1272,6 +1380,19 @@ class MiddleProcessController extends Controller
 		$id = Auth::id();
 		$tags = $request->get('tag');
 
+
+		foreach ($tags as $tag) {
+			$check = BarrelQueue::where('barrel_queues.tag', '=', $tag[0])->first();
+
+			if($check == null){
+				$response = array(
+					'status' => false,
+					'message' => 'Selected tag not in queue, please refresh page and do not print using 2 tablets at the same time',
+				);
+				return Response::json($response);
+			}
+		}
+
 		if($request->get('surface') == 'LCQ'){
 			if($request->get('code') == 'FLANEL'){
 				try{
@@ -1378,7 +1499,7 @@ class MiddleProcessController extends Controller
 						'message' => 'ID Slip for LACUQERING has been printed',
 					);
 					return Response::json($response);
-					
+
 				}
 				catch(\Exception $e){
 					$error_log = new ErrorLog([
@@ -2246,10 +2367,11 @@ class MiddleProcessController extends Controller
 
 	public function fetchBuffing(Request $request)
 	{
+		$started_at = date('Y-m-d H:i:s');
 		try{
 			$tags = db::connection('digital_kanban')
 			->table('buffing_inventories')
-			->select('material_num','operator_id',"material_tag_id")
+			->select('material_num','operator_id',"material_tag_id","material_qty")
 			->where('material_tag_id','=', $request->get("tag"))
 			->first();
 
@@ -2269,7 +2391,8 @@ class MiddleProcessController extends Controller
 				'status' => true,
 				'datas' => $tags,
 				'material' => $material,
-				'operator' => $operator
+				'operator' => $operator,
+				'started_at' => $started_at
 			);
 			return Response::json($response);
 		}
@@ -2294,6 +2417,7 @@ class MiddleProcessController extends Controller
 					'ng_name' => $ng[0],
 					'quantity' => $ng[1],
 					'location' => $request->get('loc'),
+					'started_at' => $request->get('started_at')
 				]);
 
 				try{
@@ -2313,15 +2437,35 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		} else {
-			$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
-				'lokasi' => 'BUFFING-AFTER',
-			]);
+			try{
+				$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+					'lokasi' => 'BUFFING-AFTER',
+				]);
 
-			$response = array(
-				'status' => true,
-				'message' => 'No NG'
-			);
-			return Response::json($response);
+				$middle_log = new MiddleLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
+					'material_number' => $request->get('material_number'),
+					'quantity' => $request->get('quantity'),
+					'location' => $request->get('loc'),
+					'started_at' => $request->get('started_at'),
+				]);
+
+				$middle_log->save();
+
+				$response = array(
+					'status' => true,
+					'message' => 'Input material successfull.',
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 		}
 	}
 }
