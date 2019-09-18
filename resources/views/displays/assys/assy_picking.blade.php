@@ -68,12 +68,11 @@
 				</div>
 
 				<div class="col-xs-2">
-					<select class="form-control select2" multiple="multiple" id="hplselect" name="hpl" data-placeholder="Select HPL">
+					<select class="form-control select2" id="hpl" name="hpl" data-placeholder="Select HPL">
 						<option value="">Select Hpl</option>
 						<option value="ASKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "ASKEY"): echo "selected"; endif ?>>ASKEY</option>
 						<option value="TSKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "TSKEY"): echo "selected"; endif ?>>TESKEY</option>
 					</select>
-					<input type="text" name="model2" id="model2" hidden>
 				</div>
 				<div class="col-xs-1">
 					<button class="btn btn-success" type="submit">Cari</button>
