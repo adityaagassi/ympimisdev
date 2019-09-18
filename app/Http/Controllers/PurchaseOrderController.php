@@ -1056,7 +1056,7 @@ class PurchaseOrderController extends Controller
 		}
 
 		if($request->get('status') == 1){
-			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
+			$po_lists = $po_lists->where('po_file.remark', '=', 'converted');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){
