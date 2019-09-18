@@ -8,7 +8,7 @@
 	}
 	.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
 		border: 1px solid black;
-		font-size: 1vw;
+		/*font-size: 1vw;*/
 		font-weight: bold;
 	}
 	.table > tbody > tr > th {
@@ -81,7 +81,7 @@
 			</form>
 		</div>
 		<div class="col-xs-12">
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; width: 100%; margin-bottom: 0px;">
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
 				<tr id="model">
 				</tr>
 				<tr id="plan">
@@ -191,7 +191,7 @@
 				$("#picking").empty();
 				$("#diff").empty();
 
-				model = "<th style='width:50px'>#</th>";
+				model = "<th>#</th>";
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
@@ -222,7 +222,7 @@
 				$("#diff").append(diff);
 				
 
-				// -----        CHART ------------
+				// -------- CHART ------------
 
 				var stockroom = [];
 				var middle = [];
@@ -238,10 +238,13 @@
 					categories.push(value2.model+" "+value2.key+" "+value2.surface);
 				})
 
+				console.table(result.stok);
+
 				Highcharts.chart('picking_chart', {
 					chart: {
 						type: 'column',
-						width: $('#assyTable').width()
+						width: $('#assyTable').width(),
+						marginLeft: 40
 					},
 					title: {
 						text: null

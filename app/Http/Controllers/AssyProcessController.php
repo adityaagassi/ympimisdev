@@ -128,11 +128,17 @@ class AssyProcessController extends Controller
 			$where4 .= " hpl = '".$request->get('hpl')."'";
 		}
 
+		if ($where == "" OR $where2 == "" OR $where3 == "") {
+			$dd = "where";
+		} else {
+			$dd = "and";
+		}
+
 		$first = date('Y-m-01',strtotime($tanggal));
 
 		$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
 
-		$table = "select final2.material_number, materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(stock) as stock, (sum(plan)-sum(picking)) as diff from
+		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(stock) as stock, (sum(plan)-sum(picking)) as diff from
 		(
 		select material_number, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock from
 		(
@@ -164,7 +170,7 @@ class AssyProcessController extends Controller
 		) as final group by material_number having plan > 0
 		) as final2
 		join materials on final2.material_number = materials.material_number ".$where." ".$where2." ".$where3." ".$where4."
-		group by final2.material_number ,materials.model, materials.`key`, materials.surface
+		group by materials.model, materials.`key`, materials.surface
 		order by diff desc";
 
 		$picking_assy = db::select($table);
@@ -173,7 +179,7 @@ class AssyProcessController extends Controller
 		$gmc = "";
 
 		for($x = 0; $x < $tabellength; $x++) {
-			$gmc = $gmc."'".$picking_assy[$x]->material_number."'";
+			$gmc = $gmc."'".$picking_assy[$x]->key.$picking_assy[$x]->model.$picking_assy[$x]->surface."'";
 			if($x != $tabellength -1){
 				$gmc = $gmc.",";
 			}
@@ -188,9 +194,9 @@ class AssyProcessController extends Controller
 		union all
 
 		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(ympimis.middle_inventories.quantity) as middle, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number
-		) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null 
-		AND materials.material_number in (".$gmc.")
+		) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null
 		group by middle.material_number, materials.key, materials.model, materials.surface
+		
 
 		union all
 
@@ -203,18 +209,18 @@ class AssyProcessController extends Controller
 		left join bom_components on bom_components.material_parent = parent.material_child
 		) as welding
 		left join kitto.inventories on kitto.inventories.material_number = welding.material_child 
-		where material_number in (".$gmc.")
 		group by kitto.inventories.material_number, welding.key, welding.model, welding.surface) as semua
 		group by `key`, model, surface) as final
-		".$where." ".$where2." ".$where3."
-		";
+		".$where." ".$where2." ".$where3." ".$where4." ".$dd." concat(`key`,model,surface) in (".$gmc.")
+		order by field(concat(`key`,model,surface), ".$gmc.")";
 
 		$stok = db::select($picking2);
 
 		$response = array(
 			'status' => true,
 			'plan' => $picking_assy,
-			'stok' => $stok
+			'stok' => $stok,
+			'gmc' => $gmc
 		);
 		return Response::json($response);
 
