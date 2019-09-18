@@ -41,17 +41,24 @@ class MiddleProcessController extends Controller
 		];
 	}
 
-	public function indexDisplayPicking(){
-		$surfaces = '';
-		
+	public function indexDisplayMonitoring(){
+		$locs = db::select("select distinct location from middle_inventories order by location");
 
+		return view('processes.middle.display.monitoring', array(
+			'title' => 'Middle Process Monitoring',
+			'title_jp' => '(??)',
+			'locs' => $locs,
+		))->with('page', 'Middle Process Monitoring');
+
+	}	
+
+	public function indexDisplayPicking(){
 		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
 		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
 
 		return view('processes.middle.display.middle_picking', array(
 			'title' => 'Middle Process Picking Schedule',
 			'title_jp' => '(??)',
-			'surfaces' => $surfaces,
 			'models' => $models,
 			'keys' => $keys,
 		))->with('page', 'Middle Process Picking Schedule');
@@ -327,6 +334,150 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function fetchDisplayMonitoring(Request $request){
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "where location in (".$location.") ";
+		}
+
+		$stock = db::select("select a.diff, a.location, COALESCE(b.jml,0) as jml from
+			(select diff, location from
+			(select distinct location from middle_inventories) loc
+			cross join
+			(select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories) diff
+			order by diff, location asc) a
+			left join
+			(select DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff, location, sum(quantity) as jml
+			from middle_inventories ".$addlocation."
+			GROUP BY location,diff order by diff, location asc) b
+			on (a.diff = b.diff and a.location = b.location)
+			ORDER BY a.diff, a.location");
+		$loc = db::select("select distinct location from middle_inventories");
+		$diff = db::select("select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories");
+
+		$response = array(
+			'status' => true,
+			'stock' => $stock,
+			'loc' => $loc,
+			'diff' => $diff,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchDetailStockMonitoring(Request $request){
+		
+	}
+
+	public function fetchDisplayPicking(Request $request){
+
+		// $tgl = '';
+		// if(strlen($request->get("tgl")) > 0){
+		// 	$dateto = date('Y-m-d',strtotime($request->get("tgl")));
+		// 	$datefrom = date('Y-m-01', strtotime($request->get("tgl")));
+		// 	$tgl = "where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".$datefrom."' and DATE_FORMAT(a.created_at,'%Y-%m-%d') <= '".$dateto."'";
+		// }else{
+		// 	$dateto = date('Y-m-d');
+		// 	$datefrom = date('Y-m-01');
+		// 	$tgl = "where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".$datefrom."' and DATE_FORMAT(a.created_at,'%Y-%m-%d') <= '".$dateto."'";
+		// }
+
+		// $surface = $request->get("surface");
+		// $model = $request->get("model");
+		// $key = $request->get("key");
+
+		// $add_surface = "";
+		// $add_model = "";
+		// $add_key = "";
+
+		// if ($request->get('surface') != "") {
+		// 	$surfaces = explode(",",$request->get('surface'));
+		// 	$surfacelength = count($surfaces);
+		// 	$surface = "";
+
+		// 	for($x = 0; $x < $keylength; $x++) {
+		// 		$surface = $surface."'".$surfaces[$x]."'";
+		// 		if($x != $keylength -1){
+		// 			$surface = $surface.",";
+		// 		}
+		// 	}
+		// 	$add_surface = " AND m.surface IN (".$surface.")";
+		// }
+
+		// if ($request->get('model') != "") {
+		// 	$models = explode(",",$request->get('model'));
+		// 	$modellength = count($models);
+		// 	$model = "";
+
+		// 	for($x = 0; $x < $modellength; $x++) {
+		// 		$model = $model."'".$models[$x]."'";
+		// 		if($x != $modellength -1){
+		// 			$model = $model.",";
+		// 		}
+		// 	}
+		// 	$add_model = " AND m.model IN (".$model.")";
+		// }
+
+		// if ($request->get('key') != "") {
+		// 	$keys = explode(",",$request->get('key'));
+		// 	$keylength = count($keys);
+		// 	$key = "";
+
+		// 	for($x = 0; $x < $keylength; $x++) {
+		// 		$key = $key."'".$keys[$x]."'";
+		// 		if($x != $keylength -1){
+		// 			$key = $key.",";
+		// 		}
+		// 	}
+		// 	$add_key = " AND m.`key` IN (".$key.")";
+		// }
+
+		// $assy = '';
+		// $minus = '';
+
+		// $date = substr(date('Y-m-d',strtotime($request->get("tgl"))),8,2);
+		// if($date == '01'){
+		// 	$assy = db::select("select a.material_number, m.surface, m.model, m.`key`, sum(a.quantity) qty from
+		// 		assy_picking_schedules a left join materials m on a.material_number = m.material_number
+		// 		".$tgl."".$add_surface."".$add_model."".$add_key."
+		// 		group by a.material_number, m.surface, m.model, m.`key`
+		// 		order by m.`key`, m.model asc
+		// 		limit 20");
+
+		// }else{
+		// 	$assy = db::select("select a.material_number, m.surface, m.model, m.`key`, sum(a.quantity) qty from
+		// 		assy_picking_schedules a left join materials m on a.material_number = m.material_number
+		// 		where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".date('Y-m-d',strtotime($request->get("tgl")))."'
+		// 		".$add_surface."".$add_model."".$add_key."
+		// 		group by a.material_number, m.surface, m.model, m.`key`
+		// 		order by m.`key`, m.model asc
+		// 		limit 20");
+
+		// 	$minus = db::connection('mysql2')->select("select material_number, minus from
+		// 		(select transfer_material_id, SUM(IF(category = 'transfer' OR category = 'transfer_adjustment', IF(transfer_movement_type = '9I3',lot,0),0)) - SUM(IF(category = 'transfer_cancel' OR category = 'transfer_return' OR category = 'transfer_adjustment', IF(transfer_movement_type = '9I4',lot,0),0)) as minus from kitto.histories
+		// 		".$tgl."
+		// 		and transfer_material_id is not null
+		// 		group by transfer_material_id) min 
+		// 		left join kitto.materials as k_materials on k_materials.id = min.transfer_material_id
+		// 		where k_materials.location like '%51%'");
+		// }	
+
+		// $response = array(
+		// 	'status' => true,
+		// 	'assy' => $assy,
+		// 	'minus' => $minus,
+		// );
+		// return Response::json($response);
 	}
 
 	public function fetchDisplayProductionResult(Request $request){
@@ -2147,7 +2298,7 @@ class MiddleProcessController extends Controller
 					'tag' => $datas['tag'][$i],
 					'material_number' => $datas['material'][$i],
 					'quantity' => $datas['qty'][$i],
-					'remark' => 'add',
+					'remark' => 'up',
 					'created_at' => $datas['created_at'][$i],
 					'updated_at' => date('Y-m-d H:i:s')
 				]);
