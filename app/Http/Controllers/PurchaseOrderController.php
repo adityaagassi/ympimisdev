@@ -1052,11 +1052,11 @@ class PurchaseOrderController extends Controller
 		}
 
 		if($request->get('status') == 0){
-			$po_lists = $po_lists->where('po_file.remark', '=', null);
+			$po_lists = $po_lists->where('po_lists.remark', '=', null);
 		}
 
 		if($request->get('status') == 1){
-			$po_lists = $po_lists->where('po_file.remark', '=', 'converted');
+			$po_lists = $po_lists->where('po_lists.remark', '=', 'converted');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){
