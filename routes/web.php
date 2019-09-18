@@ -525,6 +525,11 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('ngfg/stamp', 'ProcessController@ngsxStamp');
 	Route::post('scan/serial_number_ng_Sx', 'ProcessController@scanSerialNumberngSx');
 	// end ng sax
+
+	// ng FL
+	Route::post('ngfgFL/stamp', 'ProcessController@ngFLStamp');
+	Route::post('scan/serial_number_ng_FL', 'ProcessController@scanSerialNumberngFL');
+	// end ng FL
 });
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -805,6 +810,12 @@ Route::get('fetch/returnTableSx', 'ProcessController@fetchReturnTableSx');
 Route::get('index/ngSx', 'ProcessController@indexngSx');
 Route::get('fetch/ngTableSx', 'ProcessController@fetchngTableSx');
 // end ng sax
+
+// ng sax
+Route::get('index/ngFL', 'ProcessController@indexngFL');
+Route::get('fetch/ngTableFL', 'ProcessController@fetchngTableFL');
+// end ng sax
+
 
 // return cl
 Route::get('index/repairCl', 'ProcessController@indexRepairCl');

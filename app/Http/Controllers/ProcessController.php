@@ -2657,6 +2657,69 @@ public function ngsxStamp(Request $request){
 
 // end ng sax
 
+
+// ng FL
+
+public function indexngFL(){
+		return view('processes.assy_fl.ng')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+	}
+
+public function ngFLStamp(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'NG']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'NG - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+	public function fetchngTableFL(){
+		$stamp_inventories = StampInventory::where('origin_group_code', '=', '041')
+		->where('status', '=', 'NG')
+		->orderBy('updated_at', 'desc')
+		->get();
+
+		return DataTables::of($stamp_inventories)
+		->make(true);
+	}
+
+	public function scanSerialNumberngFL(Request $request){
+		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+
+		$stamp_inventory->update(['status' => 'NG']);
+
+		$id = Auth::id();
+		$err = new ErrorLog([
+			'error_message' => 'NG - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+			'created_by' => $id,
+		]);
+
+		$err->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Return success',
+		);
+		return Response::json($response);
+	}
+
+
+// end ng FL
+
 	//result sax new
 
 	public function fetchResultSaxnew(Request $request)
@@ -3005,13 +3068,14 @@ select  COALESCE(sum(target2.plan),0) as planh2, model3.model as modelh2 from (
 left Join
 (
 SELECT model2 as model_stamp, COALESCE(SUM(quantity),0) as total_stamp from (
-SELECT model, SUM(quantity) as quantity from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' GROUP BY model
+SELECT model, SUM(quantity) as quantity from (
+SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041')
+) a GROUP BY  model
  ) ng 
 	RIGHT JOIN(
 SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
 ) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
 ) as hasil on all_data.model3 = hasil.model_stamp
-
 
 	";
 
