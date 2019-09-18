@@ -1051,11 +1051,11 @@ class PurchaseOrderController extends Controller
 			$po_lists = $po_lists->whereIn('po_lists.pgr', $request->get('pgr'));
 		}
 
-		if(strlen($request->get('status')) == 0){
+		if($request->get('status') == 0){
 			$po_lists = $po_lists->where('po_file.remark', '=', null);
 		}
 
-		if(strlen($request->get('status')) == 1){
+		if($request->get('status') == 1){
 			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
 		}
 
