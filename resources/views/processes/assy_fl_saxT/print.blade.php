@@ -850,7 +850,7 @@
 						totalSubassy = (totalTarget - value.actual) - (value.total_return - value.total_ng);
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
-							h2 = Math.round(value.planh2 / 2) - value.total_perolehan;
+							h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
@@ -912,11 +912,12 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[6]) > parseInt(rowData[5])  && parseInt(rowData[7]) > 0) {
-									// alert(parseInt(rowData[5])+parseInt(rowData[7]));
-									// parseInt(rowData[6]) >= (parseInt(rowData[5])+parseInt(rowData[7]))
+								if ( parseInt(rowData[5]) >= 0  && parseInt(rowData[7]) > 0) {
+									if (parseInt(rowData[5]) <= 0) {
+											$(td).css('background-color', 'RGB(255,204,255)')
+										}
 
-									$(td).css('background-color', 'RGB(255,204,255)')
+									
 								}
 								else
 								{

@@ -88,24 +88,40 @@ table.table-bordered > tfoot > tr > th{
 								
 							</p>
 						</div>
-						<div class="col-xs-4">
+						<div class="col-xs-5">
 							<center>
 								<span style="font-size: 24px;">Schedule:</span>
 							</center>
 							<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
-									<th>Model</th>
-									<th>Plan</th>
-									<th>Act</th>
-									<th>Diff</th>
+									<tr>
+										<th rowspan="2">Model</th>
+										<th rowspan="2">Target Packing</th>
+										<th rowspan="2">Act Packing</th>
+										<th colspan="2" width="15%">Stock</th>
+										<th rowspan="2">Target SubAssy (H)</th>
+										<th rowspan="2">Stamping</th>
+										<th rowspan="2">Target SubAssy (H+1)</th>
+										<!-- <th>Diff</th> -->
+									</tr>
+									<tr>
+										<th>WIP</th>
+										<th>NG</th>
+									</tr>
 								</thead>
 								<tbody id="planTableBody">
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
-									<th>Total</th>
-									<th></th>
-									<th></th>
-									<th></th>
+									<tr>
+										<th>Total</th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
 								</tfoot>
 							</table>
 						</div>
@@ -127,7 +143,7 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</center>
 						</div>
-						<div class="col-xs-5">
+						<div class="col-xs-4">
 							<center>
 								<span style="font-size: 24px;">Result:</span>
 							</center>
@@ -246,7 +262,7 @@ table.table-bordered > tfoot > tr > th{
 		stamp();
 
 		$('body').toggleClass("sidebar-collapse");
-		fillPlan();
+		fillPlannew();
 		fillSerialNumber();
 		fillResult();
 	});
@@ -519,7 +535,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					if(result.statusCode == 'stamp'){
 						fillResult();
-						fillPlan();
+						fillPlannew();
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
@@ -587,7 +603,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#editModal').modal('hide');
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
-						fillPlan();
+						fillPlannew();
 					}
 					else{
 						audio_error.play();
@@ -623,7 +639,7 @@ table.table-bordered > tfoot > tr > th{
 					$('#editModal').modal('hide');
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
-					fillPlan();
+					fillPlannew();
 				}
 				else{
 					audio_error.play();
@@ -649,6 +665,118 @@ table.table-bordered > tfoot > tr > th{
 	}
 	function category(id){
 		$("#category").val(id);
+	}
+
+
+	function fillPlannew(){
+		$.get('{{ url("fetch/fetchResultFlnew") }}', function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status = 200){
+				if(result.status){
+					$('#planTable').DataTable().destroy();
+					$('#planTableBody').html("");
+					var planData = '';
+					var totalTarget = '';
+					var totalSubassy = '';
+					
+					$.each(result.planData, function(key, value) {
+						// alert(value.planh2 );
+						
+						totalTarget = value.plan+(-value.debt);
+						totalSubassy = (totalTarget - value.actual) - (value.total_return - value.total_ng);
+						var h2 = Math.round(value.planh2 / 2);
+						if (totalSubassy < 0) {
+						totalSubassy = 0;
+						h2 = Math.round(value.planh2 / 2) - (value.total_stamp - value.actual);
+						}
+						if (h2 < 0) {
+							h2 = 0;
+						}
+						planData += '<tr>';
+						planData += '<td>'+ value.model3 +'</td>';
+						planData += '<td>'+ totalTarget +'</td>';
+						planData += '<td>'+ value.actual +'</td>';
+						planData += '<td>'+ value.total_return +'</td>';
+						planData += '<td>'+ value.total_ng +'</td>';
+						planData += '<td>'+ totalSubassy +'</td>';
+						planData += '<td>'+ value.total_stamp +'</td>';
+						planData += '<td>'+ h2 +'</td>';
+						planData += '</tr>';
+					});
+					$('#planTableBody').append(planData);
+					$('#listModel').html("");
+					$.unique(result.model.map(function (d) {
+						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
+					}));
+					$('#planTable').DataTable({
+						'paging': false,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"footerCallback": function (tfoot, data, start, end, display) {
+							var intVal = function ( i ) {
+								return typeof i === 'string' ?
+								i.replace(/[\$,]/g, '')*1 :
+								typeof i === 'number' ?
+								i : 0;
+							};
+							var api = this.api();
+							
+							var total_actual = api.column(6).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(6).footer()).html(total_actual.toLocaleString());
+
+						},
+						"columnDefs": [  {
+							"targets": 5,
+							"createdCell": function (td, cellData, rowData, row, col) {
+
+
+								if ( parseInt(rowData[6]) < parseInt(rowData[5])  ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						},
+						{
+							"targets": 7,
+							"createdCell": function (td, cellData, rowData, row, col) {
+
+
+								if ( parseInt(rowData[5]) >= 0  && parseInt(rowData[7]) > 0) {
+										if (parseInt(rowData[5]) <= 0) {
+											$(td).css('background-color', 'RGB(255,204,255)')
+										}
+
+									
+								}
+								else
+								{
+										// $(td).css('background-color', 'RGB(204,255,255)')
+									}
+								}
+							}]
+					});
+				}
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from server');
+			}
+		});
 	}
 </script>
 @endsection

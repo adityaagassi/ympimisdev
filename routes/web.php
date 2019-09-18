@@ -572,6 +572,10 @@ Route::get('fetch/middle/display_production_result', 'MiddleProcessController@fe
 Route::get('index/process_buffing_kensa/{id}', 'MiddleProcessController@indexProcessBuffingKensa');
 Route::post('input/middle/buffing/kensa', 'MiddleProcessController@inputBuffingKensa');
 Route::get('index/middle/display_picking', 'MiddleProcessController@indexDisplayPicking');
+Route::get('fetch/middle/display_picking', 'MiddleProcessController@fetchDisplayPicking');
+Route::get('index/middle/display_monitoring', 'MiddleProcessController@indexDisplayMonitoring');
+Route::get('fetch/middle/display_monitoring', 'MiddleProcessController@fetchDisplayMonitoring');
+Route::get('fetch/middle/detail_monitoring', 'MiddleProcessController@fetchDetailStockMonitoring');
 // Report Middle LCQ
 Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
 Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');
@@ -902,6 +906,10 @@ Route::get('index/process_stamp_sx_check', 'ProcessController@indexProcessAssyFL
 // new sax result
 Route::get('fetch/fetchResultSaxnew', 'ProcessController@fetchResultSaxnew');
 //end new sax result 
+
+// new fl result
+Route::get('fetch/fetchResultFlnew', 'ProcessController@fetchResultFlStamp');
+//end new fl result 
 
 Route::get('scan/maedaoshi_material', 'MaedaoshiController@scan_maedaoshi_material');
 Route::get('scan/maedaoshi_serial', 'MaedaoshiController@scan_maedaoshi_serial');
