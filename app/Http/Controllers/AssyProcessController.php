@@ -128,7 +128,7 @@ class AssyProcessController extends Controller
 			$where4 .= " hpl = '".$request->get('hpl')."'";
 		}
 
-		if ($where == "" OR $where2 == "" OR $where3 == "") {
+		if ($where == "" AND $where2 == "" AND $where3 == ""  AND $where4 == "") {
 			$dd = "where";
 		} else {
 			$dd = "and";
