@@ -586,7 +586,7 @@ class ProcessController extends Controller
 				$datas = $plc->read_data('D0', 5);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='042') {
-				$plc = new ActMLEasyIf(3);
+				$plc = new ActMLEasyIf(0);
 				$datas = $plc->read_data('D20', 5);
 				$plc_counter = PlcCounter::where('origin_group_code', '=', $request->get('originGroupCode'))->first();	
 			}else if ($request->get('originGroupCode') =='043') {
