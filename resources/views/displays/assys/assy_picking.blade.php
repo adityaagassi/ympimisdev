@@ -28,7 +28,7 @@
 @section('header')
 @endsection
 @section('content')
-<section class="content" style="padding-top: 0;">
+<section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12">
 			<form method="GET" action="{{ action('AssyProcessController@indexDisplayAssy') }}">
@@ -66,13 +66,22 @@
 						<option value="W" <?php if (isset($_GET['surface']) && $_GET['surface'] == "W"): echo "selected"; endif ?>>Washed</option>
 					</select>
 				</div>
+
+				<div class="col-xs-2">
+					<select class="form-control select2" multiple="multiple" id="hplselect" name="hpl" data-placeholder="Select HPL">
+						<option value="">Select Hpl</option>
+						<option value="ASKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "ASKEY"): echo "selected"; endif ?>>ASKEY</option>
+						<option value="TSKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "TSKEY"): echo "selected"; endif ?>>TESKEY</option>
+					</select>
+					<input type="text" name="model2" id="model2" hidden>
+				</div>
 				<div class="col-xs-1">
 					<button class="btn btn-success" type="submit">Cari</button>
 				</div>
 			</form>
 		</div>
 		<div class="col-xs-12">
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; width: 100%; margin-bottom: 0px">
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; width: 100%; margin-bottom: 0px;">
 				<tr id="model">
 				</tr>
 				<tr id="plan">
@@ -147,7 +156,7 @@
 	jQuery(document).ready(function(){
 		fill_table();
 
-		setInterval(fill_table, 18000);
+		// setInterval(fill_table, 20000);
 
 		$('.select2').select2();
 
@@ -171,7 +180,8 @@
 			tanggal:"{{$_GET['date']}}",
 			key:"{{$_GET['key2']}}",
 			model:"{{$_GET['model2']}}",
-			surface:"{{$_GET['surface']}}"
+			surface:"{{$_GET['surface']}}",
+			hpl:"{{$_GET['hpl']}}"
 		}
 
 		$.get('{{ url("fetch/display/sub_assy") }}', data, function(result, status, xhr){
@@ -186,57 +196,52 @@
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
 				var style = "";
+				var arrDatas = [];
 
-				$.each(result.picking, function(index, value){
-					if ((value.picking - value.total_plan) < 0) {
-						style = "style='background-color:#f24b4b';";
-					} else {
+				$.each(result.plan, function(index, value){
+					var minus = 0;
+					// var picking = 0;
+
+					if (value.diff < 0) {
 						style = "style='background-color:#00a65a';";
+					} else {
+						style = "style='background-color:#f24b4b';";
 					}
 
 					model += "<th>"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
-					totplan += "<td>"+value.total_plan.toLocaleString()+"</td>";
-					picking += "<td>"+value.picking.toLocaleString()+"</td>";
-					diff += "<td "+style+">"+(value.picking - value.total_plan).toLocaleString()+"</td>";
+					totplan += "<td>"+value.plan+"</td>";
+					picking += "<td>"+value.picking+"</td>";
+					diff += "<td "+style+">"+value.diff+"</td>";
+
+					arrDatas.push(value.model+value.key+value.surface);
 				})
 
 				$("#model").append(model);
 				$("#plan").append(totplan);
 				$("#picking").append(picking);
 				$("#diff").append(diff);
+				
 
-				fill_chart();
-			}
-		})
-	}
+				// -----        CHART ------------
 
-	function fill_chart() {
-		var data = {
-			tanggal:"{{$_GET['date']}}",
-			key:"{{$_GET['key2']}}",
-			model:"{{$_GET['model2']}}",
-			surface:"{{$_GET['surface']}}"
-		}
-
-		$.get('{{ url("fetch/chart/sub_assy") }}', data, function(result, status, xhr){
-			if(result.status){
 				var stockroom = [];
 				var middle = [];
 				var welding = [];
 
 				var categories = [];
 
-				$.each(result.picking, function(index, value){
-					middle.push(parseInt(value.middle));
-					stockroom.push(parseInt(value.stockroom));
-					welding.push(parseInt(value.welding));
+				$.each(result.stok, function(index2, value2){
+					middle.push(parseInt(value2.middle));
+					stockroom.push(parseInt(value2.stockroom));
+					welding.push(parseInt(value2.welding));
 
-					categories.push(value.model+" "+value.key+" "+value.surface);
+					categories.push(value2.model+" "+value2.key+" "+value2.surface);
 				})
 
 				Highcharts.chart('picking_chart', {
 					chart: {
-						type: 'column'
+						type: 'column',
+						width: $('#assyTable').width()
 					},
 					title: {
 						text: null
@@ -302,8 +307,6 @@
 						data: stockroom
 					}]
 				});
-
-				
 			}
 		})
 	}

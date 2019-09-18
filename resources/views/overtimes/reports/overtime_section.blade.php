@@ -255,6 +255,7 @@
           series: seriesData
         });
       });
+   
  }
 
  $('#tgl').datepicker({
