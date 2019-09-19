@@ -50,7 +50,7 @@
 					</select>
 					<input type="text" name="key2" id="dd" hidden>
 				</div>
-				<div class="col-xs-2">
+				<div class="col-xs-1">
 					<select class="form-control select2" multiple="multiple" id="modelselect" onchange="changeModel()" data-placeholder="Select Model">
 						@foreach($models as $model)
 						<option value="{{ $model->model }}">{{ $model->model }}</option>
@@ -67,7 +67,7 @@
 					<input type="text" name="surface2" id="surface2" hidden>
 				</div>
 
-				<div class="col-xs-2">
+				<div class="col-xs-1">
 					<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
 						@foreach($hpls as $hpl)
 						<option value="{{ $hpl }}">{{ $hpl }}</option>
@@ -78,10 +78,12 @@
 				<div class="col-xs-1">
 					<button class="btn btn-success" type="submit">Cari</button>
 				</div>
+				<div class="col-xs-3">
+					<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
+				</div>
 			</form>
 		</div>
 		<div class="col-xs-12">
-			<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
 				<tr id="model">
 				</tr>
