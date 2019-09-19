@@ -21,13 +21,23 @@ class AssyProcessController extends Controller
 
 		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
 		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
+		$surfaces = array
+		(
+			array("","All"),
+			array("LCQ","Lacquering"),
+			array("PLT","Plating"),
+			array("W","Washed")
+		);
 
+		$hpls = array('All', 'ASKEY', 'TSKEY');
 
 		return view('displays.assys.assy_picking', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'keys' => $keys,
-			'models' => $models
+			'models' => $models,
+			'surfaces' => $surfaces,
+			'hpls' => $hpls,
 		))->with('page', 'Assy Schedule')->with('head', '');
 	}
 
@@ -78,7 +88,7 @@ class AssyProcessController extends Controller
 				}
 			}
 
-			$where = " WHERE `key` IN (".$key.")";
+			$where = " WHERE materials.`key` IN (".$key.")";
 		}
 
 		if ($request->get('model') != "") {
@@ -99,7 +109,7 @@ class AssyProcessController extends Controller
 				}
 			}
 
-			$where2 .= " model IN (".$model.")";
+			$where2 .= " materials.model IN (".$model.")";
 		}
 
 		if ($request->get('surface') != "") {
@@ -108,24 +118,21 @@ class AssyProcessController extends Controller
 			} else {
 				$where3 = "WHERE ";
 			}
+			$surface = str_replace(",", "|", $request->get('surface'));			
 
-			if ($request->get('surface') == 'PLT') {
-				$where3 .= " surface LIKE '%PLT%'";
-			} else if ($request->get('surface') == 'LCQ') {
-				$where3 .= " surface LIKE '%LCQ%'";
-			} else {
-				$where3 .= " surface = 'W'";
-			}
+			$where3 .= " materials.surface REGEXP '".$surface."'";
 		}
 
-		if ($request->get('hpl') != "") {
+		if ($request->get('hpl') != "" OR $request->get('hpl') != "All") {
 			if ($where != "" OR $where2 != "" OR $where3 != "") {
 				$where4 = "AND ";
 			} else {
 				$where4 = "WHERE ";
 			}
 
-			$where4 .= " hpl = '".$request->get('hpl')."'";
+			$hpl = str_replace(",", "|", $request->get('hpl'));			
+
+			$where4 .= " materials.hpl REGEXP '".$hpl."'";
 		}
 
 		if ($where == "" AND $where2 == "" AND $where3 == ""  AND $where4 == "") {
@@ -167,7 +174,7 @@ class AssyProcessController extends Controller
 		where due_date >= '".$first."' and due_date <= '".$tanggal."'
 		group by assy_picking_schedules.material_number
 		) as plan group by material_number
-		) as final group by material_number having plan > 0
+		) as final group by material_number having plan > 0  
 		) as final2
 		join materials on final2.material_number = materials.material_number ".$where." ".$where2." ".$where3." ".$where4."
 		group by materials.model, materials.`key`, materials.surface
@@ -185,7 +192,7 @@ class AssyProcessController extends Controller
 			}
 		}
 
-		$picking2 = "select final.`key`, final.model, final.surface, stockroom, middle, welding from
+		$picking2 = "select final2.`key`, final2.model, final2.surface, stockroom, middle, welding from
 		(select sum(stockroom) stockroom, sum(middle) middle, sum(welding) welding, `key`, model, surface from 
 		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.middle) as middle, sum(middle.welding) as welding, materials.key, materials.model, materials.surface from
 		(
@@ -210,9 +217,10 @@ class AssyProcessController extends Controller
 		) as welding
 		left join kitto.inventories on kitto.inventories.material_number = welding.material_child 
 		group by kitto.inventories.material_number, welding.key, welding.model, welding.surface) as semua
-		group by `key`, model, surface) as final
-		".$where." ".$where2." ".$where3." ".$where4." ".$dd." concat(`key`,model,surface) in (".$gmc.")
-		order by field(concat(`key`,model,surface), ".$gmc.")";
+		group by `key`, model, surface) as final2
+		join materials on materials.`key` = final2.`key` and materials.model = final2.model and materials.surface = final2.surface
+		".$where." ".$where2." ".$where3." ".$where4." ".$dd." concat(final2.`key`,final2.model,final2.surface) in (".$gmc.")
+		order by field(concat(final2.`key`,final2.model,final2.surface), ".$gmc.")";
 
 		$stok = db::select($picking2);
 

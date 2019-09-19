@@ -59,20 +59,21 @@
 					<input type="text" name="model2" id="model2" hidden>
 				</div>
 				<div class="col-xs-2">
-					<select class="form-control select2" name="surface">
-						<option value="">Select Surface</option>
-						<option value="PLT" <?php if (isset($_GET['surface']) && $_GET['surface'] == "PLT"): echo "selected"; endif ?>>Plating</option>
-						<option value="LCQ" <?php if (isset($_GET['surface']) && $_GET['surface'] == "LCQ"): echo "selected"; endif ?>>Lacquering</option>
-						<option value="W" <?php if (isset($_GET['surface']) && $_GET['surface'] == "W"): echo "selected"; endif ?>>Washed</option>
+					<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
+						@foreach($surfaces as $surface)
+						<option value="{{ $surface[0] }}">{{ $surface[1] }}</option>
+						@endforeach
 					</select>
+					<input type="text" name="surface2" id="surface2" hidden>
 				</div>
 
 				<div class="col-xs-2">
-					<select class="form-control select2" id="hpl" name="hpl" data-placeholder="Select HPL">
-						<option value="">Select Hpl</option>
-						<option value="ASKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "ASKEY"): echo "selected"; endif ?>>ASKEY</option>
-						<option value="TSKEY" <?php if (isset($_GET['hpl']) && $_GET['hpl'] == "TSKEY"): echo "selected"; endif ?>>TESKEY</option>
+					<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
+						@foreach($hpls as $hpl)
+						<option value="{{ $hpl }}">{{ $hpl }}</option>
+						@endforeach
 					</select>
+					<input type="text" name="hpl2" id="hpl2" hidden>
 				</div>
 				<div class="col-xs-1">
 					<button class="btn btn-success" type="submit">Cari</button>
@@ -80,6 +81,7 @@
 			</form>
 		</div>
 		<div class="col-xs-12">
+			<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
 				<tr id="model">
 				</tr>
@@ -155,6 +157,22 @@
 	jQuery(document).ready(function(){
 		fill_table();
 
+		var kunci = "{{$_GET['key2']}}";
+		var kuncies = kunci.split(",");
+		var kunciFilter = [];
+		ctg = "";
+
+		for(var i = 0; i < kuncies.length; i++){
+			ctg = kuncies[i].charAt(0);
+
+			if(kunciFilter.indexOf(ctg) === -1){
+				kunciFilter[kunciFilter.length] = ctg;
+			}
+		}
+		// alert(kunciFilter);
+
+		$("#judul").text(kunciFilter+"-{{$_GET['model2']}}-{{$_GET['surface2']}}-{{$_GET['hpl2']}}");
+
 		// setInterval(fill_table, 20000);
 
 		$('.select2').select2();
@@ -173,15 +191,26 @@
 	function changeModel() {
 		$("#model2").val($("#modelselect").val());
 	}
+	function changeSurface() {
+		$("#surface2").val($("#surface").val());
+	}
+	function changeHpl() {
+		$("#hpl2").val($("#hpl").val());
+	}
 
 	function fill_table() {
 		var data = {
 			tanggal:"{{$_GET['date']}}",
 			key:"{{$_GET['key2']}}",
 			model:"{{$_GET['model2']}}",
-			surface:"{{$_GET['surface']}}",
-			hpl:"{{$_GET['hpl']}}"
+			surface:"{{$_GET['surface2']}}",
+			hpl:"{{$_GET['hpl2']}}"
 		}
+
+		// var values="{{$_GET['key2']}}";
+		// $.each(values.split(","), function(i,e){
+		// 	$("#key option[value='" + e + "']").prop("selected", true);
+		// });
 
 		$.get('{{ url("fetch/display/sub_assy") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -190,7 +219,7 @@
 				$("#picking").empty();
 				$("#diff").empty();
 
-				model = "<th>#</th>";
+				model = "<th style='width:45px'>#</th>";
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
@@ -207,7 +236,13 @@
 						style = "style='background-color:#f24b4b';";
 					}
 
-					model += "<th>"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
+					if (value.model.charAt(0) == 'A') {
+						color = "style='background-color:#80ed5f';";
+					} else {
+						color = "style='background-color:#f2e127';";
+					}
+
+					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
 					diff += "<td "+style+">"+value.diff+"</td>";
@@ -237,7 +272,7 @@
 					categories.push(value2.model+" "+value2.key+" "+value2.surface);
 				})
 
-				console.table(result.stok);
+				// console.table(result.stok);
 
 				Highcharts.chart('picking_chart', {
 					chart: {
@@ -287,7 +322,7 @@
 						},
 						series: {
 							cursor: 'pointer',
-							pointPadding: -0.2,
+							pointPadding: -0.25,
 							events: {
 								click: function(event) {
 									openModal(event.point.category, this.name)
