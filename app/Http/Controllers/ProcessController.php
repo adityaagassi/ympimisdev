@@ -696,7 +696,7 @@ class ProcessController extends Controller
 					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
 					$code_generator->index = $code_generator->index+1;
 
-					if ($request->get('category')=='FG'){
+					if ($request->get('category')=='fg'){
 
 						$stamp_inventory = StampInventory::updateOrCreate(
 							[
@@ -3069,7 +3069,7 @@ left Join
 (
 SELECT model2 as model_stamp, COALESCE(SUM(quantity),0) as total_stamp from (
 SELECT model, SUM(quantity) as quantity from (
-SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041')
+SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') and remark ='FG'
 ) a GROUP BY  model
  ) ng 
 	RIGHT JOIN(
