@@ -21,13 +21,14 @@
 	#schedule {
 		overflow-y: scroll;
 		height: 610px;
+		width: 1000px;
 		/*margin-top: -60px;*/
-		zoom: 2.5;
-		-moz-transform: scale(2.5);
-		-moz-transform-origin: 0 0;
+		/*zoom: 2;
+		-moz-transform: scale(2);
+		-moz-transform-origin: 0 0;*/
 		position:absolute; 
-		clip:rect(100px,1110px,800px,50px);
-		top:-170px; left:-125px;
+		clip:rect(0px,1110px,800px,50px);
+		top:-50px; left:-50px;
 	}
 	
 </style>

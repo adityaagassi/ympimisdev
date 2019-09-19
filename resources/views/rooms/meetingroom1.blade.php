@@ -7,6 +7,7 @@
 	}
 	body {
 		margin: 0px;
+		background-color: #333333;
 	}
 	.navbare {
 		overflow: hidden;
@@ -21,13 +22,14 @@
 	#schedule {
 		overflow-y: scroll;
 		height: 610px;
+		width: 1000px;
 		/*margin-top: -60px;*/
-		zoom: 2;
+		/*zoom: 2;
 		-moz-transform: scale(2);
-		-moz-transform-origin: 0 0;
+		-moz-transform-origin: 0 0;*/
 		position:absolute; 
-		clip:rect(100px,1110px,800px,50px);
-		top:-120px; left:-105px;
+		clip:rect(0px,1110px,800px,50px);
+		top:-50px; left:-50px;
 	}
 	
 </style>
@@ -37,11 +39,11 @@
 <div class="navbare">
 	<center><span style="color: white; font-size: 4vw; font-weight: bold;">MEETING ROOM 1</span></center>
 </div>
-<center>
-	<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule"></iframe>
-	<!-- <object type="text/html" data="https://outlook.office365.com/calendar/view/day/" width="800px" height="600px" style="overflow:auto;border:5px ridge blue"> -->
-	</object>
-</center>
+
+<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule"></iframe>
+<!-- <object type="text/html" data="https://outlook.office365.com/calendar/view/day/" width="800px" height="600px" style="overflow:auto;border:5px ridge blue"> -->
+</object>
+
 @endsection
 
 <script type="text/javascript">
