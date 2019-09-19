@@ -94,7 +94,15 @@
 				<tr id="diff">
 					<!-- <th>Diff</th> -->
 				</tr>
+				<tr style="height: 5px"></tr>
+				<tr id="stok">
+					
+				</tr>
 			</table>
+
+			<!-- <table class="table table-bordered" style="padding: 0px; margin-bottom: 10px;">
+				
+			</table> -->
 		</div>
 		<div class="col-xs-12">
 			<div id="picking_chart" style="width: 100%; margin: auto"></div>
@@ -156,6 +164,7 @@
 
 	jQuery(document).ready(function(){
 		fill_table();
+		setInterval(fill_table, 20000);
 
 		var kunci = "{{$_GET['key2']}}";
 		var kuncies = kunci.split(",");
@@ -173,7 +182,6 @@
 
 		$("#judul").text(kunciFilter+"-{{$_GET['model2']}}-{{$_GET['surface2']}}-{{$_GET['hpl2']}}");
 
-		// setInterval(fill_table, 20000);
 
 		$('.select2').select2();
 
@@ -219,12 +227,16 @@
 				$("#picking").empty();
 				$("#diff").empty();
 
+				$("#stok").empty();
+
 				model = "<th style='width:45px'>#</th>";
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
+
+				stk = "<th style='border: 1px solid white'>Stok room</th>";
+
 				var style = "";
-				var arrDatas = [];
 
 				$.each(result.plan, function(index, value){
 					var minus = 0;
@@ -242,18 +254,26 @@
 						color = "style='background-color:#f2e127';";
 					}
 
+					if (value.stock >= value.plan) {
+						color2 = "background-color:#00a65a";
+					} else {
+						color2 = "background-color:#f24b4b";
+					}
+
 					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
-					diff += "<td "+style+">"+value.diff+"</td>";
+					diff += "<td "+style+">"+(-value.diff)+"</td>";
 
-					arrDatas.push(value.model+value.key+value.surface);
+					stk += "<td style='border: 1px solid white;"+color2+"'>"+value.stock+"</td>";
 				})
 
 				$("#model").append(model);
 				$("#plan").append(totplan);
 				$("#picking").append(picking);
 				$("#diff").append(diff);
+
+				$("#stok").append(stk);
 				
 
 				// -------- CHART ------------

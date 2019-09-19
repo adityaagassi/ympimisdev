@@ -251,7 +251,7 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス仮組～組立)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy?date=&surface=&key2=&model2=") }}">
+                            <a href="{{ url("/index/display/sub_assy?date=&surface2=&key2=&model2=&hpl2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                         </td>
