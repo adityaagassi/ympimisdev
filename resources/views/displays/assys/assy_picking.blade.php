@@ -256,7 +256,7 @@
 						color = "style='background-color:#f2e127';";
 					}
 
-					if (value.diff >= (-value.stock)) {
+					if (value.stock >= (-value.diff)) {
 						color2 = "background-color:#00a65a";
 					} else {
 						color2 = "background-color:#f24b4b";
