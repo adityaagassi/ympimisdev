@@ -384,7 +384,7 @@ class MiddleProcessController extends Controller
 			where location = 'bff-kensa'
 			and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
 			GROUP BY ng_name order by jml desc");
-
+	
 		$response = array(
 			'status' => true,
 			'date' => $date,
@@ -1815,7 +1815,7 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$check2 = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')->where('materials.surface', 'not like', '%PLT')->count();
+		$check2 = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')->count();
 
 		if($check2 >= 64 && ($check2-$count) < 64 ){
 			self::sendEmailMinQueue();
