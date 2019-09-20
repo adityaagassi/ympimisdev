@@ -11,6 +11,7 @@ use File;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use FTP;
+use App\ErrorLog;
 
 class UploadCompletions extends Command
 {
@@ -89,7 +90,16 @@ class UploadCompletions extends Command
             }
             File::put($flofilepath, $flo_text);
 
-            $success = self::uploadFTP($flofilepath, $flofiledestination);
+            try{
+                $success = self::uploadFTP($flofilepath, $flofiledestination);    
+            }
+            catch(\Exception $e){
+                $error_log = new ErrorLog([
+                    'error_message' => $e->getMessage(),
+                    'created_by' => '1'
+                ]);
+                $error_log->save();
+            }
 
             if($success){
                 foreach ($flo_completions as $flo_completion) {
