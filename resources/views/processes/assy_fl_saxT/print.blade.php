@@ -851,7 +851,12 @@
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
 							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
+							if ((value.total_perolehan - value.actual ) < 0) {
+							h2 = Math.round(value.planh2 / 2) - 0;
+						}
+						else{
 							h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual );
+						}
 						}
 						if (h2 < 0) {
 							h2 = 0;
