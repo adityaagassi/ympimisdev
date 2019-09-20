@@ -36,8 +36,10 @@ class MiddleProcessController extends Controller
 	public function __construct(){
 		$this->middleware('auth');
 		$this->location = [
+			'bff',
+			'bff-kensa',
 			'lcq-incoming',
-			'lcq-kensa'
+			'lcq-kensa',
 		];
 	}
 
@@ -219,20 +221,20 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
 	}
 
-	public function indexBuffingBoardReverse($id){
-		if($id == 'buffing-sx'){
-			$title = 'Saxophone Buffing Board 2';
+	public function indexBuffingWorkOrder($id){
+		if($id == 'bff-sx'){
+			$title = 'Saxophone Buffing Work Order';
 			$title_jp = '-';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
 
-		return view('processes.middle.buffing_board_reverse', array(
+		return view('processes.middle.buffing_work_order', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
-		))->with('page', 'Middle Process Barrel Board 2')->with('head', 'Middle Process');
+		))->with('page', 'Buffing Work Order')->with('head', 'Middle Process');
 	}
 
 	public function indexReportMiddle($id){
@@ -803,18 +805,18 @@ class MiddleProcessController extends Controller
 		$key = db::select("select DISTINCT SUBSTRING(`key`, 1, 1) as kunci from materials where hpl = 'ASKEY' and surface not like '%PLT%' ORDER BY `key` asc");
 
 		$jam = [
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '01:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '01:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '03:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '03:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '05:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '05:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '07:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '09:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '09:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '11:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '11:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '14:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '14:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '16:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '18:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '18:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '20:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '22:00:00'",
-			"DATE_FORMAT(l.created_at,'%H:%m:%s') > '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') <= '00:00:00'"
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '01:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '01:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '03:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '03:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '05:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '05:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '07:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '09:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '09:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '11:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '11:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '14:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '14:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '16:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '18:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '18:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '20:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '22:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '23:59:59'"
 		];
 		
 		$dataShift3 = [];
