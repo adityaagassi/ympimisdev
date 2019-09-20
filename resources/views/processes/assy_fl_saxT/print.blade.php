@@ -847,7 +847,7 @@
 						var diff = '';
 						var h2 = Math.round(value.planh2 / 2);
 						totalTarget = value.plan+(-value.debt);
-						totalSubassy = (totalTarget - value.actual) - (value.total_return - value.total_ng);
+						totalSubassy = ((totalTarget - value.actual) - (value.total_return - value.total_ng)) - value.total_perolehan;
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
 							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
