@@ -96,12 +96,13 @@ table.table-bordered > tfoot > tr > th{
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th rowspan="2">Model</th>
+										<th rowspan="2">MTD (H-1)</th>
 										<th rowspan="2">Target Packing</th>
 										<th rowspan="2">Act Packing</th>
 										<th colspan="2" width="15%">Stock</th>
 										<th rowspan="2">Target SubAssy (H)</th>
 										<th rowspan="2">Stamping</th>
-										<th rowspan="2">Target SubAssy (H+1)</th>
+										<th rowspan="2">Target SubAssy (H+1 Full)</th>
 										<!-- <th>Diff</th> -->
 									</tr>
 									<tr>
@@ -684,18 +685,19 @@ table.table-bordered > tfoot > tr > th{
 					$.each(result.planData, function(key, value) {
 						// alert(value.planh2 );
 						
-						totalTarget = value.plan+(-value.debt);
-						totalSubassy = (totalTarget - value.actual) - (value.total_return - value.total_ng);
-						var h2 = Math.round(value.planh2 / 2);
+						totalTarget = value.plan;
+						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.total_return - value.total_ng)) ;
+						var h2 = Math.round(value.planh2);
 						if (totalSubassy < 0) {
 						totalSubassy = 0;
-						h2 = Math.round(value.planh2 / 2) - (value.total_stamp - value.actual);
+						h2 = Math.round(value.planh2) - (value.total_stamp - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
 						}
 						planData += '<tr>';
 						planData += '<td>'+ value.model3 +'</td>';
+						planData += '<td>'+ value.debt +'</td>';						
 						planData += '<td>'+ totalTarget +'</td>';
 						planData += '<td>'+ value.actual +'</td>';
 						planData += '<td>'+ value.total_return +'</td>';
@@ -727,18 +729,18 @@ table.table-bordered > tfoot > tr > th{
 							};
 							var api = this.api();
 							
-							var total_actual = api.column(6).data().reduce(function (a, b) {
+							var total_actual = api.column(7).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(6).footer()).html(total_actual.toLocaleString());
+							$(api.column(7).footer()).html(total_actual.toLocaleString());
 
 						},
 						"columnDefs": [  {
-							"targets": 5,
+							"targets": 6,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[6]) < parseInt(rowData[5])  ) {
+								if ( parseInt(rowData[7]) < parseInt(rowData[6])  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 								}
 								else
@@ -748,11 +750,11 @@ table.table-bordered > tfoot > tr > th{
 							}
 						},
 						{
-							"targets": 7,
+							"targets": 8,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[5]) >= 0  && parseInt(rowData[7]) > 0) {
+								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[8]) > 0) {
 										if (parseInt(rowData[5]) <= 0) {
 											$(td).css('background-color', 'RGB(255,204,255)')
 										}

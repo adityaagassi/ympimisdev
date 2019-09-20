@@ -108,7 +108,7 @@
 										<th colspan="2" width="15%">Stock</th>
 										<th rowspan="2">Target AssySax (H)</th>
 										<th rowspan="2">Picking</th>
-										<th rowspan="2">Target AssySax (H+1)</th>
+										<th rowspan="2">Target AssySax (H+1/2)</th>
 										<!-- <th>Diff</th> -->
 									</tr>
 									<tr>
