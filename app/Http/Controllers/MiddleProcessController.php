@@ -41,6 +41,13 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexBuffingNgRate(){
+		return view('processes.middle.display.buffing_ng', array(
+			'title' => 'Daily NG Rate Buffing',
+			'title_jp' => '(??)',
+		))->with('page', 'Daily NG Buffing');
+	}
+
 	public function indexDisplayMonitoring(){
 		$locs = db::select("select distinct location from middle_inventories order by location");
 
@@ -179,6 +186,23 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
 	}
 
+	public function indexBuffingPerformance($id){
+
+		if($id == 'op_ng'){
+			$title = 'NG Rate By Operators';
+			$title_jp = '';
+
+			$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
+
+			return view('processes.middle.display.buffing_op_ng', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'origin_groups' => $origin_groups
+			))->with('page', 'Middle Process Buffing Performance')->with('head', 'Middle Process');
+		}
+
+	}
+
 	public function indexBuffingBoard($id){
 		if($id == 'buffing-sx'){
 			$title = 'Saxophone Buffing Board';
@@ -193,6 +217,22 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
+	}
+
+	public function indexBuffingBoardReverse($id){
+		if($id == 'buffing-sx'){
+			$title = 'Saxophone Buffing Board 2';
+			$title_jp = '-';
+			$mrpc = 'S41';
+			$hpl = 'ASKEY,TSKEY';
+		}
+
+		return view('processes.middle.buffing_board_reverse', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'mrpc' => $mrpc,
+			'hpl' => $hpl,
+		))->with('page', 'Middle Process Barrel Board 2')->with('head', 'Middle Process');
 	}
 
 	public function indexReportMiddle($id){
@@ -336,6 +376,135 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+
+	public function FunctionName(){
+		$date = date("Y-m-d"):
+		
+		$ng = db::select("select ng_name, sum(quantity) as jml
+			from middle_ng_logs
+			where location = 'bff-kensa'
+			and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
+			GROUP BY ng_name order by jml desc");
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+		);
+		return Response::json($response);
+
+
+	}
+
+
+	public function fetchBuffingNgRate(){
+		$datefrom = date("Y-m-d", strtotime("-3 Months"));
+		$dateto = date("Y-m-d");
+
+		$ng_alto = db::select("select a.week_date, b.jml from
+			(select week_date from weekly_calendars WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') a
+			left join
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(quantity) as jml
+			from middle_ng_logs l left join materials m on l.material_number = m.material_number
+			where m.hpl = 'ASKEY' and l.location = 'bff-kensa'
+			group by tgl) b
+			on a.week_date = b.tgl
+			order by a.week_date");
+
+		$ng_tenor = db::select("select a.week_date, b.jml from
+			(select week_date from weekly_calendars WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') a
+			left join
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(quantity) as jml
+			from middle_ng_logs l left join materials m on l.material_number = m.material_number
+			where m.hpl = 'TSKEY' and l.location = 'bff-kensa'
+			group by tgl) b
+			on a.week_date = b.tgl
+			order by a.week_date");
+
+		$buff_alto = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, sum(l.material_qty) as jml
+			from data_log l left join materials m on l.material_number = m.material_number
+			where m.hpl = 'ASKEY'
+			and DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl");
+		$buff_tenor = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, sum(l.material_qty) as jml
+			from data_log l left join materials m on l.material_number = m.material_number
+			where m.hpl = 'TSKEY'
+			and DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl");
+
+		$response = array(
+			'status' => true,
+			'ng_alto' => $ng_alto,
+			'ng_tenor' => $ng_tenor,
+			'buff_alto' => $buff_alto,
+			'buff_tenor' => $buff_tenor,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingPerformance(Request $request){
+		$tanggal = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$tanggal = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$tanggal = date('Y-m-d');
+		}
+
+		$where_ng = "";
+		$where_mt = "";
+		if($request->get('code') != null) {
+			$codes = $request->get('code');
+			$code = "";
+
+			for($x = 0; $x < count($codes); $x++) {
+				$code = $code."'".substr($codes[$x],0,3)."'";
+				if($x != count($codes)-1){
+					$code = $code.",";
+				}
+			}
+			$where_ng = "and m.origin_group_code in (".$code.") ";
+			$where_mt = "where origin_group_code in (".$code.") ";
+		}
+
+		$ng_logs = db::select("select l.operator_id, e.`name`, sum(quantity) as jml_ng from middle_ng_logs l
+			left join employees e
+			on l.operator_id = e.employee_id
+			left join materials m
+			on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'".$where_ng."
+			and l.location = 'bff-kensa'
+			GROUP BY l.operator_id, e.`name`");
+
+		$material_number = db::select("select distinct material_number from materials ".$where_mt);
+		$material = json_encode($material_number);
+		$material = str_replace('{"material_number":"','',$material);
+		$material = str_replace('"}','',$material);
+		$material = str_replace('[','',$material);
+		$material = str_replace(']','',$material);
+
+		$addmaterial = "";
+		$materials = explode(",", $material);
+		$material_number = "";
+
+		for($x = 0; $x < count($materials); $x++) {
+			$material_number = $material_number."'".$materials[$x]."'";
+			if($x != count($materials)-1){
+				$material_number = $material_number.",";
+			}
+		}
+		$addmaterial = "and material_number in (".$material_number.") ";
+
+		$rfid = db::connection('digital_kanban')->select("select operator_id, material_number, sum(material_qty) as jml_buff from data_log where DATE_FORMAT(selesai_start_time,'%Y-%m-%d') = '".$tanggal."' ".$addmaterial."
+			GROUP BY operator_id, material_number order by operator_id");
+
+		$response = array(
+			'status' => true,
+			'ng_logs' => $ng_logs,
+			'rfid' => $rfid,
+			
+		);
+		return Response::json($response);
+	}
+
 	public function fetchDisplayMonitoring(Request $request){
 		$addlocation = "";
 		if($request->get('location') != null) {
@@ -355,16 +524,17 @@ class MiddleProcessController extends Controller
 			(select diff, location from
 			(select distinct location from middle_inventories) loc
 			cross join
-			(select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories) diff
+			(select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories
+			where DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) <= 6
+			) diff
 			order by diff, location asc) a
 			left join
-			(select DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff, location, sum(quantity) as jml
-			from middle_inventories ".$addlocation."
-			GROUP BY location,diff order by diff, location asc) b
+			(select location, count(id) as jml, if(DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at)>=6, 6, DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at)) as diff from middle_inventories ".$addlocation."
+			group by location, diff order by diff, location asc) b
 			on (a.diff = b.diff and a.location = b.location)
 			ORDER BY a.diff, a.location");
-		$loc = db::select("select distinct location from middle_inventories");
-		$diff = db::select("select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories");
+		$loc = db::select("select distinct location from middle_inventories order by location asc");
+		$diff = db::select("select distinct DATEDIFF(CURRENT_TIMESTAMP, middle_inventories.created_at) as diff from middle_inventories order by diff asc");
 
 		$response = array(
 			'status' => true,
@@ -376,6 +546,29 @@ class MiddleProcessController extends Controller
 	}
 
 	public function fetchDetailStockMonitoring(Request $request){
+
+		$diff = $request->get('diff'); 
+		if($diff[0] == '0'){
+			$diff = '= 0';
+		}else if($diff[0] == '<'){
+			$diff = '= '.substr($diff,1,1);
+		}else{
+			$diff = substr($diff,0,2);
+		}
+
+		$location = strtolower($request->get('loc'));
+
+		$detail = db::select("select i.tag, i.material_number, m.material_description, i.location, i.quantity
+			from middle_inventories i left join materials m
+			on i.material_number = m.material_number
+			where DATEDIFF(CURRENT_TIMESTAMP, i.created_at) ".$diff."
+			and location = '".$location."'");
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail,
+		);
+		return Response::json($response);
 		
 	}
 
@@ -1210,6 +1403,85 @@ class MiddleProcessController extends Controller
 				}
 			}
 		}
+
+		$response = array(
+			'status' => true,
+			'boards' => $boards,
+			'materials' => $materials
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingReverse(Request $request)
+	{
+		$tmp = [];
+		$boards = [];
+
+		$work_stations = db::connection('digital_kanban')->table('dev_list')
+		->select('idx','dev_name', 'dev_operator_id', 'dev_akan_num', 'dev_sedang_num', 'dev_selesai_num','dev_selesai_detected')
+		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
+		->where('enable_antrian', '=', 'YES')
+		->orderBy('dev_name', 'asc')
+		->get();
+
+		foreach ($work_stations as $ws) {
+			$employee = Employee::where('employee_id', '=', $ws->dev_operator_id)->select('name')->first();
+
+			if($employee != null){
+				$employee_name = $employee->name;
+			}
+			else{
+				$employee_name = "NotFound";
+			}
+
+			if($ws->dev_selesai_detected == 1){
+				$selesai = $ws->dev_selesai_num;
+				array_push($tmp, $ws->dev_selesai_num);
+			}
+			else{
+				$selesai = "";
+			}
+
+			$queues_q = db::connection('digital_kanban')->table('buffing_queues')
+			// ->where('rack', '=', $work_station->dev_name)
+			->whereRaw('rack = concat(SPLIT_STRING("'.$ws->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$ws->dev_name.'", "-", 2))')
+			->orderBy('created_at', 'asc')
+			->get();
+
+			$queues = array();
+			for ($i=0; $i < count($queues_q); $i++) {
+				if(isset($queues_q[$i])){
+					array_push($queues, $queues_q[$i]->material_num);
+					array_push($tmp, $queues_q[$i]->material_num);
+				}
+				else{
+					array_push($queues, "");
+				}
+			}
+
+			array_push($tmp, $ws->dev_sedang_num);
+			array_push($tmp, $ws->dev_akan_num);
+
+			array_push($boards, [
+				'id' => $ws->idx,
+				'ws' => $ws->dev_name,
+				'employee_id' => $ws->dev_operator_id,
+				'employee_name' => $employee_name,
+				'sedang' => $ws->dev_sedang_num,
+				'akan' => $ws->dev_akan_num,
+				'selesai' => $selesai,
+				'queues' => $queues,
+			]);
+
+		}
+
+		$tmp = array_unique($tmp);
+
+		$materials = Material::where('materials.mrpc', '=', $request->get('mrpc'))
+		->whereIn('materials.hpl', $request->get('hpl'))
+		->whereIn('materials.material_number', $tmp)
+		->select('material_number',db::raw("concat(material_number,'<br>',model,'_',`key`) as isi"))
+		->get();
 
 		$response = array(
 			'status' => true,
@@ -2327,8 +2599,7 @@ class MiddleProcessController extends Controller
 			$awal = '00:00:00';
 			$akhir = '07:00:00';
 		}
-
-
+		
 		$detailPerolehan = db::table('materials')
 		->leftJoin('barrel_logs','materials.material_number','=','barrel_logs.material')
 		->where('materials.category', '=', 'WIP')
@@ -2575,6 +2846,7 @@ class MiddleProcessController extends Controller
 					'ng_name' => $ng[0],
 					'quantity' => $ng[1],
 					'location' => $request->get('loc'),
+					'operator_id' => $request->get('operator_id'),
 					'started_at' => $request->get('started_at')
 				]);
 
