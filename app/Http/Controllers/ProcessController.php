@@ -2881,7 +2881,7 @@ left Join
 
 (
 SELECT model, sum(total_perolehan) as total_perolehan from (
-SELECT model,sum(quantity) as total_perolehan from stamp_inventories WHERE process_code  in ('2','3') and origin_group_code ='043' and `status` is null and DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' GROUP BY model
+SELECT model,sum(quantity) as total_perolehan from log_processes WHERE process_code  in ('2') and origin_group_code ='043'  and DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' GROUP BY model
 UNION all
 SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
 ) hasil group by model

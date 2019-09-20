@@ -755,7 +755,7 @@ table.table-bordered > tfoot > tr > th{
 
 
 								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[8]) > 0) {
-										if (parseInt(rowData[5]) <= 0) {
+										if (parseInt(rowData[6]) <= 0) {
 											$(td).css('background-color', 'RGB(255,204,255)')
 										}
 
