@@ -376,9 +376,8 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
-
-	public function FunctionName(){
-		$date = date("Y-m-d"):
+	public function fetchBuffingNg(){
+		$date = date("Y-m-d");
 		
 		$ng = db::select("select ng_name, sum(quantity) as jml
 			from middle_ng_logs
@@ -388,11 +387,10 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
+			'date' => $date,
 			'ng' => $ng,
 		);
 		return Response::json($response);
-
-
 	}
 
 
