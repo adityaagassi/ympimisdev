@@ -2725,7 +2725,7 @@ public function ngFLStamp(Request $request){
 	public function fetchResultSaxnew(Request $request)
 	{
 		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 		}
 		else{
 			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
@@ -2939,7 +2939,7 @@ select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN
 	public function fetchResultFlStamp(Request $request)
 	{
 		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 		}
 		else{
 			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
