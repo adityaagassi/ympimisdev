@@ -166,7 +166,7 @@
 
 	jQuery(document).ready(function(){
 		fill_table();
-		setInterval(fill_table, 20000);
+		setInterval(fill_table, 30000);
 
 		var kunci = "{{$_GET['key2']}}";
 		var kuncies = kunci.split(",");
