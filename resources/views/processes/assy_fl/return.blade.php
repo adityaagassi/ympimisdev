@@ -132,8 +132,8 @@ table.table-bordered > tfoot > tr > th{
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					$("#serial_number").val("");
-					$("#serial_number").focus();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
 					openSuccessGritter('Success!', result.message);
 					$('#returnTable').DataTable().ajax.reload();
 				}
