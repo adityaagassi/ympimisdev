@@ -35,6 +35,16 @@
 	.progress {
 		background-color: rgba(0,0,0,0);
 	}
+	#loading, #error { display: none; }
+
+	.loading {
+		margin-top: 8%;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
 </style>
 @stop
 @section('header')
@@ -73,14 +83,13 @@
 						</div>
 					</div>
 				</form>
-				<!-- <ol class="breadcrumb pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 12px;"></ol> -->
 			</div>
 			
 			<div class="col-xs-12" style="padding: 0px">
 				<div class="col-xs-12" style="padding: 0px">
-					<div class="nav-tabs-custom">
+					<div class="nav-tabs-custom" id="tab_1">
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
+							<div class="tab-pane active">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="col-xs-3">
@@ -108,7 +117,7 @@
 					</div>
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
+							<div class="tab-pane active">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="col-xs-3">
@@ -139,7 +148,7 @@
 							<div class="col-xs-6" style="padding-right: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_ic_3_alto" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -148,7 +157,7 @@
 							<div class="col-xs-6" style="padding-left: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_ic_3_tenor" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -162,7 +171,7 @@
 							<div class="col-xs-6" style="padding-right: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_ic_4_alto" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -171,7 +180,7 @@
 							<div class="col-xs-6" style="padding-left: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_ic_4_tenor" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -182,7 +191,7 @@
 
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
+							<div class="tab-pane active">
 								<div id="chart_ic_5" style="width: 99%;"></div>
 							</div>
 						</div>
@@ -190,7 +199,7 @@
 
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
+							<div class="tab-pane active">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="col-xs-3">
@@ -221,7 +230,7 @@
 							<div class="col-xs-6" style="padding-right: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_kensa_2_alto" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -230,7 +239,7 @@
 							<div class="col-xs-6" style="padding-left: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_kensa_2_tenor" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -244,7 +253,7 @@
 							<div class="col-xs-6" style="padding-right: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_kensa_3_alto" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -253,7 +262,7 @@
 							<div class="col-xs-6" style="padding-left: 0.5%;">
 								<div class="nav-tabs-custom">
 									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
+										<div class="tab-pane active">
 											<div id="chart_kensa_3_tenor" style="width: 99%;"></div>
 										</div>
 									</div>
@@ -264,7 +273,7 @@
 
 					<div class="nav-tabs-custom">
 						<div class="tab-content">
-							<div class="tab-pane active" id="tab_1">
+							<div class="tab-pane active">
 								<div id="chart_kensa_4" style="width: 99%;"></div>
 							</div>
 						</div>
@@ -329,7 +338,6 @@
 			bulan:"{{$_GET['bulan']}}",
 			fy:"{{$_GET['fy']}}"
 		}
-
 		$.get('{{ url("fetch/middle/lcq_ng_rate_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
@@ -537,11 +545,11 @@ $.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, sta
 
 				ng.push(parseInt(result.weekly[i].ng));
 				g.push(parseInt(result.weekly[i].g));
-				ng[i] = ng[i] || 0;
-				g[i] = g[i] || 0;
+				// ng[i] = ng[i] || 0;
+				// g[i] = g[i] || 0;
 				perolehan[i] = ng[i] + g[i];
 				ng_rate[i] = (ng[i] / perolehan[i]) * 100;
-				ng_rate[i] = ng_rate[i] || 0;
+				// ng_rate[i] = ng_rate[i] || 0;
 				ng_rate_weekly.push(ng_rate[i]);
 			}
 
@@ -591,6 +599,9 @@ $.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, sta
 								return Highcharts.numberFormat(this.y,2)+'%';
 							}
 						}
+					},
+					series: {
+						connectNulls: true
 					}
 				},credits: {
 					enabled: false
@@ -1084,30 +1095,34 @@ $.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xh
 			var ng_alto = [];
 			var total_alto = [];
 			var ng_rate_alto = [];
-
+			var push = 0;
 			for (var i = 0; i < result.dailyICAlto.length; i++) {
 				tgl.push(result.dailyICAlto[i].tgl);
 
 				ng_alto.push(result.dailyICAlto[i].ng);
 				total_alto.push(result.dailyICAlto[i].total);
-				ng_alto[i] = ng_alto[i] || 0;
-				total_alto[i] = total_alto[i] || 0;
-				ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
+				push = (ng_alto[i] / total_alto[i]) * 100;
+				if(push == 0){
+					push = NaN;
+				}
+				ng_rate_alto.push(push);
 			}
 
 			var tgl = [];
 			var ng_tenor = [];
 			var total_tenor = [];
 			var ng_rate_tenor = [];
-
+			var push = [];
 			for (var i = 0; i < result.dailyICTenor.length; i++) {
 				tgl.push(result.dailyICTenor[i].tgl);
 
 				ng_tenor.push(result.dailyICTenor[i].ng);
 				total_tenor.push(result.dailyICTenor[i].total);
-				ng_tenor[i] = ng_tenor[i] || 0;
-				total_tenor[i] = total_tenor[i] || 0;
-				ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
+				push = (ng_tenor[i] / total_tenor[i]) * 100;
+				if(push == 0){
+					push = NaN;
+				}
+				ng_rate_tenor.push(push);
 			}
 			var bulan = result.bulan;
 
@@ -1146,6 +1161,9 @@ $.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xh
 								return Highcharts.numberFormat(this.y,2)+'%';
 							}
 						}
+					},
+					series: {
+						connectNulls: true
 					}
 				},credits: {
 					enabled: false
@@ -1166,15 +1184,18 @@ $.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xh
 			var ng_alto = [];
 			var total_alto = [];
 			var ng_rate_alto = [];
-
+			var push = 0;
 			for (var i = 0; i < result.dailyKensaAlto.length; i++) {
 				tgl.push(result.dailyKensaAlto[i].tgl);
 
 				ng_alto.push(result.dailyKensaAlto[i].ng);
 				total_alto.push(result.dailyKensaAlto[i].total);
-				ng_alto[i] = ng_alto[i] || 0;
-				total_alto[i] = total_alto[i] || 0;
-				ng_rate_alto.push(((ng_alto[i] / total_alto[i]) * 100)||0);
+				push = (ng_alto[i] / total_alto[i]) * 100;
+				if(push == 0){
+					push = NaN;
+				}
+
+				ng_rate_alto.push(push);
 			}
 
 			var tgl = [];
@@ -1187,9 +1208,11 @@ $.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xh
 
 				ng_tenor.push(result.dailyKensaTenor[i].ng);
 				total_tenor.push(result.dailyKensaTenor[i].total);
-				ng_tenor[i] = ng_tenor[i] || 0;
-				total_tenor[i] = total_tenor[i] || 0;
-				ng_rate_tenor.push(((ng_tenor[i] / total_tenor[i]) * 100)||0);
+				push = (ng_tenor[i] / total_tenor[i]) * 100;
+				if(push == 0){
+					push = NaN;
+				}
+				ng_rate_tenor.push(push);
 			}
 			var bulan = result.bulan;
 
@@ -1229,6 +1252,9 @@ $.get('{{ url("fetch/middle/lcq_ng_rate") }}', data, function(result, status, xh
 								return Highcharts.numberFormat(this.y,2)+'%';
 							}
 						}
+					},
+					series: {
+						connectNulls: true
 					}
 				},credits: {
 					enabled: false

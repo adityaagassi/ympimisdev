@@ -45,7 +45,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingNgRate(){
 		return view('processes.middle.display.buffing_ng', array(
-			'title' => 'Daily NG Rate Buffing',
+			'title' => 'Daily Buffing NG Rate',
 			'title_jp' => '(??)',
 		))->with('page', 'Daily NG Buffing');
 	}
@@ -85,7 +85,7 @@ class MiddleProcessController extends Controller
 
 	public function indexReportBuffingNg(){
 		return view('processes.middle.report.ng_buffing', array(
-			'title' => 'Report NG Buffing',
+			'title' => 'NG Buffing Report',
 			'title_jp' => '(??)'
 		))->with('page', 'NG Buffing');
 	}

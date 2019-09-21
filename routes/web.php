@@ -74,6 +74,14 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 
 //end visitor control 
 
+//----- Start mesin injeksi
+
+Route::get('index/injeksi', 'InjeksiController@index');
+
+Route::get('index/in', 'InjeksiController@in');
+
+// end mesin injeksi
+
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
 	Route::get('index/dp_production_result', 'DisplayController@index_dp_production_result');
 	Route::get('fetch/dp_production_result', 'DisplayController@fetch_dp_production_result');
@@ -556,6 +564,7 @@ Route::get('fetch/middle/barrel_machine', 'MiddleProcessController@fetchMiddleBa
 Route::get('index/middle/barrel_machine', 'MiddleProcessController@indexProcessBarrelMachine');
 Route::get('index/middle/barrel_board/{id}', 'MiddleProcessController@indexProcessBarrelBoard');
 Route::get('index/middle/buffing_board/{id}', 'MiddleProcessController@indexBuffingBoard');
+Route::get('index/middle/buffing_board_reverse/{id}', 'MiddleProcessController@indexBuffingBoardReverse');
 Route::get('fetch/middle/get_barrel_machine', 'MiddleProcessController@fetchProcessBarrelMachine');
 Route::get('fetch/middle/get_barrel', 'MiddleProcessController@fetchProcessBarrel');
 Route::get('fetch/middle/barrel_board', 'MiddleProcessController@fetchMiddleBarrelBoard');
@@ -566,6 +575,7 @@ Route::get('fetch/middle/barrel_reprint', 'MiddleProcessController@fetchMiddleBa
 Route::get('fetch/middle/barrel_result', 'MiddleProcessController@fetchBarrelBoardDetails');
 Route::get('index/report_middle/{id}', 'MiddleProcessController@indexReportMiddle');
 Route::get('fetch/middle/buffing_board', 'MiddleProcessController@fetchBuffingBoard');
+Route::get('fetch/middle/buffing_board_reverse', 'MiddleProcessController@fetchBuffingReverse');
 Route::get('index/middle/barrel_log', 'MiddleProcessController@indexBarrelLog');
 Route::get('fetch/middle/barrel_log', 'MiddleProcessController@fetchBarrelLog');
 Route::get('index/middle/report_ng', 'MiddleProcessController@indexReportNG');
@@ -591,8 +601,12 @@ Route::get('index/middle/report_hourly_lcq', 'MiddleProcessController@indexRepor
 Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchReportHourlyLcq');
 // Report Middle Buffing
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
-
-
+Route::get('index/middle/buffing_performance/{id}', 'MiddleProcessController@indexBuffingPerformance');
+Route::get('fetch/middle/buffing_performance', 'MiddleProcessController@fetchBuffingPerformance');
+Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
+Route::get('index/middle/buffing_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
+Route::get('fetch/middle/buffing_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
+Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){

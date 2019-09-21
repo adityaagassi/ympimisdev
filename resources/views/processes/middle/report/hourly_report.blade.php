@@ -282,7 +282,7 @@
 						body += '<tr>';
 
 						body += '<td>'+result.tanggal+'</td>';
-						body += '<td>'+jam[0][i]+'</td>';
+						body += '<td>'+jam[1][i]+'</td>';
 
 						var sum_as = 0;
 						var sum_ts = 0;
@@ -360,7 +360,7 @@
 						body += '<tr>';
 
 						body += '<td>'+result.tanggal+'</td>';
-						body += '<td>'+jam[0][i]+'</td>';
+						body += '<td>'+jam[2][i]+'</td>';
 
 						var sum_as = 0;
 						var sum_ts = 0;

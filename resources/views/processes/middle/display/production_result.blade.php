@@ -46,7 +46,7 @@
 				<form method="GET" action="{{ action('MiddleProcessController@indexDisplayProductionResult') }}">
 					<div class="col-xs-2">
 						<div class="input-group date">
-							<div class="input-group-addon bg-green">
+							<div class="input-group-addon bg-green" style="border: none;">
 								<i class="fa fa-calendar"></i>
 							</div>
 							<input type="text" class="form-control datepicker" name="tanggal" placeholder="Select Date">
@@ -113,7 +113,7 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		fillTable();
-		setInterval(fillTable, 60000);
+		setInterval(fillTable, 10000);
 	});
 
 	function addZero(i) {
@@ -200,62 +200,115 @@
 						key.push(result.key[i].key);
 						head += '<th style="padding: 0px;width:1%;">'+ key[i] +'</th>';
 					}
-
+					head += '<th style="padding: 0px;width:1%;">Total</th>';
 					head += '</tr>';
+
+					var sum = [];
 					var body = '';
+
+					//Alto Body
 					var model_alto = [];
+					var alto = [];
+					var alto_key = [];
 
 					for (var i = 0; i < result.model_alto.length; i++) {
 						model_alto.push(result.model_alto[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: #ffff66;color:black;">'+ model_alto[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_alto[i] == as_model[k]) && (key[j] == as_key[k])){
 									if(as_shift3[k] > 0){
 										body += '<td style="background-color: #ffff66;color:black;">'+ as_shift3[k] +'</td>';
+										sum.push(parseInt(as_shift3[k]));
 									}
 									else{
 										body += '<td>'+ as_shift3[k] +'</td>';
+										sum.push(parseInt(as_shift3[k]));
+
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
-							}			
+								sum.push(parseInt(0));
+							}
 						}
+						alto.push(sum);
+						body += '<td style="background-color: #ffff66;color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: #ffff66;color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_alto.length; j++){
+							temp += alto[j][i];
+						}
+						alto_key.push(temp);
+						body += '<td style="background-color: #ffff66;color:black;">'+alto_key[i]+'</td>';
+					}
+					body += '<td style="background-color: #ffff66;color:black;">'+alto_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Alto Body
 
+					//Tenor Body
+					var tenor = [];
+					var tenor_key = [];
 					var model_tenor = [];
 					for (var i = 0; i < result.model_tenor.length; i++) {
 						model_tenor.push(result.model_tenor[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ model_tenor[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_tenor[i] == ts_model[k]) && (key[j] == ts_key[k])){
 									if(ts_shift3[k] > 0){
 										body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ ts_shift3[k] +'</td>';
+										sum.push(parseInt(ts_shift3[k]));
 									}
 									else{
 										body += '<td>'+ ts_shift3[k] +'</td>';
+										sum.push(parseInt(ts_shift3[k]));
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
+								sum.push(parseInt(0));
+
 							}			
 						}
+						tenor.push(sum);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_tenor.length; j++){
+							temp += tenor[j][i];
+						}
+						tenor_key.push(temp);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key[i]+'</td>';
+					}
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Tenor Body
 
 					$('#head_s3').append(head);
 					$('#body_s3').append(body);
+
+
+
+
 
 
 					//------------------------------------------ Shift 1
@@ -267,62 +320,113 @@
 						key.push(result.key[i].key);
 						head += '<th style="padding: 0px;width:1%;">'+ key[i] +'</th>';
 					}
-
+					head += '<th style="padding: 0px;width:1%;">Total</th>';
 					head += '</tr>';
-					var body = '';
-					var model_alto = [];
 
+					var sum = [];
+					var body = '';
+
+					//Alto Body
+					var model_alto = [];
+					var alto = [];
+					var alto_key = [];					
 					for (var i = 0; i < result.model_alto.length; i++) {
 						model_alto.push(result.model_alto[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: #ffff66;color:black;">'+ model_alto[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_alto[i] == as_model[k]) && (key[j] == as_key[k])){
 									if(as_shift1[k] > 0){
 										body += '<td style="background-color: #ffff66;color:black;">'+ as_shift1[k] +'</td>';
+										sum.push(parseInt(as_shift1[k]));
 									}
 									else{
 										body += '<td>'+ as_shift1[k] +'</td>';
+										sum.push(parseInt(as_shift1[k]));
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
+								sum.push(parseInt(0));
+
 							}			
 						}
+						alto.push(sum);
+						body += '<td style="background-color: #ffff66;color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: #ffff66;color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_alto.length; j++){
+							temp += alto[j][i];
+						}
+						alto_key.push(temp);
+						body += '<td style="background-color: #ffff66;color:black;">'+alto_key[i]+'</td>';
+					}
+					body += '<td style="background-color: #ffff66;color:black;">'+alto_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Alto Body
 
+
+					//Tenor Body
 					var model_tenor = [];
+					var tenor = [];
+					var tenor_key = [];
 					for (var i = 0; i < result.model_tenor.length; i++) {
 						model_tenor.push(result.model_tenor[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ model_tenor[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_tenor[i] == ts_model[k]) && (key[j] == ts_key[k])){
 									if(ts_shift1[k] > 0){
 										body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ ts_shift1[k] +'</td>';
+										sum.push(parseInt(ts_shift1[k]));
 									}
 									else{
 										body += '<td>'+ ts_shift1[k] +'</td>';
+										sum.push(parseInt(ts_shift1[k]));
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
+								sum.push(parseInt(0));
 							}			
 						}
+						tenor.push(sum);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_tenor.length; j++){
+							temp += tenor[j][i];
+						}
+						tenor_key.push(temp);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key[i]+'</td>';
+					}
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Tenor Body
 
 					$('#head_s1').append(head);
 					$('#body_s1').append(body);
+
+
+
 
 					//----------------------------------- Shift 2
 					$('#head_alto_s2').html("");
@@ -333,57 +437,108 @@
 						key.push(result.key[i].key);
 						head += '<th style="padding: 0px;width:1%;">'+ key[i] +'</th>';
 					}
-
+					head += '<th style="padding: 0px;width:1%;">Total</th>';
 					head += '</tr>';
-					var body = '';
-					var model_alto = [];
 
+					var body = '';
+					var sum = [];
+					
+					//Alto Body
+					var model_alto = [];
+					var alto = [];
+					var alto_key = [];	
 					for (var i = 0; i < result.model_alto.length; i++) {
 						model_alto.push(result.model_alto[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: #ffff66;color:black;">'+ model_alto[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_alto[i] == as_model[k]) && (key[j] == as_key[k])){
 									if(as_shift2[k] > 0){
 										body += '<td style="background-color: #ffff66;color:black;">'+ as_shift2[k] +'</td>';
+										sum.push(parseInt(as_shift2[k]));
 									}
 									else{
 										body += '<td>'+ as_shift2[k] +'</td>';
+										sum.push(parseInt(as_shift2[k]));
+
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
+								sum.push(parseInt(0));
+
 							}			
 						}
+						alto.push(sum);
+						body += '<td style="background-color: #ffff66;color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: #ffff66;color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_alto.length; j++){
+							temp += alto[j][i];
+						}
+						alto_key.push(temp);
+						body += '<td style="background-color: #ffff66;color:black;">'+alto_key[i]+'</td>';
+					}
+					body += '<td style="background-color: #ffff66;color:black;">'+alto_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Alto Body
+					
+
+					//Tenor Body
 					var model_tenor = [];
+					var tenor = [];
+					var tenor_key = [];
 					for (var i = 0; i < result.model_tenor.length; i++) {
 						model_tenor.push(result.model_tenor[i].model);
 						body += '<tr>';
 						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ model_tenor[i] +'</td>';
+						sum = [];
 						for (var j = 0; j < result.key.length; j++) {
 							var is = true;
 							for (var k = 0; k < result.alto.length; k++) {
 								if((model_tenor[i] == ts_model[k]) && (key[j] == ts_key[k])){
 									if(ts_shift2[k] > 0){
 										body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+ ts_shift2[k] +'</td>';
+										sum.push(parseInt(ts_shift2[k]));
 									}else{
 										body += '<td>'+ ts_shift2[k] +'</td>';
+										sum.push(parseInt(ts_shift2[k]));
 									}
 									is = false;
 								}
 							}
 							if(is){
 								body += '<td>0</td>';
+								sum.push(parseInt(0));
 							}			
 						}
+						tenor.push(sum);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+sum.reduce(function(a,b){return a+b})+'</td>';
 						body += '</tr>';
 					}
+					body += '<tr>';
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">Total</td>';
+					for (var i = 0; i < result.key.length; i++) {
+						var temp = 0;
+						for(var j = 0; j < result.model_tenor.length; j++){
+							temp += tenor[j][i];
+						}
+						tenor_key.push(temp);
+						body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key[i]+'</td>';
+					}
+					body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+tenor_key.reduce(function(a,b){return a+b})+'</td>';
+					body += '<tr>';
+					//End Tenor Body
+
 					$('#head_s2').append(head);
 					$('#body_s2').append(body);
 
