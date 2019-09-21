@@ -386,7 +386,7 @@ class MiddleProcessController extends Controller
 			where location = 'bff-kensa'
 			and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
 			GROUP BY ng_name order by jml desc");
-	
+
 		$response = array(
 			'status' => true,
 			'date' => $date,
@@ -1811,7 +1811,7 @@ class MiddleProcessController extends Controller
 			if($check == null){
 				$response = array(
 					'status' => false,
-					'message' => 'Selected tag not in queue, please refresh page and do not print using 2 tablets at the same time',
+					'message' => 'Selected tag not in queue, please refresh page',
 				);
 				return Response::json($response);
 			}
@@ -1843,8 +1843,23 @@ class MiddleProcessController extends Controller
 					foreach ($tags as $tag) {
 						$barrel = Barrel::leftJoin('materials', 'materials.material_number', '=', 'barrels.material_number')
 						->where('barrels.tag', '=', $tag[0])
-						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.quantity')
+						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.qty')
 						->first();
+
+						$group = explode('-', $barrel->key);
+						$rack = 'SXKEY-'.$group[0];
+
+						$buffing_queue = DB::connection('digital_kanban')
+						->table('buffing_queues')
+						->insert([
+							'rack' => $rack,
+							'material_num' => $barrel->material_number,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s'),
+							'updated_at' => date('Y-m-d H:i:s'),
+							'material_qty' => $barrel->qty,
+							'material_tag_id' => $tag[0]
+						]);
 
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
@@ -1907,6 +1922,21 @@ class MiddleProcessController extends Controller
 						->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.qty', 'barrels.remark', 'barrels.machine', 'barrels.jig')
 						->first();
 
+						$group = explode('-', $barrel->key);
+						$rack = 'SXKEY-'.$group[0];
+
+						$buffing_queue = DB::connection('digital_kanban')
+						->table('buffing_queues')
+						->insert([
+							'rack' => $rack,
+							'material_num' => $barrel->material_number,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s'),
+							'updated_at' => date('Y-m-d H:i:s'),
+							'material_qty' => $barrel->qty,
+							'material_tag_id' => $tag[0]
+						]);
+
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
 						],
@@ -1947,6 +1977,21 @@ class MiddleProcessController extends Controller
 					->where('barrel_queues.tag', '=', $tag[0])
 					->select('barrel_queues.tag', 'barrel_queues.material_number', 'barrel_queues.quantity', 'materials.model', 'materials.hpl', 'materials.key', 'materials.surface', 'materials.material_description', db::raw('SPLIT_STRING(barrel_queues.remark, "+", 1) as remark'))
 					->first();
+
+					$group = explode('-', $barrel->key);
+					$rack = 'SXKEY-'.$group[0];
+
+					$buffing_queue = DB::connection('digital_kanban')
+					->table('buffing_queues')
+					->insert([
+						'rack' => $rack,
+						'material_num' => $barrel->material_number,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+						'material_qty' => $barrel->quantity,
+						'material_tag_id' => $tag[0]
+					]);
 
 					$barrel_log = new BarrelLog([
 						'machine' => $request->get('surface'),
@@ -2010,6 +2055,21 @@ class MiddleProcessController extends Controller
 					->where('barrels.tag', '=', $tag[0])
 					->select('materials.hpl', 'barrels.remark2', 'materials.model', 'materials.key', 'materials.surface', 'barrels.tag', 'barrels.material_number', 'materials.material_description', 'barrels.qty')
 					->first();
+
+					$group = explode('-', $barrel->key);
+					$rack = 'SXKEY-'.$group[0];
+
+					$buffing_queue = DB::connection('digital_kanban')
+					->table('buffing_queues')
+					->insert([
+						'rack' => $rack,
+						'material_num' => $barrel->material_number,
+						'created_by' => $id,
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+						'material_qty' => $barrel->qty,
+						'material_tag_id' => $tag[0]
+					]);
 
 					MiddleInventory::firstOrcreate([
 						'tag' => $tag[0]
@@ -2599,7 +2659,7 @@ class MiddleProcessController extends Controller
 			$awal = '00:00:00';
 			$akhir = '07:00:00';
 		}
-		
+
 		$detailPerolehan = db::table('materials')
 		->leftJoin('barrel_logs','materials.material_number','=','barrel_logs.material')
 		->where('materials.category', '=', 'WIP')

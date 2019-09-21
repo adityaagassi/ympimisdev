@@ -10,7 +10,7 @@ class MiddleNgLog extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'material_number', 'location', 'ng_name', 'quantity', 'employee_id', 'remark', 'started_at'
+		'tag', 'material_number', 'location', 'ng_name', 'quantity', 'employee_id', 'remark', 'started_at', 'operator_id'
 	];
 
 	public function material()
