@@ -327,7 +327,6 @@
 						ng_rate_tenor.push([Date.parse(tgl[i]), ((ng_tenor[i]/buff_tenor[i])*100)]);
 					}
 
-					console.table(ng_rate_alto);
 
 					var chart = Highcharts.stockChart('container1', {
 						rangeSelector: {

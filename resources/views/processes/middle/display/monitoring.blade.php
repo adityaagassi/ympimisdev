@@ -453,16 +453,12 @@
 							data: series[0],
 						},
 						{
-							name:'Kensa-Middle',
+							name:'LCQ-Incoming',
 							data: series[1],
 						},
 						{
-							name:'LCQ-Incoming',
-							data: series[2],
-						},
-						{
 							name:'LCQ-Kensa',
-							data: series[3],
+							data: series[2],
 						}
 						]
 
