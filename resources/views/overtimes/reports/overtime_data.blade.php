@@ -134,6 +134,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 8%">Date</th>
+										<th style="width: 8%">ID Overtime</th>
 										<th style="width: 7%">Employee ID</th>
 										<th style="width: 10%">Name</th>
 										<th style="width: 15%">Department</th>
@@ -148,6 +149,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -283,6 +285,7 @@
 			},
 			"columns": [
 			{ "data": "tanggal" },
+			{ "data": "id_overtime" },
 			{ "data": "nik" },
 			{ "data": "name" },
 			{ "data": "department" },

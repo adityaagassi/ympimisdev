@@ -418,8 +418,8 @@ class OvertimeController extends Controller
 		}
 
 
-		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, emp.name, bagian.cost_center, bagian.department, bagian.section, ot, keperluan, code from
-			(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
+		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, ovr.id_overtime, emp.name, bagian.cost_center, bagian.department, bagian.section, ot, keperluan, code from
+			(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(id_ot) as id_overtime, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
 			where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
 			left join ympimis.employees as emp on emp.employee_id = ovr.nik
 			left join (select employee_id, cost_center, division, department, section, sub_section, `group` from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
