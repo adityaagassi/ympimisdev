@@ -72,6 +72,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
+		setInterval(fillChart, 10000);
 	});
 
 	$('.datepicker').datepicker({

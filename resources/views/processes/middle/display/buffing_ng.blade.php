@@ -253,6 +253,8 @@
 		Highcharts.setOptions(Highcharts.theme);
 
 		fillChart();
+		setInterval(fillChart, 30000);
+
 
 	});
 
