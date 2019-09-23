@@ -270,6 +270,7 @@
 				openErrorGritter('Error!', 'ID Slip Invalid');
 				audio_error.play();
 				$("#tag").val("");
+				$("#tag").focus();
 			}			
 		}
 	});
@@ -379,6 +380,8 @@
 				btn.innerText = 'CONFIRM';
 				audio_error.play();
 				openErrorGritter('Error!', result.message);
+				$("#tag").val("");
+				$("#tag").focus();
 			}
 		});
 	}
@@ -450,6 +453,7 @@
 				openErrorGritter('Error!', result.message);
 				audio_error.play();
 				$("#tag").val("");
+				$("#tag").focus();
 			}
 		});
 	}
