@@ -44,14 +44,14 @@
 			<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 		</div>
 		<div class="col-xs-12">
-			<div id="wait" class="loading">
+			<!-- <div id="wait" class="loading">
 				<div>
 					<center>
 						<i class="fa fa-spinner fa-5x fa-spin" style="color: white;"></i><br>
 						<h2 style="margin: 0px; color: white;">Loading . . .</h2>
 					</center>
 				</div>
-			</div>
+			</div> -->
 			<div id="container" style="style: 100%;"></div>
 		</div>
 	</div>
@@ -72,7 +72,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 30000);
 	});
 
 	$('.datepicker').datepicker({
@@ -306,8 +306,8 @@
 	}
 
 	function fillChart() {
-		$("#wait").show();
-		$("#container").hide();
+		// $("#wait").show();
+		// $("#container").hide();
 		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
 
@@ -334,9 +334,9 @@
 		}
 
 		$.get('{{ url("fetch/middle/buffing_performance") }}', data, function(result, status, xhr) {
-			$("#wait").hide();
+			// $("#wait").hide();
 			if(result.status){
-				$("#container").show();
+				// $("#container").show();
 				$('#location_title').html('<b>'+ location_title +'</b>');
 
 				var id = [];
