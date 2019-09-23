@@ -41,11 +41,13 @@
 
 	@-webkit-keyframes akan {
 		0%, 49% {
+			/*border:1px solid rgb(150,150,150);*/
 			background: rgba(0, 0, 0, 0);
 			/*opacity: 0;*/
 		}
 		50%, 100% {
 			background-color: rgb(243, 156, 18);
+			/*border:1px solid rgb(150,150,150);*/
 		}
 	}
 
@@ -125,7 +127,7 @@
 
 		jQuery(document).ready(function() {
 			fetchTable();
-			// setInterval(fetchTable, 2000);
+			setInterval(fetchTable, 2000);
 		});
 
 		function fetchTable(){
@@ -150,27 +152,42 @@
 						var color2 = "";
 						var colorSelesai = "";
 						var x = 0;
+						var num = 1;
 
 						$.each(result.boards, function(index, value){
 							if (x % 2 === 0 ) {
 								if (value.employee_id) {
 									color = '';
+									if (!value.akan)
+										color2 = 'class="akan"';
+
+									if (value.selesai)
+									colorSelesai = 'class="selesai"';
 								}
 								else {
 									color = '';
+									color2 = '';
+									colorSelesai = '';
 								}
 							} else {
 								if (value.employee_id) {
 									color = 'style="background-color: RGB(100,100,100)"';
+									if (!value.akan)
+										color2 = 'class="akan"';
+
+									if (value.selesai)
+									colorSelesai = 'class="selesai"';
 								}
 								else {
 									color = 'style="background-color: RGB(100,100,100)"';
+									color2 = '';
+									colorSelesai = '';
 								}
 							}
 
 
-							ws += "<td "+color+">"+value.ws+"</td>";
-							op += "<td "+color+">"+value.employee_name.split(' ').slice(0,2).join(' ')+"</td>";
+							ws += "<td "+color+" "+color2+">"+value.ws+"</td>";
+							op += "<td "+color+" "+color2+">"+value.employee_id+"<br>"+value.employee_name.split(' ').slice(0,2).join(' ')+"</td>";
 
 							if (value.sedang != "") {
 								$.each(result.materials, function(index2, value2){
@@ -182,22 +199,22 @@
 								sedang += "<td "+color+"></td>";
 							}
 
-							if (value.sedang != "") {
+							if (value.akan != "") {
 
 								$.each(result.materials, function(index3, value3){
 									if (value.akan == value3.material_number) {
-										akan += "<td "+color+">"+value3.isi+"</td>";
+										akan += "<td "+color+" "+color2+">"+value3.isi+"</td>";
 									}
 								})
 							} else {
-								akan += "<td "+color+"></td>";
+								akan += "<td "+color+" "+color2+"></td>";
 							}
 
 							if (value.selesai != "") {
 
 								$.each(result.materials, function(index4, value4){
 									if (value.selesai == value4.material_number) {
-										selesai += "<td "+color+">"+value4.isi+"</td>";
+										selesai += "<td "+color+" "+colorSelesai+">"+value4.isi+"</td>";
 									}
 								})
 							} else {
@@ -208,15 +225,27 @@
 								$.each(result.materials, function(index6, value6){
 									if (result.boards[index].queues[index5] == value6.material_number) {
 										antrian_tmp.push({id: value.id, ws: value.ws, antrian: value6.isi});
-										antrian.push({id: value.id, ws: value.ws, antrian: value6.isi, color:color});
+										antrian.push({id: value.id, ws: value.ws, antrian: value6.isi, num: num});
 									}
 								})
 							})
+
+							if (typeof result.boards[index+1] !== 'undefined') {
+								if (result.boards[index].ws != result.boards[index+1].ws) {
+									num++;
+								}
+							} else {
+								if (result.boards[index].ws != result.boards[index-1].ws) {
+									num++;
+								}
+							}
 
 							indexs.push(antrian_tmp.length);
 							antrian_tmp = [];
 							x++;
 						})
+
+						// console.table(antrian);
 
 						$("#antrian").html("");
 						$("#buffingTable").find("td").remove();  
@@ -237,16 +266,26 @@
 						$.each(result.boards, function(index7, value7){
 							var z = 1;
 							var stat = 0;
+							var cd = "";
+
 							$.each(antrian, function(index8, value8){
+								if (value8.num %2 === 0) {
+									cls = 'style="background-color: #646464"';
+								}
+								else {
+									cls = '';
+								}
+
 								if (value7.id == value8.id) {
-									$("#queue"+z).append("<td "+value8.color+">"+value8.antrian+"</td>");
+									$("#queue"+z).append("<td "+cls+">"+value8.antrian+"</td>");
+									cd = cls;
 									z++;
 								}
 							});
 
 							if (z <= antrian_len) {
 								for (var i = z; i <= antrian_len; i++) {
-									$("#queue"+i).append("<td style='background-color: rgb(255,255,255);'>"+value7.ws+"</td>");
+									$("#queue"+i).append("<td "+cd+"></td>");
 								}
 							}
 						})
