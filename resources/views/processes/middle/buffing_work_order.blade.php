@@ -160,9 +160,11 @@
 									color = '';
 									if (!value.akan)
 										color2 = 'class="akan"';
+									else
+										color2 = '';
 
 									if (value.selesai)
-									colorSelesai = 'class="selesai"';
+										colorSelesai = 'class="selesai"';
 								}
 								else {
 									color = '';
@@ -174,9 +176,11 @@
 									color = 'style="background-color: RGB(100,100,100)"';
 									if (!value.akan)
 										color2 = 'class="akan"';
+									else
+										color2 = '';
 
 									if (value.selesai)
-									colorSelesai = 'class="selesai"';
+										colorSelesai = 'class="selesai"';
 								}
 								else {
 									color = 'style="background-color: RGB(100,100,100)"';
@@ -292,46 +296,46 @@
 					}
 				}
 			})
-		}
+}
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '3000'
-			});
-		}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '3000'
-			});
-		}
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-		$.date = function(dateObject) {
-			var d = new Date(dateObject);
-			var day = d.getDate();
-			var month = d.getMonth() + 1;
-			var year = d.getFullYear();
-			if (day < 10) {
-				day = "0" + day;
-			}
-			if (month < 10) {
-				month = "0" + month;
-			}
-			var date = day + "/" + month + "/" + year;
+$.date = function(dateObject) {
+	var d = new Date(dateObject);
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (day < 10) {
+		day = "0" + day;
+	}
+	if (month < 10) {
+		month = "0" + month;
+	}
+	var date = day + "/" + month + "/" + year;
 
-			return date;
-		};
-	</script>
-	@endsection
+	return date;
+};
+</script>
+@endsection

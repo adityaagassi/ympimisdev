@@ -146,6 +146,8 @@
 
 								if (!value.akan)
 									color2 = 'class="akan"';
+								else
+									color2 = '';
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
@@ -162,6 +164,8 @@
 
 								if (!value.akan)
 									color2 = 'class="akan"';
+								else
+									color2 = '';
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
