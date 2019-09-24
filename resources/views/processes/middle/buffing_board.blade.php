@@ -151,6 +151,8 @@
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
+								else
+									colorSelesai = '';
 							}
 							else {
 								// color = 'style="background-color: RGB(255,0,0)"';
@@ -169,6 +171,8 @@
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
+								else
+									colorSelesai = '';
 							}
 							else {
 								// color = 'style="background-color: RGB(255,0,0)"';
