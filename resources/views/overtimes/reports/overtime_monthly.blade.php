@@ -115,7 +115,7 @@
 										<span class="description-percentage" id="tot_diff"></span>
 									</h5>      
 									<span class="description-text" style="font-size: 35px;">Difference</span>
-									<br><span class="description-text" style="font-size: 18px">(ACT-BDG)</span>
+									<br><span class="description-text" style="font-size: 18px">(ACT-FQ)</span>
 									<br><span class="description-text" style="font-size: 35px;">差異</span>   
 								</div>
 							</div>
@@ -239,7 +239,7 @@
     	}
     }
 
-    tot_diff = tot_act - tot_budget;
+    tot_diff = tot_act - tot_day_budget;
 
     tot_budget = Math.round(tot_budget * 100) / 100;
     tot_day_budget = Math.round(tot_day_budget * 100) / 100;
