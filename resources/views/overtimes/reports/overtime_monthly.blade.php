@@ -83,23 +83,23 @@
 				<div class="box box-solid">
 					<div class="box-body">
 						<div class="col-md-12">
-							<div class="col-md-2">
-								<div class="description-block border-right" style="color: #f76111">
+							<div class="col-md-3">
+								<div class="description-block border-right" style="color: #02ff17">
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="tot_budget"></span>
 									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Budget<br><span >単月予算</span></span>   
+									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
 								</div>
 							</div>
 
-							<div class="col-md-3">
+						<!-- 	<div class="col-md-3">
 								<div class="description-block border-right" style="color: #02ff17">
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="tot_day_budget"></span>
 									</h5>      
 									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span >単月見込み</span></span>   
 								</div>
-							</div>
+							</div> -->
 
 							<div class="col-md-3">
 								<div class="description-block border-right" style="color: #7300ab" >
@@ -109,7 +109,7 @@
 									<span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-3">
 								<div class="description-block border-right text-green" id="diff_text">
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="tot_diff"></span>
@@ -119,7 +119,7 @@
 									<br><span class="description-text" style="font-size: 35px;">差異</span>   
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-3">
 								<div class="description-block border-right text-yellow">
 									<h5 class="description-header" style="font-size: 50px;">
 										<span class="description-percentage" id="avg"></span>
@@ -251,8 +251,8 @@
     var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
-    $("#tot_budget").text(tot_budget2);
-    $("#tot_day_budget").text(tot_day_budget2);
+    $("#tot_budget").text(tot_day_budget2);
+    $("#tot_day_budget").text(tot_budget2);
     $("#tot_act").text(tot_act2);
 
     if (tot_diff > 0) {
@@ -268,9 +268,9 @@
     avg = Math.round(avg * 100) / 100;
     $("#avg").html(avg);
 
-    Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-    	return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
-    };
+    // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+    // 	return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+    // };
 
     Highcharts.chart('over_control', {
     	chart: {
@@ -354,25 +354,26 @@
     		}
     	},
     	series: [{
-    		name: 'Budget Accumulative',
-    		data: seriesDataBudget,
-    		color: "#f76111"
+    		name: 'Forecast Accumulative',
+    		data: budgetHarian,
+    		color: "#02ff17"
     	}, {
     		name: 'Actual Accumulative',
     		data: seriesDataAktual,
     		color: "#7300ab"
     	},
-    	{
-    		name: 'Forecast Production',
-    		marker: {
-    			symbol: 'c-rect',
-    			lineWidth:4,
-    			lineColor: '#02ff17',
-    			radius: 10,
-    		},
-    		type: 'scatter',
-    		data: budgetHarian
-    	}]
+    	// {
+    	// 	name: 'Forecast Production',
+    	// 	marker: {
+    	// 		symbol: 'c-rect',
+    	// 		lineWidth:4,
+    	// 		lineColor: '#02ff17',
+    	// 		radius: 10,
+    	// 	},
+    	// 	type: 'scatter',
+    	// 	data: budgetHarian
+    	// }
+      ]
     });
   });
 }
