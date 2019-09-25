@@ -43,8 +43,12 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexBuffingOpEff(){
+		
+	}
+
 	public function indexBuffingNgRate(){
-		return view('processes.middle.display.buffing_ng', array(
+		return view('processes.middle.display.buffing_daily_ng', array(
 			'title' => 'Daily Buffing NG Rate',
 			'title_jp' => '(??)',
 		))->with('page', 'Daily NG Buffing');
@@ -192,11 +196,11 @@ class MiddleProcessController extends Controller
 
 		if($id == 'op_ng'){
 			$title = 'NG Rate By Operators';
-			$title_jp = '';
+			$title_jp = '??';
 
 			$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
-			return view('processes.middle.display.buffing_op_ng', array(
+			return view('processes.middle.display.buffing_ng', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'origin_groups' => $origin_groups
@@ -378,8 +382,14 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
-	public function fetchBuffingNg(){
-		$date = date("Y-m-d");
+	public function fetchBuffingNg(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
 		
 		$ng = db::select("select ng_name, sum(quantity) as jml
 			from middle_ng_logs
@@ -425,6 +435,7 @@ class MiddleProcessController extends Controller
 			where m.hpl = 'ASKEY'
 			and DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl");
+
 		$buff_tenor = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, sum(l.material_qty) as jml
 			from data_log l left join materials m on l.material_number = m.material_number
 			where m.hpl = 'TSKEY'
@@ -465,14 +476,27 @@ class MiddleProcessController extends Controller
 			$where_mt = "where origin_group_code in (".$code.") ";
 		}
 
-		$ng_logs = db::select("select l.operator_id, e.`name`, sum(quantity) as jml_ng from middle_ng_logs l
+		// $ng_logs = db::select("select l.operator_id, e.`name`, sum(quantity) as jml_ng from middle_ng_logs l
+		// 	left join employees e
+		// 	on l.operator_id = e.employee_id
+		// 	left join materials m
+		// 	on l.material_number = m.material_number
+		// 	where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'".$where_ng."
+		// 	and l.location = 'bff-kensa'
+		// 	GROUP BY l.operator_id, e.`name`");
+
+		$ng_logs = db::select("SELECT * from (
+			SELECT operator_id, `name`, sum(jml) as jml, COUNT(created_at) as kensa from
+			(select l.created_at, l.operator_id, e.`name`, sum(quantity) as jml from middle_ng_logs l
 			left join employees e
 			on l.operator_id = e.employee_id
 			left join materials m
 			on l.material_number = m.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'".$where_ng."
 			and l.location = 'bff-kensa'
-			GROUP BY l.operator_id, e.`name`");
+			GROUP BY l.created_at,l.operator_id, e.`name`) a
+			GROUP BY operator_id, `name`) b
+			WHERE kensa > 2");
 
 		$material_number = db::select("select distinct material_number from materials ".$where_mt);
 		$material = json_encode($material_number);
@@ -1276,7 +1300,7 @@ class MiddleProcessController extends Controller
 
 		$work_stations = db::connection('digital_kanban')->table('dev_list')
 		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
-		->where('enable_antrian', '=', 'YES')
+		->where('enable_antrian', '!=', 'RPR')
 		->orderBy('dev_name', 'asc')
 		->get();
 
@@ -1420,7 +1444,7 @@ class MiddleProcessController extends Controller
 		$work_stations = db::connection('digital_kanban')->table('dev_list')
 		->select('idx','dev_name', 'dev_operator_id', 'dev_akan_num', 'dev_sedang_num', 'dev_selesai_num','dev_selesai_detected')
 		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
-		->where('enable_antrian', '=', 'YES')
+		->where('enable_antrian', '!=', 'RPR')
 		->orderBy('dev_name', 'asc')
 		->get();
 
@@ -1849,17 +1873,23 @@ class MiddleProcessController extends Controller
 						$group = explode('-', $barrel->key);
 						$rack = 'SXKEY-'.$group[0];
 
-						$buffing_queue = DB::connection('digital_kanban')
-						->table('buffing_queues')
-						->insert([
-							'rack' => $rack,
-							'material_num' => $barrel->material_number,
-							'created_by' => $id,
-							'created_at' => date('Y-m-d H:i:s'),
-							'updated_at' => date('Y-m-d H:i:s'),
-							'material_qty' => $barrel->qty,
-							'material_tag_id' => $tag[0]
-						]);
+						// IF JIKA BUKAN 82 dan KUNCI 'C' SAJA
+						if($group[0] == 'C' && preg_match("/82/", $barrel->model) != TRUE){
+
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => $rack,
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+						}
 
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
@@ -1925,17 +1955,23 @@ class MiddleProcessController extends Controller
 						$group = explode('-', $barrel->key);
 						$rack = 'SXKEY-'.$group[0];
 
-						$buffing_queue = DB::connection('digital_kanban')
-						->table('buffing_queues')
-						->insert([
-							'rack' => $rack,
-							'material_num' => $barrel->material_number,
-							'created_by' => $id,
-							'created_at' => date('Y-m-d H:i:s'),
-							'updated_at' => date('Y-m-d H:i:s'),
-							'material_qty' => $barrel->qty,
-							'material_tag_id' => $tag[0]
-						]);
+						if($group[0] == 'C' && preg_match("/82/", $barrel->model) != TRUE){
+
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => $rack,
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+
+						}
 
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
@@ -1981,17 +2017,23 @@ class MiddleProcessController extends Controller
 					$group = explode('-', $barrel->key);
 					$rack = 'SXKEY-'.$group[0];
 
-					$buffing_queue = DB::connection('digital_kanban')
-					->table('buffing_queues')
-					->insert([
-						'rack' => $rack,
-						'material_num' => $barrel->material_number,
-						'created_by' => $id,
-						'created_at' => date('Y-m-d H:i:s'),
-						'updated_at' => date('Y-m-d H:i:s'),
-						'material_qty' => $barrel->quantity,
-						'material_tag_id' => $tag[0]
-					]);
+					if($group[0] == 'C' && preg_match("/82/", $barrel->model) != TRUE){
+
+						$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+						$buffing_queue = DB::connection('digital_kanban')
+						->table('buffing_queues')
+						->insert([
+							'rack' => $rack,
+							'material_num' => $buffing->material_child,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s'),
+							'updated_at' => date('Y-m-d H:i:s'),
+							'material_qty' => $barrel->quantity,
+							'material_tag_id' => $tag[0]
+						]);
+
+					}
 
 					$barrel_log = new BarrelLog([
 						'machine' => $request->get('surface'),
@@ -2059,17 +2101,22 @@ class MiddleProcessController extends Controller
 					$group = explode('-', $barrel->key);
 					$rack = 'SXKEY-'.$group[0];
 
-					$buffing_queue = DB::connection('digital_kanban')
-					->table('buffing_queues')
-					->insert([
-						'rack' => $rack,
-						'material_num' => $barrel->material_number,
-						'created_by' => $id,
-						'created_at' => date('Y-m-d H:i:s'),
-						'updated_at' => date('Y-m-d H:i:s'),
-						'material_qty' => $barrel->qty,
-						'material_tag_id' => $tag[0]
-					]);
+					if($group[0] == 'C' && preg_match("/82/", $barrel->model) != TRUE){
+
+						$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+						$buffing_queue = DB::connection('digital_kanban')
+						->table('buffing_queues')
+						->insert([
+							'rack' => $rack,
+							'material_num' => $buffing->material_child,
+							'created_by' => $id,
+							'created_at' => date('Y-m-d H:i:s'),
+							'updated_at' => date('Y-m-d H:i:s'),
+							'material_qty' => $barrel->qty,
+							'material_tag_id' => $tag[0]
+						]);
+					}
 
 					MiddleInventory::firstOrcreate([
 						'tag' => $tag[0]
@@ -2858,8 +2905,7 @@ class MiddleProcessController extends Controller
 	{
 		$started_at = date('Y-m-d H:i:s');
 		try{
-			$tags = db::connection('digital_kanban')
-			->table('buffing_inventories')
+			$tags = db::connection('digital_kanban')->table('buffing_inventories')
 			->select('material_num','operator_id',"material_tag_id","material_qty")
 			->where('material_tag_id','=', $request->get("tag"))
 			->first();
