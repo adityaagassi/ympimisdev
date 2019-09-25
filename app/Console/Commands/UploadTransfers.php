@@ -11,6 +11,8 @@ use File;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use FTP;
+use App\ErrorLog;
+use Illuminate\Support\Facades\Mail;
 
 class UploadTransfers extends Command
 {
@@ -101,9 +103,9 @@ class UploadTransfers extends Command
             }
             File::put($flofilepath, $flo_text);
 
-            $success = self::uploadFTP($flofilepath, $flofiledestination);
+            try{
+                $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            if($success){
                 foreach ($flo_transfers as $flo_transfer) {
                     $log_transaction = new LogTransaction([
                         'material_number' => $flo_transfer->material_number,
@@ -120,16 +122,26 @@ class UploadTransfers extends Command
                     $log_transaction->save();
                 }
             }
-            else{
+            catch(\Exception $e){
                 $flo_error = FloDetail::where('transfer', '=', $flofilename);
                 $flo_error->update(['transfer' => null]);
-                echo 'false1';
+
+                $error_log = new ErrorLog([
+                    'error_message' => $e->getMessage(),
+                    'created_by' => '1'
+                ]);
+                $error_log->save();
+
+                Mail::raw('Error Message: '.$e->getMessage().'; FLO will be uploaded in the next batch job.', function ($message) {
+                    $message->to(['mei.rahayu@music.yamaha.com', 'istiqomah@music.yamaha.com', 'silvy.firliany@music.yamaha.com', 'aditya.agassi@music.yamaha.com', 'budhi.apriyanto@music.yamaha.com'])
+                    ->subject('Error FLO Transfer Upload '.$flofilename);
+                });
             }
         }
         else{
             $flo_error = FloDetail::where('transfer', '=', $flofilename);
             $flo_error->update(['transfer' => null]);
-            echo 'false2';
+            echo 'false';
         }
     }
 

@@ -163,7 +163,7 @@ public function print_check_surat($id)
 
      $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
      SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-      and deleted_at is null) cek
+     and deleted_at is null) cek
      LEFT JOIN (
      SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
 ) as inv on cek.gmc = inv.material_number";

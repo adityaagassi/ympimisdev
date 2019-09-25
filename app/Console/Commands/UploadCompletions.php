@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Response;
 use FTP;
 use App\ErrorLog;
+use Illuminate\Support\Facades\Mail;
 
 class UploadCompletions extends Command
 {
@@ -91,17 +92,8 @@ class UploadCompletions extends Command
             File::put($flofilepath, $flo_text);
 
             try{
-                $success = self::uploadFTP($flofilepath, $flofiledestination);    
-            }
-            catch(\Exception $e){
-                $error_log = new ErrorLog([
-                    'error_message' => $e->getMessage(),
-                    'created_by' => '1'
-                ]);
-                $error_log->save();
-            }
+                $success = self::uploadFTP($flofilepath, $flofiledestination);
 
-            if($success){
                 foreach ($flo_completions as $flo_completion) {
                     $log_transaction = new LogTransaction([
                         'material_number' => $flo_completion->material_number,
@@ -115,17 +107,28 @@ class UploadCompletions extends Command
                     ]);
                     $log_transaction->save();
                 }
+
             }
-            else{
+            catch(\Exception $e){
                 $flo_error = FloDetail::where('completion', '=', $flofilename);
                 $flo_error->update(['completion' => null]);
-                echo 'false1';
+
+                $error_log = new ErrorLog([
+                    'error_message' => $e->getMessage(),
+                    'created_by' => '1'
+                ]);
+                $error_log->save();
+
+                Mail::raw('Error Message: '.$e->getMessage().'; FLO will be uploaded in the next batch job.', function ($message) {
+                    $message->to(['mei.rahayu@music.yamaha.com', 'istiqomah@music.yamaha.com', 'silvy.firliany@music.yamaha.com', 'aditya.agassi@music.yamaha.com', 'budhi.apriyanto@music.yamaha.com'])
+                    ->subject('Error FLO Completion Upload '.$flofilename);
+                });
             }
         }
         else{
             $flo_error = FloDetail::where('completion', '=', $flofilename);
             $flo_error->update(['completion' => null]);
-            echo 'false2';
+            echo 'false';
         }
     }
 
