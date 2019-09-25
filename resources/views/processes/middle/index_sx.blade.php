@@ -36,9 +36,12 @@
 			<a href="{{ url("index/process_middle_return", "buffing") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Repair/Return to Buffing</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/display_monitoring?location=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Kanban WIP Monitoring</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/buffing_board/buffing-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
-			<a href="{{ url("index/middle/buffing_performance/op_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operators Performance</a>
+			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
+			<a href="{{ url("index/middle/buffing_performance/op_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Buffing</a>
 			<a href="{{ url("index/middle/buffing_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>
@@ -46,7 +49,6 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Production Result</a>
 			{{-- <a href="{{ url("index/middle/display_picking?tanggal=&surface=&model=&key=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Picking Schedule</a> --}}
-			<a href="{{ url("index/middle/display_monitoring?location=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
@@ -61,8 +63,6 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_lcq_ng?bulan=&fy=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: purple;">Resume</a>
 			<a href="{{ url("index/middle/report_hourly_lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Hourly Report</a>
-
-			
 		</div>
 	</div>
 </section>
@@ -77,7 +77,7 @@
 	});
 	
 	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");		
+		$('body').toggleClass("sidebar-collapse");
 	});
 </script>
 @endsection
