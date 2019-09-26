@@ -827,51 +827,104 @@ class MiddleProcessController extends Controller
 			$addlocation = "and l.location in (".$location.") ";
 		}
 
-		$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
-		(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`) a
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s3
-		on a.keymodel = s3.keymodel
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s1
-		on a.keymodel = s1.keymodel
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s2
-		on a.keymodel = s2.keymodel
-		ORDER BY `key`";
-		$alto = db::select($query1);
+		if($request->get('location') == 'bff'){
+			$tanggal = "DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$tgl."' and";
 
-		$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
-		(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by `key`) a
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s3
-		on a.keymodel = s3.keymodel
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s1
-		on a.keymodel = s1.keymodel
-		left join
-		(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
-		left join materials m on l.material_number = m.material_number
-		WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' ".$addlocation."
-		GROUP BY m.`key`, m.model) s2
-		on a.keymodel = s2.keymodel
-		ORDER BY `key`";
-		$tenor = db::select($query2);
+			$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'ASKEY'
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'ASKEY'
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'ASKEY'
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$alto = db::connection('digital_kanban')->select($query1);
+
+			$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'TSKEY'
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'TSKEY'
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'TSKEY'
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$tenor = db::connection('digital_kanban')->select($query2);
+		}
+		else{
+			$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$alto = db::select($query1);
+
+			$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' ".$addlocation."
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$tenor = db::select($query2);
+		}
+
+		
 
 		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`";
 		$key =  db::select($query3);
