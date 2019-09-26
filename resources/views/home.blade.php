@@ -203,6 +203,16 @@
                     </tr>
                     <tr>
                         <td>
+                            <span style="font-weight: bold;">Injections Process (???)</span>
+                           
+                            <br>
+                            <a href="{{ url("/index/injeksi") }}">
+                                <i class="fa fa-caret-right"></i> Injections Recorder (???)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <span style="font-weight: bold;">INITIAL Process (イニシアル工程)</span>
                             <br>
                             <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
@@ -212,6 +222,7 @@
                             <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
                                 <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
                             </a>
+                           
                         </td>
                     </tr>
                     <tr>
@@ -226,6 +237,14 @@
                     <tr>
                         <td>
                             <span style="font-weight: bold;">MIDDLE Process (中間工程)</span>
+                            <br>
+                            <a href="{{ url("/index/process_middle_cl") }}">
+                                <i class="fa fa-caret-right"></i> Clarinet ()
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/process_middle_fl") }}">
+                                <i class="fa fa-caret-right"></i> Flute ()
+                            </a>
                             <br>
                             <a href="{{ url("/index/process_middle_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス表面処理)
@@ -357,6 +376,15 @@
                             <br>
                             <a href="{{ url("/index/ch_daily_production_result") }}" target="_blank">
                                 <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Additional</span>
+                            <br>
+                            <a href="{{ url("flute_repair") }}" target="_blank">
+                                <i class="fa fa-caret-right"></i> Flute Repair
                             </a>
                         </td>
                     </tr>
