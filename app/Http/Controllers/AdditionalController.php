@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Response;
+use App\FloRepairLog;
 use App\FloRepair;
 use App\FloDetail;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,10 @@ class AdditionalController extends Controller
 
 	public function indexKembali(){
 		return view('additional.flute_repair.kembali')->with('page', 'Flute Repair');		
+	}
+
+	public function indexResume(){
+		return view('additional.flute_repair.resume')->with('page', 'Flute Repair Resume');		
 	}
 
 	public function fetchTarik(){
@@ -75,6 +80,18 @@ class AdditionalController extends Controller
 					]);
 					$flo_repair->save();
 				}
+				foreach ($flo_datas as $flo_data) {
+					$log = new FloRepairLog([
+						'serial_number' => $flo_data->serial_number,
+						'material_number' => $flo_data->material_number,
+						'origin_group_code' => $flo_data->origin_group_code,
+						'flo_number' => $flo_data->flo_number,
+						'quantity' => $flo_data->quantity,
+						'status' => 'repair',
+						'packed_at' => $flo_data->created_at
+					]);
+					$log->save();
+				}
 				$response = array(
 					'status' => true,
 					'message' => 'Input FLO successfull.',
@@ -102,13 +119,27 @@ class AdditionalController extends Controller
 		$serialNumber = $request->get("serialNumber");
 
 		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
-		->first();
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
+		->get();
 
 		if(count($flo_data) > 0){
 			try{
 				$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
 					'status' => 'selesai repair'
 				]);
+				foreach ($flo_data as $data) {
+					$log = new FloRepairLog([
+						'serial_number' => $data->serial_number,
+						'material_number' => $data->material_number,
+						'origin_group_code' => $data->origin_group_code,
+						'flo_number' => $data->flo_number,
+						'quantity' => $data->quantity,
+						'status' => 'selesai repair',
+						'packed_at' => $data->created_at
+					]);
+					$log->save();
+				}
+
 				$response = array(
 					'status' => true,
 					'message' => 'Update status successfull.',
@@ -136,13 +167,26 @@ class AdditionalController extends Controller
 		$serialNumber = $request->get("serialNumber");
 
 		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
-		->first();
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
+		->get();
 
 		if(count($flo_data) > 0){
 			try{
 				$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
 					'status' => 'kembali ke warehouse'
 				]);
+				foreach ($flo_data as $data) {
+					$log = new FloRepairLog([
+						'serial_number' => $data->serial_number,
+						'material_number' => $data->material_number,
+						'origin_group_code' => $data->origin_group_code,
+						'flo_number' => $data->flo_number,
+						'quantity' => $data->quantity,
+						'status' => 'kembali ke warehouse',
+						'packed_at' => $data->created_at
+					]);
+					$log->save();
+				}
 				$response = array(
 					'status' => true,
 					'message' => 'Update status successfull.',
