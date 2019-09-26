@@ -46,7 +46,7 @@
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
-				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="serialNumber" name="serialNumber" placeholder="Scan FLO Number Here" required>
+				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="serialNumber" name="serialNumber" placeholder="Scan Serial Number Here" required>
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
@@ -120,6 +120,30 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanSerialNumber(){
+		var serialNumber = $("#serialNumber").val();
+		var data = {
+			serialNumber : serialNumber
+		}
+
+		$.post('{{ url("scan/flute_repair/selesai") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
+					openSuccessGritter('Success!', result.message);
+					$('#selesai').DataTable().ajax.reload();
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
+				}
+			}
+			else{
+				alert('Disconnected from server');
+			}
+		});
 		
 	}
 

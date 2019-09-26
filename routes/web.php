@@ -141,9 +141,10 @@ Route::get('fetch/flute_repair/tarik', 'AdditionalController@fetchTarik');
 Route::post('scan/flute_repair/tarik', 'AdditionalController@scanTarik');
 Route::get('index/flute_repair/selesai', 'AdditionalController@indexSelesai');
 Route::get('fetch/flute_repair/selesai', 'AdditionalController@fetchSelesai');
-
-
+Route::post('scan/flute_repair/selesai', 'AdditionalController@scanSelesai');
 Route::get('index/flute_repair/kembali', 'AdditionalController@indexKembali');
+Route::get('fetch/flute_repair/kembali', 'AdditionalController@fetchKembali');
+Route::post('scan/flute_repair/kembali', 'AdditionalController@scanKembali');
 
 
 //EMPLOYEE

@@ -47,7 +47,7 @@ class AdditionalController extends Controller
 	}
 
 	public function fetchKembali(){
-		$selesai = FloRepair::where('status','=','kembali')
+		$selesai = FloRepair::where('status','=','kembali ke warehouse')
 		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status')
 		->get();
 
@@ -77,7 +77,7 @@ class AdditionalController extends Controller
 				}
 				$response = array(
 					'status' => true,
-					'message' => 'Input material successfull.',
+					'message' => 'Input FLO successfull.',
 				);
 				return Response::json($response);
 			}catch(\Exception $e){
@@ -95,6 +95,75 @@ class AdditionalController extends Controller
 			return Response::json($response);
 
 		}
+	}
+
+
+	public function scanSelesai(Request $request){
+		$serialNumber = $request->get("serialNumber");
+
+		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
+		->first();
+
+		if(count($flo_data) > 0){
+			try{
+				$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
+					'status' => 'selesai repair'
+				]);
+				$response = array(
+					'status' => true,
+					'message' => 'Update status successfull.',
+				);
+				return Response::json($response);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Serial Number not found',
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function scanKembali(Request $request){
+		$serialNumber = $request->get("serialNumber");
+
+		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
+		->first();
+
+		if(count($flo_data) > 0){
+			try{
+				$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
+					'status' => 'kembali ke warehouse'
+				]);
+				$response = array(
+					'status' => true,
+					'message' => 'Update status successfull.',
+				);
+				return Response::json($response);
+
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Serial Number not found',
+			);
+			return Response::json($response);
+		}
+
 	}
 
 

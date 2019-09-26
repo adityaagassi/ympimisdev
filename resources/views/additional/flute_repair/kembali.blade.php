@@ -46,7 +46,7 @@
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
-				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="serialNumber" name="serialNumber" placeholder="Scan FLO Number Here" required>
+				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="serialNumber" name="serialNumber" placeholder="Scan Serial Number Here" required>
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
@@ -57,7 +57,7 @@
 			<div class="input-group col-md-8 col-md-offset-2">
 				<div class="box box-danger">
 					<div class="box-body">
-						<table id="returnTable" class="table table-bordered table-striped table-hover" style="width: 100%">
+						<table id="kembali" class="table table-bordered table-striped table-hover" style="width: 100%">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th>Serial Number</th>
@@ -99,33 +99,121 @@
 	jQuery(document).ready(function() {
 		$("#serialNumber").val("");
 		$('#serialNumber').focus();
-		
-		fetchReturnTable();
-		// $('#serialNumber').keydown(function(event) {
-		// 	if (event.keyCode == 13 || event.keyCode == 9) {
-		// 		if($("#serialNumber").val().length == 8){
-		// 			scanSerialNumber();
-		// 			return false;
-		// 		}
-		// 		else{
-		// 			openErrorGritter('Error!', 'Serial number invalid.');
-		// 			audio_error.play();
-		// 			$("#serialNumber").val("");
-		// 			$("#serialNumber").focus();
-		// 		}
-		// 	}
-		// });
+		fetchTabelKembali();
+		$('#serialNumber').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#serialNumber").val().length >= 8){
+					scanSerialNumber();
+					return false;
+				}
+				else{
+					openErrorGritter('Error!', 'Serial number invalid.');
+					audio_error.play();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
+				}
+			}
+		});
 		
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanSerialNumber(){
+		var serialNumber = $("#serialNumber").val();
+		var data = {
+			serialNumber : serialNumber
+		}
+
+		$.post('{{ url("scan/flute_repair/kembali") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
+					openSuccessGritter('Success!', result.message);
+					$('#kembali').DataTable().ajax.reload();
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
+				}
+			}
+			else{
+				alert('Disconnected from server');
+			}
+		});
 		
 	}
 
-	function fetchReturnTable(){
-		
+	function fetchTabelKembali(){
+		$('#kembali').DataTable().destroy();
+		$('#kembali').DataTable({
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'language': { 'search': "" },
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/flute_repair/kembali") }}",
+			},
+			"columns": [
+			{ "data": "serial_number" },
+			{ "data": "material_number" },
+			{ "data": "origin_group_code" },
+			{ "data": "flo_number" },
+			{ "data": "quantity" },
+			{ "data": "packed_at" },
+			{ "data": "status" }
+			]
+		});
 	}
 
 	function openErrorGritter(title, message) {
