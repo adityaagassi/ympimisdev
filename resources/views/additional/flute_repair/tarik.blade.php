@@ -46,7 +46,7 @@
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
-				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="flo_number" name="flo_number" placeholder="Scan FLO Number Here" required>
+				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="serialNumber" name="serialNumber" placeholder="Scan Serial Number Here" required>
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
@@ -67,6 +67,7 @@
 									<th>Quantity</th>
 									<th>Packed at</th>
 									<th>Status</th>
+									<th>Repair at</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -97,19 +98,19 @@
 	});
 
 	jQuery(document).ready(function() {
-		$("#flo_number").val("");
-		$('#flo_number').focus();
+		$("#serialNumber").val("");
+		$('#serialNumber').focus();
 		fetchTableTarik();
-		$('#flo_number').keydown(function(event) {
+		$('#serialNumber').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
-				if ($("#flo_number").val().length >= 8) {
+				if ($("#serialNumber").val().length >= 8) {
 					scanFloNumber();
 					return false;
 				}else{
 					openErrorGritter('Error!', 'Serial number invalid.');
 					audio_error.play();
-					$("#flo_number").val("");
-					$("#flo_number").focus();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
 				}
 
 			}
@@ -120,24 +121,24 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanFloNumber(){
-		var flo_number = $("#flo_number").val();
+		var serialNumber = $("#serialNumber").val();
 		var data = {
-			flo_number : flo_number
+			serialNumber : serialNumber
 		}
 
 		$.post('{{ url("scan/flute_repair/tarik") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
-					$("#flo_number").val("");
-					$("#flo_number").focus();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
 					openSuccessGritter('Success!', result.message);
 					$('#tarik').DataTable().ajax.reload();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 					audio_error.play();
-					$("#flo_number").val("");
-					$("#flo_number").focus();
+					$("#serialNumber").val("");
+					$("#serialNumber").focus();
 				}
 			}
 			else{
@@ -211,7 +212,8 @@
 			{ "data": "flo_number" },
 			{ "data": "quantity" },
 			{ "data": "packed_at" },
-			{ "data": "status" }
+			{ "data": "status" },
+			{ "data": "created_at" },
 			]
 		});	
 	}

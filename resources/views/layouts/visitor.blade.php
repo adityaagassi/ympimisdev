@@ -42,7 +42,7 @@
               <li>
                 <a style="font-size: 20px; font-weight: bold;" class="text-yellow">
                   <?php if (isset($title)) {
-                   echo $title." (".$title_jp.")";
+                   echo $title;
                  } ?>
                </a>
              </li>

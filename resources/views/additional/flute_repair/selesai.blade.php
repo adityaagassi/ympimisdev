@@ -67,6 +67,7 @@
 									<th>Quantity</th>
 									<th>Packed at</th>
 									<th>Status</th>
+									<th>Finished_at</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -211,7 +212,9 @@
 			{ "data": "flo_number" },
 			{ "data": "quantity" },
 			{ "data": "packed_at" },
-			{ "data": "status" }
+			{ "data": "status" },
+			{ "data": "updated_at" },
+
 			]
 		});
 	}

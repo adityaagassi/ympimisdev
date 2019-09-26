@@ -32,69 +32,67 @@ class AdditionalController extends Controller
 	}
 
 	public function indexResume(){
-		return view('additional.flute_repair.resume')->with('page', 'Flute Repair Resume');		
+		return view('additional.flute_repair.resume', array(
+			'title' => 'Flute Repair Resume',
+		))->with('page', 'Flute Repair Resume');
 	}
 
 	public function fetchTarik(){
 		$tarik = FloRepair::where('status','=','repair')
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status')
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','created_at')
 		->get();
-
 		return DataTables::of($tarik)->make(true);
 	}
 
 	public function fetchSelesai(){
 		$selesai = FloRepair::where('status','=','selesai repair')
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status')
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','updated_at')
 		->get();
-
 		return DataTables::of($selesai)->make(true);
 	}
 
 	public function fetchKembali(){
 		$selesai = FloRepair::where('status','=','kembali ke warehouse')
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status')
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','updated_at')
 		->get();
-
 		return DataTables::of($selesai)->make(true);
 	}
 
 	public function scanTarik(Request $request){
-		$flo_number = $request->get("flo_number");
+		$serial_number = $request->get("serialNumber");
 
-		$flo_datas = FloDetail::where('flo_number','=',$flo_number)
+		$flo_datas = FloDetail::where('serial_number','=',$serial_number)->where('origin_group_code', '=', '041')
 		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
-		->get();
+		->first();
 
 		if(count($flo_datas) > 0){
 			try{
-				foreach ($flo_datas as $flo_data) {
-					$flo_repair = new FloRepair([
-						'serial_number' => $flo_data->serial_number,
-						'material_number' => $flo_data->material_number,
-						'origin_group_code' => $flo_data->origin_group_code,
-						'flo_number' => $flo_data->flo_number,
-						'quantity' => $flo_data->quantity,
-						'status' => 'repair',
-						'packed_at' => $flo_data->created_at
-					]);
-					$flo_repair->save();
-				}
-				foreach ($flo_datas as $flo_data) {
-					$log = new FloRepairLog([
-						'serial_number' => $flo_data->serial_number,
-						'material_number' => $flo_data->material_number,
-						'origin_group_code' => $flo_data->origin_group_code,
-						'flo_number' => $flo_data->flo_number,
-						'quantity' => $flo_data->quantity,
-						'status' => 'repair',
-						'packed_at' => $flo_data->created_at
-					]);
-					$log->save();
-				}
+
+				$flo_repair = new FloRepair([
+					'serial_number' => $flo_data->serial_number,
+					'material_number' => $flo_data->material_number,
+					'origin_group_code' => $flo_data->origin_group_code,
+					'flo_number' => $flo_data->flo_number,
+					'quantity' => $flo_data->quantity,
+					'status' => 'repair',
+					'packed_at' => $flo_data->created_at
+				]);
+				$flo_repair->save();
+
+				$log = new FloRepairLog([
+					'serial_number' => $flo_data->serial_number,
+					'material_number' => $flo_data->material_number,
+					'origin_group_code' => $flo_data->origin_group_code,
+					'flo_number' => $flo_data->flo_number,
+					'quantity' => $flo_data->quantity,
+					'status' => 'repair',
+					'packed_at' => $flo_data->created_at
+				]);
+				$log->save();
+
 				$response = array(
 					'status' => true,
-					'message' => 'Input FLO successfull.',
+					'message' => 'Input successfull.',
 				);
 				return Response::json($response);
 			}catch(\Exception $e){
@@ -107,10 +105,9 @@ class AdditionalController extends Controller
 		}else{
 			$response = array(
 				'status' => false,
-				'message' => 'FLO Number not found',
+				'message' => 'Serial Number not found',
 			);
 			return Response::json($response);
-
 		}
 	}
 
@@ -118,7 +115,7 @@ class AdditionalController extends Controller
 	public function scanSelesai(Request $request){
 		$serialNumber = $request->get("serialNumber");
 
-		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
+		$flo_data = FloRepair::where('serial_number','=',$serialNumber)
 		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
 		->get();
 
@@ -164,29 +161,80 @@ class AdditionalController extends Controller
 	}
 
 	public function scanKembali(Request $request){
-		$serialNumber = $request->get("serialNumber");
 
-		$flo_data = FloDetail::where('serial_number','=',$serialNumber)
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
-		->get();
+		if($request->get("serialNumber") != null){
+			$serialNumber = $request->get("serialNumber");
+
+			$flo_data = FloRepair::where('serial_number','=',$serialNumber)
+			->where('status','=','selesai repair')
+			->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at','status')
+			->get();
+		}else if($request->get("floNumber") != null){
+			$floNumber = $request->get("floNumber");
+
+			$row = FloRepair::where('flo_number','=',$floNumber)
+			->where('status','=','repair')
+			->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at','status')
+			->get()->count();
+
+			if($row == 0){
+				$flo_data = FloRepair::where('flo_number','=',$floNumber)
+				->where('status','=','selesai repair')
+				->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at','status')
+				->get();
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'FLFG is still being repaired',
+				);
+				return Response::json($response);
+			}
+		}
+
 
 		if(count($flo_data) > 0){
 			try{
-				$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
-					'status' => 'kembali ke warehouse'
-				]);
-				foreach ($flo_data as $data) {
-					$log = new FloRepairLog([
-						'serial_number' => $data->serial_number,
-						'material_number' => $data->material_number,
-						'origin_group_code' => $data->origin_group_code,
-						'flo_number' => $data->flo_number,
-						'quantity' => $data->quantity,
-						'status' => 'kembali ke warehouse',
-						'packed_at' => $data->created_at
+
+				if($request->get("serialNumber") != null){
+					$update_flo_repair = FloRepair::where('serial_number', '=', $serialNumber)->update([
+						'status' => 'kembali ke warehouse'
 					]);
-					$log->save();
+					foreach ($flo_data as $data) {
+						$log = new FloRepairLog([
+							'serial_number' => $data->serial_number,
+							'material_number' => $data->material_number,
+							'origin_group_code' => $data->origin_group_code,
+							'flo_number' => $data->flo_number,
+							'quantity' => $data->quantity,
+							'status' => 'kembali ke warehouse',
+							'packed_at' => $data->created_at
+						]);
+						$log->save();
+					}
+
+				}else if($request->get("floNumber") != null){
+					$update_flo_repair = FloRepair::where('flo_number', '=', $floNumber)->update([
+						'status' => 'kembali ke warehouse'
+					]);
+					foreach ($flo_data as $data) {
+						$log = new FloRepairLog([
+							'serial_number' => $data->serial_number,
+							'material_number' => $data->material_number,
+							'origin_group_code' => $data->origin_group_code,
+							'flo_number' => $data->flo_number,
+							'quantity' => $data->quantity,
+							'status' => 'kembali ke warehouse',
+							'packed_at' => $data->created_at
+						]);
+						$log->save();
+					}
+
 				}
+
+
+
+
+				
 				$response = array(
 					'status' => true,
 					'message' => 'Update status successfull.',
@@ -203,10 +251,22 @@ class AdditionalController extends Controller
 		}else{
 			$response = array(
 				'status' => false,
-				'message' => 'Serial Number not found',
+				'message' => 'Serial or FLO Number invalid',
 			);
 			return Response::json($response);
 		}
+
+	}
+
+
+	public function fetchByStatus(){
+		$status = db::select("select `status`, sum(quantity) as jml from flo_repairs
+			GROUP BY `status`");
+		$response = array(
+			'status' => true,
+			'status' => $status,
+		);
+		return Response::json($response);
 
 	}
 
