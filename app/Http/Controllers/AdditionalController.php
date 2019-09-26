@@ -61,11 +61,11 @@ class AdditionalController extends Controller
 	public function scanTarik(Request $request){
 		$serial_number = $request->get("serialNumber");
 
-		$flo_datas = FloDetail::where('serial_number','=',$serial_number)->where('origin_group_code', '=', '041')
+		$flo_data = FloDetail::where('serial_number','=',$serial_number)->where('origin_group_code', '=', '041')
 		->select('serial_number','material_number','origin_group_code','flo_number','quantity','created_at')
 		->first();
 
-		if(count($flo_datas) > 0){
+		if(count($flo_data) > 0){
 			try{
 
 				$flo_repair = new FloRepair([
