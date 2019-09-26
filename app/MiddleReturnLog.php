@@ -5,12 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MiddleInventory extends Model
+class MiddleReturnLog extends Model
 {
 	use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'material_number', 'location', 'quantity', 'remark', 'last_check'
+		'tag', 'material_number', 'location', 'quantity', 'employee_id', 'remark'
 	];
 
 	public function material()

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
+use DateTime;
 use Carbon\Carbon;
 use App\TagMaterial;
 use App\MiddleInventory;
@@ -26,11 +27,13 @@ use App\MiddleNgLog;
 use App\MiddleLog;
 use App\ErrorLog;
 use App\Material;
+use App\MiddleRequestHelper;
+use App\MiddleMaterialRequest;
 use App\Employee;
 use App\Mail\SendEmail;
 use App\RfidBuffingInventory;
 use Illuminate\Support\Facades\Mail;
-
+use App\MiddleReturnLog;
 class MiddleProcessController extends Controller
 {
 	public function __construct(){
@@ -163,6 +166,110 @@ class MiddleProcessController extends Controller
 
 	public function indexProcessMiddleSX(){
 		return view('processes.middle.index_sx')->with('page', 'Middle Process SX')->with('head', 'Middle Process');
+	}
+
+	public function indexProcessMiddleCL(){
+		return view('processes.middle.index_cl')->with('page', 'Middle Process CL');
+	}
+
+	public function indexRequest(){
+		return view('processes.middle.request', array( 
+			'title' => 'Middle Request Material',
+			'title_jp' => '?')
+	)->with('page', 'Middle Request Material Soldering');
+	}
+
+	public function indexProcessMiddleFL(){
+		return view('processes.middle.index_fl')->with('page', 'Middle Process FL');
+	}
+
+	public function indexRequestFL(){
+		return view('processes.middle.request', array(
+			'option' => 'FL', 
+			'title' => 'Middle Request Flute',
+			'title_jp' => '?')
+	)->with('page', 'Middle Request FL');
+	}
+
+	public function scanRequestTag(Request $request)
+	{
+		$matnum = substr($request->get('material_number'),2,7);
+		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
+
+		if ($mat) {
+
+			if ($mat->origin_group_code == '042' OR $mat->origin_group_code == '041') {
+				$qty = 20;
+			} else if ($mat->origin_group_code == '043') {
+				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+					$qty = 15;
+				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+					$qty = 8;
+				} else if(preg_match("/82/", $mat->model) == TRUE) {
+					$qty = 10;
+				} else {
+					$qty = 0;
+				}
+			} else {
+				$qty = 0;
+			}
+
+			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
+
+			if ($req_log_q) {
+				$dt_db = new DateTime($req_log_q->updated_at);
+				$dt_now = new DateTime();
+				$interval = $dt_db->diff($dt_now);
+
+				if ($interval->format('%I') < 5) {
+					$response = array(
+						'status' => false,
+						'error' => "Too Fast on same Material Tag",
+					);
+					return Response::json($response);
+				}
+
+				$req_log = MiddleRequestHelper::where('material_tag',"=", $request->get('material_number'))
+				->update(['updated_at' => new DateTime()]);
+				
+			} else {
+				$req_log = new MiddleRequestHelper;
+
+				$req_log->material_tag = $request->get('material_number');
+				$req_log->material_number = $matnum;
+				$req_log->created_by = Auth::id();
+				$req_log->created_at = new DateTime();
+
+				$req_log->save();
+			}
+
+			try {
+				$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
+				$req->quantity += $qty;
+				$req->created_by = Auth::id();
+				$req->updated_at = new DateTime();
+				$req->save();
+
+				$response = array(
+					'status' => true,
+					'datas' => $mat,
+					'datas_log' => $req_log,
+				);
+				return Response::json($response);
+			} catch (QueryException $e){
+				$response = array(
+					'status' => false,
+					'error' => $e,
+				);
+				return Response::json($response);
+			}
+		} else {			
+			$response = array(
+				'status' => false,
+				'error' => "Material Doesn't Exist ",
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function indexProcessBarrelMachine(){
@@ -1340,6 +1447,17 @@ class MiddleProcessController extends Controller
 				}
 			}
 
+			$dt_now = new DateTime();
+
+			$dt_akan = new DateTime($work_station->dev_akan_time);
+			$akan_time = $dt_akan->diff($dt_now);
+
+			$dt_sedang = new DateTime($work_station->dev_sedang_time);
+			$sedang_time = $dt_sedang->diff($dt_now);
+
+			$dt_selesai = new DateTime($work_station->dev_selesai_time);
+			$selesai_time = $dt_selesai->diff($dt_now);
+
 			array_push($tmp, $work_station->dev_sedang_num);
 			array_push($tmp, $work_station->dev_akan_num);
 
@@ -1349,6 +1467,9 @@ class MiddleProcessController extends Controller
 				'employee_name' => $employee_name,
 				'sedang' => $work_station->dev_sedang_num,
 				'akan' => $work_station->dev_akan_num,
+				'akan_time' => $akan_time->format('%H:%i:%s'),
+				'sedang_time' => $sedang_time->format('%H:%i:%s'),
+				'selesai_time' => $selesai_time->format('%H:%i:%s'),
 				'selesai' => $selesai,
 				'queue_1' => $lists[0],
 				'queue_2' => $lists[1],
@@ -1470,6 +1591,7 @@ class MiddleProcessController extends Controller
 			// ->where('rack', '=', $work_station->dev_name)
 			->whereRaw('rack = concat(SPLIT_STRING("'.$ws->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$ws->dev_name.'", "-", 2))')
 			->orderBy('created_at', 'asc')
+			->limit(50)
 			->get();
 
 			$queues = array();
@@ -2448,6 +2570,7 @@ class MiddleProcessController extends Controller
 		if(!$request->get('ng')){
 			$middle_inventory = MiddleInventory::where('tag', '=', $request->get('tag'))->first();
 			$middle_inventory->location = $request->get('loc');
+			$middle_inventory->last_check = $request->get('employee_id');
 			$middle_log = new MiddleLog([
 				'employee_id' => $request->get('employee_id'),
 				'tag' => $request->get('tag'),
@@ -2567,6 +2690,16 @@ class MiddleProcessController extends Controller
 			'created_at' => $created[0]->created_at,
 			'updated_at' => $created[0]->created_at
 		]);
+
+		$middle_return_log = new MiddleReturnLog([
+			'tag' => $request->get('qr'),
+			'material_number' => $barrel_inventories[0]->material_number,
+			'quantity' => $barrel_inventories[0]->quantity,
+			'location' => $barrel_inventories[0]->location,
+			'employee_id' => $barrel_inventories[0]->last_check,
+		]);
+
+		$middle_return_log->save();
 
 		DB::table('middle_inventories')->where('tag', '=', $tag)->delete();
 

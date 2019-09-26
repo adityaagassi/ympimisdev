@@ -32,6 +32,9 @@
 		-o-animation: akan 1s infinite;  /* Opera 12+ */
 		animation: akan 1s infinite;  /* IE 10+, Fx 29+ */
 	}
+	hr {
+		margin: 0px;
+	}
 
 	@-webkit-keyframes akan {
 		0%, 49% {
@@ -185,8 +188,8 @@
 						buffingTableBody += '<tr '+color+'>';
 						buffingTableBody += '<td '+color2+'>'+value.ws.split("-")[1]+'</td>';
 						buffingTableBody += '<td '+color2+'>'+value.employee_id+'<br>'+value.employee_name.split(' ')[0]+'</td>';
-						buffingTableBody += '<td>'+value.sedang+'</td>';
-						buffingTableBody += '<td '+color2+'>'+value.akan+'</td>';
+						buffingTableBody += '<td>'+value.sedang+'<hr>'+value.sedang_time+'</td>';
+						buffingTableBody += '<td '+color2+'>'+value.akan+'<hr>'+value.akan_time+'</td>';
 						buffingTableBody += '<td>'+value.queue_1+'</td>';
 						buffingTableBody += '<td>'+value.queue_2+'</td>';
 						buffingTableBody += '<td>'+value.queue_3+'</td>';
@@ -197,7 +200,7 @@
 						buffingTableBody += '<td>'+value.queue_8+'</td>';
 						buffingTableBody += '<td>'+value.queue_9+'</td>';
 						buffingTableBody += '<td>'+value.queue_10+'</td>';
-						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'</td>';
+						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<hr>'+value.selesai_time+'</td>';
 						buffingTableBody += '</tr>';
 						i += 1;
 					});

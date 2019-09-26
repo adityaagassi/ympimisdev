@@ -304,8 +304,6 @@
 		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
 
-		console.log(hpl);
-
 		var location_title = "";
 		if(hpl.length > 1){
 			for(var i = 0; i < hpl.length; i++){
@@ -319,8 +317,7 @@
 		}else if(hpl.length == 1){ 
 			location_title += hpl[0].replace('-',' ');
 		}
-
-
+		
 		var data = {
 			tanggal:tanggal,
 			code:hpl
