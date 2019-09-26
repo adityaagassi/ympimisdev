@@ -20,6 +20,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 Route::get('tes', 'TrialController@tes');
 Route::get('happybirthday', 'TrialController@ultah');
 
+
+Route::get('trialmail', 'TrialController@trialmail');
+
 Route::get('/trial', function () {
 	return view('trial');
 });
@@ -76,10 +79,25 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 
 //----- Start mesin injeksi
 
-Route::get('index/injeksi', 'InjeksiController@index');
+Route::get('index/injeksi', 'InjectionController@index');
+//in
+Route::get('index/in', 'InjectionController@in');
+Route::post('scan/part_injeksi', 'InjectionController@scanPartInjeksi');
+Route::get('send/Part', 'InjectionController@sendPart');
+Route::get('get/Inpart', 'InjectionController@getDataIn');
+//end in
 
-Route::get('index/in', 'InjeksiController@in');
+// out
+Route::get('index/out', 'InjectionController@out');
+Route::get('get/Outpart', 'InjectionController@getDataOut');
+//end out
 
+Route::get('fetch/InOutpart', 'InjectionController@getDataInOut');
+
+//schedule
+Route::get('index/Schedule', 'InjectionController@schedule');
+Route::get('fetch/Schedulepart', 'InjectionController@getDataSchedule');
+//end schedule
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -115,6 +133,17 @@ Route::group(['nav' => 'R7', 'middleware' => 'permission'], function(){
 	Route::post('edit/overtime_confirmation', 'OvertimeController@editOvertimeConfirmation');
 	Route::post('delete/overtime_confirmation', 'OvertimeController@deleteOvertimeConfirmation');
 });
+
+//REPAIR FLUTE
+Route::get('flute_repair', 'AdditionalController@indexFluteRepair');
+Route::get('index/flute_repair/tarik', 'AdditionalController@indexTarik');
+Route::get('fetch/flute_repair/tarik', 'AdditionalController@fetchTarik');
+Route::post('scan/flute_repair/tarik', 'AdditionalController@scanTarik');
+Route::get('index/flute_repair/selesai', 'AdditionalController@indexSelesai');
+Route::get('fetch/flute_repair/selesai', 'AdditionalController@fetchSelesai');
+
+
+Route::get('index/flute_repair/kembali', 'AdditionalController@indexKembali');
 
 
 //EMPLOYEE
@@ -552,11 +581,17 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
 
-
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
 Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
+//CLARINET
+Route::get('index/process_middle_cl', 'MiddleProcessController@indexProcessMiddleCL');
+Route::get('index/middle/request_cl', 'MiddleProcessController@indexRequestCL');
+Route::get('scan/middle/request', 'MiddleProcessController@scanRequestTag');
+//FLUTE
+Route::get('index/process_middle_fl', 'MiddleProcessController@indexProcessMiddleFL');
+Route::get('index/middle/request_fl', 'MiddleProcessController@indexRequestFL');
 Route::get('index/process_middle_kensa/{id}', 'MiddleProcessController@indexProcessMiddleKensa');
 Route::get('index/process_middle_barrel/{id}', 'MiddleProcessController@indexProcessMiddleBarrel');
 Route::get('fetch/middle/barrel', 'MiddleProcessController@fetchMiddleBarrel');
@@ -607,6 +642,7 @@ Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@inde
 Route::get('index/middle/buffing_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
 Route::get('fetch/middle/buffing_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
+Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 
 
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
