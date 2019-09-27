@@ -10,7 +10,7 @@ class MiddleLog extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'material_number', 'location', 'quantity', 'employee_id', 'remark', 'started_at'
+		'tag', 'material_number', 'location', 'quantity', 'employee_id', 'remark', 'started_at', 'operator_id', 'buffing_time'
 	];
 
 	public function material()

@@ -61,6 +61,7 @@
 <section class="content" style="padding-top: 0;">
 	<input type="hidden" id="loc" value="{{ $loc }}">
 	<input type="hidden" id="started_at">
+	<input type="hidden" id="buffing_time">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-6" style="padding-right: 0; padding-left: 0">
 			<div>
@@ -288,6 +289,7 @@
 				$("#opbuffing").text(result.datas.operator_id+" - "+result.operator.name);
 				// $("#op").text(result.operator.name);
 
+				$('#buffing_time').val(result.datas.updated_at);
 				$('#material_tag').val(result.datas.material_tag_id);
 				$('#material_number').val(result.datas.material_num);
 				$('#started_at').val(result.started_at);
@@ -305,8 +307,6 @@
 
 		});
 	}
-
-	
 
 	function fillResult(emp_id){
 		var data = {
@@ -380,6 +380,7 @@
 			employee_id: $('#op').text(),
 			operator_id: $('#opbuffing').text().split(' ')[0],
 			started_at: $('#started_at').val(),
+			buffing_time: $('#buffing_time').val(),
 			ng: ng,
 			count_text: count_text,
 			// total_ng: total,

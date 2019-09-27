@@ -319,7 +319,7 @@ class MiddleProcessController extends Controller
 	public function indexBuffingBoard($id){
 		if($id == 'buffing-sx'){
 			$title = 'Saxophone Buffing Board';
-			$title_jp = '-';
+			$title_jp = '';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -3092,7 +3092,7 @@ class MiddleProcessController extends Controller
 		$started_at = date('Y-m-d H:i:s');
 		try{
 			$tags = db::connection('digital_kanban')->table('buffing_inventories')
-			->select('material_num','operator_id',"material_tag_id","material_qty")
+			->select('material_num','operator_id',"material_tag_id","material_qty", 'updated_at')
 			->where('material_tag_id','=', $request->get("tag"))
 			->first();
 
@@ -3138,6 +3138,7 @@ class MiddleProcessController extends Controller
 					'ng_name' => $ng[0],
 					'quantity' => $ng[1],
 					'location' => $request->get('loc'),
+					'buffing_time' => $request->get('buffing_time'),
 					'operator_id' => $request->get('operator_id'),
 					'started_at' => $request->get('started_at')
 				]);
@@ -3170,6 +3171,8 @@ class MiddleProcessController extends Controller
 					'material_number' => $request->get('material_number'),
 					'quantity' => $request->get('quantity'),
 					'location' => $request->get('loc'),
+					'operator_id' => $request->get('operator_id'),
+					'buffing_time' => $request->get('buffing_time'),
 					'started_at' => $request->get('started_at'),
 				]);
 
