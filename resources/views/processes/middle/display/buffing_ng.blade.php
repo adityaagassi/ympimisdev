@@ -327,47 +327,13 @@
 			if(result.status){
 				$('#location_title').html('<b>'+ location_title +'</b>');
 
-				var id = [];
 				var op_name = [];
-				var ng = [];
+				var rate = [];
 
-				for(var i = 0; i < result.ng_logs.length; i++){
-					id.push(result.ng_logs[i].operator_id);
-					op_name.push(result.ng_logs[i].name);
-					ng.push(result.ng_logs[i].jml);
+				for(var i = 0; i < result.ng_rate.length; i++){
+					op_name.push(result.ng_rate[i].name);
+					rate.push(result.ng_rate[i].rate);
 				}
-
-				var total = [];
-
-				for(var i = 0; i < id.length; i++){
-					var sum = 0;
-					for(var j = 0; j < result.rfid.length; j++){
-						if(id[i] == result.rfid[j].operator_id){
-							sum += result.rfid[j].jml_buff;
-						}
-						if(j == result.rfid.length-1){
-							total.push(sum);
-						}
-					}
-				}
-
-				var ng_rate = [];
-				for(var i = 0; i < id.length; i++){
-					ng_rate.push([(ng[i]/total[i])*100,op_name[i]]);
-				}
-
-				data = ng_rate.sort(function(a, b){return b[0]-a[0]});
-
-				data_x = [];
-				data_series = [];
-				for (var i = 0; i < data.length; i++) {
-					data_series.push(data[i][0]);
-					data_x.push(data[i][1]);
-				}
-
-				console.log(ng);
-				console.log(total);
-
 
 				var chart = Highcharts.chart('container1', {
 					title: {
@@ -394,7 +360,7 @@
 						}
 					},
 					xAxis: {
-						categories: data_x,
+						categories: op_name,
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
@@ -432,7 +398,7 @@
 						name:'NG Rate',
 						type: 'column',
 						colorByPoint: true,
-						data: data_series,
+						data: rate,
 						showInLegend: false
 					}]
 
@@ -489,7 +455,8 @@
 							yAxis: {
 								title: {
 									text: 'Total Not Good'
-								}
+								},
+								type: 'logarithmic'
 							},
 							legend : {
 								enabled: false

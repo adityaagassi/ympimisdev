@@ -172,104 +172,16 @@ class MiddleProcessController extends Controller
 		return view('processes.middle.index_cl')->with('page', 'Middle Process CL');
 	}
 
-	public function indexRequest(){
+	public function indexRequest($id){
 		return view('processes.middle.request', array( 
-			'title' => 'Middle Request Material',
-			'title_jp' => '?')
+			'title' => 'Middle Request Material '.$id,
+			'title_jp' => '?',
+			'option' => $id)
 	)->with('page', 'Middle Request Material Soldering');
 	}
 
 	public function indexProcessMiddleFL(){
 		return view('processes.middle.index_fl')->with('page', 'Middle Process FL');
-	}
-
-	public function indexRequestFL(){
-		return view('processes.middle.request', array(
-			'option' => 'FL', 
-			'title' => 'Middle Request Flute',
-			'title_jp' => '?')
-	)->with('page', 'Middle Request FL');
-	}
-
-	public function scanRequestTag(Request $request)
-	{
-		$matnum = substr($request->get('material_number'),2,7);
-		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
-
-		if ($mat) {
-
-			if ($mat->origin_group_code == '042' OR $mat->origin_group_code == '041') {
-				$qty = 20;
-			} else if ($mat->origin_group_code == '043') {
-				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 15;
-				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 8;
-				} else if(preg_match("/82/", $mat->model) == TRUE) {
-					$qty = 10;
-				} else {
-					$qty = 0;
-				}
-			} else {
-				$qty = 0;
-			}
-
-			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
-
-			if ($req_log_q) {
-				$dt_db = new DateTime($req_log_q->updated_at);
-				$dt_now = new DateTime();
-				$interval = $dt_db->diff($dt_now);
-
-				if ($interval->format('%I') < 5) {
-					$response = array(
-						'status' => false,
-						'error' => "Too Fast on same Material Tag",
-					);
-					return Response::json($response);
-				}
-
-				$req_log = MiddleRequestHelper::where('material_tag',"=", $request->get('material_number'))
-				->update(['updated_at' => new DateTime()]);
-				
-			} else {
-				$req_log = new MiddleRequestHelper;
-
-				$req_log->material_tag = $request->get('material_number');
-				$req_log->material_number = $matnum;
-				$req_log->created_by = Auth::id();
-				$req_log->created_at = new DateTime();
-
-				$req_log->save();
-			}
-
-			try {
-				$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
-				$req->quantity += $qty;
-				$req->created_by = Auth::id();
-				$req->updated_at = new DateTime();
-				$req->save();
-
-				$response = array(
-					'status' => true,
-					'datas' => $mat,
-					'datas_log' => $req_log,
-				);
-				return Response::json($response);
-			} catch (QueryException $e){
-				$response = array(
-					'status' => false,
-					'error' => $e,
-				);
-				return Response::json($response);
-			}
-		} else {			
-			$response = array(
-				'status' => false,
-				'error' => "Material Doesn't Exist ",
-			);
-			return Response::json($response);
-		}
 	}
 
 	public function indexProcessBarrelMachine(){
@@ -517,44 +429,44 @@ class MiddleProcessController extends Controller
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");
 
-		$ng_alto = db::select("select a.week_date, b.jml from
-			(select week_date from weekly_calendars WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') a
+		$alto = db::select("select date.week_date, rate.rate from
+			(select week_date from weekly_calendars WHERE
+			week_date BETWEEN '".$datefrom."' and '".$dateto."') date
 			left join
-			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(quantity) as jml
-			from middle_ng_logs l left join materials m on l.material_number = m.material_number
-			where m.hpl = 'ASKEY' and l.location = 'bff-kensa'
-			group by tgl) b
-			on a.week_date = b.tgl
-			order by a.week_date");
-
-		$ng_tenor = db::select("select a.week_date, b.jml from
-			(select week_date from weekly_calendars WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') a
+			(select g.tgl, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where m.location = 'bff-kensa' and mt.hpl = 'ASKEY'
+			GROUP BY tgl) g
 			left join
-			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(quantity) as jml
-			from middle_ng_logs l left join materials m on l.material_number = m.material_number
-			where m.hpl = 'TSKEY' and l.location = 'bff-kensa'
-			group by tgl) b
-			on a.week_date = b.tgl
-			order by a.week_date");
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where m.location = 'bff-kensa' and mt.hpl = 'ASKEY'
+			GROUP BY tgl) ng
+			on g.tgl = ng.tgl) rate
+			on date.week_date = rate.tgl");
 
-		$buff_alto = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, sum(l.material_qty) as jml
-			from data_log l left join materials m on l.material_number = m.material_number
-			where m.hpl = 'ASKEY'
-			and DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-			GROUP BY tgl");
-
-		$buff_tenor = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, sum(l.material_qty) as jml
-			from data_log l left join materials m on l.material_number = m.material_number
-			where m.hpl = 'TSKEY'
-			and DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-			GROUP BY tgl");
+		$tenor = db::select("select date.week_date, rate.rate from
+			(select week_date from weekly_calendars WHERE
+			week_date BETWEEN '".$datefrom."' and '".$dateto."') date
+			left join
+			(select g.tgl, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where m.location = 'bff-kensa' and mt.hpl = 'TSKEY'
+			GROUP BY tgl) g
+			left join
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where m.location = 'bff-kensa' and mt.hpl = 'TSKEY'
+			GROUP BY tgl) ng
+			on g.tgl = ng.tgl) rate
+			on date.week_date = rate.tgl");
 
 		$response = array(
 			'status' => true,
-			'ng_alto' => $ng_alto,
-			'ng_tenor' => $ng_tenor,
-			'buff_alto' => $buff_alto,
-			'buff_tenor' => $buff_tenor,
+			'alto' => $alto,
+			'tenor' => $tenor,
 		);
 		return Response::json($response);
 	}
@@ -566,9 +478,7 @@ class MiddleProcessController extends Controller
 		}else{
 			$tanggal = date('Y-m-d');
 		}
-
-		$where_ng = "";
-		$where_mt = "";
+		$where = "";
 		if($request->get('code') != null) {
 			$codes = $request->get('code');
 			$code = "";
@@ -579,59 +489,31 @@ class MiddleProcessController extends Controller
 					$code = $code.",";
 				}
 			}
-			$where_ng = "and m.origin_group_code in (".$code.") ";
-			$where_mt = "where origin_group_code in (".$code.") ";
+			$where = "and mt.origin_group_code in (".$code.") ";
 		}
-
-		// $ng_logs = db::select("select l.operator_id, e.`name`, sum(quantity) as jml_ng from middle_ng_logs l
-		// 	left join employees e
-		// 	on l.operator_id = e.employee_id
-		// 	left join materials m
-		// 	on l.material_number = m.material_number
-		// 	where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'".$where_ng."
-		// 	and l.location = 'bff-kensa'
-		// 	GROUP BY l.operator_id, e.`name`");
-
-		$ng_logs = db::select("SELECT * from (
-			SELECT operator_id, `name`, sum(jml) as jml, COUNT(created_at) as kensa from
-			(select l.created_at, l.operator_id, e.`name`, sum(quantity) as jml from middle_ng_logs l
-			left join employees e
-			on l.operator_id = e.employee_id
-			left join materials m
-			on l.material_number = m.material_number
-			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'".$where_ng."
-			and l.location = 'bff-kensa'
-			GROUP BY l.created_at,l.operator_id, e.`name`) a
-			GROUP BY operator_id, `name`) b
-			WHERE kensa > 2");
-
-		$material_number = db::select("select distinct material_number from materials ".$where_mt);
-		$material = json_encode($material_number);
-		$material = str_replace('{"material_number":"','',$material);
-		$material = str_replace('"}','',$material);
-		$material = str_replace('[','',$material);
-		$material = str_replace(']','',$material);
-
-		$addmaterial = "";
-		$materials = explode(",", $material);
-		$material_number = "";
-
-		for($x = 0; $x < count($materials); $x++) {
-			$material_number = $material_number."'".$materials[$x]."'";
-			if($x != count($materials)-1){
-				$material_number = $material_number.",";
-			}
-		}
-		$addmaterial = "and material_number in (".$material_number.") ";
-
-		$rfid = db::connection('digital_kanban')->select("select operator_id, material_number, sum(material_qty) as jml_buff from data_log where DATE_FORMAT(selesai_start_time,'%Y-%m-%d') = '".$tanggal."' ".$addmaterial."
-			GROUP BY operator_id, material_number order by operator_id");
+		
+		$ng_rate = db::select("select e.`name`, rate.tot, rate.ng, rate.rate from
+			(select g.operator_id, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
+			(select m.operator_id, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null ".$where."
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$tanggal."'
+			GROUP BY m.operator_id) g
+			left join
+			(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null ".$where."
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$tanggal."'
+			GROUP BY m.operator_id) ng
+			on g.operator_id = ng.operator_id) rate
+			left join employees e on e.employee_id = rate.operator_id
+			ORDER BY rate.rate desc");
 
 		$response = array(
 			'status' => true,
-			'ng_logs' => $ng_logs,
-			'rfid' => $rfid,
-			
+			'ng_rate' => $ng_rate,
 		);
 		return Response::json($response);
 	}
@@ -3192,5 +3074,97 @@ class MiddleProcessController extends Controller
 				return Response::json($response);
 			}
 		}
+	}
+
+	public function scanRequestTag(Request $request)
+	{
+		$matnum = substr($request->get('material_number'),2,7);
+		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
+
+		if ($mat) {
+			if ($mat->origin_group_code == '042' OR $mat->origin_group_code == '041') {
+				$qty = 20;
+			} else if ($mat->origin_group_code == '043') {
+				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+					$qty = 15;
+				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+					$qty = 8;
+				} else if(preg_match("/82/", $mat->model) == TRUE) {
+					$qty = 10;
+				} else {
+					$qty = 0;
+				}
+			} else {
+				$qty = 0;
+			}
+
+			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
+
+			if ($req_log_q) {
+				$dt_db = new DateTime($req_log_q->updated_at);
+				$dt_now = new DateTime();
+				$interval = $dt_db->diff($dt_now);
+
+				if ($interval->format('%I') < 5) {
+					$response = array(
+						'status' => false,
+						'error' => "Too Fast on same Material Tag",
+					);
+					return Response::json($response);
+				}
+
+				$req_log = MiddleRequestHelper::where('material_tag',"=", $request->get('material_number'))
+				->update(['updated_at' => new DateTime()]);
+				
+			} else {
+				$req_log = new MiddleRequestHelper;
+
+				$req_log->material_tag = $request->get('material_number');
+				$req_log->material_number = $matnum;
+				$req_log->created_by = Auth::id();
+				$req_log->created_at = new DateTime();
+
+				$req_log->save();
+			}
+
+			try {
+				$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
+				$req->quantity += $qty;
+				$req->item = $request->get("item");
+				$req->created_by = Auth::id();
+				$req->updated_at = new DateTime();
+				$req->save();
+
+				$response = array(
+					'status' => true,
+					'datas' => $mat,
+					'datas_log' => $req_log,
+				);
+				return Response::json($response);
+			} catch (QueryException $e){
+				$response = array(
+					'status' => false,
+					'error' => $e,
+				);
+				return Response::json($response);
+			}
+		} else {			
+			$response = array(
+				'status' => false,
+				'error' => "Material Doesn't Exist ",
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchRequest(Request $request)
+	{
+		$log_request = MiddleMaterialRequest::where("item","=", $request->get("option"))->orderBy('quantity','desc')->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $log_request
+		);
+		return Response::json($response);
 	}
 }

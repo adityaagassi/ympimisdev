@@ -274,42 +274,13 @@
 			if(xhr.status == 200){
 				if(result.status){
 					var tgl = [];
-					var ng_alto = [];
-					var ng_tenor = [];
-					var buff_alto = [];
-					var buff_tenor = [];
 					var ng_rate_alto = [];
 					var ng_rate_tenor = [];
 
-					for(var i = 0; i < result.ng_alto.length; i++){
-						tgl.push(result.ng_alto[i].week_date);
-						ng_alto.push(result.ng_alto[i].jml);
-						ng_tenor.push(result.ng_tenor[i].jml);
-
-						var isAltoEmpty = true;
-						for(var j = 0; j < result.buff_alto.length; j++){
-							if(tgl[i] == result.buff_alto[j].tgl){
-								buff_alto.push(result.buff_alto[j].jml);
-								isAltoEmpty = false;
-							}
-						}
-						if(isAltoEmpty){
-							buff_alto.push(NaN);
-						}
-
-						var isTenorEmpty = true;
-						for(var j = 0; j < result.buff_tenor.length; j++){
-							if(tgl[i] == result.buff_tenor[j].tgl){
-								buff_tenor.push(result.buff_tenor[j].jml);
-								isTenorEmpty = false;
-							}
-						}
-						if(isTenorEmpty){
-							buff_tenor.push(NaN);
-						}
-
-						ng_rate_alto.push([Date.parse(tgl[i]), ((ng_alto[i]/buff_alto[i])*100)]);
-						ng_rate_tenor.push([Date.parse(tgl[i]), ((ng_tenor[i]/buff_tenor[i])*100)]);
+					for(var i = 0; i < result.alto.length; i++){
+						tgl.push(result.alto[i].week_date);
+						ng_rate_alto.push([Date.parse(tgl[i]), result.alto[i].rate]);
+						ng_rate_tenor.push([Date.parse(tgl[i]), result.tenor[i].rate]);
 					}
 
 					var chart = Highcharts.stockChart('container1', {
