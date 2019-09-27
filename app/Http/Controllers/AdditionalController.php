@@ -206,8 +206,60 @@ class AdditionalController extends Controller
 
 	}
 
+	public function fetchByModel(Request $request){
+
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+		
+		$model = db::select("select distinct model from flo_repair_logs f
+			left join materials m on m.material_number = f.material_number
+			where DATE_FORMAT(f.created_at,'%Y-%m-%d') = '".$date."' order by model");
+
+		$datas = db::select("select a.model, a.`status`, COALESCE(b.jml,0) as jml from
+			(select model.model, `status`.`status` from
+			(select distinct model from flo_repair_logs f
+			left join materials m on m.material_number = f.material_number
+			where DATE_FORMAT(f.created_at,'%Y-%m-%d') = '".$date."'
+			) model
+			cross join
+			(select distinct `status` from flo_repair_logs) `status`) a
+			left join
+			(select m.model, f.`status`, sum(f.quantity) as jml from flo_repair_logs f
+			left join materials m on m.material_number = f.material_number
+			where DATE_FORMAT(f.created_at,'%Y-%m-%d') = '".$date."'
+			GROUP BY m.model, f.`status`) b
+			on a.model = b.model and a.`status` = b.`status`
+			order by model, `status`");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'model' => $model,
+			'datas' => $datas,
+		);
+		return Response::json($response);
+	}
 
 
+	public function fetchByDate(){
+
+		$datas = db::select("select DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl, f.`status`, sum(f.quantity) as jml from flo_repair_logs f GROUP BY tgl, f.`status`");
+
+		$tgl = db::select("select distinct DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl from flo_repair_logs f");
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas,
+			'tgl' => $tgl,
+		);
+		return Response::json($response);
+
+
+	}
 
 
 

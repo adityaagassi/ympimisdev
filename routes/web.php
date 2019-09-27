@@ -153,9 +153,8 @@ Route::get('fetch/flute_repair/kembali', 'AdditionalController@fetchKembali');
 Route::post('scan/flute_repair/kembali', 'AdditionalController@scanKembali');
 Route::get('index/flute_repair/resume', 'AdditionalController@indexResume');
 Route::get('fetch/flute_repair/by_status', 'AdditionalController@fetchByStatus');
-
-
-
+Route::get('fetch/flute_repair/by_model', 'AdditionalController@fetchByModel');
+Route::get('fetch/flute_repair/by_date', 'AdditionalController@fetchByDate');
 
 
 //EMPLOYEE
@@ -597,7 +596,7 @@ Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
 Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
-Route::get('index/middle/request', 'MiddleProcessController@indexRequest');
+Route::get('index/middle/request/{id}', 'MiddleProcessController@indexRequest');
 //CLARINET
 Route::get('index/process_middle_cl', 'MiddleProcessController@indexProcessMiddleCL');
 Route::get('scan/middle/request', 'MiddleProcessController@scanRequestTag');
