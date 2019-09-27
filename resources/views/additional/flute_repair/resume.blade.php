@@ -141,6 +141,9 @@
 
 		drawSmallBox();
 		drawChart();
+		setInterval(drawSmallBox, 30000);
+		setInterval(drawChart, 30000);
+
 
 	});
 
