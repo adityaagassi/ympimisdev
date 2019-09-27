@@ -31,7 +31,7 @@
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12">
-			<form method="GET" action="{{ action('AssyProcessController@indexDisplayAssy') }}">
+			<form method="GET" action="{{ url('index/display/sub_assy/assy') }}">
 				<div class="col-xs-2" style="line-height: 1">
 					<div class="input-group date">
 						<div class="input-group-addon bg-green" style="border-color: #00a65a">
@@ -58,14 +58,18 @@
 					</select>
 					<input type="text" name="model2" id="model2" hidden>
 				</div>
+
+				<!-- JIKA SUB ASSY -->
+				@if($option == "assy")
 				<div class="col-xs-2">
 					<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
 						@foreach($surfaces as $surface)
 						<option value="{{ $surface[0] }}">{{ $surface[1] }}</option>
 						@endforeach
 					</select>
-					<input type="text" name="surface2" id="surface2" hidden>
 				</div>
+				@endif
+				<input type="text" name="surface2" id="surface2" hidden>
 
 				<div class="col-xs-1">
 					<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
@@ -221,8 +225,13 @@
 		// $.each(values.split(","), function(i,e){
 		// 	$("#key option[value='" + e + "']").prop("selected", true);
 		// });
+		if ("{{$option}}" == "assy") {
+			var url = '{{ url("fetch/display/sub_assy") }}';
+		} else {
+			var url = '{{ url("fetch/display/welding") }}';
+		}
 
-		$.get('{{ url("fetch/display/sub_assy") }}', data, function(result, status, xhr){
+		$.get(url, data, function(result, status, xhr){
 			if(result.status){
 				$("#model").empty();
 				$("#plan").empty();
@@ -262,7 +271,13 @@
 						color2 = "background-color:#f24b4b";
 					}
 
-					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
+					if (value.surface) {
+						srf = value.surface;
+					} else {
+						srf = "";
+					}
+
+					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
 					diff += "<td "+style+">"+(-value.diff)+"</td>";
@@ -291,7 +306,13 @@
 					stockroom.push(parseInt(value2.stockroom));
 					welding.push(parseInt(value2.welding));
 
-					categories.push(value2.model+" "+value2.key+" "+value2.surface);
+					if (value2.surface) {
+						srf2 = value2.surface;
+					} else {
+						srf2 = "";
+					}
+
+					categories.push(value2.model+" "+value2.key+" "+srf2);
 				})
 
 				// console.table(result.stok);

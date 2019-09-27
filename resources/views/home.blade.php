@@ -204,7 +204,7 @@
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Injections Process (???)</span>
-                           
+
                             <br>
                             <a href="{{ url("/index/injeksi") }}">
                                 <i class="fa fa-caret-right"></i> Injections Recorder (???)
@@ -222,7 +222,7 @@
                             <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
                                 <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
                             </a>
-                           
+
                         </td>
                     </tr>
                     <tr>
@@ -231,6 +231,10 @@
                             <br>
                             <a href="{{ url("/index/process_stamp_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/display/sub_assy/wld?date=&surface2=&key2=&model2=&hpl2=") }}">
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                         </td>
                     </tr>
@@ -270,7 +274,7 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス仮組～組立)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy?date=&surface2=&key2=&model2=&hpl2=") }}">
+                            <a href="{{ url("/index/display/sub_assy/assy?date=&surface2=&key2=&model2=&hpl2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                         </td>

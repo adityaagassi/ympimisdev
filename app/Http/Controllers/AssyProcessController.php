@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class AssyProcessController extends Controller
 {
-	public function indexDisplayAssy()
+	public function indexDisplayAssy($id)
 	{
 		$title = 'Saxophone Picking Monitor';
 		$title_jp = 'サックスのピッキング監視';
@@ -38,6 +38,7 @@ class AssyProcessController extends Controller
 			'models' => $models,
 			'surfaces' => $surfaces,
 			'hpls' => $hpls,
+			'option' => $id
 		))->with('page', 'Assy Schedule')->with('head', '');
 	}
 
@@ -221,6 +222,171 @@ class AssyProcessController extends Controller
 		join materials on materials.`key` = final2.`key` and materials.model = final2.model and materials.surface = final2.surface
 		".$where." ".$where2." ".$where3." ".$where4." ".$dd." concat(final2.`key`,final2.model,final2.surface) in (".$gmc.")
 		order by field(concat(final2.`key`,final2.model,final2.surface), ".$gmc.")";
+
+		$stok = db::select($picking2);
+
+		$response = array(
+			'status' => true,
+			'plan' => $picking_assy,
+			'stok' => $stok,
+			'gmc' => $gmc
+		);
+		return Response::json($response);
+	}
+
+	public function fetchPickingWelding(Request $request)
+	{
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		}
+
+		$where = "";
+		$where2 = "";
+		$where3 = "";
+		$where4 = "";
+		$minus = "0";
+
+		if (date('d', strtotime($tanggal)) != "01") {
+			$minus = " COALESCE(minus,0) ";
+		}
+
+		if ($request->get('key') != "") {
+			$keys = explode(",",$request->get('key'));
+			$keylength = count($keys);
+			$key = "";
+
+			for($x = 0; $x < $keylength; $x++) {
+				$key = $key."'".$keys[$x]."'";
+				if($x != $keylength -1){
+					$key = $key.",";
+				}
+			}
+
+			$where = " WHERE materials.`key` IN (".$key.")";
+		}
+
+		if ($request->get('model') != "") {
+			if ($where != "") {
+				$where2 = "AND ";
+			} else {
+				$where2 = "WHERE ";
+			}
+
+			$models = explode(",",$request->get('model'));
+			$modellength = count($models);
+			$model = "";
+
+			for($x = 0; $x < $modellength; $x++) {
+				$model = $model."'".$models[$x]."'";
+				if($x != $modellength -1){
+					$model = $model.",";
+				}
+			}
+
+			$where2 .= " materials.model IN (".$model.")";
+		}
+
+		if ($request->get('hpl') != "" OR $request->get('hpl') != "All") {
+			if ($where != "" OR $where2 != "" OR $where3 != "") {
+				$where4 = "AND ";
+			} else {
+				$where4 = "WHERE ";
+			}
+
+			$hpl = str_replace(",", "|", $request->get('hpl'));			
+
+			$where4 .= " materials.hpl REGEXP '".$hpl."'";
+		}
+
+		if ($where == "" AND $where2 == ""  AND $where4 == "") {
+			$dd = "where";
+		} else {
+			$dd = "and";
+		}
+
+		$first = date('Y-m-01',strtotime($tanggal));
+
+		$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+
+		$table = "select materials.model, materials.`key`, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock, (sum(plan)-sum(picking)) as diff from
+		(
+		select material_number, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock from
+		(
+		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as stock from
+		(
+		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+
+		union all
+
+		select inventories.material_number, 0 as plan, 0 as picking, sum(inventories.lot) as stock from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51', 'CL51', 'FL51') and materials.category = 'key' group by inventories.material_number
+
+		union all
+
+		select material_number, sum(plan) as plan, 0 as picking, 0 as stock from
+		(
+		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan from
+		(
+		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+
+		union all
+
+		select assy_picking_schedules.material_number, sum(quantity) as plan from assy_picking_schedules 
+		left join materials on materials.material_number = assy_picking_schedules.material_number
+		where due_date >= '".$first."' and due_date <= '".$tanggal."'
+		group by assy_picking_schedules.material_number
+		) as plan group by material_number
+		) as final group by material_number having plan > 0  
+		) as final2
+		join materials on final2.material_number = materials.material_number ".$where." ".$where2." ".$where4."
+		group by materials.model, materials.`key`
+		order by diff desc";
+
+		$picking_assy = db::select($table);
+
+		$tabellength = count($picking_assy);
+		$gmc = "";
+
+		for($x = 0; $x < $tabellength; $x++) {
+			$gmc = $gmc."'".$picking_assy[$x]->key.$picking_assy[$x]->model."'";
+			if($x != $tabellength -1){
+				$gmc = $gmc.",";
+			}
+		}
+
+		$picking2 = "select final2.`key`, final2.model, max(stockroom) stockroom, max(middle) middle, max(welding) welding from
+		(select sum(stockroom) stockroom, sum(middle) middle, sum(welding) welding, `key`, model from 
+		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.middle) as middle, sum(middle.welding) as welding, materials.key, materials.model from
+		(
+		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as middle, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
+
+		union all
+
+		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(ympimis.middle_inventories.quantity) as middle, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number
+		) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null
+		group by middle.material_number, materials.key, materials.model
+		
+
+		union all
+
+		select kitto.inventories.material_number, 0 as stockroom, 0 as middle, sum(kitto.inventories.lot) as welding, welding.key, welding.model from
+		(
+		select distinct bom_components.material_child, parent.key, parent.model from
+		(
+		select bom_components.material_child, materials.key, materials.model from materials left join bom_components on bom_components.material_parent = materials.material_number where materials.hpl in ('ASKEY', 'TSKEY') and materials.key is not null and mrpc in ('S51')
+		) as parent
+		left join bom_components on bom_components.material_parent = parent.material_child
+		) as welding
+		left join kitto.inventories on kitto.inventories.material_number = welding.material_child 
+		group by kitto.inventories.material_number, welding.key, welding.model) as semua
+		group by `key`, model) as final2
+		join materials on materials.`key` = final2.`key` and materials.model = final2.model
+		".$where." ".$where2." ".$where4." ".$dd." concat(final2.`key`,final2.model) in (".$gmc.")
+		group by final2.`key`, final2.model
+		order by field(concat(final2.`key`,final2.model), ".$gmc.")";
 
 		$stok = db::select($picking2);
 
