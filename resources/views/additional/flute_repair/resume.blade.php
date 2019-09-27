@@ -247,7 +247,8 @@
 					yAxis: {
 						title: {
 							text: 'Total'
-						}
+						},
+						type: 'logarithmic'
 					},
 					legend : {
 						enabled: false
@@ -373,7 +374,8 @@
 					yAxis: {
 						title: {
 							text: 'Total'
-						}
+						},
+						type: 'logarithmic'
 					},
 					legend : {
 						enabled: false
