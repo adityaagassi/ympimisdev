@@ -98,6 +98,12 @@ Route::get('fetch/InOutpart', 'InjectionController@getDataInOut');
 Route::get('index/Schedule', 'InjectionController@schedule');
 Route::get('fetch/Schedulepart', 'InjectionController@getDataSchedule');
 //end schedule
+
+//report stock
+
+Route::get('index/reportStock', 'InjectionController@reportStock');
+Route::get('fetch/getDataStock', 'InjectionController@getDataStock');
+//end report
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -145,6 +151,11 @@ Route::post('scan/flute_repair/selesai', 'AdditionalController@scanSelesai');
 Route::get('index/flute_repair/kembali', 'AdditionalController@indexKembali');
 Route::get('fetch/flute_repair/kembali', 'AdditionalController@fetchKembali');
 Route::post('scan/flute_repair/kembali', 'AdditionalController@scanKembali');
+Route::get('index/flute_repair/resume', 'AdditionalController@indexResume');
+Route::get('fetch/flute_repair/by_status', 'AdditionalController@fetchByStatus');
+
+
+
 
 
 //EMPLOYEE
@@ -586,9 +597,9 @@ Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
 Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
+Route::get('index/middle/request', 'MiddleProcessController@indexRequest');
 //CLARINET
 Route::get('index/process_middle_cl', 'MiddleProcessController@indexProcessMiddleCL');
-Route::get('index/middle/request_cl', 'MiddleProcessController@indexRequestCL');
 Route::get('scan/middle/request', 'MiddleProcessController@scanRequestTag');
 //FLUTE
 Route::get('index/process_middle_fl', 'MiddleProcessController@indexProcessMiddleFL');
@@ -1023,8 +1034,9 @@ Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime')
 Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffingMonitoring');
 
 //ASSY PICKING
-Route::get('index/display/sub_assy', 'AssyProcessController@indexDisplayAssy');
+Route::get('index/display/sub_assy/{id}', 'AssyProcessController@indexDisplayAssy');
 Route::get('fetch/display/sub_assy', 'AssyProcessController@fetchPicking');
+Route::get('fetch/display/welding', 'AssyProcessController@fetchPickingWelding');
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 
