@@ -27,6 +27,11 @@
 		border:1px solid rgb(211,211,211);
 	}
 	#loading, #error { display: none; }
+	h1{
+		font-size: 70px;
+		font-weight: bold;
+	}
+	
 </style>
 @stop
 @section('header')
@@ -60,10 +65,10 @@
 		<div class="col-lg-3 col-xs-12" style="margin-left: 0px;">
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-red">
-					<div class="inner">
-						<p style="margin-bottom: 0px;"><b>SEDANG DI CEK</b></p>
-						<h3 id='tarik'>0<sup style="font-size: 20px">set</sup></h3>
+				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 259px;">
+					<div class="inner" style="padding-bottom: 0px;">
+						<h3 style="margin-bottom: 0px;"><b>REPAIR</b></h3>
+						<h1 style="margin: 0px;font-size: 7vw;" id='tarik'>0<sup style="font-size: 4vw">set</sup></h1>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -73,10 +78,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-yellow">
-					<div class="inner">
-						<p style="margin-bottom: 0px;"><b>SELESAI DI CEK</b></p>
-						<h3 id='selesai'>0<sup style="font-size: 20px">set</sup></h3>
+				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 259px;">
+					<div class="inner" style="padding-bottom: 0px;">
+						<h3 style="margin-bottom: 0px;"><b>SELESAI</b></h3>
+						<h1 style="margin: 0px; font-size: 7vw;" id='selesai'>0<sup style="font-size: 4vw">set</sup></h1>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -86,10 +91,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-green">
-					<div class="inner">
-						<p style="margin-bottom: 0px;"><b>KEMBALI KE WAREHOUSE</b></p>
-						<h3 id='kembali'>0<sup style="font-size: 20px">set</sup></h3>
+				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 259px;">
+					<div class="inner" style="padding-bottom: 0px;">
+						<h3 style="margin-bottom: 0px;"><b>KEMBALI</b></h3>
+						<h1 style="margin: 0px; font-size: 7vw;" id='kembali'>0<sup style="font-size: 4vw">set</sup></h1>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -171,15 +176,15 @@
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
 						$('#tarik').append().empty();
-						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 20px">set</sup>');
+						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 					if(result.status[i].status == 'selesai repair'){
 						$('#selesai').append().empty();
-						$('#selesai').html(result.status[i].jml + '<sup style="font-size: 20px">set</sup>');
+						$('#selesai').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 					if(result.status[i].status == 'kembali ke warehouse'){
 						$('#kembali').append().empty();
-						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 20px">set</sup>');
+						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 				}
 			}
@@ -227,16 +232,10 @@
 						type: 'column'
 					},
 					title: {
-						text: 'Flute Repair by Model',
+						text: 'Flute Repair by Model on '+result.date,
 						style: {
-							fontSize: '20px',
+							fontSize: '30px',
 							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'on '+result.date,
-						style: {
-							fontSize: '18px',
 						}
 					},
 					xAxis: {
@@ -280,7 +279,12 @@
 								enabled: true,
 								formatter: function () {
 									return Highcharts.numberFormat(this.y,0);
+								},
+								style: {
+									fontSize: '30px',
+									fontWeight: 'bold'
 								}
+
 							}
 						}
 					},
@@ -356,7 +360,7 @@
 					title: {
 						text: 'Flute Repair by Date',
 						style: {
-							fontSize: '20px',
+							fontSize: '30px',
 							fontWeight: 'bold'
 						}
 					},
@@ -401,6 +405,10 @@
 								enabled: true,
 								formatter: function () {
 									return Highcharts.numberFormat(this.y,0);
+								},
+								style: {
+									fontSize: '30px',
+									fontWeight: 'bold'
 								}
 							}
 						}

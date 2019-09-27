@@ -237,7 +237,7 @@ class AdditionalController extends Controller
 
 		$response = array(
 			'status' => true,
-			'date' => $date,
+			'date' => date("d M Y", strtotime($date)),
 			'model' => $model,
 			'datas' => $datas,
 		);
