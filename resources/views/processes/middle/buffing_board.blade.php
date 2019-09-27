@@ -11,13 +11,17 @@
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid rgb(150,150,150);
+		border-top: 2px solid white;
 		vertical-align: middle;
 		text-align: center;
-		padding:0;
+		padding:1px;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(150,150,150);
 		padding:0;
+	}
+	table.table-bordered > tbody > tr > td > p{
+		color: #abfbff;
 	}
 	.content{
 		color: white;
@@ -60,7 +64,7 @@
 			background: rgba(0, 0, 0, 0);
 		}
 		50%, 100% {
-			background-color: rgb(0, 166, 90);
+			background-color: #f73939;
 		}
 	}
 </style>
@@ -89,8 +93,8 @@
 					<tr>
 						<th style="width: 0.66%; padding: 0;">WS</th>
 						<th style="width: 0.66%; padding: 0;">Operator</th>
-						<th style="width: 0.66%; padding: 0;">Sedang</th>
-						<th style="width: 0.66%; padding: 0;">Akan</th>
+						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">Sedang</th>
+						<th style="width: 0.66%; padding: 0; background-color:#ffd03a">Akan</th>
 						<th style="width: 0.66%; padding: 0;">#1</th>
 						<th style="width: 0.66%; padding: 0;">#2</th>
 						<th style="width: 0.66%; padding: 0;">#3</th>
@@ -101,7 +105,7 @@
 						<th style="width: 0.66%; padding: 0;">#8</th>
 						<th style="width: 0.66%; padding: 0;">#9</th>
 						<th style="width: 0.66%; padding: 0;">#10</th>
-						<th style="width: 0.66%; padding: 0;">Selesai</th>
+						<th style="width: 0.66%; padding: 0; background-color: #f76a6a">Selesai</th>
 					</tr>
 				</thead>
 				<tbody id="buffingTableBody">
@@ -150,7 +154,7 @@
 								if (!value.akan)
 									color2 = 'class="akan"';
 								else
-									color2 = '';
+									color2 = 'style="color:#ffd03a"';
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
@@ -165,12 +169,12 @@
 							}
 						} else {
 							if (value.employee_id) {
-								color = 'style="background-color: RGB(100,100,100)"';
+								color = 'style="background-color: #575c57"';
 
 								if (!value.akan)
 									color2 = 'class="akan"';
 								else
-									color2 = '';
+									color2 = 'style="color:#ffd03a"';
 
 								if (value.selesai)
 									colorSelesai = 'class="selesai"';
@@ -179,28 +183,28 @@
 							}
 							else {
 								// color = 'style="background-color: RGB(255,0,0)"';
-								color = 'style="background-color: RGB(100,100,100)"';
+								color = 'style="background-color: #575c57"';
 								color2 = '';
 								colorSelesai = '';
 							}
 						}
 
 						buffingTableBody += '<tr '+color+'>';
-						buffingTableBody += '<td '+color2+'>'+value.ws.split("-")[1]+'</td>';
-						buffingTableBody += '<td '+color2+'>'+value.employee_id+'<br>'+value.employee_name.split(' ')[0]+'</td>';
-						buffingTableBody += '<td>'+value.sedang+'<hr>'+value.sedang_time+'</td>';
-						buffingTableBody += '<td '+color2+'>'+value.akan+'<hr>'+value.akan_time+'</td>';
-						buffingTableBody += '<td>'+value.queue_1+'</td>';
-						buffingTableBody += '<td>'+value.queue_2+'</td>';
-						buffingTableBody += '<td>'+value.queue_3+'</td>';
-						buffingTableBody += '<td>'+value.queue_4+'</td>';
-						buffingTableBody += '<td>'+value.queue_5+'</td>';
-						buffingTableBody += '<td>'+value.queue_6+'</td>';
-						buffingTableBody += '<td>'+value.queue_7+'</td>';
-						buffingTableBody += '<td>'+value.queue_8+'</td>';
-						buffingTableBody += '<td>'+value.queue_9+'</td>';
-						buffingTableBody += '<td>'+value.queue_10+'</td>';
-						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<hr>'+value.selesai_time+'</td>';
+						buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
+						buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+						buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+value.sedang_time+'</p></td>';
+						buffingTableBody += '<td '+color2+'>'+value.akan+'<p>'+value.akan_time+'</p></td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
+						buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+value.selesai_time+'</p></td>';
 						buffingTableBody += '</tr>';
 						i += 1;
 					});
