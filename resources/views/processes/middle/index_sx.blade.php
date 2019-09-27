@@ -18,6 +18,7 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/request/Saxophone") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
 			<a href="{{ url("index/middle/buffing_work_order", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Saxophone Work Order</a>
 			<a href="{{ url("index/process_buffing_kensa", "bff-kensa") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
@@ -48,7 +49,6 @@
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Machine Activity</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Production Result</a>
-			{{-- <a href="{{ url("index/middle/display_picking?tanggal=&surface=&model=&key=") }}" class="btn btn-default btn-block" target="blank" style="font-size: 24px; border-color: red;">Picking Schedule</a> --}}
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

@@ -597,6 +597,7 @@ Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchB
 Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
 Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddleSX');
 Route::get('index/middle/request/{id}', 'MiddleProcessController@indexRequest');
+Route::get('fetch/middle/request', 'MiddleProcessController@fetchRequest');
 //CLARINET
 Route::get('index/process_middle_cl', 'MiddleProcessController@indexProcessMiddleCL');
 Route::get('scan/middle/request', 'MiddleProcessController@scanRequestTag');
