@@ -38,7 +38,6 @@
 						<th style="width: 2%; border:1px solid black;">Surface</th>
 						<th style="width: 3%; border:1px solid black;">Qty</th>
 						<th style="width: 4%; border:1px solid black;">Created At</th>
-						{{-- <th style="width: 3%; border:1px solid black;">Remark</th> --}}
 					</tr>
 				</thead>
 				<tbody>
@@ -56,7 +55,6 @@
 						<td style="border:1px solid black;"><?php echo $col->surface; ?></td>
 						<td style="border:1px solid black; text-align: right;"><?php echo $col->quantity; ?></td>
 						<td style="border:1px solid black; text-align: right;"><?php echo $col->created_at; ?></td>
-						{{-- <td style="border:1px solid black;text-align: center;"><?php if($col->remark){echo $col->remark;}else{echo "-";} ?></td> --}}
 					</tr>
 					<?php } ?>
 				</tbody>
