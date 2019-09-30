@@ -32,6 +32,7 @@ use App\MiddleMaterialRequest;
 use App\Employee;
 use App\Mail\SendEmail;
 use App\RfidBuffingInventory;
+use App\RfidLogEfficiency;
 use Illuminate\Support\Facades\Mail;
 use App\MiddleReturnLog;
 use App\MiddleReworkLog;
@@ -45,7 +46,29 @@ class MiddleProcessController extends Controller
 			'bff-kensa',
 			'lcq-incoming',
 			'lcq-kensa',
+			'plt-incoming',
+			'plt-kensa',
 		];
+	}
+
+	public function indexBuffingOpNg(){
+		$title = 'NG Rate by Operator';
+		$title_jp = '??';
+
+		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
+
+		return view('processes.middle.display.buffing_ng_op', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'origin_groups' => $origin_groups
+		))->with('page', 'NG Rate by Operator')->with('head', 'Middle Process');
+	}
+
+	public function indexBuffingOpNgRate(){
+		return view('processes.middle.display.buffing_daily_ng_op', array(
+			'title' => 'Daily NG Rate by Operator',
+			'title_jp' => '(??)',
+		))->with('page', 'Daily NG Rate by Operator');
 	}
 
 	public function indexBuffingOpEff(){
@@ -71,6 +94,14 @@ class MiddleProcessController extends Controller
 			'locs' => $locs,
 		))->with('page', 'Middle Process Monitoring');
 
+	}
+
+	public function indexMizusumashi()
+	{
+		return view('processes.middle.display.mizusumashi_monitoring', array(
+			'title' => 'Mizusumashi Monitoring',
+			'title_jp' => '??'
+		));
 	}	
 
 	public function indexDisplayPicking(){
@@ -119,6 +150,16 @@ class MiddleProcessController extends Controller
 		return view('processes.middle.display.production_result', array(
 			'title' => 'Middle Production Result',
 			'title_jp' => '中間工程生産実績',
+			'locations' => $locations
+		))->with('page', 'Production Result');
+	}
+
+	public function indexDisplayKensaTime(){
+		$locations = $this->location;
+
+		return view('processes.middle.display.kensa_time', array(
+			'title' => 'Middle Kensa Time',
+			'title_jp' => '???',
 			'locations' => $locations
 		))->with('page', 'Production Result');
 	}
@@ -216,20 +257,17 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Middle Process Barrel Board')->with('head', 'Middle Process');
 	}
 
-	public function indexBuffingPerformance($id){
+	public function indexBuffingNg(){
+		$title = 'Buffing NG Rate';
+		$title_jp = '??';
 
-		if($id == 'op_ng'){
-			$title = 'NG Rate By Operators';
-			$title_jp = '??';
+		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
-			$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
-
-			return view('processes.middle.display.buffing_ng', array(
-				'title' => $title,
-				'title_jp' => $title_jp,
-				'origin_groups' => $origin_groups
-			))->with('page', 'Middle Process Buffing Performance')->with('head', 'Middle Process');
-		}
+		return view('processes.middle.display.buffing_ng', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'origin_groups' => $origin_groups
+		))->with('page', 'Middle Process Buffing Performance')->with('head', 'Middle Process');
 
 	}
 
@@ -406,6 +444,109 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+
+	public function fetchBuffingNgKey(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."'
+			and location = 'lcq-incoming'
+			group by m.`key` order by jml desc");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'key' => $key,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingOpWorking(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$working_time = db::connection('digital_kanban')->select("select l.operator_id,
+			sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act,
+			sum((l.material_qty*t.time))/60 as std from data_log l
+			left join standart_times t on l.material_number = t.material_number
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY l.operator_id");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'working_time' => $working_time,
+		);
+		return Response::json($response);
+	}
+
+
+	public function fetchBuffingOpNgRate(){
+		$datefrom = date("Y-m-d", strtotime("-3 Months"));
+		$dateto = date("Y-m-d");
+
+		$ng_rate = db::select("select date.week_date, date.operator_id, date.`name`, (COALESCE(rate.rate,0)*100) as ng_rate  from
+			(select * from (select week_date from weekly_calendars
+			WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') calender
+			cross join
+			(select distinct m.operator_id, e.`name` from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			left join employees e on e.employee_id = m.operator_id
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op
+			order by week_date, operator_id asc) date
+			left join
+			(select g.tgl, g.operator_id, g.jml as g, ng.jml as ng, (ng.jml/g.jml) as rate from
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl, m.operator_id) g
+			left join
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl, m.operator_id) ng
+			on ng.tgl = g.tgl and ng.operator_id = g.operator_id) rate
+			on date.week_date = rate.tgl and date.operator_id = rate.operator_id
+			ORDER BY week_date, operator_id");
+
+		$op = db::select("select distinct m.operator_id, e.`name` from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			left join employees e on e.employee_id = m.operator_id
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'");
+
+
+		$response = array(
+			'status' => true,
+			'ng_rate' => $ng_rate,
+			'op' => $op,
+		);
+		return Response::json($response);
+
+	}
+
+
 	public function fetchBuffingOpEff(Request $request){
 		$date = '';
 		if(strlen($request->get("tanggal")) > 0){
@@ -511,7 +652,7 @@ class MiddleProcessController extends Controller
 			on g.tgl = ng.tgl) rate
 			on date.week_date = rate.tgl");
 
-		$daily_by_ng = db::select("select ng.created_at, ng.material_number, ng.ng_name, ng, result, round((ng/result)*100,2) as percentage from
+		$daily_by_ng = db::select("select ng.created_at, ng.ng_name, sum(ng) as ng, sum(result) as result, round((sum(ng)/sum(result))*100,2) as percentage from
 			(
 			select date(created_at) as created_at, material_number, ng_name, sum(quantity) as ng from middle_ng_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number, ng_name
 			) as ng
@@ -519,7 +660,7 @@ class MiddleProcessController extends Controller
 			(
 			select date(created_at) as created_at, material_number, sum(quantity) as result from middle_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number
 			) as result
-			on result.created_at = ng.created_at and result.material_number = ng.material_number where result is not null");
+			on result.created_at = ng.created_at and result.material_number = ng.material_number where result is not null group by ng.created_at, ng.ng_name");
 
 		$response = array(
 			'status' => true,
@@ -3190,6 +3331,74 @@ class MiddleProcessController extends Controller
 	//PENCATATAN LOG BUFFING
 	public function insertLogBuffing(Request $request)
 	{
-		
+		$log = RfidLogEfficiency::where('operator_id', "=",$request->get('employee_id'))
+		->where('status', "=", "kosong")
+		->orderBy('updated_at','DESC')
+		->limit(1)
+		->get();
+
+		if ($log->isEmpty()) {
+			RfidLogEfficiency::insert(
+				['operator_id' => $request->get('employee_id'), 'status' => "kosong", 'time_log' => new DateTime(), 'created_at' => new DateTime(), 'updated_at' => new DateTime()]
+			);
+
+			$response = array(
+				'status' => true,
+				'datas' => 'Success Insert'
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => false,
+			'datas' => 'Not Inserted'
+		);
+		return Response::json($response);
 	}
+
+	public function updateLogBuffing(Request $request)
+	{
+		$log = RfidLogEfficiency::where('operator_id', "=", $request->get('employee_id'))
+		->where('status', "=", "kosong")
+		->orderBy('updated_at','DESC')
+		->limit(1)
+		->get();
+
+		if ($log->isNotEmpty()) {
+			RfidLogEfficiency::where('operator_id', "=", $request->get('employee_id'))
+			->orderBy('updated_at','DESC')
+			->limit(1)
+			->update(
+				['operator_id' => $request->get('employee_id'), 'status' => "tidak kosong", 'time_log' => new DateTime()]
+			);
+
+			$response = array(
+				'status' => true,
+				'datas' => 'Success Update'
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchMisuzumashi(Request $request)
+	{
+		if ($request->get('date') != "") {
+			$date = $request->get('date');
+		} else {
+			$date = date("Y-m-d");
+		}
+
+		$mz_data = RfidLogEfficiency::where('remark', "=", "1")
+		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) as ngaggur_sec"))
+		->groupBy('operator_id','grup')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $mz_data
+		);
+		return Response::json($response);
+	}
+
 }

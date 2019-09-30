@@ -43,14 +43,10 @@
 			</div>
 			<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 		</div>
+
 		<div class="col-xs-12">
 			<div id="container1" style="width: 100%;"></div>
 		</div>
-		<div class="col-xs-12">
-			<div id="container2" style="width: 100%;"></div>
-		</div>
-
-
 	</div>
 </section>
 @endsection
@@ -325,183 +321,93 @@
 			code:hpl
 		}
 
+		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr) {
+			if(result.status){
+				$('#location_title').html('<b>'+ location_title +'</b>');
 
-		$.get('{{ url("fetch/middle/buffing_ng") }}',data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
+				var op_name = [];
+				var rate = [];
 
-					var ng_name = [];
-					var jml = [];
+				for(var i = 0; i < result.ng_rate.length; i++){
+					op_name.push(result.ng_rate[i].name);
+					rate.push(result.ng_rate[i].rate);
+				}
 
-					for (var i = 0; i < result.ng.length; i++) {
-						ng_name.push(result.ng[i].ng_name);
-						jml.push(parseInt(result.ng[i].jml));
-					}
+				var date = result.date; 
 
-					var date = result.date; 
-
-					Highcharts.chart('container1', {
-						chart: {
-							type: 'column'
-						},
+				var chart = Highcharts.chart('container1', {
+					title: {
+						text: 'NG Rate By Operators',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'on '+date,
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
 						title: {
-							text: 'NG Buffing Kensa',
+							text: 'NG Rate (%)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: op_name,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
 							style: {
-								fontSize: '30px',
-								fontWeight: 'bold'
+								fontSize: '26px'
 							}
 						},
-						subtitle: {
-							text: 'on '+date,
-							style: {
-								fontSize: '18px',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: ng_name,
-							type: 'category',
-							gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							labels: {
-								style: {
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
 									fontSize: '26px'
 								}
 							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Not Good'
-							},
-							type: 'logarithmic'
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-						},
-						plotOptions: {
-							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '26px'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer'
 						}
-						]
-					});
+					},
+					series: [{
+						name:'NG Rate',
+						type: 'column',
+						colorByPoint: true,
+						data: rate,
+						showInLegend: false
+					}]
 
-				}
+				});
+
 			}
+
 		});
 
-
-		$.get('{{ url("fetch/middle/buffing_ng_key") }}',data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
-
-					var key = [];
-					var jml = [];
-
-					for (var i = 0; i < result.key.length; i++) {
-						key.push(result.key[i].key);
-						jml.push(result.key[i].jml);
-					}
-
-					Highcharts.chart('container2', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: 'NG I.C. Atokotei',
-							style: {
-								fontSize: '30px',
-								fontWeight: 'bold'
-							}
-						},
-						subtitle: {
-							text: 'on '+result.date,
-							style: {
-								fontSize: '18px',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: key,
-							type: 'category',
-							gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							labels: {
-								rotation: -65,
-								style: {
-									fontSize: '26px'
-								}
-							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Not Good'
-							},
-							type: 'logarithmic'
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-						},
-						plotOptions: {
-							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '26px'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
-						}
-						]
-					});
-
-
-				}
-			}
-		});
 
 	}
 

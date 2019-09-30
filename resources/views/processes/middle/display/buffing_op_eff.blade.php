@@ -31,14 +31,8 @@
 					<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 				</div>
 			</div>
-			<div class="col-xs-2" style="padding-right: 0;">
-				<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
-					@foreach($origin_groups as $origin_group)
-					<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>
-					@endforeach
-				</select>
-			</div>
-			<div class="col-xs-2">
+			
+			<div class="col-xs-1">
 				<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 			</div>
 			<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
@@ -49,14 +43,11 @@
 		<div class="col-xs-12">
 			<div id="container2" style="width: 100%;"></div>
 		</div>
-
-
 	</div>
 </section>
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
@@ -65,11 +56,12 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+	
 
 	jQuery(document).ready(function(){
-		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 30000);
+
 	});
 
 	$('.datepicker').datepicker({
@@ -284,224 +276,197 @@
 	};
 	Highcharts.setOptions(Highcharts.theme);
 
-	function addZero(i) {
-		if (i < 10) {
-			i = "0" + i;
-		}
-		return i;
-	}
-	
-	function getActualFullDate() {
-		var d = new Date();
-		var day = addZero(d.getDate());
-		var month = addZero(d.getMonth()+1);
-		var year = addZero(d.getFullYear());
-		var h = addZero(d.getHours());
-		var m = addZero(d.getMinutes());
-		var s = addZero(d.getSeconds());
-		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
-	}
 
 	function fillChart() {
-		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
 
-		var location_title = "";
-		if(hpl.length > 1){
-			for(var i = 0; i < hpl.length; i++){
-				location_title += hpl[i].replace('-',' ');
-				if(i == hpl.length-2){
-					location_title += " & ";
-				}else if(i != hpl.length-1){
-					location_title += ", ";
-				}
-			}
-		}else if(hpl.length == 1){ 
-			location_title += hpl[0].replace('-',' ');
-		}
-		
 		var data = {
 			tanggal:tanggal,
-			code:hpl
 		}
 
+		$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
+			if(result.status){
+				var eff = [];
 
-		$.get('{{ url("fetch/middle/buffing_ng") }}',data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
-
-					var ng_name = [];
-					var jml = [];
-
-					for (var i = 0; i < result.ng.length; i++) {
-						ng_name.push(result.ng[i].ng_name);
-						jml.push(parseInt(result.ng[i].jml));
+				for(var i = 0; i < result.rate.length; i++){
+					for(var j = 0; j < result.time_eff.length; j++){
+						if(result.rate[i].operator_id == result.time_eff[j].operator_id){
+							eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+						}
 					}
+				}
 
-					var date = result.date; 
+				eff.sort(function(a, b){return b[1] - a[1]});
+				var op_name = [];
+				var eff_value = [];
+				for (var i = 0; i < eff.length; i++) {
+					op_name.push(eff[i][0]);
+					eff_value.push(eff[i][1]);
+				}
 
-					Highcharts.chart('container1', {
-						chart: {
-							type: 'column'
-						},
+
+				var chart = Highcharts.chart('container1', {
+					title: {
+						text: 'Operators Overall Efficiency on '+ result.date,
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
 						title: {
-							text: 'NG Buffing Kensa',
+							text: 'OP Efficiency (%)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: op_name,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
 							style: {
-								fontSize: '30px',
-								fontWeight: 'bold'
+								fontSize: '26px'
 							}
 						},
-						subtitle: {
-							text: 'on '+date,
-							style: {
-								fontSize: '18px',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: ng_name,
-							type: 'category',
-							gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							labels: {
-								style: {
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
 									fontSize: '26px'
 								}
 							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Not Good'
-							},
-							type: 'logarithmic'
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-						},
-						plotOptions: {
-							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '26px'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer'
 						}
-						]
-					});
+					},
+					series: [{
+						name:'OP Efficiency',
+						type: 'column',
+						colorByPoint: true,
+						data: eff_value,
+						showInLegend: false
+					}]
 
-				}
+				});
+
+
 			}
+
+
 		});
 
+		$.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
+			if(result.status){
 
-		$.get('{{ url("fetch/middle/buffing_ng_key") }}',data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
+				var op = [];
+				var act = [];
+				var std = [];
 
-					var key = [];
-					var jml = [];
+				for(var i = 0; i < result.working_time.length; i++){
+					op.push(result.working_time[i].operator_id);
+					act.push(parseFloat(result.working_time[i].act));
+					std.push(parseFloat(result.working_time[i].std));
+				}
 
-					for (var i = 0; i < result.key.length; i++) {
-						key.push(result.key[i].key);
-						jml.push(result.key[i].jml);
-					}
 
-					Highcharts.chart('container2', {
-						chart: {
-							type: 'column'
-						},
+				var chart = Highcharts.chart('container2', {
+					title: {
+						text: 'Operators Working time on '+ result.date,
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
 						title: {
-							text: 'NG I.C. Atokotei',
+							text: 'OP Working Time'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: op,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
 							style: {
-								fontSize: '30px',
-								fontWeight: 'bold'
+								fontSize: '26px'
 							}
 						},
-						subtitle: {
-							text: 'on '+result.date,
-							style: {
-								fontSize: '18px',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: key,
-							type: 'category',
-							gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							labels: {
-								rotation: -65,
-								style: {
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					legend : {
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}',
+								style:{
+									textOutline: false,
 									fontSize: '26px'
 								}
 							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Not Good'
-							},
-							type: 'logarithmic'
-						},
-						legend : {
-							enabled: false
-						},
-						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-						},
-						plotOptions: {
-							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '26px'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							}
-						},credits: {
-							enabled: false
-						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
+							animation: false,
+							cursor: 'pointer'
 						}
-						]
-					});
+					},
+					series: [{
+						name:'Actual Time',
+						type: 'column',
+						color: 'rgb(144,238,126)',
+						data: act,
+					},
+					{
+						name:'Standart time',
+						type: 'column',
+						color: 'rgb(255,116,116)',
+						data: std
+					}]
+
+				});
 
 
-				}
 			}
+
+
 		});
+
 
 	}
 

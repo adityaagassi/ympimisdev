@@ -268,7 +268,7 @@
 	}
 
 	function fillChart() {
-		$.get('{{ url("fetch/middle/buffing_ng_rate") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/buffing_daily_ng_rate") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					var tgl = [];
@@ -295,7 +295,7 @@
 							enabled:false
 						},
 						title: {
-							text: 'Daily NG Rate Buffing By Type',
+							text: 'SX Buffing NG Rate By Type',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -324,9 +324,7 @@
 							tickInterval: 24 * 3600 * 1000 
 						},
 						tooltip: {
-
 							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
-
 						},
 						legend : {
 							enabled:true
@@ -395,7 +393,7 @@
 					$.each(names, function(key, name){
 						var series = [];
 						$.each(result.daily_by_ng, function(i, value) {
-							if(value.category == name){
+							if(value.ng_name == name){
 								series.push([Date.parse(value.created_at), parseFloat(value.percentage)]);
 							}
 						});
@@ -406,64 +404,89 @@
 						};
 					});
 
-					window.chart = Highcharts.stockChart('container2', {
+					window.chart2 = Highcharts.stockChart('container2', {
+						chart:{
+							type:'spline',
+						},
 						rangeSelector: {
 							selected: 0
+						},
+						scrollbar:{
+							enabled:false
 						},
 						navigator:{
 							enabled:false
 						},
-						yAxis: {
-							title: {
-								text: 'Quantity (pcs)'
-							}
-						},
 						title: {
-							text: 'M-PRO Daily Stock By Quantity',
+							text: 'SX Buffing NG Rate By NG Name',
 							style: {
-								fontSize: '20px',
+								fontSize: '30px',
 								fontWeight: 'bold'
 							}
 						},
-						xAxis:{
-							type: 'datetime',
-							tickInterval: 24 * 3600 * 1000
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+						yAxis: {
+							title: {
+								text: 'NG Rate (%)'
+							},
+							plotLines: [{
+								color: '#FFFFFF',
+								width: 2,
+								value: 0,
+								dashStyles: 'longdashdot'
+							}]
+						},
+						xAxis: {
+							categories: 'datetime',
+							tickInterval: 24 * 3600 * 1000 
+						},
+						tooltip: {
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+						},
+						legend : {
+							enabled:true
+						},
+						credits: {
+							enabled:false
 						},
 						plotOptions: {
 							series: {
-								lineWidth: 2,
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:,.1f}%',
+								},
+								connectNulls: true,
+								shadow: {
+									width: 3,
+									opacity: 0.4
+								},
 								label: {
 									connectorAllowed: false
 								},
 								cursor: 'pointer',
-								point: {
-									events: {
-										click: function () {
-											fetchModal($.date(this.category), this.series.name);
-										}
+							}
+						},
+						series: dataCount,
+						responsive: {
+							rules: [{
+								condition: {
+									maxWidth: 500
+								},
+								chartOptions: {
+									legend: {
+										layout: 'horizontal',
+										align: 'center',
+										verticalAlign: 'bottom'
 									}
 								}
-							},
-							line: {
-								dataLabels: {
-									enabled: true
-								}
-							}
-						},
-						legend: {
-							enabled: true,
-							itemStyle: {
-								fontSize:'20px'
-							}
-						},
-						credits:{
-							enabled:false
-						},
-						tooltip: {
-							pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> pc(s)<br/>',
-							split: true
-						},
-						series: dataCount
+							}]
+						}
 					});
 				}
 			}
