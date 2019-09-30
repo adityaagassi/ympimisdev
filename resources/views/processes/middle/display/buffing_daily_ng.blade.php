@@ -23,7 +23,8 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="container1" style="width: 100%;height: 580px;"></div>
+			<div id="container2" style="width: 100%;height: 20%;"></div>
+			<div id="container1" style="width: 100%;height: 20%;"></div>
 		</div>
 	</div>
 </section>
@@ -244,11 +245,8 @@
 		};
 
 		Highcharts.setOptions(Highcharts.theme);
-
 		fillChart();
 		setInterval(fillChart, 30000);
-
-
 	});
 
 	function addZero(i) {
@@ -284,6 +282,9 @@
 					}
 
 					var chart = Highcharts.stockChart('container1', {
+						chart:{
+							type:'spline',
+						},
 						rangeSelector: {
 							selected: 0
 						},
@@ -294,7 +295,7 @@
 							enabled:false
 						},
 						title: {
-							text: 'Daily NG Rate Buffing',
+							text: 'Daily NG Rate Buffing By Type',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -335,6 +336,10 @@
 						},
 						plotOptions: {
 							series: {
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:,.1f}%',
+								},
 								connectNulls: true,
 								shadow: {
 									width: 3,
@@ -349,15 +354,15 @@
 						series: [
 						{
 							name:'Alto Key',
-							color: '#ffff66',
+							color: '#f5ff0d',
 							data: ng_rate_alto,
-							lineWidth: 2
+							lineWidth: 3
 						},
 						{
 							name:'Tenor Key',
 							color: '#00FF00',
 							data: ng_rate_tenor,
-							lineWidth: 2
+							lineWidth: 3
 						}
 						],
 						responsive: {
@@ -375,12 +380,95 @@
 							}]
 						}
 					});
+
+					var names = [];
+					var dataCount = [];
+					var cat;
+
+					$.each(result.daily_by_ng, function(key, value) {
+						cat = value.ng_name;
+						if(names.indexOf(cat) === -1){
+							names[names.length] = cat;
+						}
+					});
+
+					$.each(names, function(key, name){
+						var series = [];
+						$.each(result.daily_by_ng, function(i, value) {
+							if(value.category == name){
+								series.push([Date.parse(value.created_at), parseFloat(value.percentage)]);
+							}
+						});
+
+						dataCount[key] = {
+							name:name,
+							data:series
+						};
+					});
+
+					window.chart = Highcharts.stockChart('container2', {
+						rangeSelector: {
+							selected: 0
+						},
+						navigator:{
+							enabled:false
+						},
+						yAxis: {
+							title: {
+								text: 'Quantity (pcs)'
+							}
+						},
+						title: {
+							text: 'M-PRO Daily Stock By Quantity',
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis:{
+							type: 'datetime',
+							tickInterval: 24 * 3600 * 1000
+						},
+						plotOptions: {
+							series: {
+								lineWidth: 2,
+								label: {
+									connectorAllowed: false
+								},
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											fetchModal($.date(this.category), this.series.name);
+										}
+									}
+								}
+							},
+							line: {
+								dataLabels: {
+									enabled: true
+								}
+							}
+						},
+						legend: {
+							enabled: true,
+							itemStyle: {
+								fontSize:'20px'
+							}
+						},
+						credits:{
+							enabled:false
+						},
+						tooltip: {
+							pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> pc(s)<br/>',
+							split: true
+						},
+						series: dataCount
+					});
 				}
 			}
 		});
-
-
-	}
+}
 
 
 

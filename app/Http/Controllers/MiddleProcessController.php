@@ -34,6 +34,8 @@ use App\Mail\SendEmail;
 use App\RfidBuffingInventory;
 use Illuminate\Support\Facades\Mail;
 use App\MiddleReturnLog;
+use App\MiddleReworkLog;
+
 class MiddleProcessController extends Controller
 {
 	public function __construct(){
@@ -47,7 +49,10 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBuffingOpEff(){
-		
+		return view('processes.middle.display.buffing_op_eff', array(
+			'title' => 'Operator Overall Efficiency',
+			'title_jp' => '(??)',
+		))->with('page', 'Operator Overall Efficiency');
 	}
 
 	public function indexBuffingNgRate(){
@@ -401,6 +406,50 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+	public function fetchBuffingOpEff(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$rate = db::select("select e.`name`, rate.operator_id, rate.rate from
+			(select g.operator_id, g.jml as tot, ng.jml as ng, (g.jml-ng.jml) as g, ((g.jml-ng.jml)/g.jml) as rate from
+			(select m.operator_id, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$date."'
+			GROUP BY m.operator_id) g
+			left join
+			(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$date."'
+			GROUP BY m.operator_id) ng
+			on g.operator_id = ng.operator_id) rate
+			left join employees e on e.employee_id = rate.operator_id");
+
+		$time_eff = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
+			from data_log l left join standart_times t on l.material_number = t.material_number
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY l.operator_id;");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'rate' => $rate,
+			'time_eff' => $time_eff,
+		);
+		return Response::json($response);
+		
+	}
+
+
 	public function fetchBuffingNg(Request $request){
 		$date = '';
 		if(strlen($request->get("tanggal")) > 0){
@@ -409,7 +458,6 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		
 		$ng = db::select("select ng_name, sum(quantity) as jml
 			from middle_ng_logs
 			where location = 'bff-kensa'
@@ -463,10 +511,21 @@ class MiddleProcessController extends Controller
 			on g.tgl = ng.tgl) rate
 			on date.week_date = rate.tgl");
 
+		$daily_by_ng = db::select("select ng.created_at, ng.material_number, ng.ng_name, ng, result, round((ng/result)*100,2) as percentage from
+			(
+			select date(created_at) as created_at, material_number, ng_name, sum(quantity) as ng from middle_ng_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number, ng_name
+			) as ng
+			left join
+			(
+			select date(created_at) as created_at, material_number, sum(quantity) as result from middle_logs where location = 'bff-kensa' and date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."' group by date(created_at), material_number
+			) as result
+			on result.created_at = ng.created_at and result.material_number = ng.material_number where result is not null");
+
 		$response = array(
 			'status' => true,
 			'alto' => $alto,
 			'tenor' => $tenor,
+			'daily_by_ng' => $daily_by_ng,
 		);
 		return Response::json($response);
 	}
@@ -491,7 +550,7 @@ class MiddleProcessController extends Controller
 			}
 			$where = "and mt.origin_group_code in (".$code.") ";
 		}
-		
+
 		$ng_rate = db::select("select e.`name`, rate.tot, rate.ng, rate.rate from
 			(select g.operator_id, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
 			(select m.operator_id, sum(m.quantity) as jml from middle_logs m
@@ -514,6 +573,7 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'ng_rate' => $ng_rate,
+			'date' => $tanggal
 		);
 		return Response::json($response);
 	}
@@ -582,108 +642,7 @@ class MiddleProcessController extends Controller
 			'detail' => $detail,
 		);
 		return Response::json($response);
-		
-	}
 
-	public function fetchDisplayPicking(Request $request){
-
-		// $tgl = '';
-		// if(strlen($request->get("tgl")) > 0){
-		// 	$dateto = date('Y-m-d',strtotime($request->get("tgl")));
-		// 	$datefrom = date('Y-m-01', strtotime($request->get("tgl")));
-		// 	$tgl = "where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".$datefrom."' and DATE_FORMAT(a.created_at,'%Y-%m-%d') <= '".$dateto."'";
-		// }else{
-		// 	$dateto = date('Y-m-d');
-		// 	$datefrom = date('Y-m-01');
-		// 	$tgl = "where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".$datefrom."' and DATE_FORMAT(a.created_at,'%Y-%m-%d') <= '".$dateto."'";
-		// }
-
-		// $surface = $request->get("surface");
-		// $model = $request->get("model");
-		// $key = $request->get("key");
-
-		// $add_surface = "";
-		// $add_model = "";
-		// $add_key = "";
-
-		// if ($request->get('surface') != "") {
-		// 	$surfaces = explode(",",$request->get('surface'));
-		// 	$surfacelength = count($surfaces);
-		// 	$surface = "";
-
-		// 	for($x = 0; $x < $keylength; $x++) {
-		// 		$surface = $surface."'".$surfaces[$x]."'";
-		// 		if($x != $keylength -1){
-		// 			$surface = $surface.",";
-		// 		}
-		// 	}
-		// 	$add_surface = " AND m.surface IN (".$surface.")";
-		// }
-
-		// if ($request->get('model') != "") {
-		// 	$models = explode(",",$request->get('model'));
-		// 	$modellength = count($models);
-		// 	$model = "";
-
-		// 	for($x = 0; $x < $modellength; $x++) {
-		// 		$model = $model."'".$models[$x]."'";
-		// 		if($x != $modellength -1){
-		// 			$model = $model.",";
-		// 		}
-		// 	}
-		// 	$add_model = " AND m.model IN (".$model.")";
-		// }
-
-		// if ($request->get('key') != "") {
-		// 	$keys = explode(",",$request->get('key'));
-		// 	$keylength = count($keys);
-		// 	$key = "";
-
-		// 	for($x = 0; $x < $keylength; $x++) {
-		// 		$key = $key."'".$keys[$x]."'";
-		// 		if($x != $keylength -1){
-		// 			$key = $key.",";
-		// 		}
-		// 	}
-		// 	$add_key = " AND m.`key` IN (".$key.")";
-		// }
-
-		// $assy = '';
-		// $minus = '';
-
-		// $date = substr(date('Y-m-d',strtotime($request->get("tgl"))),8,2);
-		// if($date == '01'){
-		// 	$assy = db::select("select a.material_number, m.surface, m.model, m.`key`, sum(a.quantity) qty from
-		// 		assy_picking_schedules a left join materials m on a.material_number = m.material_number
-		// 		".$tgl."".$add_surface."".$add_model."".$add_key."
-		// 		group by a.material_number, m.surface, m.model, m.`key`
-		// 		order by m.`key`, m.model asc
-		// 		limit 20");
-
-		// }else{
-		// 	$assy = db::select("select a.material_number, m.surface, m.model, m.`key`, sum(a.quantity) qty from
-		// 		assy_picking_schedules a left join materials m on a.material_number = m.material_number
-		// 		where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".date('Y-m-d',strtotime($request->get("tgl")))."'
-		// 		".$add_surface."".$add_model."".$add_key."
-		// 		group by a.material_number, m.surface, m.model, m.`key`
-		// 		order by m.`key`, m.model asc
-		// 		limit 20");
-
-		// 	$minus = db::connection('mysql2')->select("select material_number, minus from
-		// 		(select transfer_material_id, SUM(IF(category = 'transfer' OR category = 'transfer_adjustment', IF(transfer_movement_type = '9I3',lot,0),0)) - SUM(IF(category = 'transfer_cancel' OR category = 'transfer_return' OR category = 'transfer_adjustment', IF(transfer_movement_type = '9I4',lot,0),0)) as minus from kitto.histories
-		// 		".$tgl."
-		// 		and transfer_material_id is not null
-		// 		group by transfer_material_id) min 
-		// 		left join kitto.materials as k_materials on k_materials.id = min.transfer_material_id
-		// 		where k_materials.location like '%51%'");
-		// }	
-
-		// $response = array(
-		// 	'status' => true,
-		// 	'assy' => $assy,
-		// 	'minus' => $minus,
-		// );
-		// return Response::json($response);
 	}
 
 	public function fetchDisplayProductionResult(Request $request){
@@ -806,7 +765,7 @@ class MiddleProcessController extends Controller
 			$tenor = db::select($query2);
 		}
 
-		
+
 
 		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`";
 		$key =  db::select($query3);
@@ -884,7 +843,7 @@ class MiddleProcessController extends Controller
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '22:00:00'",
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '23:59:59'"
 		];
-		
+
 		$dataShift3 = [];
 		$dataShift1 = [];
 		$dataShift2 = [];
@@ -911,7 +870,7 @@ class MiddleProcessController extends Controller
 				GROUP BY tgl, kunci, m.hpl
 				ORDER BY kunci)");
 			array_push($dataShift3, $push_data[$i]);
-			
+
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
 				from middle_logs l left join materials m on l.material_number = m.material_number 
 				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z' ".$addlocation."
@@ -934,7 +893,7 @@ class MiddleProcessController extends Controller
 				GROUP BY tgl, kunci, m.hpl
 				ORDER BY kunci)");
 			array_push($dataShift1, $push_data[$i]);
-			
+
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
 				from middle_logs l left join materials m on l.material_number = m.material_number 
 				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z' ".$addlocation."
@@ -957,7 +916,7 @@ class MiddleProcessController extends Controller
 				GROUP BY tgl, kunci, m.hpl
 				ORDER BY kunci)");
 			array_push($dataShift2, $push_data[$i]);
-			
+
 			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
 				from middle_logs l left join materials m on l.material_number = m.material_number 
 				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82Z' ".$addlocation."
@@ -1165,7 +1124,7 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
-			
+
 			'ngIC_alto' => $ngIC_alto,
 			'ngIC_tenor' => $ngIC_tenor,
 			'totalCekIC_alto' => $totalCekIC_alto,
@@ -1252,13 +1211,13 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
-			
+
 			'dailyICAlto' => $dailyICAlto,
 			'dailyICTenor' => $dailyICTenor,
 
 			'dailyKensaAlto' => $dailyKensaAlto,
 			'dailyKensaTenor' => $dailyKensaTenor,
-			
+
 			'bulan' => $bulan
 		);
 		return Response::json($response);
@@ -1400,6 +1359,9 @@ class MiddleProcessController extends Controller
 				'ws' => $work_station->dev_name,
 				'employee_id' => $work_station->dev_operator_id,
 				'employee_name' => $employee_name,
+				'dev_akan_detected' => $work_station->dev_akan_detected,
+				'dev_sedang_detected' => $work_station->dev_sedang_detected,
+				'dev_selesai_detected' => $work_station->dev_selesai_detected,
 				'sedang' => $work_station->dev_sedang_num,
 				'akan' => $work_station->dev_akan_num,
 				'akan_time' => $akan_time->format('%H:%i:%s'),
@@ -2470,6 +2432,63 @@ class MiddleProcessController extends Controller
 		}
 	}
 
+	public function inputMiddleRework(Request $request){
+
+		$middle_rework_log = new MiddleReworkLog([
+			'employee_id' => $request->get('employee_id'),
+			'tag' => $request->get('tag'),
+			'material_number' => $request->get('material_number'),
+			'quantity' => $request->get('quantity'),
+			'location' => $request->get('loc'),
+			'started_at' => $request->get('started_at'),
+		]);
+
+		try{
+			$middle_rework_log->save();
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Rework time has been recorded.',
+		);
+		return Response::json($response);
+
+		// foreach ($request->get('ng') as $ng) {
+		// 	$middle_rework_log = new MiddleReworkLog([
+		// 		'employee_id' => $request->get('employee_id'),
+		// 		'tag' => $request->get('tag'),
+		// 		'material_number' => $request->get('material_number'),
+		// 		'ng_name' => $ng[0],
+		// 		'quantity' => $ng[1],
+		// 		'location' => $request->get('loc'),
+		// 		'started_at' => $request->get('started_at'),
+		// 	]);
+
+		// 	try{
+		// 		$middle_rework_log->save();
+		// 	}
+		// 	catch(\Exception $e){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => $e->getMessage(),
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// }
+		// $response = array(
+		// 	'status' => true,
+		// 	'message' => 'Rework time has been recorded.',
+		// );
+		// return Response::json($response);
+	}
+
 	public function inputMiddleKensa(Request $request){
 
 		if($request->get('ng')){
@@ -3115,7 +3134,7 @@ class MiddleProcessController extends Controller
 
 				$req_log = MiddleRequestHelper::where('material_tag',"=", $request->get('material_number'))
 				->update(['updated_at' => new DateTime()]);
-				
+
 			} else {
 				$req_log = new MiddleRequestHelper;
 
@@ -3138,7 +3157,7 @@ class MiddleProcessController extends Controller
 				$response = array(
 					'status' => true,
 					'datas' => $mat,
-					'datas_log' => $req_log,
+					'datas_log' => $req
 				);
 				return Response::json($response);
 			} catch (QueryException $e){
@@ -3166,5 +3185,11 @@ class MiddleProcessController extends Controller
 			'datas' => $log_request
 		);
 		return Response::json($response);
+	}
+
+	//PENCATATAN LOG BUFFING
+	public function insertLogBuffing(Request $request)
+	{
+		
 	}
 }
