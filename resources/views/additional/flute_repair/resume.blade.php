@@ -308,14 +308,17 @@
 					{
 						name: 'Repair',
 						data: tarik,
+						color: '#dd4b39'
 					},
 					{
 						name: 'Selesai Repair',
 						data: selesai,
+						color: '#f39c12'
 					},
 					{
 						name: 'Kembali',
 						data: kembali,
+						color: '#00a65a'
 					}
 					]
 					
@@ -434,14 +437,17 @@
 					{
 						name: 'Repair',
 						data: tarik,
+						color: '#dd4b39'
 					},
 					{
 						name: 'Selesai Repair',
 						data: selesai,
+						color: '#f39c12'
 					},
 					{
 						name: 'Kembali',
 						data: kembali,
+						color: '#00a65a'
 					}
 					]
 
