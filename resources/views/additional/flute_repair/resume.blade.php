@@ -330,7 +330,7 @@
 		});
 
 
-		$.get('{{ url("fetch/flute_repair/by_date") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/flute_repair/by_date") }}', function(result, status, xhr) {
 			if(result.status){
 
 				var tarik = [];

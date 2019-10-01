@@ -253,7 +253,16 @@ class AdditionalController extends Controller
 
 	public function fetchByDate(){
 
-		$datas = db::select("select DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl, f.`status`, sum(f.quantity) as jml from flo_repair_logs f GROUP BY tgl, f.`status`");
+		$datas = db::select("select a.tgl, a.`status`, COALESCE(b.jml,0) as jml  from
+			(select * from
+			(select distinct DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl from flo_repair_logs f) tgl
+			cross join
+			(select distinct `status` from flo_repair_logs f) `status`) a
+			left join
+			(select DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl, f.`status`, sum(f.quantity) as jml
+			from flo_repair_logs f GROUP BY tgl, f.`status`) b
+			on a.tgl = b.tgl and a.`status` = b.`status` 
+			ORDER BY a.tgl");
 
 		$tgl = db::select("select distinct DATE_FORMAT(f.created_at,'%Y-%m-%d') as tgl from flo_repair_logs f");
 
