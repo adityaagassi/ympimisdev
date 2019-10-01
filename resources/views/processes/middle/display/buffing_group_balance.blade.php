@@ -313,14 +313,14 @@
 
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: 'Archievment of Work Group',
+						text: 'achievement of group work',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
-						text: 'on '+date,
+						text: 'on '+tanggal,
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'
@@ -348,7 +348,7 @@
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
 					},
 					credits: {
 						enabled:false
@@ -357,7 +357,7 @@
 						series:{
 							dataLabels: {
 								enabled: true,
-								format: '{point.y:.2f}%',
+								format: '{point.y}',
 								style:{
 									textOutline: false,
 									fontSize: '26px'
@@ -373,12 +373,12 @@
 					series: [{
 						name:'Plan',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(255,116,116)',
 						data: plan,
 					},{
 						name:'Result Buffing',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(169,255,151)',
 						data: bff,
 					}]
 
