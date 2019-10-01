@@ -307,8 +307,8 @@
 
 				for(var i = 0; i < result.data.length; i++){
 					key.push(result.data[i].key);
-					plan.push(result.data[i].plan);
-					bff.push(result.data[i].result);
+					plan.push(Math.ceil(result.data[i].plan));
+					bff.push(Math.ceil(result.data[i].result));
 				}
 
 				var chart = Highcharts.chart('container1', {
@@ -320,7 +320,7 @@
 						}
 					},
 					subtitle: {
-						text: 'on '+tanggal,
+						text: 'on '+result.tanggal,
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'
@@ -328,7 +328,7 @@
 					},
 					yAxis: {
 						title: {
-							text: ''
+							text: 'Minutes'
 						},
 						style: {
 							fontSize: '26px',
@@ -364,9 +364,6 @@
 								}
 							},
 							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
 							cursor: 'pointer'
 						}
 					},

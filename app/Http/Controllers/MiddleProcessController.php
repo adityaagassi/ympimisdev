@@ -451,6 +451,40 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+	// public function fetchBuffingGroupAchievement(){
+	// 	$datefrom = date("Y-m-d", strtotime("-3 Months"));
+	// 	$dateto = date("Y-m-d");
+
+	// 	$data = db::select("select date.week_date, COALESCE(plan1.plan,0) as plan, COALESCE(result.result,0) as result from
+	// 		(select week_date from weekly_calendars
+	// 		where week_date BETWEEN '".$datefrom."' and '".$dateto."') date
+	// 		left join
+	// 		(select due_date, sum(plan.plan) as plan from
+	// 		(select a.due_date, b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
+	// 		left join bom_components b on a.material_number = b.material_parent
+	// 		left join standart_times t on b.material_child = t.material_number
+	// 		where quantity > 0
+	// 		and a.due_date BETWEEN '".$datefrom."' and '".$dateto."' 
+	// 		group by a.due_date, b.material_child
+	// 		order by a.due_date) plan
+	// 		group by due_date) plan1
+	// 		on date.week_date = plan1.due_date
+	// 		left join
+	// 		(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
+	// 		left join materials m on m.material_number = l.material_number
+	// 		left join standart_times s on s.material_number = l.material_number
+	// 		where l.location = 'bff-kensa'
+	// 		and DATE_FORMAT(l.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+	// 		GROUP BY tgl) result
+	// 		on date.week_date =  result.tgl");
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'data' => $data,
+	// 	);
+	// 	return Response::json($response);
+	// }
+
 	public function fetchBuffingGroupAchievement(Request $request){
 		if ($request->get('tanggal') == "") {
 			$tanggal = date('Y-m-d');
@@ -458,68 +492,31 @@ class MiddleProcessController extends Controller
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
-		$first = date('Y-m-01',strtotime($tanggal));
-
-		if (substr($tanggal, -2) != "01") {
-			$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
-		} else {
-			$minsatu = date('Y-m-d');
-		}
-
-
-		$query = "select plan2.`key`, plan2.plan, COALESCE(result.result,0) as result from
-		(select LEFT(plan.`key`,1) as `key`, ROUND(sum(plan.plan * std_time.time / 60),2) as plan from
-		(select materials.material_number, materials.`key`, materials.surface , sum(plan) as plan from
-		(
-		select material_number, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock from
-		(
-		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as stock from
-		(
-		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51') and category = 'key'
-		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
-
-		union all
-
-		select inventories.material_number, 0 as plan, 0 as picking, sum(inventories.lot) as stock from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51') and materials.category = 'key' group by inventories.material_number
-
-		union all
-
-		select material_number, sum(plan) as plan, 0 as picking, 0 as stock from
-		(
-		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan from
-		(
-		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51') and category = 'key'
-		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
-
-		union all
-
-		select assy_picking_schedules.material_number, sum(quantity) as plan from assy_picking_schedules 
-		left join materials on materials.material_number = assy_picking_schedules.material_number
-		where due_date >= '".$first."' and due_date <= '".$tanggal."'
-		group by assy_picking_schedules.material_number
-		) as plan group by material_number
-		) as final group by material_number having plan > 0  
-		) as final2
-		join materials on final2.material_number = materials.material_number
-		group by materials.material_number, materials.model, materials.`key`, materials.surface
-		order by plan desc) plan
-		left join standart_times std_time on std_time.material_number = plan.material_number
-		GROUP BY LEFT(plan.`key`,1)) plan2	
+		$query = "select plan.`key`, plan.plan, COALESCE(result.result,0) as result from
+		(select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
+		(select b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
+		left join bom_components b on a.material_number = b.material_parent
+		left join standart_times t on b.material_child = t.material_number
+		where quantity > 0
+		and due_date = '".$tanggal."'
+		group by b.material_child) plan
+		left join materials m on plan.material_child = m.material_number
+		group by LEFT(m.`key`,1)) plan
 		left join
 		(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
 		left join materials m on m.material_number = l.material_number
 		left join standart_times s on s.material_number = l.material_number
 		where l.location = 'bff-kensa'
 		and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
-		GROUP BY left(m.`key`,1)
-		ORDER BY left(m.`key`,1)) result
-		on plan2.`key` = result.`key`";
+		GROUP BY left(m.`key`,1)) result
+		on plan.`key` = result.`key`";
 
 		$data = db::select($query);
 
 		$response = array(
 			'status' => true,
 			'data' => $data,
+			'tanggal' => $tanggal
 		);
 		return Response::json($response);
 	}
@@ -3552,12 +3549,30 @@ class MiddleProcessController extends Controller
 			array_push($op, $operator);
 		}
 
+		foreach ($mz_data as $key) {
+			$operator = Employee::select("name","employee_id")
+			->where("employee_id","=",$key->operator_id)
+			->first();
+
+			array_push($op, $operator);
+		}
+
+		foreach ($mz_data_selesai as $key) {
+			$operator = Employee::select("name","employee_id")
+			->where("employee_id","=",$key->operator_id)
+			->first();
+
+			array_push($op, $operator);
+		}
+
+		$op = array_unique($op);
+
 		$response = array(
 			'status' => true,
 			'datas_sedang' => $mz_data,
 			'datas_selesai' => $mz_data_selesai,
 			'datas_akan' => $mz_data_akan,
-			'op' => $op 
+			'op' => $op
 		);
 		return Response::json($response);
 	}
