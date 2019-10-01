@@ -128,7 +128,7 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		setInterval(fetchTable, 1000);
+		setInterval(fetchTable, 2000);
 	});
 
 	function fetchTable(){
@@ -189,11 +189,35 @@
 							}
 						}
 
+						//JIKA Akan
+						if (value.dev_akan_detected == 0) {
+							akan_time = value.akan_time;
+							akan = "";
+						} else {
+							akan = value.akan;
+							akan_time = "";
+						}
+
+						//JIKA Sedang buffing
+						if (value.dev_sedang_detected == 1) {
+							sedang_time = value.sedang_time;
+						} else {
+							sedang_time = "";
+						}
+
+						//JIKA Selesai
+						if (value.dev_selesai_detected == 1) {
+							selesai_time = value.selesai_time;
+						} else {
+							selesai_time = "";
+						}
+
+
 						buffingTableBody += '<tr '+color+'>';
 						buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
 						buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-						buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+value.sedang_time+'</p></td>';
-						buffingTableBody += '<td '+color2+'>'+value.akan+'<p>'+value.akan_time+'</p></td>';
+						buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
+						buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
@@ -204,11 +228,20 @@
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 						buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+value.selesai_time+'</p></td>';
+						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
 						buffingTableBody += '</tr>';
 						i += 1;
-					});
 
+						data2 = {
+							employee_id: value.employee_id
+						}
+
+						// if (value.employee_id && (value.dev_akan_detected == 0 && value.dev_sedang_detected == 0)) {
+						// 	$.get('{{ url("log/middle/buffing/ins") }}', data2);
+						// } else if (value.employee_id && value.dev_sedang_detected == 1) {
+						// 	$.get('{{ url("log/middle/buffing/up") }}', data2);
+						// }
+					});
 
 					$('#buffingTableBody').append(buffingTableBody);
 				}

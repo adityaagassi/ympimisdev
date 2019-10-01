@@ -144,7 +144,12 @@ class AssyProcessController extends Controller
 
 		$first = date('Y-m-01',strtotime($tanggal));
 
-		$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+		if (substr($tanggal, -2) != "01") {
+			$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+		} else {
+			$minsatu = date('Y-m-d');
+		}
+
 
 		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(stock) as stock, (sum(plan)-sum(picking)) as diff from
 		(
