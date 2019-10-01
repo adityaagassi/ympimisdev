@@ -67,7 +67,7 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>TARIK</b></h3>
+						<h3 style="margin-bottom: 0px;"><b>TOTAL MASUK (PIANICA)</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -79,7 +79,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>SEDANG REPAIR</b></h3>
+						<h3 style="margin-bottom: 0px;"><b>BELUM & SEDANG REPAIR</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -92,7 +92,7 @@
 				<!-- small box -->
 				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>SELESAI</b></h3>
+						<h3 style="margin-bottom: 0px;"><b>SELESAI (PIANICA)</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -105,7 +105,7 @@
 				<!-- small box -->
 				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>KEMBALI</b></h3>
+						<h3 style="margin-bottom: 0px;"><b>SELESAI+KEMBALI (WH/ASSY)</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -186,6 +186,7 @@
 		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
 				var tarik = 0;
+				var selesai_kembali = 0;
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
 						$('#sedang').append().empty();
@@ -196,14 +197,18 @@
 						$('#selesai').append().empty();
 						$('#selesai').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 						tarik += result.status[i].jml;
+						selesai_kembali += result.status[i].jml;
 					}
 					if(result.status[i].status == 'kembali ke warehouse'){
-						$('#kembali').append().empty();
-						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
+						tarik += result.status[i].jml;
+						selesai_kembali += result.status[i].jml;
 					}
 				}
 				$('#tarik').append().empty();
 				$('#tarik').html(tarik + '<sup style="font-size: 30px">set</sup>');
+
+				$('#kembali').append().empty();
+				$('#kembali').html(selesai_kembali + '<sup style="font-size: 30px">set</sup>');
 			}
 
 		});
