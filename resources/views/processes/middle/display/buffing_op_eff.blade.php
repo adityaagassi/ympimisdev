@@ -22,26 +22,25 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="col-xs-2">
-				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none;">
-						<i class="fa fa-calendar"></i>
+		<div class="col-xs-12" style="margin-top: 0px;">
+			<div class="row" style="margin:0px;">
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
-					<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+				</div>
+				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
-			
-			<div class="col-xs-1">
-				<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container1" style="width: 100%;"></div>
+				<div id="container2" style="width: 100%;"></div>
 			</div>
-			<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
-		</div>
-		<div class="col-xs-12">
-			<div id="container1" style="width: 100%;"></div>
-		</div>
-		<div class="col-xs-12">
-			<div id="container2" style="width: 100%;"></div>
 		</div>
 	</div>
 </section>
@@ -367,7 +366,6 @@
 
 				});
 
-
 			}
 
 
@@ -381,7 +379,11 @@
 				var std = [];
 
 				for(var i = 0; i < result.working_time.length; i++){
-					op.push(result.working_time[i].operator_id);
+					for(var j = 0; j < result.emp_name.length; j++){
+						if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
+							op.push(result.emp_name[j].name);
+						}
+					}
 					act.push(parseFloat(result.working_time[i].act));
 					std.push(parseFloat(result.working_time[i].std));
 				}
@@ -397,7 +399,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'OP Working Time'
+							text: 'Minutes'
 						},
 						style: {
 							fontSize: '26px',
