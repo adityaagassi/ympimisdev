@@ -1122,7 +1122,7 @@ function drawChartOvertimeControl() {
      }
    }
 
-   tot_diff = tot - tot_day_budget;
+   tot_diff = tot_act - tot_day_budget;
 
    tot_day_budget = Math.round(tot_day_budget * 100) / 100;
    tot = Math.round(tot * 100) / 100;
@@ -1139,7 +1139,7 @@ function drawChartOvertimeControl() {
 
    if (tot_diff > 0) {
     $('#diff_text').removeClass('text-green').addClass('text-red');
-    $("#tot_diff").html("+"+tot_diff2);
+    $("#tot_diff").html("+ "+tot_diff2);
   }
   else {
     $('#diff_text').removeClass('text-red').addClass('text-green');
