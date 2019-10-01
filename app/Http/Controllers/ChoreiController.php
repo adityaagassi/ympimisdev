@@ -275,12 +275,22 @@ class ChoreiController extends Controller
 
 		if($date == date('Y-m-01', strtotime($date))){
 			$last = $date;
+			$debt = "";
 		}
 		else{
 			$last = date('Y-m-d', strtotime('yesterday', strtotime($date)));
-		}
+			$debt = "		union all
 
-		
+			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+			(
+			select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+
+			union all
+
+			select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+			) as debt
+			group by material_number";
+		}
 
 		$query = "select materials.hpl, materials.category, sum(final.plan)-sum(final.actual) as plan, sum(final.actual) AS actual from
 		(
@@ -298,17 +308,7 @@ class ChoreiController extends Controller
 		where date(created_at) = '". $now ."' 
 		group by material_number
 
-		union all
-
-		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-		(
-		select material_number, sum(quantity) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
-
-		union all
-
-		select material_number, -(sum(quantity)) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-		) as debt
-		group by material_number
+		".$debt."
 
 		) as result
 		group by result.material_number
