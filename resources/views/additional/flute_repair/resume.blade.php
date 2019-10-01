@@ -333,9 +333,9 @@
 					},
 					series: [
 					{
-						name: 'Repair',
+						name: 'Tarik',
 						data: tarik,
-						color: '#dd4b39'
+						color: '#f39c12'
 					},
 					{
 						name: 'Selesai Repair',
@@ -467,9 +467,9 @@
 					},
 					series: [
 					{
-						name: 'Repair',
+						name: 'Tarik',
 						data: tarik,
-						color: '#dd4b39'
+						color: '#f39c12'
 					},
 					{
 						name: 'Selesai Repair',
