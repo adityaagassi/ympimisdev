@@ -31,7 +31,7 @@
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12">
-			<form method="GET" action="{{ url('index/display/sub_assy/assy') }}">
+			<form method="GET" action="{{ url('index/display/sub_assy/'.$option) }}">
 				<div class="col-xs-2" style="line-height: 1">
 					<div class="input-group date">
 						<div class="input-group-addon bg-green" style="border-color: #00a65a">
@@ -245,7 +245,7 @@
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
 
-				stk = "<th style='border: 1px solid white'>Stok room</th>";
+				stk = "<th style='border: 1px solid white'>Stock room</th>";
 
 				var style = "";
 
