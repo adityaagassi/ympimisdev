@@ -450,6 +450,80 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+	public function fetchBuffingGroupAchievement(Request $request){
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		}
+
+		$first = date('Y-m-01',strtotime($tanggal));
+
+		if (substr($tanggal, -2) != "01") {
+			$minsatu = date('Y-m-d',strtotime('-1 day', strtotime($tanggal)));
+		} else {
+			$minsatu = date('Y-m-d');
+		}
+
+
+		$query = "select plan2.`key`, plan2.plan, COALESCE(result.result,0) as result from
+		(select LEFT(plan.`key`,1) as `key`, ROUND(sum(plan.plan * std_time.time / 60),2) as plan from
+		(select materials.material_number, materials.`key`, materials.surface , sum(plan) as plan from
+		(
+		select material_number, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock from
+		(
+		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as stock from
+		(
+		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51') and category = 'key'
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+
+		union all
+
+		select inventories.material_number, 0 as plan, 0 as picking, sum(inventories.lot) as stock from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51') and materials.category = 'key' group by inventories.material_number
+
+		union all
+
+		select material_number, sum(plan) as plan, 0 as picking, 0 as stock from
+		(
+		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan from
+		(
+		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51') and category = 'key'
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
+
+		union all
+
+		select assy_picking_schedules.material_number, sum(quantity) as plan from assy_picking_schedules 
+		left join materials on materials.material_number = assy_picking_schedules.material_number
+		where due_date >= '".$first."' and due_date <= '".$tanggal."'
+		group by assy_picking_schedules.material_number
+		) as plan group by material_number
+		) as final group by material_number having plan > 0  
+		) as final2
+		join materials on final2.material_number = materials.material_number
+		group by materials.material_number, materials.model, materials.`key`, materials.surface
+		order by plan desc) plan
+		left join standart_times std_time on std_time.material_number = plan.material_number
+		GROUP BY LEFT(plan.`key`,1)) plan2	
+		left join
+		(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
+		left join materials m on m.material_number = l.material_number
+		left join standart_times s on s.material_number = l.material_number
+		where l.location = 'bff-kensa'
+		and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+		GROUP BY left(m.`key`,1)
+		ORDER BY left(m.`key`,1)) result
+		on plan2.`key` = result.`key`";
+
+		$data = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'data' => $data,
+			
+		);
+		return Response::json($response);
+	}
+
 
 	public function fetchBuffingNgKey(Request $request){
 		$date = '';
@@ -3456,9 +3530,9 @@ class MiddleProcessController extends Controller
 		->groupBy('operator_id','grup')
 		->get();
 
-		$mz_data_selesai = RfidLogEfficiency::where('remark', "=", "3")
+		$mz_data_selesai = RfidLogEfficiency::where('remark', "=", "2")
 		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as ngaggur_min"))
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as selesai_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as selesai_min"))
 		->groupBy('operator_id','grup')
 		->get();
 
@@ -3475,6 +3549,7 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'datas_sedang' => $mz_data,
+			'datas_selesai' => $mz_data_selesai,
 			'op' => $op 
 		);
 		return Response::json($response);
