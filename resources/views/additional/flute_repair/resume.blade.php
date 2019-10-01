@@ -27,7 +27,7 @@
 		border:1px solid rgb(211,211,211);
 	}
 	#loading, #error { display: none; }
-	h1{
+	h2{
 		font-size: 70px;
 		font-weight: bold;
 	}
@@ -65,10 +65,22 @@
 		<div class="col-lg-3 col-xs-12" style="margin-left: 0px;">
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 259px;">
+				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>REPAIR</b></h3>
-						<h1 style="margin: 0px;font-size: 7vw;" id='tarik'>0<sup style="font-size: 4vw">set</sup></h1>
+						<h3 style="margin-bottom: 0px;"><b>TARIK</b></h3>
+						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
+					</div>
+					<div class="icon">
+						<i class="ion ion-stats-bars"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
+				<!-- small box -->
+				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 188px;">
+					<div class="inner" style="padding-bottom: 0px;">
+						<h3 style="margin-bottom: 0px;"><b>SEDANG REPAIR</b></h3>
+						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -78,10 +90,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 259px;">
+				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;"><b>SELESAI</b></h3>
-						<h1 style="margin: 0px; font-size: 7vw;" id='selesai'>0<sup style="font-size: 4vw">set</sup></h1>
+						<h2 style="margin: 0px; font-size: 4vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -91,10 +103,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 259px;">
+				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;"><b>KEMBALI</b></h3>
-						<h1 style="margin: 0px; font-size: 7vw;" id='kembali'>0<sup style="font-size: 4vw">set</sup></h1>
+						<h2 style="margin: 0px; font-size: 4vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -173,20 +185,25 @@
 	function drawSmallBox(){
 		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
+				var tarik = 0;
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
-						$('#tarik').append().empty();
-						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
+						$('#sedang').append().empty();
+						$('#sedang').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
+						tarik += result.status[i].jml;
 					}
 					if(result.status[i].status == 'selesai repair'){
 						$('#selesai').append().empty();
 						$('#selesai').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
+						tarik += result.status[i].jml;
 					}
 					if(result.status[i].status == 'kembali ke warehouse'){
 						$('#kembali').append().empty();
 						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 				}
+				$('#tarik').append().empty();
+				$('#tarik').html(tarik + '<sup style="font-size: 30px">set</sup>');
 			}
 
 		});
@@ -313,7 +330,7 @@
 					{
 						name: 'Selesai Repair',
 						data: selesai,
-						color: '#f39c12'
+						color: '#0073b7'
 					},
 					{
 						name: 'Kembali',
@@ -442,7 +459,7 @@
 					{
 						name: 'Selesai Repair',
 						data: selesai,
-						color: '#f39c12'
+						color: '#0073b7'
 					},
 					{
 						name: 'Kembali',
