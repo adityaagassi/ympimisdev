@@ -240,7 +240,7 @@ table.table-bordered > tfoot > tr > th{
               <h5 class="description-header" style="font-size: 60px;">
                 <span class="description-percentage" id="tot_budget"></span>
               </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Budget<br><span>単月予算</span></span>   
+              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
             </div>
           </div>
           <div class="col-md-4">
@@ -248,7 +248,7 @@ table.table-bordered > tfoot > tr > th{
               <h5 class="description-header" style="font-size: 60px; ">
                 <span class="description-percentage" id="tot_act"></span>
               </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Actual<br><span >総実績</span></span>   
+              <span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
             </div>
           </div>
           <div class="col-md-4">
@@ -1122,7 +1122,7 @@ function drawChartOvertimeControl() {
      }
    }
 
-   tot_diff = tot - tot_act;
+   tot_diff = tot - tot_day_budget;
 
    tot_day_budget = Math.round(tot_day_budget * 100) / 100;
    tot = Math.round(tot * 100) / 100;
@@ -1134,15 +1134,15 @@ function drawChartOvertimeControl() {
    var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
    var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
-   $("#tot_budget").text(tot2);
+   $("#tot_budget").text(tot_day_budget2);
    $("#tot_act").text(tot_act2);
 
    if (tot_diff > 0) {
-    $('#diff_text').removeClass('text-red').addClass('text-green');
-    $("#tot_diff").html(tot_diff2);
+    $('#diff_text').removeClass('text-green').addClass('text-red');
+    $("#tot_diff").html("+"+tot_diff2);
   }
   else {
-    $('#diff_text').removeClass('text-green').addClass('text-red');
+    $('#diff_text').removeClass('text-red').addClass('text-green');
     $("#tot_diff").html(tot_diff2);
   }
 
@@ -1150,9 +1150,9 @@ function drawChartOvertimeControl() {
   avg = Math.round(avg * 100) / 100;
   // $("#avg").html(avg);
 
-  Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-    return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
-  };
+  // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+  //   return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+  // };
 
   Highcharts.chart('over_control', {
     chart: {
@@ -1236,24 +1236,13 @@ function drawChartOvertimeControl() {
       }
     },
     series: [{
-      name: 'Budget Accumulative',
-      data: seriesDataBudget,
-      color: "#f76111"
+      name: 'Forecast Accumulative',
+      data: budgetHarian,
+      color: "#02ff17"
     }, {
       name: 'Actual Accumulative',
       data: seriesDataAktual,
       color: "#7300ab"
-    },
-    {
-      name: 'Forecast Production',
-      marker: {
-        symbol: 'c-rect',
-        lineWidth:4,
-        lineColor: '#02ff17',
-        radius: 10,
-      },
-      type: 'scatter',
-      data: budgetHarian
     }]
   });
 });
