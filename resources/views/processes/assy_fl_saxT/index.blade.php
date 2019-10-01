@@ -22,6 +22,7 @@
 			<a href="{{ url("index/process_stamp_sx_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print</a>
 			<a href="{{ url("index/process_stamp_sx_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Check Sheet</a>
 			<a href="{{ url("index/process_stamp_sx_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Label</a>
+			<a href="{{ url("index/fetchResultSaxnew") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Picking Schedule</a>
 			{{-- 
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>

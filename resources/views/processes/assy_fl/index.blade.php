@@ -24,6 +24,7 @@
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>
 			<a href="{{ url("index/process_assy_fl_4") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Chousei</a>
 			<a href="{{ url("index/label_fl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy FL - Print Label</a>
+			<a href="{{ url("index/fetchResultFlnew") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Picking Schedule</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> NG <i class="fa fa-angle-double-down"></i></span>

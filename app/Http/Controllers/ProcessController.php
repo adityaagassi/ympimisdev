@@ -2722,6 +2722,14 @@ public function ngFLStamp(Request $request){
 
 	//result sax new
 
+	public function indexfetchResultSaxnew(){
+		return view('processes.assy_fl_saxT.picking_schedule', array(
+			'title' => 'Picking Schedule Saxophone',
+			'title_jp' => '(??)',
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+	}
+
 	public function fetchResultSaxnew(Request $request)
 	{
 		if(date('D')=='Fri' ){
@@ -3089,6 +3097,14 @@ SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and 
 			'model' => $materials,
 		);
 		return Response::json($response);
+	}
+
+	public function indexfetchResultFlStamp(){
+		return view('processes.assy_fl.picking_schedule', array(
+			'title' => 'Picking Schedule Flute',
+			'title_jp' => '(??)',
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
 	}
 
 }

@@ -125,6 +125,12 @@ Route::get('get/getDataMesinShootLog', 'InjectionController@getDataMesinShootLog
 
 // end operator
 
+//report stock
+
+Route::get('index/reportStockMonitoring', 'InjectionController@reportStockMonitoring');
+Route::get('fetch/getTargetWeek', 'InjectionController@getTargetWeek');
+//end report
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -1017,10 +1023,13 @@ Route::get('index/process_stamp_sx_check', 'ProcessController@indexProcessAssyFL
 // end check sheet sax
 
 // new sax result
+
+Route::get('index/fetchResultSaxnew', 'ProcessController@indexfetchResultSaxnew');
 Route::get('fetch/fetchResultSaxnew', 'ProcessController@fetchResultSaxnew');
 //end new sax result 
 
 // new fl result
+Route::get('index/fetchResultFlnew', 'ProcessController@indexfetchResultFlStamp');
 Route::get('fetch/fetchResultFlnew', 'ProcessController@fetchResultFlStamp');
 //end new fl result 
 
