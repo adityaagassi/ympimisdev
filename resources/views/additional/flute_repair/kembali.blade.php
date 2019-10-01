@@ -42,22 +42,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-			<div class="from-group col-md-3" style="padding-right: 0px;padding-left: 0px;">
-				<div class="radio">
-					<label style="font-size: 20px;color: white;font-weight:bold;">
-						<input type="radio" name="optionsRadios" id="r_sn" value="sn" checked>
-						SERIAL NUMBER
-					</label>
-				</div>
-				<div class="radio">
-					<label style="font-size: 20px;color: white;font-weight:bold;">
-						<input type="radio" name="optionsRadios" id="r_fn" value="fn">
-						FLO NUMBER
-					</label>
-				</div>
-			</div>
-
-			<div id="sn" class="input-group col-md-9" style="text-align: center;">
+			<div class="input-group col-md-12" style="text-align: center;">
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
@@ -66,15 +51,7 @@
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
 			</div>
-			<div id="fn" class="input-group col-md-9" style="text-align: center;">
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
-					<i class="glyphicon glyphicon-barcode"></i>
-				</div>
-				<input type="text" style="text-align: center; border-color: red; font-size: 3vw; height: 70px" class="form-control" id="floNumber" name="floNumber" placeholder="Scan FLO Number Here" required>
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: red;">
-					<i class="glyphicon glyphicon-barcode"></i>
-				</div>
-			</div>
+
 		</div>
 	</div>
 	<br>
@@ -124,9 +101,6 @@
 	});
 
 	jQuery(document).ready(function() {
-		$("#sn").show();
-		$("#fn").show();
-		$("#fn").hide();
 		$("#serialNumber").val("");
 		$('#serialNumber').focus();
 		fetchTabelKembali();
@@ -145,50 +119,15 @@
 			}
 		});
 
-		$('#floNumber').keydown(function(event) {
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#floNumber").val().length >= 8){
-					scanSerialNumber();
-					return false;
-				}
-				else{
-					openErrorGritter('Error!', 'Serial number invalid.');
-					audio_error.play();
-					$("#floNumber").val("");
-					$("#floNumber").focus();
-				}
-			}
-		});
-		
-	});
-
-	$('input[type=radio]').click(function(e) {
-		var value = $(this).val();
-		if(value == 'sn'){
-			$("#fn").hide();
-			$("#sn").show();
-			$("#serialNumber").val("");
-			$('#serialNumber').focus();
-		}
-		else if(value == 'fn'){
-			$("#sn").show();
-			$("#fn").show();
-			$("#sn").hide();
-			$("#floNumber").val("");
-			$('#floNumber').focus();
-		}
-
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanSerialNumber(){
 		var serialNumber = $("#serialNumber").val();
-		var floNumber = $("#floNumber").val();
-
+		
 		var data = {
-			serialNumber : serialNumber,
-			floNumber : floNumber
+			serialNumber : serialNumber
 		}
 
 		console.table(data);
