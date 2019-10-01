@@ -264,7 +264,12 @@
 						categories: model,
 						gridLineWidth: 3,
 						gridLineColor: 'RGB(204,255,255)',
-						crosshair: true
+						crosshair: true,
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
 					},
 					yAxis: {
 						title: {
@@ -304,7 +309,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '30px',
+									fontSize: '20px',
 									fontWeight: 'bold'
 								}
 
@@ -394,7 +399,12 @@
 						categories: tgl,
 						gridLineWidth: 3,
 						gridLineColor: 'RGB(204,255,255)',
-						crosshair: true
+						crosshair: true,
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
 					},
 					yAxis: {
 						title: {
@@ -417,7 +427,7 @@
 						series: {
 							shadow: false,
 							cursor: 'pointer',
-							borderWidth: 0
+							borderWidth: 0,							
 						},
 						column: {
 							events: {
@@ -434,7 +444,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '30px',
+									fontSize: '20px',
 									fontWeight: 'bold'
 								}
 							}
