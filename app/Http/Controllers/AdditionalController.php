@@ -184,6 +184,12 @@ class AdditionalController extends Controller
 			]);
 			$log->save();
 
+			$response = array(
+				'status' => true,
+				'message' => 'Update status successfull.',
+			);
+			return Response::json($response);
+
 		}
 		catch(\Exception $e){
 			$response = array(
