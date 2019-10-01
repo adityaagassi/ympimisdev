@@ -90,22 +90,9 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 188px;">
-					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>SELESAI (PIANICA)</b></h3>
-						<h2 style="margin: 0px; font-size: 4vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
-					</div>
-					<div class="icon">
-						<i class="ion ion-stats-bars"></i>
-					</div>
-					<a href="{{ url("index/flute_repair/selesai") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-				</div>
-			</div>
-			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
-				<!-- small box -->
 				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 188px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>SELESAI+KEMBALI (WH/ASSY)</b></h3>
+						<h3 style="margin-bottom: 0px;"><b>KIRIM (WH/ASSY)</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -185,30 +172,23 @@
 	function drawSmallBox(){
 		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
-				var tarik = 0;
-				var selesai_kembali = 0;
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
-						$('#sedang').append().empty();
-						$('#sedang').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
-						tarik += result.status[i].jml;
-					}
-					if(result.status[i].status == 'selesai repair'){
-						$('#selesai').append().empty();
-						$('#selesai').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
-						tarik += result.status[i].jml;
-						selesai_kembali += result.status[i].jml;
+						$('#tarik').append().empty();
+						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 					if(result.status[i].status == 'kembali ke warehouse'){
-						tarik += result.status[i].jml;
-						selesai_kembali += result.status[i].jml;
+						$('#kembali').append().empty();
+						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
 				}
-				$('#tarik').append().empty();
-				$('#tarik').html(tarik + '<sup style="font-size: 30px">set</sup>');
 
-				$('#kembali').append().empty();
-				$('#kembali').html(selesai_kembali + '<sup style="font-size: 30px">set</sup>');
+				for(var i = 0; i < result.sedang.length; i++){
+					$('#sedang').append().empty();
+					$('#sedang').html(result.sedang[i].jml + '<sup style="font-size: 30px">set</sup>');
+				}
+
+
 			}
 
 		});

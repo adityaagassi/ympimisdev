@@ -202,11 +202,16 @@ class AdditionalController extends Controller
 
 
 	public function fetchByStatus(){
-		$status = db::select("select `status`, sum(quantity) as jml from flo_repairs
+		$status = db::select("select `status`, sum(quantity) as jml from flo_repair_logs
 			GROUP BY `status`");
+
+		$sedang = db::select("select `status`, sum(quantity) as jml from flo_repairs
+			where `status` = 'repair' GROUP BY `status`");
+
 		$response = array(
 			'status' => true,
 			'status' => $status,
+			'sedang' => $sedang,
 		);
 		return Response::json($response);
 
@@ -220,7 +225,7 @@ class AdditionalController extends Controller
 		}else{
 			$date = date('Y-m-d');
 		}
-		
+
 		$model = db::select("select distinct model from flo_repair_logs f
 			left join materials m on m.material_number = f.material_number
 			where DATE_FORMAT(f.created_at,'%Y-%m-%d') = '".$date."' order by model");
