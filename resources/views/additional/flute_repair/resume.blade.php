@@ -318,14 +318,14 @@
 						color: '#f39c12'
 					},
 					{
-						name: 'Selesai Repair',
+						name: 'Kirim WH/Assy',
 						data: selesai,
-						color: '#0073b7'
+						color: '#00a65a'
 					},
 					{
-						name: 'Kembali',
+						name: 'Warehouse',
 						data: kembali,
-						color: '#00a65a'
+						color: '#0073b7'
 					}
 					]
 					
@@ -452,14 +452,14 @@
 						color: '#f39c12'
 					},
 					{
-						name: 'Selesai Repair',
+						name: 'Kirim WH/Assy',
 						data: selesai,
-						color: '#0073b7'
+						color: '#00a65a'
 					},
 					{
-						name: 'Kembali',
+						name: 'Warehouse',
 						data: kembali,
-						color: '#00a65a'
+						color: '#0073b7'
 					}
 					]
 
