@@ -65,10 +65,10 @@
 		<div class="col-lg-3 col-xs-12" style="margin-left: 0px;">
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 188px;">
+				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;"><b>TOTAL MASUK (PIANICA)</b></h3>
-						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px;font-size: 6vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -77,28 +77,28 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 188px;">
+				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;"><b>BELUM & SEDANG REPAIR</b></h3>
-						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px;font-size: 6vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
 					</div>
-					<a href="{{ url("index/flute_repair/tarik") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+					
 				</div>
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 188px;">
+				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;"><b>KIRIM (WH/ASSY)</b></h3>
-						<h2 style="margin: 0px; font-size: 4vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px; font-size: 6vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
 					</div>
-					<a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+					{{-- <a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
 				</div>
 			</div>
 		</div>
@@ -177,7 +177,7 @@
 						$('#tarik').append().empty();
 						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
-					if(result.status[i].status == 'kembali ke warehouse'){
+					if(result.status[i].status == 'selesai repair'){
 						$('#kembali').append().empty();
 						$('#kembali').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
 					}
