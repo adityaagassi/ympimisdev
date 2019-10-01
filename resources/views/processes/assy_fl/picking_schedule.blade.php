@@ -46,16 +46,17 @@ table.table-bordered > tfoot > tr > th{
 			<div class="input-group col-md-12 ">
 				<div class="box box-danger">
 					<div class="box-body">
-						<table id="planTablenew" name="planTablenew" class="table table-bordered table-hover table-striped">
+						<table id="planTable" name="planTable" class="table table-bordered table-hover table-striped">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th rowspan="2">Model</th>
+										<th rowspan="2">MTD (H-1)</th>
 										<th rowspan="2">Target Packing</th>
 										<th rowspan="2">Act Packing</th>
 										<th colspan="2" width="15%">Stock</th>
-										<th rowspan="2">Target AssySax (H)</th>
-										<th rowspan="2">Picking</th>
-										<th rowspan="2">Target AssySax (H+1/2)</th>
+										<th rowspan="2">Target SubAssy (H)</th>
+										<th rowspan="2">Stamping</th>
+										<th rowspan="2">Target SubAssy (H+1 Full)</th>
 										<!-- <th>Diff</th> -->
 									</tr>
 									<tr>
@@ -63,11 +64,12 @@ table.table-bordered > tfoot > tr > th{
 										<th>NG</th>
 									</tr>
 								</thead>
-								<tbody id="planTableBodynew">
+								<tbody id="planTableBody">
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
 										<th>Total</th>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -107,51 +109,49 @@ table.table-bordered > tfoot > tr > th{
 	});
 
 	function fillPlannew(){
-		$.get('{{ url("fetch/fetchResultSaxnew") }}', function(result, status, xhr){
+		$.get('{{ url("fetch/fetchResultFlnew") }}', function(result, status, xhr){
 			console.log(status);
 			console.log(result);
 			console.log(xhr);
 			if(xhr.status = 200){
 				if(result.status){
-					$('#planTablenew').DataTable().destroy();
-					$('#planTableBodynew').html("");
+					$('#planTable').DataTable().destroy();
+					$('#planTableBody').html("");
 					var planData = '';
-					$.each(result.tableData, function(key, value) {
-						var totalTarget = '';
-						var totalSubassy = '';
-						var diff = '';
-						var h2 = Math.round(value.planh2 / 2);
-						totalTarget = value.plan+(-value.debt);
-						totalSubassy = ((totalTarget - value.actual) - (value.total_return - value.total_ng)) - value.total_perolehan;
+					var totalTarget = '';
+					var totalSubassy = '';
+					
+					$.each(result.planData, function(key, value) {
+						// alert(value.planh2 );
+						
+						totalTarget = value.plan;
+						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.total_return - value.total_ng)) ;
+						var h2 = Math.round(value.planh2);
 						if (totalSubassy < 0) {
-							totalSubassy = 0;
-							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
-							if ((value.total_perolehan - value.actual ) < 0) {
-							h2 = Math.round(value.planh2 / 2) - 0;
-						}
-						else{
-							h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual );
-						}
+						totalSubassy = 0;
+						h2 = Math.round(value.planh2) - (value.total_stamp - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
 						}
-						diff = totalSubassy - value.total_perolehan;
 						planData += '<tr>';
-						planData += '<td>'+ value.model2 +'</td>';
+						planData += '<td>'+ value.model3 +'</td>';
+						planData += '<td>'+ value.debt +'</td>';						
 						planData += '<td>'+ totalTarget +'</td>';
 						planData += '<td>'+ value.actual +'</td>';
 						planData += '<td>'+ value.total_return +'</td>';
 						planData += '<td>'+ value.total_ng +'</td>';
 						planData += '<td>'+ totalSubassy +'</td>';
-						planData += '<td>'+ value.total_perolehan +'</td>';
+						planData += '<td>'+ value.total_stamp +'</td>';
 						planData += '<td>'+ h2 +'</td>';
-							// planData += '<td>'+ diff +'</td>';
-
-							planData += '</tr>';
-						});
-					$('#planTableBodynew').append(planData);										
-					$('#planTablenew').DataTable({
+						planData += '</tr>';
+					});
+					$('#planTableBody').append(planData);
+					$('#listModel').html("");
+					$.unique(result.model.map(function (d) {
+						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
+					}));
+					$('#planTable').DataTable({
 						'paging': false,
 						'lengthChange': false,
 						'searching': false,
@@ -167,19 +167,19 @@ table.table-bordered > tfoot > tr > th{
 								i : 0;
 							};
 							var api = this.api();
-
-							var total_diff = api.column(6).data().reduce(function (a, b) {
+							
+							var total_actual = api.column(7).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(6).footer()).html(total_diff.toLocaleString());
+							$(api.column(7).footer()).html(total_actual.toLocaleString());
 
 						},
-						"columnDefs": [ {
-							"targets": 5,
+						"columnDefs": [  {
+							"targets": 6,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[6]) < parseInt(rowData[5])  ) {
+								if ( parseInt(rowData[7]) < parseInt(rowData[6])  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 								}
 								else
@@ -189,12 +189,12 @@ table.table-bordered > tfoot > tr > th{
 							}
 						},
 						{
-							"targets": 7,
+							"targets": 8,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[5]) >= 0  && parseInt(rowData[7]) > 0) {
-									if (parseInt(rowData[5]) <= 0) {
+								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[8]) > 0) {
+										if (parseInt(rowData[6]) <= 0) {
 											$(td).css('background-color', 'RGB(255,204,255)')
 										}
 
@@ -205,33 +205,19 @@ table.table-bordered > tfoot > tr > th{
 										// $(td).css('background-color', 'RGB(204,255,255)')
 									}
 								}
-							},
-							{
-							"targets": 0,
-							"createdCell": function (td, cellData, rowData, row, col) {
-								if ( rowData[0].indexOf("YAS") != -1) {								
-
-									$(td).css('background-color', 'rgb(157, 255, 105)')
-								}
-								else
-								{
-										$(td).css('background-color', '#ffff66')
-									}
-								}
 							}]
-						});
-						
-						}
-						else{
-							audio_error.play();
-							alert('Attempt to retrieve data failed');
-						}
-					}
-					else{
-						audio_error.play();
-						alert('Disconnected from server');
-					}
-				});
+					});
+				}
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from server');
+			}
+		});
 	}
 </script>
 @endsection
