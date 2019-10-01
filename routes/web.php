@@ -120,6 +120,8 @@ Route::get('index/opmesin', 'InjectionController@opmesin');
 Route::post('input/statusmesin', 'InjectionController@inputStatusMesin');
 Route::post('delete/statusmesin', 'InjectionController@deleteStatusMesin');
 Route::get('get/statusmesin', 'InjectionController@getStatusMesin');
+Route::post('input/logmesin', 'InjectionController@logmesin');
+Route::get('get/getDataMesinShootLog', 'InjectionController@getDataMesinShootLog');
 
 // end operator
 
@@ -662,6 +664,7 @@ Route::get('index/middle/detail_monitoring', 'MiddleProcessController@fetchDetai
 
 // Report Middle Global
 Route::get('index/middle/display_kensa_time', 'MiddleProcessController@indexDisplayKensaTime');
+Route::get('fetch/middle/display_kensa_time', 'MiddleProcessController@fetchDisplayKensaTime');
 // Report Middle LCQ
 Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
 Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');
@@ -672,8 +675,6 @@ Route::get('index/middle/report_hourly_lcq', 'MiddleProcessController@indexRepor
 Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchReportHourlyLcq');
 // Report Middle Buffing
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
-
-
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingNgKey');
@@ -686,8 +687,12 @@ Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexB
 Route::get('fetch/middle/buffing_daily_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@indexBuffingOpNgRate');
 Route::get('fetch/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@fetchBuffingOpNgRate');
+Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexBuffingGroupBalance');
+Route::get('fetch/middle/buffing_group_achievement', 'MiddleProcessController@fetchBuffingGroupAchievement');
+
 
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
+
 //MIZUSUMASHI
 Route::get('index/middle/muzusumashi', 'MiddleProcessController@indexMizusumashi');
 Route::get('fetch/middle/muzusumashi', 'MiddleProcessController@fetchMisuzumashi');

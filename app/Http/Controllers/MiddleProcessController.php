@@ -35,7 +35,6 @@ use App\RfidBuffingInventory;
 use App\RfidLogEfficiency;
 use Illuminate\Support\Facades\Mail;
 use App\MiddleReturnLog;
-use App\MiddleReworkLog;
 
 class MiddleProcessController extends Controller
 {
@@ -49,6 +48,13 @@ class MiddleProcessController extends Controller
 			'plt-incoming',
 			'plt-kensa',
 		];
+	}
+
+	public function indexBuffingGroupBalance(){
+		return view('processes.middle.display.buffing_group_balance', array(
+			'title' => 'Buffing Group Balance',
+			'title_jp' => '(??)',
+		))->with('page', 'Buffing Group Balance');
 	}
 
 	public function indexBuffingOpNg(){
@@ -482,9 +488,12 @@ class MiddleProcessController extends Controller
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY l.operator_id");
 
+		$emp_name = Employee::select('employee_id','name')->get();
+
 		$response = array(
 			'status' => true,
 			'date' => $date,
+			'emp_name' => $emp_name,
 			'working_time' => $working_time,
 		);
 		return Response::json($response);
@@ -784,6 +793,47 @@ class MiddleProcessController extends Controller
 		);
 		return Response::json($response);
 
+	}
+
+	public function fetchDisplayKensaTime(Request $request){
+		$date = "";
+		if(strlen($request->get('tgl')) > 0){
+			$date = date('Y-m-d',strtotime($request->get("tgl")));
+		}else{
+			$date = date("Y-m-d");
+		}
+
+		$location="";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$loc = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$loc = $loc."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$loc = $loc.",";
+				}
+			}
+		}
+
+		$kensa_time = db::select("select employee_id, sum(ng_time), sum(rework_time), sum(ok_time), sum(ng_time)+sum(rework_time)+sum(ok_time) from (
+			select employee_id, sum(TIMEDIFF(created_at, started_at)) as ng_time, 0 as rework_time, 0 as ok_time from middle_ng_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
+
+			union all
+
+			select employee_id, 0 as ng_time, 0 as rework_time, sum(TIMEDIFF(created_at, started_at)) as ok_time from middle_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
+
+			union all
+
+			select employee_id, 0 as ng_time, sum(TIMEDIFF(created_at, started_at)) as rework_time, 0 as ok_time from middle_rework_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
+		) as kensa_time group by employee_id ");
+
+		$response = array(
+			'status' => true,
+			'kensa_time' => $kensa_time,
+			'title' => $location
+		);
+		return Response::json($response);
 	}
 
 	public function fetchDisplayProductionResult(Request $request){
@@ -2632,6 +2682,11 @@ class MiddleProcessController extends Controller
 
 	public function inputMiddleKensa(Request $request){
 
+		$code_generator = CodeGenerator::where('note','=','middle-kensa')->first();
+		$code = $code_generator->index+1;
+		$code_generator->index = $code;
+		$code_generator->save();
+
 		if($request->get('ng')){
 			foreach ($request->get('ng') as $ng) {
 				$middle_ng_log = new MiddleNgLog([
@@ -2642,6 +2697,7 @@ class MiddleProcessController extends Controller
 					'quantity' => $ng[1],
 					'location' => $request->get('loc'),
 					'started_at' => $request->get('started_at'),
+					'remark' => $code
 				]);
 
 				try{
@@ -3171,6 +3227,11 @@ class MiddleProcessController extends Controller
 
 	public function inputBuffingKensa(Request $request)
 	{
+		$code_generator = CodeGenerator::where('note','=','middle-kensa')->first();
+		$code = $code_generator->index+1;
+		$code_generator->index = $code;
+		$code_generator->save();
+
 		if($request->get('ng')){
 			foreach ($request->get('ng') as $ng) {
 				$middle_ng_log = new MiddleNgLog([
@@ -3182,7 +3243,8 @@ class MiddleProcessController extends Controller
 					'location' => $request->get('loc'),
 					'buffing_time' => $request->get('buffing_time'),
 					'operator_id' => $request->get('operator_id'),
-					'started_at' => $request->get('started_at')
+					'started_at' => $request->get('started_at'),
+					'remark' => $code,
 				]);
 
 				try{
@@ -3390,13 +3452,30 @@ class MiddleProcessController extends Controller
 
 		$mz_data = RfidLogEfficiency::where('remark', "=", "1")
 		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) as ngaggur_sec"))
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as ngaggur_min"))
 		->groupBy('operator_id','grup')
 		->get();
 
+		$mz_data_selesai = RfidLogEfficiency::where('remark', "=", "3")
+		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as ngaggur_min"))
+		->groupBy('operator_id','grup')
+		->get();
+
+		$op = [];
+
+		foreach ($mz_data as $key) {
+			$operator = Employee::select("name","employee_id")
+			->where("employee_id","=",$key->operator_id)
+			->first();
+
+			array_push($op, $operator);
+		}
+
 		$response = array(
 			'status' => true,
-			'datas' => $mz_data
+			'datas_sedang' => $mz_data,
+			'op' => $op 
 		);
 		return Response::json($response);
 	}

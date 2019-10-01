@@ -45,7 +45,7 @@
 			<a href="{{ url("index/middle/buffing_board/buffing-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
 			<a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>
 			<a href="{{ url("index/middle/buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Balance</a>
+			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Balance</a>
 			<a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a>
 			<a href="{{ url("index/middle/buffing_op_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
 			<a href="{{ url("index/middle/buffing_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Efficiency</a>

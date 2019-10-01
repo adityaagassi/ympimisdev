@@ -79,27 +79,27 @@
                         <td>
                             <span style="font-weight: bold;">Overtime Information (残業の情報)</span>
                             <br>
-                            <a href="{{ url("index/report/overtime_monthly") }}" target="_blank">
+                            <a href="{{ url("index/report/overtime_monthly") }}">
                                 <i class="fa fa-caret-right"></i> OT Monitor By CC (コストセンターによる残業管理)
                             </a>
                             <br>
-                            <a href="http://172.17.128.4/myhris/management/overtime_control" target="_blank">
+                            <a href="http://172.17.128.4/myhris/management/overtime_control">
                                 <i class="fa fa-caret-right"></i> OT Monitor Daily (日次ざんぎぃう管理)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/overtime_section")}}" target="_blank">
+                            <a href="{{ url("index/report/overtime_section")}}">
                                 <i class="fa fa-caret-right"></i> OT By CC (コストセンター別の残業)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/overtime_data") }}" target="_blank">
+                            <a href="{{ url("index/report/overtime_data") }}">
                                 <i class="fa fa-caret-right"></i> OT Data (残業データ)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/overtime_resume") }}" target="_blank">
+                            <a href="{{ url("index/report/overtime_resume") }}">
                                 <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (月次残業・要員まとめ)
                             </a>
                             <br>
-                            <a href="http://172.17.128.4/myhris/home/overtime_form" target="_blank">
+                            <a href="http://172.17.128.4/myhris/home/overtime_form">
                                 <i class="fa fa-caret-right"></i> Create OT Form (残業申請書)
                             </a>
                         </td>
@@ -108,27 +108,27 @@
                         <td>
                             <span style="font-weight: bold;">Manpower Information (人工の情報)</span>
                             <br>
-                            <a href="{{ url("index/report/stat") }}" target="_blank">
+                            <a href="{{ url("index/report/stat") }}">
                                 <i class="fa fa-caret-right"></i>By Status (雇用形態別)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/department") }}" target="_blank">
+                            <a href="{{ url("index/report/department") }}">
                                 <i class="fa fa-caret-right"></i>By Department (部門別)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/grade") }}" target="_blank">
+                            <a href="{{ url("index/report/grade") }}">
                                 <i class="fa fa-caret-right"></i>By Grade (等級別)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/jabatan") }}" target="_blank">
+                            <a href="{{ url("index/report/jabatan") }}">
                                 <i class="fa fa-caret-right"></i>By Position (役職別)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/gender") }}" target="_blank">
+                            <a href="{{ url("index/report/gender") }}">
                                 <i class="fa fa-caret-right"></i>By Gender (性別)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/total_meeting") }}" target="_blank">
+                            <a href="{{ url("index/report/total_meeting") }}">
                                 <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
                             </a>
                         </td>
@@ -137,11 +137,11 @@
                         <td>
                             <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                             <br>
-                            <a href="{{ url("index/report/daily_attendance")}}" target="_blank">
+                            <a href="{{ url("index/report/daily_attendance")}}">
                                 <i class="fa fa-caret-right"></i>Attendance (出勤)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/gender") }}" target="_blank">
+                            <a href="{{ url("index/report/gender") }}">
                                 <i class="fa fa-caret-right"></i>Absence (欠勤)
                             </a>
                         </td>
@@ -150,15 +150,15 @@
                         <td>
                             <span style="font-weight: bold;">Other Information (他の情報)</span>
                             <br>
-                            <a href="{{ url("index/report/overtime_outsource") }}" target="_blank">
+                            <a href="{{ url("index/report/overtime_outsource") }}">
                                 <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/overtime_outsource_data") }}" target="_blank">
+                            <a href="{{ url("index/report/overtime_outsource_data") }}">
                                 <i class="fa fa-caret-right"></i> Outsource OT Data (派遣社員の残業データ)
                             </a>
                             <br>
-                            <a href="{{ url("index/employee/service") }}" target="_blank">
+                            <a href="{{ url("index/employee/service") }}">
                                 <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
                             </a>
                         </td>
@@ -167,7 +167,7 @@
                         <td>
                             <span style="font-weight: bold;">Plant Maintenance (工場保全管理)</span>
                             <br>
-                            <a href="http://172.17.129.99/zed/dashboard/awal" target="_blank">
+                            <a href="http://172.17.129.99/zed/dashboard/awal">
                                 <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                             </a>
                         </td>
@@ -196,7 +196,7 @@
                         <td>
                             <span style="font-weight: bold;">KITTO (きっと)</span>
                             <br>
-                            <a href="http://172.17.128.4/kitto/public" target="_blank">
+                            <a href="http://172.17.128.4/kitto/public">
                                 <i class="fa fa-caret-right"></i> Kanban Monitoring (かんばん監視)
                             </a>
                         </td>
@@ -283,11 +283,11 @@
                         <td>
                             <span style="font-weight: bold;">Check Material Dimensions (寸法測定結果)</span>
                             <br>
-                            <a href="http://172.17.128.114/digital-ik-cdm/" target="blank">
+                            <a href="http://172.17.128.114/digital-ik-cdm/">
                                 <i class="fa fa-caret-right"></i> Work Instruction Digital System<br>(作業手順書デジタル化)
                             </a>
                             <br>
-                            <a href="http://172.17.128.114/cdm-new/" target="blank">
+                            <a href="http://172.17.128.114/cdm-new/">
                                 <i class="fa fa-caret-right"></i> T-Pro CDM Charts<br>(T-ProのCDMチャート)
                             </a>
                         </td>
@@ -319,7 +319,7 @@
                                 <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
                             </a>
                             <br>
-                            <a href="{{ url("/index/dp_fg_accuracy") }}" target="_blank">
+                            <a href="{{ url("/index/dp_fg_accuracy") }}">
                                 <i class="fa fa-caret-right"></i> FG Accuracy (FG週次出荷)
                             </a>
                             <br>
@@ -361,7 +361,7 @@
                         <td>
                             <span style="font-weight: bold;">Shipment Performance (出荷管理)</span>
                             <br>
-                            <a href="{{ url("/index/display/stuffing_monitoring") }}" target="_blank">
+                            <a href="{{ url("/index/display/stuffing_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Stuffing Monitoring (荷積み監視)
                             </a>
                             <br>
@@ -378,7 +378,7 @@
                         <td>
                             <span style="font-weight: bold;">Chorei (朝礼)</span>
                             <br>
-                            <a href="{{ url("/index/ch_daily_production_result") }}" target="_blank">
+                            <a href="{{ url("/index/ch_daily_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                             </a>
                         </td>
@@ -387,7 +387,7 @@
                         <td>
                             <span style="font-weight: bold;">Additional</span>
                             <br>
-                            <a href="{{ url("flute_repair") }}" target="_blank">
+                            <a href="{{ url("flute_repair") }}">
                                 <i class="fa fa-caret-right"></i> Flute Repair
                             </a>
                         </td>
@@ -396,11 +396,11 @@
                         <td>
                             <span style="font-weight: bold;">Display (表示)</span>
                             <br>
-                            <a href="{{ url("/index/display/stuffing_progress") }}" target="_blank">
+                            <a href="{{ url("/index/display/stuffing_progress") }}">
                                 <i class="fa fa-caret-right"></i> Stuffing Progress (荷積み進捗)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/stuffing_time") }}" target="_blank">
+                            <a href="{{ url("/index/display/stuffing_time") }}">
                                 <i class="fa fa-caret-right"></i> Stuffing Time (荷積み時間)
                             </a>
                         </td>

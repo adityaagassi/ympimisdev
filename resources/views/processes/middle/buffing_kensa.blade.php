@@ -47,7 +47,7 @@
 		text-overflow: ellipsis;
 	}
 	#ngList {
-		height:450px;
+		height:480px;
 		overflow-y: scroll;
 	}
 	#loading, #error { display: none; }
@@ -187,8 +187,9 @@
 			</div>
 			<div>
 				<center>
-					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 30%" onclick="canc()" class="btn btn-danger">CANCEL</button>
-					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: yellow; width: 69%" onclick="conf()" class="btn btn-success">CONFIRM</button>
+					<button style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+					<button style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="rework()" class="btn btn-warning">REWORK</button>
+					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="conf()" class="btn btn-success">CONFIRM</button>
 				</center>
 			</div>
 		</div>
@@ -348,6 +349,83 @@
 		}
 	}
 
+	function disabledButtonRework() {
+		if($('#tag').val() != ""){
+			var btn = document.getElementById('rework');
+			btn.disabled = true;
+			btn.innerText = 'Posting...'	
+			return false;
+		}
+	}
+
+	function rework(){
+		if($('#tag').val() == ""){
+			openErrorGritter('Error!', 'Tag is empty');
+			audio_error.play();
+			$("#tag").val("");
+			$("#tag").focus();
+
+			return false;
+		}
+
+		var tag = $('#tag_material').val();
+		var loop = $('#loop').val();
+		// var total = 0;
+		var count_ng = 0;
+		var ng = [];
+		var count_text = [];
+		for (var i = 1; i <= loop; i++) {
+			if($('#count'+i).text() > 0){
+				ng.push([$('#ng'+i).text(), $('#count'+i).text()]);
+				count_text.push('#count'+i);
+				// total += parseInt($('#count'+i).text());
+				count_ng += 1;
+			}
+		}
+
+		var data = {
+			loc: $('#loc').val(),
+			tag: $('#material_tag').val(),
+			material_number: $('#material_number').val(),
+			quantity: $('#material_quantity').val(),
+			employee_id: $('#employee_id').val(),
+			started_at: $('#started_at').val(),
+			ng: ng,
+			count_text: count_text,
+			// total_ng: total,
+		}
+		disabledButtonRework();
+
+		$.post('{{ url("input/middle/rework") }}', data, function(result, status, xhr){
+			if(result.status){
+				var btn = document.getElementById('rework');
+				btn.disabled = false;
+				btn.innerText = 'REWORK';
+				openSuccessGritter('Success!', result.message);
+				for (var i = 1; i <= loop; i++) {
+					$('#count'+i).text(0);
+				}
+				$('#model').text("");
+				$('#key').text("");
+				$('#material_tag').val("");
+				$('#material_number').val("");
+				$('#material_quantity').val("");
+				$('#tag').val("");
+				$('#tag').prop('disabled', false);
+				fillResult($('#employee_id').val());
+				$('#tag').focus();				
+			}
+			else{
+				var btn = document.getElementById('rework');
+				btn.disabled = false;
+				btn.innerText = 'REWORK';
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+				$("#tag").val("");
+				$("#tag").focus();
+			}
+		});
+	}
 
 	function conf(){
 		if($('#model').text() == ""){
