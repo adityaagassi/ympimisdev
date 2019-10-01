@@ -35,6 +35,7 @@ use App\RfidBuffingInventory;
 use App\RfidLogEfficiency;
 use Illuminate\Support\Facades\Mail;
 use App\MiddleReturnLog;
+use App\MiddleReworkLog;
 
 class MiddleProcessController extends Controller
 {
@@ -519,7 +520,6 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'data' => $data,
-			
 		);
 		return Response::json($response);
 	}
@@ -3532,13 +3532,19 @@ class MiddleProcessController extends Controller
 
 		$mz_data_selesai = RfidLogEfficiency::where('remark', "=", "2")
 		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as selesai_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as selesai_min"))
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled)))) as selesai_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled))) / 60 as selesai_min"))
+		->groupBy('operator_id','grup')
+		->get();
+
+		$mz_data_akan = RfidLogEfficiency::where('remark', "=", "3")
+		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
+		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled)))) as akan_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled))) / 60 as akan_min"))
 		->groupBy('operator_id','grup')
 		->get();
 
 		$op = [];
 
-		foreach ($mz_data as $key) {
+		foreach ($mz_data_akan as $key) {
 			$operator = Employee::select("name","employee_id")
 			->where("employee_id","=",$key->operator_id)
 			->first();
@@ -3550,6 +3556,7 @@ class MiddleProcessController extends Controller
 			'status' => true,
 			'datas_sedang' => $mz_data,
 			'datas_selesai' => $mz_data_selesai,
+			'datas_akan' => $mz_data_akan,
 			'op' => $op 
 		);
 		return Response::json($response);
