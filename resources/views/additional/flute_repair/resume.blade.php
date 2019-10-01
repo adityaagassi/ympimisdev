@@ -67,7 +67,7 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>TOTAL MASUK (PIANICA)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL MASUK (PIANICA)</b></h3>
 						<h2 style="margin: 0px;font-size: 6vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -79,7 +79,7 @@
 				<!-- small box -->
 				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>BELUM & SEDANG REPAIR</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>BELUM & SEDANG REPAIR</b></h3>
 						<h2 style="margin: 0px;font-size: 6vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -92,7 +92,7 @@
 				<!-- small box -->
 				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 259px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;"><b>KIRIM (WH/ASSY)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>KIRIM (WH/ASSY)</b></h3>
 						<h2 style="margin: 0px; font-size: 6vw;" id='kembali'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
