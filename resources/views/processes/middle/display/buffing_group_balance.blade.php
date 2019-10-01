@@ -300,7 +300,92 @@
 		}
 
 		$.get('{{ url("fetch/middle/buffing_group_achievement") }}', data, function(result, status, xhr) {
+			if(result.status){
+				var key = [];
+				var plan = [];
+				var bff = [];
 
+				for(var i = 0; i < result.data.length; i++){
+					key.push(result.data[i].key);
+					plan.push(result.data[i].plan);
+					bff.push(result.data[i].result);
+				}
+
+				var chart = Highcharts.chart('container1', {
+					title: {
+						text: 'Archievment of Work Group',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'on '+date,
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: ''
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: key,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer'
+						}
+					},
+					series: [{
+						name:'Plan',
+						type: 'column',
+						colorByPoint: true,
+						data: plan,
+					},{
+						name:'Result Buffing',
+						type: 'column',
+						colorByPoint: true,
+						data: bff,
+					}]
+
+				});
+
+
+			}
 
 		});
 
