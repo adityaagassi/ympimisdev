@@ -38,7 +38,17 @@
 				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;"></div>
+				<div class="col-xs-4" style="padding-left: 0px;">
+					<div id="container1_shift3" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4">
+					<div id="container1_shift1" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4" style="padding-right: 0px;">
+					<div id="container1_shift2" style="width: 100%;"></div>
+				</div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 1%;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
@@ -285,14 +295,17 @@
 
 		$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
 			if(result.status){
+				
+				// Shift 3
 				var eff = [];
-
 				for(var i = 0; i < result.rate.length; i++){
-					for(var j = 0; j < result.time_eff.length; j++){
-						if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-							eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+					if(result.rate[i].shift == 's3'){
+						for(var j = 0; j < result.time_eff.length; j++){
+							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+							}
 						}
-					}
+					}					
 				}
 
 				eff.sort(function(a, b){return b[1] - a[1]});
@@ -303,12 +316,18 @@
 					eff_value.push(eff[i][1]);
 				}
 
-
-				var chart = Highcharts.chart('container1', {
+				var chart = Highcharts.chart('container1_shift3', {
 					title: {
-						text: 'Operators Overall Efficiency on '+ result.date,
+						text: 'Operators Overall Efficiency',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Shift 3 on '+ result.date,
+						style: {
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -316,10 +335,6 @@
 						title: {
 							text: 'OP Efficiency (%)'
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -328,7 +343,7 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -346,7 +361,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '20px'
 								}
 							},
 							animation: false,
@@ -366,124 +381,297 @@
 
 				});
 
-			}
 
-
-		});
-
-		$.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
-			if(result.status){
-
-				var op = [];
-				var act = [];
-				var std = [];
-				var target = [];
-
-				for(var i = 0; i < result.working_time.length; i++){
-					for(var j = 0; j < result.emp_name.length; j++){
-						if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
-							op.push(result.emp_name[j].name);
+				// Shift 1
+				var eff = [];
+				for(var i = 0; i < result.rate.length; i++){
+					if(result.rate[i].shift == 's1'){
+						for(var j = 0; j < result.time_eff.length; j++){
+							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+							}
 						}
-					}
-					act.push(Math.ceil(result.working_time[i].act));
-					std.push(Math.ceil(result.working_time[i].std));
-					target.push(parseInt(480));
+					}					
 				}
 
-				var chart = Highcharts.chart('container2', {
+				eff.sort(function(a, b){return b[1] - a[1]});
+				var op_name = [];
+				var eff_value = [];
+				for (var i = 0; i < eff.length; i++) {
+					op_name.push(eff[i][0]);
+					eff_value.push(eff[i][1]);
+				}
+
+				var chart = Highcharts.chart('container1_shift1', {
 					title: {
-						text: 'Operators Working time on '+ result.date,
+						text: 'Operators Overall Efficiency',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Shift 1 on '+ result.date,
+						style: {
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
 					yAxis: {
 						title: {
-							enabled: true,
-							text: "Minutes"
+							text: 'OP Efficiency (%)'
 						},
-						max: 500,
-						plotLines: [{
-							color: '#FF0000',
-							width: 2,
-							value: 480,
-							label: {
-								align:'right',
-								text: '480 Minutes',
-								x:-7,
-								style: {
-									fontSize: '1vw',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}]
 					},
 					xAxis: {
-						categories: op,
+						categories: op_name,
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
 					},
 					credits: {
 						enabled:false
-					},
-					legend : {
-						align: 'center',
-						verticalAlign: 'bottom',
-						x: 0,
-						y: 0,
-
-						backgroundColor: (
-							Highcharts.theme && Highcharts.theme.background2) || 'white',
-						shadow: false
 					},
 					plotOptions: {
 						series:{
 							dataLabels: {
 								enabled: true,
-								format: '{point.y}',
+								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '20px'
 								}
 							},
 							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
 							cursor: 'pointer'
-						},
+						}
 					},
-					series: [
-					{
-						name:'Standart time',
+					series: [{
+						name:'OP Efficiency',
 						type: 'column',
-						color: 'rgb(255,116,116)',
-						data: std
-					},
-					{
-						name:'Actual Time',
-						type: 'column',
-						color: 'rgb(144,238,126)',
-						data: act,
-					}
-					]
+						colorByPoint: true,
+						data: eff_value,
+						showInLegend: false
+					}]
 
 				});
 
+
+				// Shift 2
+				var eff = [];
+				for(var i = 0; i < result.rate.length; i++){
+					if(result.rate[i].shift == 's2'){
+						for(var j = 0; j < result.time_eff.length; j++){
+							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+							}
+						}
+					}					
+				}
+
+				eff.sort(function(a, b){return b[1] - a[1]});
+				var op_name = [];
+				var eff_value = [];
+				for (var i = 0; i < eff.length; i++) {
+					op_name.push(eff[i][0]);
+					eff_value.push(eff[i][1]);
+				}
+
+				var chart = Highcharts.chart('container1_shift2', {
+					title: {
+						text: 'Operators Overall Efficiency',
+						style: {
+							fontSize: '25px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Shift 2 on '+ result.date,
+						style: {
+							fontSize: '1vw',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'OP Efficiency (%)'
+						},
+					},
+					xAxis: {
+						categories: op_name,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '1vw'
+							}
+						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
+									fontSize: '20px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer'
+						}
+					},
+					series: [{
+						name:'OP Efficiency',
+						type: 'column',
+						colorByPoint: true,
+						data: eff_value,
+						showInLegend: false
+					}]
+
+				});
+
+
 			}
+
+
+		});
+
+$.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
+	if(result.status){
+
+		var op = [];
+		var act = [];
+		var std = [];
+		var target = [];
+
+		for(var i = 0; i < result.working_time.length; i++){
+			for(var j = 0; j < result.emp_name.length; j++){
+				if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
+					op.push(result.emp_name[j].name);
+				}
+			}
+			act.push(Math.ceil(result.working_time[i].act));
+			std.push(Math.ceil(result.working_time[i].std));
+			target.push(parseInt(480));
+		}
+
+		var chart = Highcharts.chart('container2', {
+			title: {
+				text: 'Operators Working time on '+ result.date,
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Minutes"
+				},
+				max: 500,
+				plotLines: [{
+					color: '#FF0000',
+					width: 2,
+					value: 480,
+					label: {
+						align:'right',
+						text: '480 Minutes',
+						x:-7,
+						style: {
+							fontSize: '1vw',
+							color: '#FF0000',
+							fontWeight: 'bold'
+						}
+					}
+				}]
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					style: {
+						fontSize: '26px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				align: 'center',
+				verticalAlign: 'bottom',
+				x: 0,
+				y: 0,
+
+				backgroundColor: (
+					Highcharts.theme && Highcharts.theme.background2) || 'white',
+				shadow: false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '26px'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Standart time',
+				type: 'column',
+				color: 'rgb(255,116,116)',
+				data: std
+			},
+			{
+				name:'Actual Time',
+				type: 'column',
+				color: 'rgb(144,238,126)',
+				data: act,
+			}
+			]
 
 		});
 
 	}
+
+});
+
+}
 
 
 

@@ -422,9 +422,10 @@
 
 				var date = result.date; 
 
+
+				// SHIFT 3
 				var op_name = [];
 				var rate = [];
-
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's3'){
 						op_name.push(result.ng_rate[i].name);
@@ -436,14 +437,14 @@
 					title: {
 						text: 'SX Buffing NG Rate By Operators',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
 						text: 'Shift 3 on '+date,
 						style: {
-							fontSize: '18px',
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -451,10 +452,6 @@
 						title: {
 							text: 'NG Rate (%)'
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -463,7 +460,7 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -481,7 +478,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '20px'
 								}
 							},
 							animation: false,
@@ -507,7 +504,11 @@
 					}]
 				});
 
+				
 
+				// SHIFT 1
+				var op_name = [];
+				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's1'){
 						op_name.push(result.ng_rate[i].name);
@@ -519,14 +520,14 @@
 					title: {
 						text: 'SX Buffing NG Rate By Operators',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
 						text: 'Shift 1 on '+date,
 						style: {
-							fontSize: '18px',
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -534,10 +535,6 @@
 						title: {
 							text: 'NG Rate (%)'
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -546,7 +543,7 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -564,7 +561,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '20px'
 								}
 							},
 							animation: false,
@@ -591,6 +588,9 @@
 				});
 
 
+				// SHIFT 2
+				var op_name = [];
+				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's2'){
 						op_name.push(result.ng_rate[i].name);
@@ -602,14 +602,14 @@
 					title: {
 						text: 'SX Buffing NG Rate By Operators',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
 						text: 'Shift 2 on '+date,
 						style: {
-							fontSize: '18px',
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -617,10 +617,6 @@
 						title: {
 							text: 'NG Rate (%)'
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -629,7 +625,7 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -647,7 +643,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '20px'
 								}
 							},
 							animation: false,

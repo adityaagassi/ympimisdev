@@ -674,25 +674,26 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$rate = db::select("select e.`name`, rate.operator_id, rate.rate from
-			(select g.operator_id, g.jml as tot, ng.jml as ng, (g.jml-ng.jml) as g, ((g.jml-ng.jml)/g.jml) as rate from
-			(select m.operator_id, sum(m.quantity) as jml from middle_logs m
+		$rate = db::select("select rate.shift, rate.operator_id, e.`name`, rate.tot, rate.ng, rate.rate from
+			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
+			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$date."'
-			GROUP BY m.operator_id) g
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY shift, m.operator_id) g
 			left join
-			(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$date."'
-			GROUP BY m.operator_id) ng
-			on g.operator_id = ng.operator_id) rate
-			left join employees e on e.employee_id = rate.operator_id");
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY shift, m.operator_id) ng
+			on g.shift = ng.shift and g.operator_id = ng.operator_id) rate
+			left join employees e on e.employee_id = rate.operator_id
+			ORDER BY shift, rate.rate desc");
 
 		$time_eff = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
 			from data_log l left join standart_times t on l.material_number = t.material_number
