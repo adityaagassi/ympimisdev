@@ -263,7 +263,7 @@ table.table-bordered > tfoot > tr > th{
 		stamp();
 
 		$('body').toggleClass("sidebar-collapse");
-		// fillPlannew();
+		fillPlannew();
 		fillSerialNumber();
 		fillResult();
 	});
@@ -536,7 +536,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					if(result.statusCode == 'stamp'){
 						fillResult();
-						// fillPlannew();
+						fillPlannew();
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
@@ -604,7 +604,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#editModal').modal('hide');
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
-						// fillPlannew();
+						fillPlannew();
 					}
 					else{
 						audio_error.play();
@@ -640,7 +640,7 @@ table.table-bordered > tfoot > tr > th{
 					$('#editModal').modal('hide');
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
-					// fillPlannew();
+					fillPlannew();
 				}
 				else{
 					audio_error.play();
@@ -707,7 +707,7 @@ table.table-bordered > tfoot > tr > th{
 						planData += '<td>'+ h2 +'</td>';
 						planData += '</tr>';
 					});
-					$('#planTableBody').append(planData);
+					// $('#planTableBody').append(planData);
 					$('#listModel').html("");
 					$.unique(result.model.map(function (d) {
 						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
