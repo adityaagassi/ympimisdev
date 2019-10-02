@@ -685,7 +685,9 @@ Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingNgKey');
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
-Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingPerformance');
+Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
+Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
+
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
@@ -693,11 +695,11 @@ Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexB
 Route::get('fetch/middle/buffing_daily_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@indexBuffingOpNgRate');
 Route::get('fetch/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@fetchBuffingOpNgRate');
-Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexBuffingGroupBalance');
+Route::get('index/middle/buffing_group_achievement', 'MiddleProcessController@indexBuffingGroupAchievement');
 Route::get('fetch/middle/buffing_group_achievement', 'MiddleProcessController@fetchBuffingGroupAchievement');
 Route::get('fetch/middle/buffing_daily_group_achievement', 'MiddleProcessController@fetchDailyGroupAchievement');
-
-
+Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexBuffingGroupBalance');
+Route::get('fetch/middle/buffing_line_balance', 'MiddleProcessController@fetchBuffingLineBalance');
 
 
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');

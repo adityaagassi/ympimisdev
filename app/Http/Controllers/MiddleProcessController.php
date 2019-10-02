@@ -58,6 +58,13 @@ class MiddleProcessController extends Controller
 		))->with('page', 'Buffing Group Balance');
 	}
 
+	public function indexBuffingGroupAchievement(){
+		return view('processes.middle.display.buffing_group_achievement', array(
+			'title' => 'Buffing Group Achievement',
+			'title_jp' => '(??)',
+		))->with('page', 'Buffing Group Achievement');
+	}
+
 	public function indexBuffingOpNg(){
 		$title = 'NG Rate by Operator';
 		$title_jp = '??';
@@ -451,6 +458,37 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+	public function fetchBuffingLineBalance(Request $request){
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		}
+
+		$plan = db::select("select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
+			(select b.material_child, sum(a.quantity * t.time / 60) as plan from assy_picking_schedules a
+			left join bom_components b on a.material_number = b.material_parent
+			left join standart_times t on b.material_child = t.material_number
+			where quantity > 0
+			and due_date = '".$tanggal."'
+			group by b.material_child) plan
+			left join materials m on plan.material_child = m.material_number
+			group by LEFT(m.`key`,1)");
+
+		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, count(dev_name) as jml from dev_list
+			where dev_name in ('SXKEY-C','SXKEY-D','SXKEY-E','SXKEY-F','SXKEY-G','SXKEY-H','SXKEY-J')
+			GROUP BY dev_name");
+
+		$response = array(
+			'status' => true,
+			'plan' => $plan,
+			'key' => $key,
+			'tanggal' => $tanggal,
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchDailyGroupAchievement(){
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");
@@ -752,7 +790,19 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchBuffingPerformance(Request $request){
+	public function fetchBuffingDetailOpNg(Request $request){
+		$detail = db::select("select ng.created_at, e.`name`, m.model, m.`key`, ng.ng_name, ng.quantity from middle_ng_logs ng
+			left join employees e on e.employee_id = ng.operator_id
+			left join materials m on m.material_number = ng.material_number
+			where ng.location = 'bff-kensa'
+			and DATE_FORMAT(ng.created_at,'%Y-%m-%d') = '".$request->get('tgl')."'
+			and e.`name` = '".$request->get('nama')."'
+			order by ng.created_at");
+
+		return DataTables::of($detail)->make(true);
+	}
+
+	public function fetchBuffingOpNg(Request $request){
 		$tanggal = '';
 		if(strlen($request->get("tanggal")) > 0){
 			$tanggal = date('Y-m-d', strtotime($request->get("tanggal")));
@@ -773,24 +823,24 @@ class MiddleProcessController extends Controller
 			$where = "and mt.origin_group_code in (".$code.") ";
 		}
 
-		$ng_rate = db::select("select e.`name`, rate.tot, rate.ng, rate.rate from
-			(select g.operator_id, g.jml as tot, ng.jml as ng, (ng.jml/g.jml*100) as rate from
-			(select m.operator_id, sum(m.quantity) as jml from middle_logs m
+		$ng_rate = db::select("select rate.shift, e.`name`, rate.tot, rate.ng, rate.rate from
+			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/g.jml*100) as rate from
+			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa'
 			and m.operator_id is not null ".$where."
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$tanggal."'
-			GROUP BY m.operator_id) g
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
+			GROUP BY shift, m.operator_id) g
 			left join
-			(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa'
 			and m.operator_id is not null ".$where."
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') = '".$tanggal."'
-			GROUP BY m.operator_id) ng
-			on g.operator_id = ng.operator_id) rate
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
+			GROUP BY shift, m.operator_id) ng
+			on g.shift = ng.shift and g.operator_id = ng.operator_id) rate
 			left join employees e on e.employee_id = rate.operator_id
-			ORDER BY rate.rate desc");
+			ORDER BY shift, rate.rate desc");
 
 		$response = array(
 			'status' => true,
@@ -876,9 +926,9 @@ class MiddleProcessController extends Controller
 		}
 
 		$location="";
+		$loc="'lcq-incoming'";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
-			$loc = "";
 
 			for($x = 0; $x < count($locations); $x++) {
 				$loc = $loc."'".$locations[$x]."'";
@@ -888,17 +938,15 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$kensa_time = db::select("select employee_id, sum(ng_time), sum(rework_time), sum(ok_time), sum(ng_time)+sum(rework_time)+sum(ok_time) from (
-			select employee_id, sum(TIMEDIFF(created_at, started_at)) as ng_time, 0 as rework_time, 0 as ok_time from middle_ng_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
-
+		$kensa_time = db::select("
+			select kensa_time.employee_id, concat(SPLIT_STRING(employees.name, ' ', 1), ' ', SPLIT_STRING(employees.name, ' ', 2)) as employee_name, sum(time_min) as kensa_time from
+			( 
+			select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_rework_logs where date(created_at) = '".$date."' and location in (".$loc.")
 			union all
-
-			select employee_id, 0 as ng_time, 0 as rework_time, sum(TIMEDIFF(created_at, started_at)) as ok_time from middle_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
-
+			select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_logs where date(created_at) = '".$date."' and location in (".$loc.")
 			union all
-
-			select employee_id, 0 as ng_time, sum(TIMEDIFF(created_at, started_at)) as rework_time, 0 as ok_time from middle_rework_logs where date(started_at) = '2019-09-27' and location in ('lcq-incoming') group by employee_id
-		) as kensa_time group by employee_id ");
+			select employee_id, remark, timestampdiff(second, started_at, max(created_at))/60 as time_min from middle_ng_logs where date(created_at) = '".$date."' and location in (".$loc.") group by employee_id, remark, started_at
+		) as kensa_time left join employees on employees.employee_id = kensa_time.employee_id group by kensa_time.employee_id, employees.name");
 
 		$response = array(
 			'status' => true,
@@ -3518,8 +3566,10 @@ class MiddleProcessController extends Controller
 	{
 		if ($request->get('date') != "") {
 			$date = $request->get('date');
+			$date2 = date("Y-m", strtotime($request->get('date')));
 		} else {
 			$date = date("Y-m-d");
+			$date2 = date("Y-m");
 		}
 
 		$mz_data = RfidLogEfficiency::whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
@@ -3537,10 +3587,20 @@ class MiddleProcessController extends Controller
 			array_push($op, $operator);
 		}
 
+		//OVERALL CHART
+
+		$mz_overall = RfidLogEfficiency::whereRaw("DATE_FORMAT(created_at,'%Y-%m') = '".$date2."'")
+		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$date."'")
+		->select(db::raw('DATE_FORMAT(created_at,"%Y-%m-%d") as tanggal') ,'grup', db::raw("SUM(IF(remark = 1, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0)) / 60 as nganggur_min"), db::raw("SUM(IF(remark = 2, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0))  / 60 as selesai_min"), db::raw("SUM(IF(remark = 3, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0))  / 60 as akan_min"))
+		->groupBy(db::raw('DATE_FORMAT(created_at,"%Y-%m-%d")'), 'grup')
+		->get();
+
+
 		$response = array(
 			'status' => true,
 			'datas' => $mz_data,
-			'op' => $op
+			'op' => $op,
+			'overall' => $mz_overall
 		);
 		return Response::json($response);
 	}

@@ -390,8 +390,6 @@
 					target.push(parseInt(480));
 				}
 
-				var yAxisLabels = [0,100,200,300,400,550];
-
 				var chart = Highcharts.chart('container2', {
 					title: {
 						text: 'Operators Working time on '+ result.date,
@@ -401,13 +399,11 @@
 						}
 					},
 					yAxis: {
-						min: 0,
 						title: {
-							enabled:false,
+							enabled: true,
+							text: "Minutes"
 						},
-						tickPositioner: function() {
-							return yAxisLabels;
-						},
+						max: 500,
 						plotLines: [{
 							color: '#FF0000',
 							width: 2,
@@ -417,15 +413,12 @@
 								text: '480 Minutes',
 								x:-7,
 								style: {
-									fontSize: '2vw',
+									fontSize: '1vw',
 									color: '#FF0000',
 									fontWeight: 'bold'
 								}
 							}
-						}],
-						labels: {
-							enabled:false
-						}
+						}]
 					},
 					xAxis: {
 						categories: op,
@@ -486,12 +479,9 @@
 
 				});
 
-
 			}
 
-
 		});
-
 
 	}
 

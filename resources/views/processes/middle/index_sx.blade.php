@@ -45,10 +45,11 @@
 			<a href="{{ url("index/middle/buffing_board/buffing-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
 			<a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>
 			<a href="{{ url("index/middle/buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
-			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Balance</a>
-			<a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a>
 			<a href="{{ url("index/middle/buffing_op_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
 			<a href="{{ url("index/middle/buffing_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Efficiency</a>
+			<a href="{{ url("index/middle/buffing_group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Achievement</a>
+			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Balance</a>
+			{{-- <a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a> --}}
 			<a href="{{ url("index/middle/muzusumashi") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Mizusumashi Monitoring</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>

@@ -5,6 +5,50 @@
 		color: white;
 		font-weight: bold;
 	}
+
+	thead>tr>th{
+		text-align:center;
+		overflow:hidden;
+		padding: 3px;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+		vertical-align: middle;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	.dataTable > thead > tr > th[class*="sort"]:after{
+		content: "" !important;
+	}
+	#queueTable.dataTable {
+		margin-top: 0px!important;
+	}
+
 	#loading, #error { display: none; }
 
 	.loading {
@@ -45,10 +89,60 @@
 				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;"></div>
+				<div class="col-xs-4" style="padding-left: 0px;">
+					<div id="container1_shift3" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4">
+					<div id="container1_shift1" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4" style="padding-right: 0px;">
+					<div id="container1_shift2" style="width: 100%;"></div>
+				</div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
 	</div>
+
+	<!-- start modal -->
+	<div class="modal fade" id="myModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="float: right;" id="modal-title"></h4>
+					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+					<br><h4 class="modal-title" id="judul_table"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="tabel_detail" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Kensa at</th>
+										<th>Nama</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>NG Name</th>
+										<th>Quantity</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end modal -->
+
+
 </section>
 @endsection
 @section('scripts')
@@ -296,7 +390,7 @@
 		var h = addZero(d.getHours());
 		var m = addZero(d.getMinutes());
 		var s = addZero(d.getSeconds());
-		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+		return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
 	}
 
 	function fillChart() {
@@ -326,26 +420,28 @@
 			if(result.status){
 				$('#location_title').html('<b>'+ location_title +'</b>');
 
+				var date = result.date; 
+
 				var op_name = [];
 				var rate = [];
 
 				for(var i = 0; i < result.ng_rate.length; i++){
-					op_name.push(result.ng_rate[i].name);
-					rate.push(result.ng_rate[i].rate);
+					if(result.ng_rate[i].shift == 's3'){
+						op_name.push(result.ng_rate[i].name);
+						rate.push(result.ng_rate[i].rate);						
+					}
 				}
 
-				var date = result.date; 
-
-				var chart = Highcharts.chart('container1', {
+				var chart = Highcharts.chart('container1_shift3', {
 					title: {
-						text: 'NG Rate By Operators',
+						text: 'SX Buffing NG Rate By Operators',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
-						text: 'on '+date,
+						text: 'Shift 3 on '+date,
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'
@@ -392,7 +488,14 @@
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(date, event.point.category);
+									}
+								}
+							},
 						}
 					},
 					series: [{
@@ -402,15 +505,361 @@
 						data: rate,
 						showInLegend: false
 					}]
-
 				});
 
-			}
 
+				for(var i = 0; i < result.ng_rate.length; i++){
+					if(result.ng_rate[i].shift == 's1'){
+						op_name.push(result.ng_rate[i].name);
+						rate.push(result.ng_rate[i].rate);						
+					}
+				}
+
+				var chart = Highcharts.chart('container1_shift1', {
+					title: {
+						text: 'SX Buffing NG Rate By Operators',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Shift 1 on '+date,
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'NG Rate (%)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: op_name,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(date, event.point.category);
+									}
+								}
+							},
+						}
+					},
+					series: [{
+						name:'NG Rate',
+						type: 'column',
+						colorByPoint: true,
+						data: rate,
+						showInLegend: false
+					}]
+				});
+
+
+				for(var i = 0; i < result.ng_rate.length; i++){
+					if(result.ng_rate[i].shift == 's2'){
+						op_name.push(result.ng_rate[i].name);
+						rate.push(result.ng_rate[i].rate);						
+					}
+				}
+
+				var chart = Highcharts.chart('container1_shift2', {
+					title: {
+						text: 'SX Buffing NG Rate By Operators',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Shift 2 on '+date,
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'NG Rate (%)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: op_name,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(date, event.point.category);
+									}
+								}
+							},
+						}
+					},
+					series: [{
+						name:'NG Rate',
+						type: 'column',
+						colorByPoint: true,
+						data: rate,
+						showInLegend: false
+					}]
+				});
+			}
 		});
 
+$.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, status, xhr) {
+	if(result.status){
 
+		var seriesData = [];
+		var data = [];
+
+
+		for (var i = 0; i < result.op.length; i++) {
+			data = [];
+			for (var j = 0; j < result.ng_rate.length; j++) {
+				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
+					data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+				}
+			}
+			seriesData.push({name : result.op[i].name, data: data});
+		}
+
+		var chart = Highcharts.stockChart('container2', {
+			chart:{
+				type:'spline',
+			},
+			rangeSelector: {
+				selected: 0
+			},
+			scrollbar:{
+				enabled:false
+			},
+			navigator:{
+				enabled:false
+			},
+			title: {
+				text: 'Daily SX Buffing NG Rate By Operators',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Last Update: '+getActualFullDate(),
+				style: {
+					fontSize: '18px',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'NG Rate (%)'
+				},
+				plotLines: [{
+					color: '#FFFFFF',
+					width: 2,
+					value: 0,
+					dashStyles: 'longdashdot'
+				}]
+			},
+			xAxis: {
+				categories: 'datetime',
+				tickInterval: 24 * 3600 * 1000 
+			},
+			tooltip: {
+				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+			},
+			legend : {
+				enabled:true
+			},
+			credits: {
+				enabled:false
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:,.1f}%',
+					},
+					connectNulls: true,
+					shadow: {
+						width: 3,
+						opacity: 0.4
+					},
+					label: {
+						connectorAllowed: false
+					},
+					cursor: 'pointer',
+				}
+			},
+			series: seriesData,
+			responsive: {
+				rules: [{
+					condition: {
+						maxWidth: 500
+					},
+					chartOptions: {
+						legend: {
+							layout: 'horizontal',
+							align: 'center',
+							verticalAlign: 'bottom'
+						}
+					}
+				}]
+			}
+		});
 	}
+});
+
+
+}
+
+
+function showDetail(tgl, nama) {
+	tabel = $('#tabel_detail').DataTable();
+	tabel.destroy();
+
+	$('#myModal').modal('show');
+
+	var table = $('#tabel_detail').DataTable({
+		'dom': 'Bfrtip',
+		'responsive': true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'buttons': {
+			buttons:[
+			{
+				extend: 'pageLength',
+				className: 'btn btn-default',
+					// text: '<i class="fa fa-print"></i> Show',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/middle/buffing_detail_op_ng") }}",
+				"data" : {
+					tgl : tgl,
+					nama : nama
+				}
+			},
+			"columns": [
+			{ "data": "created_at" },
+			{ "data": "name" },
+			{ "data": "model"},
+			{ "data": "key"},
+			{ "data": "ng_name"},
+			{ "data": "quantity"},
+			]
+		});
+
+}
 
 
 

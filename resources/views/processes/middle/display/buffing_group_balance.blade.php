@@ -38,10 +38,27 @@
 				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;"></div>
-			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container2" style="width: 100%;"></div>
+				<div class="col-xs-9" style="padding: 0px;">
+					<div id="container1" style="width: 100%;"></div>					
+				</div>
+				<div class="col-xs-3" style="padding: 0px;padding-left: 1%;">
+					<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 350px;">
+						<div class="inner" style="padding-bottom: 0px;">
+							<h2 style="margin: 0px; font-size: 3vw;"><b>LINE BALANCE</b></h2>
+							<br>
+							<p style="margin: 0px; font-size: 2vw;">=  Σ(Plan Group)</p>
+							<hr style="margin-left: 5%;margin-top: 0px;margin-bottom: 0px;width:75%;">
+							<p style="font-size: 2vw;margin-left: 5%;margin-top: 0px;margin-bottom: 0px;">Max Value x ΣGroup</p>
+							<p style="margin: 0px; font-size: 2vw;" id="line_balance"></p>
+
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+						{{-- <a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -302,21 +319,39 @@
 			tanggal:tanggal,
 		}
 
-		$.get('{{ url("fetch/middle/buffing_group_achievement") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/buffing_line_balance") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var key = [];
-				var plan = [];
-				var bff = [];
 
-				for(var i = 0; i < result.data.length; i++){
-					key.push(result.data[i].key);
-					plan.push(Math.ceil(result.data[i].plan));
-					bff.push(Math.ceil(result.data[i].result));			
+				var key_value = [];
+				var key = [];
+
+				var total_value = 0;
+				var max = 0;
+				
+				for (var i = 0; i < result.plan.length; i++) {
+					key.push(result.plan[i].key);
+					for (var j = 0; j < result.key.length; j++) {
+						if(result.plan[i].key == result.key[j].key){
+							key_value.push(Math.ceil(result.plan[i].plan / result.key[i].jml));
+							total_value += Math.ceil(result.plan[i].plan / result.key[i].jml);
+							if(Math.ceil(result.plan[i].plan / result.key[i].jml) > max){
+								max = Math.ceil(result.plan[i].plan / result.key[i].jml);
+							}
+						}
+					}
 				}
+
+				var line_balance = total_value / (max * key.length);
+
+				$('#line_balance').append().empty();
+				$('#line_balance').html('=  '+line_balance.toFixed(2));
+
+				console.log(line_balance);
+
 
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: 'achievement of group work',
+						text: 'Group Balance',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -356,6 +391,9 @@
 					credits: {
 						enabled:false
 					},
+					legend : {
+						enabled: false
+					},
 					plotOptions: {
 						series:{
 							dataLabels: {
@@ -371,141 +409,14 @@
 						}
 					},
 					series: [{
-						name:'Plan',
 						type: 'column',
-						color: 'rgb(255,116,116)',
-						data: plan,
-					},{
-						name:'Result Buffing',
-						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: bff,
+						"colorByPoint": true,
+						data: key_value,
 					}]
 
 				});
 
-			}
-
-		});
-
-		$.get('{{ url("fetch/middle/buffing_daily_group_achievement") }}', function(result, status, xhr) {
-			if(result.status){
-				var tgl = [];
-				var plan = [];
-				var plan_data = [];
-				var bff = [];
-				var bff_data = [];
-
-				for(var i = 0; i < result.data.length; i++){
-					if((result.data[i].plan > 0) || (result.data[i].result > 0)){
-						tgl.push(result.data[i].week_date);
-						plan_data.push(Math.ceil(result.data[i].plan));
-						bff_data.push(Math.ceil(result.data[i].result));
-					}
-				}
-
-				for(var i = 0; i < tgl.length; i++){
-					plan.push([Date.parse(tgl[i]), plan_data[i]]);
-					bff.push([Date.parse(tgl[i]), bff_data[i]]);
-				}
-
-
-				var chart = Highcharts.stockChart('container2', {
-					chart:{
-						type:'spline',
-					},
-					rangeSelector: {
-						selected: 0
-					},
-					scrollbar:{
-						enabled:false
-					},
-					navigator:{
-						enabled:false
-					},
-					title: {
-						text: 'achievement of daily group work',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Last Update: '+getActualFullDate(),
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: 'Minutes'
-						},
-						plotLines: [{
-							color: '#FFFFFF',
-							width: 2,
-							value: 0,
-							dashStyles: 'longdashdot'
-						}]
-					},
-					xAxis: {
-						categories: 'datetime',
-						tickInterval: 24 * 3600 * 1000 
-					},
-					tooltip: {
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b>',
-					},
-					legend : {
-						enabled:true
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series: {
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:}',
-							},
-							connectNulls: true,
-							shadow: {
-								width: 3,
-								opacity: 0.4
-							},
-							label: {
-								connectorAllowed: false
-							},
-							cursor: 'pointer',
-						}
-					},
-					series: [
-					{
-						name:'Plan',
-						data: plan,
-						lineWidth: 3
-					},
-					{
-						name:'Result',
-						data: bff,
-						lineWidth: 3
-					}
-					],
-					responsive: {
-						rules: [{
-							condition: {
-								maxWidth: 500
-							},
-							chartOptions: {
-								legend: {
-									layout: 'horizontal',
-									align: 'center',
-									verticalAlign: 'bottom'
-								}
-							}
-						}]
-					}
-				});
-
+				
 			}
 
 		});
