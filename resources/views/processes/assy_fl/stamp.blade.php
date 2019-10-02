@@ -88,7 +88,7 @@ table.table-bordered > tfoot > tr > th{
 								
 							</p>
 						</div>
-						<div class="col-xs-5">
+						<!-- <div class="col-xs-5">
 							<center>
 								<span style="font-size: 24px;">Schedule:</span>
 							</center>
@@ -102,9 +102,9 @@ table.table-bordered > tfoot > tr > th{
 										<th colspan="2" width="15%">Stock</th>
 										<th rowspan="2">Target SubAssy (H)</th>
 										<th rowspan="2">Stamping</th>
-										<th rowspan="2">Target SubAssy (H+1 Full)</th>
+										<th rowspan="2">Target SubAssy (H+1 Full)</th> -->
 										<!-- <th>Diff</th> -->
-									</tr>
+									<!-- </tr>
 									<tr>
 										<th>WIP</th>
 										<th>NG</th>
@@ -125,8 +125,8 @@ table.table-bordered > tfoot > tr > th{
 									</tr>
 								</tfoot>
 							</table>
-						</div>
-						<div class="col-xs-3">
+						</div> -->
+						<div class="col-xs-4 col-xs-offset-1">
 							<center>
 								<span style="font-size: 24px">Last Counter:</span><br>
 								<input id="nextCounter" type="hidden" style="font-weight: bold; background-color: rgb(255,255,204); width: 100%; text-align: center; font-size: 4vw" disabled>
@@ -144,7 +144,7 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</center>
 						</div>
-						<div class="col-xs-4">
+						<div class="col-xs-7">
 							<center>
 								<span style="font-size: 24px;">Result:</span>
 							</center>
@@ -263,7 +263,7 @@ table.table-bordered > tfoot > tr > th{
 		stamp();
 
 		$('body').toggleClass("sidebar-collapse");
-		fillPlannew();
+		// fillPlannew();
 		fillSerialNumber();
 		fillResult();
 	});
@@ -536,7 +536,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					if(result.statusCode == 'stamp'){
 						fillResult();
-						fillPlannew();
+						// fillPlannew();
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
@@ -604,7 +604,7 @@ table.table-bordered > tfoot > tr > th{
 						$('#editModal').modal('hide');
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
-						fillPlannew();
+						// fillPlannew();
 					}
 					else{
 						audio_error.play();
@@ -640,7 +640,7 @@ table.table-bordered > tfoot > tr > th{
 					$('#editModal').modal('hide');
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
-					fillPlannew();
+					// fillPlannew();
 				}
 				else{
 					audio_error.play();

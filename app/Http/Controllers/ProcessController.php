@@ -1068,11 +1068,33 @@ class ProcessController extends Controller
 		ORDER BY serial_number DESC";
 		$log_processes = db::select($query);
 	}elseif($id =="YTS2"){
-		$query="SELECT * FROM (
-		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+		$query ="
+		SELECT picking.*,stamp.`name` from (
+		SELECT * FROM (
+		SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d') >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
 		UNION ALL
-		SELECT serial_number,model,created_at,id FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
-	) A ORDER BY created_at DESC";
+		SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YAS%' and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d') >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+		) picking
+		ORDER BY created_at DESC
+		)picking 
+		left JOIN(
+		SELECT a.*,users.`name` FROM (
+		SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1' 
+		UNION ALL
+		SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YAS%' and process_code ='1' 
+		) A
+		LEFT JOIN users on a.created_by = users.id
+		ORDER BY a.created_at DESC
+		) as stamp on picking.serial_number = stamp.serial_number ORDER BY picking.created_at DESC
+		";
+
+	// 	$query="SELECT a.*, users.`name` FROM (
+	// 	SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YTS%' and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+	// 	UNION ALL
+	// 	SELECT serial_number,model,created_at,id,created_by FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='2' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+	// ) A 
+	// LEFT JOIN users on a.created_by = users.id
+	// ORDER BY a.created_at DESC";
 	$log_processes = db::select($query);
 }elseif($id =="YTS3"){
 	$query="SELECT * FROM (

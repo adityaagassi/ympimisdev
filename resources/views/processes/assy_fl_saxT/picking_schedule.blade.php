@@ -103,7 +103,7 @@ table.table-bordered > tfoot > tr > th{
 	jQuery(document).ready(function() {
 		fillPlannew();
 
-         setInterval(fillPlannew, 5000);
+         setInterval(fillPlannew, 1000);
 	});
 
 	function fillPlannew(){
