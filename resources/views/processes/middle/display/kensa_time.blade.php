@@ -43,7 +43,7 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
-				<form method="GET" action="{{ action('MiddleProcessController@indexDisplayProductionResult') }}">
+				<form method="GET" action="{{ action('MiddleProcessController@indexDisplayKensaTime') }}">
 					<div class="col-xs-2">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none;">
@@ -94,7 +94,7 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		fillTable();
-		// setInterval(fillTable, 30000);
+		setInterval(fillTable, 30000);
 	});
 
 	Highcharts.theme = {
@@ -333,6 +333,9 @@
 		$.get('{{ url("fetch/middle/display_kensa_time") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					var title = result.title;
+					$('#last_update').html('<b>'+ title +'</b>');
+					
 					var data = result.kensa_time;
 					var categories = [];
 					var series = [];

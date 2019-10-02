@@ -51,6 +51,19 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexBuffingIcAtokotei(){
+		$title = 'Incoming Check Atokotei';
+		$title_jp = '??';
+
+		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
+
+		return view('processes.middle.display.ic_atokotei', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'origin_groups' => $origin_groups
+		))->with('page', 'Incoming Check Atokotei')->with('head', 'Middle Process');
+	}
+
 	public function indexBuffingGroupBalance(){
 		return view('processes.middle.display.buffing_group_balance', array(
 			'title' => 'Buffing Group Balance',
@@ -457,6 +470,50 @@ class MiddleProcessController extends Controller
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
+
+	public function fetchBuffingIcAtokotei(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$where = "";
+		if($request->get('code') != null) {
+			$codes = $request->get('code');
+			$code = "";
+
+			for($x = 0; $x < count($codes); $x++) {
+				$code = $code."'".substr($codes[$x],0,3)."'";
+				if($x != count($codes)-1){
+					$code = $code.",";
+				}
+			}
+			$where = "and m.origin_group_code in (".$code.") ";
+		}
+
+		$ng_name = db::select("select l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'lcq-incoming'
+			group by l.ng_name order by jml desc");
+
+		$key = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'lcq-incoming'
+			group by m.`key` order by jml desc");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'ng_name' => $ng_name,
+			'key' => $key
+		);
+		return Response::json($response);
+	}
+
 
 	public function fetchBuffingLineBalance(Request $request){
 		if ($request->get('tanggal') == "") {
@@ -927,7 +984,7 @@ class MiddleProcessController extends Controller
 		}
 
 		$location="";
-		$loc="'lcq-incoming'";
+		$loc="";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
 
@@ -951,8 +1008,9 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
+			'date' => $date,
 			'kensa_time' => $kensa_time,
-			'title' => $location
+			'title' => strtoupper(str_replace("'", "", $loc))
 		);
 		return Response::json($response);
 	}

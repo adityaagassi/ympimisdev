@@ -19,6 +19,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('tes', 'TrialController@tes');
 Route::get('tes2', 'TrialController@tes2');
+Route::get('fetch/employee/data', 'TrialController@fetch_data');
 Route::get('happybirthday', 'TrialController@ultah');
 
 
@@ -688,7 +689,6 @@ Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingN
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
 Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
-
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
@@ -701,6 +701,8 @@ Route::get('fetch/middle/buffing_group_achievement', 'MiddleProcessController@fe
 Route::get('fetch/middle/buffing_daily_group_achievement', 'MiddleProcessController@fetchDailyGroupAchievement');
 Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexBuffingGroupBalance');
 Route::get('fetch/middle/buffing_line_balance', 'MiddleProcessController@fetchBuffingLineBalance');
+Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuffingIcAtokotei');
+Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
 
 
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');

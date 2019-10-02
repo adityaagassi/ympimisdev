@@ -284,7 +284,7 @@
 					type: "column"
 				},
 				title: {
-					text: 'Operator Monitoring',
+					text: 'Mizusumashi Performance Monitor',
 					style: {
 						fontSize: '30px',
 						fontWeight: 'bold'
@@ -328,16 +328,16 @@
 				},
 
 				series: [{
-					name: 'Idle Operator',
+					name: 'OP Buffing Idle',
 					color: '#2598db',
 					data: sedang
 				}, {
-					name: 'Finish in Rack',
+					name: 'Finish not Taked',
 					color: '#f78a1d',
 					data: selesai
 				},
 				{
-					name: 'Next Material Blanks',
+					name: 'Next Material Blank',
 					color: '#f90031',
 					data: akan
 				}
@@ -359,7 +359,7 @@
 					type: 'spline'			
 				},
 				title: {
-					text: 'Overall Operator Monitoring',
+					text: 'Daily Mizusumashi Monitor',
 					style: {
 						fontSize: '30px',
 						fontWeight: 'bold'
@@ -392,17 +392,17 @@
 
 				series: [{
 					data: sedang_all,
-					name: "Idle Operator",
+					name: "OP Buffing Idle",
 					color: '#2598db',
 				},
 				{
 					data: selesai_all,
-					name: "Finish in Rack",
+					name: "Finish not Taked",
 					color: '#f78a1d',
 				},
 				{
 					data: akan_all,
-					name: "Next Material Blanks",
+					name: "Next Material Blank",
 					color: '#f90031',
 				}]
 			});

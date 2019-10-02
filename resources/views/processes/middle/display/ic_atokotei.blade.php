@@ -32,35 +32,21 @@
 						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
 				</div>
+				<div class="col-xs-2" style="padding-right: 0;">
+					<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
+						@foreach($origin_groups as $origin_group)
+						<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>
+						@endforeach
+					</select>
+				</div>
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
 				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div class="col-xs-9" style="padding: 0px;">
-					<div id="container1" style="width: 100%; height: 690px"></div>					
-				</div>
-				<div class="col-xs-3" style="padding: 0px;padding-left: 1%;">
-					<p style="margin: 0px; font-size: 2vw;">Balance</p>
-					<p style="margin: 0px; font-size: 7vw;" id="line_balance"></p>
-					{{-- <div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 350px;">
-						<div class="inner" style="padding-bottom: 0px;">
-							<h2 style="margin: 0px; font-size: 3vw;"><b>LINE BALANCE</b></h2>
-							<br>
-							<p style="margin: 0px; font-size: 2vw;">=  Σ(Plan Group)</p>
-							<hr style="margin-left: 5%;margin-top: 0px;margin-bottom: 0px;width:75%;">
-							<p style="font-size: 2vw;margin-left: 5%;margin-top: 0px;margin-bottom: 0px;">Max Value x ΣGroup</p>
-							<p style="margin: 0px; font-size: 2vw;" id="line_balance"></p>
-
-						</div>
-						<div class="icon">
-							<i class="ion ion-stats-bars"></i>
-						</div>
-						<a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-					</div> --}}
-				</div>
-
+				<div id="container1" style="width: 100%;"></div>
+				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
 	</div>
@@ -81,7 +67,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 30000);
+		setInterval(fillChart, 30000);
 	});
 
 	$('.datepicker').datepicker({
@@ -315,112 +301,192 @@
 	}
 
 	function fillChart() {
+		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
 
+		var location_title = "";
+		if(hpl.length > 1){
+			for(var i = 0; i < hpl.length; i++){
+				location_title += hpl[i].replace('-',' ');
+				if(i == hpl.length-2){
+					location_title += " & ";
+				}else if(i != hpl.length-1){
+					location_title += ", ";
+				}
+			}
+		}else if(hpl.length == 1){ 
+			location_title += hpl[0].replace('-',' ');
+		}
+		
 		var data = {
 			tanggal:tanggal,
+			code:hpl
 		}
 
-		$.get('{{ url("fetch/middle/buffing_line_balance") }}', data, function(result, status, xhr) {
-			if(result.status){
+		$.get('{{ url("fetch/middle/buffing_ic_atokotei") }}',data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
 
-				var key_value = [];
-				var key = [];
+					var ng = [];
+					var jml = [];
 
-				var total_value = 0;
-				var max = 0;
-				
-				for (var i = 0; i < result.plan.length; i++) {
-					key.push(result.plan[i].key);
-					for (var j = 0; j < result.key.length; j++) {
-						if(result.plan[i].key == result.key[j].key){
-							key_value.push(Math.ceil(result.plan[i].plan / result.key[i].jml));
-							total_value += Math.ceil(result.plan[i].plan / result.key[i].jml);
-							if(Math.ceil(result.plan[i].plan / result.key[i].jml) > max){
-								max = Math.ceil(result.plan[i].plan / result.key[i].jml);
-							}
-						}
+					for (var i = 0; i < result.ng_name.length; i++) {
+						ng.push(result.ng_name[i].ng_name);
+						jml.push(result.ng_name[i].jml);
 					}
-				}
 
-				var line_balance = total_value / (max * key.length);
-
-				$('#line_balance').append().empty();
-				$('#line_balance').html((line_balance*100).toFixed(2) + "%");
-
-				console.log(line_balance);
-
-
-				var chart = Highcharts.chart('container1', {
-					title: {
-						text: 'Group Balance',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'on '+result.tanggal,
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: 'Minutes'
+					Highcharts.chart('container1', {
+						chart: {
+							type: 'column'
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
-					},
-					xAxis: {
-						categories: key,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
+						title: {
+							text: 'NG I.C. Atokotei by NG Name',
 							style: {
-								fontSize: '26px'
+								fontSize: '30px',
+								fontWeight: 'bold'
 							}
 						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend : {
-						enabled: false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
+						subtitle: {
+							text: 'on '+result.date,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: ng,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								style: {
+									fontSize: '1vw'
+								}
+							},
+						},
+						yAxis: {
+							title: {
+								text: 'Total Not Good'
+							},
+							type: 'logarithmic'
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+						},
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										textOutline: false,
+										fontSize: '1vw'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							"colorByPoint": true,
+							name: 'Total NG',
+							data: jml,
+						}
+						]
+					});
+
+					var key = [];
+					var jml = [];
+
+					for (var i = 0; i < result.key.length; i++) {
+						key.push(result.key[i].key);
+						jml.push(result.key[i].jml);
+					}
+
+					Highcharts.chart('container2', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'NG I.C. Atokotei by Key',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'on '+result.date,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: key,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								rotation: -65,
+								style: {
 									fontSize: '26px'
 								}
 							},
-							animation: false,
-							cursor: 'pointer'
+						},
+						yAxis: {
+							title: {
+								text: 'Total Not Good'
+							},
+							type: 'logarithmic'
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+						},
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										textOutline: false,
+										fontSize: '20px'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							"colorByPoint": true,
+							name: 'Total NG',
+							data: jml,
 						}
-					},
-					series: [{
-						type: 'column',
-						"colorByPoint": true,
-						data: key_value,
-					}]
+						]
+					});
 
-				});
 
-				
+				}
 			}
-
 		});
 
 	}
