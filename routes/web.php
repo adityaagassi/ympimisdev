@@ -695,6 +695,9 @@ Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@ind
 Route::get('fetch/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@fetchBuffingOpNgRate');
 Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexBuffingGroupBalance');
 Route::get('fetch/middle/buffing_group_achievement', 'MiddleProcessController@fetchBuffingGroupAchievement');
+Route::get('fetch/middle/buffing_daily_group_achievement', 'MiddleProcessController@fetchDailyGroupAchievement');
+
+
 
 
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');

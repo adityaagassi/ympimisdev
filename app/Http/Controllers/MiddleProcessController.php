@@ -451,39 +451,40 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
-	// public function fetchBuffingGroupAchievement(){
-	// 	$datefrom = date("Y-m-d", strtotime("-3 Months"));
-	// 	$dateto = date("Y-m-d");
+	public function fetchDailyGroupAchievement(){
+		$datefrom = date("Y-m-d", strtotime("-3 Months"));
+		$dateto = date("Y-m-d");
 
-	// 	$data = db::select("select date.week_date, COALESCE(plan1.plan,0) as plan, COALESCE(result.result,0) as result from
-	// 		(select week_date from weekly_calendars
-	// 		where week_date BETWEEN '".$datefrom."' and '".$dateto."') date
-	// 		left join
-	// 		(select due_date, sum(plan.plan) as plan from
-	// 		(select a.due_date, b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
-	// 		left join bom_components b on a.material_number = b.material_parent
-	// 		left join standart_times t on b.material_child = t.material_number
-	// 		where quantity > 0
-	// 		and a.due_date BETWEEN '".$datefrom."' and '".$dateto."' 
-	// 		group by a.due_date, b.material_child
-	// 		order by a.due_date) plan
-	// 		group by due_date) plan1
-	// 		on date.week_date = plan1.due_date
-	// 		left join
-	// 		(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
-	// 		left join materials m on m.material_number = l.material_number
-	// 		left join standart_times s on s.material_number = l.material_number
-	// 		where l.location = 'bff-kensa'
-	// 		and DATE_FORMAT(l.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-	// 		GROUP BY tgl) result
-	// 		on date.week_date =  result.tgl");
+		$data = db::select("select date.week_date, COALESCE(plan1.plan,0) as plan, COALESCE(result.result,0) as result from
+			(select week_date from weekly_calendars
+			where week_date BETWEEN '".$datefrom."' and '".$dateto."') date
+			left join
+			(select due_date, sum(plan.plan) as plan from
+			(select a.due_date, b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
+			left join bom_components b on a.material_number = b.material_parent
+			left join standart_times t on b.material_child = t.material_number
+			where quantity > 0
+			and a.due_date BETWEEN '".$datefrom."' and '".$dateto."' 
+			group by a.due_date, b.material_child
+			order by a.due_date) plan
+			group by due_date) plan1
+			on date.week_date = plan1.due_date
+			left join
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
+			left join materials m on m.material_number = l.material_number
+			left join standart_times s on s.material_number = l.material_number
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl) result
+			on date.week_date =  result.tgl
+			order by date.week_date");
 
-	// 	$response = array(
-	// 		'status' => true,
-	// 		'data' => $data,
-	// 	);
-	// 	return Response::json($response);
-	// }
+		$response = array(
+			'status' => true,
+			'data' => $data,
+		);
+		return Response::json($response);
+	}
 
 	public function fetchBuffingGroupAchievement(Request $request){
 		if ($request->get('tanggal') == "") {
@@ -3521,33 +3522,12 @@ class MiddleProcessController extends Controller
 			$date = date("Y-m-d");
 		}
 
-		$mz_data = RfidLogEfficiency::where('remark', "=", "1")
-		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at)))) as nganggur_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(IFNULL(time_filled, now()),created_at))) / 60 as ngaggur_min"))
-		->groupBy('operator_id','grup')
-		->get();
-
-		$mz_data_selesai = RfidLogEfficiency::where('remark', "=", "2")
-		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled)))) as selesai_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled))) / 60 as selesai_min"))
-		->groupBy('operator_id','grup')
-		->get();
-
-		$mz_data_akan = RfidLogEfficiency::where('remark', "=", "3")
-		->whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
-		->select('operator_id','grup', db::raw("SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled)))) as akan_time"), db::raw("SUM(TIME_TO_SEC(TIMEDIFF(created_at, time_filled))) / 60 as akan_min"))
+		$mz_data = RfidLogEfficiency::whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'")
+		->select('operator_id','grup', db::raw("SUM(IF(remark = 1, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0)) / 60 as nganggur_min"), db::raw("SUM(IF(remark = 2, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0))  / 60 as selesai_min"), db::raw("SUM(IF(remark = 3, TIME_TO_SEC(TIMEDIFF(created_at,time_filled)), 0))  / 60 as akan_min"))
 		->groupBy('operator_id','grup')
 		->get();
 
 		$op = [];
-
-		foreach ($mz_data_akan as $key) {
-			$operator = Employee::select("name","employee_id")
-			->where("employee_id","=",$key->operator_id)
-			->first();
-
-			array_push($op, $operator);
-		}
 
 		foreach ($mz_data as $key) {
 			$operator = Employee::select("name","employee_id")
@@ -3557,21 +3537,9 @@ class MiddleProcessController extends Controller
 			array_push($op, $operator);
 		}
 
-		foreach ($mz_data_selesai as $key) {
-			$operator = Employee::select("name","employee_id")
-			->where("employee_id","=",$key->operator_id)
-			->first();
-
-			array_push($op, $operator);
-		}
-
-		$op = array_unique($op);
-
 		$response = array(
 			'status' => true,
-			'datas_sedang' => $mz_data,
-			'datas_selesai' => $mz_data_selesai,
-			'datas_akan' => $mz_data_akan,
+			'datas' => $mz_data,
 			'op' => $op
 		);
 		return Response::json($response);

@@ -22,35 +22,33 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="col-xs-2">
-				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none;">
-						<i class="fa fa-calendar"></i>
+		<div class="col-xs-12" style="margin-top: 0px;">
+			<div class="row" style="margin:0px;">
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
-					<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 				</div>
+				<div class="col-xs-2" style="padding-right: 0;">
+					<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
+						@foreach($origin_groups as $origin_group)
+						<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+				</div>
+				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
-			<div class="col-xs-2" style="padding-right: 0;">
-				<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
-					@foreach($origin_groups as $origin_group)
-					<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>
-					@endforeach
-				</select>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container1" style="width: 100%;"></div>
+				<div id="container2" style="width: 100%;"></div>
 			</div>
-			<div class="col-xs-2">
-				<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-			</div>
-			<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 		</div>
-		<div class="col-xs-12">
-			<div id="container1" style="width: 100%;"></div>
-		</div>
-		<div class="col-xs-12">
-			<div id="container2" style="width: 100%;"></div>
-		</div>
-
-
 	</div>
 </section>
 @endsection

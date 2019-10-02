@@ -40,6 +40,9 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
 			</div>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container2" style="width: 100%;"></div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -308,7 +311,7 @@
 				for(var i = 0; i < result.data.length; i++){
 					key.push(result.data[i].key);
 					plan.push(Math.ceil(result.data[i].plan));
-					bff.push(Math.ceil(result.data[i].result));
+					bff.push(Math.ceil(result.data[i].result));			
 				}
 
 				var chart = Highcharts.chart('container1', {
@@ -381,6 +384,127 @@
 
 				});
 
+			}
+
+		});
+
+		$.get('{{ url("fetch/middle/buffing_daily_group_achievement") }}', function(result, status, xhr) {
+			if(result.status){
+				var tgl = [];
+				var plan = [];
+				var plan_data = [];
+				var bff = [];
+				var bff_data = [];
+
+				for(var i = 0; i < result.data.length; i++){
+					if((result.data[i].plan > 0) || (result.data[i].result > 0)){
+						tgl.push(result.data[i].week_date);
+						plan_data.push(Math.ceil(result.data[i].plan));
+						bff_data.push(Math.ceil(result.data[i].result));
+					}
+				}
+
+				for(var i = 0; i < tgl.length; i++){
+					plan.push([Date.parse(tgl[i]), plan_data[i]]);
+					bff.push([Date.parse(tgl[i]), bff_data[i]]);
+				}
+
+
+				var chart = Highcharts.stockChart('container2', {
+					chart:{
+						type:'spline',
+					},
+					rangeSelector: {
+						selected: 0
+					},
+					scrollbar:{
+						enabled:false
+					},
+					navigator:{
+						enabled:false
+					},
+					title: {
+						text: 'achievement of daily group work',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'Last Update: '+getActualFullDate(),
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'Minutes'
+						},
+						plotLines: [{
+							color: '#FFFFFF',
+							width: 2,
+							value: 0,
+							dashStyles: 'longdashdot'
+						}]
+					},
+					xAxis: {
+						categories: 'datetime',
+						tickInterval: 24 * 3600 * 1000 
+					},
+					tooltip: {
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b>',
+					},
+					legend : {
+						enabled:true
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series: {
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:}',
+							},
+							connectNulls: true,
+							shadow: {
+								width: 3,
+								opacity: 0.4
+							},
+							label: {
+								connectorAllowed: false
+							},
+							cursor: 'pointer',
+						}
+					},
+					series: [
+					{
+						name:'Plan',
+						data: plan,
+						lineWidth: 3
+					},
+					{
+						name:'Result',
+						data: bff,
+						lineWidth: 3
+					}
+					],
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+							chartOptions: {
+								legend: {
+									layout: 'horizontal',
+									align: 'center',
+									verticalAlign: 'bottom'
+								}
+							}
+						}]
+					}
+				});
 
 			}
 

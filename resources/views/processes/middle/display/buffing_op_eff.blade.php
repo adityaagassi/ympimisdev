@@ -377,6 +377,7 @@
 				var op = [];
 				var act = [];
 				var std = [];
+				var target = [];
 
 				for(var i = 0; i < result.working_time.length; i++){
 					for(var j = 0; j < result.emp_name.length; j++){
@@ -384,10 +385,12 @@
 							op.push(result.emp_name[j].name);
 						}
 					}
-					act.push(parseFloat(result.working_time[i].act));
-					std.push(parseFloat(result.working_time[i].std));
+					act.push(Math.ceil(result.working_time[i].act));
+					std.push(Math.ceil(result.working_time[i].std));
+					target.push(parseInt(480));
 				}
 
+				var yAxisLabels = [0,100,200,300,400,550];
 
 				var chart = Highcharts.chart('container2', {
 					title: {
@@ -398,12 +401,30 @@
 						}
 					},
 					yAxis: {
+						min: 0,
 						title: {
-							text: 'Minutes'
+							enabled:false,
 						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
+						tickPositioner: function() {
+							return yAxisLabels;
+						},
+						plotLines: [{
+							color: '#FF0000',
+							width: 2,
+							value: 480,
+							label: {
+								align:'right',
+								text: '480 Minutes',
+								x:-7,
+								style: {
+									fontSize: '2vw',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+						labels: {
+							enabled:false
 						}
 					},
 					xAxis: {
@@ -419,7 +440,7 @@
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}</b> <br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
 					},
 					credits: {
 						enabled:false
@@ -438,7 +459,7 @@
 						series:{
 							dataLabels: {
 								enabled: true,
-								format: '{point.y:.2f}',
+								format: '{point.y}',
 								style:{
 									textOutline: false,
 									fontSize: '26px'
@@ -446,20 +467,22 @@
 							},
 							animation: false,
 							cursor: 'pointer'
-						}
+						},
 					},
-					series: [{
-						name:'Actual Time',
-						type: 'column',
-						color: 'rgb(144,238,126)',
-						data: act,
-					},
+					series: [
 					{
 						name:'Standart time',
 						type: 'column',
 						color: 'rgb(255,116,116)',
 						data: std
-					}]
+					},
+					{
+						name:'Actual Time',
+						type: 'column',
+						color: 'rgb(144,238,126)',
+						data: act,
+					}
+					]
 
 				});
 

@@ -22,9 +22,11 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12">
-			<div id="container2" style="width: 100%;height: 20%;"></div>
-			<div id="container1" style="width: 100%;height: 20%;"></div>
+		<div class="col-xs-12" style="margin-top: 0px;">
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container2" style="width: 100%;height: 20%;"></div>
+				<div id="container1" style="width: 100%;height: 20%;"></div>
+			</div>
 		</div>
 	</div>
 </section>
