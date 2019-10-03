@@ -412,7 +412,7 @@
 				for (var i = 0; i < result.akumulasi.length; i++) {
 					tgl.push(result.akumulasi[i].tgl);
 					barrel.push(parseInt(result.akumulasi[i].barrel) + diff);
-					bff.push(parseInt(result.akumulasi[i].barrel));
+					bff.push(parseInt(result.akumulasi[i].bff));
 
 					diff = barrel[i] - bff[i];
 				}
