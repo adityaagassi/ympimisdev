@@ -438,6 +438,8 @@
 						},
 						type: 'logarithmic',
 						gridLineWidth: 0,
+						startOnTick: false,
+						endOnTick: false
 					},
 					xAxis: {
 						categories: tgl,
@@ -472,6 +474,18 @@
 						shadow: false
 					},
 					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							cursor: 'pointer'
+						},
 						areaspline: {
 							fillOpacity: 0.5
 						}
