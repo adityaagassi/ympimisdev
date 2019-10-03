@@ -227,9 +227,6 @@
 				$('#butuh').html(butuh + '<sup style="font-size: 30px">set</sup>');
 
 
-
-
-
 			}
 
 		});
@@ -331,7 +328,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '1vw',
+									fontSize: '15px',
 									fontWeight: 'bold'
 								}
 
@@ -467,7 +464,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '1vw',
+									fontSize: '15px',
 									fontWeight: 'bold'
 								}
 							}
