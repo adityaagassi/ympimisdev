@@ -330,7 +330,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '20px',
+									fontSize: '1vw',
 									fontWeight: 'bold'
 								}
 
@@ -465,7 +465,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '20px',
+									fontSize: '1vw',
 									fontWeight: 'bold'
 								}
 							}
