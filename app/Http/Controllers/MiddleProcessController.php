@@ -514,31 +514,89 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchBuffingDailyOpEff(){
+		$datefrom = date("Y-m-d", strtotime("-3 Months"));
+		$dateto = date("Y-m-d");
 
-	public function fetchBuffingLineBalance(Request $request){
+		$rate = db::select("select date.week_date, date.operator_id, e.`name`, COALESCE(pr.rate,0) as rate  from
+			(select week_date, operator_id from
+			(select week_date from weekly_calendars where week_date BETWEEN '".$datefrom."' and '".$dateto."') tgl
+			cross join
+			(select DISTINCT operator_id from middle_logs where DATE_FORMAT(buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op) date
+			left join
+			(select rate.tgl, rate.operator_id, rate.tot, rate.ng, rate.rate from
+			(select g.tgl, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
+			(select DATE_FORMAT(m.buffing_time,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl, m.operator_id) g
+			left join
+			(select DATE_FORMAT(m.buffing_time,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			where location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl, m.operator_id) ng
+			on g.tgl = ng.tgl and g.operator_id = ng.operator_id) rate
+			ORDER BY tgl desc) pr
+			on date.week_date = pr.tgl and date.operator_id = pr.operator_id
+			left join employees e on e.employee_id = date.operator_id
+			order by week_date asc");
+
+		$time_eff = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
+			from data_log l left join standart_times t on l.material_number = t.material_number
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			GROUP BY tgl, l.operator_id;");
+
+		$op = db::select("select DISTINCT m.operator_id, e.`name` from middle_logs m left join employees e on m.operator_id = e.employee_id where DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'");
+
+		$response = array(
+			'status' => true,
+			'rate' => $rate,
+			'time_eff' => $time_eff,
+			'op' => $op,
+		);
+		return Response::json($response);
+	}
+
+
+	public function fetchBuffingGroupBalance(Request $request){
 		if ($request->get('tanggal') == "") {
 			$tanggal = date('Y-m-d');
 		} else {
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
-		$plan = db::select("select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
-			(select b.material_child, sum(a.quantity * t.time / 60) as plan from assy_picking_schedules a
+		$data = db::select("select plan.`key`, plan.plan, COALESCE(result.result,0) as result from
+			(select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
+			(select b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
 			left join bom_components b on a.material_number = b.material_parent
 			left join standart_times t on b.material_child = t.material_number
 			where quantity > 0
 			and due_date = '".$tanggal."'
 			group by b.material_child) plan
 			left join materials m on plan.material_child = m.material_number
-			group by LEFT(m.`key`,1)");
+			group by LEFT(m.`key`,1)) plan
+			left join
+			(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
+			left join materials m on m.material_number = l.material_number
+			left join standart_times s on s.material_number = l.material_number
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+			GROUP BY left(m.`key`,1)) result
+			on plan.`key` = result.`key`");
 
-		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, count(dev_name) as jml from dev_list
+		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, (count(dev_name)*3) as jml from dev_list
 			where dev_name in ('SXKEY-C','SXKEY-D','SXKEY-E','SXKEY-F','SXKEY-G','SXKEY-H','SXKEY-J')
 			GROUP BY dev_name");
 
 		$response = array(
 			'status' => true,
-			'plan' => $plan,
+			'data' => $data,
 			'key' => $key,
 			'tanggal' => $tanggal,
 		);
@@ -582,6 +640,37 @@ class MiddleProcessController extends Controller
 	}
 
 	public function fetchBuffingGroupAchievement(Request $request){
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+		}
+
+		$query = "select barrel.kunci, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
+		(select LEFT(m.`key`,1) as kunci, sum(b.qty) as jml from barrel_logs b
+		left join materials m on m.material_number = b.material
+		where b.`status` != 'reset'
+		and DATE_FORMAT(b.created_at,'%Y-%m-%d') = '".$tanggal."'
+		group by kunci) barrel
+		left join
+		(select LEFT(m.`key`,1) as kunci, sum(l.quantity) as jml from middle_logs l
+		left join materials m on m.material_number = l.material_number
+		where l.location = 'bff-kensa'
+		and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+		group by kunci) bff
+		on barrel.kunci = bff.kunci";
+
+		$data = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'data' => $data,
+			'tanggal' => $tanggal
+		);
+		return Response::json($response);
+	}
+
+	public function fetchBuffingGroupAchievement_backup(Request $request){
 		if ($request->get('tanggal') == "") {
 			$tanggal = date('Y-m-d');
 		} else {

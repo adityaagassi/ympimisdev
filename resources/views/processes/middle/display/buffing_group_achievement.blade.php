@@ -40,9 +40,7 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container2" style="width: 100%;"></div>
-			</div>
+			
 		</div>
 	</div>
 </section>
@@ -309,14 +307,14 @@
 				var bff = [];
 
 				for(var i = 0; i < result.data.length; i++){
-					key.push('Group '+result.data[i].key);
-					plan.push(Math.ceil(result.data[i].plan));
-					bff.push(Math.ceil(result.data[i].result));			
+					key.push('Group '+result.data[i].kunci);
+					plan.push(Math.ceil(result.data[i].barrel));
+					bff.push(Math.ceil(result.data[i].bff));			
 				}
 
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: 'achievement of group work',
+						text: 'Daily qty of incoming instruction Vs Actual result qty',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -381,141 +379,17 @@
 						}
 					},
 					series: [{
-						name:'Plan',
+						name:'Incoming Instruction',
 						type: 'column',
 						color: 'rgb(255,116,116)',
 						data: plan,
 					},{
-						name:'Result Buffing',
+						name:'Actual Result',
 						type: 'column',
 						color: 'rgb(169,255,151)',
 						data: bff,
 					}]
 
-				});
-
-			}
-
-		});
-
-		$.get('{{ url("fetch/middle/buffing_daily_group_achievement") }}', function(result, status, xhr) {
-			if(result.status){
-				var tgl = [];
-				var plan = [];
-				var plan_data = [];
-				var bff = [];
-				var bff_data = [];
-
-				for(var i = 0; i < result.data.length; i++){
-					if((result.data[i].plan > 0) || (result.data[i].result > 0)){
-						tgl.push(result.data[i].week_date);
-						plan_data.push(Math.ceil(result.data[i].plan));
-						bff_data.push(Math.ceil(result.data[i].result));
-					}
-				}
-
-				for(var i = 0; i < tgl.length; i++){
-					plan.push([Date.parse(tgl[i]), plan_data[i]]);
-					bff.push([Date.parse(tgl[i]), bff_data[i]]);
-				}
-
-
-				var chart = Highcharts.stockChart('container2', {
-					chart:{
-						type:'spline',
-					},
-					rangeSelector: {
-						selected: 0
-					},
-					scrollbar:{
-						enabled:false
-					},
-					navigator:{
-						enabled:false
-					},
-					title: {
-						text: 'achievement of daily group work',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Last Update: '+getActualFullDate(),
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: 'Minutes'
-						},
-						plotLines: [{
-							color: '#FFFFFF',
-							width: 2,
-							value: 0,
-							dashStyles: 'longdashdot'
-						}]
-					},
-					xAxis: {
-						categories: 'datetime',
-						tickInterval: 24 * 3600 * 1000 
-					},
-					tooltip: {
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend : {
-						enabled:true
-					},
-					plotOptions: {
-						series: {
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:}',
-							},
-							connectNulls: true,
-							shadow: {
-								width: 3,
-								opacity: 0.4
-							},
-							label: {
-								connectorAllowed: false
-							},
-							cursor: 'pointer',
-						}
-					},
-					series: [
-					{
-						name:'Plan',
-						color: 'rgb(255,116,116)',
-						data: plan,
-						lineWidth: 3
-					},
-					{
-						name:'Result',
-						color: 'rgb(169,255,151)',
-						data: bff,
-						lineWidth: 3
-					}
-					],
-					responsive: {
-						rules: [{
-							condition: {
-								maxWidth: 500
-							},
-							chartOptions: {
-								legend: {
-									layout: 'horizontal',
-									align: 'center',
-									verticalAlign: 'bottom'
-								}
-							}
-						}]
-					}
 				});
 
 			}

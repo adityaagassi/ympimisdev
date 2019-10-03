@@ -340,7 +340,7 @@
 
 				var chart = Highcharts.chart('container1_shift3', {
 					title: {
-						text: 'Operators Overall Efficiency',
+						text: 'Operators Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -426,7 +426,7 @@
 
 				var chart = Highcharts.chart('container1_shift1', {
 					title: {
-						text: 'Operators Overall Efficiency',
+						text: 'Operators Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -512,7 +512,7 @@
 
 				var chart = Highcharts.chart('container1_shift2', {
 					title: {
-						text: 'Operators Overall Efficiency',
+						text: 'Operators Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -599,6 +599,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 			std.push(Math.ceil(result.working_time[i].std));
 			target.push(parseInt(480));
 		}
+
 
 		var chart = Highcharts.chart('container3', {
 			title: {
@@ -707,15 +708,17 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 			for (var j = 0; j < result.rate.length; j++) {
 
 				if(result.op[i].operator_id == result.rate[j].operator_id){
-
+					var isEmpty = true;
 					for (var k = 0; k < result.time_eff.length; k++) {
-
 						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
 							data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
-						}else{
-							data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * 100 * 0)]);
+							isEmpty = false;						
 						}
 
+					}
+
+					if(isEmpty){
+						data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * 0)]);
 					}				
 
 				}
@@ -724,6 +727,9 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 
 			seriesData.push({name : result.op[i].name, data: data});
 		}
+
+		console.table(result.rate);
+		console.table(result.time_eff);
 
 
 		var chart = Highcharts.stockChart('container2', {
@@ -740,7 +746,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 				enabled:false
 			},
 			title: {
-				text: 'SX Buffing NG Rate By Operators',
+				text: 'Daily Operators Overall Efficiency',
 				style: {
 					fontSize: '30px',
 					fontWeight: 'bold'
@@ -772,7 +778,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
 			},
 			legend : {
-				enabled:true
+				enabled:false
 			},
 			credits: {
 				enabled:false
@@ -781,7 +787,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 				series: {
 					dataLabels: {
 						enabled: true,
-						format: '{point.y:,.1f}%',
+						format: '{point.y:,.2f}%',
 					},
 					connectNulls: true,
 					shadow: {
