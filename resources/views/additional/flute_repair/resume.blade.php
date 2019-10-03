@@ -65,10 +65,10 @@
 		<div class="col-lg-3 col-xs-12" style="margin-left: 0px;">
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 189px;">
+				<div class="small-box bg-teal" style="font-size: 30px;font-weight: bold;height: 147px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL MASUK (PIANICA)</b></h3>
-						<h2 style="margin: 0px;font-size: 6vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>FLUTE HARUS REPAIR</b></h3>
+						<h2 style="margin: 0px;font-size: 4vw;" id='butuh'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -77,10 +77,22 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 189px;">
+				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 147px;">
+					<div class="inner" style="padding-bottom: 0px;">
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL MASUK (PIANICA)</b></h3>
+						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
+					</div>
+					<div class="icon">
+						<i class="ion ion-stats-bars"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
+				<!-- small box -->
+				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 147px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>BELUM & SEDANG REPAIR</b></h3>
-						<h2 style="margin: 0px;font-size: 6vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -90,10 +102,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 189px;">
+				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 147px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>SELESAI REPAIR</b></h3>
-						<h2 style="margin: 0px; font-size: 6vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px; font-size: 4vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -103,10 +115,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 189px;">
+				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 147px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>KIRIM WAREHOUSE</b></h3>
-						<h2 style="margin: 0px; font-size: 6vw;" id='wh'>0<sup style="font-size: 2vw">set</sup></h2>
+						<h2 style="margin: 0px; font-size: 4vw;" id='wh'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
@@ -185,10 +197,14 @@
 	function drawSmallBox(){
 		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
+				var total_repair = 1368 + 1772;
+				var tarik = 0;
+
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
 						$('#tarik').append().empty();
 						$('#tarik').html(result.status[i].jml + '<sup style="font-size: 30px">set</sup>');
+						tarik = result.status[i].jml;
 					}
 					if(result.status[i].status == 'selesai repair'){
 						$('#selesai').append().empty();
@@ -200,10 +216,18 @@
 					}
 				}
 
+
 				for(var i = 0; i < result.sedang.length; i++){
 					$('#sedang').append().empty();
 					$('#sedang').html(result.sedang[i].jml + '<sup style="font-size: 30px">set</sup>');
 				}
+
+				var butuh = total_repair - tarik;
+				$('#butuh').append().empty();
+				$('#butuh').html(butuh + '<sup style="font-size: 30px">set</sup>');
+
+
+
 
 
 			}
@@ -335,12 +359,12 @@
 						color: '#f39c12'
 					},
 					{
-						name: 'Kirim WH/Assy',
+						name: 'Selesai Repair',
 						data: selesai,
 						color: '#00a65a'
 					},
 					{
-						name: 'Warehouse',
+						name: 'Kirim Warehouse',
 						data: kembali,
 						color: '#0073b7'
 					}
@@ -469,12 +493,12 @@
 						color: '#f39c12'
 					},
 					{
-						name: 'Kirim WH/Assy',
+						name: 'Selesai Repair',
 						data: selesai,
 						color: '#00a65a'
 					},
 					{
-						name: 'Warehouse',
+						name: 'Kirim Warehouse',
 						data: kembali,
 						color: '#0073b7'
 					}
