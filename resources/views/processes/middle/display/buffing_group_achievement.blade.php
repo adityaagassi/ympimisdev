@@ -441,7 +441,7 @@
 					},
 					xAxis: {
 						categories: tgl,
-						gridLineWidth: 1,
+						gridLineWidth: 0,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
@@ -472,18 +472,6 @@
 						shadow: false
 					},
 					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
-									fontSize: '26px'
-								}
-							},
-							animation: false,
-							cursor: 'pointer'
-						},
 						areaspline: {
 							fillOpacity: 0.5
 						}
