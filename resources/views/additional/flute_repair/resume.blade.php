@@ -288,7 +288,7 @@
 						crosshair: true,
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -326,6 +326,7 @@
 							},
 							dataLabels: {	
 								enabled: true,
+								rotation: -65,
 								formatter: function () {
 									return Highcharts.numberFormat(this.y,0);
 								},
@@ -423,7 +424,7 @@
 						crosshair: true,
 						labels: {
 							style: {
-								fontSize: '26px'
+								fontSize: '1vw'
 							}
 						},
 					},
@@ -461,6 +462,7 @@
 							},
 							dataLabels: {	
 								enabled: true,
+								rotation: -65,
 								formatter: function () {
 									return Highcharts.numberFormat(this.y,0);
 								},
