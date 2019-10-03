@@ -173,6 +173,36 @@ table.table-bordered > tfoot > tr > th{
 							}, 0)
 							$(api.column(6).footer()).html(total_diff.toLocaleString());
 
+							var Packing = api.column(1).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(1).footer()).html(Packing.toLocaleString());
+
+							var actpacking = api.column(2).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(2).footer()).html(actpacking.toLocaleString());
+
+							var wip = api.column(3).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(3).footer()).html(wip.toLocaleString());
+
+							var ng = api.column(4).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(4).footer()).html(ng.toLocaleString());
+
+							var h = api.column(5).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(5).footer()).html(h.toLocaleString());
+
+							var h2 = api.column(7).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(7).footer()).html(h2.toLocaleString());
+
 						},
 						"columnDefs": [ {
 							"targets": 5,

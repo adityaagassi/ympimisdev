@@ -173,6 +173,42 @@ table.table-bordered > tfoot > tr > th{
 							}, 0)
 							$(api.column(7).footer()).html(total_actual.toLocaleString());
 
+							var mtd = api.column(1).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(1).footer()).html(mtd.toLocaleString());
+
+							var Packing = api.column(2).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(2).footer()).html(Packing.toLocaleString());
+
+							var act = api.column(3).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(3).footer()).html(act.toLocaleString());
+
+							var wip = api.column(4).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(4).footer()).html(wip.toLocaleString());
+
+							var ng = api.column(5).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(5).footer()).html(ng.toLocaleString());
+
+							var h = api.column(6).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(6).footer()).html(h.toLocaleString());
+
+							var h2 = api.column(8).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(8).footer()).html(h2.toLocaleString());
+
+
 						},
 						"columnDefs": [  {
 							"targets": 6,
