@@ -411,17 +411,20 @@
 
 				for (var i = 0; i < result.akumulasi.length; i++) {
 					tgl.push(result.akumulasi[i].tgl);
-					barrel.push(parseInt(result.akumulasi[i].barrel + diff));
+					barrel.push(parseInt(result.akumulasi[i].barrel) + diff);
 					bff.push(parseInt(result.akumulasi[i].barrel));
 
 					diff = barrel[i] - bff[i];
 				}
 
+				console.table(result.akumulasi);
+
 				console.log(barrel);
+				console.log(bff);
 
 				var chart = Highcharts.chart('container2', {
 					title: {
-						text: 'Weekly Group Achievements Accumulation ',
+						text: 'Weekly Group Achievements Accumulation',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
