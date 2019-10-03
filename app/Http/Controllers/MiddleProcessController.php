@@ -73,7 +73,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingGroupAchievement(){
 		return view('processes.middle.display.buffing_group_achievement', array(
-			'title' => 'Buffing Group Achievement',
+			'title' => 'Buffing Group Achievements',
 			'title_jp' => '(??)',
 		))->with('page', 'Buffing Group Achievement');
 	}
@@ -129,7 +129,16 @@ class MiddleProcessController extends Controller
 			'title' => 'Mizusumashi Monitoring',
 			'title_jp' => '??'
 		));
-	}	
+	}
+
+	public function indexRequestDisplay($id)
+	{
+		return view('processes.middle.display.buffing_request', array( 
+			'title' => 'Middle Request Material '.$id,
+			'title_jp' => '?',
+			'option' => $id)
+	)->with('page', 'Middle Request Material Soldering');
+	}
 
 	public function indexDisplayPicking(){
 		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
@@ -635,6 +644,43 @@ class MiddleProcessController extends Controller
 		$response = array(
 			'status' => true,
 			'data' => $data,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAccumulatedAchievement(Request $request){
+		if ($request->get('tanggal') == "") {
+			$tanggal = date('Y-m-d');
+			$tahun = date('Y');
+		} else {
+			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
+			$tahun = date('Y',strtotime($request->get('tanggal')));
+		}
+
+		$akumulasi = db::select("select barrel.tgl, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
+			(select DATE_FORMAT(b.created_at,'%Y-%m-%d') as tgl, sum(b.qty) as jml from barrel_logs b
+			left join materials m on m.material_number = b.material
+			where b.`status` != 'reset'
+			and DATE_FORMAT(b.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars
+			where week_name = (select week_name from weekly_calendars where week_date = '".$tanggal."')
+			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
+			group by tgl) barrel
+			left join
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(l.quantity) as jml from middle_logs l
+			left join materials m on m.material_number = l.material_number
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars
+			where week_name = (select week_name from weekly_calendars where week_date = '".$tanggal."')
+			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
+			group by tgl) bff
+			on barrel.tgl = bff.tgl
+			order by tgl asc");
+
+
+		$response = array(
+			'status' => true,
+			'akumulasi' => $akumulasi,
+			'tanggal' => $tanggal
 		);
 		return Response::json($response);
 	}
@@ -3649,7 +3695,12 @@ class MiddleProcessController extends Controller
 
 	public function fetchRequest(Request $request)
 	{
-		$log_request = MiddleMaterialRequest::where("item","=", $request->get("option"))->orderBy('quantity','desc')->get();
+		$log_request = MiddleMaterialRequest::leftJoin("materials","materials.material_number","=","middle_material_requests.material_number")
+		->leftJoin("material_volumes","middle_material_requests.material_number","=","material_volumes.material_number")
+		->where("item","=", $request->get("option"))
+		->orderBy('quantity','desc')
+		->select('materials.model','materials.key','item','quantity','material_description','lot_transfer')
+		->get();
 
 		$response = array(
 			'status' => true,

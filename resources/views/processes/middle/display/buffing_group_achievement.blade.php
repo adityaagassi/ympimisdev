@@ -40,6 +40,10 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
 			</div>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container2" style="width: 100%;"></div>
+			</div>
+			
 			
 		</div>
 	</div>
@@ -329,7 +333,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Minutes'
+							text: 'PC(s)'
 						},
 						style: {
 							fontSize: '26px',
@@ -394,6 +398,102 @@
 
 			}
 
+		});
+
+		$.get('{{ url("fetch/middle/buffing_accumulated_achievement") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+				var tgl= [];
+				var barrel = [];
+				var bff = [];
+
+				var diff = 0;
+
+				for (var i = 0; i < result.akumulasi.length; i++) {
+					tgl.push(result.akumulasi[i].tgl);
+					barrel.push(parseInt(result.akumulasi[i].barrel + diff));
+					bff.push(parseInt(result.akumulasi[i].barrel));
+
+					diff = barrel[i] - bff[i];
+				}
+
+				console.log(barrel);
+
+				var chart = Highcharts.chart('container2', {
+					title: {
+						text: 'Weekly Group Achievements Accumulation ',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'PC(s)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: tgl,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '26px'
+							}
+						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					legend : {
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							cursor: 'pointer'
+						}
+					},
+					series: [{
+						name:'Incoming Instruction',
+						type: 'column',
+						color: 'rgb(255,116,116)',
+						data: barrel,
+					},{
+						name:'Actual Result',
+						type: 'column',
+						color: 'rgb(169,255,151)',
+						data: bff,
+					}]
+
+				});				
+
+
+			}
 		});
 
 	}
