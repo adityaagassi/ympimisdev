@@ -28,6 +28,10 @@
 		font-weight: bold;
 	}
 
+	hr {
+		margin: 0px;
+	}
+
 	.akan {
 		/*width: 50px;
 		height: 50px;*/
@@ -36,10 +40,7 @@
 		-o-animation: akan 1s infinite;  /* Opera 12+ */
 		animation: akan 1s infinite;  /* IE 10+, Fx 29+ */
 	}
-	hr {
-		margin: 0px;
-	}
-
+	
 	@-webkit-keyframes akan {
 		0%, 49% {
 			background: rgba(0, 0, 0, 0);
