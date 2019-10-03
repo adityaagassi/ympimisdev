@@ -38,22 +38,25 @@ class AdditionalController extends Controller
 	}
 
 	public function fetchTarik(){
-		$tarik = FloRepair::where('status','=','repair')
+		$tarik = FloRepairLog::where('status','=','repair')
 		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','created_at')
+		->orderBy('created_at','DESC')
 		->get();
 		return DataTables::of($tarik)->make(true);
 	}
 
 	public function fetchSelesai(){
-		$selesai = FloRepair::where('status','=','selesai repair')
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','updated_at')
+		$selesai = FloRepairLog::where('status','=','selesai repair')
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','created_at')
+		->orderBy('created_at','DESC')
 		->get();
 		return DataTables::of($selesai)->make(true);
 	}
 
 	public function fetchKembali(){
-		$selesai = FloRepair::where('status','=','kembali ke warehouse')
-		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','updated_at')
+		$selesai = FloRepairLog::where('status','=','kembali ke warehouse')
+		->select('serial_number','material_number','origin_group_code','flo_number','quantity','packed_at','status','created_at')
+		->orderBy('created_at','DESC')
 		->get();
 		return DataTables::of($selesai)->make(true);
 	}

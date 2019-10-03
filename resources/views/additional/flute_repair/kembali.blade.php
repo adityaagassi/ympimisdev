@@ -219,7 +219,7 @@
 			{ "data": "quantity" },
 			{ "data": "packed_at" },
 			{ "data": "status" },
-			{ "data": "updated_at" },
+			{ "data": "created_at" },
 			]
 		});
 	}
