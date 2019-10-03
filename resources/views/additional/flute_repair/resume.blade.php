@@ -199,6 +199,7 @@
 			if(result.status){
 				var total_repair = 1368 + 1772;
 				var tarik = 0;
+				var sedang = 0;
 
 				for(var i = 0; i < result.status.length; i++){
 					if(result.status[i].status == 'repair'){
@@ -220,9 +221,10 @@
 				for(var i = 0; i < result.sedang.length; i++){
 					$('#sedang').append().empty();
 					$('#sedang').html(result.sedang[i].jml + '<sup style="font-size: 30px">set</sup>');
+					sedang = result.sedang[i].jml;
 				}
 
-				var butuh = total_repair - tarik;
+				var butuh = total_repair - tarik + sedang;
 				$('#butuh').append().empty();
 				$('#butuh').html(butuh + '<sup style="font-size: 30px">set</sup>');
 
