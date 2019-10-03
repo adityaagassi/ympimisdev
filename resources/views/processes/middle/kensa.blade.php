@@ -182,9 +182,9 @@
 			</div>
 			<div>
 				<center>
-					<button style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="canc()" class="btn btn-danger">CANCEL</button>
-					<button id="rework" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="rework()" class="btn btn-warning">REWORK</button>
-					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 33%" onclick="conf()" class="btn btn-success">CONFIRM</button>
+					<button style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+					<button id="rework" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="rework()" class="btn btn-warning">REWORK</button>
+					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="conf()" class="btn btn-success">CONFIRM</button>
 				</center>
 			</div>
 		</div>
