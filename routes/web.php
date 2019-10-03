@@ -18,7 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('tes', 'TrialController@tes');
-Route::get('tes2', 'TrialController@tes2');
+Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
 Route::get('happybirthday', 'TrialController@ultah');
 

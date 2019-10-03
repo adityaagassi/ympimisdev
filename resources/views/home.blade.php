@@ -161,6 +161,10 @@
                             <a href="{{ url("index/employee/service") }}">
                                 <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
                             </a>
+                            <br>
+                            <a href="{{ url("index/emergency_response") }}">
+                                <i class="fa fa-caret-right"></i> Emergency Condition (??)
+                            </a>
                         </td>
                     </tr>
                     <tr>
