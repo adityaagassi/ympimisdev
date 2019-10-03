@@ -70,7 +70,7 @@ class TrialController extends Controller
 		$json = file_get_contents('https://spreadsheets.google.com/feeds/cells/1BqvAO5r-O0HFIR_fM13P84QRmN3OFnjzW9-4iENxOwU/1/public/full?alt=json');
 		$obj = json_decode($json, TRUE);
 
-		return view('trial', array(
+		return view('emergencies.emergency_response', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'dd' => $obj

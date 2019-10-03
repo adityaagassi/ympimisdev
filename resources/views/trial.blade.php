@@ -1,34 +1,39 @@
 @extends('layouts.display')
 @section('stylesheets')
-<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<style type="text/css">
-	
-</style>
 @stop
 @section('header')
-{{-- <section class="content-header" style="padding-top: 0; padding-bottom: 0;">
-</section> --}}
 @endsection
+<style type="text/css">
+</style>
 @section('content')
-<section class="content" style="padding: 0px;">
-	<a href="{{ url('tes') }}" class="btn">asdfasdas</a>
+<section class="content" style="padding-top: 0;">
+	<textarea></textarea>
+	<button class="btn btn-danger" onclick="mesin()">Mesin</button>
+	<button class="btn btn-warning" onclick="textarrange()">Text Trial Arrange</button>
+
 </section>
-@endsection
+@stop
 @section('scripts')
+<script src="{{ url("js/jquery.marquee.min.js")}}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
 
 	jQuery(document).ready(function() {
-		
-	});
+		drawTable2();
+	});	
+
+	function textarrange(){
+
+	}
+
+	function mesin(){
+		$.get("{{ 'http://172.17.129.99/zed/dashboard/getData' }}", function(result, status, xhr){
+			console.log(result);
+		});
+	}
+
 
 </script>
 @endsection
-
