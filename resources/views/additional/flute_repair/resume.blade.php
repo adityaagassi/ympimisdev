@@ -308,6 +308,8 @@
 					},
 					plotOptions: {
 						series: {
+							pointPadding: 0.93,
+							groupPadding: 0.93,
 							shadow: false,
 							cursor: 'pointer',
 							borderWidth: 0
@@ -352,9 +354,9 @@
 					},
 					series: [
 					{
-						name: 'Tarik',
-						data: tarik,
-						color: '#f39c12'
+						name: 'Kirim Warehouse',
+						data: kembali,
+						color: '#0073b7'
 					},
 					{
 						name: 'Selesai Repair',
@@ -362,9 +364,9 @@
 						color: '#00a65a'
 					},
 					{
-						name: 'Kirim Warehouse',
-						data: kembali,
-						color: '#0073b7'
+						name: 'Tarik',
+						data: tarik,
+						color: '#f39c12'
 					}
 					]
 					
@@ -444,6 +446,8 @@
 					},
 					plotOptions: {
 						series: {
+							pointPadding: 0.93,
+							groupPadding: 0.93,
 							shadow: false,
 							cursor: 'pointer',
 							borderWidth: 0,							
@@ -464,7 +468,7 @@
 									return Highcharts.numberFormat(this.y,0);
 								},
 								style: {
-									fontSize: '15px',
+									fontSize: '20px',
 									fontWeight: 'bold'
 								}
 							}
@@ -487,9 +491,9 @@
 					},
 					series: [
 					{
-						name: 'Tarik',
-						data: tarik,
-						color: '#f39c12'
+						name: 'Kirim Warehouse',
+						data: kembali,
+						color: '#0073b7'
 					},
 					{
 						name: 'Selesai Repair',
@@ -497,10 +501,11 @@
 						color: '#00a65a'
 					},
 					{
-						name: 'Kirim Warehouse',
-						data: kembali,
-						color: '#0073b7'
+						name: 'Tarik',
+						data: tarik,
+						color: '#f39c12'
 					}
+					
 					]
 
 				});
