@@ -435,11 +435,12 @@
 						style: {
 							fontSize: '26px',
 							fontWeight: 'bold'
-						}
+						},
+						type: 'logarithmic',
+						gridLineWidth: 0,
 					},
 					xAxis: {
 						categories: tgl,
-						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
@@ -447,6 +448,11 @@
 								fontSize: '26px'
 							}
 						},
+						plotBands: [{ // visualize the weekend
+							from: 4.5,
+							to: 6.5,
+							color: 'rgba(68, 170, 213, .2)'
+						}]
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
