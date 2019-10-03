@@ -91,7 +91,8 @@
 				<!-- small box -->
 				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 147px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>SEDANG REPAIR (PIANICA)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>BELUM & SEDANG REPAIR</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>(PIANICA)</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
