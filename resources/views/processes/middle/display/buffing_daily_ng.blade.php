@@ -248,7 +248,7 @@
 
 		Highcharts.setOptions(Highcharts.theme);
 		fillChart();
-		setInterval(fillChart, 30000);
+		setInterval(fillChart, 60000);
 	});
 
 	function addZero(i) {

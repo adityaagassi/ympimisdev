@@ -72,7 +72,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		// setInterval(fillChart, 60000);
+		setInterval(fillChart, 60000);
 
 	});
 

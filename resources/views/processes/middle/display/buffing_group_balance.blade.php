@@ -85,7 +85,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 60000);
+		setInterval(fillChart, 60000);
 	});
 
 	$('.datepicker').datepicker({
