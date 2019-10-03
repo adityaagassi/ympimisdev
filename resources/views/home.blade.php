@@ -141,7 +141,7 @@
                                 <i class="fa fa-caret-right"></i>Attendance (出勤)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/gender") }}">
+                            <a href="{{ url("index/report/absence") }}">
                                 <i class="fa fa-caret-right"></i>Absence (欠勤)
                             </a>
                         </td>

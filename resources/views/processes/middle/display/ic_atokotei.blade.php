@@ -463,7 +463,7 @@
 									format: '{point.y}',
 									style:{
 										textOutline: false,
-										fontSize: '20px'
+										fontSize: '1vw'
 									}
 								},
 								animation: false,

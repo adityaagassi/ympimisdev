@@ -435,7 +435,7 @@
 
 				var chart = Highcharts.chart('container1_shift3', {
 					title: {
-						text: 'SX Buffing NG Rate By Operators',
+						text: 'Daily NG Rate By Operators',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -518,7 +518,7 @@
 
 				var chart = Highcharts.chart('container1_shift1', {
 					title: {
-						text: 'SX Buffing NG Rate By Operators',
+						text: 'NG Rate By Operators',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -734,7 +734,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
 			},
 			legend : {
-				enabled:true
+				enabled:false
 			},
 			credits: {
 				enabled:false

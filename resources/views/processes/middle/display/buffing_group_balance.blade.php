@@ -42,23 +42,27 @@
 					<div id="container1" style="width: 100%; height: 690px"></div>					
 				</div>
 				<div class="col-xs-3" style="padding: 0px;padding-left: 1%;">
-					<p style="margin: 0px; font-size: 2vw;">Balance</p>
-					<p style="margin: 0px; font-size: 7vw;" id="line_balance"></p>
-					{{-- <div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 350px;">
-						<div class="inner" style="padding-bottom: 0px;">
-							<h2 style="margin: 0px; font-size: 3vw;"><b>LINE BALANCE</b></h2>
-							<br>
-							<p style="margin: 0px; font-size: 2vw;">=  Σ(Plan Group)</p>
-							<hr style="margin-left: 5%;margin-top: 0px;margin-bottom: 0px;width:75%;">
-							<p style="font-size: 2vw;margin-left: 5%;margin-top: 0px;margin-bottom: 0px;">Max Value x ΣGroup</p>
-							<p style="margin: 0px; font-size: 2vw;" id="line_balance"></p>
-
+					
+					<div class="small-box" style="font-size: 30px;font-weight: bold;height: 200px;background-color:#FF7474;">
+						<div class="inner" style="padding-bottom: 0px; color: #3c3c3c;">
+							<p style="margin: 0px; font-size: 2vw;">Plan Balance Ratio</p>
+							<p style="margin: 0px; font-size: 5vw;" id="balance_ratio_plan"></p>
 						</div>
 						<div class="icon">
 							<i class="ion ion-stats-bars"></i>
 						</div>
-						<a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-					</div> --}}
+					</div>
+
+					<div class="small-box" style="font-size: 30px;font-weight: bold;height: 200px;background-color:#A9FF97;">
+						<div class="inner" style="padding-bottom: 0px; color: #3c3c3c;">
+							<p style="margin: 0px; font-size: 2vw;">Actual Balance Ratio</p>
+							<p style="margin: 0px; font-size: 5vw;" id="balance_ratio_bff"></p>
+						</div>
+						<div class="icon">
+							<i class="ion ion-stats-bars"></i>
+						</div>
+					</div>
+
 				</div>
 
 			</div>
@@ -81,7 +85,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 30000);
+		// setInterval(fillChart, 60000);
 	});
 
 	$('.datepicker').datepicker({
@@ -321,35 +325,50 @@
 			tanggal:tanggal,
 		}
 
-		$.get('{{ url("fetch/middle/buffing_line_balance") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/buffing_group_balance") }}', data, function(result, status, xhr) {
 			if(result.status){
 
-				var key_value = [];
 				var key = [];
+				var key_value_plan = [];
+				var key_value_bff = [];
 
-				var total_value = 0;
-				var max = 0;
+
+				var total_value_plan = 0;
+				var total_value_bff = 0;
+				var max_plan = 0;
+				var max_bff = 0;
 				
-				for (var i = 0; i < result.plan.length; i++) {
-					key.push(result.plan[i].key);
+				for (var i = 0; i < result.data.length; i++) {
+					key.push('Group ' +result.data[i].key);
 					for (var j = 0; j < result.key.length; j++) {
-						if(result.plan[i].key == result.key[j].key){
-							key_value.push(Math.ceil(result.plan[i].plan / result.key[i].jml));
-							total_value += Math.ceil(result.plan[i].plan / result.key[i].jml);
-							if(Math.ceil(result.plan[i].plan / result.key[i].jml) > max){
-								max = Math.ceil(result.plan[i].plan / result.key[i].jml);
+
+						if(result.data[i].key == result.key[j].key){
+							
+							key_value_plan.push(Math.ceil(result.data[i].plan / result.key[i].jml));
+							key_value_bff.push(Math.ceil(result.data[i].result / result.key[i].jml));
+							
+							total_value_plan += Math.ceil(result.data[i].plan / result.key[i].jml);
+							total_value_bff += Math.ceil(result.data[i].result / result.key[i].jml);
+							
+							if(Math.ceil(result.data[i].plan / result.key[i].jml) > max_plan){
+								max_plan = Math.ceil(result.data[i].plan / result.key[i].jml);
+							}
+
+							if(Math.ceil(result.data[i].result / result.key[i].jml) > max_bff){
+								max_bff = Math.ceil(result.data[i].result / result.key[i].jml);
 							}
 						}
 					}
 				}
 
-				var line_balance = total_value / (max * key.length);
+				var balance_ratio_plan = total_value_plan / (max_plan * key.length);
+				var balance_ratio_bff = total_value_bff / (max_bff * key.length);
 
-				$('#line_balance').append().empty();
-				$('#line_balance').html((line_balance*100).toFixed(2) + "%");
+				$('#balance_ratio_plan').append().empty();
+				$('#balance_ratio_plan').html((balance_ratio_plan*100).toFixed(2) + "%");
 
-				console.log(line_balance);
-
+				$('#balance_ratio_bff').append().empty();
+				$('#balance_ratio_bff').html((balance_ratio_bff*100).toFixed(2) + "%");
 
 				var chart = Highcharts.chart('container1', {
 					title: {
@@ -362,7 +381,7 @@
 					subtitle: {
 						text: 'on '+result.tanggal,
 						style: {
-							fontSize: '18px',
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -394,7 +413,14 @@
 						enabled:false
 					},
 					legend : {
-						enabled: false
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
 					},
 					plotOptions: {
 						series:{
@@ -403,18 +429,27 @@
 								format: '{point.y}',
 								style:{
 									textOutline: false,
-									fontSize: '26px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
 							cursor: 'pointer'
 						}
 					},
-					series: [{
+					series: [
+					{
+						name:'Plan',
+						color: 'rgb(255,116,116)',
 						type: 'column',
-						"colorByPoint": true,
-						data: key_value,
-					}]
+						data: key_value_plan,
+					},
+					{
+						name:'Actual',
+						color: 'rgb(169,255,151)',
+						type: 'column',
+						data: key_value_bff,
+					}
+					]
 
 				});
 

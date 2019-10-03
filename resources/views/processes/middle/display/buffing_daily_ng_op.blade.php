@@ -297,8 +297,6 @@
 					seriesData.push({name : result.op[i].name, data: data});
 				}
 
-				console.log(seriesData);
-
 
 				var chart = Highcharts.stockChart('container3', {
 					chart:{

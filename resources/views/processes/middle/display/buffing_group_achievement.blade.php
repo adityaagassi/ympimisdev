@@ -309,7 +309,7 @@
 				var bff = [];
 
 				for(var i = 0; i < result.data.length; i++){
-					key.push(result.data[i].key);
+					key.push('Group '+result.data[i].key);
 					plan.push(Math.ceil(result.data[i].plan));
 					bff.push(Math.ceil(result.data[i].result));			
 				}
@@ -355,6 +355,16 @@
 					},
 					credits: {
 						enabled:false
+					},
+					legend : {
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
 					},
 					plotOptions: {
 						series:{
@@ -455,11 +465,11 @@
 					tooltip: {
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b>',
 					},
-					legend : {
-						enabled:true
-					},
 					credits: {
 						enabled:false
+					},
+					legend : {
+						enabled:true
 					},
 					plotOptions: {
 						series: {

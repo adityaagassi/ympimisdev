@@ -51,6 +51,9 @@
 			<div class="col-xs-12" style="margin-top: 1%;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>
+			<div class="col-xs-12" style="margin-top: 1%;">
+				<div id="container3" style="width: 100%;"></div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -69,7 +72,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		setInterval(fillChart, 30000);
+		// setInterval(fillChart, 60000);
 
 	});
 
@@ -284,6 +287,25 @@
 		maskColor: 'rgba(255,255,255,0.3)'
 	};
 	Highcharts.setOptions(Highcharts.theme);
+
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+	
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
 
 
 	function fillChart() {
@@ -578,7 +600,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 			target.push(parseInt(480));
 		}
 
-		var chart = Highcharts.chart('container2', {
+		var chart = Highcharts.chart('container3', {
 			title: {
 				text: 'Operators Working time on '+ result.date,
 				style: {
@@ -669,6 +691,128 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 
 	}
 
+});
+
+
+$.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status, xhr) {
+	if(result.status){
+
+		var seriesData = [];
+		var data = [];
+
+
+		for (var i = 0; i < result.op.length; i++) {
+			data = [];
+
+			for (var j = 0; j < result.rate.length; j++) {
+
+				if(result.op[i].operator_id == result.rate[j].operator_id){
+
+					for (var k = 0; k < result.time_eff.length; k++) {
+
+						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
+							data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+						}else{
+							data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * 100 * 0)]);
+						}
+
+					}				
+
+				}
+				
+			}
+
+			seriesData.push({name : result.op[i].name, data: data});
+		}
+
+
+		var chart = Highcharts.stockChart('container2', {
+			chart:{
+				type:'spline',
+			},
+			rangeSelector: {
+				selected: 0
+			},
+			scrollbar:{
+				enabled:false
+			},
+			navigator:{
+				enabled:false
+			},
+			title: {
+				text: 'SX Buffing NG Rate By Operators',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Last Update: '+getActualFullDate(),
+				style: {
+					fontSize: '18px',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'NG Rate (%)'
+				},
+				plotLines: [{
+					color: '#FFFFFF',
+					width: 2,
+					value: 0,
+					dashStyles: 'longdashdot'
+				}]
+			},
+			xAxis: {
+				categories: 'datetime',
+				tickInterval: 24 * 3600 * 1000 
+			},
+			tooltip: {
+				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+			},
+			legend : {
+				enabled:true
+			},
+			credits: {
+				enabled:false
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:,.1f}%',
+					},
+					connectNulls: true,
+					shadow: {
+						width: 3,
+						opacity: 0.4
+					},
+					label: {
+						connectorAllowed: false
+					},
+					cursor: 'pointer',
+				}
+			},
+			series: seriesData,
+			responsive: {
+				rules: [{
+					condition: {
+						maxWidth: 500
+					},
+					chartOptions: {
+						legend: {
+							layout: 'horizontal',
+							align: 'center',
+							verticalAlign: 'bottom'
+						}
+					}
+				}]
+			}
+		});
+
+
+	}
 });
 
 }

@@ -310,7 +310,7 @@
 						borderWidth: 0,
 						dataLabels: {
 							enabled: true,
-							format: '{point.y:.2f} min'
+							format: '{point.y:.0f} min'
 						},
 						animation: false,
 						minPointLength: 3
@@ -380,7 +380,7 @@
 						animation: false,
 						dataLabels: {
 							enabled: true,
-							format: '{point.y:.2f} min'
+							format: '{point.y:.0f} min'
 						}
 					}
 				},

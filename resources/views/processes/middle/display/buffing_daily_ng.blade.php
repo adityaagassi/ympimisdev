@@ -297,7 +297,7 @@
 							enabled:false
 						},
 						title: {
-							text: 'SX Buffing NG Rate By Type',
+							text: 'SX Buffing NG Rate By HPL',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
