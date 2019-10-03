@@ -417,12 +417,10 @@
 					diff = barrel[i] - bff[i];
 				}
 
-				console.table(result.akumulasi);
-
-				console.log(barrel);
-				console.log(bff);
-
 				var chart = Highcharts.chart('container2', {
+					chart: {
+						type: 'areaspline'
+					},
 					title: {
 						text: 'Weekly Group Achievements Accumulation',
 						style: {
@@ -479,16 +477,17 @@
 							},
 							animation: false,
 							cursor: 'pointer'
+						},
+						areaspline: {
+							fillOpacity: 0.5
 						}
 					},
 					series: [{
 						name:'Incoming Instruction',
-						type: 'column',
 						color: 'rgb(255,116,116)',
 						data: barrel,
 					},{
 						name:'Actual Result',
-						type: 'column',
 						color: 'rgb(169,255,151)',
 						data: bff,
 					}]
