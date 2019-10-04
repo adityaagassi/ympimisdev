@@ -389,7 +389,7 @@
 					headerFormat: '<b>{series.name}</b><br />',
 					pointFormat: '{point.y:.2f}'
 				},
-				
+
 				credits: {
 					enabled: false
 				},

@@ -198,22 +198,21 @@ class AssyProcessController extends Controller
 			}
 		}
 
-		$picking2 = "select final2.`key`, final2.model, final2.surface, stockroom, middle, welding from
-		(select sum(stockroom) stockroom, sum(middle) middle, sum(welding) welding, `key`, model, surface from 
-		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.middle) as middle, sum(middle.welding) as welding, materials.key, materials.model, materials.surface from
+		$picking2 = "select final2.`key`, final2.model, final2.surface, stockroom, barrel, lacquering, plating, welding from
+		(select sum(stockroom) stockroom, sum(barrel) as barrel, sum(lacquering) as lacquering, sum(plating) as plating, sum(welding) welding, `key`, model, surface from 
+		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.barrel) as barrel, sum(middle.lacquering) as lacquering, sum(middle.plating) as plating, sum(middle.welding) as welding, materials.key, materials.model, materials.surface from
 		(
-		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as middle, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
+		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as barrel, 0 as lacquering, 0 as plating, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
 
 		union all
 
-		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(ympimis.middle_inventories.quantity) as middle, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number
-		) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null
+		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(if(location = 'barrel',ympimis.middle_inventories.quantity, 0)) as barrel, sum(if(location LIKE 'lcq%',ympimis.middle_inventories.quantity, 0)) as lacquering, sum(if(location LIKE 'plt%',ympimis.middle_inventories.quantity, 0)) as plating, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null
 		group by middle.material_number, materials.key, materials.model, materials.surface
 		
 
 		union all
 
-		select kitto.inventories.material_number, 0 as stockroom, 0 as middle, sum(kitto.inventories.lot) as welding, welding.key, welding.model, welding.surface from
+		select kitto.inventories.material_number, 0 as stockroom,0 as barrel, 0 as lacquering, 0 as plating, sum(kitto.inventories.lot) as welding, welding.key, welding.model, welding.surface from
 		(
 		select distinct bom_components.material_child, parent.key, parent.model, parent.surface from
 		(
@@ -362,22 +361,22 @@ class AssyProcessController extends Controller
 			}
 		}
 
-		$picking2 = "select final2.`key`, final2.model, max(stockroom) stockroom, max(middle) middle, max(welding) welding from
-		(select sum(stockroom) stockroom, sum(middle) middle, sum(welding) welding, `key`, model from 
-		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.middle) as middle, sum(middle.welding) as welding, materials.key, materials.model from
+		$picking2 = "select final2.`key`, final2.model, max(stockroom) stockroom, max(barrel) barrel, max(lacquering) lacquering, max(plating) plating, max(welding) welding from
+		(select sum(stockroom) stockroom, sum(barrel) barrel, sum(lacquering) lacquering, sum(plating) plating, sum(welding) welding, `key`, model from 
+		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.barrel) as barrel, sum(middle.lacquering) as lacquering, sum(middle.plating) as plating, sum(middle.welding) as welding, materials.key, materials.model from
 		(
-		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as middle, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
+		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as barrel, 0 as lacquering, 0 as plating, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
 
 		union all
 
-		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(ympimis.middle_inventories.quantity) as middle, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number
+		select ympimis.middle_inventories.material_number, 0 as stockroom, sum(if(location = 'barrel',ympimis.middle_inventories.quantity, 0)) as barrel, sum(if(location LIKE 'lcq%',ympimis.middle_inventories.quantity, 0)) as lacquering, sum(if(location LIKE 'plt%',ympimis.middle_inventories.quantity, 0)) as plating, 0 as welding from ympimis.middle_inventories group by ympimis.middle_inventories.material_number
 		) as middle left join materials on materials.material_number = middle.material_number where materials.key is not null
 		group by middle.material_number, materials.key, materials.model
 		
 
 		union all
 
-		select kitto.inventories.material_number, 0 as stockroom, 0 as middle, sum(kitto.inventories.lot) as welding, welding.key, welding.model from
+		select kitto.inventories.material_number, 0 as stockroom, 0 as barrel, 0 as lacquering, 0 as plating, sum(kitto.inventories.lot) as welding, welding.key, welding.model from
 		(
 		select distinct bom_components.material_child, parent.key, parent.model from
 		(
