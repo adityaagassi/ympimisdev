@@ -69,7 +69,7 @@
 						KARYAWAN TERDAMPAK
 					</center>
 				</div>
-				<div class="col-xs-12">
+				<div class="col-xs-12" style="padding: 0;">
 					<div id="pie_chart1" style="height: 360px;"></div>
 				</div>
 				<div class="col-xs-12" style="font-size: 22px;">
@@ -77,7 +77,7 @@
 						KELUARGA TERDAMPAK
 					</center>
 				</div>
-				<div class="col-xs-12">
+				<div class="col-xs-12" style="padding: 0;">
 					<div id="pie_chart2" style="height: 360px;"></div>
 				</div>		
 			</div>
@@ -118,8 +118,8 @@
 
 	jQuery(document).ready(function() {
 		drawTable2();
-		setInterval(drawTable2, 30000);
-	});	
+		// setInterval(drawTable2, 30000);
+	});
 
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
@@ -327,6 +327,7 @@
 
 	function drawTable() {
 		var arr = <?php echo json_encode($arr); ?>;
+
 		var head = "";
 		// var len = 0;
 		var row = [];
@@ -407,6 +408,30 @@
 			}
 		})
 
+		console.log(arr2);
+		var temp = [['','']];
+
+		var temp2 = [['','']];
+		var num = 0;
+
+		for (var i = arr2.length - 1; i >= 0; i--) {
+			for (var z = 0; z < temp.length; z++) {
+				if (temp[z].includes(arr2[i][1]) == false) {
+					temp.push([arr2[i][1], arr2[i][2]]);
+				}
+			}
+		}
+
+		// for (var i = arr2.length - 1; i >= 0; i--) {
+		// 	if (temp2.includes(arr2[i][1]) == false) {
+		// 		temp.push(arr2[i][1]);
+		// 	}
+		// }
+
+		console.log(temp);
+		console.log(temp2);
+
+
 		$.each(arr2, function(index, value) {
 			nik = nik+"'"+arr2[index][1]+"'";
 			if (typeof arr2[index+1] !== 'undefined') {
@@ -438,7 +463,7 @@
 					}
 				})
 			})
-			console.log(tes);
+			// console.log(tes);
 
 			$.each(result.emp_datas, function(index, value) {
 				body2 += "<tr>";

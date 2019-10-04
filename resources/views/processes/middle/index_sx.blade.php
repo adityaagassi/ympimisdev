@@ -41,6 +41,7 @@
 			<a href="{{ url("index/middle/display_monitoring?location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Kanban WIP Monitoring</a>
 			<a href="{{ url("index/middle/display_kensa_time?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Kensa ΣTime</a>
 			<a href="{{ url("index/middle/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Production Result</a>
+			<a href="{{ url("index/middle/request/display/saxophone") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Material Request Soldering</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/buffing_board/buffing-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
 			<a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>
