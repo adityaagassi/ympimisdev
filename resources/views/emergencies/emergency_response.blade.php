@@ -408,44 +408,21 @@
 			}
 		})
 
-		console.log(arr2);
-		var temp = [['','']];
+		var temp = [];
 
-		var temp2 = [['','']];
-		var num = 0;
+		var temp2 = [];
 
 		for (var i = arr2.length - 1; i >= 0; i--) {
-			for (var z = 0; z < temp.length; z++) {
-				if (temp[z].includes(arr2[i][1]) == false) {
-					temp.push([arr2[i][1], arr2[i][2]]);
-				}
+			if (temp.includes(arr2[i][1]) == false) {
+				temp2.push([arr2[i][1], arr2[i][2]]);
+				temp.push(arr2[i][1]);
 			}
 		}
 
-		// for (var i = arr2.length - 1; i >= 0; i--) {
-		// 	if (temp2.includes(arr2[i][1]) == false) {
-		// 		temp.push(arr2[i][1]);
-		// 	}
-		// }
-
-		console.log(temp);
-		console.log(temp2);
-
-
-		$.each(arr2, function(index, value) {
-			nik = nik+"'"+arr2[index][1]+"'";
-			if (typeof arr2[index+1] !== 'undefined') {
+		$.each(temp2, function(index, value) {
+			nik = nik+"'"+temp2[index][0]+"'";
+			if (typeof temp2[index+1] !== 'undefined') {
 				nik = nik+",";
-			}
-		})
-
-		var tes = [];
-
-		$.each(arr, function(index, value) {
-			if (value.row != '1') {
-				if (value.column == '2') {
-					tes.push([value.content, arr[index+1].content]);
-				}
 			}
 		})
 
@@ -457,13 +434,12 @@
 			var body2 = "";
 
 			$.each(result.emp_bagian, function(index, value) {
-				$.each(tes, function(index2, value2) {
-					if (tes[index2][0] == value.employee_id) {
-						tes[index2].push(value.department);
+				$.each(temp2, function(index2, value2) {
+					if (temp2[index2][0] == value.employee_id) {
+						temp2[index2].push(value.department);
 					}
 				})
 			})
-			// console.log(tes);
 
 			$.each(result.emp_datas, function(index, value) {
 				body2 += "<tr>";
@@ -472,10 +448,10 @@
 				var num_tidak = 0;
 				var num_ya = 0;
 
-				$.each(tes, function(index2, value2) {
-					if (tes[index2][2] == value.department && tes[index2][1] == "Tidak") {
+				$.each(temp2, function(index2, value2) {
+					if (temp2[index2][2] == value.department && temp2[index2][1] == "Tidak") {
 						num_tidak += 1;
-					} else if (tes[index2][2] == value.department && tes[index2][1] != "Tidak") {
+					} else if (temp2[index2][2] == value.department && temp2[index2][1] != "Tidak") {
 						num_ya += 1;
 					}
 				})
