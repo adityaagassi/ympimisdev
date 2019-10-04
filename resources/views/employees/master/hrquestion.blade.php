@@ -242,6 +242,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								from:"HR"
 							}
 
+							$(this).val("");
 							$.post('{{ url("post/chat/comment") }}', data, function(result, status, xhr){
 								getDetailQuestion(emp);
 							})
