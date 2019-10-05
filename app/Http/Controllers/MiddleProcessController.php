@@ -3138,7 +3138,7 @@ class MiddleProcessController extends Controller
 	{
 		$tag = $request->get('qr');
 		$barrel_inventories = DB::table('middle_inventories')
-		->select('tag', 'material_number','location','quantity')
+		->select('tag', 'material_number','location','quantity','last_check')
 		->where('tag','=', $tag)
 		->get();
 
