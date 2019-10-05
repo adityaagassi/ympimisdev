@@ -129,7 +129,7 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		setInterval(fetchTable, 2000);
+		setInterval(fetchTable, 1000);
 	});
 
 	function fetchTable(){
