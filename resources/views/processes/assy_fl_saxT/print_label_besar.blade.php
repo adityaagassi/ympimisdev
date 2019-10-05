@@ -215,7 +215,7 @@ var printSettings = {
 	"footerStrLeft": "",
 	"footerStrCenter": "",
 	"footerStrRight": "",
-	 "printerName" : "SATO LM408e" 
+	 "printerName" : "SATO LC408e (Copy 1)" 
 };
 
 function snp() {

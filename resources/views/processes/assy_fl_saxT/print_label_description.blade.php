@@ -93,7 +93,7 @@ var printSettings = {
   "footerStrLeft": "",
   "footerStrCenter": "",
   "footerStrRight": "",
-   "printerName" : "SATO LM408e (MESIN2)" 
+   "printerName" : "SATO LC408e_mesin2" 
 };
 
 function defineCustomPaperSize() {
