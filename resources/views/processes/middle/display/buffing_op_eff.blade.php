@@ -397,7 +397,7 @@
 					series: [{
 						name:'OP Efficiency',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(68,169,168)',
 						data: eff_value,
 						showInLegend: false
 					}]
@@ -483,7 +483,7 @@
 					series: [{
 						name:'OP Efficiency',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(169,255,151)',
 						data: eff_value,
 						showInLegend: false
 					}]
@@ -569,7 +569,7 @@
 					series: [{
 						name:'OP Efficiency',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(255,116,116)',
 						data: eff_value,
 						showInLegend: false
 					}]

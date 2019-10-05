@@ -485,7 +485,7 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(68,169,168)',
 						data: rate,
 						showInLegend: false
 					}]
@@ -568,7 +568,7 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(169,255,151)',
 						data: rate,
 						showInLegend: false
 					}]
@@ -650,7 +650,7 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						colorByPoint: true,
+						color: 'rgb(255,116,116)',
 						data: rate,
 						showInLegend: false
 					}]

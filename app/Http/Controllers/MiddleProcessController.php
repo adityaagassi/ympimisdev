@@ -53,7 +53,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingIcAtokotei(){
 		$title = 'Incoming Check Atokotei';
-		$title_jp = '??';
+		$title_jp = '後工程受入検査';
 
 		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
@@ -67,20 +67,20 @@ class MiddleProcessController extends Controller
 	public function indexBuffingGroupBalance(){
 		return view('processes.middle.display.buffing_group_balance', array(
 			'title' => 'Buffing Group Balance',
-			'title_jp' => '(??)',
+			'title_jp' => 'バフグループバランス',
 		))->with('page', 'Buffing Group Balance');
 	}
 
 	public function indexBuffingGroupAchievement(){
 		return view('processes.middle.display.buffing_group_achievement', array(
 			'title' => 'Buffing Group Achievements',
-			'title_jp' => '(??)',
+			'title_jp' => 'バフグループ達成度',
 		))->with('page', 'Buffing Group Achievement');
 	}
 
 	public function indexBuffingOpNg(){
 		$title = 'NG Rate by Operator';
-		$title_jp = '??';
+		$title_jp = '作業者不良率';
 
 		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
@@ -94,21 +94,21 @@ class MiddleProcessController extends Controller
 	public function indexBuffingOpNgRate(){
 		return view('processes.middle.display.buffing_daily_ng_op', array(
 			'title' => 'Daily NG Rate by Operator',
-			'title_jp' => '(??)',
+			'title_jp' => '作業者日次不良率',
 		))->with('page', 'Daily NG Rate by Operator');
 	}
 
 	public function indexBuffingOpEff(){
 		return view('processes.middle.display.buffing_op_eff', array(
 			'title' => 'Operator Overall Efficiency',
-			'title_jp' => '(??)',
+			'title_jp' => '作業者全体能率',
 		))->with('page', 'Operator Overall Efficiency');
 	}
 
 	public function indexBuffingNgRate(){
 		return view('processes.middle.display.buffing_daily_ng', array(
 			'title' => 'Daily Buffing NG Rate',
-			'title_jp' => '(??)',
+			'title_jp' => 'バフ日次不良率',
 		))->with('page', 'Daily NG Buffing');
 	}
 
@@ -117,7 +117,7 @@ class MiddleProcessController extends Controller
 
 		return view('processes.middle.display.monitoring', array(
 			'title' => 'Middle Process Monitoring',
-			'title_jp' => '(??)',
+			'title_jp' => '中間工程監視',
 			'locs' => $locs,
 		))->with('page', 'Middle Process Monitoring');
 
@@ -127,7 +127,7 @@ class MiddleProcessController extends Controller
 	{
 		return view('processes.middle.display.mizusumashi_monitoring', array(
 			'title' => 'Mizusumashi Monitoring',
-			'title_jp' => '??'
+			'title_jp' => 'みずすまし監視'
 		));
 	}
 
@@ -135,7 +135,7 @@ class MiddleProcessController extends Controller
 	{
 		return view('processes.middle.display.buffing_request', array( 
 			'title' => 'Middle Request Material '.$id,
-			'title_jp' => '?',
+			'title_jp' => '中間工程ワーク',
 			'option' => $id)
 	)->with('page', 'Middle Request Material Soldering');
 	}
@@ -157,7 +157,7 @@ class MiddleProcessController extends Controller
 
 		return view('processes.middle.report.hourly_report', array(
 			'title' => 'Hourly Lacquering Report',
-			'title_jp' => '(??)',
+			'title_jp' => 'メッキ毎時記録',
 			'locations' => $locations
 		))->with('page', 'Hourly Report');
 	}
@@ -165,7 +165,7 @@ class MiddleProcessController extends Controller
 	public function indexReportBuffingNg(){
 		return view('processes.middle.report.ng_buffing', array(
 			'title' => 'NG Buffing Report',
-			'title_jp' => '(??)'
+			'title_jp' => 'バフ不良報告'
 		))->with('page', 'NG Buffing');
 	}
 
@@ -195,7 +195,7 @@ class MiddleProcessController extends Controller
 
 		return view('processes.middle.display.kensa_time', array(
 			'title' => 'Middle Kensa Time',
-			'title_jp' => '???',
+			'title_jp' => '中間検査時間',
 			'locations' => $locations
 		))->with('page', 'Production Result');
 	}
@@ -235,7 +235,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBarrelLog(){
 		$title = 'Barrel Log';
-		$title_jp = '(?)';
+		$title_jp = 'バレルログ';
 
 		$origin_groups = db::table('origin_groups')->get();
 
@@ -257,7 +257,7 @@ class MiddleProcessController extends Controller
 	public function indexRequest($id){
 		return view('processes.middle.request', array( 
 			'title' => 'Middle Request Material '.$id,
-			'title_jp' => '?',
+			'title_jp' => '中間要求ワーク',
 			'option' => $id)
 	)->with('page', 'Middle Request Material Soldering');
 	}
@@ -295,7 +295,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingNg(){
 		$title = 'Buffing NG Rate';
-		$title_jp = '??';
+		$title_jp = 'バフ不良率';
 
 		$origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
 
@@ -310,7 +310,7 @@ class MiddleProcessController extends Controller
 	public function indexBuffingBoard($id){
 		if($id == 'buffing-sx'){
 			$title = 'Saxophone Buffing Board';
-			$title_jp = '??';
+			$title_jp = 'サックスバフボード';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -326,7 +326,7 @@ class MiddleProcessController extends Controller
 	public function indexBuffingWorkOrder($id){
 		if($id == 'bff-sx'){
 			$title = 'Saxophone Buffing Work Order';
-			$title_jp = '??';
+			$title_jp = 'サックスバフ作業順番';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -409,7 +409,7 @@ class MiddleProcessController extends Controller
 		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
 
 		$title = 'Buffing Kensa';
-		$title_jp = "";
+		$title_jp = 'バフ検査';
 
 		return view('processes.middle.buffing_kensa', array(
 			'ng_lists' => $ng_lists,
@@ -425,23 +425,23 @@ class MiddleProcessController extends Controller
 
 		if($id == 'lcq-incoming'){
 			$title = 'I.C. Saxophone Key Lacquering';
-			$title_jp= '?';
+			$title_jp= 'サックスキィ塗装の受入検査';
 		}
 		if($id == 'lcq-incoming2'){
 			$title = 'I.C. Saxophone Key After Treatment Lacquering';
-			$title_jp= '?';
+			$title_jp= '塗装処理後サックスキィの受入検査';
 		}
 		if($id == 'plt-incoming-sx'){
 			$title = 'I.C. Saxophone Key Plating';
-			$title_jp= '?';
+			$title_jp= 'サックスキィメッキの受入検査';
 		}
 		if($id == 'lcq-kensa'){
 			$title = 'Kensa Saxophone Key Lacquering';
-			$title_jp= '?';
+			$title_jp= 'サックスキィ塗装検査';
 		}
 		if($id == 'plt-kensa-sx'){
 			$title = 'Kensa Saxophone Key Plating';
-			$title_jp= '?';
+			$title_jp= 'サックスキィメッキ検査';
 		}
 
 		return view('processes.middle.kensa', array(
@@ -455,7 +455,7 @@ class MiddleProcessController extends Controller
 	public function indexBarrelAdjustment()
 	{
 		$title = 'Saxophone Barrel Adjustment';
-		$title_jp = '??';
+		$title_jp = 'サックスバレル調整';
 		$mrpc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
 
@@ -469,7 +469,7 @@ class MiddleProcessController extends Controller
 	public function indexWIPAdjustment()
 	{
 		$title = 'WIP Adjustment';
-		$title_jp = '??';
+		$title_jp = '仕掛品調整';
 		$mrpc = 'S51';
 		$hpl = 'ASKEY,TSKEY';
 
@@ -791,7 +791,7 @@ class MiddleProcessController extends Controller
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY l.operator_id");
 
-		$emp_name = Employee::select('employee_id','name')->get();
+		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
 		$response = array(
 			'status' => true,
@@ -867,7 +867,7 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$rate = db::select("select rate.shift, rate.operator_id, e.`name`, rate.tot, rate.ng, rate.rate from
+		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
 			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
@@ -1017,7 +1017,7 @@ class MiddleProcessController extends Controller
 			$where = "and mt.origin_group_code in (".$code.") ";
 		}
 
-		$ng_rate = db::select("select rate.shift, e.`name`, rate.tot, rate.ng, rate.rate from
+		$ng_rate = db::select("select rate.shift, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/g.jml*100) as rate from
 			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
