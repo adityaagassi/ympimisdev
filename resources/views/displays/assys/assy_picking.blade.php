@@ -487,7 +487,7 @@
 	}, null, document.getElementsByTagName('head')[0]);
 
 	Highcharts.theme = {
-		colors: ['#7cb5ec', '#fcf33a', '#f45b5b', '#ec2ef0', '#90ed7d'],
+		colors: ['#7cb5ec', '#722973' , '#fcf33a', '#94908f', '#90ed7d'],
 		chart: {
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
