@@ -94,7 +94,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</li>
 							<li class="list-group-item">
 								<b>Penugasan</b> <a class="pull-right">
-									<span class="label label-success">-</span>
+									<span class="label label-success">{{ $profil[0]->position }}</span>
 								</a>
 							</li>
 						</ul>

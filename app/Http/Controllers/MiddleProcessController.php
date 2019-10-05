@@ -310,7 +310,7 @@ class MiddleProcessController extends Controller
 	public function indexBuffingBoard($id){
 		if($id == 'buffing-sx'){
 			$title = 'Saxophone Buffing Board';
-			$title_jp = '';
+			$title_jp = '??';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -326,7 +326,7 @@ class MiddleProcessController extends Controller
 	public function indexBuffingWorkOrder($id){
 		if($id == 'bff-sx'){
 			$title = 'Saxophone Buffing Work Order';
-			$title_jp = '-';
+			$title_jp = '??';
 			$mrpc = 'S41';
 			$hpl = 'ASKEY,TSKEY';
 		}
@@ -657,7 +657,8 @@ class MiddleProcessController extends Controller
 			$tahun = date('Y',strtotime($request->get('tanggal')));
 		}
 
-		$akumulasi = db::select("select barrel.tgl, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
+		$akumulasi = db::select("select w.week_name, acc.tgl, acc.barrel, acc.bff from
+			(select barrel.tgl, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
 			(select DATE_FORMAT(b.created_at,'%Y-%m-%d') as tgl, sum(b.qty) as jml from barrel_logs b
 			left join materials m on m.material_number = b.material
 			where b.`status` != 'reset'
@@ -673,14 +674,14 @@ class MiddleProcessController extends Controller
 			where week_name = (select week_name from weekly_calendars where week_date = '".$tanggal."')
 			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
 			group by tgl) bff
-			on barrel.tgl = bff.tgl
+			on barrel.tgl = bff.tgl ) acc
+			left join weekly_calendars w on w.week_date = acc.tgl
 			order by tgl asc");
-
 
 		$response = array(
 			'status' => true,
 			'akumulasi' => $akumulasi,
-			'tanggal' => $tanggal
+			'tanggal' => $tanggal,
 		);
 		return Response::json($response);
 	}
@@ -3699,7 +3700,7 @@ class MiddleProcessController extends Controller
 		->leftJoin("material_volumes","middle_material_requests.material_number","=","material_volumes.material_number")
 		->where("item","=", $request->get("option"))
 		->orderBy('quantity','desc')
-		->select('materials.model','materials.key','item','quantity','material_description','lot_transfer')
+		->select('middle_material_requests.material_number','materials.model','materials.key','item','quantity','material_description','lot_transfer')
 		->get();
 
 		$response = array(

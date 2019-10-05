@@ -321,6 +321,7 @@
 				$("#tbody").empty();
 				var material_req = [];
 				var cat = [];
+				var limit = [];
 
 				$.each(result.datas, function(index, value) {
 
@@ -338,7 +339,8 @@
 
 					if (value.quantity >= value.lot_transfer) {
 						cat.push(value.model+" "+value.key);
-						material_req.push((value.quantity / value.lot_transfer));	
+						material_req.push((value.quantity / value.lot_transfer));
+						limit.push(2);	
 					}
 
 				})
@@ -390,7 +392,14 @@
 						tickInterval: 1,
 						title: {
 							text: 'Quantity (Kanban)'
-						}
+						},
+						plotLines: [{
+							color: 'red',
+							width: 2,
+							value: 2,
+							zIndex: 5,
+							dashStyle: 'Dash'
+						}]
 					},
 					plotOptions: {
 						column: {
@@ -407,9 +416,9 @@
 							},
 							zones: [{
 								value: 2, 
-								color: 'green' 
+								color: '#46e83a' 
 							},{
-								color: 'red' 
+								color: '#f55656' 
 							}]
 						}, 
 						series: {
