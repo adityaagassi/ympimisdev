@@ -160,7 +160,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 60000);
+		setInterval(fillChart, 10000);
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 		
 	});
@@ -408,7 +408,6 @@
 			if(result.status){
 
 				var date = result.date; 
-
 
 				// SHIFT 3
 				var op_name = [];
@@ -669,10 +668,15 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 			data = [];
 			for (var j = 0; j < result.ng_rate.length; j++) {
 				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
-					if(result.ng_rate[j].ng_rate == 0){
-						data.push([Date.parse(result.ng_rate[j].week_date), null]);
+					if(Date.parse(result.ng_rate[j].week_date) > Date.parse('2019-10-01')){
+						if(result.ng_rate[j].ng_rate == 0){
+							data.push([Date.parse(result.ng_rate[j].week_date), null]);
+						}else{
+							data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+						}
 					}else{
-						data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+						data.push([Date.parse(result.ng_rate[j].week_date), null]);
+
 					}
 				}
 			}

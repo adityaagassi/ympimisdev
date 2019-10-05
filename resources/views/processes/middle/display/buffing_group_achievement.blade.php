@@ -64,7 +64,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 60000);
+		setInterval(fillChart, 10000);
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 	});
@@ -420,9 +420,6 @@
 
 					diff = barrel[i] - bff[i];
 				}
-
-				console.log(result.akumulasi);
-				console.log(week_name);
 
 				var chart = Highcharts.chart('container2', {
 					chart: {

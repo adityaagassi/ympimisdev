@@ -49,7 +49,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 60000);
+		setInterval(fillChart, 10000);
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 	});
 

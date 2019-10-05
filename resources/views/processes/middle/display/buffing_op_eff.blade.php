@@ -72,7 +72,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		setInterval(fillChart, 60000);
+		setInterval(fillChart, 10000);
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 	});
@@ -713,10 +713,16 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 					for (var k = 0; k < result.time_eff.length; k++) {
 						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
 
-							if(result.rate[j].rate == 0){
-								data.push([Date.parse(result.rate[j].week_date), null]);
+							if(Date.parse(result.rate[j].week_date) > Date.parse('2019-10-01')){
+								if(result.rate[j].rate == 0){
+									data.push([Date.parse(result.rate[j].week_date), null]);
+								}else{
+									data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+								}
+
 							}else{
-								data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+								data.push([Date.parse(result.rate[j].week_date), null]);
+
 							}
 							isEmpty = false;						
 						}
