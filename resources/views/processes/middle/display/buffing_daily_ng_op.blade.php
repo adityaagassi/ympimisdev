@@ -50,7 +50,6 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 10000);
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 	});
 
 	$('.datepicker').datepicker({
@@ -284,6 +283,8 @@
 	}
 
 	function fillChart() {
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+		
 
 		$.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, status, xhr) {
 			if(result.status){

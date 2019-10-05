@@ -253,7 +253,6 @@
 		Highcharts.setOptions(Highcharts.theme);
 		fillChart();
 		setInterval(fillChart, 10000);
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 	});
 
@@ -276,6 +275,8 @@
 	}
 
 	function fillChart() {
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+		
 		$.get('{{ url("fetch/middle/buffing_daily_ng_rate") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){

@@ -73,7 +73,6 @@
 	jQuery(document).ready(function(){
 		fillChart();
 		setInterval(fillChart, 10000);
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 	});
 
@@ -311,6 +310,7 @@
 
 	function fillChart() {
 		var tanggal = $('#tanggal').val();
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 		var data = {
 			tanggal:tanggal,

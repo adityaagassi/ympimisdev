@@ -65,7 +65,7 @@
 		<div class="col-lg-3 col-xs-12" style="margin-left: 0px;">
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-teal" style="font-size: 30px;font-weight: bold;height: 146px;">
+				<div class="small-box bg-teal" style="font-size: 30px;font-weight: bold;height: 143px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>FLUTE BELUM REPAIR</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='butuh'>0<sup style="font-size: 2vw">set</sup></h2>
@@ -77,9 +77,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 146px;">
+				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 153px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL MASUK (PIANICA)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>TOTAL MASUK</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -89,10 +90,10 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 151px;">
+				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 153px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>BELUM & SEDANG REPAIR</b></h3>
-						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>(PIANICA)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -103,7 +104,7 @@
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 146px;">
+				<div class="small-box bg-green" style="font-size: 30px;font-weight: bold;height: 143px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>SELESAI REPAIR</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='selesai'>0<sup style="font-size: 2vw">set</sup></h2>
@@ -111,12 +112,11 @@
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
 					</div>
-					{{-- <a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
 				</div>
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
 				<!-- small box -->
-				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 146px;">
+				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 143px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>KIRIM WAREHOUSE</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='wh'>0<sup style="font-size: 2vw">set</sup></h2>
@@ -124,7 +124,6 @@
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
 					</div>
-					{{-- <a href="{{ url("index/flute_repair/kembali") }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
 				</div>
 			</div>
 		</div>
