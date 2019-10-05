@@ -35,7 +35,7 @@
 				<div class="col-xs-1">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div class="col-xs-4" style="padding-left: 0px;">
@@ -73,6 +73,7 @@
 	jQuery(document).ready(function(){
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 	});
 
@@ -340,7 +341,7 @@
 
 				var chart = Highcharts.chart('container1_shift3', {
 					title: {
-						text: 'Operators Efficiency',
+						text: 'Operators Overall Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -426,7 +427,7 @@
 
 				var chart = Highcharts.chart('container1_shift1', {
 					title: {
-						text: 'Operators Efficiency',
+						text: 'Operators Overall Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -512,7 +513,7 @@
 
 				var chart = Highcharts.chart('container1_shift2', {
 					title: {
-						text: 'Operators Efficiency',
+						text: 'Operators Overall Efficiency',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -711,25 +712,22 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 					var isEmpty = true;
 					for (var k = 0; k < result.time_eff.length; k++) {
 						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
-							data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+
+							if(result.rate[j].rate == 0){
+								data.push([Date.parse(result.rate[j].week_date), null]);
+							}else{
+								data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+							}
 							isEmpty = false;						
 						}
-
 					}
-
 					if(isEmpty){
-						data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * 0)]);
+						data.push([Date.parse(result.rate[j].week_date), null]);
 					}				
-
 				}
-				
 			}
-
 			seriesData.push({name : result.op[i].name, data: data});
 		}
-
-		console.table(result.rate);
-		console.table(result.time_eff);
 
 
 		var chart = Highcharts.stockChart('container2', {
@@ -776,6 +774,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 			},
 			tooltip: {
 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+				split: false,
 			},
 			legend : {
 				enabled:false
@@ -797,7 +796,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status,
 					label: {
 						connectorAllowed: false
 					},
-					cursor: 'pointer',
+
 				}
 			},
 			series: seriesData,

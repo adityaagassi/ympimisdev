@@ -23,6 +23,10 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
+			<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+		</div>
+
+		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container3" style="width: 100%;"></div>
 			</div>
@@ -46,6 +50,7 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 	});
 
 	$('.datepicker').datepicker({

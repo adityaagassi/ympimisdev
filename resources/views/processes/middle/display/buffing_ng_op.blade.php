@@ -86,7 +86,7 @@
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div class="col-xs-4" style="padding-left: 0px;">
@@ -161,6 +161,8 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+		
 	});
 
 	$('.datepicker').datepicker({
@@ -396,20 +398,6 @@
 	function fillChart() {
 		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
-
-		var location_title = "";
-		if(hpl.length > 1){
-			for(var i = 0; i < hpl.length; i++){
-				location_title += hpl[i].replace('-',' ');
-				if(i == hpl.length-2){
-					location_title += " & ";
-				}else if(i != hpl.length-1){
-					location_title += ", ";
-				}
-			}
-		}else if(hpl.length == 1){ 
-			location_title += hpl[0].replace('-',' ');
-		}
 		
 		var data = {
 			tanggal:tanggal,
@@ -418,7 +406,6 @@
 
 		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr) {
 			if(result.status){
-				$('#location_title').html('<b>'+ location_title +'</b>');
 
 				var date = result.date; 
 
@@ -682,7 +669,11 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 			data = [];
 			for (var j = 0; j < result.ng_rate.length; j++) {
 				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
-					data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+					if(result.ng_rate[j].ng_rate == 0){
+						data.push([Date.parse(result.ng_rate[j].week_date), null]);
+					}else{
+						data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+					}
 				}
 			}
 			seriesData.push({name : result.op[i].name, data: data});
@@ -732,6 +723,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 			},
 			tooltip: {
 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+				split: false,
 			},
 			legend : {
 				enabled:false

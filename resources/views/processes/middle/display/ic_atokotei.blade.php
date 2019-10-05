@@ -42,7 +42,7 @@
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
@@ -68,6 +68,8 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+		
 	});
 
 	$('.datepicker').datepicker({

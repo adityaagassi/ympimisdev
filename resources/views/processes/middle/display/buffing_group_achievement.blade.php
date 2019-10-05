@@ -35,7 +35,7 @@
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
-				<div class="pull-right" id="location_title" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
@@ -65,6 +65,8 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
 	});
 
 	$('.datepicker').datepicker({
@@ -407,15 +409,20 @@
 				var barrel = [];
 				var bff = [];
 
+				var week_name = '';
 				var diff = 0;
 
 				for (var i = 0; i < result.akumulasi.length; i++) {
+					week_name = result.akumulasi[i].week_name;
 					tgl.push(result.akumulasi[i].tgl);
 					barrel.push(parseInt(result.akumulasi[i].barrel) + diff);
 					bff.push(parseInt(result.akumulasi[i].bff));
 
 					diff = barrel[i] - bff[i];
 				}
+
+				console.log(result.akumulasi);
+				console.log(week_name);
 
 				var chart = Highcharts.chart('container2', {
 					chart: {
@@ -425,6 +432,13 @@
 						text: 'Weekly Group Achievements Accumulation',
 						style: {
 							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'on WEEK '+week_name.substr(1),
+						style: {
+							fontSize: '18px',
 							fontWeight: 'bold'
 						}
 					},

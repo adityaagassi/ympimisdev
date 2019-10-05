@@ -23,6 +23,10 @@
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
+			<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+		</div>
+
+		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;height: 20%;"></div>
 				<div id="container1" style="width: 100%;height: 20%;"></div>
@@ -249,6 +253,8 @@
 		Highcharts.setOptions(Highcharts.theme);
 		fillChart();
 		setInterval(fillChart, 60000);
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
 	});
 
 	function addZero(i) {
@@ -257,7 +263,7 @@
 		}
 		return i;
 	}
-	
+
 	function getActualFullDate() {
 		var d = new Date();
 		var day = addZero(d.getDate());
@@ -300,13 +306,6 @@
 							text: 'SX Buffing NG Rate By HPL',
 							style: {
 								fontSize: '30px',
-								fontWeight: 'bold'
-							}
-						},
-						subtitle: {
-							text: 'Last Update: '+getActualFullDate(),
-							style: {
-								fontSize: '18px',
 								fontWeight: 'bold'
 							}
 						},
@@ -423,13 +422,6 @@
 							text: 'SX Buffing NG Rate By NG Name',
 							style: {
 								fontSize: '30px',
-								fontWeight: 'bold'
-							}
-						},
-						subtitle: {
-							text: 'Last Update: '+getActualFullDate(),
-							style: {
-								fontSize: '18px',
 								fontWeight: 'bold'
 							}
 						},
