@@ -1367,6 +1367,7 @@ public function fetchMasterQuestion(Request $request)
 
   $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
   ->orderBy('hr_question_logs.created_at', 'desc')
+  ->orderBy('SUM(hr.remark)', 'ASC')
   ->get();
 
   $response = array(
