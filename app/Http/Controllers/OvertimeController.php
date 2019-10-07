@@ -127,13 +127,15 @@ class OvertimeController extends Controller
 		$cost_center = db::select('select cost_center from ympimis.cost_centers group by cost_center');
 		$department = db::select("select child_code from organization_structures where remark = '".'department'."'");
 		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
+		$group = db::select("select child_code from organization_structures where remark = '".'group'."'");
 
 		return view('overtimes.reports.overtime_data', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'cost_centers' => $cost_center,
 			'departments' => $department,
-			'sections' => $section
+			'sections' => $section,
+			'groups' => $group
 		));
 	}
 
@@ -417,14 +419,28 @@ class OvertimeController extends Controller
 			$addsection = "and bagian.section in (".$section.") ";
 		}
 
+		if($request->get('group') != null) {
+			$groups = $request->get('group');
+			$grplen = count($groups);
+			$group = "";
 
-		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, ovr.id_overtime, emp.name, bagian.cost_center, bagian.department, bagian.section, ot, keperluan, code from
+			for($x = 0; $x < $grplen; $x++) {
+				$group = $group."'".$groups[$x]."'";
+				if($x != $grplen-1){
+					$group = $group.",";
+				}
+			}
+			$addgrup = "and bagian.group in (".$group.") ";
+		}
+
+
+		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, ovr.id_overtime, emp.name, bagian.cost_center, bagian.department, bagian.section, bagian.group, ot, keperluan, code from
 			(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(id_ot) as id_overtime, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
 			where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
 			left join ympimis.employees as emp on emp.employee_id = ovr.nik
 			left join (select employee_id, cost_center, division, department, section, sub_section, `group` from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
 			left join ympimis.cost_centers on ympimis.cost_centers.cost_center = bagian.cost_center
-			where ot > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addcode."
+			where ot > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addcode."".$addgrup."
 			order by ot asc
 			");
 

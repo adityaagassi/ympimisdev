@@ -119,7 +119,18 @@
 								</select>
 							</div>
 						</div>			
-						
+					</div>
+					<div class="row">
+						<div class="col-md-4 col-md-offset-2">
+							<div class="form-group">
+								<label>Sub Group</label>
+								<select class="form-control select2" multiple="multiple" name="group" id='group' data-placeholder="Select Sub Group" style="width: 100%;">
+									@foreach($groups as $group)
+									<option value="{{ $group->child_code }}">{{ $group->child_code }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
 					</div>
 					<div class="col-md-4 col-md-offset-6">
 						<div class="form-group pull-right">
@@ -139,6 +150,7 @@
 										<th style="width: 10%">Name</th>
 										<th style="width: 15%">Department</th>
 										<th style="width: 15%">Section</th>
+										<th style="width: 15%">Group</th>
 										<th style="width: 8%">Cost Center</th>
 										<th style="width: 3%">Overtime</th>
 										<th style="width: 15%">Reason</th>
@@ -149,6 +161,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -216,6 +229,7 @@
 		var costcenter = $('#costcenter').val();
 		var section = $('#section').val();
 		var department = $('#department').val();
+		var group = $('#group').val();
 		
 		var data = {
 			datefrom:datefrom,
@@ -223,7 +237,8 @@
 			code:code,
 			costcenter:costcenter,
 			section:section,
-			department:department
+			department:department,
+			group:group,
 		}
 
 		var table = $('#overtimeDataTable').DataTable({
@@ -290,6 +305,7 @@
 			{ "data": "name" },
 			{ "data": "department" },
 			{ "data": "section" },
+			{ "data": "group" },
 			{ "data": "cost_center" },
 			{ "data": "ot" },
 			{ "data": "keperluan" },
