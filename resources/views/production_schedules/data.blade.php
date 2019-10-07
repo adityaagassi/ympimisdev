@@ -450,6 +450,18 @@
 								tableData += '<td '+warna2+'>'+ value5.diff2 +'</td>';
 								tableData += '</tr>';
 							}
+						} else if(value5.diff1 < 0){
+							tableData += '<tr>';
+							tableData += '<td>'+ value5.due_date +'</td>';
+							tableData += '<td>'+ value5.material_number +'</td>';
+							tableData += '<td>'+ value5.mat_desc +'</td>';
+							tableData += '<td>'+ value5.plan_act +'</td>';
+							tableData += '<td>'+ value5.qty +'</td>';
+							tableData += '<td>'+ value5.pkg +'</td>';
+							tableData += '<td>'+ value5.diff1 +'</td>';
+							tableData += '<td>'+ value5.deliv +'</td>';
+							tableData += '<td>'+ value5.diff2 +'</td>';
+							tableData += '</tr>';
 						}
 					})
 
