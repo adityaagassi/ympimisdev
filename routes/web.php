@@ -132,6 +132,15 @@ Route::get('index/reportStockMonitoring', 'InjectionController@reportStockMonito
 Route::get('fetch/getTargetWeek', 'InjectionController@getTargetWeek');
 //end report
 
+//report balance mesin
+
+Route::get('index/reportBalanceMesin', 'InjectionController@reportBalanceMesin');
+Route::get('fetch/getBalanceMesin', 'InjectionController@getBalanceMesin');
+
+Route::post('input/makePlan', 'InjectionController@makePlan');
+Route::get('fetch/getBalanceMesinChart', 'InjectionController@getBalanceMesinChart');
+//end balance mesin
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -683,13 +692,17 @@ Route::get('index/middle/report_hourly_lcq', 'MiddleProcessController@indexRepor
 Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchReportHourlyLcq');
 // Report Middle Buffing
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
+Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuffingNgRateMonthly');
+Route::get('fetch/middle/bff_op_ng_monthly', 'MiddleProcessController@fetchBuffingOpNgMonthly');
+Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
+Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
+
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingNgKey');
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
 Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
-
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBuffingDailyOpEff');
@@ -706,7 +719,6 @@ Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexB
 Route::get('fetch/middle/buffing_group_balance', 'MiddleProcessController@fetchBuffingGroupBalance');
 Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuffingIcAtokotei');
 Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
-
 
 
 
@@ -1101,6 +1113,16 @@ Route::get('fetch/display/sub_assy', 'AssyProcessController@fetchPicking');
 Route::get('fetch/display/welding', 'AssyProcessController@fetchPickingWelding');
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
+
+
+//Production Report
+Route::get('index/production_reporting', 'ProductionReporting@index');
+Route::get('index/production_reporting/activity/{id}', 'ProductionReporting@activity');
+
+Route::get('index/activity_list', 'ActivityListController@index');
+
+//QC Report
+Route::get('index/qc_report', 'QcReportController@index');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

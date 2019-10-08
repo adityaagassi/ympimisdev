@@ -163,9 +163,12 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexReportBuffingNg(){
+		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+
 		return view('processes.middle.report.ng_buffing', array(
 			'title' => 'NG Buffing Report',
-			'title_jp' => 'バフ不良報告'
+			'title_jp' => 'バフ不良報告',
+			'fys' => $fys
 		))->with('page', 'NG Buffing');
 	}
 
@@ -173,7 +176,7 @@ class MiddleProcessController extends Controller
 		$fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
 
 		return view('processes.middle.report.ng_lacquering', array(
-			'title' => 'Report NG Lacquering',
+			'title' => 'NG Lacquering Report',
 			'title_jp' => '塗装不良率',
 			'fys' => $fys
 		))->with('page', 'NG Lacquering');
@@ -478,6 +481,217 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function fetchBuffingNgDaily(Request $request){
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}else{
+			$bulan = date('m-Y');
+		}
+
+
+		$daily = db::select("SELECT tgl.week_date, tgl.hpl, ng.ng, g.g, (ng.ng/g.g*100) as ng_rate from
+			(select week_date, hpl from
+			(select week_date from weekly_calendars where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') date
+			cross join
+			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
+			left join
+			(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, m.hpl, sum(n.quantity) ng from middle_ng_logs n
+			left join materials m on m.material_number = n.material_number
+			where n.location = 'bff-kensa' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
+			GROUP BY tgl, m.hpl) ng on tgl.week_date = ng.tgl and tgl.hpl = ng.hpl
+			left join
+			(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, m.hpl, sum(g.quantity) g from middle_logs g
+			left join materials m on m.material_number = g.material_number
+			where g.location = 'bff-kensa' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
+			GROUP BY tgl, m.hpl) g on tgl.week_date = g.tgl and tgl.hpl = g.hpl");
+
+		$response = array(
+			'status' => true,
+			'daily' => $daily,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+
+	}
+
+
+	public function fetchBuffingNgMonthly(Request $request){
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}else{
+			$bulan = date('m-Y');
+		}
+
+		$addHpl = "";
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl."'".$hpls[$i]."'";
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.',';
+				}
+			}
+			$addHpl = "and m.hpl in (".$hpl.") ";
+		}
+
+		$ng = db::select("select ng.ng_name, ng.ng, g.g, (ng.ng/g.g) as ng_rate from
+			(SELECT l.ng_name, sum(l.quantity) ng from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
+			GROUP BY l.ng_name) ng
+			cross join
+			(SELECT sum(l.quantity) g from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl.") g
+			order by ng_rate desc");
+
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl.$hpls[$i];
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.' & ';
+				}
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+			'hpl' => $hpl,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+
+	}
+
+
+	public function fetchBuffingOpNgMonthly(Request $request){
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}else{
+			$bulan = date('m-Y');
+		}
+
+		$addHpl = "";
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl."'".$hpls[$i]."'";
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.',';
+				}
+			}
+			$addHpl = "and m.hpl in (".$hpl.") ";
+		}
+
+		$op_ng = db::select("SELECT g.`name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+			(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
+			left join employees e on e.employee_id = l.operator_id
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
+			GROUP BY l.operator_id, e.`name`) ng
+			left join
+			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_logs l
+			left join employees e on e.employee_id = l.operator_id
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
+			GROUP BY l.operator_id, e.`name`) g
+			on ng.operator_id = g.operator_id
+			order by ng_rate desc
+			limit 5");
+
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl.$hpls[$i];
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.' & ';
+				}
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'op_ng' => $op_ng,
+			'hpl' => $hpl,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchBuffingNgRateMonthly(Request $request){
+		$fy = '';
+		if($request->get('fy') != null){
+			$fys =  explode(",", $request->get('fy'));
+			for ($i=0; $i < count($fys); $i++) {
+				$fy = $fy."'".$fys[$i]."'";
+				if($i != (count($fys)-1)){
+					$fy = $fy.',';
+				}
+			}
+		}else{
+			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
+			foreach ($get_fy as $key) {
+				$fy = "'".$key->fiscal_year."'";
+			}
+		}
+
+		$addHpl = "";
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl."'".$hpls[$i]."'";
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.',';
+				}
+			}
+			$addHpl = "and m.hpl in (".$hpl.") ";
+		}
+
+		$monthly = db::select("SELECT tgl.tgl, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+			(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) tgl
+			left join
+			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) ng from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' ".$addHpl."
+			GROUP BY tgl) ng on tgl.tgl = ng.tgl
+			left join
+			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) g from middle_logs l
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' ".$addHpl."
+			GROUP BY tgl) g on tgl.tgl = g.tgl");
+
+
+		$hpl = '';	
+		if($request->get('hpl') != null) {
+			$hpls =  explode(",", $request->get('hpl'));
+			for ($i=0; $i < count($hpls); $i++) {
+				$hpl = $hpl.$hpls[$i];
+				if($i != (count($hpls)-1)){
+					$hpl = $hpl.' & ';
+				}
+			}
+		}
+
+
+		$response = array(
+			'status' => true,
+			'monthly' => $monthly,
+			'hpl' => $hpl
+		);
+		return Response::json($response);
 	}
 
 	public function fetchBuffingIcAtokotei(Request $request){
