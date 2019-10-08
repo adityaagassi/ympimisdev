@@ -3223,13 +3223,13 @@ SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and 
 
 	$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()->get();
 
-		$tableData = DB::select($query);
+		$tableData = DB::select($queryAll);
 		
 		$response = array(
 			'status' => true,
 			'planData' => $tableData,
 			'model' => $materials,
-			'a' => $query,
+			// 'a' => $query,
 		);
 		return Response::json($response);
 	}
