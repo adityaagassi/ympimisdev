@@ -362,6 +362,7 @@ class OvertimeController extends Controller
 		$addcostcenter = "";
 		$adddepartment = "";
 		$addsection = "";
+		$addgrup = "";
 
 		if(strlen($request->get('datefrom')) > 0){
 			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
