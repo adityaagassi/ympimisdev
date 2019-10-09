@@ -54,6 +54,16 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<div class="row">
 								<div class="col-xs-3">
 									<input type="text" id="search" class="form-control" placeholder="Search . . .">
+									<select class="form-control select2" id="category">
+										<option value="">All</option>
+										<option value="Absensi">Absensi</option>
+										<option value="Lembur">Lembur</option>
+										<option value="Cuti">Cuti</option>
+										<option value="PKB">PKB</option>
+										<option value="Penggajian">Penggajian</option>
+										<option value="BPJS Kes">BPJS Kes</option>
+										<option value="BPJS TK">BPJS TK</option>
+									</select>
 								</div>
 								<div class="col-xs-9">
 									<h4>Chat History</h4>
@@ -89,15 +99,20 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 	var emp = "";
 	var saringan = "";
+	var cat = "";
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		getMasterQuestion("");
+		getMasterQuestion("","");
 
 		$("#search").keypress(function() {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if(keycode == '13'){
-				getMasterQuestion(this.value);
+				if ($('#category').val() != "") {
+					cat = $('#category').val();
+				}
+
+				getMasterQuestion(this.value, cat);
 				saringan = this.value;
 			}
 		});
@@ -105,9 +120,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		setInterval(check_chart, 10000);
 	});
 
+	$('#category').on('change', function() {
+		cat = this.value;
+		getMasterQuestion(saringan, cat);
+	});
+
 	function check_chart() {
 		if (!$(".komen").is(':focus')) {
-			getMasterQuestion(saringan);
+			getMasterQuestion(saringan, cat);
 
 			if (emp != "") {
 				getDetailQuestion(emp);
@@ -117,10 +137,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		}
 	}
 
-	function getMasterQuestion(cat) {
+	function getMasterQuestion(cat, cat2) {
 		var data = {
-			filter:cat
+			filter:cat,
+			ctg:cat2
 		}
+
 		$.get('{{ url("fetch/hr/hrqa") }}', data,function(result, status, xhr){
 			if (result.status) {
 				var masterQuestion = "";

@@ -1356,6 +1356,7 @@ public function detailAbsence(Request $request){
 public function fetchMasterQuestion(Request $request)
 {
   $filter = $request->get("filter");
+  $ctg = $request->get("ctg");
 
   $getQuestion = HrQuestionLog::leftJoin(db::raw('hr_question_logs as hr'),'hr.created_by' ,'=','hr_question_logs.created_by')
   ->select('hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
@@ -1363,6 +1364,10 @@ public function fetchMasterQuestion(Request $request)
 
   if($filter != "") {
     $getQuestion = $getQuestion->whereRaw('hr_question_logs.created_by like "%'.$filter.'%"');
+  }
+
+  if($ctg != "") {
+    $getQuestion = $getQuestion->whereRaw('hr_question_logs.category = "'.$ctg.'"');
   }
 
   $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
