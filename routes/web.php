@@ -280,10 +280,11 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('fetch/fg_shipment_result', 'FinishedGoodsController@fetch_fg_shipment_result');
 	Route::get('fetch/tb_shipment_result', 'FinishedGoodsController@fetch_tb_shipment_result');
 	//
-	Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
-	Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
 	Route::get('index/fg_production_monitoring', 'ProductionScheduleController@indexProductionMonitoring');
 });
+
+Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
+Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
 
 Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
 	Route::get('index/ch_daily_production_result', 'ChoreiController@index_ch_daily_production_result');
@@ -1120,9 +1121,23 @@ Route::get('index/production_reporting', 'ProductionReporting@index');
 Route::get('index/production_reporting/activity/{id}', 'ProductionReporting@activity');
 
 Route::get('index/activity_list', 'ActivityListController@index');
+Route::get('index/activity_list/create', 'ActivityListController@create');
+Route::post('index/activity_list/store', 'ActivityListController@store');
+Route::get('index/activity_list/show/{id}', 'ActivityListController@show');
+Route::get('index/activity_list/destroy/{id}', 'ActivityListController@destroy');
+Route::get('index/activity_list/edit/{id}', 'ActivityListController@edit');
+Route::post('index/activity_list/update/{id}', 'ActivityListController@update');
+
+Route::get('index/production_audit/index/{id}', 'ProductionAuditController@index');
+Route::post('index/production_audit/filter_audit/{id}', 'ProductionAuditController@filter_audit');
+Route::get('index/production_audit/create/{id}', 'ProductionAuditController@create');
+Route::post('index/production_audit/store/{id}', 'ProductionAuditController@store');
 
 //QC Report
 Route::get('index/qc_report', 'QcReportController@index');
+Route::get('index/qc_report/create', 'QcReportController@create');
+Route::post('index/qc_report/store', 'QcReportController@store');
+Route::get('index/qc_report/delete/{id}', 'QcReportController@delete');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
