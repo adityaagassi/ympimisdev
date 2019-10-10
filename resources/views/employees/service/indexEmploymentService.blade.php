@@ -302,7 +302,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 				}
 			});
+
 			name = "{{ $profil[0]->name }}";
+			name = name.replace('&#039;','');
 
 			fill_chat();
 

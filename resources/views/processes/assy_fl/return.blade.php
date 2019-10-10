@@ -127,9 +127,6 @@ table.table-bordered > tfoot > tr > th{
 			originGroupCode : '041',
 		}
 		$.post('{{ url("scan/serial_number_return_fl") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$("#serialNumber").val("");
