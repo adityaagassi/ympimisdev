@@ -474,6 +474,8 @@
 		$('#modalDetailTitle').html("");
 		$('#tableDetail').hide();
 
+		$('#tableDetail').DataTable().destroy();
+
 		var data = {
 			loc:loc,
 			diff:diff
@@ -500,6 +502,9 @@
 					});
 					$('#tableDetailBody').append(resultData);
 					$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>"+loc+" : "+diff+"</span></center>");
+					
+					$('#tableDetail').DataTable();
+					
 					$('#loading').hide();
 					$('#tableDetail').show();
 
