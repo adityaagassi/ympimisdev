@@ -1127,7 +1127,7 @@ public function getModelReprintAll2(Request $request)
 	$query ="SELECT material_number,serial_number from materials 
 	LEFT JOIN log_processes 
 	on materials.material_description = log_processes.model
-	where serial_number ='".$request->get('sn')."' and process_code='4'";
+	where serial_number ='".$request->get('sn')."' and process_code='4' and origin_group_code='043'";
 
 	$reprint = DB::select($query);
 	$response = array(
@@ -1951,7 +1951,7 @@ public function print_sax2(Request $request){
 
 public function label_des($id){
 	
-	$query ="select model from log_processes where process_code ='4' and serial_number='".$id."'";
+	$query ="select model from log_processes where process_code ='4' and serial_number='".$id."' and origin_group_code='043'";
 	$barcode = DB::select($query);
 	
 	return view('processes.assy_fl_saxT.print_label_description',array(
