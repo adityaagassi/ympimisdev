@@ -1127,7 +1127,7 @@ public function getModelReprintAll2(Request $request)
 	$query ="SELECT material_number,serial_number from materials 
 	LEFT JOIN log_processes 
 	on materials.material_description = log_processes.model
-	where serial_number ='".$request->get('sn')."' and process_code='4' and origin_group_code='043'";
+	where serial_number ='".$request->get('sn')."' and process_code='4' and log_processes.origin_group_code='043'";
 
 	$reprint = DB::select($query);
 	$response = array(
