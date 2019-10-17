@@ -1203,7 +1203,7 @@ public function label_besar($id,$gmc,$remark){
 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
 		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
@@ -1214,7 +1214,7 @@ public function label_besar($id,$gmc,$remark){
 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
 		SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."')b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
@@ -1225,9 +1225,9 @@ public function label_besar($id,$gmc,$remark){
 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
 	}
@@ -1236,22 +1236,22 @@ public function label_besar($id,$gmc,$remark){
 		$query ="select stamp_inventories.serial_number,finished,janean,upc,date_code,remark,stamp_inventories.model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
 		INNER JOIN stamp_inventories on a.serial_number = stamp_inventories.serial_number";
 	}elseif ($remark =="JRB") {
 		$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark ='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
 		LEFT JOIN 
 		(
-		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4'
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4' and log_processes.origin_group_code ='043'
 		) c on a.serial_number = c.sn2";
 	}
 
@@ -1259,13 +1259,13 @@ public function label_besar($id,$gmc,$remark){
 		$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J'
+		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J' and log_processes.origin_group_code ='043'
 		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."'))b
+		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
 		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
 		LEFT JOIN 
 		(
-		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4'
+		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4' and log_processes.origin_group_code ='043'
 		) c on a.serial_number = c.sn2";
 	}
 
@@ -1678,12 +1678,12 @@ public function getModel(Request $request)
 	if ($request->get('log')==3) {
 		$query ="select material_number,material_description,remark from materials
 		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
-		WHERE stamp_hierarchies.model in ( SELECT model from log_processes WHERE serial_number='".$request->get('sn')."' )
+		WHERE stamp_hierarchies.model in ( SELECT model from log_processes WHERE serial_number='".$request->get('sn')."' and origin_group_code='043')
 		";
 	}else{
 		$query ="select material_number,material_description,remark from materials
 		LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
-		WHERE stamp_hierarchies.model in ( SELECT model from stamp_inventories WHERE serial_number='".$request->get('sn')."' )
+		WHERE stamp_hierarchies.model in ( SELECT model from stamp_inventories WHERE serial_number='".$request->get('sn')."' and origin_group_code='043')
 		";	
 	}
 
