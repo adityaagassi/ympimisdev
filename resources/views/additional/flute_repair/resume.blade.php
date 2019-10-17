@@ -198,7 +198,8 @@
 		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
 				// var total_repair = 1368 + 1772;
-				var total_repair = 1386 + 1772;
+				// var total_repair = 1386 + 1772;
+				var total_repair = 1422 + 1772;
 				var tarik = 0;
 				var sedang = 0;
 
