@@ -2,39 +2,39 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td{
-	overflow:hidden;
-	text-overflow: ellipsis;
-}
-table {
-	table-layout:fixed;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-	/*margin-top:20px;*/
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	table {
+		table-layout:fixed;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+		/*margin-top:20px;*/
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -126,7 +126,7 @@ table.table-bordered > tfoot > tr > th{
 								</tfoot>
 							</table>
 						</div> -->
-						<div class="col-xs-4 col-xs-offset-1">
+						<div class="col-xs-6">
 							<center>
 								<span style="font-size: 24px">Last Counter:</span><br>
 								<input id="nextCounter" type="hidden" style="font-weight: bold; background-color: rgb(255,255,204); width: 100%; text-align: center; font-size: 4vw" disabled>
@@ -144,7 +144,7 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</center>
 						</div>
-						<div class="col-xs-7">
+						<div class="col-xs-6">
 							<center>
 								<span style="font-size: 24px;">Result:</span>
 							</center>
@@ -671,9 +671,6 @@ table.table-bordered > tfoot > tr > th{
 
 	function fillPlannew(){
 		$.get('{{ url("fetch/fetchResultFlnew") }}', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status = 200){
 				if(result.status){
 					$('#planTable').DataTable().destroy();
@@ -689,8 +686,8 @@ table.table-bordered > tfoot > tr > th{
 						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.total_return - value.total_ng)) ;
 						var h2 = Math.round(value.planh2);
 						if (totalSubassy < 0) {
-						totalSubassy = 0;
-						h2 = Math.round(value.planh2) - (value.total_stamp - value.actual);
+							totalSubassy = 0;
+							h2 = Math.round(value.planh2) - (value.total_stamp - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
@@ -710,7 +707,7 @@ table.table-bordered > tfoot > tr > th{
 					// $('#planTableBody').append(planData);
 					$('#listModel').html("");
 					$.unique(result.model.map(function (d) {
-						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
+						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 3px; margin-left: 2px; margin-right: 2px; width: 19%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
 					}));
 					$('#planTable').DataTable({
 						'paging': false,
@@ -755,9 +752,9 @@ table.table-bordered > tfoot > tr > th{
 
 
 								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[8]) > 0) {
-										if (parseInt(rowData[6]) <= 0) {
-											$(td).css('background-color', 'RGB(255,204,255)')
-										}
+									if (parseInt(rowData[6]) <= 0) {
+										$(td).css('background-color', 'RGB(255,204,255)')
+									}
 
 									
 								}
@@ -767,7 +764,7 @@ table.table-bordered > tfoot > tr > th{
 									}
 								}
 							}]
-					});
+						});
 				}
 				else{
 					audio_error.play();

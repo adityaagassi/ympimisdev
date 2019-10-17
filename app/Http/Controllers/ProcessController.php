@@ -3006,112 +3006,112 @@ select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN
 		}
 
 
-		$query = "select * from (
-		select * from (
-		select * from (
-		select * from ( 
-		select  sum(target2.debt) as debt, sum(target2.plan) as plan, sum(target2.actual) as actual,model3.model as model3 from (		 
-		select target_packing.* from ( 
+// 		$query = "select * from (
+// 		select * from (
+// 		select * from (
+// 		select * from ( 
+// 		select  sum(target2.debt) as debt, sum(target2.plan) as plan, sum(target2.actual) as actual,model3.model as model3 from (		 
+// 		select target_packing.* from ( 
 
-		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
-		(
-		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-		from production_schedules 
-		where due_date = '". $now ."' 
-		group by material_number
+// 		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+// 		(
+// 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+// 		from production_schedules 
+// 		where due_date = '". $now ."' 
+// 		group by material_number
 
-		union all
+// 		union all
 
-		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-		from flo_details 
-		where date(created_at) = '". $now ."'  
-		group by material_number
+// 		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
+// 		from flo_details 
+// 		where date(created_at) = '". $now ."'  
+// 		group by material_number
 
-		".$debt."
+// 		".$debt."
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '041'
-		group by result.material_number, materials.material_description
-		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-	) target_packing ) target2
+// 		) as result
+// 		left join materials on materials.material_number = result.material_number
+// 		where materials.category = 'FG' and materials.origin_group_code = '041'
+// 		group by result.material_number, materials.material_description
+// 		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
+// 	) target_packing ) target2
 
-		LEFT JOIN(
-	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
+// 		LEFT JOIN(
+// 	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
+// 	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
 
-	left Join
+// 	left Join
 
-	(
+// 	(
 	
-		SELECT model2 as model, COALESCE(SUM(total_return),0)  as total_return FROM (
-		SELECT model, SUM(quantity) as total_return from (
-			SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='041'  and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='041' and `status` ='return') 
-			) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') GROUP BY model
-			) a 
+// 		SELECT model2 as model, COALESCE(SUM(total_return),0)  as total_return FROM (
+// 		SELECT model, SUM(quantity) as total_return from (
+// 			SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='041'  and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='041' and `status` ='return') 
+// 			) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') GROUP BY model
+// 			) a 
 			
-			RIGHT JOIN(
-		SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-		) model3 on a.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
+// 			RIGHT JOIN(
+// 		SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
+// 		) model3 on a.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
 
-) as t_return on paking.model3 = t_return.model ) as packing_return
+// ) as t_return on paking.model3 = t_return.model ) as packing_return
 
-left Join
-(
+// left Join
+// (
 
-SELECT model2 as modelng, COALESCE(SUM(quantity),0) as total_ng from (
-SELECT model, SUM(quantity) as quantity from stamp_inventories WHERE `status` ='ng' and origin_group_code='041' GROUP BY model
- ) ng 
-	RIGHT JOIN(
-SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
+// SELECT model2 as modelng, COALESCE(SUM(quantity),0) as total_ng from (
+// SELECT model, SUM(quantity) as quantity from stamp_inventories WHERE `status` ='ng' and origin_group_code='041' GROUP BY model
+//  ) ng 
+// 	RIGHT JOIN(
+// SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
+// ) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
 
-) as t_ng on packing_return.model3 = t_ng.modelng
-) as packing_return_ng
+// ) as t_ng on packing_return.model3 = t_ng.modelng
+// ) as packing_return_ng
 
 
-left Join
+// left Join
 
-(
-SELECT * from (
-select  COALESCE(sum(target2.plan),0) as planh2, model3.model as modelh2 from (		 
-		select target_packing.* from ( 
+// (
+// SELECT * from (
+// select  COALESCE(sum(target2.plan),0) as planh2, model3.model as modelh2 from (		 
+// 		select target_packing.* from ( 
 
-		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
-		(
-		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-		from production_schedules 
-		where due_date = '". $nextday ."' 
-		group by material_number
+// 		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+// 		(
+// 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
+// 		from production_schedules 
+// 		where due_date = '". $nextday ."' 
+// 		group by material_number
 
 		
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '041'
-		group by result.material_number, materials.material_description
-		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-	) target_packing ) target2
+// 		) as result
+// 		left join materials on materials.material_number = result.material_number
+// 		where materials.category = 'FG' and materials.origin_group_code = '041'
+// 		group by result.material_number, materials.material_description
+// 		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
+// 	) target_packing ) target2
 
-		LEFT JOIN(
-	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
+// 		LEFT JOIN(
+// 	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
+// 	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
 
-) as pakingh2 on packing_return_ng.model3 = pakingh2.modelh2 ) as all_data
+// ) as pakingh2 on packing_return_ng.model3 = pakingh2.modelh2 ) as all_data
 
-left Join
-(
-SELECT model2 as model_stamp, COALESCE(SUM(quantity),0) as total_stamp from (
-SELECT model, SUM(quantity) as quantity from (
-SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') and remark ='FG'
-) a GROUP BY  model
- ) ng 
-	RIGHT JOIN(
-SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
-) as hasil on all_data.model3 = hasil.model_stamp
+// left Join
+// (
+// SELECT model2 as model_stamp, COALESCE(SUM(quantity),0) as total_stamp from (
+// SELECT model, SUM(quantity) as quantity from (
+// SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') and remark ='FG'
+// ) a GROUP BY  model
+//  ) ng 
+// 	RIGHT JOIN(
+// SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
+// ) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
+// ) as hasil on all_data.model3 = hasil.model_stamp
 
-	";
+// 	";
 
 
 		$queryAll = "select model3, COALESCE(debt,0) debt, COALESCE(plan,0) plan , COALESCE(actual,0) actual, COALESCE(total_return,0) total_return, COALESCE(total_ng,0) total_ng , COALESCE(total_stamp,0) total_stamp, COALESCE(planh2,0) planh2 from (
@@ -3221,7 +3221,8 @@ SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and 
 
 	";
 
-	$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()->get();
+	$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()
+	->orderBy('model')->get();
 
 		$tableData = DB::select($queryAll);
 		
@@ -3237,7 +3238,7 @@ SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and 
 	public function indexfetchResultFlStamp(){
 		return view('processes.assy_fl.picking_schedule', array(
 			'title' => 'Picking Schedule Flute',
-			'title_jp' => '(??)',
+			'title_jp' => '',
 		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
 	}
