@@ -726,13 +726,30 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
 			and location = 'lcq-incoming'
-			group by m.`key` order by jml desc");
+			group by m.`key` order by jml desc limit 10");
+
+		$detail_key = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select DISTINCT l.ng_name from middle_ng_logs l
+			where location = 'lcq-incoming') a
+			cross join
+			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' ".$where."
+			and location = 'lcq-incoming'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
 
 		$response = array(
 			'status' => true,
 			'date' => $date,
 			'ng_name' => $ng_name,
-			'key' => $key
+			'key' => $key,
+			'detail_key' => $detail_key
 		);
 		return Response::json($response);
 	}

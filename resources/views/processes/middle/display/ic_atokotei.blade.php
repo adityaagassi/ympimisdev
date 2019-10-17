@@ -67,7 +67,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 		
 	});
 
@@ -329,12 +329,44 @@
 			if(xhr.status == 200){
 				if(result.status){
 
+					//CHart By NG Name
 					var ng = [];
 					var jml = [];
+					var color = [];
+					var series = [];
 
 					for (var i = 0; i < result.ng_name.length; i++) {
-						ng.push(result.ng_name[i].ng_name);
-						jml.push(result.ng_name[i].jml);
+						if(result.ng_name[i].ng_name == 'Kizu Beret, Scrath, Butsu'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#2b908f');
+						}else if(result.ng_name[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#90ee7e');
+						}else if(result.ng_name[i].ng_name == 'Kizu'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#f45b5b');
+						}else if(result.ng_name[i].ng_name == 'Sisa Lusterlime'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#7798BF');
+						}else if(result.ng_name[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#aaeeee');
+						}else if(result.ng_name[i].ng_name == 'Pesok,Kake,Bengkok'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#ff0066');
+						}else if(result.ng_name[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
+							ng.push(result.ng_name[i].ng_name);
+							jml.push([result.ng_name[i].jml]);
+							color.push('#eeaaee');
+						}
+
+						series.push({name : ng[i], data: jml[i], color: color[i]});
 					}
 
 					Highcharts.chart('container1', {
@@ -360,10 +392,9 @@
 							type: 'category',
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
+							reversed: true,
 							labels: {
-								style: {
-									fontSize: '1vw'
-								}
+								enabled: false
 							},
 						},
 						yAxis: {
@@ -372,12 +403,21 @@
 							},
 							type: 'logarithmic'
 						},
-						legend : {
-							enabled: false
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -40,
+							y: 80,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true
 						},
 						tooltip: {
-							headerFormat: '<span>{point.category}</span><br/>',
-							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+							headerFormat: '<span>NG Name</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b> <br/>',
 						},
 						plotOptions: {
 							series:{
@@ -398,21 +438,43 @@
 						},credits: {
 							enabled: false
 						},
-						series: [
-						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
-						}
-						]
+						series: series
 					});
 
+
+					//Chart By Key
+					
 					var key = [];
-					var jml = [];
+					
+					var kizu_beret = [];
+					var aus = [];
+					var kizu = [];
+					var sisa = [];
+					var toke = [];
+					var pesok = [];
+					var lain = [];
 
 					for (var i = 0; i < result.key.length; i++) {
 						key.push(result.key[i].key);
-						jml.push(result.key[i].jml);
+						for (var j = 0; j < result.detail_key.length; j++) {
+							if(result.key[i].key == result.detail_key[j].key){
+								if(result.detail_key[j].ng_name == 'Kizu Beret, Scrath, Butsu'){
+									kizu_beret.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
+									aus.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Kizu'){
+									kizu.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Sisa Lusterlime'){
+									sisa.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
+									toke.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Pesok,Kake,Bengkok'){
+									pesok.push(result.detail_key[j].jml);
+								}else if(result.detail_key[j].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
+									lain.push(result.detail_key[j].jml);
+								}
+							}
+						}
 					}
 
 					Highcharts.chart('container2', {
@@ -420,7 +482,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'NG I.C. Atokotei by Key',
+							text: '10 Highest NG I.C. Atokotei by Key',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -439,7 +501,7 @@
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
 							labels: {
-								rotation: -65,
+								// rotation: -65,
 								style: {
 									fontSize: '26px'
 								}
@@ -449,25 +511,47 @@
 							title: {
 								text: 'Total Not Good'
 							},
-							type: 'logarithmic'
+							stackLabels: {
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: 'white',
+									fontSize: '1vw'
+								}
+							},
 						},
-						legend : {
-							enabled: false
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -40,
+							y: 80,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true
 						},
 						tooltip: {
 							headerFormat: '<span>{point.category}</span><br/>',
 							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
 						},
 						plotOptions: {
+							column: {
+								stacking: 'normal',
+								// dataLabels: {
+								// 	enabled: true,
+								// }
+							},
 							series:{
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										textOutline: false,
-										fontSize: '1vw'
-									}
-								},
+								// dataLabels: {
+								// 	enabled: true,
+								// 	format: '{point.y}',
+								// 	style:{
+								// 		textOutline: false,
+								// 		fontSize: '1vw'
+								// 	}
+								// },
 								animation: false,
 								pointPadding: 0.93,
 								groupPadding: 0.93,
@@ -479,19 +563,48 @@
 						},
 						series: [
 						{
-							"colorByPoint": true,
-							name: 'Total NG',
-							data: jml,
+							name: 'Kizu Beret, Scrath, Butsu',
+							data: kizu_beret,
+							color: '#2b908f'
+						},
+						{
+							name: 'Aus, Nami, Buff Torinai, Buff tdk rata',
+							data: aus,
+							color: '#90ee7e'
+						},
+						{
+							name: 'Kizu',
+							data: kizu,
+							color: '#f45b5b'
+						},
+						{
+							name: 'Sisa Lusterlime',
+							data: sisa,
+							color: '#7798BF'
+						},
+						{
+							name: 'Toke, Rohtare, gosong, Handatsuki',
+							data: toke,
+							color: '#aaeeee'
+						},
+						{
+							name: 'Pesok,Kake,Bengkok',
+							data: pesok,
+							color: '#ff0066'
+						},
+						{
+							name: 'Lain-lain (Hakuri nokoru,material salah,bekas)',
+							data: lain,
+							color: '#eeaaee'
 						}
 						]
 					});
-
 
 				}
 			}
 		});
 
-	}
+}
 
 
 
