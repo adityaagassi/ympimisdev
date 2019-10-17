@@ -243,7 +243,10 @@
 
 		var data = {
 			dateFrom:dateFrom,
-			dateTo:dateTo
+			dateTo:dateTo,
+			product_code:originGroupCode,
+			material_number:material,
+			model:model
 		}
 
 		$.get('{{ url("fetch/fg_production_schedule") }}', data, function(result, status, xhr){

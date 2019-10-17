@@ -295,6 +295,8 @@ class ProductionScheduleController extends Controller
     {
 
       $first = date("Y-m-01",strtotime($request->get("dateTo")));
+      $request->get("material_number");
+      $request->get("model");
 
       // PRODUCTION SCHEDULE
 
@@ -304,6 +306,10 @@ class ProductionScheduleController extends Controller
 
       if ($request->get("dateTo")) {
         $production_sch = $production_sch->where("due_date", "<=", $request->get("dateTo"));
+      }
+
+      if ($request->get("product_code") != "") {
+        $production_sch = $production_sch->where("origin_group_code", "=", $request->get("product_code"));
       }
 
       $production_sch = $production_sch->select("due_date", "production_schedules.material_number", "material_description", "quantity","origin_group_code","model")
@@ -333,13 +339,29 @@ class ProductionScheduleController extends Controller
         $where = '';
       }
 
+      if ($request->get("product_code") != "") {
+        $product_codes = $request->get('product_code');
+        $codelength = count($product_codes);
+        $code = "";
+
+        for($x = 0; $x < $codelength; $x++) {
+          $code = $code."'".$product_codes[$x]."'";
+          if($x != $codelength-1){
+            $code = $code.",";
+          }
+        }
+        $where2 = " and origin_group_code in (".$code.") ";
+      } else {
+        $where2 = '';
+      }
+
       $q_deliv = 'select * from (select flomaster.flo_number, flomaster.material_number, sum(flomaster.actual) deliv, flomaster.`status`, DATE_FORMAT(deliv.created_at, "%Y-%m-%d") date from
       (select flos.flo_number, flos.material_number, actual, `status` from flos where `status` NOT IN (0,1,"m")) as flomaster left join 
       (select flo_number, created_at from flo_logs where status_code = 2) as deliv on flomaster.flo_number = deliv.flo_number
       where DATE_FORMAT(deliv.created_at, "%Y-%m-%d") >= "'.$first.'" '. $where .'
       group by flomaster.material_number, DATE_FORMAT(deliv.created_at, "%Y-%m-%d")) alls
       left join materials on materials.material_number = alls.material_number
-      where category = "FG"
+      where category = "FG" '.$where2.'
       order by alls.material_number asc, alls.date asc';
 
       $deliv = db::select($q_deliv);
