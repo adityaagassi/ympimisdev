@@ -2301,20 +2301,28 @@ class MiddleProcessController extends Controller
 	}
 
 	public function scanMiddleOperator(Request $request){
-		$employee = db::table('employees')->where('employee_id', 'like', '%'.$request->get('employee_id').'%')->first();
 
+		$nik = $request->get('employee_id');
+
+		if(strlen($nik) > 9){
+			$id_card = (explode("+",$nik));
+			$nik = $id_card[0];
+		}
+
+		$employee = db::table('employees')->where('employee_id', 'like', '%'.$nik.'%')->first();
+		
 		if(count($employee) > 0 ){
 			$response = array(
 				'status' => true,
 				'message' => 'Logged In',
-				'employee' => $employee,
+				'employee' => $employee
 			);
 			return Response::json($response);
 		}
 		else{
 			$response = array(
 				'status' => false,
-				'message' => 'Employee ID Invalid',
+				'message' => 'Employee ID Invalid'
 			);
 			return Response::json($response);
 		}
