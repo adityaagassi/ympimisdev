@@ -1052,11 +1052,11 @@ class PurchaseOrderController extends Controller
 		}
 
 		if($request->get('status') == 0){
-			$po_lists = $po_lists->where('po_lists.remark', '=', null);
+			$po_lists = $po_lists->whereNull('po_lists.remark');
 		}
 
 		if($request->get('status') == 1){
-			$po_lists = $po_lists->where('po_lists.remark', '=', 'converted');
+			$po_lists = $po_lists->whereNotNull('po_lists.remark');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){
@@ -1137,11 +1137,11 @@ class PurchaseOrderController extends Controller
 		}
 
 		if(strlen($request->get('status')) == 0){
-			$po_lists = $po_lists->where('po_file.remark', '=', null);
+			$po_lists = $po_lists->whereNull('po_lists.remark');
 		}
 
 		if(strlen($request->get('status')) == 1){
-			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
+			$po_lists = $po_lists->whereNotNull('po_lists.remark');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){

@@ -76,7 +76,7 @@
                                              <select class="form-control select2" multiple="multiple" id='pgr' name="pgr" data-placeholder="Select Purchase Group" style="width: 100%;">
                                                   <option></option>
                                                   @foreach($pgrs as $pgr)
-                                                  <option value="{{ $pgr }}">{{ $pgr }}</option>
+                                                  <option value="{{$pgr}}">{{ $pgr }}</option>
                                                   @endforeach
                                              </select>
                                         </div>
@@ -357,6 +357,7 @@
           var deliv_date_from = $('#delivfrom').val();
           var deliv_date_to = $('#delivto').val();
           var status = $('#status').val();
+
           var data = {
                pgr: pgr,
                vendor: vendor,
