@@ -34,7 +34,6 @@
 						<th style="width: 2%; border:1px solid black;">Surface</th>
 						<th style="width: 3%; border:1px solid black;">Qty</th>
 						<th style="width: 4%; border:1px solid black;">Created At</th>
-						<th style="width: 3%; border:1px solid black;">Remark</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -49,7 +48,6 @@
 							<td>'.$data['barrel_queues'][$i]['surface'].'</td>
 							<td style="text-align:right">'.$data['barrel_queues'][$i]['quantity'].'</td>
 							<td style="text-align:right">'.$data['barrel_queues'][$i]['created_at'].'</td>
-							<td>'.$data['barrel_queues'][$i]['remark'].'</td>
 							</tr>');
 					}
 					?>
