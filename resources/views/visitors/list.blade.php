@@ -136,6 +136,10 @@
 		filllist();
 		drawChart();
 
+		setInterval(filllist, 60000);
+		setInterval(drawChart, 60000);
+
+
 		$('.select2').select2({
 			dropdownAutoWidth : true,
 			width: '100%',
