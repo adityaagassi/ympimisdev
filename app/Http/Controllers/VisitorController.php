@@ -28,10 +28,10 @@ class VisitorController extends Controller
 	public function registration()
 	{
 		$employees = "SELECT DISTINCT( employees.employee_id) as employee_id,employees.`name`,mutation_logs.department, cost_centers.department as shortname from employees
-LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
-LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
-WHERE mutation_logs.valid_to is null and employees.end_date is null  ORDER BY mutation_logs.department asc";
-$employee = DB::select($employees);
+		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
+		LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
+		WHERE mutation_logs.valid_to is null and employees.end_date is null  ORDER BY mutation_logs.department asc";
+		$employee = DB::select($employees);
 		return view('visitors.registration', array(
 			'employee' => $employee,
 		))->with('page', 'Visitor Registration');
@@ -264,7 +264,7 @@ public function updateremarkall(Request $request){
 		->withTrashed()
 		->update(['remark' => 'Confirmed']);       
 		
-	
+
 		$visitor = Visitor::where('id','=', $id)		     
 		->first();
 		$visitor->remark = 'Confirmed';
@@ -373,12 +373,20 @@ public function display()
 	return view('visitors.list')->with('page', 'Visitor display');
 }
 
-public function filldisplay($nik)
+public function filldisplay($nik, Request $request)
 {
 
 	$kurang = date('Y-m-d',strtotime('-30 days'));
 	$tgl = date('m-Y');
 	$tgl2 = date('Y-m-d');
+
+	if($request->get('date') > 0){
+		$date = $request->get('date');
+	}else{
+		$date = date('Y-m-d');
+
+	}
+
 
 	if ($nik !="") {
 		$where = "where employee = '".$nik."'";
@@ -390,21 +398,19 @@ public function filldisplay($nik)
 
 	if($nik =="display"){
 
-		$where=" WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='".$kurang."' and DATE_FORMAT(created_at,'%Y-%m-%d')<='".$tgl2."' ";
+		$where=" WHERE DATE_FORMAT(created_at,'%Y-%m-%d') ='".$date."' ";
 	}
 
-	$op="SELECT *,count(DISTINCT(total1)) as total from (
+	$op = "SELECT *,count(DISTINCT(total1)) as total from (
 	select visitors.reason,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark, visitors.created_at, DATE_FORMAT(visitors.created_at,'%Y-%m-%d')as tgl from visitors
 	left join visitor_details on visitors.id = visitor_details.id_visitor
 	LEFT JOIN employees on visitors.employee = employees.employee_id
-	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
+	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id) a ".$where."
+	GROUP BY a.id  order by a.id desc";
 
-) a ".$where." GROUP BY a.id  order by a.id desc";
-$ops = DB::select($op);
-return DataTables::of($ops)
+	$ops = DB::select($op);
 
-
-->make(true);
+	return DataTables::of($ops)->make(true);
 }
 
 public function getchart(Request $request)
@@ -444,10 +450,10 @@ public function getchart(Request $request)
 	";
 
 	$op="select DATE_FORMAT(tglok,'%d %b %y') as tglok, COALESCE(d.vendor,0) as vendor, COALESCE(d.visitor,0) as visitor  from (
-SELECT  b.tgl, sum(b.vendor) as vendor, sum(b.visitor) as visitor  from (
-select final.status, final.tgl, sum(final.total_vendor) as vendor, sum(final.total_visitor) as visitor from
-(
-SELECT Status, tgl ,count(total1) as total_vendor, 0 as total_visitor from (
+	SELECT  b.tgl, sum(b.vendor) as vendor, sum(b.visitor) as visitor  from (
+	select final.status, final.tgl, sum(final.total_vendor) as vendor, sum(final.total_visitor) as visitor from
+	(
+	SELECT Status, tgl ,count(total1) as total_vendor, 0 as total_visitor from (
 	select visitor_details.id_number as total1, visitors.status, DATE_FORMAT(visitors.created_at,'%Y-%m-%d')as tgl from visitors
 	left join visitor_details on visitors.id = visitor_details.id_visitor
 	) a WHERE a.status = 'Vendor' GROUP BY a.tgl,a.Status
