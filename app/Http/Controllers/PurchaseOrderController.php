@@ -1042,20 +1042,19 @@ class PurchaseOrderController extends Controller
 	}
 
 	public function fetchPoList(Request $request){
-		$po_lists = PoList::leftJoin(db::raw('(
-			select a.purchdoc, count(po_list_files.file_name) as att from 
-			(select distinct purchdoc, order_no from purchase_orders) as a left join po_list_files on po_list_files.order_no = a.order_no group by a.purchdoc) as po_file'), 'po_file.purchdoc', '=', 'po_lists.purchdoc')
-		->select('po_lists.id', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.material', 'po_lists.description', 'po_lists.order_date', 'po_lists.deliv_date', 'po_lists.order_qty', 'po_lists.price', 'po_lists.curr', 'po_file.att');
+		$po_lists = PoList::select('po_lists.id', 'po_lists.pgr', 'po_lists.vendor', 'po_lists.purchdoc', 'po_lists.item', 'po_lists.material', 'po_lists.description', 'po_lists.order_date', 'po_lists.deliv_date', 'po_lists.order_qty', 'po_lists.price', 'po_lists.curr', 'po_lists.remark');
 
 		if($request->get('pgr') != null){
 			$po_lists = $po_lists->whereIn('po_lists.pgr', $request->get('pgr'));
 		}
 
-		if($request->get('status') == 0){
+		if($request->get('status') == '0'){
 			$po_lists = $po_lists->whereNull('po_lists.remark');
+			// $po_lists = $po_lists->where('po_file.remark', '=', null);
 		}
 
-		if($request->get('status') == 1){
+		if($request->get('status') == '1'){
+			// $po_lists = $po_lists->where('po_file.att', '=', 'converted');
 			$po_lists = $po_lists->whereNotNull('po_lists.remark');
 		}
 
@@ -1101,12 +1100,18 @@ class PurchaseOrderController extends Controller
 
 		$po_lists = $po_lists->get();
 
+		// $response = array(
+		// 	'status' => true,
+		// 	'file_paths' => $po_lists,
+		// );
+		// return Response::json($response);
+
 		return DataTables::of($po_lists)
 		->addColumn('action', function($po_lists){
 			return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editPoList(id)" id="' . $po_lists->id . '"><i class="fa fa-edit"> Edit</i></a>';
 		})
 		->addColumn('status', function($po_lists){
-			if($po_lists->att > 0){
+			if($po_lists->remark == 'converted'){
 				return '<a href="javascript:void(0)" onClick="modalDownload(id)" id="' . $po_lists->purchdoc . '"> Converted(' . $po_lists->att . ')</a>';
 			}
 			else{
@@ -1137,11 +1142,11 @@ class PurchaseOrderController extends Controller
 		}
 
 		if(strlen($request->get('status')) == 0){
-			$po_lists = $po_lists->whereNull('po_lists.remark');
+			$po_lists = $po_lists->where('po_file.remark', '=', null);
 		}
 
 		if(strlen($request->get('status')) == 1){
-			$po_lists = $po_lists->whereNotNull('po_lists.remark');
+			$po_lists = $po_lists->where('po_file.att', '=', 'converted');
 		}
 
 		if(strlen($request->get('order_date_from')) > 0){
