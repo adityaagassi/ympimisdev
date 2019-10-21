@@ -133,7 +133,7 @@ class PurchaseOrderController extends Controller
 
 				if($pdf){
 					$po_file = PolistFile::updateOrCreate([
-						'order_noorder_no' => $order_no, 
+						'order_no' => $orderNo, 
 						'file_name' => $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . '.pdf'
 					],
 					[
