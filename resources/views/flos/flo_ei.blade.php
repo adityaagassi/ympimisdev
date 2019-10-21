@@ -2,54 +2,54 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
-thead input {
-	width: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-}
-table {
-	table-layout:fixed;
-}
-td{
-	overflow:hidden;
-	text-overflow: ellipsis;
-}
-td:hover {
-	overflow: visible;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
-input[type=number]::-webkit-outer-spin-button,`
-input[type=number]::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-}
-input[type=number] {
-	-moz-appearance:textfield;
-}
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	table {
+		table-layout:fixed;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error { display: none; }
+	input[type=number]::-webkit-outer-spin-button,`
+	input[type=number]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	input[type=number] {
+		-moz-appearance:textfield;
+	}
 </style>
 @stop
 @section('header')
@@ -337,6 +337,7 @@ input[type=number] {
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	function scanMaterialNumber(){
+		$('#material_number').prop('disabled', true);
 		var material_number = $("#material_number").val();
 		var ymj = $("#ymj").is(":checked");
 		var data = {
@@ -378,17 +379,20 @@ input[type=number] {
 									else{
 										$('#flo_detail_table').DataTable().ajax.reload();
 									}
+									$('#material_number').prop('disabled', false);
 									$("#material_number").focus();
 								}
 								else{
 									openErrorGritter('Error!', result.message);
 									audio_error.play();
+									$('#material_number').prop('disabled', false);
 									$("#material_number").val("");
 								}
 							}
 							else{
 								openErrorGritter('Error!', 'Disconnected from server');
 								audio_error.play();
+								$('#material_number').prop('disabled', false);
 								$("#material_number").val("");
 							}
 						});
@@ -396,12 +400,14 @@ input[type=number] {
 					else{
 						openErrorGritter('Error!', result.message);
 						audio_error.play();
+						$('#material_number').prop('disabled', false);
 						$("#material_number").val("");
 					}
 				}
 				else{
 					openErrorGritter('Error!', 'Disconnected from server');
 					audio_error.play();
+					$('#material_number').prop('disabled', false);
 					$("#material_number").val("");
 				}
 			});
