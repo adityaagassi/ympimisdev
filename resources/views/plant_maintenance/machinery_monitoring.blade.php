@@ -18,7 +18,7 @@
 		vertical-align: middle;
 	}
 	.content{
-		color: white;
+		color: black;
 		font-weight: bold;
 	}
 	.progress {
@@ -35,7 +35,7 @@
 
 	<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
 		<form method="GET" action="{{ url("/machinery_monitoring") }}" style="margin-bottom: 0px;">
-			<div class="col-xs-3">
+			<div class="col-xs-2">
 				<div class="form-group">
 					<select class="form-control select2" multiple="multiple" id="mesinSelect" data-placeholder="Select Machines" onchange="change()">
 						<option value="machining">Machining</option>
@@ -47,14 +47,14 @@
 					<input type="text" name="mesin" id="mesin" hidden>
 				</div>
 			</div>
-			<div class="col-xs-2">
+			<div class="col-xs-1">
 				<div class="form-group">
 					<button class="btn btn-success" type="submit">Show</button>
 				</div>
 			</div>
 		</form>
 		
-		<div class="col-xs-3 pull-right" style="padding:0px; border:2px solid #fff;">
+		<div class="col-xs-3 pull-right" style="padding:0px; border:2px solid #fff; color:#fff">
 			<div class="col-xs-2" style="padding:0px;">
 				<div class="col-xs-8 pull-right" style="padding:0px;">Ket :</div>
 			</div>		
@@ -97,11 +97,11 @@
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
 					<thead><tr><th style="background-color: #fff;">Machining All</th></tr></thead>
-					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 155px;">Status</th></tr></tbody>
+					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
 			<div class="col-xs-11" style="padding: 0px; overflow-x: auto;">
-				<table id="table_machining" class="table table-bordered" style="margin:0; width: 100%;">
+				<table id="table_machining" class="table table-bordered" style="margin:0; width: 100%; color: #000">
 					<thead id="head_machining">
 					</thead>
 					<tbody id="body_machining">
@@ -114,11 +114,11 @@
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
 					<thead><tr><th style="background-color: #fff;">Senban All</th></tr></thead>
-					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 155px;">Status</th></tr></tbody>
+					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
-			<div class="col-xs-11" style="padding: 0px; overflow-x: auto;">
-				<table id="table_press" class="table table-bordered" style="margin:0; width: 100%;">
+			<div class="col-xs-8" style="padding: 0px; overflow-x: auto;">
+				<table id="table_press" class="table table-bordered" style="margin:0; width: 100%; color: #000">
 					<thead id="head_press">
 					</thead>
 					<tbody id="body_press">
@@ -131,11 +131,11 @@
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
 					<thead><tr><th style="background-color: #fff;">Injeksi All</th></tr></thead>
-					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 155px;">Status</th></tr></tbody>
+					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
 			<div class="col-xs-11" style="padding: 0px; overflow-x: auto;">
-				<table id="table_injeksi" class="table table-bordered" style="margin:0; width: 100%;">
+				<table id="table_injeksi" class="table table-bordered" style="margin:0; width: 100%; color: #000">
 					<thead id="head_injeksi">
 					</thead>
 					<tbody id="body_injeksi">
@@ -148,11 +148,11 @@
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
 					<thead><tr><th style="background-color: #fff;">Press All</th></tr></thead>
-					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 155px;">Status</th></tr></tbody>
+					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
 			<div class="col-xs-11" style="padding: 0px; overflow-x: auto;">
-				<table id="table_senban" class="table table-bordered" style="margin:0; width: 100%;">
+				<table id="table_senban" class="table table-bordered" style="margin:0; width: 100%; color: #000">
 					<thead id="head_senban">
 					</thead>
 					<tbody id="body_senban">
@@ -164,12 +164,12 @@
 		<div id="zpro" class="col-xs-12" style="padding: 0px; margin-top: 0;">
 			<div class="col-xs-1" style="padding: 0px;">
 				<table class="table table-bordered" style="margin:0">
-					<thead><tr><th style="background-color: #fff;">Press All</th></tr></thead>
-					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 155px;">Status</th></tr></tbody>
+					<thead><tr><th style="background-color: #fff;">Zpro All</th></tr></thead>
+					<tbody><tr><th style="background-color: #fff; text-align: center; vertical-align: middle; height: 105px;">Status</th></tr></tbody>
 				</table>
 			</div>
 			<div class="col-xs-4" style="padding: 0px; overflow-x: auto;">
-				<table id="table_zpro" class="table table-bordered" style="margin:0; width: 100%;">
+				<table id="table_zpro" class="table table-bordered" style="margin:0; width: 100%; color: #000">
 					<thead id="head_zpro">
 					</thead>
 					<tbody id="body_zpro">
@@ -203,6 +203,7 @@
 
 	});	
 
+
 	function change(){
 		$("#mesin").val($("#mesinSelect").val());
 	}
@@ -231,6 +232,7 @@
 		}
 	}
 
+	var audio_error = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 
 	function mesin1(){
 		$.get("{{ 'http://172.17.129.99/zed/dashboard/getDataSystem' }}", function(result, status, xhr){
@@ -263,6 +265,7 @@
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th style="background-color: #f24b4b; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							audio_error.play();
 						}else if(mesin_split[j][1] == 1){//hijau
 							head += '<th style="background-color: #00a65a; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
 						}else if(mesin_split[j][1] == 2){//kuning
@@ -272,7 +275,7 @@
 						}else if(mesin_split[j][1] == 4){//putih
 							head += '<th style="background-color: #fcfdff; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
+							head += '<th style="background-color: #000; color: #fff; width:6%;">'+zpro[i][1].replace("MC ","")+'</th>';
 						}
 
 						//body
@@ -292,7 +295,7 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						body += '<div style="height: 150px;">';
+						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
@@ -364,6 +367,8 @@
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th style="background-color: #f24b4b; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							audio_error.play();
+
 						}else if(mesin_split[j][1] == 1){//hijau
 							head += '<th style="background-color: #00a65a; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
 						}else if(mesin_split[j][1] == 2){//kuning
@@ -373,7 +378,7 @@
 						}else if(mesin_split[j][1] == 4){//putih
 							head += '<th style="background-color: #fcfdff; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
+							head += '<th style="background-color: #000; color: #fff; width:5%;">'+machining[i][1].replace("MC ","")+'</th>';
 						}
 
 						//body
@@ -393,7 +398,7 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						body += '<div style="height: 150px;">';
+						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
@@ -445,6 +450,8 @@
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th style="background-color: #f24b4b; width:5%;">'+press_data[i][1]+'</th>';
+							audio_error.play();
+
 						}else if(mesin_split[j][1] == 1){//hijau
 							head += '<th style="background-color: #00a65a; width:5%;">'+press_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 2){//kuning
@@ -454,7 +461,7 @@
 						}else if(mesin_split[j][1] == 4){//putih
 							head += '<th style="background-color: #fcfdff; width:5%;">'+press_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; width:5%;">'+press_data[i][1]+'</th>';
+							head += '<th style="background-color: #000; color: #fff; width:5%;">'+press_data[i][1]+'</th>';
 						}
 
 						//body
@@ -474,7 +481,7 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						body += '<div style="height: 150px;">';
+						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
@@ -530,6 +537,8 @@
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th style="background-color: #f24b4b; width:5%;">'+injeksi_data[i][1]+'</th>';
+							audio_error.play();
+
 						}else if(mesin_split[j][1] == 1){//hijau
 							head += '<th style="background-color: #00a65a; width:5%;">'+injeksi_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 2){//kuning
@@ -539,7 +548,7 @@
 						}else if(mesin_split[j][1] == 4){//putih
 							head += '<th style="background-color: #fcfdff; width:5%;">'+injeksi_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; width:5%;">'+injeksi_data[i][1]+'</th>';
+							head += '<th style="background-color: #000; color: #fff; width:5%;">'+injeksi_data[i][1]+'</th>';
 						}
 
 						//body
@@ -559,7 +568,7 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						body += '<div style="height: 150px;">';
+						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
@@ -627,6 +636,8 @@
 						//head
 						if (mesin_split[j][1] == 0){//merah
 							head += '<th style="background-color: #f24b4b; width:5%;">'+senban_data[i][1]+'</th>';
+							audio_error.play();
+
 						}else if(mesin_split[j][1] == 1){//hijau
 							head += '<th style="background-color: #00a65a; width:5%;">'+senban_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 2){//kuning
@@ -636,7 +647,7 @@
 						}else if(mesin_split[j][1] == 4){//putih
 							head += '<th style="background-color: #fcfdff; width:5%;">'+senban_data[i][1]+'</th>';
 						}else if(mesin_split[j][1] == 5){//hitam	
-							head += '<th style="background-color: #000; width:5%;">'+senban_data[i][1]+'</th>';
+							head += '<th style="background-color: #000; color: #fff; width:5%;">'+senban_data[i][1]+'</th>';
 						}
 
 						//body
@@ -656,7 +667,7 @@
 						var hitam_time = (parseInt(hitam[0])*3600) + (parseInt(hitam[1])*60) + parseInt(hitam[2]);
 						var total_time = merah_time + hijau_time + kuning_time + biru_time + putih_time + hitam_time;
 
-						body += '<div style="height: 150px;">';
+						body += '<div style="height: 100px;">';
 						body += '<div style="background-color: #f24b4b; height: '+ (merah_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #00a65a; height: '+ (hijau_time/total_time)*100 +'%;"></div>';
 						body += '<div style="background-color: #FCF33A; height: '+ (kuning_time/total_time)*100 +'%;"></div>';
