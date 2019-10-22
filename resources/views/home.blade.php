@@ -144,6 +144,10 @@
                             <a href="{{ url("index/report/absence") }}">
                                 <i class="fa fa-caret-right"></i>Absence (欠勤)
                             </a>
+                            <br>
+                            <a href="{{ url("index/report/attendance_data")}}">
+                                <i class="fa fa-caret-right"></i>Attendance Data (??)
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -165,6 +169,12 @@
                             <a href="{{ url("index/emergency_response") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Condition (??)
                             </a>
+                            <br>
+                            <a href="{{ url("index/activity_list") }}">
+                                <i class="fa fa-caret-right"></i> Activity Lists (活動リスト)
+                            </a>
+                            <br>
+                            
                         </td>
                     </tr>
                     <tr>
@@ -173,6 +183,19 @@
                             <br>
                             <a href="http://172.17.129.99/zed/dashboard/awal">
                                 <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
+                            </a>
+                            <br>
+                            <a href="{{ url("/machinery_monitoring?mesin=") }}">
+                                <i class="fa fa-caret-right"></i> Machinery Monitoring ()
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Quality Assurance (品質保証)</span>
+                            <br>
+                            <a href="{{ url("index/qc_report") }}">
+                                <i class="fa fa-caret-right"></i> QC Report
                             </a>
                         </td>
                     </tr>
@@ -280,6 +303,10 @@
                             <br>
                             <a href="{{ url("/index/display/sub_assy/assy?date=&surface2=&key2=&model2=&hpl2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/activity_list/filter/8") }}">
+                                <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
                             </a>
                         </td>
                     </tr>
@@ -394,6 +421,7 @@
                             <a href="{{ url("flute_repair") }}">
                                 <i class="fa fa-caret-right"></i> Flute Repair
                             </a>
+
                         </td>
                     </tr>
                     {{-- <tr>

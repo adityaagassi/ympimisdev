@@ -24,8 +24,18 @@ Route::get('happybirthday', 'TrialController@ultah');
 
 Route::get('trialmail', 'TrialController@trialmail');
 
-Route::get('/trial', function () {
-	return view('trial');
+// Route::get('/trial', function () {
+// 	return view('trial', array(
+// 		'title' => 'OEE Recording',
+// 		'title_jp' => '-'
+// 	));
+// });
+
+Route::get('/machinery_monitoring', function () {
+	return view('plant_maintenance.machinery_monitoring', array(
+		'title' => 'Machinery Monitoring',
+		'title_jp' => ''
+	));
 });
 
 Auth::routes();
@@ -80,65 +90,65 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 
 //----- Start mesin injeksi
 
-Route::get('index/injeksi', 'InjectionController@index');
+Route::get('index/injeksi', 'InjectionsController@index');
 //in
-Route::get('index/in', 'InjectionController@in');
-Route::post('scan/part_injeksi', 'InjectionController@scanPartInjeksi');
-Route::get('send/Part', 'InjectionController@sendPart');
-Route::get('get/Inpart', 'InjectionController@getDataIn');
+Route::get('index/in', 'InjectionsController@in');
+Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
+Route::get('send/Part', 'InjectionsController@sendPart');
+Route::get('get/Inpart', 'InjectionsController@getDataIn');
 //end in
 
 // out
-Route::get('index/out', 'InjectionController@out');
-Route::get('get/Outpart', 'InjectionController@getDataOut');
+Route::get('index/out', 'InjectionsController@out');
+Route::get('get/Outpart', 'InjectionsController@getDataOut');
 //end out
 
-Route::get('fetch/InOutpart', 'InjectionController@getDataInOut');
+Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 
 //schedule
-Route::get('index/Schedule', 'InjectionController@schedule');
-Route::get('fetch/Schedulepart', 'InjectionController@getDataSchedule');
+Route::get('index/Schedule', 'InjectionsController@schedule');
+Route::get('fetch/Schedulepart', 'InjectionsController@getDataSchedule');
 //end schedule
 
 //report stock
 
-Route::get('index/reportStock', 'InjectionController@reportStock');
-Route::get('fetch/getDataStock', 'InjectionController@getDataStock');
+Route::get('index/reportStock', 'InjectionsController@reportStock');
+Route::get('fetch/getDataStock', 'InjectionsController@getDataStock');
 //end report
 
 
 // mesin
-Route::get('index/mesin', 'InjectionController@mesin');
-Route::get('fetch/getDataMenit', 'InjectionController@getDataMenit');
-Route::get('fetch/getDataMesinShoot', 'InjectionController@getDataMesinShoot');
+Route::get('index/mesin', 'InjectionsController@mesin');
+Route::get('fetch/getDataMenit', 'InjectionsController@getDataMenit');
+Route::get('fetch/getDataMesinShoot', 'InjectionsController@getDataMesinShoot');
 
 
 // end mesin
 
 
 // operator
-Route::get('index/opmesin', 'InjectionController@opmesin');
-Route::post('input/statusmesin', 'InjectionController@inputStatusMesin');
-Route::post('delete/statusmesin', 'InjectionController@deleteStatusMesin');
-Route::get('get/statusmesin', 'InjectionController@getStatusMesin');
-Route::post('input/logmesin', 'InjectionController@logmesin');
-Route::get('get/getDataMesinShootLog', 'InjectionController@getDataMesinShootLog');
+Route::get('index/opmesin', 'InjectionsController@opmesin');
+Route::post('input/statusmesin', 'InjectionsController@inputStatusMesin');
+Route::post('delete/statusmesin', 'InjectionsController@deleteStatusMesin');
+Route::get('get/statusmesin', 'InjectionsController@getStatusMesin');
+Route::post('input/logmesin', 'InjectionsController@logmesin');
+Route::get('get/getDataMesinShootLog', 'InjectionsController@getDataMesinShootLog');
 
 // end operator
 
 //report stock
 
-Route::get('index/reportStockMonitoring', 'InjectionController@reportStockMonitoring');
-Route::get('fetch/getTargetWeek', 'InjectionController@getTargetWeek');
+Route::get('index/reportStockMonitoring', 'InjectionsController@reportStockMonitoring');
+Route::get('fetch/getTargetWeek', 'InjectionsController@getTargetWeek');
 //end report
 
 //report balance mesin
 
-Route::get('index/reportBalanceMesin', 'InjectionController@reportBalanceMesin');
-Route::get('fetch/getBalanceMesin', 'InjectionController@getBalanceMesin');
+Route::get('index/reportBalanceMesin', 'InjectionsController@reportBalanceMesin');
+Route::get('fetch/getBalanceMesin', 'InjectionsController@getBalanceMesin');
 
-Route::post('input/makePlan', 'InjectionController@makePlan');
-Route::get('fetch/getBalanceMesinChart', 'InjectionController@getBalanceMesinChart');
+Route::post('input/makePlan', 'InjectionsController@makePlan');
+Route::get('fetch/getBalanceMesinChart', 'InjectionsController@getBalanceMesinChart');
 //end balance mesin
 
 // end mesin injeksi
@@ -242,10 +252,12 @@ Route::post('post/hrqa', 'EmployeeController@postChat');
 Route::get('index/employee_information', 'EmployeeController@indexEmployeeInformation');
 Route::get('fetch/cc/budget', 'OvertimeController@fetchCostCenterBudget');
 Route::get('fetch/chart/control/detail', 'OvertimeController@overtimeDetail');
+Route::get('update/employee/number', 'EmployeeController@editNumber');
 // DailyAttendanceControl
 Route::get('index/report/daily_attendance', 'EmployeeController@indexDailyAttendance');
 Route::get('fetch/report/daily_attendance', 'EmployeeController@fetchDailyAttendance');
 Route::get('fetch/report/detail_daily_attendance', 'EmployeeController@detailDailyAttendance');
+Route::get('index/report/attendance_data', 'EmployeeController@attendanceData');
 // Presence
 Route::get('index/report/presence', 'EmployeeController@indexPresence');
 Route::get('fetch/report/presence', 'EmployeeController@fetchPresence');
@@ -638,6 +650,8 @@ Route::get('index/process_middle_sx', 'MiddleProcessController@indexProcessMiddl
 Route::get('index/middle/request/{id}', 'MiddleProcessController@indexRequest');
 Route::get('index/middle/request/display/{id}', 'MiddleProcessController@indexRequestDisplay');
 Route::get('fetch/middle/request', 'MiddleProcessController@fetchRequest');
+//FROM SOLDERING
+Route::get('index/middle/requested', 'MiddleProcessController@indexRequestSolder');
 //CLARINET
 Route::get('index/process_middle_cl', 'MiddleProcessController@indexProcessMiddleCL');
 Route::get('scan/middle/request', 'MiddleProcessController@scanRequestTag');
@@ -1117,27 +1131,74 @@ Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 
 
 //Production Report
-Route::get('index/production_reporting', 'ProductionReporting@index');
-Route::get('index/production_reporting/activity/{id}', 'ProductionReporting@activity');
+Route::get('index/production_report/index/{id}', 'ProductionReportController@index');
+Route::get('index/production_report/activity/{id}', 'ProductionReportController@activity');
 
 Route::get('index/activity_list', 'ActivityListController@index');
 Route::get('index/activity_list/create', 'ActivityListController@create');
+Route::get('index/activity_list/create_by_department/{id}', 'ActivityListController@create_by_department');
 Route::post('index/activity_list/store', 'ActivityListController@store');
+Route::post('index/activity_list/store_by_department/{id}', 'ActivityListController@store_by_department');
 Route::get('index/activity_list/show/{id}', 'ActivityListController@show');
 Route::get('index/activity_list/destroy/{id}', 'ActivityListController@destroy');
+Route::get('index/activity_list/destroy_by_department/{id}/{department_id}', 'ActivityListController@destroy_by_department');
 Route::get('index/activity_list/edit/{id}', 'ActivityListController@edit');
+Route::get('index/activity_list/edit_by_department/{id}/{department_id}', 'ActivityListController@edit_by_department');
 Route::post('index/activity_list/update/{id}', 'ActivityListController@update');
+Route::post('index/activity_list/update_by_department/{id}/{department_id}', 'ActivityListController@update_by_department');
+Route::get('index/activity_list/filter/{id}', 'ActivityListController@filter');
 
+//production audit
 Route::get('index/production_audit/index/{id}', 'ProductionAuditController@index');
+Route::get('index/production_audit/show/{id}/{audit_id}', 'ProductionAuditController@show');
+Route::get('index/production_audit/destroy/{id}/{audit_id}', 'ProductionAuditController@destroy');
 Route::post('index/production_audit/filter_audit/{id}', 'ProductionAuditController@filter_audit');
 Route::get('index/production_audit/create/{id}', 'ProductionAuditController@create');
 Route::post('index/production_audit/store/{id}', 'ProductionAuditController@store');
+Route::get('index/production_audit/edit/{id}/{audit_id}', 'ProductionAuditController@edit');
+Route::post('index/production_audit/update/{id}/{audit_id}', 'ProductionAuditController@update');
+Route::post('index/production_audit/listPointCheck', 'ProductionAuditController@listPointCheck');
+
+//point check master
+Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');
+Route::post('index/point_check_audit/filter_point_check/{id}', 'PointCheckController@filter_point_check');
+Route::get('index/point_check_audit/show/{id}/{point_check_audit_id}', 'PointCheckController@show');
+Route::get('index/point_check_audit/destroy/{id}/{point_check_audit_id}', 'PointCheckController@destroy');
+Route::get('index/point_check_audit/create/{id}', 'PointCheckController@create');
+Route::post('index/point_check_audit/store/{id}', 'PointCheckController@store');
+
+//training
+Route::get('index/training_report/index/{id}', 'TrainingReportController@index');
+Route::post('index/training_report/filter_training/{id}', 'TrainingReportController@filter_training');
+Route::get('index/training_report/show/{id}/{training_id}', 'TrainingReportController@show');
+Route::get('index/training_report/create/{id}', 'TrainingReportController@create');
+Route::post('index/training_report/store/{id}', 'TrainingReportController@store');
+Route::get('index/training_report/destroy/{id}/{training_id}', 'TrainingReportController@destroy');
+Route::get('index/training_report/edit/{id}/{training_id}', 'TrainingReportController@edit');
+Route::post('index/training_report/update/{id}/{training_id}', 'TrainingReportController@update');
+Route::get('index/training_report/details/{id}', 'TrainingReportController@details');
+Route::post('index/training_report/insertpicture/{id}', 'TrainingReportController@insertpicture');
+Route::post('index/training_report/insertparticipant/{id}', 'TrainingReportController@insertparticipant');
+Route::get('index/training_report/destroypicture/{id}/{picture_id}', 'TrainingReportController@destroypicture');
+Route::get('index/training_report/destroyparticipant/{id}/{participant_id}', 'TrainingReportController@destroyparticipant');
+Route::post('index/training_report/editpicture/{id}/{picture_id}', 'TrainingReportController@editpicture');
+Route::post('index/training_report/editparticipant/{id}/{participant_id}', 'TrainingReportController@editparticipant');
 
 //QC Report
 Route::get('index/qc_report', 'QcReportController@index');
 Route::get('index/qc_report/create', 'QcReportController@create');
-Route::post('index/qc_report/store', 'QcReportController@store');
+Route::post('index/qc_report/create_action', 'QcReportController@create_action');
+Route::get('index/qc_report/update/{id}', 'QcReportController@update');
+Route::post('index/qc_report/update_action/{id}', 'QcReportController@update_action');
 Route::get('index/qc_report/delete/{id}', 'QcReportController@delete');
+Route::post('index/qc_report/create_item', 'QcReportController@create_item');
+Route::get('index/qc_report/fetch_item/{id}', 'QcReportController@fetch_item');
+Route::post('index/qc_report/edit_item', 'QcReportController@edit_item');
+Route::get('index/qc_report/edit_item', 'QcReportController@fetch_item_edit');
+Route::get('index/qc_report/view_item', 'QcReportController@view_item');
+Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
+Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
+
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
