@@ -1354,30 +1354,33 @@ class MiddleProcessController extends Controller
 		$loc="";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
-
+			$loc = $loc."and (";
 			for($x = 0; $x < count($locations); $x++) {
-				$loc = $loc."'".$locations[$x]."'";
+				$loc = $loc."location like '%".$locations[$x]."%'";
 				if($x != count($locations)-1){
-					$loc = $loc.",";
+					$loc = $loc." or ";
 				}
 			}
+			$loc = $loc.")";
 		}
 
 		$kensa_time = db::select("
 			select kensa_time.employee_id, concat(SPLIT_STRING(employees.name, ' ', 1), ' ', SPLIT_STRING(employees.name, ' ', 2)) as employee_name, sum(time_min) as kensa_time from
-			( 
-			select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_rework_logs where date(created_at) = '".$date."' and location in (".$loc.")
+			(select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_rework_logs where date(created_at) = '".$date."' ".$loc."
 			union all
-			select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_logs where date(created_at) = '".$date."' and location in (".$loc.")
+			select employee_id, 0 as remark, timestampdiff(second, started_at, created_at)/60 as time_min from middle_logs where date(created_at) = '".$date."' ".$loc."
 			union all
-			select employee_id, remark, timestampdiff(second, started_at, max(created_at))/60 as time_min from middle_ng_logs where date(created_at) = '".$date."' and location in (".$loc.") group by employee_id, remark, started_at
-		) as kensa_time left join employees on employees.employee_id = kensa_time.employee_id group by kensa_time.employee_id, employees.name");
+			select employee_id, remark, timestampdiff(second, started_at, max(created_at))/60 as time_min from middle_ng_logs where date(created_at) = '".$date."' ".$loc."
+			group by employee_id, remark, started_at
+			) as kensa_time
+			left join employees on employees.employee_id = kensa_time.employee_id
+			group by kensa_time.employee_id, employees.name");
 
 		$response = array(
 			'status' => true,
 			'date' => $date,
 			'kensa_time' => $kensa_time,
-			'title' => strtoupper(str_replace("'", "", $loc))
+			'title' => $request->get('location')
 		);
 		return Response::json($response);
 	}

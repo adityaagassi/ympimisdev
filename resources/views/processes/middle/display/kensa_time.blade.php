@@ -55,9 +55,9 @@
 					<div class="col-xs-3">
 						<div class="form-group">
 							<select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Location" onchange="change()">
-								@foreach($locations as $location)
-								<option value="{{ $location }}">{{ $location }}</option>
-								@endforeach
+								<option value="bff">Buffing</option>
+								<option value="lcq">Lacquering</option>
+								<option value="plt">Plating</option>
 							</select>
 							<input type="text" name="location" id="location" hidden>
 						</div>
@@ -333,8 +333,24 @@
 		$.get('{{ url("fetch/middle/display_kensa_time") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					var title = result.title;
-					$('#last_update').html('<b>'+ title +'</b>');
+					
+					var title = result.title.split(',');
+					var title_text = '';
+					for (var i = 0; i < title.length; i++) {
+						if(title[i] == 'bff'){
+							title_text += 'BUFFING'
+						}else if(title[i] == 'lcq'){
+							title_text += 'LACQUERING'
+						}else if(title[i] == 'plt'){
+							title_text += 'PLATING'
+						}
+
+						if(i != title.length - 1){
+							title_text += " , ";
+						}
+					}
+
+					$('#last_update').html('<b>'+ title_text +'</b>');
 					
 					var data = result.kensa_time;
 					var categories = [];
@@ -395,6 +411,10 @@
 						},
 						credits: {
 							enabled:false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f} Minutes</b> <br/>',
 						},
 						plotOptions: {
 							series:{
