@@ -2308,8 +2308,7 @@ class MiddleProcessController extends Controller
 		$nik = $request->get('employee_id');
 
 		if(strlen($nik) > 9){
-			$id_card = (explode("+",$nik));
-			$nik = $id_card[0];
+			$nik = substr($nik,0,9);
 		}
 
 		$employee = db::table('employees')->where('employee_id', 'like', '%'.$nik.'%')->first();
