@@ -68,15 +68,15 @@
 		}
 	});
 
-	var option = "{{$option}}";
+	// var option = "{{$option}}";
 
-	if (option == "Saxophone") {
-		var code = "SX";
-	} else if (option == "Flute") {
-		var code = "FL";
-	} else if (option == "Clarinet") {
-		var code = "CL";
-	}
+	// if (option == "Saxophone") {
+	// 	var code = "SX";
+	// } else if (option == "Flute") {
+	// 	var code = "FL";
+	// } else if (option == "Clarinet") {
+	// 	var code = "CL";
+	// }
 
 	jQuery(document).ready(function() {
 		$("#tag").focus();
@@ -90,12 +90,12 @@
 	$('#tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			var str = $("#tag").val();
-			if (str.substring(0, 2) != code) {
-				$("#tag").val("");
-				audio_error.play();
-				openErrorGritter('Error', 'Incorrect item');
-				return false;
-			}
+			// if (str.substring(0, 2) != code) {
+			// 	$("#tag").val("");
+			// 	audio_error.play();
+			// 	openErrorGritter('Error', 'Incorrect item');
+			// 	return false;
+			// }
 
 			scanTag(str);
 			$("#tag").focus();
@@ -115,6 +115,7 @@
 		$.get('{{ url("scan/middle/request") }}', data, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success!', result.message);
+				drawTable();
 				$("#material_number").text(result.datas.material_number);
 				$("#item").text(result.datas.origin_group_name);
 				$("#kanban").text(result.datas_log.quantity);

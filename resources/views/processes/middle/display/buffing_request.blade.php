@@ -31,14 +31,22 @@
 		color: black;
 		background-color: white;
 	}
+	table.table-bordered > tbody > tr > th{
+		border:1px solid black;
+		vertical-align: middle;
+		text-align: center;
+		padding:2px;
+		background-color: white;
+		color: black;
+	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid white;
 		vertical-align: middle;
-		padding:0;
+		padding:2px;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid white;
-		padding:0;
+		padding:2px;
 	}
 	td{
 		overflow:hidden;
@@ -57,7 +65,7 @@
 			/*opacity: 0;*/
 		}
 		50%, 100% {
-			background-color: rgb(243, 156, 18);
+			background-color: #f55656;
 		}
 	}
 </style>
@@ -70,7 +78,7 @@
 		<div class="col-xs-12" style="margin-top: 5px;">
 			<div id="chart"></div>
 
-			<table class="table table-bordered table-stripped" id="logs">
+			<!-- <table class="table table-bordered table-stripped" id="logs">
 				<thead>
 					<tr>
 						<th>Material Number</th>
@@ -82,6 +90,18 @@
 				</thead>
 				<tbody id="tbody">
 				</tbody>
+			</table> -->
+
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; font-size: 1vw">
+				<tr id="modelAll">
+					<!-- <th>#</th> -->
+				</tr>
+				<tr id="quantity">
+					<!-- <th>Total Quantity</th> -->
+				</tr>
+				<tr id="quantity_kanban">
+					<!-- <th>Total Qty Kanban</th> -->
+				</tr>
 			</table>
 		</div>
 	</div>
@@ -314,55 +334,48 @@
 			option:"{{$option}}"
 		}
 
-		$.get('{{ url("fetch/middle/request") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/middle/request/") }}', data, function(result, status, xhr){
 			if(result.status){
-				var tableData = "";
-				$('#logs').DataTable().destroy();
-				$("#tbody").empty();
+				$("#modelAll").empty();
+				$("#quantity").empty();
+				$("#quantity_kanban").empty();
+
 				var material_req = [];
 				var cat = [];
 				var limit = [];
+				var style = "";
 
-				$.each(result.datas, function(index, value) {
+				model = "<th style='width:45px'>#</th>";
+				quantity = "<th>Qty</th>";
+				quantity_kanban = "<th>Qty Kanban</th>";
 
-					if (value.quantity >= (value.lot_transfer*2)) {
-						
+				$.each(result.datas, function(index, value){
+					if ((value.quantity / value.lot_transfer) >= 2) {
+						style = 'class="color"';
+					} else {
+						style = '';
 					}
 
-					tableData += "<tr>";
-					tableData += "<td>"+value.material_number+"</td>";
-					tableData += "<td>"+value.model+" "+value.key+"</td>";
-					tableData += "<td>"+value.material_description+"</td>";
-					tableData += "<td>"+value.quantity+"</td>";
-					tableData += "<td>"+(value.quantity / value.lot_transfer)+"</td>";
-					tableData += "</tr>";
+					if (value.quantity > 0) {
+						model += "<th>"+value.model+" "+value.key+"</th>";
+						quantity += "<td "+style+">"+value.quantity+"</td>";
+						quantity_kanban += "<td "+style+">"+(value.quantity / value.lot_transfer)+"</td>";
+					}
+
+					if (value.quantity >= (value.lot_transfer*2)) {
+
+					}
 
 					if (value.quantity >= value.lot_transfer) {
 						cat.push(value.model+" "+value.key);
 						material_req.push((value.quantity / value.lot_transfer));
 						limit.push(2);	
 					}
-
 				})
 
-				$("#tbody").append(tableData);
-				$('#logs').DataTable({
-					"paging": true,
-					'searching': false,
-					'responsive':true,
-					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					],
-					'ordering': false,
-					'lengthChange': false,
-					'info': false,
-					'sPaginationType': "full_numbers",
-					"columnDefs": [ {
-						"targets": 0,
-						"orderable": false
-					} ]
-				});
+				$("#modelAll").append(model);
+				$("#quantity").append(quantity);
+				$("#quantity_kanban").append(quantity_kanban);
 
 
 				//CHART
@@ -435,7 +448,68 @@
 				});
 			}
 		})
+
 	}
+
+
+	// function drawTable() {
+	// 	var data = {
+	// 		option:"{{$option}}"
+	// 	}
+
+	// 	$.get('{{ url("fetch/middle/request/") }}', data, function(result, status, xhr){
+	// 		if(result.status){
+	// 			var tableData = "";
+	// 			$('#logs').DataTable().destroy();
+	// 			$("#tbody").empty();
+	// 			var material_req = [];
+	// 			var cat = [];
+	// 			var limit = [];
+
+	// 			$.each(result.datas, function(index, value) {
+
+	// 				if (value.quantity >= (value.lot_transfer*2)) {
+
+	// 				}
+
+	// 				tableData += "<tr>";
+	// 				tableData += "<td>"+value.material_number+"</td>";
+	// 				tableData += "<td>"+value.model+" "+value.key+"</td>";
+	// 				tableData += "<td>"+value.material_description+"</td>";
+	// 				tableData += "<td>"+value.quantity+"</td>";
+	// 				tableData += "<td>"+(value.quantity / value.lot_transfer)+"</td>";
+	// 				tableData += "</tr>";
+
+	// 				if (value.quantity >= value.lot_transfer) {
+	// 					cat.push(value.model+" "+value.key);
+	// 					material_req.push((value.quantity / value.lot_transfer));
+	// 					limit.push(2);	
+	// 				}
+
+	// 			})
+
+	// 			$("#tbody").append(tableData);
+	// 			$('#logs').DataTable({
+	// 				"paging": true,
+	// 				'searching': false,
+	// 				'responsive':true,
+	// 				'lengthMenu': [
+	// 				[ 10, 25, 50, -1 ],
+	// 				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	// 				],
+	// 				'ordering': false,
+	// 				'lengthChange': false,
+	// 				'info': false,
+	// 				'sPaginationType': "full_numbers",
+	// 				"columnDefs": [ {
+	// 					"targets": 0,
+	// 					"orderable": false
+	// 				} ]
+	// 			});
+
+			// }
+	// 	})
+	// }
 
 	$('.datepicker').datepicker({
 		<?php $tgl_max = date('d-m-Y') ?>

@@ -24,6 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->date('birth_date');
             $table->string('address');
             $table->string('phone');
+            $table->string('wa_number');
             $table->string('card_id');
             $table->string('account');
             $table->string('bpjstk');

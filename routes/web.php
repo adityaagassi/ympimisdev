@@ -1157,7 +1157,7 @@ Route::get('index/production_audit/create/{id}', 'ProductionAuditController@crea
 Route::post('index/production_audit/store/{id}', 'ProductionAuditController@store');
 Route::get('index/production_audit/edit/{id}/{audit_id}', 'ProductionAuditController@edit');
 Route::post('index/production_audit/update/{id}/{audit_id}', 'ProductionAuditController@update');
-Route::post('index/production_audit/listPointCheck', 'ProductionAuditController@listPointCheck');
+Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
 
 //point check master
 Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');
@@ -1166,6 +1166,8 @@ Route::get('index/point_check_audit/show/{id}/{point_check_audit_id}', 'PointChe
 Route::get('index/point_check_audit/destroy/{id}/{point_check_audit_id}', 'PointCheckController@destroy');
 Route::get('index/point_check_audit/create/{id}', 'PointCheckController@create');
 Route::post('index/point_check_audit/store/{id}', 'PointCheckController@store');
+Route::get('index/point_check_audit/edit/{id}/{point_check_audit_id}', 'PointCheckController@edit');
+Route::post('index/point_check_audit/update/{id}/{point_check_audit_id}', 'PointCheckController@update');
 
 //training
 Route::get('index/training_report/index/{id}', 'TrainingReportController@index');
@@ -1184,6 +1186,9 @@ Route::get('index/training_report/destroyparticipant/{id}/{participant_id}', 'Tr
 Route::post('index/training_report/editpicture/{id}/{picture_id}', 'TrainingReportController@editpicture');
 Route::post('index/training_report/editparticipant/{id}/{participant_id}', 'TrainingReportController@editparticipant');
 
+//sampling check
+Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
+
 //QC Report
 Route::get('index/qc_report', 'QcReportController@index');
 Route::get('index/qc_report/create', 'QcReportController@create');
@@ -1198,7 +1203,7 @@ Route::get('index/qc_report/edit_item', 'QcReportController@fetch_item_edit');
 Route::get('index/qc_report/view_item', 'QcReportController@view_item');
 Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
-
+Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

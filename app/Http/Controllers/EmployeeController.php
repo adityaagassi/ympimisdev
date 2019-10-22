@@ -79,6 +79,11 @@ class EmployeeController extends Controller
     return view('employees.index_employee_information');
   }
 
+  public function attendanceData()
+  {
+    return view('employees.report.attendance_data'); 
+  }
+
   public function getNotif()
   {
     $ntf = HrQuestionLog::select(db::raw("SUM(remark) as ntf"))->first();
@@ -112,7 +117,7 @@ class EmployeeController extends Controller
     $position = Position::orderBy('id', 'asc')->get();
     $cc = CostCenter::get();
 
-    
+
 
     return view('employees.master.insertEmp', array(
       'dev' => $dev,
@@ -836,7 +841,7 @@ public function indexEmployeeService()
   $title_jp = '従業員の情報サービス';
   $emp_id = Auth::user()->username;
   
-  $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
+  $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
   left join 
   (
   SELECT employee_id, `status` FROM employment_logs
@@ -1395,6 +1400,38 @@ public function fetchDetailQuestion(Request $request)
   return Response::json($response);
 }
 //------------- End Absence ------
+
+public function fetchAttendanceData(Request $request)
+{
+  $datas = "select employee_id, `name` from employees where (end_date is null or end_date >= '2019-09-01') and hire_date <= '2019-09-01'";
+
+  $response = array(
+    'status' => true,
+    'datas' => $datas
+  );
+  return Response::json($response);
+}
+
+public function editNumber(Request $request)
+{
+  try {
+    $datas =  Employee::where('employee_id', $request->get('employee_id'))
+    ->update(['phone' => $request->get('phone_number'), 'wa_number' => $request->get('wa_number')]);
+
+    $response = array(
+      'status' => true,
+      'datas' => $datas
+    );
+    return Response::json($response);
+  } catch (QueryException $e){
+    $response = array(
+      'status' => false,
+      'datas' => $e->getMessage()
+    );
+    return Response::json($response);
+  }
+
+}
 
 
 }
