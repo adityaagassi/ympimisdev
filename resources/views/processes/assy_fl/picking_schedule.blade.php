@@ -125,35 +125,34 @@ table.table-bordered > tfoot > tr > th{
 						// alert(value.planh2 );
 						
 						totalTarget = value.plan;
-						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.total_return - value.total_ng)) ;
-						var h2 = Math.round(value.planh2);
+						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.wip - value.ng)) ;
+						var h2 = Math.round(value.h1);
 						if (totalSubassy < 0) {
 						totalSubassy = 0;
-						h2 = Math.round(value.planh2) - (value.total_stamp - value.actual);
+						h2 = Math.round(value.h1) - (value.stamp - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
 						}
 
-						if (value.total_stamp <= 0 && (value.total_return - value.total_ng) >= Math.round(value.planh2)) {
+						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
 							h2 = 0;
 						}
 
-						if (value.total_stamp <= 0 && (value.total_return - value.total_ng) <= Math.round(value.planh2)) {
-							h2 = Math.round(value.planh2) - (value.total_return - value.total_ng);
+						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
+							h2 = Math.round(value.h1) - (value.wip - value.ng);
 						}
 
 						
-
 						planData += '<tr>';
-						planData += '<td>'+ value.model3 +'</td>';
+						planData += '<td>'+ value.model +'</td>';
 						planData += '<td>'+ value.debt +'</td>';						
 						planData += '<td>'+ totalTarget +'</td>';
 						planData += '<td>'+ value.actual +'</td>';
-						planData += '<td>'+ value.total_return +'</td>';
-						planData += '<td>'+ value.total_ng +'</td>';
+						planData += '<td>'+ value.wip +'</td>';
+						planData += '<td>'+ value.ng +'</td>';
 						planData += '<td>'+ totalSubassy +'</td>';
-						planData += '<td>'+ value.total_stamp +'</td>';
+						planData += '<td>'+ value.stamp +'</td>';
 						planData += '<td>'+ h2 +'</td>';
 						planData += '</tr>';
 					});
