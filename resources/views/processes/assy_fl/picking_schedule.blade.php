@@ -135,7 +135,16 @@ table.table-bordered > tfoot > tr > th{
 							h2 = 0;
 						}
 
+						if (value.total_stamp <= 0 && (value.total_return - value.total_ng) >= Math.round(value.planh2)) {
+							h2 = 0;
+						}
+
+						if (value.total_stamp <= 0 && (value.total_return - value.total_ng) <= Math.round(value.planh2)) {
+							h2 = Math.round(value.planh2) - (value.total_return - value.total_ng);
+						}
+
 						
+
 						planData += '<tr>';
 						planData += '<td>'+ value.model3 +'</td>';
 						planData += '<td>'+ value.debt +'</td>';						
