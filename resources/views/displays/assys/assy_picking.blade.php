@@ -23,6 +23,46 @@
 	#detailTabel {
 		color: black;
 	}
+	.stock {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #a9ff96;
+		display: inline-block;
+	}
+	.lcq {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #fcf33a;
+		display: inline-block;
+	}
+	.brl {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #722973;
+		display: inline-block;
+	}
+	.wld {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #7cb5ec;
+		display: inline-block;
+	}
+	.plt {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: silver;
+		display: inline-block;
+	}
 </style>
 @endsection
 @section('header')
@@ -87,8 +127,8 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-xs-12">
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
+		<div class="col-xs-12" style="height:100%">
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
 				<tr id="model">
 				</tr>
 				<tr id="plan">
@@ -104,6 +144,9 @@
 				<tr id="stok">
 					
 				</tr>
+				<tr id="chart" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 12px;">
+				</tr>
+				<tr id="legend"></tr>
 			</table>
 
 			<!-- <table class="table table-bordered" style="padding: 0px; margin-bottom: 10px;">
@@ -295,20 +338,27 @@
 
 				// -------- CHART ------------
 
-				var stockroom = [];
-				var barrel = [];
-				var lacquering = [];
-				var plating = [];
-				var welding = [];
+				var stockroom = 0;
+				var barrel = 0;
+				var lacquering = 0;
+				var plating = 0;
+				var welding = 0;
+				var legend = 0;
 
 				var categories = [];
+				var max_tmp = [];
+				var max = 0;
+				var sisa = 0;
 
 				$.each(result.stok, function(index2, value2){
-					barrel.push(parseInt(value2.barrel));
-					lacquering.push(parseInt(value2.lacquering));
-					plating.push(parseInt(value2.plating));
-					stockroom.push(parseInt(value2.stockroom));
-					welding.push(parseInt(value2.welding));
+					// barrel.push(parseInt(value2.barrel));
+					// lacquering.push(parseInt(value2.lacquering));
+					// plating.push(parseInt(value2.plating));
+					// stockroom.push(parseInt(value2.stockroom));
+					// welding.push(parseInt(value2.welding));
+
+					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
+						+ parseInt(value2.stockroom) + parseInt(value2.welding));
 
 					if (value2.surface) {
 						srf2 = value2.surface;
@@ -321,131 +371,179 @@
 
 				// console.table(result.stok);
 
-				Highcharts.chart('picking_chart', {
-					chart: {
-						type: 'column',
-						width: $('#assyTable').width(),
-						marginLeft: 40
-					},
-					title: {
-						text: null
-					},
-					xAxis: {
-						categories: categories
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							enabled: false
-						},
-						stackLabels: {
-							enabled: true,
-							style: {
-								fontWeight: 'bold',
-								color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-							}
-						},
-						labels: {
-							useHTML:true,
-							style:{
-								width:'10px',
-								whiteSpace:'normal'
-							},
-						},
-						tickInterval: 10
-					},
-					tooltip: {
-						headerFormat: '<b>{point.x}</b><br/>',
-						pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-					},
-					plotOptions: {
-						column: {
-							stacking: 'normal',
-							dataLabels: {
-								enabled: true,
-								color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-							},
-							animation: false,
-						},
-						series: {
-							cursor: 'pointer',
-							pointPadding: -0.25,
-							events: {
-								click: function(event) {
-									openModal(event.point.category, this.name)
-								}
-							}
-						}
-					},
-					credits :{
-						enabled: false,
-					},
-					series: [{
-						name: 'Welding',
-						data: welding
-					}, {
-						name: 'Barrel',
-						data: barrel
-					}, {
-						name: 'Lacquering',
-						data: lacquering
-					}, {
-						name: 'Plating',
-						data: plating
-					}, {
-						name: 'Stockroom',
-						data: stockroom
-					}]
-				});
+				max = (Math.max(...max_tmp)) + 10;
+				// console.log(max);
+
+				$('#chart').empty();
+				$('#legend').empty();
+
+				var chart = "<td style='background-color:white; border-color: white';></td>";
+				for (var i = 0; i < result.stok.length; i++) {
+					chart += '<td style="padding: 0px; height:350px">';
+
+					kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating)
+						+ parseInt(result.stok[i].stockroom) + parseInt(result.stok[i].welding))) / max * 100;
+					chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+
+					welding = parseInt(result.stok[i].welding) / max * 100;
+					if (parseInt(result.stok[i].welding) > 0) wld = parseInt(result.stok[i].welding); else wld = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+welding+'%" id="welding">'+wld+'</div>';
+
+					barrel = parseInt(result.stok[i].barrel) / max * 100;
+					if (parseInt(result.stok[i].barrel) > 0) brl = parseInt(result.stok[i].barrel); else brl = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #722973; height: '+barrel+'%" id="barrel">'+brl+'</div>';
+
+					lacquering = parseInt(result.stok[i].lacquering) / max * 100;
+					if (parseInt(result.stok[i].lacquering) > 0) lcq = parseInt(result.stok[i].lacquering); else lcq = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #fcf33a; height: '+lacquering+'%" id="lacquering">'+lcq+'</div>';
+
+					plating = parseInt(result.stok[i].plating) / max * 100;
+					if (parseInt(result.stok[i].plating) > 0) plt = parseInt(result.stok[i].plating); else plt = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: silver; height: '+plating+'%" id="plating">'+plt+'</div>';
+
+					stockroom = parseInt(result.stok[i].stockroom) / max * 100;
+					if (parseInt(result.stok[i].stockroom) > 0) stk = parseInt(result.stok[i].stockroom); else stk = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #a9ff96; height: '+stockroom+'%" id="stockroom">'+stk+'</div>';
+					chart += '</td>';
+				}
+
+				legend += "<td style='background-color:white; border-color:white'></td>";
+				legend += "<td colspan='"+(result.stok.length)+"' style='text-align:left'>";
+				legend += "<div class='stock'></div> Stockroom";
+				legend += "<div class='plt'></div> Plating";
+				legend += "<div class='lcq'></div> Lacquering";
+				legend += "<div class='brl'></div> Barrel";
+				legend += "<div class='wld'></div> Welding";
+				legend += "</td>";
+
+				$('#chart').append(chart);
+				$('#legend').append(legend);
+
+				// Highcharts.chart('picking_chart', {
+				// 	chart: {
+				// 		type: 'column',
+				// 		width: $('#assyTable').width(),
+				// 		marginLeft: 40
+				// 	},
+				// 	title: {
+				// 		text: null
+				// 	},
+				// 	xAxis: {
+				// 		categories: categories
+				// 	},
+				// 	yAxis: {
+				// 		min: 0,
+				// 		title: {
+				// 			enabled: false
+				// 		},
+				// 		stackLabels: {
+				// 			enabled: true,
+				// 			style: {
+				// 				fontWeight: 'bold',
+				// 				color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+				// 			}
+				// 		},
+				// 		labels: {
+				// 			useHTML:true,
+				// 			style:{
+				// 				width:'10px',
+				// 				whiteSpace:'normal'
+				// 			},
+				// 		},
+				// 		tickInterval: 10
+				// 	},
+				// 	tooltip: {
+				// 		headerFormat: '<b>{point.x}</b><br/>',
+				// 		pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+				// 	},
+				// 	plotOptions: {
+				// 		column: {
+				// 			stacking: 'normal',
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+				// 			},
+				// 			animation: false,
+				// 		},
+				// 		series: {
+				// 			cursor: 'pointer',
+				// 			pointPadding: -0.25,
+				// 			events: {
+				// 				click: function(event) {
+				// 					openModal(event.point.category, this.name)
+				// 				}
+				// 			}
+				// 		}
+				// 	},
+				// 	credits :{
+				// 		enabled: false,
+				// 	},
+				// 	series: [{
+				// 		name: 'Welding',
+				// 		data: welding
+				// 	}, {
+				// 		name: 'Barrel',
+				// 		data: barrel
+				// 	}, {
+				// 		name: 'Lacquering',
+				// 		data: lacquering
+				// 	}, {
+				// 		name: 'Plating',
+				// 		data: plating
+				// 	}, {
+				// 		name: 'Stockroom',
+				// 		data: stockroom
+				// 	}]
+				// });
 			}
 		})
+}
+
+function openModal(kunci, lokasi) {
+	$("#myModal").modal("show");
+	$("#titel").text(kunci+" ("+lokasi+")");
+
+	$('#detailTabel').DataTable().destroy();
+
+	var data = {
+		model:kunci.split(" ")[0],
+		key:kunci.split(" ")[1],
+		surface:kunci.split(" ")[2],
+		location:lokasi
 	}
 
-	function openModal(kunci, lokasi) {
-		$("#myModal").modal("show");
-		$("#titel").text(kunci+" ("+lokasi+")");
-
-		$('#detailTabel').DataTable().destroy();
-
-		var data = {
-			model:kunci.split(" ")[0],
-			key:kunci.split(" ")[1],
-			surface:kunci.split(" ")[2],
-			location:lokasi
-		}
-
-		var table = $('#detailTabel').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": false,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": false,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/detail/sub_assy") }}",
-				"data" : data
-			},
-			"columns": [
-			{ "data": "tag", "width" : "10%" },
-			{ "data": "material_number", "width" : "10%" },
-			{ "data": "material_description", "width" : "70%" },
-			{ "data": "quantity", "width" : "10%", "className": "text-right"}
-			],
-			"footerCallback": function ( row, data, start, end, display ) {
-				var api = this.api(), data;
+	var table = $('#detailTabel').DataTable({
+		'dom': 'Bfrtip',
+		'responsive': true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'paging': true,
+		'lengthChange': true,
+		'searching': true,
+		'ordering': true,
+		'order': [],
+		'info': true,
+		'autoWidth': true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": false,
+		"bAutoWidth": false,
+		"processing": true,
+		"serverSide": false,
+		"ajax": {
+			"type" : "get",
+			"url" : "{{ url("fetch/detail/sub_assy") }}",
+			"data" : data
+		},
+		"columns": [
+		{ "data": "tag", "width" : "10%" },
+		{ "data": "material_number", "width" : "10%" },
+		{ "data": "material_description", "width" : "70%" },
+		{ "data": "quantity", "width" : "10%", "className": "text-right"}
+		],
+		"footerCallback": function ( row, data, start, end, display ) {
+			var api = this.api(), data;
 
             // Remove the formatting to get integer data for summation
             var intVal = function ( i ) {
@@ -478,210 +576,210 @@
         }
     });
 
-	}
+}
 
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
+// Highcharts.createElement('link', {
+// 	href: '{{ url("fonts/UnicaOne.css")}}',
+// 	rel: 'stylesheet',
+// 	type: 'text/css'
+// }, null, document.getElementsByTagName('head')[0]);
 
-	Highcharts.theme = {
-		colors: ['#7cb5ec', '#722973' , '#fcf33a', '#94908f', '#90ed7d'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
+// Highcharts.theme = {
+// 	colors: ['#7cb5ec', '#722973' , '#fcf33a', '#94908f', '#90ed7d'],
+// 	chart: {
+// 		backgroundColor: {
+// 			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+// 			stops: [
+// 			[0, '#2a2a2b'],
+// 			[1, '#3e3e40']
+// 			]
+// 		},
+// 		style: {
+// 			fontFamily: 'sans-serif'
+// 		},
+// 		plotBorderColor: '#606063'
+// 	},
+// 	title: {
+// 		style: {
+// 			color: '#E0E0E3',
+// 			textTransform: 'uppercase',
+// 			fontSize: '20px'
+// 		}
+// 	},
+// 	subtitle: {
+// 		style: {
+// 			color: '#E0E0E3',
+// 			textTransform: 'uppercase'
+// 		}
+// 	},
+// 	xAxis: {
+// 		gridLineColor: '#707073',
+// 		labels: {
+// 			style: {
+// 				color: '#E0E0E3'
+// 			}
+// 		},
+// 		lineColor: '#707073',
+// 		minorGridLineColor: '#505053',
+// 		tickColor: '#707073',
+// 		title: {
+// 			style: {
+// 				color: '#A0A0A3'
 
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: '#FFF'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'black'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
+// 			}
+// 		}
+// 	},
+// 	yAxis: {
+// 		gridLineColor: '#707073',
+// 		labels: {
+// 			style: {
+// 				color: '#E0E0E3'
+// 			}
+// 		},
+// 		lineColor: '#707073',
+// 		minorGridLineColor: '#505053',
+// 		tickColor: '#707073',
+// 		tickWidth: 1,
+// 		title: {
+// 			style: {
+// 				color: '#A0A0A3'
+// 			}
+// 		}
+// 	},
+// 	tooltip: {
+// 		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+// 		style: {
+// 			color: '#F0F0F0'
+// 		}
+// 	},
+// 	plotOptions: {
+// 		series: {
+// 			dataLabels: {
+// 				color: '#FFF'
+// 			},
+// 			marker: {
+// 				lineColor: '#333'
+// 			}
+// 		},
+// 		boxplot: {
+// 			fillColor: '#505053'
+// 		},
+// 		candlestick: {
+// 			lineColor: 'black'
+// 		},
+// 		errorbar: {
+// 			color: 'white'
+// 		}
+// 	},
+// 	legend: {
+// 		itemStyle: {
+// 			color: '#E0E0E3'
+// 		},
+// 		itemHoverStyle: {
+// 			color: '#FFF'
+// 		},
+// 		itemHiddenStyle: {
+// 			color: '#606063'
+// 		}
+// 	},
+// 	credits: {
+// 		style: {
+// 			color: '#666'
+// 		}
+// 	},
+// 	labels: {
+// 		style: {
+// 			color: '#707073'
+// 		}
+// 	},
 
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
+// 	drilldown: {
+// 		activeAxisLabelStyle: {
+// 			color: '#F0F0F3'
+// 		},
+// 		activeDataLabelStyle: {
+// 			color: '#F0F0F3'
+// 		}
+// 	},
 
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
+// 	navigation: {
+// 		buttonOptions: {
+// 			symbolStroke: '#DDDDDD',
+// 			theme: {
+// 				fill: '#505053'
+// 			}
+// 		}
+// 	},
 
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					}
-				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
-			}
-		},
+// 	rangeSelector: {
+// 		buttonTheme: {
+// 			fill: '#505053',
+// 			stroke: '#000000',
+// 			style: {
+// 				color: '#CCC'
+// 			},
+// 			states: {
+// 				hover: {
+// 					fill: '#707073',
+// 					stroke: '#000000',
+// 					style: {
+// 						color: 'white'
+// 					}
+// 				},
+// 				select: {
+// 					fill: '#000003',
+// 					stroke: '#000000',
+// 					style: {
+// 						color: 'white'
+// 					}
+// 				}
+// 			}
+// 		},
+// 		inputBoxBorderColor: '#505053',
+// 		inputStyle: {
+// 			backgroundColor: '#333',
+// 			color: 'silver'
+// 		},
+// 		labelStyle: {
+// 			color: 'silver'
+// 		}
+// 	},
 
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: 'black'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
-		},
+// 	navigator: {
+// 		handles: {
+// 			backgroundColor: '#666',
+// 			borderColor: 'black'
+// 		},
+// 		outlineColor: '#CCC',
+// 		maskFill: 'rgba(255,255,255,0.1)',
+// 		series: {
+// 			color: '#7798BF',
+// 			lineColor: '#A6C7ED'
+// 		},
+// 		xAxis: {
+// 			gridLineColor: '#505053'
+// 		}
+// 	},
 
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
+// 	scrollbar: {
+// 		barBackgroundColor: '#808083',
+// 		barBorderColor: '#808083',
+// 		buttonArrowColor: '#CCC',
+// 		buttonBackgroundColor: '#606063',
+// 		buttonBorderColor: '#606063',
+// 		rifleColor: '#FFF',
+// 		trackBackgroundColor: '#404043',
+// 		trackBorderColor: '#404043'
+// 	},
 
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#fff',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
+// 	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+// 	background2: '#505053',
+// 	dataLabelsColor: '#fff',
+// 	textColor: '#C0C0C0',
+// 	contrastTextColor: '#F0F0F3',
+// 	maskColor: 'rgba(255,255,255,0.3)'
+// };
+// Highcharts.setOptions(Highcharts.theme);
 
 </script>
 @endsection

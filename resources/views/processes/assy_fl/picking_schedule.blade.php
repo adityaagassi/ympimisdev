@@ -134,6 +134,8 @@ table.table-bordered > tfoot > tr > th{
 						if (h2 < 0) {
 							h2 = 0;
 						}
+
+						
 						planData += '<tr>';
 						planData += '<td>'+ value.model3 +'</td>';
 						planData += '<td>'+ value.debt +'</td>';						
