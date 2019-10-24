@@ -103,6 +103,10 @@ Route::get('index/out', 'InjectionsController@out');
 Route::get('get/Outpart', 'InjectionsController@getDataOut');
 //end out
 
+// ---- dailyStock
+Route::get('index/dailyStock', 'InjectionsController@dailyStock');
+Route::get('fetch/dailyStock', 'InjectionsController@getDailyStock');
+// ---- end dailyStock
 Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 
 //schedule
@@ -1133,20 +1137,24 @@ Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 //Production Report
 Route::get('index/production_report/index/{id}', 'ProductionReportController@index');
 Route::get('index/production_report/activity/{id}', 'ProductionReportController@activity');
+Route::get('index/production_report/report_all/{id}', 'ProductionReportController@report_all');
+Route::get('index/production_report/fetchReport/{id}', 'ProductionReportController@fetchReport');
 
+
+//Activity List
 Route::get('index/activity_list', 'ActivityListController@index');
 Route::get('index/activity_list/create', 'ActivityListController@create');
-Route::get('index/activity_list/create_by_department/{id}', 'ActivityListController@create_by_department');
+Route::get('index/activity_list/create_by_department/{id}/{no}', 'ActivityListController@create_by_department');
 Route::post('index/activity_list/store', 'ActivityListController@store');
-Route::post('index/activity_list/store_by_department/{id}', 'ActivityListController@store_by_department');
+Route::post('index/activity_list/store_by_department/{id}/{no}', 'ActivityListController@store_by_department');
 Route::get('index/activity_list/show/{id}', 'ActivityListController@show');
 Route::get('index/activity_list/destroy/{id}', 'ActivityListController@destroy');
-Route::get('index/activity_list/destroy_by_department/{id}/{department_id}', 'ActivityListController@destroy_by_department');
+Route::get('index/activity_list/destroy_by_department/{id}/{department_id}/{no}', 'ActivityListController@destroy_by_department');
 Route::get('index/activity_list/edit/{id}', 'ActivityListController@edit');
-Route::get('index/activity_list/edit_by_department/{id}/{department_id}', 'ActivityListController@edit_by_department');
+Route::get('index/activity_list/edit_by_department/{id}/{department_id}/{no}', 'ActivityListController@edit_by_department');
 Route::post('index/activity_list/update/{id}', 'ActivityListController@update');
-Route::post('index/activity_list/update_by_department/{id}/{department_id}', 'ActivityListController@update_by_department');
-Route::get('index/activity_list/filter/{id}', 'ActivityListController@filter');
+Route::post('index/activity_list/update_by_department/{id}/{department_id}/{no}', 'ActivityListController@update_by_department');
+Route::get('index/activity_list/filter/{id}/{no}', 'ActivityListController@filter');
 
 //production audit
 Route::get('index/production_audit/index/{id}', 'ProductionAuditController@index');
@@ -1189,7 +1197,7 @@ Route::post('index/training_report/editparticipant/{id}/{participant_id}', 'Trai
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
 
-//QC Report
+//CPAR
 Route::get('index/qc_report', 'QcReportController@index');
 Route::get('index/qc_report/create', 'QcReportController@create');
 Route::post('index/qc_report/create_action', 'QcReportController@create_action');
@@ -1204,6 +1212,11 @@ Route::get('index/qc_report/view_item', 'QcReportController@view_item');
 Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
+Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
+Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
+Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
+//CAR
+Route::get('index/qc_car', 'QcCarController@index');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

@@ -123,7 +123,7 @@ class InjectionsController extends Controller
         ) as in_out2
 
         LEFT JOIN (
-        SELECT part, stock_akhir from stock_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m')='2019-10'
+        SELECT part, stock_akhir from stock_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m')='".$moth."'
         ) as stock on in_out2.part_name = stock.part
         ) as stock_all
 
@@ -168,5 +168,89 @@ class InjectionsController extends Controller
         return view('injection.out')->with('page', 'Injection Stock Out')->with('jpn', '???');
 
     }
+
+    // -------------- end out
+
+    // --------------  dailyStock
+
+     public function dailyStock(){
+
+        return view('injection.dailyStock')->with('page', 'Injection Stock Out')->with('jpn', '???');
+
+    }
+
+    public function getDailyStock(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+        if ($location =="Blue") {
+            $reg = "YRS20BB|YRS20GB";
+        }
+        elseif ($location =="Green") {
+            $reg = "YRS20BG|YRS20GG";
+        }
+        elseif ($location =="Pink") {
+            $reg = "YRS20BP|YRS20GP";
+        }
+        elseif ($location =="Red") {
+            $reg = "YRS20BR";
+        }
+        elseif ($location =="Brown") {
+            $reg = "YRS24BUK";
+        }
+        elseif ($location =="Ivory") {
+            $reg = "YRS23|YRS24B MIDDLE";
+        }
+        elseif ($location =="Yrf") {
+            $reg = "YRF21";
+        }else{
+            $reg = "YRS20BB|YRS20GB";
+        }
+        
+        
+        $query = "select * from (
+        SELECT date_all.week_date, date_all.part, COALESCE(stock.stock_in,0) as stock from (
+        SELECT * from (
+        SELECT DISTINCT part FROM detail_part_injections WHERE  part REGEXP '".$reg."' 
+        ) a
+        cross JOIN (
+        SELECT week_date FROM weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d') >='".$first."' and DATE_FORMAT(week_date,'%Y-%m-%d') <='".$day."'
+        ) as date 
+        ) date_all
+        LEFT JOIN (
+        SELECT gmc as gmc_in,part as part_in,sum(total) as stock_in, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from transaction_part_injections WHERE  `status` ='IN' and DATE_FORMAT(created_at,'%Y-%m') ='".$moth."' GROUP BY part,gmc,DATE_FORMAT(created_at,'%Y-%m-%d') 
+        ) as stock on date_all.week_date = stock.tgl and date_all.part = stock.part_in  ORDER BY part, week_date
+        ) as aa GROUP BY week_date, part
+        ";
+
+        $query2="SELECT DISTINCT part FROM detail_part_injections WHERE  part REGEXP '".$reg."' ";
+
+        $part = DB::select($query);
+        $model = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'model' => $model,
+            'message' => 'Get Part Success',
+            'asas' => $tgl1,
+        );
+        return Response::json($response);
+    }
+
+    // -------------- end dailyStock
 
 }
