@@ -24,7 +24,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="8" style="background-color: #9f84a7">Production Overtime</th>
+						<th colspan="9" style="background-color: #9f84a7">Production Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
@@ -32,6 +32,7 @@
 						<th style="width: 3%; border:1px solid black;">Sect</th>
 						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
+						<th style="width: 6%; border:1px solid black;">Grade</th>
 						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 						<th style="width: 2%; border:1px solid black;">Σ Forecast</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
@@ -46,6 +47,7 @@
 							<td>'.$data['productions'][$i]['section'].'</td>
 							<td>'.$data['productions'][$i]['employee_id'].'</td>
 							<td>'.$data['productions'][$i]['name'].'</td>
+							<td>'.$data['productions'][$i]['grade'].'</td>
 							<td style="text-align:right">'.$data['productions'][$i]['budget'].'</td>
 							<td style="text-align:right">'.$data['productions'][$i]['fq'].'</td>
 							<td style="text-align:right">'.$data['productions'][$i]['overtime'].'</td>
@@ -60,7 +62,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="8" style="background-color: #9f84a7">Office Overtime</th>
+						<th colspan="9" style="background-color: #9f84a7">Office Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
@@ -68,6 +70,7 @@
 						<th style="width: 3%; border:1px solid black;">Sect</th>
 						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 8%; border:1px solid black;">Name</th>
+						<th style="width: 6%; border:1px solid black;">Grade</th>
 						<th style="width: 2%; border:1px solid black;">Σ Budget</th>
 						<th style="width: 2%; border:1px solid black;">Σ Forecast</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
@@ -82,6 +85,7 @@
 							<td>'.$data['offices'][$i]['section'].'</td>
 							<td>'.$data['offices'][$i]['employee_id'].'</td>
 							<td>'.$data['offices'][$i]['name'].'</td>
+							<td>'.$data['offices'][$i]['grade'].'</td>
 							<td style="text-align:right">'.$data['offices'][$i]['budget'].'</td>
 							<td style="text-align:right">'.$data['offices'][$i]['fq'].'</td>
 							<td style="text-align:right">'.$data['offices'][$i]['overtime'].'</td>

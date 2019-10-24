@@ -63,6 +63,7 @@ class SendEmailOvertimes extends Command
         SELECT DISTINCT
         ovr.nik,
         emp.name,
+        jabatan.grade,
         pos.department,
         pos.section,
         helper.code,
@@ -86,6 +87,7 @@ class SendEmailOvertimes extends Command
         nik 
         ) ovr
         LEFT JOIN ympimis.employees AS emp ON emp.employee_id = ovr.nik
+        LEFT JOIN (select employee_id, if(position <> '-', position, grade_name) as grade from ympimis.promotion_logs where valid_to is null) as jabatan on jabatan.employee_id = ovr.nik
         LEFT JOIN ( SELECT mutation_logs.employee_id, ympimis.cost_centers.department, mutation_logs.section, mutation_logs.`group`, mutation_logs.cost_center FROM ympimis.mutation_logs left join ympimis.cost_centers on ympimis.cost_centers.cost_center = mutation_logs.cost_center WHERE valid_to IS NULL ) AS pos ON ovr.nik = pos.employee_id
         LEFT JOIN ympimis.total_meeting_codes AS helper ON pos.`group` = helper.group_name
         LEFT JOIN (
@@ -120,6 +122,7 @@ class SendEmailOvertimes extends Command
                     'period' => $mon,
                     'department' => strtoupper($data->department),
                     'section' => ucwords($data->section),
+                    'grade' => ucwords($data->grade),
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
                     'overtime' => $data->act,
@@ -133,6 +136,7 @@ class SendEmailOvertimes extends Command
                     'period' => $mon,
                     'department' => strtoupper($data->department),
                     'section' => ucwords($data->section),
+                    'grade' => ucwords($data->grade),
                     'employee_id' => strtoupper($data->nik),
                     'name' => ucwords($data->name),
                     'overtime' => $data->act,
