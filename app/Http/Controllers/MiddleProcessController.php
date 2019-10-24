@@ -483,6 +483,31 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+
+	public function fetchBuffingOpResult(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$op_result = db::connection('digital_kanban')->select("select l.operator_id, sum(material_qty) as qty from data_log l
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY l.operator_id");
+
+		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'emp_name' => $emp_name,
+			'op_result' => $op_result,
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchBuffingNgDaily(Request $request){
 		$bulan="";
 		if(strlen($request->get('bulan')) > 0){
@@ -2066,7 +2091,7 @@ class MiddleProcessController extends Controller
 			$queues = db::connection('digital_kanban')->table('buffing_queues')
 			// ->where('rack', '=', $work_station->dev_name)
 			->whereRaw('rack = concat(SPLIT_STRING("'.$work_station->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$work_station->dev_name.'", "-", 2))')
-			->orderBy('created_at', 'asc')
+			->orderBy('idx', 'asc')
 			->limit(10)
 			->get();
 
@@ -2227,7 +2252,7 @@ class MiddleProcessController extends Controller
 			$queues_q = db::connection('digital_kanban')->table('buffing_queues')
 			// ->where('rack', '=', $work_station->dev_name)
 			->whereRaw('rack = concat(SPLIT_STRING("'.$ws->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$ws->dev_name.'", "-", 2))')
-			->orderBy('created_at', 'asc')
+			->orderBy('idx', 'asc')
 			->limit(50)
 			->get();
 
