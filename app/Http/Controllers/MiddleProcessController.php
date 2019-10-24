@@ -3758,7 +3758,13 @@ class MiddleProcessController extends Controller
 			->where("employee_id","=",$tags->operator_id)
 			->first();
 
-			$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+			// $buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+			// 	'lokasi' => 'BUFFING-KENSA',
+			// ]);
+
+			$buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
+			->where('material_tag_id', '=', $request->get('tag'))
+			->update([
 				'lokasi' => 'BUFFING-KENSA',
 			]);
 
@@ -3821,7 +3827,13 @@ class MiddleProcessController extends Controller
 			return Response::json($response);
 		} else {
 			try{
-				$buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+				// $buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
+				// 	'lokasi' => 'BUFFING-AFTER',
+				// ]);
+
+				$buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
+				->where('material_tag_id', '=', $request->get('tag'))
+				->update([
 					'lokasi' => 'BUFFING-AFTER',
 				]);
 
