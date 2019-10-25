@@ -126,13 +126,15 @@ table.table-bordered{
 						totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) 
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
-							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
-							if ((value.stamp - value.actual ) < 0) {
-							h2 = Math.round(value.h1) - 0;
-						}
-						else{
+							
 							h2 = Math.round(value.h1 ) - (value.stamp - value.actual );
-						}
+							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
+							// if ((value.stamp - value.actual ) < 0) {
+							// h2 = Math.round(value.h1) - 0;
+							// }
+							// else{
+							// 	h2 = Math.round(value.h1 ) - (value.stamp - value.actual );
+							// }
 						}
 						if (h2 < 0) {
 							h2 = 0;
