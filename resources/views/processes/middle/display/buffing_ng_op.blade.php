@@ -415,12 +415,27 @@
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's3'){
-						op_name.push(result.ng_rate[i].name);
+
+						var name_temp = result.ng_rate[i].name.split(" ");
+						var in_name = '';
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							if(name_temp[1].length > 7){
+								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+							}else{
+								in_name = result.ng_rate[i].name;
+							}
+						}
+						op_name.push(in_name);
 						rate.push(result.ng_rate[i].rate);						
 					}
 				}
 
 				var chart = Highcharts.chart('container1_shift3', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'NG Rate By Operators',
 						style: {
@@ -446,6 +461,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -465,7 +481,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
@@ -498,12 +514,26 @@
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's1'){
-						op_name.push(result.ng_rate[i].name);
-						rate.push(result.ng_rate[i].rate);						
+						var name_temp = result.ng_rate[i].name.split(" ");
+						var in_name = '';
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							if(name_temp[1].length > 7){
+								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+							}else{
+								in_name = result.ng_rate[i].name;
+							}
+						}
+						op_name.push(in_name);
+						rate.push(result.ng_rate[i].rate);					
 					}
 				}
 
 				var chart = Highcharts.chart('container1_shift1', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'NG Rate By Operators',
 						style: {
@@ -529,6 +559,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -548,7 +579,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
@@ -580,12 +611,26 @@
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's2'){
-						op_name.push(result.ng_rate[i].name);
-						rate.push(result.ng_rate[i].rate);						
+						var name_temp = result.ng_rate[i].name.split(" ");
+						var in_name = '';
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							if(name_temp[1].length > 7){
+								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+							}else{
+								in_name = result.ng_rate[i].name;
+							}
+						}
+						op_name.push(in_name);
+						rate.push(result.ng_rate[i].rate);			
 					}
 				}
 
 				var chart = Highcharts.chart('container1_shift2', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'NG Rate By Operators',
 						style: {
@@ -611,6 +656,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -630,7 +676,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
