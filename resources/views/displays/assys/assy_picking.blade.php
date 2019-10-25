@@ -63,6 +63,10 @@
 		background: silver;
 		display: inline-block;
 	}
+	.acc {
+		background: #c8cfcb;
+		color: black;
+	}
 </style>
 @endsection
 @section('header')
@@ -130,6 +134,15 @@
 		<div class="col-xs-12" style="height:100%">
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
 				<tr id="model">
+				</tr>
+				<tr id="plan_acc">
+					<!-- <th>Plan acc</th> -->
+				</tr>
+				<tr id="picking_acc">
+					<!-- <th>Pick acc</th> -->
+				</tr>
+				<tr id="return_acc">
+					<!-- <th>Return acc</th> -->
 				</tr>
 				<tr id="plan">
 					<!-- <th>Total Plan</th> -->
@@ -281,6 +294,10 @@
 				$("#picking").empty();
 				$("#diff").empty();
 
+				$("#plan_acc").empty();
+				$("#picking_acc").empty();
+				$("#return_acc").empty();
+
 				$("#stok").empty();
 
 				model = "<th style='width:45px'>#</th>";
@@ -288,7 +305,11 @@
 				picking = "<th>Pick</th>";
 				diff = "<th>Diff</th>";
 
-				stk = "<th style='border: 1px solid white'>Stock room</th>";
+				planAcc = "<th>Plan acc</th>";
+				pickAcc = "<th>Pick acc</th>";
+				retunAcc = "<th>Return acc</th>";
+
+				stk = "<th style='border: 1px solid white;' rowspan='2'>Stock Room</th>";
 
 				var style = "";
 
@@ -296,7 +317,7 @@
 					var minus = 0;
 					// var picking = 0;
 
-					if (value.diff < 0) {
+					if (value.diff <= 0) {
 						style = "style='background-color:#00a65a';";
 					} else {
 						style = "style='background-color:#f24b4b';";
@@ -320,6 +341,10 @@
 						srf = "";
 					}
 
+					planAcc += "<td class='acc'>"+value.plan_ori+"</td>";
+					pickAcc += "<td class='acc'>"+value.plus+"</td>";
+					retunAcc += "<td class='acc'>"+value.minus+"</td>";
+
 					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
@@ -332,6 +357,10 @@
 				$("#plan").append(totplan);
 				$("#picking").append(picking);
 				$("#diff").append(diff);
+
+				$("#plan_acc").append(planAcc);
+				$("#picking_acc").append(pickAcc);
+				$("#return_acc").append(retunAcc);
 
 				$("#stok").append(stk);
 				
@@ -377,7 +406,7 @@
 				$('#chart').empty();
 				$('#legend').empty();
 
-				var chart = "<td style='background-color:white; border-color: white';></td>";
+				var chart = "";
 				for (var i = 0; i < result.stok.length; i++) {
 					chart += '<td style="padding: 0px; height:350px">';
 

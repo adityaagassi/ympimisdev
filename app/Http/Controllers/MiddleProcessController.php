@@ -2665,7 +2665,7 @@ class MiddleProcessController extends Controller
 						$rack = 'SXKEY-'.$group[0];
 
 						// IF JIKA BUKAN 82 dan KUNCI 'C' SAJA
-						if(($group[0] == 'C' || $group[0] == 'G' || $group[0] == 'J' || $group[0] == 'H') && preg_match("/82/", $barrel->model) != TRUE){
+						if(preg_match("/82/", $barrel->model) != TRUE){
 
 							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
 
@@ -2746,7 +2746,7 @@ class MiddleProcessController extends Controller
 						$group = explode('-', $barrel->key);
 						$rack = 'SXKEY-'.$group[0];
 
-						if(($group[0] == 'C' || $group[0] == 'G' || $group[0] == 'J' || $group[0] == 'H') && preg_match("/82/", $barrel->model) != TRUE){
+						if(preg_match("/82/", $barrel->model) != TRUE){
 
 							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
 
@@ -2808,7 +2808,7 @@ class MiddleProcessController extends Controller
 					$group = explode('-', $barrel->key);
 					$rack = 'SXKEY-'.$group[0];
 
-					if(($group[0] == 'C' || $group[0] == 'G' || $group[0] == 'J' || $group[0] == 'H') && preg_match("/82/", $barrel->model) != TRUE){
+					if(preg_match("/82/", $barrel->model) != TRUE){
 
 						$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
 
@@ -2892,7 +2892,7 @@ class MiddleProcessController extends Controller
 					$group = explode('-', $barrel->key);
 					$rack = 'SXKEY-'.$group[0];
 
-					if(($group[0] == 'C' || $group[0] == 'G' || $group[0] == 'J' || $group[0] == 'H') && preg_match("/82/", $barrel->model) != TRUE){
+					if(preg_match("/82/", $barrel->model) != TRUE){
 
 						$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
 

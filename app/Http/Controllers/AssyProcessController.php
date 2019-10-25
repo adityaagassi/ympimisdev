@@ -150,32 +150,31 @@ class AssyProcessController extends Controller
 			$minsatu = date('Y-m-d');
 		}
 
-
-		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(stock) as stock, (sum(plan)-sum(picking)) as diff from
+		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori, (sum(plan)-sum(picking)) as diff from
 		(
-		select material_number, sum(plan) as plan, sum(picking) as picking, sum(stock) as stock from
+		select material_number, sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori from
 		(
-		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as stock from
+		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot, 0)) as plus, sum(if(histories.transfer_movement_type = '9I4', histories.lot,0)) as minus, 0 as stock, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 
 		union all
 
-		select inventories.material_number, 0 as plan, 0 as picking, sum(inventories.lot) as stock from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51', 'CL51', 'FL51') and materials.category = 'key' group by inventories.material_number
+		select inventories.material_number, 0 as plan, 0 as picking, 0 as plus, 0 as minus, sum(inventories.lot) as stock, 0 as plan_ori from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51', 'CL51', 'FL51') and materials.category = 'key' group by inventories.material_number
 
 		union all
 
-		select material_number, sum(plan) as plan, 0 as picking, 0 as stock from
+		select material_number, sum(plan) as plan, 0 as picking, 0 as plus, 0 as minus, 0 as stock, sum(plan_ori) as plan_ori from
 		(
-		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan from
+		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 
 		union all
 
-		select assy_picking_schedules.material_number, sum(quantity) as plan from assy_picking_schedules 
+		select assy_picking_schedules.material_number, sum(quantity) as plan, sum(quantity) as plan_ori from assy_picking_schedules 
 		left join materials on materials.material_number = assy_picking_schedules.material_number
 		where due_date >= '".$first."' and due_date <= '".$tanggal."'
 		group by assy_picking_schedules.material_number

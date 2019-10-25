@@ -159,7 +159,7 @@
 					tableData += "<td>"+value.quantity+"</td>";
 					tableData += "</tr>";
 
-					if (value.quantity >= value.lot_transfer) {
+					if (value.quantity >= value.lot_transfer * 2) {
 						cat.push(value.model+" "+value.key);
 						material_req.push((value.quantity / value.lot_transfer));
 						limit.push(2);	
