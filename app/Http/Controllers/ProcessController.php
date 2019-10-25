@@ -2790,173 +2790,54 @@ public function ngFLStamp(Request $request){
 		}
 
 
-		$query = " select * from (
-		 select * from (
-		select * from ( select * from ( select a.model2, sum(a.debt) as debt, sum(a.plan) as plan, sum(a.actual) as actual  from (
-		select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2 from ( 
-
-		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
+		$query = "
+		select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(plan)-sum(debt)-sum(wip)-sum(actual) as target_assy, sum(stamp) as stamp, sum(h1)/2 as h1  from
 		(
-		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-		from production_schedules 
-		where due_date = '". $now ."' 
-		group by material_number
+		select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
+		(
+		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
 
 		union all
 
-		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-		from flo_details 
-		where date(created_at) = '". $now ."'  
-		group by material_number
+		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual from flo_details where date(created_at) = '".$now."' group by material_number
 
-		".$debt."
+		union all
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '043'
-		group by result.material_number, materials.material_description
-		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-	) target_packing ) a GROUP by a.model2 ) as packing
+					select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+					(
+					select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
 
-	LEFT JOIN 
- (
-SELECT model3, sum(total_ng) as total_ng from (
-SELECT model3, sum(quantity) as total_ng from (
-SELECT ng_inv.*, IF(ng_inv.model2 is null,ng_inv.model,ng_inv.model2) as model3 FROM (
-SELECT a.*,(CASE WHEN a.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN a.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN a.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN a.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN a.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN a.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN a.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN a.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN a.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN a.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN a.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN a.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN a.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN a.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN a.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN a.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN a.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2 from (
-SELECT model, quantity, process_code from stamp_inventories WHERE `status` ='ng' and origin_group_code='043'
-) a
-) ng_inv
-) total_ng GROUP BY model3
-UNION all
+					union all
 
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
-) total_ng_all GROUP BY model3
-) as ng on packing.model2 = ng.model3 ) as packing_ng
+					select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."' group by material_number
+					) as debt
+					group by material_number
+		) as assy left join materials on materials.material_number = assy.material_number where materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
 
-left Join
+		union all
 
-(
-
-SELECT model3 as model4,sum(total_return) as total_return from (
-SELECT model3, sum(quantity) as total_return from (
-SELECT x_return2.*, IF(x_return2.model2 is null,x_return2.model,x_return2.model2) as model3 from (
-SELECT x_return.*, 
-(CASE WHEN x_return.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN x_return.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN x_return.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN x_return.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN x_return.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN x_return.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN x_return.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN x_return.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN x_return.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN x_return.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN x_return.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN x_return.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN x_return.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN x_return.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN x_return.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN x_return.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN x_return.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model2
-from (
-SELECT * from (
-SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='043' and process_code in ('2','3') and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='043' and `status` ='return') 
-) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='043')
-) x_return
-) x_return2
-) as x_return3 group by model3
-UNION all
-
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
-
-) x_return_all GROUP BY model3
-
-) as return2 on packing_ng.model3 = return2.model4 ) as packing_ng_return
-
-left Join
-
-(
-SELECT model, sum(total_perolehan) as total_perolehan from (
-SELECT model,sum(quantity) as total_perolehan from log_processes WHERE process_code  in ('2') and origin_group_code ='043'  and DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' GROUP BY model
-UNION all
-SELECT model, 0 as total from materials WHERE issue_storage_location ='sx21' and 	hpl in ('ASBODY','TSBODY') and category ='wip'
-) hasil group by model
-) as hasil on packing_ng_return.model3 = hasil.model
-
-) h1
-left Join
-
-(
-select * from (
-select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN 'YAS200ADII'
-             WHEN target_packing.model LIKE 'YAS-26%' THEN 'YAS26'
-             WHEN target_packing.model LIKE 'YAS-280%' THEN 'YAS280'
-             WHEN target_packing.model LIKE 'YAS-300AD%' THEN 'YAS300AD'
-             WHEN target_packing.model LIKE 'YAS-380%' THEN 'YAS380'
-             WHEN target_packing.model LIKE 'YAS-480%' THEN 'YAS480'
-             WHEN target_packing.model LIKE 'YAS-580%' THEN 'YAS580'
-             WHEN target_packing.model LIKE 'YAS-PLU1II%' THEN 'YASPLU1II'
-             WHEN target_packing.model LIKE 'YAS-VDHM%' THEN 'YASVDHM'
-             WHEN target_packing.model LIKE 'YTS-200ADII%' THEN 'YTS200ADII'
-             WHEN target_packing.model LIKE 'YTS-26%' THEN 'YTS26'
-             WHEN target_packing.model LIKE 'YTS-280%' THEN 'YTS280'
-             WHEN target_packing.model LIKE 'YTS-300AD%' THEN 'YTS300AD'
-             WHEN target_packing.model LIKE 'YTS-380%' THEN 'YTS380'
-             WHEN target_packing.model LIKE 'YTS-480%' THEN 'YTS480'
-             WHEN target_packing.model LIKE 'YTS-580%' THEN 'YTS580'
-             WHEN target_packing.model LIKE 'YTS-PLU1II%' THEN 'YTSPLU1II'             
-        END) as model6 from ( 
-
-		select  materials.material_description as model, sum(result.plan) as planh2 from
+		select model, 0 as debt, 0 as plan, 0 as actual, sum(wip) as wip, 0 as ng, 0 as stamp, 0 as h1 from
 		(
-		select material_number,  sum(quantity) as plan
-		from production_schedules 
-		where due_date = '".$nextday."' 
-		group by material_number
+		select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and process_code = 2 and (stamp_inventories.status is null or stamp_inventories.status = 'ng') group by model
 
-		) as result
-		left join materials on materials.material_number = result.material_number
-		where materials.category = 'FG' and materials.origin_group_code = '043'
-		group by result.material_number, materials.material_description
-	) target_packing) as a
-) as h2 on h1.model3 = h2.model6 GROUP by model3 order By model3 asc 
-	";
+		union all
+
+		select materials.model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories left join materials on materials.material_description = stamp_inventories.model where stamp_inventories.origin_group_code = '043' and process_code = 3 and stamp_inventories.status <> 'return' group by materials.model
+		) as wip group by model
+
+		union all
+
+		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and `status` = 'ng' group by model
+
+		union all
+
+		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '043' and process_code = '2' and date(created_at) = '".$now."' group by model
+
+		union all
+
+		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '2019-10-28' and materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
+		) as picking group by model
+		";
 
 		$tableData = DB::select($query);
 		
@@ -3152,7 +3033,7 @@ select target_packing.*,(CASE WHEN target_packing.model LIKE 'YAS-200ADII%' THEN
 			union all
 
 			select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
-			) as picking group by model
+			) as picking group by model 
 
 	";
 

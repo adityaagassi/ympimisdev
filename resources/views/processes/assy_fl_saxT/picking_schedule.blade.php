@@ -2,34 +2,34 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead>tr>th{
-	text-align:center;
-	font-size: 30px;
-}
-tbody>tr>td{
-	text-align:center;
-	font-size: 30px;
-}
-tfoot>tr>th{
-	text-align:center;
-	font-size: 30px;
-}
-td:hover {
-	overflow: visible;
-}
 table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+		border:1px solid rgb(150,150,150);
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid rgb(150,150,150);
+		text-align: center;
+		vertical-align: middle;
+		font-size: 20px;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(150,150,150);
+		vertical-align: middle;
+		text-align: center;
+		padding:2px;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+		padding:0;
+		vertical-align: middle;
+		text-align: center;
+	}
+	.content{
+		color: white;
+		font-weight: bold;
+	}
+	.progress {
+		background-color: rgba(0,0,0,0);
+	}
 </style>
 @stop
 @section('header')
@@ -39,33 +39,32 @@ table.table-bordered > tfoot > tr > th{
 </section>
 @stop
 @section('content')
-<section class="content">
+<section class="content" style="padding-top: 0;">
 	<div class="row">
 	
 		<div class="col-xs-12" style="text-align: center;">
 			<div class="input-group col-md-12 ">
-				<div class="box box-danger">
-					<div class="box-body">
-						<table id="planTablenew" name="planTablenew" class="table table-bordered table-hover table-striped">
+			
+						<table id="planTablenew" name="planTablenew" class="table table-bordered ">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th rowspan="2">Model</th>
-										<th rowspan="2">Target Packing</th>
-										<th rowspan="2">Act Packing</th>
-										<th colspan="2" width="15%">Stock</th>
-										<th rowspan="2">Target AssySax (H)</th>
-										<th rowspan="2">Picking</th>
-										<th rowspan="2">Target AssySax (H+1/2)</th>
+										<th rowspan="2"style="padding:0; width:1%;">Model</th>
+										<th rowspan="2"style="padding:0; width:1%;">Target Packing</th>
+										<th rowspan="2"style="padding:0; width:1%;">Act Packing</th>
+										<th colspan="2" width="15%"style="padding:0; width:1%;">Stock</th>
+										<th rowspan="2"style="padding:0; width:1%;">Target AssySax (H)</th>
+										<th rowspan="2"style="padding:0; width:1%;">Picking</th>
+										<th rowspan="2"style="padding:0; width:1%;">Target AssySax (H+1/2)</th>
 										<!-- <th>Diff</th> -->
 									</tr>
 									<tr>
-										<th>WIP</th>
-										<th>NG</th>
+										<th style="padding:0; width:1%;">WIP</th>
+										<th style="padding:0; width:1%;">NG</th>
 									</tr>
 								</thead>
 								<tbody id="planTableBodynew">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
+								<tfoot style="background-color: RGB(252, 248, 227); color: black;">
 									<tr>
 										<th>Total</th>
 										<th></th>
@@ -78,8 +77,7 @@ table.table-bordered > tfoot > tr > th{
 									</tr>
 								</tfoot>
 							</table>
-					</div>
-				</div>
+					
 			</div>
 		</div>
 	</div>
@@ -116,39 +114,59 @@ table.table-bordered > tfoot > tr > th{
 					$('#planTablenew').DataTable().destroy();
 					$('#planTableBodynew').html("");
 					var planData = '';
+					var no = 1;
 					$.each(result.tableData, function(key, value) {
 						var totalTarget = '';
 						var totalSubassy = '';
 						var diff = '';
-						var h2 = Math.round(value.planh2 / 2);
+						var h2 = Math.round(value.h1 / 2);
+						
 						totalTarget = value.plan+(-value.debt);
-						totalSubassy = ((totalTarget - value.actual) - (value.total_return - value.total_ng)) - value.total_perolehan;
+						totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) - value.target_assy;
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
 							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
-							if ((value.total_perolehan - value.actual ) < 0) {
-							h2 = Math.round(value.planh2 / 2) - 0;
+							if ((value.stamp - value.actual ) < 0) {
+							h2 = Math.round(value.h1 / 2) - 0;
 						}
 						else{
-							h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual );
+							h2 = Math.round(value.h1 / 2) - (value.stamp - value.actual );
 						}
 						}
 						if (h2 < 0) {
 							h2 = 0;
 						}
-						diff = totalSubassy - value.total_perolehan;
-						planData += '<tr>';
-						planData += '<td>'+ value.model2 +'</td>';
-						planData += '<td>'+ totalTarget +'</td>';
-						planData += '<td>'+ value.actual +'</td>';
-						planData += '<td>'+ value.total_return +'</td>';
-						planData += '<td>'+ value.total_ng +'</td>';
-						planData += '<td>'+ totalSubassy +'</td>';
-						planData += '<td>'+ value.total_perolehan +'</td>';
-						planData += '<td>'+ h2 +'</td>';
-							// planData += '<td>'+ diff +'</td>';
 
-							planData += '</tr>';
+						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
+							h2 = 0;
+						}
+
+						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
+							h2 = Math.round(value.h1) - (value.wip - value.ng);
+						}
+
+
+					
+						if (no % 2 == 0 ) {
+							color = 'style="background-color: rgb(60,60,60)"';
+						} else {
+							color = 'style="background-color: rgb(100,100,100)"';
+						}
+
+
+						diff = totalSubassy - value.stamp;
+						planData += '<tr '+color+'>';
+						planData += '<td style="width: 1%">'+ value.model +'</td>';
+						planData += '<td style="width: 1%">'+ totalTarget +'</td>';
+						planData += '<td style="width: 1%">'+ value.actual +'</td>';
+						planData += '<td style="width: 1%">'+ value.wip +'</td>';
+						planData += '<td style="width: 1%">'+ value.ng +'</td>';
+						planData += '<td style="width: 1%">'+ totalSubassy +'</td>';
+						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
+						planData += '<td style="width: 1%">'+ h2 +'</td>';
+						planData += '</tr>';
+
+						no += 1;
 						});
 					$('#planTableBodynew').append(planData);										
 					$('#planTablenew').DataTable({
@@ -211,10 +229,12 @@ table.table-bordered > tfoot > tr > th{
 
 								if ( parseInt(rowData[6]) < parseInt(rowData[5])  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
+									$(td).css('color', 'black')
 								}
 								else
 								{
 									$(td).css('background-color', 'RGB(204,255,255)')
+									$(td).css('color', 'black')
 								}
 							}
 						},
@@ -226,6 +246,7 @@ table.table-bordered > tfoot > tr > th{
 								if ( parseInt(rowData[5]) >= 0  && parseInt(rowData[7]) > 0) {
 									if (parseInt(rowData[5]) <= 0) {
 											$(td).css('background-color', 'RGB(255,204,255)')
+											$(td).css('color', 'black')
 										}
 
 									
@@ -242,10 +263,12 @@ table.table-bordered > tfoot > tr > th{
 								if ( rowData[0].indexOf("YAS") != -1) {								
 
 									$(td).css('background-color', 'rgb(157, 255, 105)')
+									$(td).css('color', 'black')
 								}
 								else
 								{
 										$(td).css('background-color', '#ffff66')
+										$(td).css('color', 'black')
 									}
 								}
 							}]
