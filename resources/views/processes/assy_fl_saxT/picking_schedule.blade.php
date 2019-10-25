@@ -119,7 +119,7 @@ table.table-bordered{
 						var totalTarget = '';
 						var totalSubassy = '';
 						var diff = '';
-						var h2 = Math.round(value.h1 / 2);
+						var h2 = Math.round(value.h1);
 						
 						totalTarget = value.plan+(-value.debt);
 						// totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) - value.target_assy;
@@ -128,10 +128,10 @@ table.table-bordered{
 							totalSubassy = 0;
 							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
 							if ((value.stamp - value.actual ) < 0) {
-							h2 = Math.round(value.h1 / 2) - 0;
+							h2 = Math.round(value.h1) - 0;
 						}
 						else{
-							h2 = Math.round(value.h1 / 2) - (value.stamp - value.actual );
+							h2 = Math.round(value.h1 ) - (value.stamp - value.actual );
 						}
 						}
 						if (h2 < 0) {

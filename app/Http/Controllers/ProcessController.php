@@ -2835,7 +2835,7 @@ public function ngFLStamp(Request $request){
 
 		union all
 
-		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '2019-10-28' and materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
+		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
 		) as picking group by model
 		";
 
