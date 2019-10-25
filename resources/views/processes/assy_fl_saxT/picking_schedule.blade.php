@@ -122,7 +122,8 @@ table.table-bordered{
 						var h2 = Math.round(value.h1 / 2);
 						
 						totalTarget = value.plan+(-value.debt);
-						totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) - value.target_assy;
+						// totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) - value.target_assy;
+						totalSubassy = ((totalTarget - value.actual) - (value.wip - value.ng)) 
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
 							// h2 = Math.round(value.planh2 / 2) - (value.total_perolehan - value.actual);
