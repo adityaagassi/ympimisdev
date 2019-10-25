@@ -72,7 +72,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 
 	});
 
@@ -325,7 +325,20 @@
 					if(result.rate[i].shift == 's3'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+
+								var name_temp = result.rate[i].name.split(" ");
+								var in_name = '';
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									if(name_temp[1].length > 7){
+										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+									}else{
+										in_name = result.rate[i].name;
+									}
+								}
+
+								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -340,6 +353,9 @@
 				}
 
 				var chart = Highcharts.chart('container1_shift3', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'Operators Overall Efficiency',
 						style: {
@@ -358,6 +374,9 @@
 						title: {
 							text: 'OP Efficiency (%)'
 						},
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -365,6 +384,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -411,7 +431,19 @@
 					if(result.rate[i].shift == 's1'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								var name_temp = result.rate[i].name.split(" ");
+								var in_name = '';
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									if(name_temp[1].length > 7){
+										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+									}else{
+										in_name = result.rate[i].name;
+									}
+								}
+
+								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -426,6 +458,9 @@
 				}
 
 				var chart = Highcharts.chart('container1_shift1', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'Operators Overall Efficiency',
 						style: {
@@ -444,6 +479,9 @@
 						title: {
 							text: 'OP Efficiency (%)'
 						},
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -451,6 +489,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -497,7 +536,19 @@
 					if(result.rate[i].shift == 's2'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								var name_temp = result.rate[i].name.split(" ");
+								var in_name = '';
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									if(name_temp[1].length > 7){
+										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
+									}else{
+										in_name = result.rate[i].name;
+									}
+								}
+
+								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -512,6 +563,9 @@
 				}
 
 				var chart = Highcharts.chart('container1_shift2', {
+					chart: {
+						animation: false
+					},
 					title: {
 						text: 'Operators Overall Efficiency',
 						style: {
@@ -530,6 +584,9 @@
 						title: {
 							text: 'OP Efficiency (%)'
 						},
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -537,6 +594,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
+							rotation: -25,
 							style: {
 								fontSize: '1vw'
 							}
@@ -581,6 +639,96 @@
 
 
 		});
+$.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, status, xhr) {
+	if(result.status){
+
+		var op = [];
+		var qty = [];
+
+		for(var i = 0; i < result.op_result.length; i++){
+			for(var j = 0; j < result.emp_name.length; j++){
+				if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
+					var name_temp = result.emp_name[j].name.split(" ");
+					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+					}else{
+						if(name_temp[1].length > 7){
+							op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+						}else{
+							op.push(result.emp_name[j].name);
+						}
+					}
+
+				}
+			}
+			qty.push(Math.ceil(result.op_result[i].qty));
+		}
+
+
+		var chart = Highcharts.chart('container2', {
+			title: {
+				text: 'Operators Result on '+ result.date,
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -25,
+					style: {
+						fontSize: '1vw'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '1vw'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Result',
+				type: 'column',
+				color: 'rgb(144,238,126)',
+				data: qty,
+			}
+			]
+
+		});
+
+	}
+
+});
 
 $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
 	if(result.status){
@@ -593,7 +741,16 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 		for(var i = 0; i < result.working_time.length; i++){
 			for(var j = 0; j < result.emp_name.length; j++){
 				if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
-					op.push(result.emp_name[j].name);
+					var name_temp = result.emp_name[j].name.split(" ");
+					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+					}else{
+						if(name_temp[1].length > 7){
+							op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+						}else{
+							op.push(result.emp_name[j].name);
+						}
+					}
 				}
 			}
 			act.push(Math.ceil(result.working_time[i].act));
@@ -638,8 +795,9 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				gridLineWidth: 1,
 				gridLineColor: 'RGB(204,255,255)',
 				labels: {
+					rotation: -25,
 					style: {
-						fontSize: '26px'
+						fontSize: '1vw'
 					}
 				},
 			},
@@ -667,7 +825,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 						format: '{point.y}',
 						style:{
 							textOutline: false,
-							fontSize: '26px'
+							fontSize: '1vw'
 						}
 					},
 					animation: false,
@@ -696,135 +854,135 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 });
 
 
-$.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status, xhr) {
-	if(result.status){
+// $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status, xhr) {
+// 	if(result.status){
 
-		var seriesData = [];
-		var data = [];
-
-
-		for (var i = 0; i < result.op.length; i++) {
-			data = [];
-
-			for (var j = 0; j < result.rate.length; j++) {
-
-				if(result.op[i].operator_id == result.rate[j].operator_id){
-					var isEmpty = true;
-					for (var k = 0; k < result.time_eff.length; k++) {
-						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
-
-							if(Date.parse(result.rate[j].week_date) > Date.parse('2019-10-01')){
-								if(result.rate[j].rate == 0){
-									data.push([Date.parse(result.rate[j].week_date), null]);
-								}else{
-									data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
-								}
-
-							}else{
-								data.push([Date.parse(result.rate[j].week_date), null]);
-
-							}
-							isEmpty = false;						
-						}
-					}
-					if(isEmpty){
-						data.push([Date.parse(result.rate[j].week_date), null]);
-					}				
-				}
-			}
-			seriesData.push({name : result.op[i].name, data: data});
-		}
+// 		var seriesData = [];
+// 		var data = [];
 
 
-		var chart = Highcharts.stockChart('container2', {
-			chart:{
-				type:'spline',
-			},
-			rangeSelector: {
-				selected: 0
-			},
-			scrollbar:{
-				enabled:false
-			},
-			navigator:{
-				enabled:false
-			},
-			title: {
-				text: 'Daily Operators Overall Efficiency',
-				style: {
-					fontSize: '30px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Last Update: '+getActualFullDate(),
-				style: {
-					fontSize: '18px',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					text: 'NG Rate (%)'
-				},
-				plotLines: [{
-					color: '#FFFFFF',
-					width: 2,
-					value: 0,
-					dashStyles: 'longdashdot'
-				}]
-			},
-			xAxis: {
-				categories: 'datetime',
-				tickInterval: 24 * 3600 * 1000 
-			},
-			tooltip: {
-				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
-				split: false,
-			},
-			legend : {
-				enabled:false
-			},
-			credits: {
-				enabled:false
-			},
-			plotOptions: {
-				series: {
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:,.2f}%',
-					},
-					connectNulls: true,
-					shadow: {
-						width: 3,
-						opacity: 0.4
-					},
-					label: {
-						connectorAllowed: false
-					},
+// 		for (var i = 0; i < result.op.length; i++) {
+// 			data = [];
 
-				}
-			},
-			series: seriesData,
-			responsive: {
-				rules: [{
-					condition: {
-						maxWidth: 500
-					},
-					chartOptions: {
-						legend: {
-							layout: 'horizontal',
-							align: 'center',
-							verticalAlign: 'bottom'
-						}
-					}
-				}]
-			}
-		});
+// 			for (var j = 0; j < result.rate.length; j++) {
+
+// 				if(result.op[i].operator_id == result.rate[j].operator_id){
+// 					var isEmpty = true;
+// 					for (var k = 0; k < result.time_eff.length; k++) {
+// 						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
+
+// 							if(Date.parse(result.rate[j].week_date) > Date.parse('2019-10-01')){
+// 								if(result.rate[j].rate == 0){
+// 									data.push([Date.parse(result.rate[j].week_date), null]);
+// 								}else{
+// 									data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+// 								}
+
+// 							}else{
+// 								data.push([Date.parse(result.rate[j].week_date), null]);
+
+// 							}
+// 							isEmpty = false;						
+// 						}
+// 					}
+// 					if(isEmpty){
+// 						data.push([Date.parse(result.rate[j].week_date), null]);
+// 					}				
+// 				}
+// 			}
+// 			seriesData.push({name : result.op[i].name, data: data});
+// 		}
 
 
-	}
-});
+// 		var chart = Highcharts.stockChart('container2', {
+// 			chart:{
+// 				type:'spline',
+// 			},
+// 			rangeSelector: {
+// 				selected: 0
+// 			},
+// 			scrollbar:{
+// 				enabled:false
+// 			},
+// 			navigator:{
+// 				enabled:false
+// 			},
+// 			title: {
+// 				text: 'Daily Operators Overall Efficiency',
+// 				style: {
+// 					fontSize: '30px',
+// 					fontWeight: 'bold'
+// 				}
+// 			},
+// 			subtitle: {
+// 				text: 'Last Update: '+getActualFullDate(),
+// 				style: {
+// 					fontSize: '18px',
+// 					fontWeight: 'bold'
+// 				}
+// 			},
+// 			yAxis: {
+// 				title: {
+// 					text: 'NG Rate (%)'
+// 				},
+// 				plotLines: [{
+// 					color: '#FFFFFF',
+// 					width: 2,
+// 					value: 0,
+// 					dashStyles: 'longdashdot'
+// 				}]
+// 			},
+// 			xAxis: {
+// 				categories: 'datetime',
+// 				tickInterval: 24 * 3600 * 1000 
+// 			},
+// 			tooltip: {
+// 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+// 				split: false,
+// 			},
+// 			legend : {
+// 				enabled:false
+// 			},
+// 			credits: {
+// 				enabled:false
+// 			},
+// 			plotOptions: {
+// 				series: {
+// 					dataLabels: {
+// 						enabled: true,
+// 						format: '{point.y:,.2f}%',
+// 					},
+// 					connectNulls: true,
+// 					shadow: {
+// 						width: 3,
+// 						opacity: 0.4
+// 					},
+// 					label: {
+// 						connectorAllowed: false
+// 					},
+
+// 				}
+// 			},
+// 			series: seriesData,
+// 			responsive: {
+// 				rules: [{
+// 					condition: {
+// 						maxWidth: 500
+// 					},
+// 					chartOptions: {
+// 						legend: {
+// 							layout: 'horizontal',
+// 							align: 'center',
+// 							verticalAlign: 'bottom'
+// 						}
+// 					}
+// 				}]
+// 			}
+// 		});
+
+
+// 	}
+// });
 
 }
 
