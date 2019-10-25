@@ -46,8 +46,8 @@ class MiddleProcessController extends Controller
 			'bff-kensa',
 			'lcq-incoming',
 			'lcq-kensa',
-			'plt-incoming',
-			'plt-kensa',
+			'plt-incoming-sx',
+			'plt-kensa-sx',
 		];
 	}
 
