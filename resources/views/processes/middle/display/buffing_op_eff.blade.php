@@ -404,7 +404,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
@@ -509,7 +509,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,
@@ -614,7 +614,7 @@
 								format: '{point.y:.2f}%',
 								style:{
 									textOutline: false,
-									fontSize: '20px'
+									fontSize: '1vw'
 								}
 							},
 							animation: false,

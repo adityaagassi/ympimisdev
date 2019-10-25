@@ -726,6 +726,7 @@ Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingO
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBuffingDailyOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
+Route::get('fetch/middle/buffing_op_result', 'MiddleProcessController@fetchBuffingOpResult');
 Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
 Route::get('fetch/middle/buffing_daily_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@indexBuffingOpNgRate');
@@ -1139,6 +1140,7 @@ Route::get('index/production_report/index/{id}', 'ProductionReportController@ind
 Route::get('index/production_report/activity/{id}', 'ProductionReportController@activity');
 Route::get('index/production_report/report_all/{id}', 'ProductionReportController@report_all');
 Route::get('index/production_report/fetchReport/{id}', 'ProductionReportController@fetchReport');
+Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportController@detailProductionReport');
 
 
 //Activity List
