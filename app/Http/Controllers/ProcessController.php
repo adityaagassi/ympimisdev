@@ -1059,13 +1059,21 @@ class ProcessController extends Controller
 			$log_processes = db::select($query);
 
 		}elseif($id =="YTS"){
-			$query="SELECT a.*, users.`name` FROM (
-			SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1'  AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
-			UNION ALL
-			SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
-		) A 
-		LEFT JOIN users on a.created_by = users.id			
-		ORDER BY serial_number DESC";
+		// 	$query="SELECT a.*, users.`name` FROM (
+		// 	SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YTS%' and process_code ='1'  AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+		// 	UNION ALL
+		// 	SELECT serial_number,model,created_at,id,created_by,remark FROM log_processes WHERE model LIKE 'YAS%'  and process_code ='1' AND DATE_FORMAT(created_at,'%Y-%m-%d')  >='".$yesterday."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$now."'
+		// ) A 
+		// LEFT JOIN users on a.created_by = users.id			
+		// ORDER BY serial_number DESC";
+
+		$query = "
+		SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark,users.`name` from log_processes 
+		LEFT JOIN 
+		users on log_processes.created_by = users.id
+		WHERE process_code ='1' and 
+		DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' ORDER BY log_processes.created_at DESC
+		";
 		$log_processes = db::select($query);
 	}elseif($id =="YTS2"){
 		$query ="
