@@ -181,6 +181,13 @@ class AssyProcessController extends Controller
 		where due_date >= '".$first."' and due_date <= '".$tanggal."'
 		group by assy_picking_schedules.material_number
 		) as plan group by material_number
+
+		union all
+		
+		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', histories.lot,0)) as minus, 0 as stock, 0 as plan_ori from
+		(
+		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 		) as final group by material_number having plan > 0  
 		) as final2
 		join materials on final2.material_number = materials.material_number
