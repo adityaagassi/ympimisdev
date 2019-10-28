@@ -2681,6 +2681,21 @@ class MiddleProcessController extends Controller
 								'material_tag_id' => $tag[0]
 							]);
 						}
+						else{
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => 'SXKEY-82',
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+						}
 
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
@@ -2763,6 +2778,21 @@ class MiddleProcessController extends Controller
 							]);
 
 						}
+						else{
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => 'SXKEY-82',
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+						}
 
 						MiddleInventory::firstOrcreate([
 							'tag' => $tag[0]
@@ -2825,6 +2855,21 @@ class MiddleProcessController extends Controller
 						]);
 
 					}
+						else{
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => 'SXKEY-82',
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+						}
 
 					$barrel_log = new BarrelLog([
 						'machine' => $request->get('surface'),
@@ -2908,6 +2953,21 @@ class MiddleProcessController extends Controller
 							'material_tag_id' => $tag[0]
 						]);
 					}
+						else{
+							$buffing = db::table('bom_components')->where('material_parent', '=', $barrel->material_number)->first();
+
+							$buffing_queue = DB::connection('digital_kanban')
+							->table('buffing_queues')
+							->insert([
+								'rack' => 'SXKEY-82',
+								'material_num' => $buffing->material_child,
+								'created_by' => $id,
+								'created_at' => date('Y-m-d H:i:s'),
+								'updated_at' => date('Y-m-d H:i:s'),
+								'material_qty' => $barrel->qty,
+								'material_tag_id' => $tag[0]
+							]);
+						}
 
 					MiddleInventory::firstOrcreate([
 						'tag' => $tag[0]
