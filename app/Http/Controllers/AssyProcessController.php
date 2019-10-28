@@ -150,7 +150,13 @@ class AssyProcessController extends Controller
 			$minsatu = date('Y-m-d');
 		}
 
-		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori, (sum(plan)-sum(picking)) as diff from
+		if ($request->get('order') == '') {
+			$order = 'diff desc';
+		} else {
+			$order = 'diff2 asc';
+		}
+
+		$table = "select materials.model, materials.`key`, materials.surface , sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori, (sum(plan)-sum(picking)) as diff, sum(stock) - (sum(plan)-sum(picking)) as diff2 from
 		(
 		select material_number, sum(plan) as plan, sum(picking) as picking, sum(plus) as plus, sum(minus) as minus, sum(stock) as stock, sum(plan_ori) as plan_ori from
 		(
@@ -193,7 +199,7 @@ class AssyProcessController extends Controller
 		join materials on final2.material_number = materials.material_number
 		".$where." ".$where2." ".$where3." ".$where4."
 		group by materials.model, materials.`key`, materials.surface
-		order by diff desc";
+		order by ".$order;
 
 		$picking_assy = db::select($table);
 

@@ -195,7 +195,15 @@
                             <span style="font-weight: bold;">Quality Assurance (品質保証)</span>
                             <br>
                             <a href="{{ url("index/qc_report") }}">
-                                <i class="fa fa-caret-right"></i> QC Report
+                                <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request (CPAR)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qc_car") }}">
+                                <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                <i class="fa fa-caret-right"></i> Graph
                             </a>
                         </td>
                     </tr>
@@ -260,7 +268,7 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy/wld?date=&surface2=&key2=&model2=&hpl2=") }}">
+                            <a href="{{ url("/index/display/sub_assy/wld?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                         </td>
@@ -301,11 +309,11 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス仮組～組立)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy/assy?date=&surface2=&key2=&model2=&hpl2=") }}">
+                            <a href="{{ url("/index/display/sub_assy/assy?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                             <br>
-                            <a href="{{ url("/index/activity_list/filter/8") }}">
+                            <a href="{{ url("/index/production_report/index/8") }}">
                                 <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
                             </a>
                         </td>

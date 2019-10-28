@@ -74,7 +74,50 @@
 @section('content')
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
+		<div class="col-xs-12" style="height:100%">
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
+				<tr id="model">
+				</tr>
+				<tr id="plan_acc">
+					<!-- <th>Plan acc</th> -->
+				</tr>
+				<tr id="picking_acc">
+					<!-- <th>Pick acc</th> -->
+				</tr>
+				<tr id="return_acc">
+					<!-- <th>Return acc</th> -->
+				</tr>
+				<tr id="plan">
+					<!-- <th>Total Plan</th> -->
+				</tr>
+				<tr id="picking">
+					<!-- <th>Picking</th> -->
+				</tr>
+				<tr id="diff">
+					<!-- <th>Diff</th> -->
+				</tr>
+				<tr style="height: 5px"></tr>
+				<tr id="stok">
+					
+				</tr>
+				<tr id="chart" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 12px;">
+				</tr>
+				<tr id="legend"></tr>
+			</table>
+
+			<!-- <table class="table table-bordered" style="padding: 0px; margin-bottom: 10px;">
+				
+			</table> -->
+		</div>
 		<div class="col-xs-12">
+			<div id="picking_chart" style="width: 100%; margin: auto"></div>
+		</div>
+		<div class="col-xs-12">
+			<!-- <div class="col-xs-3" style="padding: 0px 5px 0px 5px"> -->
+				<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
+			<!-- </div> -->
+		</div>
+		<div class="col-xs-12" style="margin-top: 10px">
 			<form method="GET" action="{{ url('index/display/sub_assy/'.$option) }}">
 				<div class="col-xs-2" style="line-height: 1">
 					<div class="input-group date">
@@ -123,51 +166,18 @@
 					</select>
 					<input type="text" name="hpl2" id="hpl2" hidden>
 				</div>
+
+				<div class="col-xs-2">
+					<select class="form-control select2" id="order" onchange="changeOrder()" placeholder="Order by">
+						<option value="">Diff</option>
+						<option value="1" <?php if($_GET['order2'] != '' ) echo "selected"; ?> >Stock Room</option>
+					</select>
+					<input type="text" name="order2" id="order2" hidden>
+				</div>
 				<div class="col-xs-1">
 					<button class="btn btn-success" type="submit">Cari</button>
 				</div>
-				<div class="col-xs-3">
-					<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
-				</div>
 			</form>
-		</div>
-		<div class="col-xs-12" style="height:100%">
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; height:100%;">
-				<tr id="model">
-				</tr>
-				<tr id="plan_acc">
-					<!-- <th>Plan acc</th> -->
-				</tr>
-				<tr id="picking_acc">
-					<!-- <th>Pick acc</th> -->
-				</tr>
-				<tr id="return_acc">
-					<!-- <th>Return acc</th> -->
-				</tr>
-				<tr id="plan">
-					<!-- <th>Total Plan</th> -->
-				</tr>
-				<tr id="picking">
-					<!-- <th>Picking</th> -->
-				</tr>
-				<tr id="diff">
-					<!-- <th>Diff</th> -->
-				</tr>
-				<tr style="height: 5px"></tr>
-				<tr id="stok">
-					
-				</tr>
-				<tr id="chart" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 12px;">
-				</tr>
-				<tr id="legend"></tr>
-			</table>
-
-			<!-- <table class="table table-bordered" style="padding: 0px; margin-bottom: 10px;">
-				
-			</table> -->
-		</div>
-		<div class="col-xs-12">
-			<div id="picking_chart" style="width: 100%; margin: auto"></div>
 		</div>
 
 		<div class="modal fade" id="myModal">
@@ -267,6 +277,9 @@
 	function changeHpl() {
 		$("#hpl2").val($("#hpl").val());
 	}
+	function changeOrder() {
+		$("#order2").val($("#order").val());
+	}
 
 	function fill_table() {
 		var data = {
@@ -274,7 +287,8 @@
 			key:"{{$_GET['key2']}}",
 			model:"{{$_GET['model2']}}",
 			surface:"{{$_GET['surface2']}}",
-			hpl:"{{$_GET['hpl2']}}"
+			hpl:"{{$_GET['hpl2']}}",
+			order:"{{$_GET['order2']}}"
 		}
 
 		// var values="{{$_GET['key2']}}";
