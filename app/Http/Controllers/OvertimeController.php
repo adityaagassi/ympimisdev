@@ -440,7 +440,7 @@ class OvertimeController extends Controller
 			where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
 			left join ympimis.employees as emp on emp.employee_id = ovr.nik
 			left join (select employee_id, cost_center, division, department, section, sub_section, `group` from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
-			left join ympimis.cost_centers on ympimis.cost_centers.cost_center = bagian.cost_center
+			left join ympimis.cost_centers on ympimis.cost_centers.section = bagian.section and ympimis.cost_centers.group = bagian.group
 			where ot > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addcode."".$addgrup."
 			order by ot asc
 			");
