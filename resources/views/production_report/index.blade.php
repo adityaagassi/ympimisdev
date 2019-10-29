@@ -1,0 +1,53 @@
+@extends('layouts.master')
+@section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<style type="text/css">
+
+</style>
+@stop
+@section('header')
+<section class="content-header">
+	<h1>
+		Activity Lists<span class="text-purple"> 活動リスト</span>
+		<small>Assembly (WI-A) <span class="text-purple"> アセンブリ（WI-A）</span></small>
+	</h1>
+</section>
+@stop
+@section('content')
+<section class="content">
+	<div class="row">
+		<div class="col-xs-4" style="text-align: center;">
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Report <i class="fa fa-angle-double-down"></i></span>
+			<?php $no = 1 ?>
+			@foreach($activity_list as $activity_list)
+				<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
+				<?php $no++ ?>
+			@endforeach
+		</div>
+		<div class="col-xs-4" style="text-align: center; color: red;">
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			{{-- <a href="{{ url("index/middle/display/Flute") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Display Buffing</a> --}}
+		</div>
+		<div class="col-xs-4" style="text-align: center; color: purple;">
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report All Activity</a>
+			<a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
+			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
+		</div>
+	</div>
+</section>
+@endsection
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+	});
+</script>
+@endsection

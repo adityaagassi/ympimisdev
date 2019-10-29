@@ -24,12 +24,9 @@ Route::get('happybirthday', 'TrialController@ultah');
 
 Route::get('trialmail', 'TrialController@trialmail');
 
-// Route::get('/trial', function () {
-// 	return view('trial', array(
-// 		'title' => 'OEE Recording',
-// 		'title_jp' => '-'
-// 	));
-// });
+Route::get('/trial', function () {
+	return view('trial');
+});
 
 Route::get('/machinery_monitoring', function () {
 	return view('plant_maintenance.machinery_monitoring', array(
@@ -250,6 +247,7 @@ Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
+Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
 Route::post('post/hrqa', 'EmployeeController@postChat');
@@ -724,6 +722,7 @@ Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOp
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
+Route::get('fetch/middle/buffing_op_eff_detail', 'MiddleProcessController@fetchBuffingOpEffDetail');
 Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBuffingDailyOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
 Route::get('fetch/middle/buffing_op_result', 'MiddleProcessController@fetchBuffingOpResult');
@@ -1141,6 +1140,7 @@ Route::get('index/production_report/activity/{id}', 'ProductionReportController@
 Route::get('index/production_report/report_all/{id}', 'ProductionReportController@report_all');
 Route::get('index/production_report/fetchReport/{id}', 'ProductionReportController@fetchReport');
 Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportController@detailProductionReport');
+Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 
 
 //Activity List
@@ -1168,11 +1168,18 @@ Route::post('index/production_audit/store/{id}', 'ProductionAuditController@stor
 Route::get('index/production_audit/edit/{id}/{audit_id}', 'ProductionAuditController@edit');
 Route::post('index/production_audit/update/{id}/{audit_id}', 'ProductionAuditController@update');
 Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
+Route::post('index/production_audit/print_audit/{id}', 'ProductionAuditController@print_audit');
+Route::get('index/production_audit/report_audit/{id}', 'ProductionAuditController@report_audit');
+Route::get('index/production_audit/fetchReport/{id}', 'ProductionAuditController@fetchReport');
+Route::get('fetch/production_audit/detail_stat/{id}', 'ProductionAuditController@detailProductionAudit');
+Route::get('index/production_audit/signature', 'ProductionAuditController@signature');
+Route::post('index/production_audit/save_signature', 'ProductionAuditController@save_signature');
 
 //point check master
 Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');
 Route::post('index/point_check_audit/filter_point_check/{id}', 'PointCheckController@filter_point_check');
 Route::get('index/point_check_audit/show/{id}/{point_check_audit_id}', 'PointCheckController@show');
+Route::get('index/point_check_audit/show2/{point_check_audit_id}', 'PointCheckController@show2');
 Route::get('index/point_check_audit/destroy/{id}/{point_check_audit_id}', 'PointCheckController@destroy');
 Route::get('index/point_check_audit/create/{id}', 'PointCheckController@create');
 Route::post('index/point_check_audit/store/{id}', 'PointCheckController@store');
@@ -1188,13 +1195,17 @@ Route::post('index/training_report/store/{id}', 'TrainingReportController@store'
 Route::get('index/training_report/destroy/{id}/{training_id}', 'TrainingReportController@destroy');
 Route::get('index/training_report/edit/{id}/{training_id}', 'TrainingReportController@edit');
 Route::post('index/training_report/update/{id}/{training_id}', 'TrainingReportController@update');
-Route::get('index/training_report/details/{id}', 'TrainingReportController@details');
+Route::get('index/training_report/details/{id}/{session_training}', 'TrainingReportController@details');
 Route::post('index/training_report/insertpicture/{id}', 'TrainingReportController@insertpicture');
 Route::post('index/training_report/insertparticipant/{id}', 'TrainingReportController@insertparticipant');
 Route::get('index/training_report/destroypicture/{id}/{picture_id}', 'TrainingReportController@destroypicture');
 Route::get('index/training_report/destroyparticipant/{id}/{participant_id}', 'TrainingReportController@destroyparticipant');
 Route::post('index/training_report/editpicture/{id}/{picture_id}', 'TrainingReportController@editpicture');
 Route::post('index/training_report/editparticipant/{id}/{participant_id}', 'TrainingReportController@editparticipant');
+Route::get('index/training_report/report_training/{id}', 'TrainingReportController@report_training');
+Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@fetchReport');
+Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
+Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
@@ -1217,6 +1228,12 @@ Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
+Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
+Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
+Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
+Route::get('index/qc_report/sign', 'QcReportController@sign');
+Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
+
 //CAR
 Route::get('index/qc_car', 'QcCarController@index');
 
