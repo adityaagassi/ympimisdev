@@ -1072,7 +1072,7 @@ class ProcessController extends Controller
 		LEFT JOIN 
 		users on log_processes.created_by = users.id
 		WHERE process_code ='1' and 
-		DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' ORDER BY log_processes.created_at DESC
+		DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' ORDER BY log_processes.serial_number DESC
 		";
 		$log_processes = db::select($query);
 	}elseif($id =="YTS2"){
