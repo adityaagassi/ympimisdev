@@ -1,5 +1,7 @@
+<title>YMPI 情報システム</title>
+<link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
 <style>
-table{
+.table{
 	width:100%;
 }
 table, th, td {
@@ -10,18 +12,29 @@ table, th, td {
 .head {
 	border: 1px solid black;
 }
+.peserta {
+	border: 1px solid black;
+	width:50%;
+	text-align:center;
+}
 .bodytraining{
-	padding-top:50px;
-	padding-left:50px;
+	padding-left:100px;
+}
+p {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 @media print {
 	body {-webkit-print-color-adjust: exact;}
 }
 </style>
-<table class="table table-bordered table-hover">
+<table class="table">
 	<tbody>
 		<tr style="border:0px;">
-			<td class="head" colspan="6"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+			<td colspan="6"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 		</tr>
 		<tr>
 			<td class="head" colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
@@ -47,13 +60,100 @@ table, th, td {
 			<td class="head">Proses</td>
 			<td class="head">{{ $training->periode }}</td>
 		</tr>
-		<tr class="head">
-			<td class="bodytraining" width="10%">Tanggal<br>Waktu<br>Trainer<br>Tema<br>Isi Training<br>Tujuan<br>Standard</td>
-			<td width="15%" style="padding-top:50px;">:</td>
-			<td width="50%" style="padding-top:50px;">{{ $training->date }}</td>
+		
+	</tbody>
+</table>
+<table class="table">
+	<tbody class="head">
+		<tr>
+			<td class="bodytraining" width="10%" style="padding-top:50px">Tanggal</td>
+			<td width="15%" style=" text-align: right;padding-top:50px">:</td>
+			<td width="50%" style="padding-top:50px">{{ $training->date }}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Waktu</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style=""><?php 
+                $timesplit=explode(':',$training->time);
+                $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
+              	{{$min.' Menit'}}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Trainer</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style="">{{ $training->trainer }}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Tema</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style="">{{ $training->theme }}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Tujuan</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style="">{{ $training->tujuan }}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Standard</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style="">{{ $training->standard }}</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" width="10%">Isi Training</td>
+			<td width="15%" style=" text-align: right">:</td>
+			<td width="50%" style=""><?php echo $training->isi_training ?></td>
+		</tr>
+		<tr>
+			<td class="bodytraining" colspan="6">
+				Picture : 
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		@foreach($trainingPicture as $trainingPicture)
+			<td class="head" width="100px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
+		@endforeach
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="bodytraining" colspan="6">
+				Peserta Training : 
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="head">No.</td>
+			<td class="head">Nama Peserta</td>
+			<td></td>
+		</tr>
+		<?php $no = 1 ?>
+		@foreach($trainingParticipant as $trainingParticipant)
+			<tr>
+				<td></td>
+				<td class="head">{{ $no }}</td>
+				<td class="head">{{ $trainingParticipant->participant_name }}</td>
+				<td></td>
+			</tr>
+			<?php $no++ ?>
+		@endforeach
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="bodytraining" colspan="6">
+				Catatan : 
+			</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" colspan="6">
+				<?php echo  $training->notes ?> 
+			</td>
 		</tr>
 	</tbody>
 </table>
 <script>
-    // setTimeout(function () { window.print(); }, 200);
+    setTimeout(function () { window.print(); }, 200);
 </script>

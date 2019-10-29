@@ -193,7 +193,7 @@ table.table-bordered > tfoot > tr > th{
               type: 'column'
             },
             title: {
-              text: 'Report Audit of'+month
+              text: 'Report Audit of '+month
             },
             xAxis: {
               type: 'category',

@@ -1,3 +1,5 @@
+<title>YMPI 情報システム</title>
+<link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
 <style>
 table, th, td {
   border: 1px solid black;
@@ -21,8 +23,7 @@ table, th, td {
 			<td>Department</td>
 			<td>{{ $departments }}</td>
 			<td rowspan="4" colspan="2" style="padding: 15px;"><center><b>{{ $activity_name }}</b></center></td>
-			<td rowspan="4"><center>Mengetahui<br><br><br><br>
-				<a target="_blank" href="{{ url('index/production_audit/signature') }}">Sign Here</a><br>{{ $foreman }}<br>Foreman</center></td>
+			<td rowspan="4"><center>Mengetahui<br><br><br><br>{{ $foreman }}<br>Foreman</center></td>
 		</tr>
 		<tr>
 			<td>Product</td>

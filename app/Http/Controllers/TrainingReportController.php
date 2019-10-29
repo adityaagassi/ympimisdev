@@ -347,7 +347,7 @@ class TrainingReportController extends Controller
             ]);
         
 
-        return redirect('index/training_report/details/'.$id)
+        return redirect('index/training_report/details/'.$id.'/view')
             ->with('page', 'Training Report')->with('status', 'New Pictrue has been created.');
     }
 
@@ -362,7 +362,7 @@ class TrainingReportController extends Controller
             ]);
         
 
-        return redirect('index/training_report/details/'.$id)
+        return redirect('index/training_report/details/'.$id.'/view')
             ->with('page', 'Training Report')->with('status', 'New Participant has been created.');
     }
 
@@ -371,7 +371,7 @@ class TrainingReportController extends Controller
       $trainingPicture = TrainingPicture::find($picture_id);
       $trainingPicture->delete();
 
-      return redirect('/index/training_report/details/'.$id)
+      return redirect('/index/training_report/details/'.$id.'/view')
         ->with('status', 'Training Picture has been deleted.')
         ->with('page', 'Training Report');
         //
@@ -382,7 +382,7 @@ class TrainingReportController extends Controller
       $trainingParticipant = TrainingParticipant::find($participant_id);
       $trainingParticipant->delete();
 
-      return redirect('/index/training_report/details/'.$id)
+      return redirect('/index/training_report/details/'.$id.'/view')
         ->with('status', 'Training Participant has been deleted.')
         ->with('page', 'Training Report');
         //
@@ -403,7 +403,7 @@ class TrainingReportController extends Controller
             $training_picture->picture = $nama_file;
             $training_picture->save();
 
-            return redirect('/index/training_report/details/'.$id)->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
+            return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -423,7 +423,7 @@ class TrainingReportController extends Controller
             $training_participant->participant_name = $request->input('participant_name');
             $training_participant->save();
 
-            return redirect('/index/training_report/details/'.$id)->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
+            return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -499,7 +499,7 @@ class TrainingReportController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $trainingPictureQuery = "select * from training_reports where training_reports.id = '".$id."' and deleted_at is null";
+        $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
         $trainingParticipantQuery = "select * from training_participants where training_participants.training_id = '".$id."' and deleted_at is null";
         $trainingParticipant = DB::select($trainingParticipantQuery);
