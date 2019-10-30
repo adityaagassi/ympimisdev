@@ -103,18 +103,7 @@ p {
 			<td width="15%" style=" text-align: right">:</td>
 			<td width="50%" style=""><?php echo $training->isi_training ?></td>
 		</tr>
-		<tr>
-			<td class="bodytraining" colspan="6">
-				Picture : 
-			</td>
-		</tr>
 			{{-- <td></td> --}}
-		@foreach($trainingPicture as $trainingPicture)
-		<tr>
-			<td></td>
-			<td class="head" width="100px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
-		</tr>
-		@endforeach
 			{{-- <td></td> --}}
 		<tr>
 			<td></td>
@@ -152,6 +141,22 @@ p {
 			<td class="bodytraining" colspan="6">
 				<?php echo  $training->notes ?> 
 			</td>
+		</tr>
+		<tr>
+			<td class="bodytraining" colspan="6">
+				Picture : 
+			</td>
+		</tr>
+	</tbody>
+</table>
+<table class="table">
+	<tbody class="head">
+		<tr>
+			<td></td>
+		@foreach($trainingPicture as $trainingPicture)
+			<td class="head" width="100px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
+		@endforeach
+			<td></td>
 		</tr>
 	</tbody>
 </table>

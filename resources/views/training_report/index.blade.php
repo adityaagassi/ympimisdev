@@ -142,15 +142,15 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$training_report->trainer}}</td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-primary btn-xs" href="{{secure_url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
-				                    <a class="btn btn-success btn-xs" href="{{url('index/training_report/print/'.$training_report->id)}}">Print</a>
+				                    <a class="btn btn-primary btn-sm" href="{{secure_url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
+				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}">Print</a>
 				                  </center>
 				                </td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-info btn-xs" href="{{url('index/training_report/show/'.$id.'/'.$training_report->id)}}">View</a>
-				                    <a href="{{url('index/training_report/edit/'.$id.'/'.$training_report->id)}}" class="btn btn-warning btn-xs">Edit</a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroy") }}', '{{ $training_report->activity_lists->activity_name }} - {{ $training_report->product }} - {{ $training_report->date }}','{{ $id }}', '{{ $training_report->id }}');">
+				                    <a class="btn btn-info btn-sm" href="{{url('index/training_report/show/'.$id.'/'.$training_report->id)}}">View</a>
+				                    <a href="{{url('index/training_report/edit/'.$id.'/'.$training_report->id)}}" class="btn btn-warning btn-sm">Edit</a>
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroy") }}', '{{ $training_report->activity_lists->activity_name }} - {{ $training_report->product }} - {{ $training_report->date }}','{{ $id }}', '{{ $training_report->id }}');">
 				                      Delete
 				                    </a>
 				                  </center>

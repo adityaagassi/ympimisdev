@@ -215,10 +215,10 @@ table.table-bordered > tfoot > tr > th{
 				                <td><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></td>
 				                <td>
 				                  <center>
-				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal" onclick="editpicture('{{ url("index/training_report/editpicture") }}','{{ url('/data_file/training/') }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
+				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editpicture('{{ url("index/training_report/editpicture") }}','{{ url('/data_file/training/') }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
 						               <i class="fa fa-edit"></i>
 						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroypicture") }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroypicture") }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
@@ -276,10 +276,10 @@ table.table-bordered > tfoot > tr > th{
 				                </td>
 				                <td>
 				                  <center>
-				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/training_report/editparticipant") }}','{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
+				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/training_report/editparticipant") }}','{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
 						               <i class="fa fa-edit"></i>
 						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/training_report/destroyparticipant") }}', '{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/training_report/destroyparticipant") }}', '{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
