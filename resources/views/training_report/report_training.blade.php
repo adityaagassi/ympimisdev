@@ -53,19 +53,17 @@ table.table-bordered > tfoot > tr > th{
 <section class="content">
   <div class="row">
     <div class="col-md-12">
-      {{-- <div class="col-md-12">
-        <div class="col-md-3 pull-right">
-          <select class="form-control select2" name="activity_type" style="width: 100%;" data-placeholder="Choose an Activity Type..." required id='activity_type' onchange="drawChart()">
-              <option value=""></option>
-              <option value="Semua">Semua</option>
-              @foreach($data as $data)
-                <option value="{{ $data->activity_type }}">{{ $data->activity_type }}</option>
-              @endforeach
-          </select>
-          <br>
+      <div class="col-md-12">
+        <div class="col-md-2 pull-right">
+          <div class="input-group date">
+            <div class="input-group-addon bg-green" style="border-color: #00a65a">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control datepicker" id="week_date" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+          </div>
           <br>
         </div>
-      </div> --}}
+      </div>
       <div class="col-md-12">
         <div class="box">
           <div class="nav-tabs-custom">
@@ -152,14 +150,25 @@ table.table-bordered > tfoot > tr > th{
   $(function () {
       $('.select2').select2()
     });
+  $('.datepicker').datepicker({
+    // <?php $tgl_max = date('m-Y') ?>
+    autoclose: true,
+    format: "yyyy-mm",
+    startView: "months", 
+    minViewMode: "months",
+    autoclose: true,
+    
+    // endDate: '<?php echo $tgl_max ?>'
+
+  });
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
   function drawChart() {
-    // var activity_type = $('#activity_type').val();
+    var week_date = $('#week_date').val();
     var url = '{{ url("index/production_report/report_by_act_type/".$id) }}'
     var data = {
-    //   activity_type: activity_type
+      week_date: week_date
     };
     $.get('{{ url("index/training_report/fetchReport/".$id) }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
@@ -172,12 +181,13 @@ table.table-bordered > tfoot > tr > th{
           //   inTransitCount.push(data[i].intransit);
           //   fstkCount.push(data[i].fstk);
           // }
+          var month = result.monthTitle;
           
-          var training_id = [], activity_name = [], jumlah_training = [];
+          var training_id = [], week_date = [], jumlah_training = [];
 
           $.each(result.datas, function(key, value) {
             // training_id.push(value.training_id);
-            activity_name.push(value.activity_name);
+            week_date.push(value.week_date);
             jumlah_training.push(value.jumlah_training);
             // statusopen.push(value.open);
             // statusclose.push(value.close);
@@ -188,11 +198,11 @@ table.table-bordered > tfoot > tr > th{
               type: 'column'
             },
             title: {
-              text: 'Training Report of {{ $departments }}'
+              text: 'Training Report of '+month
             },
             xAxis: {
               type: 'category',
-              categories: activity_name
+              categories: week_date
             },
             yAxis: {
               type: 'linear',
@@ -233,7 +243,7 @@ table.table-bordered > tfoot > tr > th{
 
             tooltip: {
               formatter:function(){
-                return this.series.name+' '+this.key + ' : ' + '<b>'+this.y+'</b>';
+                return this.series.name+' Training <br> Tanggal '+this.key + ' : ' + '<br><b>'+this.y+'</b>';
               }
             },
             "series": [
@@ -251,7 +261,7 @@ table.table-bordered > tfoot > tr > th{
     })
   }
 
-  function ShowModal(activity_name) {
+  function ShowModal(week_date) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -313,7 +323,7 @@ table.table-bordered > tfoot > tr > th{
         "type" : "get",
         "url" : "{{ url("fetch/training_report/detail_stat/".$id) }}",
         "data" : {
-          activity_name : activity_name
+          week_date : week_date
         }
       },
       "columns": [
@@ -331,7 +341,7 @@ table.table-bordered > tfoot > tr > th{
       ]
     });
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center> Report of '+ activity_name +'<center>');
+    $('#judul_table').append('<center> Training Report of '+ week_date +'<center>');
     
   }
 

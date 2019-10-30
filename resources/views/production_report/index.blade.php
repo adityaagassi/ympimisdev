@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report All Activity</a>
+			{{-- <a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report All Activity</a> --}}
 			<a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
 			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
 		</div>

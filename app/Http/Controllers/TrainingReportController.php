@@ -27,7 +27,7 @@ class TrainingReportController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$trainingReport = TrainingReport::where('activity_list_id','0')
+    	$trainingReport = TrainingReport::where('activity_list_id',$id)
             ->get();
 
         $queryProduct = "select * from origin_groups";
@@ -456,22 +456,22 @@ class TrainingReportController extends Controller
 
     public function fetchReport(Request $request,$id)
     {
-      // if($request->get('tgl') != null){
-      //   $bulan = $request->get('tgl');
-      // }
-      // else{
-      //   $bulan = date('Y-m');
-      // }
+      if($request->get('week_date') != null){
+        $bulan = $request->get('week_date');
+      }
+      else{
+        $bulan = date('Y-m');
+      }
 
-      $data = DB::select("select count(*) as jumlah_training, activity_name from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id where department_id = '".$id."' and activity_type = 'Training' GROUP BY activity_name");
-      // $monthTitle = date("F Y", strtotime($bulan));
+      $data = DB::select("select week_date, count(*) as jumlah_training from weekly_calendars join training_reports on training_reports.date = weekly_calendars.week_date join activity_lists on activity_lists.id = training_reports.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(training_reports.date,'%Y-%m') <= '".$bulan."' GROUP BY week_date");
+      $monthTitle = date("F Y", strtotime($bulan));
 
       // $monthTitle = date("F Y", strtotime($tgl));
 
       $response = array(
         'status' => true,
         'datas' => $data,
-        // 'monthTitle' => $monthTitle,
+        'monthTitle' => $monthTitle,
         // 'bulan' => $request->get("tgl")
 
       );
@@ -480,8 +480,8 @@ class TrainingReportController extends Controller
     }
 
     public function detailTraining(Request $request, $id){
-      $activity_name = $request->get("activity_name");
-        $query = "select *, training_reports.id as training_id from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id where department_id = '".$id."' and activity_type = 'Training' and activity_name = '".$activity_name."'";
+      $week_date = $request->get("week_date");
+        $query = "select *, training_reports.id as training_id from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id where department_id = '".$id."' and activity_type = 'Training' and date = '".$week_date."'";
 
       $detail = db::select($query);
 

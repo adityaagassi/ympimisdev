@@ -180,13 +180,12 @@ table.table-bordered > tfoot > tr > th{
           // }
           var month = result.monthTitle;
           
-          var activity_name = [], jml = [], jumlahgood = [], jumlahnotgood = [],activity_list_id = [];
+          var week_date = [], jml = [], jumlahgood = [], jumlahnotgood = [];
           $.each(result.datas, function(key, value) {
-            activity_name.push(value.activity_name);
+            week_date.push(value.week_date);
             jml.push(value.jumlah_semua);
             jumlahgood.push(parseInt(value.jumlah_good));
             jumlahnotgood.push(parseInt(value.jumlah_not_good));
-            activity_list_id.push(value.activity_list_id);
           })
           $('#chart').highcharts({
             chart: {
@@ -197,7 +196,7 @@ table.table-bordered > tfoot > tr > th{
             },
             xAxis: {
               type: 'category',
-              categories: activity_name,
+              categories: week_date,
             },
             yAxis: {
               type: 'linear',
@@ -258,12 +257,12 @@ table.table-bordered > tfoot > tr > th{
             },
             series: [{
                 name: 'Good',
-                color: '#00CC00',
+                color: '#00d912',
                 data: jumlahgood
             }, {
                 name: 'Not Good',
                 data: jumlahnotgood,
-                color : '#006600'
+                color : '#ff4f4f'
             }
             ]
           })
@@ -274,7 +273,7 @@ table.table-bordered > tfoot > tr > th{
     })
   }
 
-  function ShowModal(activity_name,kondisi,activity_list_id) {
+  function ShowModal(week_date,kondisi) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -336,7 +335,7 @@ table.table-bordered > tfoot > tr > th{
         "type" : "get",
         "url" : "{{ url("fetch/production_audit/detail_stat/".$id) }}",
         "data" : {
-          activity_name : activity_name,
+          week_date : week_date,
           kondisi : kondisi,
         }
       },

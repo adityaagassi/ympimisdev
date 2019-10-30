@@ -82,78 +82,78 @@ class ProductionReportController extends Controller
         }
     }
 
-    function report_all($id)
-    {
-        $queryDepartments = "SELECT * FROM departments where id='".$id."'";
-        $department = DB::select($queryDepartments);
-        foreach($department as $department){
-            $departments = $department->department_name;
-        }
-        $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
-        return view('production_report.report_all',  array('title' => 'Production Report',
-            'title_jp' => 'Production Report',
-            'id' => $id,
-            'data' => $data,
-            'departments' => $departments,
-        ))->with('page', 'Report All');
-    }
+    // function report_all($id)
+    // {
+    //     $queryDepartments = "SELECT * FROM departments where id='".$id."'";
+    //     $department = DB::select($queryDepartments);
+    //     foreach($department as $department){
+    //         $departments = $department->department_name;
+    //     }
+    //     $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
+    //     return view('production_report.report_all',  array('title' => 'Production Report',
+    //         'title_jp' => 'Production Report',
+    //         'id' => $id,
+    //         'data' => $data,
+    //         'departments' => $departments,
+    //     ))->with('page', 'Report All');
+    // }
 
-    public function fetchReport(Request $request,$id)
-    {
-      $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
-      // $monthTitle = date("F Y", strtotime($tgl));
+    // public function fetchReport(Request $request,$id)
+    // {
+    //   $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
+    //   // $monthTitle = date("F Y", strtotime($tgl));
 
 
-      $response = array(
-        'status' => true,
-        'datas' => $data,
-        'ctg' => $request->get("ctg"),
-        // 'monthTitle' => $monthTitle
+    //   $response = array(
+    //     'status' => true,
+    //     'datas' => $data,
+    //     'ctg' => $request->get("ctg"),
+    //     // 'monthTitle' => $monthTitle
 
-      );
+    //   );
 
-      return Response::json($response); 
-    }
+    //   return Response::json($response); 
+    // }
 
-    public function detailProductionReport(Request $request, $id){
-      $activity_type = $request->get("activity_type");
-        $query = "SELECT *, activity_lists.id as id_activity FROM `activity_lists` join departments on departments.id = activity_lists.department_id where activity_lists.activity_type = '".$activity_type."' and activity_lists.deleted_at is null and activity_lists.department_id = '".$id."'";
+    // public function detailProductionReport(Request $request, $id){
+    //   $activity_type = $request->get("activity_type");
+    //     $query = "SELECT *, activity_lists.id as id_activity FROM `activity_lists` join departments on departments.id = activity_lists.department_id where activity_lists.activity_type = '".$activity_type."' and activity_lists.deleted_at is null and activity_lists.department_id = '".$id."'";
 
-      $detail = db::select($query);
+    //   $detail = db::select($query);
 
-      return DataTables::of($detail)->make(true);
+    //   return DataTables::of($detail)->make(true);
 
-    }
+    // }
 
-    function report_by_act_type($id,$activity_type)
-    {
-        // $activityList = ActivityList::find($id);
-        // // foreach ($activityList as $activity) {
-        //     $activity_type = $activityList->activity_type;
-        // }
-        if ($activity_type == "Audit") {
-            return redirect('/index/production_audit/report_audit/'.$id)->with('page', 'Production Audit');
-        }
-        elseif($activity_type == "Training"){
-            return redirect('/index/training_report/report_training/'.$id)->with('page', 'Training');
-        }
-        elseif($activity_type == "Laporan Aktivitas"){
-            var_dump("halooo");
-        }
-        elseif($activity_type == "Sampling Check"){
-            return redirect('/index/sampling_check/index/'.$id)->with('page', 'Sampling Check')->with('no', '3');
-        }
-        elseif($activity_type == "Pengecekan Foto"){
+    // function report_by_act_type($id,$activity_type)
+    // {
+    //     // $activityList = ActivityList::find($id);
+    //     // // foreach ($activityList as $activity) {
+    //     //     $activity_type = $activityList->activity_type;
+    //     // }
+    //     if ($activity_type == "Audit") {
+    //         return redirect('/index/production_audit/report_audit/'.$id)->with('page', 'Production Audit');
+    //     }
+    //     elseif($activity_type == "Training"){
+    //         return redirect('/index/training_report/report_training/'.$id)->with('page', 'Training');
+    //     }
+    //     elseif($activity_type == "Laporan Aktivitas"){
+    //         var_dump("halooo");
+    //     }
+    //     elseif($activity_type == "Sampling Check"){
+    //         return redirect('/index/sampling_check/index/'.$id)->with('page', 'Sampling Check')->with('no', '3');
+    //     }
+    //     elseif($activity_type == "Pengecekan Foto"){
 
-        }
-        elseif($activity_type == "Interview"){
+    //     }
+    //     elseif($activity_type == "Interview"){
 
-        }
-        elseif($activity_type == "Labelisasi"){
+    //     }
+    //     elseif($activity_type == "Labelisasi"){
 
-        }
-        elseif($activity_type == "Pengecekan"){
+    //     }
+    //     elseif($activity_type == "Pengecekan"){
 
-        }
-    }
+    //     }
+    // }
 }

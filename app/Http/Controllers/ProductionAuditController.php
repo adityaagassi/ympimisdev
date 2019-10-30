@@ -413,12 +413,20 @@ class ProductionAuditController extends Controller
     {
       if($request->get('tgl') != null){
         $bulan = $request->get('tgl');
+        $fynow = DB::select("select DISTINCT(fiscal_year) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$bulan."'");
+        foreach($fynow as $fynow){
+            $fy = $fynow->fiscal_year;
+        }
       }
       else{
         $bulan = date('Y-m');
+        $fynow = DB::select("select fiscal_year from weekly_calendars where CURDATE() = week_date");
+        foreach($fynow as $fynow){
+            $fy = $fynow->fiscal_year;
+        }
       }
 
-      $data = DB::select("select activity_list_id, count(*) as jumlah_semua, activity_name, sum(case when production_audits.kondisi = 'Good' then 1 else 0 end) as jumlah_good, sum(case when production_audits.kondisi = 'Not Good' then 1 else 0 end) as jumlah_not_good from production_audits join activity_lists on activity_lists.id = production_audits.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(production_audits.date,'%Y-%m') <= '".$bulan."' GROUP BY activity_lists.activity_name, activity_list_id");
+      $data = DB::select("select weekly_calendars.week_date,count(*) as jumlah_semua, sum(case when production_audits.kondisi = 'Good' then 1 else 0 end) as jumlah_good, sum(case when production_audits.kondisi = 'Not Good' then 1 else 0 end) as jumlah_not_good from (select week_date from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$bulan."' and fiscal_year='".$fy."') as weekly_calendars join production_audits on production_audits.date = weekly_calendars.week_date join activity_lists on activity_lists.id = production_audits.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(production_audits.date,'%Y-%m') <= '".$bulan."' GROUP BY  weekly_calendars.week_date");
       $monthTitle = date("F Y", strtotime($bulan));
 
       // $monthTitle = date("F Y", strtotime($tgl));
@@ -435,9 +443,9 @@ class ProductionAuditController extends Controller
     }
 
     public function detailProductionAudit(Request $request, $id){
-      $activity_name = $request->get("activity_name");
+      $week_date = $request->get("week_date");
       $kondisi = $request->get("kondisi");
-        $query = "select *,employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where activity_name = '".$activity_name."' and production_audits.kondisi = '".$kondisi."'";
+        $query = "select *,employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."'";
 
       $detail = db::select($query);
 

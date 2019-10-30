@@ -108,13 +108,14 @@ p {
 				Picture : 
 			</td>
 		</tr>
+			{{-- <td></td> --}}
+		@foreach($trainingPicture as $trainingPicture)
 		<tr>
 			<td></td>
-		@foreach($trainingPicture as $trainingPicture)
 			<td class="head" width="100px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
-		@endforeach
-			<td></td>
 		</tr>
+		@endforeach
+			{{-- <td></td> --}}
 		<tr>
 			<td></td>
 		</tr>

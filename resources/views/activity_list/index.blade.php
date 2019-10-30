@@ -80,9 +80,9 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$activity_list->activity_type}}</td>
                 <td>
                   <center>
-                    <a class="btn btn-info btn-xs" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
-                    <a href="{{url('index/activity_list/edit', $activity_list->id)}}" class="btn btn-warning btn-xs">Edit</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/activity_list/destroy") }}', '{{ $activity_list->activity_name }}', '{{ $activity_list->id }}');">
+                    <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
+                    <a href="{{url('index/activity_list/edit', $activity_list->id)}}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/activity_list/destroy") }}', '{{ $activity_list->activity_name }}', '{{ $activity_list->id }}');">
                       Delete
                     </a>
                   </center>
