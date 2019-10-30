@@ -83,6 +83,12 @@
             </div>
           </div>
           <div class="form-group row" align="right">
+            <label class="col-sm-5">Foreman</label>
+            <div class="col-sm-5" align="left">
+              {{$sampling_check->foreman}}
+            </div>
+          </div>
+          <div class="form-group row" align="right">
             <label class="col-sm-5">Created By</label>
             <div class="col-sm-5" align="left">
               {{$sampling_check->user->name}}

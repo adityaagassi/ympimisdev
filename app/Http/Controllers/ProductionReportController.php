@@ -57,7 +57,7 @@ class ProductionReportController extends Controller
     		$activity_type = $activityList->activity_type;
     	// }
     	if ($activity_type == "Audit") {
-    		return redirect('/index/production_audit/index/'.$id)->with('page', 'Production Audit')->with('no', '1');
+    		return redirect('/index/production_audit/details/'.$id)->with('page', 'Production Audit')->with('no', '1');
     	}
     	elseif($activity_type == "Training"){
             return redirect('/index/training_report/index/'.$id)->with('page', 'Training')->with('no', '2');

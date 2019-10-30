@@ -25,6 +25,7 @@ class CreateSamplingChecksTable extends Migration
             $table->string('no_seri_part');
             $table->string('jumlah_cek');
             $table->string('leader');
+            $table->string('foreman');
             $table->timestamps();
         });
     }

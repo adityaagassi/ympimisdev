@@ -1159,14 +1159,15 @@ Route::post('index/activity_list/update_by_department/{id}/{department_id}/{no}'
 Route::get('index/activity_list/filter/{id}/{no}', 'ActivityListController@filter');
 
 //production audit
-Route::get('index/production_audit/index/{id}', 'ProductionAuditController@index');
+Route::get('index/production_audit/index/{id}/{product}/{proses}', 'ProductionAuditController@index');
+Route::get('index/production_audit/details/{id}', 'ProductionAuditController@details');
 Route::get('index/production_audit/show/{id}/{audit_id}', 'ProductionAuditController@show');
-Route::get('index/production_audit/destroy/{id}/{audit_id}', 'ProductionAuditController@destroy');
-Route::post('index/production_audit/filter_audit/{id}', 'ProductionAuditController@filter_audit');
-Route::get('index/production_audit/create/{id}', 'ProductionAuditController@create');
-Route::post('index/production_audit/store/{id}', 'ProductionAuditController@store');
-Route::get('index/production_audit/edit/{id}/{audit_id}', 'ProductionAuditController@edit');
-Route::post('index/production_audit/update/{id}/{audit_id}', 'ProductionAuditController@update');
+Route::get('index/production_audit/destroy/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@destroy');
+Route::post('index/production_audit/filter_audit/{id}/{product}/{proses}', 'ProductionAuditController@filter_audit');
+Route::get('index/production_audit/create/{id}/{product}/{proses}', 'ProductionAuditController@create');
+Route::post('index/production_audit/store/{id}/{product}/{proses}', 'ProductionAuditController@store');
+Route::get('index/production_audit/edit/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@edit');
+Route::post('index/production_audit/update/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@update');
 Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
 Route::post('index/production_audit/print_audit/{id}', 'ProductionAuditController@print_audit');
 Route::get('index/production_audit/report_audit/{id}', 'ProductionAuditController@report_audit');
@@ -1206,9 +1207,19 @@ Route::get('index/training_report/report_training/{id}', 'TrainingReportControll
 Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@fetchReport');
 Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
 Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
+Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
+Route::get('index/training_report/cek_employee/{nik}','TrainingReportController@cek_employee');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
+Route::post('index/sampling_check/filter_sampling/{id}', 'SamplingCheckController@filter_sampling');
+Route::get('index/sampling_check/create/{id}', 'SamplingCheckController@create');
+Route::post('index/sampling_check/store/{id}', 'SamplingCheckController@store');
+Route::get('index/sampling_check/show/{id}/{sampling_check_id}', 'SamplingCheckController@show');
+Route::get('index/sampling_check/destroy/{id}/{sampling_check_id}', 'SamplingCheckController@destroy');
+Route::get('index/sampling_check/edit/{id}/{sampling_check_id}', 'SamplingCheckController@edit');
+Route::post('index/sampling_check/update/{id}/{sampling_check_id}', 'SamplingCheckController@update');
+Route::get('index/sampling_check/details/{sampling_check_id}', 'SamplingCheckController@details');
 
 //CPAR
 Route::get('index/qc_report', 'QcReportController@index');
@@ -1236,6 +1247,9 @@ Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
 //CAR
 Route::get('index/qc_car', 'QcCarController@index');
+Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
+Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
+Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

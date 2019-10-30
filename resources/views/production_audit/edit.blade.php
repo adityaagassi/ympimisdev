@@ -38,45 +38,27 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('index/production_audit/update/'.$id.'/'.$production_audit->id)}}" enctype="multipart/form-data">
+    <form role="form" method="post" action="{{url('index/production_audit/update/'.$id.'/'.$production_audit->id.'/'.$product.'/'.$proses)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required id="product">
-                <option value=""></option>
-                @foreach($product as $product)
-                  @if($production_audit->point_check_audit->product == $product->origin_group_name)
-                    <option value="{{ $product->origin_group_name }}" selected>{{ $product->origin_group_name }}</option>
-                  @else
-                    <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-                  @endif
-                @endforeach
-              </select>
+              <input type="text" name="product" id="product" class="form-control" value="{{ $product }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Proses<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="proses" style="width: 100%;" data-placeholder="Choose a Proses..." required id="proses" onclick="autofill(">
-                <option value=""></option>
-                @foreach($proses as $proses)
-                  @if($production_audit->point_check_audit->proses == $proses->proses)
-                    <option value="{{ $proses->proses }}" selected>{{ $proses->product }} - {{ $proses->proses }}</option>
-                  @else
-                    <option value="{{ $proses->proses }}">{{ $proses->product }} - {{ $proses->proses }}</option>
-                  @endif
-                @endforeach
-              </select>
+              <input type="text" name="proses" id="proses" class="form-control" value="{{ $proses }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right" id="form_point_check">
             <label class="col-sm-4">Point Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required id="point_check">
-                <option value="<?php echo $production_audit->point_check_audit->id ?>"><?php echo $production_audit->point_check_audit->point_check ?> - <?php echo $production_audit->point_check_audit->cara_cek ?></option>
+                <option value=""></option>
                 @foreach($pointcheck as $pointcheck)
                   @if($production_audit->point_check_audit->point_check == $pointcheck->point_check)
                     <option value="<?php echo $pointcheck->id ?>" selected><?php echo $pointcheck->point_check ?> - <?php echo $pointcheck->cara_cek ?></option>
@@ -165,7 +147,7 @@
         </div>
           <div class="col-sm-4 col-sm-offset-5">
             <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('index/production_audit/index/'.$id) }}">Cancel</a>
+              <a class="btn btn-danger" href="{{ url('index/production_audit/index/'.$id.'/'.$product.'/'.$proses) }}">Cancel</a>
             </div>
             <div class="btn-group">
               <button type="submit" class="btn btn-primary col-sm-14">Update</button>

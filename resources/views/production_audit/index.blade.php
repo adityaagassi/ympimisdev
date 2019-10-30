@@ -77,9 +77,9 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-body">
 					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }} - {{ $product }} - {{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/production_audit/filter_audit/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/production_audit/filter_audit/'.$id.'/'.$product.'/'.$proses)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12 col-md-offset-2">
 							<div class="col-md-6">
@@ -94,7 +94,7 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 col-md-offset-2">
+						{{-- <div class="col-md-12 col-md-offset-2">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Origin Group</label>
@@ -106,12 +106,12 @@ table.table-bordered > tfoot > tr > th{
 							        </select>
 								</div>
 							</div>
-						</div>
+						</div> --}}
 						<div class="col-md-12 col-md-offset-2">
 							<div class="col-md-6">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1') }}" class="btn btn-warning">Back</a>
-									<a href="{{ url('index/production_audit/index/'.$id) }}" class="btn btn-danger">Clear</a>
+									<a href="{{ url('index/production_audit/details/'.$id) }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/production_audit/index/'.$id.'/'.$product.'/'.$proses) }}" class="btn btn-danger">Clear</a>
 									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 								</div>
 							</div>
@@ -141,12 +141,7 @@ table.table-bordered > tfoot > tr > th{
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Origin Group</label>
-									<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group..." required>
-							            <option value=""></option>
-							              @foreach($product2 as $product2)
-							                <option value="{{ $product2->origin_group_name }}">{{ $product2->origin_group_name }}</option>
-							              @endforeach
-							        </select>
+									<input type="text" class="form-control" name="product" value="{{ $product }}" readonly>
 								</div>
 							</div>
 						</div>
@@ -154,12 +149,7 @@ table.table-bordered > tfoot > tr > th{
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Proses</label>
-									<select class="form-control select2" name="proses" style="width: 100%;" data-placeholder="Choose a Proses..." required>
-							            <option value=""></option>
-							              @foreach($proses as $proses)
-							                <option value="{{ $proses->proses }}">{{ $proses->product }} - {{ $proses->proses }}</option>
-							              @endforeach
-							        </select>
+									<input type="text" class="form-control" name="proses" value="{{ $proses }}" readonly>
 								</div>
 							</div>
 						</div>
@@ -176,7 +166,7 @@ table.table-bordered > tfoot > tr > th{
 						{{-- <div class="col-md-12 col-md-offset-9">
 							<div class="col-md-3"> --}}
 								<div class="form-group pull-right">
-									<a href="{{ url('index/production_audit/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
+									<a href="{{ url('index/production_audit/create/'.$id.'/'.$product.'/'.$proses) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
 								</div>
 							{{-- </div>
 						</div> --}}
@@ -222,9 +212,9 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$production_audit->employee_auditor->name}}</td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-info btn-xs" href="{{url('index/production_audit/show/'.$id.'/'.$production_audit->id)}}">View</a>
-				                    <a href="{{url('index/production_audit/edit/'.$id.'/'.$production_audit->id)}}" class="btn btn-warning btn-xs">Edit</a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/production_audit/destroy") }}', '{{ $production_audit->point_check_audit->product }} - {{ $production_audit->point_check_audit->proses }} - {{ $production_audit->date }}','{{ $id }}', '{{ $production_audit->id }}');">
+				                    <a class="btn btn-info btn-sm" href="{{url('index/production_audit/show/'.$id.'/'.$production_audit->id)}}">View</a>
+				                    <a href="{{url('index/production_audit/edit/'.$id.'/'.$production_audit->id.'/'.$product.'/'.$proses)}}" class="btn btn-warning btn-sm">Edit</a>
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/production_audit/destroy") }}', '{{ $production_audit->point_check_audit->product }} - {{ $production_audit->point_check_audit->proses }} - {{ $production_audit->date }}','{{ $id }}', '{{ $production_audit->id }}','{{ $product }}','{{ $proses }}');">
 				                      Delete
 				                    </a>
 				                  </center>
@@ -390,9 +380,9 @@ table.table-bordered > tfoot > tr > th{
         'autoWidth'   : false
       })
     })
-    function deleteConfirmation(url, name, audit_id,id) {
+    function deleteConfirmation(url, name, audit_id,id,product,proses) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+audit_id+'/'+id);
+      jQuery('#modalDeleteButton').attr("href", url+'/'+audit_id+'/'+id+'/'+product+'/'+proses);
     }
   </script>
 @endsection

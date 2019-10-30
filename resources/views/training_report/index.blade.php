@@ -142,7 +142,7 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$training_report->trainer}}</td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-primary btn-xs" href="{{url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
+				                    <a class="btn btn-primary btn-xs" href="{{secure_url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
 				                    <a class="btn btn-success btn-xs" href="{{url('index/training_report/print/'.$training_report->id)}}">Print</a>
 				                  </center>
 				                </td>

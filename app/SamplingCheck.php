@@ -12,7 +12,7 @@ class SamplingCheck extends Model
     protected $table = 'sampling_checks';
 
 	protected $fillable = [
-        'activity_list_id', 'department', 'section','subsection', 'month', 'date', 'product', 'no_seri_part', 'jumlah_cek', 'leader', 'created_by'
+        'activity_list_id', 'department', 'section','subsection', 'month', 'date', 'product', 'no_seri_part', 'jumlah_cek', 'leader','foreman', 'created_by'
     ];
     
     public function activity_lists()

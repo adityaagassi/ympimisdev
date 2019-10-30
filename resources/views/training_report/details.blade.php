@@ -1,6 +1,9 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/font-awesome.css') }}">
+<link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/bootstrap.min.css') }}">
+<script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script>
 <style type="text/css">
 thead input {
   width: 100%;
@@ -179,6 +182,7 @@ table.table-bordered > tfoot > tr > th{
 			              {{$training_report->updated_at}}
 			            </div>
 			          </div>
+			          {{-- <input type="text" id="textnama"> --}}
 			      </div>
 				  <div class="row">
 				    <div class="col-xs-6">
@@ -236,6 +240,12 @@ table.table-bordered > tfoot > tr > th{
 				      <div class="box">
 				      	<div class="box-header">
 							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
+							{{-- <a class="btn btn-xs btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}" target="_blank">Scan Employee</a>
+							<div class="panel-body text-center" >
+				              <canvas></canvas>
+				              <hr>
+				              <select></select>
+				            </div> --}}
 							<form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
@@ -612,4 +622,48 @@ table.table-bordered > tfoot > tr > th{
               }
           }
     </script>
+    {{-- <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/jquery.js') }}"></script> --}}
+  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/qrcodelib.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/webcodecamjquery.js') }}"></script>
+  <script type="text/javascript">
+      var arg = {
+          resultFunction: function(result) {
+              //$('.hasilscan').append($('<input name="noijazah" value=' + result.code + ' readonly><input type="submit" value="Cek"/>'));
+             // $.post("../cek.php", { noijazah: result.code} );
+             
+             {{-- url: "{{ url('index/training_report/cek_employee/') }}"; --}}
+             $("#textnama").val(result.code);
+             // window.location.href = url+'/'+result.code;
+             window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
+             // console.log(result.code);
+             
+              // var redirect = '../materials/cek';
+              // $.redirectPost(redirect, {materials_code: result.code});
+          }
+      };
+      console.log('camerabisa');
+      var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
+      decoder.buildSelectMenu("select");
+      decoder.play();
+      /*  Without visible select menu
+          decoder.buildSelectMenu(document.createElement('select'), 'environment|back').init(arg).play();
+      */
+      $('select').on('change', function(){
+          decoder.stop().play();
+      });
+
+      // jquery extend function
+      $.extend(
+      {
+          redirectPost: function(location, args)
+          {
+              var form = '';
+              $.each( args, function( key, value ) {
+                  form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+              });
+              $('<form action="'+location+'" method="POST">'+form+'</form>').appendTo('body').submit();
+          }
+      });
+
+  </script>
 @endsection

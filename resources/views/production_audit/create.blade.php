@@ -38,30 +38,20 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('index/production_audit/store/'.$id)}}" enctype="multipart/form-data">
+    <form role="form" method="post" action="{{url('index/production_audit/store/'.$id.'/'.$product.'/'.$proses)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required id="product">
-                <option value=""></option>
-                @foreach($product as $product)
-                  <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-                @endforeach
-              </select>
+              <input type="text" name="product" id="product" class="form-control" value="{{ $product }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Proses<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="proses" style="width: 100%;" data-placeholder="Choose a Proses..." required id="proses">
-                <option value=""></option>
-                @foreach($proses as $proses)
-                  <option value="{{ $proses->proses }}">{{ $proses->product }} - {{ $proses->proses }}</option>
-                @endforeach
-              </select>
+              <input type="text" name="proses" id="proses" class="form-control" value="{{ $proses }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right" id="form_point_check">
@@ -117,7 +107,7 @@
         </div>
           <div class="col-sm-4 col-sm-offset-5">
             <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('index/production_audit/index/'.$id) }}">Cancel</a>
+              <a class="btn btn-danger" href="{{ url('index/production_audit/index/'.$id.'/'.$product.'/'.$proses) }}">Cancel</a>
             </div>
             <div class="btn-group">
               <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
@@ -131,19 +121,19 @@
   @section('scripts')
   
   <script type="text/javascript">
-        $("#form_point_check").hide();
-        $("#proses").change(function(){
-          $("#form_point_check").show();
-          console.log($(this).val());
-          console.log($("#product").val());
+        // $("#form_point_check").hide();
+        // $("#proses").change(function(){
+          // $("#form_point_check").show();
+          // console.log($(this).val());
+          // console.log($("#product").val());
             $.ajax({
-                url: "{{ route('admin.cities.get_by_country') }}?proses=" + $(this).val()+"&product="+ $("#product").val(),
+                url: "{{ route('admin.cities.get_by_country') }}?proses=" + $("#proses").val()+"&product="+ $("#product").val(),
                 method: 'GET',
                 success: function(data) {
                     $('#point_check').html(data.html);
                 }
             });
-        });
+        // });
     </script>
   <script>
     

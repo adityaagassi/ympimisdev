@@ -41,15 +41,21 @@ class ProductionAuditController extends Controller
       $this->middleware('auth');
     }
 
-    function index($id)
+    function index($id,$productproduct,$prosesproses)
     {
         $activityList = ActivityList::find($id);
-    	$productionAudit = ProductionAudit::where('activity_list_id','0')
-            ->get();
-
-        $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
-        $product2 = DB::select($queryProduct);
+    	$productionAudit = ProductionAudit::where('activity_list_id',$id)
+                ->whereHas('point_check_audit', function ($query) use($productproduct) {
+                        $query->where('product','=', $productproduct);
+                    })
+                ->whereHas('point_check_audit', function ($query2) use($prosesproses) {
+                        $query2->where('proses','=', $prosesproses);
+                    })
+                ->get();
+        // var_dump($productionAudit);
+        // $queryProduct = "select * from origin_groups";
+        // $product = DB::select($queryProduct);
+        // $product2 = DB::select($queryProduct);
 
     	$activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -57,13 +63,9 @@ class ProductionAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         // var_dump($productionAudit);
 
-        $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
-        $proses = DB::select($queryProses);
-
     	$data = array('production_audit' => $productionAudit,
-                      'product' => $product,
-                      'proses' => $proses,
-                      'product2' => $product2,
+                      'product' => $productproduct,
+                      'proses' => $prosesproses,
     				  'departments' => $departments,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -73,53 +75,63 @@ class ProductionAuditController extends Controller
     		)->with('page', 'Production Audit');
     }
 
-    function filter_audit(Request $request,$id)
+    function details($id)
     {
-        $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
-        $product2 = DB::select($queryProduct);
-
         $activityList = ActivityList::find($id);
-        // var_dump($request->get('product'));
-        // var_dump($request->get('date'));
-        if($request->get('product') != null && strlen($request->get('date')) != null){
-            $origin_group = $request->get('product');
+        $queryProductionAudit = "select DISTINCT(proses), product from point_check_audits where activity_list_id='".$id."'";
+        $productionAudit = DB::select($queryProductionAudit);
+
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $id_departments = $activityList->departments->id;
+        $activity_alias = $activityList->activity_alias;
+
+        $data = array('production_audit' => $productionAudit,
+                      // 'product' => $product,
+                      // 'proses' => $proses,
+                      // 'product2' => $product2,
+                      'departments' => $departments,
+                      'activity_name' => $activity_name,
+                      'activity_alias' => $activity_alias,
+                      'id' => $id,
+                      'id_departments' => $id_departments);
+        return view('production_audit.details', $data
+            )->with('page', 'Production Audit');
+    }
+
+    function filter_audit(Request $request,$id,$product,$proses)
+    {
+        $activityList = ActivityList::find($id);
+
+        if(strlen($request->get('date')) != null){
             $date = date('Y-m-d', strtotime($request->get('date')));
             $productionAudit = ProductionAudit::where('activity_list_id',$id)
-                ->whereHas('point_check_audit', function ($query) use($origin_group) {
-                        $query->where('product','=', $origin_group);
+                ->whereHas('point_check_audit', function ($query) use($product) {
+                        $query->where('product','=', $product);
+                    })
+                ->whereHas('point_check_audit', function ($query2) use($proses) {
+                        $query2->where('proses','=', $proses);
                     })
                 ->where('date',$date)
-                ->get();
-        }
-        elseif (strlen($request->get('date')) > null && $request->get('product') == null) {
-            $date = date('Y-m-d', strtotime($request->get('date')));
-            $productionAudit = ProductionAudit::where('activity_list_id',$id)
-                ->where('date',$date)
-                ->get();
-        }
-        elseif($request->get('product') > null && strlen($request->get('date')) == null){
-            $origin_group = $request->get('product');
-            $productionAudit = ProductionAudit::where('activity_list_id',$id)
-                ->whereHas('point_check_audit', function ($query) use($origin_group) {
-                        $query->where('product','=', $origin_group);
-                    })
                 ->get();
         }
         else{
             $productionAudit = ProductionAudit::where('activity_list_id',$id)
-            ->get();
+                ->whereHas('point_check_audit', function ($query) use($product) {
+                        $query->where('product','=', $product);
+                    })
+                ->whereHas('point_check_audit', function ($query2) use($proses) {
+                        $query2->where('proses','=', $proses);
+                    })
+                ->get();
         }
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
-        $proses = DB::select($queryProses);
-
-        $data = array('product' => $product,
-                      'product2' => $product2,
+        $data = array(
+                      'product' => $product,
                       'proses' => $proses,
                       'production_audit' => $productionAudit,
                       'departments' => $departments,
@@ -149,18 +161,18 @@ class ProductionAuditController extends Controller
             )->with('page', 'Production Audit');
     }
 
-    public function destroy($id,$audit_id)
+    public function destroy($id,$audit_id,$product,$proses)
     {
       $production_audit = ProductionAudit::find($audit_id);
       $production_audit->delete();
 
-      return redirect('/index/production_audit/index/'.$id)
+      return redirect('/index/production_audit/index/'.$id.'/'.$product.'/'.$proses)
         ->with('status', 'Audit has been deleted.')
         ->with('page', 'Production Audit');
         //
     }
 
-    function create($id)
+    function create($id,$product,$proses)
     {
         $activityList = ActivityList::find($id);
 
@@ -176,14 +188,14 @@ class ProductionAuditController extends Controller
         $leaderForeman = DB::select($queryLeaderForeman);
         $leaderForeman2 = DB::select($queryLeaderForeman);
 
-        $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
+        // $queryProduct = "select * from origin_groups";
+        // $product = DB::select($queryProduct);
 
         $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $pic = DB::select($querypic);
 
-        $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
-        $proses = DB::select($queryProses);
+        // $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
+        // $proses = DB::select($queryProses);
         $data = array('product' => $product,
                       'leaderForeman' => $leaderForeman,
                       'pic' => $pic,
@@ -196,7 +208,7 @@ class ProductionAuditController extends Controller
             )->with('page', 'Production Audit');
     }
 
-    function store(Request $request,$id)
+    function store(Request $request,$id,$product,$proses)
     {
             $id_user = Auth::id();
             $tujuan_upload = 'data_file';
@@ -224,11 +236,11 @@ class ProductionAuditController extends Controller
             ]);
         
 
-        return redirect('index/production_audit/index/'.$id)
+        return redirect('index/production_audit/index/'.$id.'/'.$product.'/'.$proses)
             ->with('page', 'Production Audit')->with('status', 'New Audit has been created.');
     }
 
-    function edit($id,$audit_id)
+    function edit($id,$audit_id,$product,$proses)
     {
         $activityList = ActivityList::find($id);
 
@@ -246,14 +258,8 @@ class ProductionAuditController extends Controller
 
         $productionAudit = ProductionAudit::find($audit_id);
 
-        $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
-
         $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $pic = DB::select($querypic);
-
-        $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
-        $proses = DB::select($queryProses);
 
         $queryPointCheck = "SELECT * FROM `point_check_audits` where product = '".$productionAudit->point_check_audit->product."' and proses = '".$productionAudit->point_check_audit->proses."'";
         $pointcheck = DB::select($queryPointCheck);
@@ -272,7 +278,7 @@ class ProductionAuditController extends Controller
             )->with('page', 'Production Audit');
     }
 
-    function update(Request $request,$id,$audit_id)
+    function update(Request $request,$id,$audit_id,$product,$proses)
     {
         try{
             $tujuan_upload = 'data_file';
@@ -304,7 +310,7 @@ class ProductionAuditController extends Controller
                 $production_audit->auditor = $request->get('auditor');
                 $production_audit->save();
             }
-            return redirect('/index/production_audit/index/'.$id)->with('status', 'Audit data has been updated.')->with('page', 'Production Audit');
+            return redirect('/index/production_audit/index/'.$id.'/'.$product.'/'.$proses)->with('status', 'Audit data has been updated.')->with('page', 'Production Audit');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -353,7 +359,7 @@ class ProductionAuditController extends Controller
                     join employees as employees2 on employees2.employee_id = production_audits.auditor
                     where production_audits.date='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
-                    and point_check_audits.proses = '".$proses."'";
+                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
             $productionAudit = DB::select($queryProductionAudit);
         }
         $activity_name = $activityList->activity_name;
@@ -368,7 +374,7 @@ class ProductionAuditController extends Controller
             $foreman = $productAudit->foreman;
         }
         if($productionAudit == null){
-            return redirect('/index/production_audit/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
         }else{
             $data = array(
                           'proses' => $proses,

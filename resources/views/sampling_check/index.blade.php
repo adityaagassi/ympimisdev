@@ -138,6 +138,7 @@ table.table-bordered > tfoot > tr > th{
 				                <th>No. Seri / Part</th>
 				                <th>Jumlah Cek</th>
 				                <th>Leader</th>
+				                <th>Foreman</th>
 				                <th>Details</th>
 				                <th>Action</th>
 				              </tr>
@@ -154,6 +155,7 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$sampling_check->no_seri_part}}</td>
 				                <td>{{$sampling_check->jumlah_cek}}</td>
 				                <td>{{$sampling_check->leader}}</td>
+				                <td>{{$sampling_check->foreman}}</td>
 				                <td>
 				                  <center>
 				                    <a class="btn btn-primary btn-xs" href="{{url('index/sampling_check/details/'.$sampling_check->id)}}">Details</a>
@@ -173,6 +175,7 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				                <th></th>
 				                <th></th>
 				                <th></th>
 				                <th></th>

@@ -16,6 +16,7 @@ use Response;
 use DataTables;
 use Excel;
 
+
 class TrainingReportController extends Controller
 {
     public function __construct()
@@ -519,5 +520,31 @@ class TrainingReportController extends Controller
             return view('training_report.print', $data
                 )->with('page', 'Training Report');
         }
+    }
+
+    function scan_employee($id)
+    {
+            $data = array(
+                          'id' => $id);
+            return view('training_report.scan_employee', $data
+                )->with('page', 'Training Report');
+    }
+
+    function cek_employee($nik)
+    {
+        // $emp = DB::table('employees')->where('employees.employee_id',$nik)->paginate(1);
+        // $data = array('employees' => $emp);
+        // return view('materials.cek', $data);
+        $id_user = Auth::id();
+
+        TrainingParticipant::create([
+            'training_id' => '2',
+            'participant_name' => $nik,
+            'created_by' => $id_user
+        ]);
+        
+
+        return redirect('index/training_report/details/2/view')
+            ->with('page', 'Training Report')->with('status', 'New Participant has been created.');
     }
 }
