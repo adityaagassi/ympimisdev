@@ -112,7 +112,7 @@ class QcReportController extends Controller
 
     public function create()
     {
-        $managers = Employee::select('employees.employee_id,','employees.name','promotion_logs.position','mutation_logs.department')
+        $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
         ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
         ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
         ->whereNull('promotion_logs.valid_to')
