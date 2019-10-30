@@ -257,12 +257,12 @@ table.table-bordered > tfoot > tr > th{
             },
             series: [{
                 name: 'Good',
-                color: '#00d912',
+                color: '#1faa00',
                 data: jumlahgood
             }, {
                 name: 'Not Good',
                 data: jumlahnotgood,
-                color : '#ff4f4f'
+                color : '#d50000'
             }
             ]
           })
