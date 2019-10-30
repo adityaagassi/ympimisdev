@@ -497,7 +497,7 @@ class MiddleProcessController extends Controller
 			where operator_id = '".$nik['employee_id']."'
 			and date(selesai_start_time) = '".$tgl."'");
 
-		$good = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, e.`name` as op_kensa, quantity from middle_logs l
+		$good = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik['employee_id']."'

@@ -613,12 +613,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'OP Efficiency (%)'
-						},
-						labels: {
-							enabled: false
-						}
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -628,7 +623,7 @@
 						labels: {
 							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -644,9 +639,9 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,
@@ -681,19 +676,7 @@
 					if(result.rate[i].shift == 's1'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								var name_temp = result.rate[i].name.split(" ");
-								var in_name = '';
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									if(name_temp[1].length > 7){
-										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-									}else{
-										in_name = result.rate[i].name;
-									}
-								}
-
-								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -726,12 +709,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'OP Efficiency (%)'
-						},
-						labels: {
-							enabled: false
-						}
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -739,9 +717,9 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -757,16 +735,24 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.date, event.point.category);
+
+									}
+								}
+							},
 						}
 					},
 					series: [{
@@ -786,19 +772,7 @@
 					if(result.rate[i].shift == 's2'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								var name_temp = result.rate[i].name.split(" ");
-								var in_name = '';
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									if(name_temp[1].length > 7){
-										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-									}else{
-										in_name = result.rate[i].name;
-									}
-								}
-
-								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -831,12 +805,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'OP Efficiency (%)'
-						},
-						labels: {
-							enabled: false
-						}
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -844,9 +813,9 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -871,7 +840,15 @@
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.date, event.point.category);
+
+									}
+								}
+							},
 						}
 					},
 					series: [{
@@ -937,7 +914,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				labels: {
 					rotation: -45,
 					style: {
-						fontSize: '1vw'
+						fontSize: '13px'
 					}
 				},
 			},
@@ -1047,7 +1024,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				labels: {
 					rotation: -45,
 					style: {
-						fontSize: '1vw'
+						fontSize: '13px'
 					}
 				},
 			},
