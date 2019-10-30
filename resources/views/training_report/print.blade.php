@@ -154,7 +154,7 @@ p {
 		<tr>
 			<td></td>
 		@foreach($trainingPicture as $trainingPicture)
-			<td class="head" width="100px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
+			<td class="head" width="250px"><img width="100px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}"></td>
 		@endforeach
 			<td></td>
 		</tr>
