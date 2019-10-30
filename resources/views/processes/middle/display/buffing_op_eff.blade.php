@@ -1,6 +1,51 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
+	.morecontent span {
+		display: none;
+	}
+	.morelink {
+		display: block;
+	}
+
+	thead>tr>th{
+		text-align:center;
+		overflow:hidden;
+		padding: 3px;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+		vertical-align: middle;
+		text-align: center;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+		text-align: center;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
 	.content{
 		color: white;
 		font-weight: bold;
@@ -56,6 +101,90 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- start modal -->
+	<div class="modal fade" id="myModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Operator  Efficiency Details</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
+							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Finish Buffing</th>
+										<th>Material Number</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-log-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-6">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
+							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Finish Buffing</th>
+										<th>Material Number</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-ng-log-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-8">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Buffing Result</b></h5>
+							<table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Material Number</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>Akan</th>
+										<th>Sedang</th>
+										<th>Selesai</th>
+										<th>Standart time</th>
+										<th>Actual time</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="data-log-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-4">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Resume</b></h5>
+							<br><h5 class="modal-title">NG Rate</h5>
+							<h5 class="modal-title" id="ng_rate"></h5>
+							<br><h5 class="modal-title">Posh Rate</h5>
+							<h5 class="modal-title" id="posh_rate"></h5>
+							<br><h5 class="modal-title">OP Efficiency</h5>
+							<h5 class="modal-title" id="op_eff"></h5>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end modal -->
+
 </section>
 @endsection
 @section('scripts')
@@ -72,7 +201,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 
 	});
 
@@ -307,6 +436,132 @@
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
 
+	function showDetail(tgl, nama) {
+		var data = {
+			tgl:tgl,
+			nama:nama,
+		}
+
+		$('#myModal').modal('show');
+		$('#data-log-body').append().empty();
+		$('#middle-log-body').append().empty();
+		$('#middle-ng-log-body').append().empty();
+		$('#ng_rate').append().empty();
+		$('#posh_rate').append().empty();
+		$('#op_eff').append().empty();
+		$('#judul').append().empty();
+
+
+		$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+				$('#judul').append('<b>'+nama+' on '+tgl+'</b>');
+
+				//Middle log
+				var total_good = 0;
+				var body = '';
+				for (var i = 0; i < result.good.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.good[i].buffing_time+'</td>';
+					body += '<td>'+result.good[i].material_number+'</td>';
+					body += '<td>'+result.good[i].model+'</td>';
+					body += '<td>'+result.good[i].key+'</td>';
+					body += '<td>'+result.good[i].op_kensa+'</td>';
+					body += '<td>'+result.good[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_good += parseInt(result.good[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td  colspan="5" style="text-align: center;">Total</td>';
+				body += '<td>'+total_good+'</td>';
+				body += '</tr>';
+				$('#middle-log-body').append(body);
+
+
+
+				//Middle log
+				var total_ng = 0;
+				var body = '';
+				for (var i = 0; i < result.ng.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.ng[i].buffing_time+'</td>';
+					body += '<td>'+result.ng[i].material_number+'</td>';
+					body += '<td>'+result.ng[i].model+'</td>';
+					body += '<td>'+result.ng[i].key+'</td>';
+					body += '<td>'+result.ng[i].op_kensa+'</td>';
+					body += '<td>'+result.ng[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_ng += parseInt(result.ng[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td colspan="5" style="text-align: center;">Total</td>';
+				body += '<td>'+total_ng+'</td>';
+				body += '</tr>';
+				$('#middle-ng-log-body').append(body);
+
+
+				//Data log
+				var total_perolehan = 0;
+				var total_std = 0;
+				var total_act = 0;
+
+				var body = '';
+				for (var i = 0; i < result.data_log.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.data_log[i].material_number+'</td>';
+					body += '<td>'+result.data_log[i].model+'</td>';
+					body += '<td>'+result.data_log[i].key+'</td>';
+					body += '<td>'+result.data_log[i].akan+'</td>';
+					body += '<td>'+result.data_log[i].sedang+'</td>';
+					body += '<td>'+result.data_log[i].selesai+'</td>';
+					body += '<td>'+result.data_log[i].std+'</td>';
+					body += '<td>'+result.data_log[i].act+'</td>';
+					body += '<td>'+result.data_log[i].material_qty+'</td>';
+					body += '</tr>';
+					total_perolehan += parseInt(result.data_log[i].material_qty);
+					total_std += parseFloat(result.data_log[i].std);
+					total_act += parseFloat(result.data_log[i].act);
+				}
+				body += '<tr>';
+				body += '<td colspan="6" style="text-align: center;">Total</td>';
+				body += '<td>'+total_std.toFixed(2)+'</td>';
+				body += '<td>'+total_act.toFixed(2)+'</td>';
+				body += '<td>'+total_perolehan+'</td>';
+				body += '</tr>';
+				$('#data-log-body').append(body);
+
+
+				//Resume
+				var ng_rate = total_ng / total_good * 100;
+				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Good</sub> x 100%';
+				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_good +'</sub> x 100%';
+				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
+				$('#ng_rate').append(text_ng_rate);
+
+				var posh_rate = ((total_good - total_ng) / total_good) * 100;
+				var text_posh_rate = '= <sup>(Total Good - Total NG)</sup>/<sub>Total Good</sub> x 100%';
+				text_posh_rate += '<br>= <sup>('+ total_good + ' - ' + total_ng +')</sup>/<sub>'+ total_good +'</sub> x 100%';
+				text_posh_rate += '<br>= <b>'+ posh_rate.toFixed(2) +'%</b>';
+				$('#posh_rate').append(text_posh_rate);
+
+				var op_eff = posh_rate * (total_std / total_act);
+				var text_op_eff = '= <sup>Total Standart time</sup>/<sub>Total Actual time</sub> x Posh Rate';
+				text_op_eff += '<br>= <sup>'+ total_std.toFixed(2) +'</sup>/<sub>'+ total_act.toFixed(2) +'</sub> x '+ posh_rate.toFixed(2) +'%';
+				text_op_eff += '<br>= <b>'+ op_eff.toFixed(2) +'%</b>';
+				$('#op_eff').append(text_op_eff);
+
+
+
+
+
+			}
+
+		});
+
+	}
+
 
 	function fillChart() {
 		var tanggal = $('#tanggal').val();
@@ -325,20 +580,7 @@
 					if(result.rate[i].shift == 's3'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-
-								var name_temp = result.rate[i].name.split(" ");
-								var in_name = '';
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-									in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									if(name_temp[1].length > 7){
-										in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-									}else{
-										in_name = result.rate[i].name;
-									}
-								}
-
-								eff.push([in_name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -384,7 +626,7 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
 								fontSize: '1vw'
 							}
@@ -411,7 +653,15 @@
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.date, event.point.category);
+
+									}
+								}
+							},
 						}
 					},
 					series: [{
@@ -649,7 +899,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 			for(var j = 0; j < result.emp_name.length; j++){
 				if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 					var name_temp = result.emp_name[j].name.split(" ");
-					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
 						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 					}else{
 						if(name_temp[1].length > 7){
@@ -685,7 +935,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				gridLineWidth: 1,
 				gridLineColor: 'RGB(204,255,255)',
 				labels: {
-					rotation: -25,
+					rotation: -45,
 					style: {
 						fontSize: '1vw'
 					}
@@ -742,7 +992,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 			for(var j = 0; j < result.emp_name.length; j++){
 				if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
 					var name_temp = result.emp_name[j].name.split(" ");
-					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
 						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 					}else{
 						if(name_temp[1].length > 7){
@@ -795,7 +1045,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				gridLineWidth: 1,
 				gridLineColor: 'RGB(204,255,255)',
 				labels: {
-					rotation: -25,
+					rotation: -45,
 					style: {
 						fontSize: '1vw'
 					}
