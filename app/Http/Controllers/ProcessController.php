@@ -1078,7 +1078,7 @@ class ProcessController extends Controller
 	}elseif($id =="YTS2"){
 		
 		$query = "SELECT a.*,users.`name` from (
-		SELECT serial_number,model,log_processes.created_at,log_processes.id from log_processes 	WHERE process_code ='2' and DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."	' and model REGEXP 'YAS|YTS' 
+		SELECT serial_number,model,log_processes.created_at,log_processes.id from log_processes 	WHERE process_code ='2' and DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' 
 		) a LEFT JOIN (
 		SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark from log_processes 	WHERE process_code ='1' and model REGEXP 'YAS|YTS' 
 		) b on a.serial_number = b.serial_number
