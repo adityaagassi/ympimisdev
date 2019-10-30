@@ -71,7 +71,12 @@
 					<td rowspan="2">{{$part->no_invoice}}</td>
 					<td rowspan="2">{{$part->lot_qty}}</td>
 					<td rowspan="2">{{$part->sample_qty}}</td>
-					<td rowspan="2" width="80"></td>
+					<td rowspan="2" width="80">
+						<?= $part->detail_problem ?>
+						<!-- <img src="http://172.17.128.87/miraidev/public/kcfinderimages/files/foto.png"> -->
+						<!-- <img src="{{ base_path() }}/public/kcfinderimages/files/yamaha3.png" /> -->
+						<!-- <img src="{{ public_path('/kcfinderimages/files/yamaha3.png') }}"> -->
+					</td>
 					<td rowspan="2">{{$part->defect_qty}}</td>
 					<td rowspan="2">{{$part->defect_presentase}}</td>
 				<?php } else { ?>

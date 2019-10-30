@@ -210,7 +210,6 @@ table.table-bordered > tfoot > tr > th{
 				}
 			});
 		});
-
 	});
 	</script>
 

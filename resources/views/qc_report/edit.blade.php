@@ -207,7 +207,7 @@ table.table-bordered > tfoot > tr > th{
           </div>
           <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
+            <input type="text" class="form-control" name="cpar_no" placeholder="Masukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
         </div>
 

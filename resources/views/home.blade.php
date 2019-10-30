@@ -203,7 +203,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                <i class="fa fa-caret-right"></i> Graph
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
                             </a>
                         </td>
                     </tr>
@@ -217,6 +217,15 @@
                         <th>Raw Material<br/>素材</th>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="#">
+                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (?)
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">

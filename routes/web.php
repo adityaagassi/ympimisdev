@@ -541,6 +541,12 @@ Route::group(['nav' => 'M18', 'middleware' => 'permission'], function(){
 	Route::get('destroy/safety_stock', 'InitialProcessController@destroy');
 });
 
+Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
+	Route::get('index/material/storage', 'RawMaterialController@indexStorage');
+	Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
+});
+Route::get('index/material/monitoring', 'InitialProcessController@indexMonitoring');
+
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
 	Route::get('create/code_generator', 'CodeGeneratorController@create');
@@ -1250,6 +1256,7 @@ Route::get('index/qc_car', 'QcCarController@index');
 Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
 Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
 Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
+Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
