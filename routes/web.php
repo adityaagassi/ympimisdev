@@ -1226,6 +1226,9 @@ Route::get('index/sampling_check/destroy/{id}/{sampling_check_id}', 'SamplingChe
 Route::get('index/sampling_check/edit/{id}/{sampling_check_id}', 'SamplingCheckController@edit');
 Route::post('index/sampling_check/update/{id}/{sampling_check_id}', 'SamplingCheckController@update');
 Route::get('index/sampling_check/details/{sampling_check_id}', 'SamplingCheckController@details');
+Route::get('index/sampling_check/createdetails/{sampling_check_id}', 'SamplingCheckController@createdetails');
+Route::post('index/sampling_check/storedetails/{sampling_check_id}', 'SamplingCheckController@storedetails');
+Route::get('index/sampling_check/destroydetails/{sampling_id}/{sampling_check_id}', 'SamplingCheckController@destroydetails');
 
 //CPAR
 Route::get('index/qc_report', 'QcReportController@index');

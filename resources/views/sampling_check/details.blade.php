@@ -158,6 +158,7 @@ table.table-bordered > tfoot > tr > th{
 				      <div class="box">
 				      	<div class="box-header">
 							<h3 class="box-title">Sampling Check Details <span class="text-purple"></span></h3>
+							<a class="btn btn-primary pull-right" href="{{ url('index/sampling_check/createdetails/'.$sampling_id) }}">Create Details</a>
 							{{-- <a class="btn btn-xs btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}" target="_blank">Scan Employee</a>
 							<div class="panel-body text-center" >
 				              <canvas></canvas>
@@ -193,17 +194,17 @@ table.table-bordered > tfoot > tr > th{
 				            <tbody>
 				              @foreach($sampling_check_details as $sampling_check_details)
 				              <tr>
-				                <td>{{ $sampling_check_details->point_check }}</td>
-				                <td>{{ $sampling_check_details->hasil_check }}</td>
-				                <td>{{ $sampling_check_details->picture_check }}</td>
+				                <td><?php echo $sampling_check_details->point_check ?></td>
+				                <td><?php echo $sampling_check_details->hasil_check ?></td>
+				                <td><img width="200px" src="{{ url('/data_file/sampling_check/'.$sampling_check_details->picture_check) }}"></td>
 				                <td>{{ $sampling_check_details->pic_check }}</td>
 				                <td>{{ $sampling_check_details->sampling_by }}</td>
 				                <td>
 				                  <center>
-				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/sampling_check_details/editsamplingcheckdetails") }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
+				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/sampling_check/editdetails") }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 						               <i class="fa fa-edit"></i>
 						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/sampling_check_details/destroysamplingcheckdetails") }}', '{{ $sampling_check_details->point_check }}','{{ $id }}', '{{ $sampling_check_details->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '{{ $sampling_check_details->point_check }} - {{ $sampling_check_details->hasil_check }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
@@ -244,23 +245,6 @@ table.table-bordered > tfoot > tr > th{
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal modal-danger fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-        </div>
-        <div class="modal-body">
-          Are you sure delete?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <a id="modalDeleteButton2" href="#" type="button" class="btn btn-danger">Delete</a>
         </div>
       </div>
     </div>
@@ -501,9 +485,9 @@ table.table-bordered > tfoot > tr > th{
     //     'autoWidth'   : false
     //   })
     // })
-    function deleteConfirmation(url, name, id, picture_id) {
+    function deleteConfirmation(url, name, id, sampling_check_id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+sampling_check_id);
     }
   </script>
   <script language="JavaScript">

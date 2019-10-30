@@ -22,7 +22,7 @@ class SamplingCheckController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$samplingCheck = SamplingCheck::where('activity_list_id','0')
+    	$samplingCheck = SamplingCheck::where('activity_list_id',$id)
             ->get();
 
 
@@ -289,5 +289,89 @@ class SamplingCheckController extends Controller
                       'id_departments' => $id_departments);
         return view('sampling_check.details', $data
             )->with('page', 'Sampling Check Details');
+    }
+
+    public function destroydetails($id,$sampling_check_details_id)
+    {
+      $SamplingCheckDetail = SamplingCheckDetail::find($sampling_check_details_id);
+      $SamplingCheckDetail->delete();
+
+      return redirect('/index/sampling_check/details/'.$id)
+        ->with('status', 'Sampling Check Details has been deleted.')
+        ->with('page', 'Sampling Check Details');
+        //
+    }
+
+    function createdetails($sampling_id)
+    {
+        $samplingCheck = SamplingCheck::find($sampling_id);
+        // var_dump($samplingCheck);
+        // $activityList = ActivityList::find($id);
+
+        $activity_name = $samplingCheck->activity_lists->activity_name;
+        $departments = $samplingCheck->activity_lists->departments->department_name;
+        $id_departments = $samplingCheck->activity_lists->departments->id;
+        $activity_alias = $samplingCheck->activity_lists->activity_alias;
+
+        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
+        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
+
+        $leaderForeman = DB::select($queryLeaderForeman);
+        $foreman = DB::select($queryForeman);
+
+        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $section = DB::select($querySection);
+
+        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $subsection = DB::select($querySubSection);
+
+        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $operator = DB::select($queryOperator);
+
+        $data = array(
+                      'operator' => $operator,
+                      'samplingCheck' => $samplingCheck,
+                      'leaderForeman' => $leaderForeman,
+                      'foreman' => $foreman,
+                      'departments' => $departments,
+                      'section' => $section,
+                      'subsection' => $subsection,
+                      'activity_name' => $activity_name,
+                      'sampling_id' => $sampling_id);
+        return view('sampling_check.createdetails', $data
+            )->with('page', 'Sampling Check');
+    }
+
+    function storedetails(Request $request,$sampling_id)
+    {
+            // $month = date("m",strtotime($request->input('date')));
+            $tujuan_upload = 'data_file/sampling_check';
+            $date = date('Y-m-d');
+
+            $file = $request->file('file');
+            $nama_file = $file->getClientOriginalName();
+            $file->getClientOriginalName();
+            $file->move($tujuan_upload,$file->getClientOriginalName());
+
+            $id_user = Auth::id();
+            SamplingCheckDetail::create([
+                'sampling_check_id' => $sampling_id,
+                'point_check' => $request->input('point_check'),
+                'hasil_check' => $request->input('hasil_check'),
+                'picture_check' => $nama_file,
+                'pic_check' => $request->input('pic_check'),
+                'sampling_by' => $request->input('sampling_by'),
+                'created_by' => $id_user
+            ]);
+        
+
+        return redirect('index/sampling_check/details/'.$sampling_id)
+            ->with('page', 'Sampling Check')->with('status', 'New Sampling Check Details has been created.');
     }
 }
