@@ -112,6 +112,23 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
+						{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
+
+						<div class="col-md-12" style="margin-bottom: 20px;">
+							<div class="col-md-4">
+								<h5 class="modal-title">NG Rate</h5>
+								<h5 class="modal-title" id="ng_rate"></h5>
+							</div>
+							<div class="col-md-4">
+								<h5 class="modal-title">Posh Rate</h5>
+								<h5 class="modal-title" id="posh_rate"></h5>
+							</div>
+							<div class="col-md-4">
+								<h5 class="modal-title">OP Efficiency</h5>
+								<h5 class="modal-title" id="op_eff"></h5>
+							</div>
+						</div>
+
 						<div class="col-md-6">
 							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
 							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
@@ -146,7 +163,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="col-md-8">
+						<div class="col-md-12">
 							<h5 class="modal-title" style="text-transform: uppercase;"><b>Buffing Result</b></h5>
 							<table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
@@ -166,15 +183,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="col-md-4">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Resume</b></h5>
-							<br><h5 class="modal-title">NG Rate</h5>
-							<h5 class="modal-title" id="ng_rate"></h5>
-							<br><h5 class="modal-title">Posh Rate</h5>
-							<h5 class="modal-title" id="posh_rate"></h5>
-							<br><h5 class="modal-title">OP Efficiency</h5>
-							<h5 class="modal-title" id="op_eff"></h5>
-						</div>
+						
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -189,6 +198,7 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
@@ -201,7 +211,7 @@
 
 	jQuery(document).ready(function(){
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 10000);
 
 	});
 
@@ -455,7 +465,7 @@
 		$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
 			if(result.status){
 
-				$('#judul').append('<b>'+nama+' on '+tgl+'</b>');
+				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
 
 				//Middle log
 				var total_good = 0;
@@ -552,10 +562,6 @@
 				text_op_eff += '<br>= <b>'+ op_eff.toFixed(2) +'%</b>';
 				$('#op_eff').append(text_op_eff);
 
-
-
-
-
 			}
 
 		});
@@ -580,7 +586,19 @@
 					if(result.rate[i].shift == 's3'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+
+								var name_temp = result.rate[i].name.split(" ");
+								var xAxis = '';
+								xAxis += result.rate[i].operator_id + ' - ';
+
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+
+								}
+
+								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -676,7 +694,18 @@
 					if(result.rate[i].shift == 's1'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								var name_temp = result.rate[i].name.split(" ");
+								var xAxis = '';
+								xAxis += result.rate[i].operator_id + ' - ';
+
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+
+								}
+
+								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -772,7 +801,18 @@
 					if(result.rate[i].shift == 's2'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-								eff.push([result.rate[i].name, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								var name_temp = result.rate[i].name.split(" ");
+								var xAxis = '';
+								xAxis += result.rate[i].operator_id + ' - ';
+
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+								}else{
+									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+
+								}
+
+								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
 							}
 						}
 					}					
@@ -893,6 +933,9 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 
 
 		var chart = Highcharts.chart('container2', {
+			chart: {
+				animation: false
+			},
 			title: {
 				text: 'Operators Result on '+ result.date,
 				style: {
@@ -987,6 +1030,9 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 
 
 		var chart = Highcharts.chart('container3', {
+			chart: {
+				animation: false
+			},
 			title: {
 				text: 'Operators Working time on '+ result.date,
 				style: {

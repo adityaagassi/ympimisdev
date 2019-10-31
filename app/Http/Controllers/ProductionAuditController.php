@@ -133,7 +133,7 @@ class ProductionAuditController extends Controller
                 ->get();
         }
 
-        $pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)->where('product',$id)->where('proses',$prosesproses)->get();
+        $pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)->where('product',$product)->where('proses',$proses)->get();
 
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -609,12 +609,14 @@ class ProductionAuditController extends Controller
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
           $productionAudit = DB::select($queryProductionAudit);
-          
+
+
           if($productionAudit != null){
               Mail::to("mokhamadkhamdankhabibi@gmail.com")->send(new SendEmail($productionAudit, 'audit'));
+              return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('status', 'Your E-mail has been sent.')->with('page', 'Production Audit');
           }
-          echo "<script>
-                alert('Your E-Mail has been sent.');
-                window.close();</script>";
+          else{
+            return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data tidak tersedia.')->with('page', 'Production Audit');
+          }
       }
 }

@@ -485,34 +485,34 @@ class MiddleProcessController extends Controller
 
 	public function fetchBuffingOpEffDetail(Request $request){
 		$tgl = $request->get('tgl');
-		$name = $request->get('nama');
+		$nik = (explode(" - ",$request->get('nama')));
 
-		$nik =  Employee::where('name','like', '%'.$name.'%')
-		->select('employee_id')
-		->first();
+		$nama = Employee::where('employee_id','=',$nik[0])->select('name')->first();
 
 		$data_log = db::connection('digital_kanban')->select("select d.material_number, m.model, m.`key`, TIME(akan_start_time) as akan, TIME(sedang_start_time) as sedang, TIME(selesai_start_time) as selesai, material_qty, ROUND(TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time)/60,2) as act, ROUND((s.time * material_qty)/60,2) as std from data_log d
 			left join materials m on d.material_number = m.material_number
 			left join standart_times s on d.material_number = s.material_number
-			where operator_id = '".$nik['employee_id']."'
-			and date(selesai_start_time) = '".$tgl."'");
+			where operator_id = '".$nik[0]."'
+			and date(selesai_start_time) = '".$tgl."' order by selesai_start_time asc");
 
 		$good = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
-			where l.operator_id = '".$nik['employee_id']."'
-			and date(l.buffing_time) = '".$tgl."'");
+			where l.operator_id = '".$nik[0]."'
+			and date(l.buffing_time) = '".$tgl."'
+			order by buffing_time asc");
 
 		$ng = db::select("SELECT a.buffing_time, a.material_number, a.model, a.`key`, a.remark, concat(SPLIT_STRING(a.op_kensa, ' ', 1), ' ', SPLIT_STRING(a.op_kensa, ' ', 2)) as op_kensa, SUM(quantity) as quantity from (
 			select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from middle_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
-			where l.operator_id = '".$nik['employee_id']."'
-			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark");
+			where l.operator_id = '".$nik[0]."'
+			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark order by buffing_time asc");
 
 		$response = array(
 			'status' => true,
-			'nik' => $nik,
+			'nik' => $nik[0],
+			'nama' => $nama['name'],
 			'data_log' => $data_log,
 			'good' => $good,
 			'ng' => $ng,

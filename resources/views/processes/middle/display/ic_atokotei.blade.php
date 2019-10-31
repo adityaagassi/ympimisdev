@@ -32,7 +32,7 @@
 						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
 				</div>
-				<div class="col-xs-2" style="padding-right: 0;">
+				<div class="col-xs-2" style="padding-right: 0; color:black;">
 					<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
 						@foreach($origin_groups as $origin_group)
 						<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>

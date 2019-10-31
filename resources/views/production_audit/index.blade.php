@@ -154,7 +154,7 @@ table.table-bordered > tfoot > tr > th{
 						<div class="box-header">
 							<h3 class="box-title">Send Email to Foreman <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/production_audit/sendemail/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/production_audit/sendemail/'.$id)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12 col-md-offset-2">
 							<div class="col-md-8">
