@@ -1171,6 +1171,7 @@ Route::get('index/production_audit/show/{id}/{audit_id}', 'ProductionAuditContro
 Route::get('index/production_audit/destroy/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@destroy');
 Route::post('index/production_audit/filter_audit/{id}/{product}/{proses}', 'ProductionAuditController@filter_audit');
 Route::get('index/production_audit/create/{id}/{product}/{proses}', 'ProductionAuditController@create');
+Route::get('index/production_audit/create_by_point_check/{id}/{product}/{proses}/{point_check_id}', 'ProductionAuditController@create_by_point_check');
 Route::post('index/production_audit/store/{id}/{product}/{proses}', 'ProductionAuditController@store');
 Route::get('index/production_audit/edit/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@edit');
 Route::post('index/production_audit/update/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@update');
@@ -1266,6 +1267,10 @@ View::composer('*', function ($view) {
 	$notif = $controller->getNotif();
 	$view->with('notif', $notif);
 });
+
+//CUBEACON
+Route::get('/mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
+Route::get('/mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
