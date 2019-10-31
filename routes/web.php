@@ -349,6 +349,7 @@ Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
+	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive/{id}', 'MiddleProcessController@fetchBarrelInactive');
@@ -727,11 +728,7 @@ Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingN
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
 Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
-
-
 Route::get('index/middle/buffing_trend_op_eff', 'MiddleProcessController@indexTrendBuffingOpEff');
-
-
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff_detail', 'MiddleProcessController@fetchBuffingOpEffDetail');
@@ -925,10 +922,9 @@ Route::get('index/getKensaBensuki2', 'Pianica@getKensaBensuki2');
 Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
 
 
-//report  display spotwelding
+//detail spot welding
 Route::get('index/reportSpotWelding', 'Pianica@reportSpotWelding');
-Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
-Route::get('fech/reportSpotWeldingData', 'Pianica@reportSpotWeldingData');
+Route::get('fetch/reportSpotWeldingData', 'Pianica@reportSpotWeldingData');
 
 //end pianica
 
@@ -1244,6 +1240,11 @@ Route::get('index/sampling_check/details/{sampling_check_id}', 'SamplingCheckCon
 Route::get('index/sampling_check/createdetails/{sampling_check_id}', 'SamplingCheckController@createdetails');
 Route::post('index/sampling_check/storedetails/{sampling_check_id}', 'SamplingCheckController@storedetails');
 Route::get('index/sampling_check/destroydetails/{sampling_id}/{sampling_check_id}', 'SamplingCheckController@destroydetails');
+Route::get('index/sampling_check/createdetails/{sampling_check_id}', 'SamplingCheckController@createdetails');
+Route::post('index/sampling_check/storedetails/{sampling_check_id}', 'SamplingCheckController@storedetails');
+Route::get('index/sampling_check/editdetails/{id}/{sampling_check_details_id}', 'SamplingCheckController@editdetails');
+Route::post('index/sampling_check/updatedetails/{id}/{sampling_check_details_id}', 'SamplingCheckController@updatedetails');
+Route::get('index/sampling_check/report_sampling_check/{id}', 'SamplingCheckController@report_sampling_check');
 
 //CPAR
 Route::get('index/qc_report', 'QcReportController@index');
@@ -1287,6 +1288,7 @@ View::composer('*', function ($view) {
 //CUBEACON
 Route::get('/mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('/mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
+Route::get('/index/beacon','BeaconController@index');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

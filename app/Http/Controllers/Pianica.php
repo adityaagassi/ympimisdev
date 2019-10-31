@@ -2660,4 +2660,59 @@ public function updateopcode(Request $request){
 
 }
 
+
+//report monthly new display spotwelding
+public function reportSpotWelding()
+{
+
+    return view('pianica.reportSpotWelding')->with('page', 'Report Spot Welding');
+}
+
+public function reportSpotWeldingData(Request $request){
+        $tgl = $request->get('tgl');
+
+
+        if ($tgl !="") {
+            $to = $request->get('from');
+            $from = $request->get('tgl');            
+        }else{
+            $to = date('Y-m-d');
+            $from = date('Y-m-d',strtotime('-30 days'));
+        }
+               
+        $query = "
+        SELECT ng_name as ng, date_a, COALESCE(ng,0) as ng_all from (
+        SELECT * from (
+        SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
+        ) a CROSS join (
+        SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        header_bensukis where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+        ) as tgl_all
+         ) a
+        LEFT JOIN (
+        SELECT mesin, COUNT(ng) as ng, DATE_FORMAT(a.created_at,'%Y-%m-%d') as tgl from (
+        SELECT mesin, ng, header_bensukis.created_at FROM header_bensukis
+        LEFT JOIN detail_bensukis ON  header_bensukis.ID = detail_bensukis.id_bensuki
+        )a RIGHT JOIN (
+        SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
+        )b on a.mesin = b.ng_name where DATE_FORMAT(a.created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(a.created_at,'%Y-%m-%d') <= '".$to."' GROUP BY  mesin,DATE_FORMAT(a.created_at,'%Y-%m-%d') ORDER BY mesin asc
+        )as aa on a.ng_name = aa.mesin and a.date_a = aa.tgl
+        ";
+
+        $query2="SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        header_bensukis where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'";
+
+        $ng = DB::select($query);
+        $tgl = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'ng' => $ng,
+            'tgl' => $tgl,
+            'message' => 'Get Part Success',
+            'a' => $query
+            
+        );
+        return Response::json($response);
+    }
+
 }
