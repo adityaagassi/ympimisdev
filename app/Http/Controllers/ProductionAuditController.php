@@ -426,7 +426,11 @@ class ProductionAuditController extends Controller
             $foreman = $productAudit->foreman;
         }
         if($productionAudit == null){
-            return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script src='https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>";
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
         }else{
             $data = array(
                           'proses' => $proses,
