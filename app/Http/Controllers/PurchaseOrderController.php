@@ -121,8 +121,7 @@ class PurchaseOrderController extends Controller
 					'purchase_orders' => $purchase_orders,
 				));
 				$pdf->save(public_path() . "/purchase_orders/" . $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf");
-
-
+				
 				$path = "purchase_orders/" . $purchase_orders[0]->order_no . '-R' . $purchase_orders[0]->rev_no . ".pdf";
 				array_push($paths, 
 					[
