@@ -30,6 +30,7 @@ class SendEmail extends Mailable
      *
      * @return $this
      */
+    
     public function build()
     {
         if($this->remark == 'shipment'){
@@ -52,6 +53,12 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'confirmation_overtime'){
             return $this->from('ympimis@gmail.com')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
+        }
+        if($this->remark == 'cpar'){
+            return $this->from('ympimis@gmail.com')->subject('MIS CPAR')->view('mails.cpar');
+        }
+        if($this->remark == 'audit'){
+            return $this->from('ympimis@gmail.com')->subject('Production Audit')->view('mails.audit');
         }
     }
 }

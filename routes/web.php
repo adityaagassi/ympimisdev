@@ -1177,11 +1177,13 @@ Route::get('index/production_audit/edit/{id}/{audit_id}/{product}/{proses}', 'Pr
 Route::post('index/production_audit/update/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@update');
 Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
 Route::post('index/production_audit/print_audit/{id}', 'ProductionAuditController@print_audit');
+Route::get('index/production_audit/print_audit_email/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit_email');
 Route::get('index/production_audit/report_audit/{id}', 'ProductionAuditController@report_audit');
 Route::get('index/production_audit/fetchReport/{id}', 'ProductionAuditController@fetchReport');
 Route::get('fetch/production_audit/detail_stat/{id}', 'ProductionAuditController@detailProductionAudit');
 Route::get('index/production_audit/signature', 'ProductionAuditController@signature');
 Route::post('index/production_audit/save_signature', 'ProductionAuditController@save_signature');
+Route::post('index/production_audit/sendemail/{id}', 'ProductionAuditController@sendemail');
 
 //point check master
 Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');

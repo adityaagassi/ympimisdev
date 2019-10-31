@@ -75,14 +75,14 @@ table.table-bordered > tfoot > tr > th{
 					<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
 				</div> --}}
 				<div class="box-body">
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="col-xs-4 col-sm-4 col-md-6 col-lg-4">
 						<div class="box-header">
 							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }} - {{ $product }} - {{ $proses }}</span></h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/production_audit/filter_audit/'.$id.'/'.$product.'/'.$proses)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group">
 									<label>Date</label>
 									<div class="input-group date">
@@ -94,21 +94,8 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						{{-- <div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Origin Group</label>
-									<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
-							            <option value=""></option>
-							              @foreach($product as $product)
-							                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-							              @endforeach
-							        </select>
-								</div>
-							</div>
-						</div> --}}
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-10">
 								<div class="form-group pull-right">
 									<a href="{{ url('index/production_audit/details/'.$id) }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/production_audit/index/'.$id.'/'.$product.'/'.$proses) }}" class="btn btn-danger">Clear</a>
@@ -118,14 +105,14 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						</form>
 					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
 							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/production_audit/print_audit/'.$id)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group">
 									<label>Date</label>
 									<div class="input-group date">
@@ -138,7 +125,7 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 						</div>
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group">
 									<label>Origin Group</label>
 									<input type="text" class="form-control" name="product" value="{{ $product }}" readonly>
@@ -146,7 +133,7 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 						</div>
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group">
 									<label>Proses</label>
 									<input type="text" class="form-control" name="proses" value="{{ $proses }}" readonly>
@@ -154,9 +141,54 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 						</div>
 						<div class="col-md-12 col-md-offset-2">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<div class="form-group pull-right">
+									{{-- <a href="{{ url('index/production_audit/print_audit_email/'.$id.'/'.$date.'/'.$product.'/'.$proses) }}" class="btn btn-primary">Print {{ $activity_alias }}</a> --}}
 									<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+								</div>
+							</div>
+						</div>
+						</form>
+					</div>
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<div class="box-header">
+							<h3 class="box-title">Send Email to Foreman <span class="text-purple">{{ $activity_name }}</span></h3>
+						</div>
+						<form target="_blank" role="form" method="post" action="{{url('index/production_audit/sendemail/'.$id)}}">
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="col-md-12 col-md-offset-2">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label>Date</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="date-email" name="date" required>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 col-md-offset-2">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label>Origin Group</label>
+									<input type="text" class="form-control" name="product" value="{{ $product }}" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 col-md-offset-2">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label>Proses</label>
+									<input type="text" class="form-control" name="proses" value="{{ $proses }}" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 col-md-offset-2">
+							<div class="col-md-8">
+								<div class="form-group pull-right">
+									<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
 								</div>
 							</div>
 						</div>
@@ -165,7 +197,7 @@ table.table-bordered > tfoot > tr > th{
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						{{-- <div class="col-md-12 col-md-offset-9">
 							<div class="col-md-3"> --}}
-								<div class="form-group pull-right">
+								<div class="form-group">
 									<a href="{{ url('index/production_audit/create/'.$id.'/'.$product.'/'.$proses) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
 								</div>
 							{{-- </div>
@@ -300,6 +332,11 @@ table.table-bordered > tfoot > tr > th{
 			todayHighlight: true
 		});
 		$('#date-print').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
+		});
+		$('#date-email').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
 			todayHighlight: true

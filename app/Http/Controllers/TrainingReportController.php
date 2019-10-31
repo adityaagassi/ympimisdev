@@ -463,7 +463,7 @@ class TrainingReportController extends Controller
         $bulan = date('Y-m');
       }
 
-      $data = DB::select("select week_date, count(*) as jumlah_training from weekly_calendars join training_reports on training_reports.date = weekly_calendars.week_date join activity_lists on activity_lists.id = training_reports.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(training_reports.date,'%Y-%m') <= '".$bulan."' GROUP BY week_date");
+      $data = DB::select("select week_date, count(*) as jumlah_training from weekly_calendars join training_reports on training_reports.date = weekly_calendars.week_date join activity_lists on activity_lists.id = training_reports.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(training_reports.date,'%Y-%m') <= '".$bulan."' and training_reports.deleted_at is null GROUP BY week_date");
       $monthTitle = date("F Y", strtotime($bulan));
 
       // $monthTitle = date("F Y", strtotime($tgl));
@@ -481,7 +481,7 @@ class TrainingReportController extends Controller
 
     public function detailTraining(Request $request, $id){
       $week_date = $request->get("week_date");
-        $query = "select *, training_reports.id as training_id from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id where department_id = '".$id."' and activity_type = 'Training' and date = '".$week_date."'";
+        $query = "select *, training_reports.id as training_id from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id where department_id = '".$id."' and activity_type = 'Training' and date = '".$week_date."' and training_reports.deleted_at is null";
 
       $detail = db::select($query);
 

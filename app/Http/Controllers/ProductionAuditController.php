@@ -33,6 +33,8 @@ use App\OrganizationStructure;
 use File;
 use DateTime;
 use Illuminate\Support\Arr;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class ProductionAuditController extends Controller
 {
@@ -44,7 +46,7 @@ class ProductionAuditController extends Controller
     function index($id,$productproduct,$prosesproses)
     {
         $activityList = ActivityList::find($id);
-    	$productionAudit = ProductionAudit::where('activity_list_id',$id)
+    	  $productionAudit = ProductionAudit::where('activity_list_id',$id)
                 ->whereHas('point_check_audit', function ($query) use($productproduct) {
                         $query->where('product','=', $productproduct);
                     })
@@ -59,21 +61,22 @@ class ProductionAuditController extends Controller
         // $product = DB::select($queryProduct);
         // $product2 = DB::select($queryProduct);
         // var_dump($pointCheckAudit);
-
-    	$activity_name = $activityList->activity_name;
+        $date = date("Y-m-d");
+    	   $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         // var_dump($productionAudit);
 
-    	$data = array('production_audit' => $productionAudit,
+    	 $data = array('production_audit' => $productionAudit,
                       'point_check_audit' => $pointCheckAudit,
                       'product' => $productproduct,
                       'proses' => $prosesproses,
-    				  'departments' => $departments,
-    				  'activity_name' => $activity_name,
+                      'date' => $date,
+            				  'departments' => $departments,
+            				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
-    				  'id' => $id,
+            				  'id' => $id,
                       'id_departments' => $id_departments);
     	return view('production_audit.index', $data
     		)->with('page', 'Production Audit');
@@ -427,7 +430,6 @@ class ProductionAuditController extends Controller
         }
         if($productionAudit == null){
             // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
-            echo "<script src='https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>";
             echo "<script>
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
@@ -444,6 +446,60 @@ class ProductionAuditController extends Controller
                           'id' => $id,
                           'id_departments' => $id_departments);
             return view('production_audit.print', $data
+                )->with('page', 'Production Audit');
+        }
+    }
+
+    function print_audit_email($id,$date,$product,$proses)
+    {
+        $activityList = ActivityList::find($id);
+        // var_dump($request->get('product'));
+        // var_dump($request->get('date'));
+        if($product != null && $date != null && $proses != null){
+            $origin_group = $product;
+            $proses = $proses;            
+            $queryProductionAudit = "select *, employees1.name as pic_name,
+                    employees2.name as auditor_name
+                    from production_audits 
+                    join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
+                    join activity_lists on activity_lists.id =  production_audits.activity_list_id
+                    join departments on departments.id =  activity_lists.department_id
+                    join employees as employees1 on employees1.employee_id = production_audits.pic
+                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    where production_audits.date='".$date."' 
+                    and point_check_audits.product = '".$origin_group."' 
+                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
+            $productionAudit = DB::select($queryProductionAudit);
+        }
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+        foreach($productionAudit as $productAudit){
+            $product = $productAudit->product;
+            $proses = $productAudit->proses;
+            $date_audit = $productAudit->date;
+            $foreman = $productAudit->foreman;
+        }
+        if($productionAudit == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'proses' => $proses,
+                          'product' => $product,
+                          'foreman' => $foreman,
+                          'date_audit' => $date_audit,
+                          'production_audit' => $productionAudit,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('production_audit.print_email', $data
                 )->with('page', 'Production Audit');
         }
     }
@@ -501,7 +557,7 @@ class ProductionAuditController extends Controller
     public function detailProductionAudit(Request $request, $id){
       $week_date = $request->get("week_date");
       $kondisi = $request->get("kondisi");
-        $query = "select *,employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."'";
+        $query = "select *,employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
 
       $detail = db::select($query);
 
@@ -535,4 +591,30 @@ class ProductionAuditController extends Controller
 
         return response()->json(['html' => $html]);
     }
+
+    public function sendemail(Request $request,$id)
+      {
+          $origin_group = $request->get('product');
+          $proses = $request->get('proses');
+          $date = date('Y-m-d', strtotime($request->get('date')));
+          $queryProductionAudit = "select *, employees1.name as pic_name,
+                    employees2.name as auditor_name
+                    from production_audits 
+                    join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
+                    join activity_lists on activity_lists.id =  production_audits.activity_list_id
+                    join departments on departments.id =  activity_lists.department_id
+                    join employees as employees1 on employees1.employee_id = production_audits.pic
+                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    where production_audits.date='".$date."' 
+                    and point_check_audits.product = '".$origin_group."' 
+                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
+          $productionAudit = DB::select($queryProductionAudit);
+          
+          if($productionAudit != null){
+              Mail::to("mokhamadkhamdankhabibi@gmail.com")->send(new SendEmail($productionAudit, 'audit'));
+          }
+          echo "<script>
+                alert('Your E-Mail has been sent.');
+                window.close();</script>";
+      }
 }
