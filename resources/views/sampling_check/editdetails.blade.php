@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
+    Edit {{ $activity_name }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
@@ -39,20 +39,20 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('index/sampling_check/storedetails/'.$sampling_id)}}" enctype="multipart/form-data">
+    <form role="form" method="post" action="{{url('index/sampling_check/updatedetails/'.$id.'/'.$sampling_check_details_id)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
             <label class="col-sm-4">Point Check<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <textarea id="editor1" class="form-control" style="height: 250px;" name="point_check"></textarea>
+              <textarea id="editor1" class="form-control" style="height: 250px;" name="point_check">{{ $sampling_check_details->point_check }}</textarea>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Hasil Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <textarea id="editor2" class="form-control" style="height: 250px;" name="hasil_check"></textarea>
+              <textarea id="editor2" class="form-control" style="height: 250px;" name="hasil_check">{{ $sampling_check_details->hasil_check }}</textarea>
             </div>
           </div>
         </div>
@@ -60,7 +60,10 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Picture Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="file" class="form-control" name="file" placeholder="Enter File" required onchange="readURL(this)">              
+              <img width="100px" src="{{ url('/data_file/sampling_check/'.$sampling_check_details->picture_check) }}">
+              <br>
+              <input type="hidden" class="form-control" name="picture_check" placeholder="Enter File" required value="{{ $sampling_check_details->picture_check }}">   
+              <input type="file" class="form-control" name="file" placeholder="Enter File" onchange="readURL(this)">              
               <img width="200px" id="blah" src="" style="display: none" alt="your image" />
             </div>
           </div>
@@ -70,7 +73,11 @@
               <select class="form-control select2" name="pic_check" style="width: 100%;" data-placeholder="Choose a PIC Check..." required>
                 <option value=""></option>
                 @foreach($operator as $operator)
-                <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
+                 @if($sampling_check_details->pic_check == $operator->name)
+                   <option value="{{ $operator->name }}" selected>{{ $operator->employee_id }} - {{ $operator->name }}</option>
+                 @else
+                   <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
+                 @endif
                 @endforeach
               </select>
             </div>
@@ -81,17 +88,21 @@
               <select class="form-control select2" name="sampling_by" style="width: 100%;" data-placeholder="Choose a Sampling By..." required>
                 <option value=""></option>
                 @foreach($leaderForeman as $leaderForeman)
-                <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
+                  @if($sampling_check_details->sampling_by == $leaderForeman->name)
+                   <option value="{{ $leaderForeman->name }}" selected>{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
+                 @else
+                   <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
+                 @endif
                 @endforeach
               </select>
             </div>
           </div>
           <div class="col-sm-4 col-sm-offset-6">
             <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('index/sampling_check/details/'.$sampling_id) }}">Cancel</a>
+              <a class="btn btn-danger" href="{{ url('index/sampling_check/details/'.$id) }}">Cancel</a>
             </div>
             <div class="btn-group">
-              <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+              <button type="submit" class="btn btn-primary col-sm-14">Update</button>
             </div>
           </div>
         </div>
@@ -123,26 +134,26 @@
       $('#password').val('');
     });
     CKEDITOR.replace('editor1' ,{
-      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
     CKEDITOR.replace('editor2' ,{
-      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
   </script>
   <script language="JavaScript">
-    function readURL(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
+      function readURL(input) {
+              if (input.files && input.files[0]) {
+                  var reader = new FileReader();
 
-        reader.onload = function (e) {
-          $('#blah').show();
-          $('#blah')
-          .attr('src', e.target.result);
-        };
+                  reader.onload = function (e) {
+                    $('#blah').show();
+                      $('#blah')
+                          .attr('src', e.target.result);
+                  };
 
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-  </script>
+                  reader.readAsDataURL(input.files[0]);
+              }
+          }
+    </script>
   @stop
 

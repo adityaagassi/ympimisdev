@@ -9,9 +9,9 @@
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
+   <li><a href="#">Examples</a></li>
+   <li class="active">Blank page</li> --}}
+ </ol>
 </section>
 @endsection
 @section('content')
@@ -55,7 +55,7 @@
               <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
-                  <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
+                <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
                 @endforeach
               </select>
             </div>
@@ -66,7 +66,7 @@
               <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
-                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
+                <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
                 @endforeach
               </select>
             </div>
@@ -77,7 +77,7 @@
               <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
                 <option value=""></option>
                 @foreach($product as $product)
-                  <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
+                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
                 @endforeach
               </select>
             </div>
@@ -113,7 +113,7 @@
               <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
                 <option value=""></option>
                 @foreach($leaderForeman as $leaderForeman)
-                  <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
+                <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -124,7 +124,7 @@
               <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
                 <option value=""></option>
                 @foreach($foreman as $foreman)
-                  <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
+                <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -161,26 +161,26 @@
       $('#password').val('');
     });
     CKEDITOR.replace('editor1' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
     CKEDITOR.replace('editor2' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
   </script>
   <script language="JavaScript">
-      function readURL(input) {
-              if (input.files && input.files[0]) {
-                  var reader = new FileReader();
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
 
-                  reader.onload = function (e) {
-                    $('#blah').show();
-                      $('#blah')
-                          .attr('src', e.target.result);
-                  };
+        reader.onload = function (e) {
+          $('#blah').show();
+          $('#blah')
+          .attr('src', e.target.result);
+        };
 
-                  reader.readAsDataURL(input.files[0]);
-              }
-          }
-    </script>
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
   @stop
 

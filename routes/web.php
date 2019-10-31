@@ -350,6 +350,9 @@ Route::group(['nav' => 'A7', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
+	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
+	
+
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive/{id}', 'MiddleProcessController@fetchBarrelInactive');
@@ -1245,6 +1248,8 @@ Route::post('index/sampling_check/storedetails/{sampling_check_id}', 'SamplingCh
 Route::get('index/sampling_check/editdetails/{id}/{sampling_check_details_id}', 'SamplingCheckController@editdetails');
 Route::post('index/sampling_check/updatedetails/{id}/{sampling_check_details_id}', 'SamplingCheckController@updatedetails');
 Route::get('index/sampling_check/report_sampling_check/{id}', 'SamplingCheckController@report_sampling_check');
+Route::get('index/sampling_check/fetchReport/{id}', 'SamplingCheckController@fetchReport');
+Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@detail_sampling_check');
 
 //CPAR
 Route::get('index/qc_report', 'QcReportController@index');

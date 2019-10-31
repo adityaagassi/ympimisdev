@@ -161,7 +161,7 @@ table.table-bordered > tfoot > tr > th{
 							<a class="btn btn-primary pull-right" href="{{ url('index/sampling_check/createdetails/'.$sampling_id) }}">Create Details</a>
 						</div>
 				        <div class="box-body">
-				          <table id="example2" class="table table-bordered table-striped table-hover">
+				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
 				                <th>Point Check</th>
@@ -182,9 +182,9 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{ $sampling_check_details->sampling_by }}</td>
 				                <td>
 				                  <center>
-				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/sampling_check/editdetails") }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
-						               <i class="fa fa-edit"></i>
-						            </button>
+				                    <a type="button" class="btn btn-warning btn-xs" href="{{ url('index/sampling_check/editdetails/'.$sampling_id.'/'.$sampling_check_details->id) }}">
+						                  <i class="fa fa-edit"></i>
+						                </a>
 				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '<?php $array = json_decode(json_encode((array) simplexml_load_string('<data>'.$sampling_check_details->point_check.'</data>')),1);
 										print_r($array['p']); ?>','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
@@ -393,80 +393,6 @@ table.table-bordered > tfoot > tr > th{
       $('#example1 tfoot tr').appendTo('#example1 thead');
 
     });
-
-    jQuery(document).ready(function() {
-      $('#example2 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
-      var table = $('#example2').DataTable({
-        "order": [],
-        'dom': 'Bfrtip',
-        'responsive': true,
-        'lengthMenu': [
-        [ 10, 25, 50, -1 ],
-        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-        ],
-        'buttons': {
-          buttons:[
-          {
-            extend: 'pageLength',
-            className: 'btn btn-default',
-          },
-          {
-            extend: 'copy',
-            className: 'btn btn-success',
-            text: '<i class="fa fa-copy"></i> Copy',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'excel',
-            className: 'btn btn-info',
-            text: '<i class="fa fa-file-excel-o"></i> Excel',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'print',
-            className: 'btn btn-warning',
-            text: '<i class="fa fa-print"></i> Print',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          ]
-        }
-      });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example2 tfoot tr').appendTo('#example2 thead');
-
-    });
-    // $(function () {
-
-    //   $('#example2').DataTable({
-    //     'paging'      : true,
-    //     'lengthChange': false,
-    //     'searching'   : false,
-    //     'ordering'    : true,
-    //     'info'        : true,
-    //     'autoWidth'   : false
-    //   })
-    // })
     function deleteConfirmation(url, name, id, sampling_check_id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+sampling_check_id);

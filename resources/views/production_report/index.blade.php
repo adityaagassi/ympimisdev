@@ -20,8 +20,8 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Report <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
 			@foreach($activity_list as $activity_list)
-				<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
-				<?php $no++ ?>
+			<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
+			<?php $no++ ?>
 			@endforeach
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
@@ -33,6 +33,7 @@
 			{{-- <a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report All Activity</a> --}}
 			<a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
 			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
+			<a href="{{ url("index/sampling_check/report_sampling_check/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Sampling Check</a>
 		</div>
 	</div>
 </section>

@@ -11,6 +11,9 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use App\SamplingCheck;
 use App\SamplingCheckDetail;
+use Response;
+use DataTables;
+use Excel;
 
 class SamplingCheckController extends Controller
 {
@@ -373,5 +376,152 @@ class SamplingCheckController extends Controller
 
         return redirect('index/sampling_check/details/'.$sampling_id)
             ->with('page', 'Sampling Check')->with('status', 'New Sampling Check Details has been created.');
+    }
+
+    function editdetails($id,$sampling_check_details_id)
+    {
+        $sampling_check = SamplingCheck::find($id);
+        // var_dump($samplingCheck);
+        // $activityList = ActivityList::find($id);
+
+        $activity_name = $sampling_check->activity_lists->activity_name;
+        $departments = $sampling_check->activity_lists->departments->department_name;
+        $id_departments = $sampling_check->activity_lists->departments->id;
+        $activity_alias = $sampling_check->activity_lists->activity_alias;
+
+        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
+        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
+
+        $leaderForeman = DB::select($queryLeaderForeman);
+        $foreman = DB::select($queryForeman);
+
+        $querySection = "select * from sections where id_department = '".$id_departments."'";
+        $section = DB::select($querySection);
+
+        $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
+        $subsection = DB::select($querySubSection);
+
+        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $operator = DB::select($queryOperator);
+
+        $samplingCheckDetails = SamplingCheckDetail::find($sampling_check_details_id);
+
+        $data = array(
+                      'leaderForeman' => $leaderForeman,
+                      'foreman' => $foreman,
+                      'departments' => $departments,
+                      'operator' => $operator,
+                      'section' => $section,
+                      'subsection' => $subsection,
+                      'activity_name' => $activity_name,
+                      'sampling_check' => $sampling_check,
+                      'sampling_check_details' => $samplingCheckDetails,
+                      'sampling_check_details_id' => $sampling_check_details_id,
+                      'id' => $id);
+        return view('sampling_check.editdetails', $data
+            )->with('page', 'Sampling Check');
+    }
+
+    function updatedetails(Request $request,$id,$sampling_check_details_id)
+    {
+        try{
+            $tujuan_upload = 'data_file/sampling_check';
+            $date = date('Y-m-d');
+
+            if ($request->file('file') != null) {
+                $file = $request->file('file');
+                $nama_file = $file->getClientOriginalName();
+                $file->getClientOriginalName();
+                $file->move($tujuan_upload,$file->getClientOriginalName());
+
+                $sampling_check_details = SamplingCheckDetail::find($sampling_check_details_id);
+                $sampling_check_details->sampling_check_id = $id;
+                $sampling_check_details->point_check = $request->get('point_check');
+                $sampling_check_details->hasil_check = $request->get('hasil_check');
+                $sampling_check_details->picture_check = $nama_file;
+                $sampling_check_details->pic_check = $request->get('pic_check');
+                $sampling_check_details->sampling_by = $request->get('sampling_by');
+                $sampling_check_details->save();
+            }
+            else{
+                $sampling_check_details = SamplingCheckDetail::find($sampling_check_details_id);
+                $sampling_check_details->sampling_check_id = $id;
+                $sampling_check_details->point_check = $request->get('point_check');
+                $sampling_check_details->hasil_check = $request->get('hasil_check');
+                $sampling_check_details->picture_check = $request->get('picture_check');;
+                $sampling_check_details->pic_check = $request->get('pic_check');
+                $sampling_check_details->sampling_by = $request->get('sampling_by');
+                $sampling_check_details->save();
+            }
+
+            return redirect('/index/sampling_check/details/'.$id)->with('status', 'Sampling Check Details has been updated.')->with('page', 'Sampling Check');
+          }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'Sampling Check Details already exist.')->with('page', 'Training Report');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'Sampling Check');
+            }
+          }
+    }
+
+    function report_sampling_check($id)
+    {
+        $queryDepartments = "SELECT * FROM departments where id='".$id."'";
+        $department = DB::select($queryDepartments);
+        foreach($department as $department){
+            $departments = $department->department_name;
+        }
+        // $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
+        $bulan = date('Y-m');
+        return view('sampling_check.report_sampling_check',  array('title' => 'Report Sampling Check',
+            'title_jp' => 'Report Sampling Check',
+            'id' => $id,
+            'departments' => $departments,
+            // 'bulan' => $bulan,
+        ))->with('page', 'Report Sampling Check');
+    }
+
+    public function fetchReport(Request $request,$id)
+    {
+      if($request->get('week_date') != null){
+        $bulan = $request->get('week_date');
+      }
+      else{
+        $bulan = date('Y-m');
+      }
+
+      $data = DB::select("select week_date, count(*) as jumlah_sampling_check from weekly_calendars join sampling_checks on sampling_checks.date = weekly_calendars.week_date join activity_lists on activity_lists.id = sampling_checks.activity_list_id where activity_lists.department_id = '".$id."' and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."' and sampling_checks.deleted_at is null GROUP BY week_date");
+      $monthTitle = date("F Y", strtotime($bulan));
+
+      // $monthTitle = date("F Y", strtotime($tgl));
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'monthTitle' => $monthTitle,
+        // 'bulan' => $request->get("tgl")
+
+      );
+
+      return Response::json($response);
+    }
+
+    public function detail_sampling_check(Request $request, $id){
+      $week_date = $request->get("week_date");
+        $query = "select *, sampling_checks.id as sampling_check_id from sampling_checks join activity_lists on activity_lists.id = sampling_checks.activity_list_id where department_id = '".$id."' and activity_type = 'Sampling Check' and date = '".$week_date."' and sampling_checks.deleted_at is null";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)->make(true);
+
     }
 }
