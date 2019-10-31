@@ -1255,6 +1255,8 @@ Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
 Route::get('index/qc_report/sign', 'QcReportController@sign');
 Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
+Route::get('index/qc_report/sendemail/{id}', 'QcReportController@sendemail');
+
 //CAR
 Route::get('index/qc_car', 'QcCarController@index');
 Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
