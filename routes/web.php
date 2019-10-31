@@ -248,6 +248,7 @@ Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeC
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
+Route::get('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
 Route::post('post/hrqa', 'EmployeeController@postChat');
@@ -726,6 +727,11 @@ Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingN
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
 Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
+
+
+Route::get('index/middle/buffing_trend_op_eff', 'MiddleProcessController@indexTrendBuffingOpEff');
+
+
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff', 'MiddleProcessController@fetchBuffingOpEff');
 Route::get('fetch/middle/buffing_op_eff_detail', 'MiddleProcessController@fetchBuffingOpEffDetail');
@@ -917,6 +923,12 @@ Route::get('index/reportDayAwalDataGrafik', 'Pianica@reportDayAwalDataGrafik');
 Route::get('index/getKensaVisualALL2', 'Pianica@getKensaVisualALL2');
 Route::get('index/getKensaBensuki2', 'Pianica@getKensaBensuki2');
 Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
+
+
+//report  display spotwelding
+Route::get('index/reportSpotWelding', 'Pianica@reportSpotWelding');
+Route::post('index/reportDayAwalData', 'Pianica@reportDayAwalData');
+Route::get('fech/reportSpotWeldingData', 'Pianica@reportSpotWeldingData');
 
 //end pianica
 
