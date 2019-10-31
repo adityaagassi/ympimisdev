@@ -57,9 +57,13 @@
           <div class="form-group row" align="right" id="form_point_check">
             <label class="col-sm-4">Point Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required id="point_check">
-                <option value=""></option>
-              </select>
+              @if($point_check_audit != null)
+                <textarea name="point_check" class="form-control" style="height: 250px;" id="editor1" readonly>{{ $point_check_audit->point_check }}</textarea>
+              @else
+                <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required id="point_check">
+                  <option value=""></option>
+                </select>
+              @endif
             </div>
           </div>
         </div>
@@ -150,6 +154,9 @@
     jQuery(document).ready(function() {
       $('#email').val('');
       $('#password').val('');
+    });
+    CKEDITOR.replace('editor1' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
   </script>
   <script language="JavaScript">

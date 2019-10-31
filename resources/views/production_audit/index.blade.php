@@ -171,6 +171,21 @@ table.table-bordered > tfoot > tr > th{
 							{{-- </div>
 						</div> --}}
 					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="box-header">
+							<h3 class="box-title">Create By Point Check</span></h3>
+						</div>
+						@foreach($point_check_audit as $point_check_audit)
+							<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+								<a href="{{ url('index/production_audit/create_by_point_check/'.$id.'/'.$product.'/'.$proses.'/'.$point_check_audit->id) }}" style="text-decoration:none;color:black;">
+									<center><b>{{ $point_check_audit->product }}</b></center>
+									<center><b>{{ $point_check_audit->proses }}</b></center>
+									<center><?php echo $point_check_audit->point_check ?></center>
+									<center><?php echo $point_check_audit->cara_cek ?></center>
+								</a>
+							</div>
+						@endforeach
+					</div>
 				  <div class="row">
 				    <div class="col-xs-12">
 				      <div class="box">

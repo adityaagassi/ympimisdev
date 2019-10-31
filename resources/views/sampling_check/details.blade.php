@@ -159,25 +159,6 @@ table.table-bordered > tfoot > tr > th{
 				      	<div class="box-header">
 							<h3 class="box-title">Sampling Check Details <span class="text-purple"></span></h3>
 							<a class="btn btn-primary pull-right" href="{{ url('index/sampling_check/createdetails/'.$sampling_id) }}">Create Details</a>
-							{{-- <a class="btn btn-xs btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}" target="_blank">Scan Employee</a>
-							<div class="panel-body text-center" >
-				              <canvas></canvas>
-				              <hr>
-				              <select></select>
-				            </div> --}}
-							{{-- <form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-
-								<div class="form-group" align="right">
-									<select class="form-control select2" name="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
-						                <option value=""></option>
-						                @foreach($operator as $operator)
-						                  <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
-						                @endforeach
-						              </select>
-								</div>
-								<button type="submit" class="btn btn-primary pull-right">Submit</button>
-							</form> --}}
 						</div>
 				        <div class="box-body">
 				          <table id="example2" class="table table-bordered table-striped table-hover">
@@ -204,7 +185,8 @@ table.table-bordered > tfoot > tr > th{
 				                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/sampling_check/editdetails") }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 						               <i class="fa fa-edit"></i>
 						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '{{ $sampling_check_details->point_check }} - {{ $sampling_check_details->hasil_check }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '<?php $array = json_decode(json_encode((array) simplexml_load_string('<data>'.$sampling_check_details->point_check.'</data>')),1);
+										print_r($array['p']); ?>','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
