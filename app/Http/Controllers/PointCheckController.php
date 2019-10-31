@@ -30,7 +30,7 @@ class PointCheckController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
 
-    	$pointCheckAudit = PointCheckAudit::where('activity_list_id','0')
+    	$pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
             ->get();
 
     	$data = array('pointCheckAudit' => $pointCheckAudit,

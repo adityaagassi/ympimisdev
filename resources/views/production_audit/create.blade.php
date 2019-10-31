@@ -58,7 +58,8 @@
             <label class="col-sm-4">Point Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
               @if($point_check_audit != null)
-                <textarea name="point_check" class="form-control" style="height: 250px;" id="editor1" readonly>{{ $point_check_audit->point_check }}</textarea>
+                <textarea name="point_check_details" class="form-control" style="height: 250px;" id="editor1" readonly>{{ $point_check_audit->point_check }}</textarea>
+                <input type="hidden" name="point_check" value="{{ $point_check_audit->id }}">
               @else
                 <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required id="point_check">
                   <option value=""></option>
