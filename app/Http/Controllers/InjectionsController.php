@@ -15,6 +15,9 @@ use App\DetailPartInjection;
 use App\CycleTimeMesinInjection;
 use App\CapacityPartInjection;
 use App\CapacityMesinInjection;
+
+use App\StatusMesinInjection;
+use App\WorkingMesinInjection;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -252,5 +255,102 @@ class InjectionsController extends Controller
     }
 
     // -------------- end dailyStock
+
+    // ------------------------- shchedule
+
+    public function schedule(){
+
+        return view('injection.schedule')->with('page', 'Injection Stock Out')->with('jpn', '???');
+
+    }
+
+    public function getSchedule(Request $request){
+              
+        
+        
+        $query = "SELECT target_all.*, mesin.mesin  FROM (
+        SELECT total_all.material_number, total_all.model, total_all.part, total_all.part_code, total_all.color, 
+         total_all.total  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako from (
+
+
+        SELECT target.*,cycle_time_mesin_injections.cycle, cycle_time_mesin_injections.shoot, cycle_time_mesin_injections.qty, 
+        ROUND((82800  / cycle_time_mesin_injections.cycle  )*cycle_time_mesin_injections.shoot,0) as max_day,cycle_time_mesin_injections.qty_hako from (
+        SELECT target_model.*,detail_part_injections.part,detail_part_injections.part_code,detail_part_injections.color, SUM(quantity) as total from (
+        SELECT target.material_number,target.due_date,target.quantity,materials.model  from (
+        SELECT material_number,due_date,quantity from production_schedules WHERE 
+        material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+        DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-09-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-09-31'
+        ) target
+        LEFT JOIN materials on target.material_number = materials.material_number 
+        ) as target_model
+        CROSS join  detail_part_injections on target_model.model = detail_part_injections.model
+        WHERE due_date in ( SELECT week_date from weekly_calendars WHERE week_name in (SELECT week_name from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')='2019-09-01') and DATE_FORMAT(week_date,'%Y')='2019')
+        GROUP BY part,color,part_code ORDER BY due_date
+        ) target
+
+        LEFT JOIN cycle_time_mesin_injections 
+        on target.part_code = cycle_time_mesin_injections.part 
+        and target.color = cycle_time_mesin_injections.color
+        ORDER BY part
+
+
+        ) total_all 
+
+        LEFT JOIN (
+        SELECT  part, (( SUM(stock_akhir) + SUM(total_in) )-SUM(total_out)) stock from (
+        SELECT  part, stock_akhir, 0 as total_in, 0 as total_out from stock_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m')='2019-10'
+        UNION all
+        SELECT part,0 as stock_akhir ,total as total_in, 0 as total_out from transaction_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='2019-10-01' and DATE_FORMAT(created_at,'%Y-%m-%d') <='2019-10-31' and `status` ='IN'
+        UNION all
+        SELECT part,0 as stock_akhir ,0 as total_in, total as total_out from transaction_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='2019-10-01' and DATE_FORMAT(created_at,'%Y-%m-%d') <='2019-10-31' and `status` ='OUT'
+        ) as stock GROUP BY part
+
+        ) as stock on total_all.part = stock.part
+
+        ) as target_all
+
+        LEFT JOIN (
+        SELECT part,color, SUM(qty) as mesin from working_mesin_injections
+        GROUP BY part,color ORDER BY mesin
+        ) as mesin on target_all.part_code = mesin.part and target_all.color = mesin.color
+        
+        ";
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+            'asas' => $query,
+        );
+        return Response::json($response);
+    }
+
+
+    public function getStatusMesin(Request $request){             
+        
+        
+        $query = "SELECT mesin,`status` from status_mesin_injections";
+
+        $mesin = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'mesin' => $mesin,
+            'message' => 'Get Mesin Success',
+            
+        );
+        return Response::json($response);
+    }
+
+
+
+ // ------------------------- end shchedule
+
+
+
+    
+
+
+
 
 }

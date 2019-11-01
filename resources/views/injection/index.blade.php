@@ -27,6 +27,8 @@
 			<a href="{{ url("index/in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - In</a>
 
 			<a href="{{ url("index/out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - Out</a>
+
+			<a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
 			
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
