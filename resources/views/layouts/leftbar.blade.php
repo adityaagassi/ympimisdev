@@ -74,7 +74,11 @@
         </a>
         <ul class="treeview-menu">
          @if(isset($page) && $page == "queue")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/middle/barrel_adjustment") }}"><i class="fa fa-exchange"></i> <span>Queue</span></a>
+          <a href="{{ url("/index/middle/barrel_adjustment") }}"><i class="fa fa-exchange"></i> <span>Barrel Queue</span></a>
+        </li>
+
+        @if(isset($page) && $page == "queue")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/middle/buffing_adjustment") }}"><i class="fa fa-exchange"></i> <span>Buffing Queue</span></a>
         </li>
 
         @if(isset($page) && $page == "wip")<li class="active">@else<li>@endif
@@ -150,6 +154,25 @@
     </li>
     @endif
 
+    @if(in_array('M19', $navs))
+    @if(isset($head) && $head == "Raw Material Monitoring")<li class="treeview active">@else<li class="treeview">@endif
+      <a href="#">
+        <i class="fa fa-upload"></i> <span>Raw Material Monitoring</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        @if(isset($page) && $page == "Upload Storage")<li class="active">@else<li>@endif
+          <a href="{{ url("index/material/storage") }}"><i class="fa fa-cubes"></i>Storage Loc Stock</a>
+        </li>
+        @if(isset($page) && $page == "Upload SMBMR")<li class="active">@else<li>@endif
+          <a href="{{ url("index/material/smbmr") }}"><i class="fa fa-list-ol"></i>Material List By Model</a>
+        </li>
+      </ul>
+    </li>
+    @endif
+
     @if(in_array('M8', $navs))
     @if(isset($page) && $page == "Shipment Condition")<li class="active">@else<li>@endif
       <a href="{{ url("/index/shipment_condition") }}"><i class="fa fa-ship"></i> <span>Shipment Condition</span></a>
@@ -174,6 +197,12 @@
     </li>
     @endif
 
+    @if(in_array('M20', $navs))
+    @if(isset($page) && $page == "User Document")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/user_document") }}"><i class="fa fa-book"></i> <span>User Document</span></a>
+    </li>
+    @endif
+
     @if(in_array('M16', $navs))
     @if(isset($head) && $head == "Employees Data")<li class="treeview active">@else<li class="treeview">@endif
       <a href="#">
@@ -188,15 +217,15 @@
       </li>
 
       @if(isset($page) && $page == "Mutation")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i> <span>Mutation</span></a>
+        <a href="{{ url("/index/mutation") }}"><i class="fa fa-clock-o"></i><span>Mutation</span></a>
       </li>
 
       @if(isset($page) && $page == "Promotion")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i> <span>Promotion</span></a>
+        <a href="{{ url("/index/promotion") }}"><i class="fa fa-clock-o"></i><span>Promotion</span></a>
       </li>
 
       @if(isset($page) && $page == "Termination")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i> <span>Termination</span></a>
+        <a href="{{ url("/index/termination") }}"><i class="fa fa-clock-o"></i><span>Termination</span></a>
       </li>
 
     </ul>

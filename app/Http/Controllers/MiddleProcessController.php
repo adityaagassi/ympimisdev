@@ -51,6 +51,34 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexBuffingAdjustment(){
+		$title = 'Saxophone Buffing Adjustment';
+		$title_jp = '';
+
+		$materials = Material::where('mrpc','=','s41')
+		->select('material_number', 'hpl', 'model', 'material_description')
+		->orderBy('key', 'asc')
+		->orderBy('model', 'asc')
+		->get();
+
+		return view('processes.middle.buffing_adjustment', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $materials,
+		))->with('page', 'queue')->with('head', 'Middle Process Adjustment');
+	}
+
+
+	public function indexTrendBuffingOpEff(){
+		$title = 'Daily Buffing Efficiency';
+		$title_jp = '';
+
+		return view('processes.middle.display.buffing_trend_eff', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Daily Buffing Efficiency')->with('head', 'Middle Process');
+	}
+
 	public function indexBuffingIcAtokotei(){
 		$title = 'Incoming Check Atokotei';
 		$title_jp = '後工程受入検査';
@@ -481,6 +509,150 @@ class MiddleProcessController extends Controller
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
+	}
+
+	public function addBuffingQueue(Request $request){
+		$rack = $request->get('rack');
+		$material = explode('-', $request->get('material'));;
+		$kanban = $request->get('kanban');
+		$add = $request->get('add');
+
+		$material_number = $material[0];
+		$model = $material[1];
+
+		$qty = 0;
+		if($model != 'A82Z'){
+			if($model[0] == 'A'){
+				$qty = 15;
+			}else if($model[0] == 'T'){
+				$qty = 8;
+			}
+		}else{
+			$qty = 10;
+		}
+
+
+		try{
+			if($add == 'top'){
+				$queue = db::connection('digital_kanban')->table('buffing_queues')
+				->where('rack','=',$rack)
+				->select('rack','material_num','created_by','created_at','updated_at', 'material_qty', 'material_tag_id')
+				->get();
+
+				$delete_queue = db::connection('digital_kanban')->delete("DELETE FROM buffing_queues where rack = '".$rack."'");
+
+				for ($i=0; $i < $kanban; $i++) {
+					$new_queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
+						array('rack' => $rack,
+							'material_num' => $material_number,
+							'created_by' => Auth::id(),
+							'created_at' => date("Y-m-d H:i:s"),
+							'updated_at' => date("Y-m-d H:i:s"),
+							'material_qty' => $qty,
+						)
+					);
+				}
+
+				$ex_queue = json_decode(json_encode($queue), True);
+
+				$ex_queue = db::connection('digital_kanban')->table('buffing_queues')->insert($ex_queue);
+
+			}else if($add == 'bottom'){
+				for ($i=0; $i < $kanban; $i++) {
+					$queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
+						array('rack' => $rack,
+							'material_num' => $material_number,
+							'created_by' => Auth::id(),
+							'created_at' => date("Y-m-d H:i:s"),
+							'updated_at' => date("Y-m-d H:i:s"),
+							'material_qty' => $qty,
+						)
+					);
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				// 'insert1' => $new_queue,
+				// 'insert2' => $new_queue,
+				// 'delete' => $delete_queue,
+				// 'get' => $queue
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function deleteBuffingQueue(Request $request){
+		try{
+
+			if($request->get('idx') != null) {
+				$where_idx = "";		
+				$idxs = $request->get('idx');
+				$idx = "";
+				for($x = 0; $x < count($idxs); $x++) {
+					$idx = $idx."'".$idxs[$x]."'";
+					if($x != count($idxs)-1){
+						$idx = $idx.",";
+					}
+				}
+				$where_idx = "where idx in (".$idx.") ";
+
+				//db::connection('digital_kanban')->table('buffing_inventories')				
+				$delete = db::connection('digital_kanban')->delete("DELETE FROM buffing_queues ".$where_idx);
+
+			}
+
+			$response = array(
+				'status' => true,
+				'idx' => $idx,
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+		
+	}
+
+	
+	public function fetchBuffingAdjustment(Request $request){
+
+		$rack = "";
+		if($request->get('grup') != null) {
+			$grups = $request->get('grup');
+			$grup = "";
+
+			for($x = 0; $x < count($grups); $x++) {
+				$grup = $grup."'".$grups[$x]."'";
+				if($x != count($grups)-1){
+					$grup = $grup.",";
+				}
+			}
+			$rack = "where rack in (".$grup.") ";
+		}
+
+		$queue = db::connection('digital_kanban')->select("SELECT q.idx, q.rack, q.material_num, m.material_description, q.material_qty, q.created_at FROM buffing_queues q left join materials m on q.material_num = m.material_number ".$rack."
+			order by idx asc");
+
+		return DataTables::of($queue)
+		->addColumn('check', function($queue){
+			return '<input type="checkbox" class="queue" id="'.$queue->idx.'+'.$queue->material_description.'" onclick="showSelected(this)">';
+		})
+		->rawColumns([ 'check' => 'check'])
+		->make(true);
+
+
 	}
 
 	public function fetchBuffingOpEffDetail(Request $request){

@@ -871,9 +871,9 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,

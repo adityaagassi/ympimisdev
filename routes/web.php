@@ -108,7 +108,8 @@ Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 
 //schedule
 Route::get('index/Schedule', 'InjectionsController@schedule');
-Route::get('fetch/Schedulepart', 'InjectionsController@getDataSchedule');
+Route::get('fetch/Schedulepart', 'InjectionsController@getSchedule');
+Route::get('fetch/getStatusMesin', 'InjectionsController@getStatusMesin');
 //end schedule
 
 //report stock
@@ -248,6 +249,7 @@ Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeC
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
+Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
@@ -351,8 +353,8 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
 	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
-	
-
+	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
+	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
 	Route::get('fetch/middle/barrel_adjustment', 'MiddleProcessController@fetchBarrelAdjustment');
 	Route::get('fetch/middle/barrel_inactive/{id}', 'MiddleProcessController@fetchBarrelInactive');
@@ -551,6 +553,10 @@ Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
 	Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
 });
 Route::get('index/material/monitoring', 'InitialProcessController@indexMonitoring');
+
+Route::group(['nav' => 'M20', 'middleware' => 'permission'], function(){
+	Route::get('index/user_document', 'UserDocumentController@index');
+});
 
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
@@ -1250,39 +1256,47 @@ Route::post('index/sampling_check/updatedetails/{id}/{sampling_check_details_id}
 Route::get('index/sampling_check/report_sampling_check/{id}', 'SamplingCheckController@report_sampling_check');
 Route::get('index/sampling_check/fetchReport/{id}', 'SamplingCheckController@fetchReport');
 Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@detail_sampling_check');
+Route::post('index/sampling_check/print_sampling/{id}', 'SamplingCheckController@print_sampling');
 
-//CPAR
-Route::get('index/qc_report', 'QcReportController@index');
-Route::get('index/qc_report/create', 'QcReportController@create');
-Route::post('index/qc_report/create_action', 'QcReportController@create_action');
-Route::get('index/qc_report/update/{id}', 'QcReportController@update');
-Route::post('index/qc_report/update_action/{id}', 'QcReportController@update_action');
-Route::get('index/qc_report/delete/{id}', 'QcReportController@delete');
-Route::post('index/qc_report/create_item', 'QcReportController@create_item');
-Route::get('index/qc_report/fetch_item/{id}', 'QcReportController@fetch_item');
-Route::post('index/qc_report/edit_item', 'QcReportController@edit_item');
-Route::get('index/qc_report/edit_item', 'QcReportController@fetch_item_edit');
-Route::get('index/qc_report/view_item', 'QcReportController@view_item');
-Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
-Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
+
+Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
+	//CPAR
+	Route::get('index/qc_report', 'QcReportController@index');
+	Route::get('index/qc_report/create', 'QcReportController@create');
+	Route::post('index/qc_report/create_action', 'QcReportController@create_action');
+	Route::get('index/qc_report/update/{id}', 'QcReportController@update');
+	Route::post('index/qc_report/update_action/{id}', 'QcReportController@update_action');
+	Route::get('index/qc_report/delete/{id}', 'QcReportController@delete');
+	Route::post('index/qc_report/create_item', 'QcReportController@create_item');
+	Route::get('index/qc_report/fetch_item/{id}', 'QcReportController@fetch_item');
+	Route::post('index/qc_report/edit_item', 'QcReportController@edit_item');
+	Route::get('index/qc_report/edit_item', 'QcReportController@fetch_item_edit');
+	Route::get('index/qc_report/view_item', 'QcReportController@view_item');
+	Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
+	
+	Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
+	Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
+	Route::get('index/qc_report/sign', 'QcReportController@sign');
+	Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
+
+	Route::get('index/qc_report/sendemail/{id}', 'QcReportController@sendemail');
+
+	//CAR
+	Route::get('index/qc_car', 'QcCarController@index');
+	Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
+	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
+	Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
+	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
+});
+
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
-Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
-Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
-Route::get('index/qc_report/sign', 'QcReportController@sign');
-Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
+Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 
-Route::get('index/qc_report/sendemail/{id}', 'QcReportController@sendemail');
 
-//CAR
-Route::get('index/qc_car', 'QcCarController@index');
-Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
-Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
-Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
-Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
