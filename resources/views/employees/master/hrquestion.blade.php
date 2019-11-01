@@ -55,11 +55,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<tr>
 									<th>Category</th>
 									<th>&Sigma; Question</th>
+									<th>&Sigma; Unanswered</th>
 								</tr>
 								<?php foreach ($all_question as $q): ?>
 									<tr>
 										<td><?php echo $q->category; ?></td>
 										<td><?php echo $q->total_question; ?></td>
+										<td><?php echo $q->unanswer; ?></td>
 									</tr>
 								<?php endforeach ?>
 								

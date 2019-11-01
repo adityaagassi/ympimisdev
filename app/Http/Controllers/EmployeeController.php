@@ -97,7 +97,7 @@ class EmployeeController extends Controller
 
   public function indexHRQA()
   {
-    $q_question = "select category, count(id) as total_question from hr_question_logs group by category";
+    $q_question = "select category, count(id) as total_question, SUM(IF(remark = 0,1,0)) as unanswer from hr_question_logs group by category";
     $question = DB::select($q_question);
 
     return view('employees.master.hrquestion', array(
