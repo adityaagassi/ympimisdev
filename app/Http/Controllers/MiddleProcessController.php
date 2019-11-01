@@ -1127,7 +1127,7 @@ class MiddleProcessController extends Controller
 			(select barrel.tgl, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
 			(select DATE_FORMAT(b.created_at,'%Y-%m-%d') as tgl, sum(b.qty) as jml from barrel_logs b
 			left join materials m on m.material_number = b.material
-			where b.`status` != 'reset'
+			where (b.`status` = 'reset' or b.`status` = 'plt')
 			and DATE_FORMAT(b.created_at,'%Y-%m-%d') in (select week_date from weekly_calendars
 			where week_name = (select week_name from weekly_calendars where week_date = '".$tanggal."')
 			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
