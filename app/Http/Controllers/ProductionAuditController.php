@@ -609,10 +609,22 @@ class ProductionAuditController extends Controller
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
           $productionAudit = DB::select($queryProductionAudit);
+          $productionAudit2 = DB::select($queryProductionAudit);
 
+          foreach($productionAudit2 as $productionAudit2){
+            $foreman = $productionAudit2->foreman;
+            // var_dump($foreman);
+          }
+
+          $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+          $email = DB::select($queryEmail);
+          foreach($email as $email){
+            $mail_to = $email->email;
+            // var_dump($mail_to);
+          }
 
           if($productionAudit != null){
-              Mail::to("mokhamadkhamdankhabibi@gmail.com")->send(new SendEmail($productionAudit, 'audit'));
+              Mail::to($mail_to)->send(new SendEmail($productionAudit, 'audit'));
               return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('status', 'Your E-mail has been sent.')->with('page', 'Production Audit');
           }
           else{
