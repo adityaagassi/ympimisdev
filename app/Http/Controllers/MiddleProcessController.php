@@ -1162,7 +1162,7 @@ class MiddleProcessController extends Controller
 		$query = "select barrel.kunci, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
 		(select LEFT(m.`key`,1) as kunci, sum(b.qty) as jml from barrel_logs b
 		left join materials m on m.material_number = b.material
-		where b.`status` != 'reset'
+		where (b.`status` = 'reset' or b.`status` = 'plt')
 		and DATE_FORMAT(b.created_at,'%Y-%m-%d') = '".$tanggal."'
 		group by kunci) barrel
 		left join
