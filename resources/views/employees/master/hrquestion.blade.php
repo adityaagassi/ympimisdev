@@ -57,57 +57,65 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									<th>&Sigma; Question</th>
 									<th>&Sigma; Unanswered</th>
 								</tr>
-								<?php foreach ($all_question as $q): ?>
-									<tr>
-										<td><?php echo $q->category; ?></td>
-										<td><?php echo $q->total_question; ?></td>
-										<td><?php echo $q->unanswer; ?></td>
-									</tr>
-								<?php endforeach ?>
-								
-							</table>
-						</div>
+								<?php $tot_q = 0; $tot_uns = 0; foreach ($all_question as $q): ?>
+								<tr>
+									<td><?php echo $q->category; ?></td>
+									<td><?php echo $q->total_question; ?></td>
+									<td><?php echo $q->unanswer; ?></td>
+								</tr>
+								<?php
+								$tot_q += $q->total_question;
+								$tot_uns += $q->unanswer;
+							endforeach ?>
+							<tr>
+								<th>Total</th>
+								<th><?php echo $tot_q; ?></th>
+								<th><?php echo $tot_uns; ?></th>
+							</tr>
+
+						</table>
 					</div>
 				</div>
 			</div>
-			<div class="box box-solid">
-				<div class="box-body">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="row">
-								<div class="col-xs-3">
-									<input type="text" id="search" class="form-control" placeholder="Search . . .">
-									<select class="form-control select2" id="category">
-										<option value="">All</option>
-										<option value="Absensi">Absensi</option>
-										<option value="Lembur">Lembur</option>
-										<option value="Cuti">Cuti</option>
-										<option value="PKB">PKB</option>
-										<option value="Penggajian">Penggajian</option>
-										<option value="BPJS Kes">BPJS Kes</option>
-										<option value="BPJS TK">BPJS TK</option>
-									</select>
-								</div>
-								<div class="col-xs-9">
-									<h4>Chat History</h4>
-									<hr>
-								</div>
+		</div>
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="row">
+							<div class="col-xs-3">
+								<input type="text" id="search" class="form-control" placeholder="Search . . .">
+								<select class="form-control select2" id="category">
+									<option value="">All</option>
+									<option value="Absensi">Absensi</option>
+									<option value="Lembur">Lembur</option>
+									<option value="Cuti">Cuti</option>
+									<option value="PKB">PKB</option>
+									<option value="Penggajian">Penggajian</option>
+									<option value="BPJS Kes">BPJS Kes</option>
+									<option value="BPJS TK">BPJS TK</option>
+								</select>
+							</div>
+							<div class="col-xs-9">
+								<h4>Chat History</h4>
+								<hr>
 							</div>
 						</div>
-						<div class="col-xs-3" id="left" style="padding: 0 5px 0 10px;">
-							<table class="table table-responsive" id="tabel">
-								
-							</table>
-						</div>
-						<div class="col-xs-9" id="right">
-							<div id="chat">
-							</div>
+					</div>
+					<div class="col-xs-3" id="left" style="padding: 0 5px 0 10px;">
+						<table class="table table-responsive" id="tabel">
+
+						</table>
+					</div>
+					<div class="col-xs-9" id="right">
+						<div id="chat">
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </section>
 
 @endsection
