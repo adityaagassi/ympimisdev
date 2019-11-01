@@ -17,6 +17,7 @@ use App\PromotionLog;
 use App\Mutationlog;
 use App\HrQuestionLog;
 use App\HrQuestionDetail;
+use App\KaizenForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -56,6 +57,10 @@ class EmployeeController extends Controller
       'Tetap'
     ];
 
+    $this->cat = [
+      'Absensi', 'Lembur', 'BPJS Kes', 'BPJS TK', 'Cuti', "PKB", "Penggajian"
+    ];
+
   }
 // master emp
   public function index(){
@@ -92,9 +97,13 @@ class EmployeeController extends Controller
 
   public function indexHRQA()
   {
+    $q_question = "select category, count(id) as total_question from hr_question_logs group by category";
+    $question = DB::select($q_question);
+
     return view('employees.master.hrquestion', array(
       'title' => 'HR Question & Answer',
-      'title_jp' => '??'))->with('page', 'qna');
+      'title_jp' => '??',
+      'all_question' => $question))->with('page', 'qna');
   }
 
   public function updateEmp($id){
@@ -1431,6 +1440,66 @@ public function editNumber(Request $request)
     return Response::json($response);
   }
 
+}
+
+public function fetchKaizen(Request $request)
+{
+  $kz = KaizenForm::where('employee_id',$request->get('employee_id'))->get();
+  // $kz = DB::select($q_kz);
+
+  return DataTables::of($kz)
+  ->addColumn('action', function($kz){
+    return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->employee_id . '"><i class="fa fa-eye"></i> Details</a>
+    <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->employee_id . '"><i class="fa fa-pencil"></i> Ubah</a>';
+  })
+
+  ->rawColumns(['action' => 'action'])
+  ->make(true);
+}
+
+public function postKaizen(Request $request)
+{
+  try {
+    $kz = new KaizenForm([
+      'employee_id' => $request->get('employee_id'),
+      'employee_name' => $request->get('employee_name'),
+      'propose_date' => $request->get('propose_date'),
+      'section' => $request->get('section'),
+      'sub_leader' => $request->get('sub_leader'),
+      'title' => $request->get('title'),
+      'condition' => $request->get('condition'),
+      'improvement' => $request->get('improvement')
+    ]);
+
+    $kz->save();
+
+    $response = array(
+      'status' => true,
+      'datas' => 'Kaizen Berhasil ditambahkan'
+    );
+    return Response::json($response);
+
+  } catch (QueryException $e){
+    $response = array(
+      'status' => false,
+      'datas' => $e->getMessage()
+    );
+    return Response::json($response);
+  }
+}
+
+public function fetchSubLeader()
+{
+  $ldr = Employee::leftJoin('promotion_logs','promotion_logs.employee_id','=','employees.employee_id')
+  ->whereNull("end_date")
+  ->whereNull("valid_to")
+  ->get();
+
+  $response = array(
+    'status' => true,
+    'datas' => $ldr
+  );
+  return Response::json($response);
 }
 
 

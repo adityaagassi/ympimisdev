@@ -51,6 +51,27 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<div class="box-body">
 					<div class="row">
 						<div class="col-xs-12">
+							<table class="table table-bordered">
+								<tr>
+									<th>Category</th>
+									<th>&Sigma; Question</th>
+								</tr>
+								<?php foreach ($all_question as $q): ?>
+									<tr>
+										<td><?php echo $q->category; ?></td>
+										<td><?php echo $q->total_question; ?></td>
+									</tr>
+								<?php endforeach ?>
+								
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box box-solid">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-xs-12">
 							<div class="row">
 								<div class="col-xs-3">
 									<input type="text" id="search" class="form-control" placeholder="Search . . .">
