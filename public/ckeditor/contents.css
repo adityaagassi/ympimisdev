@@ -16,7 +16,7 @@ body
 	/* Remove the background color to make it transparent. */
 	background-color: #fff;
 
-	margin: 20px;
+	margin: 10px;
 }
 
 .cke_editable
@@ -205,4 +205,8 @@ a > img {
 	max-width: 1920px;
 	max-height: 1080px;
 	margin:0 auto;
+}
+
+p {
+	margin: 2px;
 }

@@ -549,14 +549,30 @@ Route::group(['nav' => 'M18', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'M19', 'middleware' => 'permission'], function(){
-	Route::get('index/material/storage', 'RawMaterialController@indexStorage');
-	Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
+	Route::post('import/material/storage', 'RawMaterialController@importStorage');
+	Route::post('import/material/smbmr', 'RawMaterialController@importSmbmr');
+	Route::post('calculate/material/usage', 'RawMaterialController@calculateUsage');
 });
+Route::get('index/material/usage', 'RawMaterialController@indexUsage');
+Route::get('fetch/material/usage', 'RawMaterialController@fetchUsage');
+Route::get('index/material/smbmr', 'RawMaterialController@indexSmbmr');
+Route::get('fetch/material/smbmr', 'RawMaterialController@fetchSmbmr');
+Route::get('index/material/storage', 'RawMaterialController@indexStorage');
+Route::get('fetch/material/storage', 'RawMaterialController@fetchStorage');
 Route::get('index/material/monitoring', 'InitialProcessController@indexMonitoring');
 
 Route::group(['nav' => 'M20', 'middleware' => 'permission'], function(){
 	Route::get('index/user_document', 'UserDocumentController@index');
+	Route::get('fetch/user_document', 'UserDocumentController@fetchUserDocument');
+	Route::get('fetch/user_document_detail', 'UserDocumentController@fetchUserDocumentDetail');
+	Route::post('fetch/user_document_renew', 'UserDocumentController@fetchUserDocumentRenew');
+	Route::post('fetch/user_document_update', 'UserDocumentController@fetchUserDocumentUpdate');
+	Route::post('fetch/user_document_create', 'UserDocumentController@fetchUserDocumentCreate');
+
+
+	
 });
+
 
 Route::group(['nav' => 'A2', 'middleware' => 'permission'], function(){
 	Route::get('index/code_generator', 'CodeGeneratorController@index');
@@ -1308,6 +1324,7 @@ View::composer('*', function ($view) {
 Route::get('/mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('/mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
 Route::get('/index/beacon','BeaconController@index');
+Route::get('fetch/user/beacon','BeaconController@getUser');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

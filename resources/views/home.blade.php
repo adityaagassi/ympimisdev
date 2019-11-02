@@ -207,6 +207,16 @@
                             </a>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Internet of Things (モノのインターネット)</span>
+                            <br>
+                            <a href="{{ url("index/beacon") }}">
+                                <i class="fa fa-caret-right"></i> Cubeacon IoT
+                            </a>                           
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
