@@ -94,7 +94,7 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		fillTable();
-		setInterval(fillTable, 30000);
+		// setInterval(fillTable, 30000);
 	});
 
 	Highcharts.theme = {
@@ -384,7 +384,7 @@
 				        type: 'spline'
 				    },
 				    title: {
-				        text: 'Daily NG Rate Spot Welding'
+				        text: 'Daily Total NG Spot Welding'
 				    },
 				    subtitle: {
 				        text: 'Last Update: '+getActualFullDate(),

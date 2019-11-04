@@ -185,7 +185,7 @@ table.table-bordered > tfoot > tr > th{
         type: 'column'
     },
     title: {
-        text: 'TOTAL NG RATE KENSA AKHIR'
+        text: 'TOTAL NG KENSA AKHIR'
     },
     subtitle: {
         text: 'Last Update '+tgl
@@ -219,7 +219,7 @@ table.table-bordered > tfoot > tr > th{
               },
     series: [{
       animation: false,
-        name: 'Total yesterday',
+        name: 'Total 3 Month Before',
         color: 'rgba(165,170,217,1)',
         data: totallas,
         pointPadding: 0.3,
@@ -254,7 +254,7 @@ table.table-bordered > tfoot > tr > th{
                 text: 'TOTAL NG RATE KENSA AKHIR YESTERDAY'
               },
               subtitle: {
-        text: 'Last Update '+tgly
+        text: 'Total 3 Month Before '+tgl
     },
               tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'

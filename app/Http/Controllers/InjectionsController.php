@@ -268,9 +268,9 @@ class InjectionsController extends Controller
               
         
         
-        $query = "SELECT target_all.*, mesin.mesin  FROM (
+        $query = "SELECT target_all.*, CEILING(ROUND((target - stock) / qty_hako,1)) as target_hako, ((CEILING(ROUND((target - stock) / qty_hako,1))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working  FROM (
         SELECT total_all.material_number, total_all.model, total_all.part, total_all.part_code, total_all.color, 
-         total_all.total  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako from (
+        (total_all.total+(total_all.total / 10))  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako from (
 
 
         SELECT target.*,cycle_time_mesin_injections.cycle, cycle_time_mesin_injections.shoot, cycle_time_mesin_injections.qty, 
@@ -310,18 +310,23 @@ class InjectionsController extends Controller
         ) as target_all
 
         LEFT JOIN (
-        SELECT part,color, SUM(qty) as mesin from working_mesin_injections
+        SELECT part,color, SUM(qty) as mesin, GROUP_CONCAT(working_mesin_injections.mesin) as working from working_mesin_injections
+        LEFT JOIN status_mesin_injections on working_mesin_injections.mesin = status_mesin_injections.mesin
+        where status_mesin_injections.`status` !='OFF'
         GROUP BY part,color ORDER BY mesin
         ) as mesin on target_all.part_code = mesin.part and target_all.color = mesin.color
+                
         
+        WHERE (CEILING(ROUND((target - stock) / qty_hako,1))* qty_hako) > 0       
+        ORDER BY color
         ";
+
 
         $part = DB::select($query);
         $response = array(
             'status' => true,            
             'part' => $part,
             'message' => 'Get Part Success',
-            'asas' => $query,
         );
         return Response::json($response);
     }

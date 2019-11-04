@@ -524,7 +524,7 @@
                  if (result.record[0].pro =="awal") { 
                    Highcharts.chart('container', {
                     chart: {
-                      type: 'line'
+                      type: 'spline'
                     },
                     title: {
                       text: 'Monthly Report'
@@ -579,7 +579,7 @@
                  }else if (result.record[0].pro =="visual"){
                   Highcharts.chart('container', {
                     chart: {
-                      type: 'line'
+                      type: 'spline'
                     },
                     title: {
                       text: 'Monthly Report Kakunin Visual'
@@ -646,7 +646,7 @@
                 }else{
                   Highcharts.chart('container', {
                     chart: {
-                      type: 'line'
+                      type: 'spline'
                     },
                     title: {
                       text: 'Monthly Report Bentsuki'

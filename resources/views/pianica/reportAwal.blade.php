@@ -179,7 +179,11 @@ table.table-bordered > tfoot > tr > th{
                     for (var i = 0; i < result.ng.length; i++) {                    
                      nglist.push(result.ng[i].ng_name);
                      total.push(parseInt(result.ng[i].total - PengurangC));
+                     if (parseInt(result.nglas[i].total - PengurangClas) > 0) {
                      totallas.push(parseInt(result.nglas[i].total - PengurangClas));
+                   }else{
+                    totallas.push(parseInt(0));
+                   }
                      
                     } 
 
@@ -206,7 +210,7 @@ table.table-bordered > tfoot > tr > th{
         type: 'column'
     },
     title: {
-        text: 'TOTAL NG RATE KENSA AWAL'
+        text: 'TOTAL NG KENSA AWAL'
     },
     subtitle: {
         text: 'Last Update '+tgl
@@ -240,7 +244,7 @@ table.table-bordered > tfoot > tr > th{
               },
     series: [{
       animation: false,
-        name: 'Total yesterday',
+        name: 'Total 3 Month Before',
         color: 'rgba(165,170,217,1)',
         data: totallas,
         pointPadding: 0.3,
@@ -275,7 +279,7 @@ table.table-bordered > tfoot > tr > th{
                 text: 'TOTAL NG RATE KENSA AWAL YESTERDAY'
               },
               subtitle: {
-        text: 'Last Update'+tgly
+        text: 'Total 3 Month Before '+tgl
     },
               tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
