@@ -628,6 +628,7 @@ class ProductionAuditController extends Controller
           foreach($productionAudit2 as $productionAudit2){
             $foreman = $productionAudit2->foreman;
             $id_production_audit = $productionAudit2->id_production_audit;
+            $send_status = $productionAudit2->send_status;
             $production_audit = ProductionAudit::find($id_production_audit);
             $production_audit->send_status = "Sent";
             $production_audit->send_date = date('Y-m-d');
@@ -642,7 +643,10 @@ class ProductionAuditController extends Controller
             // var_dump($mail_to);
           }
 
-          if($productionAudit != null){
+          if($send_status == "Sent"){
+            return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data pernah dikirim.')->with('page', 'Production Audit');
+          }
+          elseif($productionAudit != null){
               Mail::to($mail_to)->send(new SendEmail($productionAudit, 'audit'));
               return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('status', 'Your E-mail has been sent.')->with('page', 'Production Audit');
           }
