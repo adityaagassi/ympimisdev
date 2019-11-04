@@ -107,7 +107,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Operator  Efficiency Details</b></h4>
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Operator Overall Efficiency Details</b></h4>
 					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
 				</div>
 				<div class="modal-body">
@@ -120,11 +120,11 @@
 								<h5 class="modal-title" id="ng_rate"></h5>
 							</div>
 							<div class="col-md-4">
-								<h5 class="modal-title">Posh Rate</h5>
+								<h5 class="modal-title">Post Rate</h5>
 								<h5 class="modal-title" id="posh_rate"></h5>
 							</div>
 							<div class="col-md-4">
-								<h5 class="modal-title">OP Efficiency</h5>
+								<h5 class="modal-title">Operator Overall Efficiency</h5>
 								<h5 class="modal-title" id="op_eff"></h5>
 							</div>
 						</div>
@@ -135,7 +135,6 @@
 								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Finish Buffing</th>
-										<th>Material Number</th>
 										<th>Model</th>
 										<th>Key</th>
 										<th>OP Kensa</th>
@@ -152,7 +151,6 @@
 								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Finish Buffing</th>
-										<th>Material Number</th>
 										<th>Model</th>
 										<th>Key</th>
 										<th>OP Kensa</th>
@@ -168,7 +166,6 @@
 							<table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Material Number</th>
 										<th>Model</th>
 										<th>Key</th>
 										<th>Akan</th>
@@ -473,7 +470,6 @@
 				for (var i = 0; i < result.good.length; i++) {
 					body += '<tr>';
 					body += '<td>'+result.good[i].buffing_time+'</td>';
-					body += '<td>'+result.good[i].material_number+'</td>';
 					body += '<td>'+result.good[i].model+'</td>';
 					body += '<td>'+result.good[i].key+'</td>';
 					body += '<td>'+result.good[i].op_kensa+'</td>';
@@ -483,7 +479,7 @@
 					total_good += parseInt(result.good[i].quantity);
 				}
 				body += '<tr>';
-				body += '<td  colspan="5" style="text-align: center;">Total</td>';
+				body += '<td  colspan="4" style="text-align: center;">Total</td>';
 				body += '<td>'+total_good+'</td>';
 				body += '</tr>';
 				$('#middle-log-body').append(body);
@@ -496,7 +492,6 @@
 				for (var i = 0; i < result.ng.length; i++) {
 					body += '<tr>';
 					body += '<td>'+result.ng[i].buffing_time+'</td>';
-					body += '<td>'+result.ng[i].material_number+'</td>';
 					body += '<td>'+result.ng[i].model+'</td>';
 					body += '<td>'+result.ng[i].key+'</td>';
 					body += '<td>'+result.ng[i].op_kensa+'</td>';
@@ -506,7 +501,7 @@
 					total_ng += parseInt(result.ng[i].quantity);
 				}
 				body += '<tr>';
-				body += '<td colspan="5" style="text-align: center;">Total</td>';
+				body += '<td colspan="4" style="text-align: center;">Total</td>';
 				body += '<td>'+total_ng+'</td>';
 				body += '</tr>';
 				$('#middle-ng-log-body').append(body);
@@ -520,7 +515,6 @@
 				var body = '';
 				for (var i = 0; i < result.data_log.length; i++) {
 					body += '<tr>';
-					body += '<td>'+result.data_log[i].material_number+'</td>';
 					body += '<td>'+result.data_log[i].model+'</td>';
 					body += '<td>'+result.data_log[i].key+'</td>';
 					body += '<td>'+result.data_log[i].akan+'</td>';
@@ -535,7 +529,7 @@
 					total_act += parseFloat(result.data_log[i].act);
 				}
 				body += '<tr>';
-				body += '<td colspan="6" style="text-align: center;">Total</td>';
+				body += '<td colspan="5" style="text-align: center;">Total</td>';
 				body += '<td>'+total_std.toFixed(2)+'</td>';
 				body += '<td>'+total_act.toFixed(2)+'</td>';
 				body += '<td>'+total_perolehan+'</td>';

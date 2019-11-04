@@ -573,10 +573,6 @@ class MiddleProcessController extends Controller
 
 			$response = array(
 				'status' => true,
-				// 'insert1' => $new_queue,
-				// 'insert2' => $new_queue,
-				// 'delete' => $delete_queue,
-				// 'get' => $queue
 			);
 			return Response::json($response);
 
@@ -605,7 +601,6 @@ class MiddleProcessController extends Controller
 				}
 				$where_idx = "where idx in (".$idx.") ";
 
-				//db::connection('digital_kanban')->table('buffing_inventories')				
 				$delete = db::connection('digital_kanban')->delete("DELETE FROM buffing_queues ".$where_idx);
 
 			}
@@ -681,6 +676,18 @@ class MiddleProcessController extends Controller
 			where l.operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark order by buffing_time asc");
 
+		$ng_ng = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_ng_logs l
+			left join materials m on m.material_number = l.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where l.operator_id = '".$nik[0]."'
+			and date(l.buffing_time) = '".$tgl."'");
+
+		$ng_qty = db::Select("select ng_name, sum(quantity) as qty from middle_ng_logs
+			where operator_id = '".$nik[0]."'
+			and date(buffing_time) = '".$tgl."'
+			GROUP BY ng_name
+			Order by qty desc");
+
 		$response = array(
 			'status' => true,
 			'nik' => $nik[0],
@@ -688,6 +695,8 @@ class MiddleProcessController extends Controller
 			'data_log' => $data_log,
 			'good' => $good,
 			'ng' => $ng,
+			'ng_ng' => $ng_ng,
+			'ng_qty' => $ng_qty,
 		);
 		return Response::json($response);
 
@@ -1483,7 +1492,7 @@ class MiddleProcessController extends Controller
 			$where = "and mt.origin_group_code in (".$code.") ";
 		}
 
-		$ng_rate = db::select("select rate.shift, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
+		$ng_rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/g.jml*100) as rate from
 			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number

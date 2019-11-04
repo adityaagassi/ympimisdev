@@ -1,9 +1,11 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
-	.content{
-		color: white;
-		font-weight: bold;
+	.morecontent span {
+		display: none;
+	}
+	.morelink {
+		display: block;
 	}
 
 	thead>tr>th{
@@ -28,10 +30,12 @@
 	}
 	table.table-bordered > thead > tr > th{
 		border:1px solid black;
+		vertical-align: middle;
+		text-align: center;
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid black;
-		vertical-align: middle;
+		text-align: center;
 		padding:0;
 	}
 	table.table-bordered > tfoot > tr > th{
@@ -42,13 +46,10 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
-	.dataTable > thead > tr > th[class*="sort"]:after{
-		content: "" !important;
+	.content{
+		color: white;
+		font-weight: bold;
 	}
-	#queueTable.dataTable {
-		margin-top: 0px!important;
-	}
-
 	#loading, #error { display: none; }
 
 	.loading {
@@ -110,28 +111,56 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 style="float: right;" id="modal-title"></h4>
-					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-					<br><h4 class="modal-title" id="judul_table"></h4>
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-md-12">
-							<table id="tabel_detail" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead style="background-color: rgba(126,86,134,.7);">
+						{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
+
+						<div class="col-md-12" style="margin-bottom: 20px;">
+							<div class="col-md-6">
+								<h5 class="modal-title">NG Rate</h5><br>
+								<h5 class="modal-title" id="ng_rate"></h5>
+							</div>
+							<div class="col-md-6">
+								<div id="modal_ng" style="height: 200px"></div>
+							</div>
+						</div>
+
+						<div class="col-md-5">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
+							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Kensa at</th>
-										<th>Nama</th>
+										<th>Finish Buffing</th>
 										<th>Model</th>
 										<th>Key</th>
-										<th>NG Name</th>
-										<th>Quantity</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="middle-log-body">
 								</tbody>
 							</table>
 						</div>
+						<div class="col-md-7">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
+							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 10%;">Finish Buffing</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>NG Name</th>
+										<th style="width: 5%;">Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-ng-log-body">
+								</tbody>
+							</table>
+						</div>						
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -160,7 +189,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 		
 	});
 
@@ -394,6 +423,147 @@
 		return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
 	}
 
+
+	function showDetail(tgl, nama) {
+		var data = {
+			tgl:tgl,
+			nama:nama,
+		}
+
+		$('#myModal').modal('show');
+		$('#middle-log-body').append().empty();
+		$('#middle-ng-log-body').append().empty();
+		$('#ng_rate').append().empty();
+		$('#posh_rate').append().empty();
+		$('#judul').append().empty();
+
+
+		$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
+
+				//Middle log
+				var total_good = 0;
+				var body = '';
+				for (var i = 0; i < result.good.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.good[i].buffing_time+'</td>';
+					body += '<td>'+result.good[i].model+'</td>';
+					body += '<td>'+result.good[i].key+'</td>';
+					body += '<td>'+result.good[i].op_kensa+'</td>';
+					body += '<td>'+result.good[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_good += parseInt(result.good[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td  colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_good+'</td>';
+				body += '</tr>';
+				$('#middle-log-body').append(body);
+
+
+				//Middle log
+				var total_ng = 0;
+				var body = '';
+				for (var i = 0; i < result.ng_ng.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.ng_ng[i].buffing_time+'</td>';
+					body += '<td>'+result.ng_ng[i].model+'</td>';
+					body += '<td>'+result.ng_ng[i].key+'</td>';
+					body += '<td>'+result.ng_ng[i].op_kensa+'</td>';
+					body += '<td>'+result.ng_ng[i].ng_name+'</td>';
+					body += '<td>'+result.ng_ng[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_ng += parseInt(result.ng_ng[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td colspan="5" style="text-align: center;">Total</td>';
+				body += '<td>'+total_ng+'</td>';
+				body += '</tr>';
+				$('#middle-ng-log-body').append(body);
+
+
+				//Resume
+				var ng_rate = total_ng / total_good * 100;
+				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Good</sub> x 100%';
+				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_good +'</sub> x 100%';
+				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
+				$('#ng_rate').append(text_ng_rate);
+
+
+				//Chart NG
+				var data = [];
+				var ng_name = [];
+				var qty = [];
+				for (var i = 0; i < result.ng_qty.length; i++) {
+					
+					ng_name.push(result.ng_qty[i].ng_name);
+					qty.push(result.ng_qty[i].qty);
+					
+					if(i == 0){
+						data.push([ng_name[i], qty[i], true, false]);
+					}else{
+						data.push([ng_name[i], qty[i], false, false]);
+					}
+
+				}
+
+				Highcharts.chart('modal_ng', {
+					chart: {
+						styledMode: true,
+						backgroundColor: null,
+						borderWidth: null,
+						plotBackgroundColor: null,
+						plotShadow: null,
+						plotBorderWidth: null,
+						plotBackgroundImage: null
+					},
+
+					title: {
+						text: '',
+						style: {
+							display: 'none'
+						}
+					},
+					exporting: {
+						enabled: false 
+					},
+					tooltip: {
+						enabled: false
+					},
+					plotOptions: {
+						pie: {
+							animation: false,
+							dataLabels: {
+								useHTML: true,
+								enabled: true,
+								format: '<span style="color:#121212"><b>{point.name}</b>:</span><br><span style="color:#121212">total = {point.y} PC(s)</span>',
+								style:{
+									textOutline: true,
+								}
+							}
+						}
+					},
+					credits: {
+						enabled:false
+					},
+					series: [{
+						type: 'pie',
+						allowPointSelect: true,
+						keys: ['name', 'y', 'selected', 'sliced'],
+						data: data,
+					}]
+				});
+
+			}
+
+		});
+	}
+
+
 	function fillChart() {
 		var hpl = $('#origin_group').val();
 		var tanggal = $('#tanggal').val();
@@ -415,19 +585,17 @@
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's3'){
-
 						var name_temp = result.ng_rate[i].name.split(" ");
-						var in_name = '';
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						var xAxis = '';
+						xAxis += result.ng_rate[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							if(name_temp[1].length > 7){
-								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-							}else{
-								in_name = result.ng_rate[i].name;
-							}
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 						}
-						op_name.push(in_name);
+
+						op_name.push(xAxis);
 						rate.push(result.ng_rate[i].rate);						
 					}
 				}
@@ -451,9 +619,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'NG Rate (%)'
-						},
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -461,9 +627,9 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -479,9 +645,9 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,
@@ -515,18 +681,17 @@
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's1'){
 						var name_temp = result.ng_rate[i].name.split(" ");
-						var in_name = '';
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						var xAxis = '';
+						xAxis += result.ng_rate[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							if(name_temp[1].length > 7){
-								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-							}else{
-								in_name = result.ng_rate[i].name;
-							}
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 						}
-						op_name.push(in_name);
-						rate.push(result.ng_rate[i].rate);					
+
+						op_name.push(xAxis);
+						rate.push(result.ng_rate[i].rate);				
 					}
 				}
 
@@ -549,9 +714,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'NG Rate (%)'
-						},
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -559,9 +722,9 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -577,9 +740,9 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,
@@ -612,18 +775,17 @@
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 's2'){
 						var name_temp = result.ng_rate[i].name.split(" ");
-						var in_name = '';
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-							in_name = name_temp[0].charAt(0)+'. '+name_temp[1];
+						var xAxis = '';
+						xAxis += result.ng_rate[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							if(name_temp[1].length > 7){
-								in_name = name_temp[0]+'. '+name_temp[1].charAt(0);
-							}else{
-								in_name = result.ng_rate[i].name;
-							}
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 						}
-						op_name.push(in_name);
-						rate.push(result.ng_rate[i].rate);			
+
+						op_name.push(xAxis);
+						rate.push(result.ng_rate[i].rate);	
 					}
 				}
 
@@ -646,9 +808,7 @@
 						}
 					},
 					yAxis: {
-						title: {
-							text: 'NG Rate (%)'
-						},
+						visible: false
 					},
 					xAxis: {
 						categories: op_name,
@@ -656,9 +816,9 @@
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
-							rotation: -25,
+							rotation: -45,
 							style: {
-								fontSize: '1vw'
+								fontSize: '13px'
 							}
 						},
 					},
@@ -674,9 +834,9 @@
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									textOutline: false,
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
 							animation: false,
@@ -817,90 +977,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 		});
 	}
 });
-
-
 }
-
-
-function showDetail(tgl, nama) {
-	tabel = $('#tabel_detail').DataTable();
-	tabel.destroy();
-
-	$('#myModal').modal('show');
-
-	var table = $('#tabel_detail').DataTable({
-		'dom': 'Bfrtip',
-		'responsive': true,
-		'lengthMenu': [
-		[ 10, 25, 50, -1 ],
-		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-		],
-		'buttons': {
-			buttons:[
-			{
-				extend: 'pageLength',
-				className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/middle/buffing_detail_op_ng") }}",
-				"data" : {
-					tgl : tgl,
-					nama : nama
-				}
-			},
-			"columns": [
-			{ "data": "created_at" },
-			{ "data": "name" },
-			{ "data": "model"},
-			{ "data": "key"},
-			{ "data": "ng_name"},
-			{ "data": "quantity"},
-			]
-		});
-
-}
-
-
 
 </script>
 @endsection
