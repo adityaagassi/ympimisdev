@@ -421,12 +421,17 @@ class ProductionAuditController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $jml_null = 0;
 
         foreach($productionAudit as $productAudit){
             $product = $productAudit->product;
             $proses = $productAudit->proses;
             $date_audit = $productAudit->date;
             $foreman = $productAudit->foreman;
+            if ($productAudit->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $productAudit->approved_date;
         }
         if($productionAudit == null){
             // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
@@ -438,6 +443,8 @@ class ProductionAuditController extends Controller
                           'proses' => $proses,
                           'product' => $product,
                           'foreman' => $foreman,
+                          'approved_date' => $approved_date,
+                          'jml_null' => $jml_null,
                           'date_audit' => $date_audit,
                           'production_audit' => $productionAudit,
                           'departments' => $departments,
@@ -458,7 +465,7 @@ class ProductionAuditController extends Controller
         if($product != null && $date != null && $proses != null){
             $origin_group = $product;
             $proses = $proses;            
-            $queryProductionAudit = "select *, employees1.name as pic_name,
+            $queryProductionAudit = "select *,production_audits.id as id_production_audit, employees1.name as pic_name,
                     employees2.name as auditor_name
                     from production_audits 
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
@@ -476,11 +483,16 @@ class ProductionAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
+        $jml_null = 0;
         foreach($productionAudit as $productAudit){
             $product = $productAudit->product;
             $proses = $productAudit->proses;
             $date_audit = $productAudit->date;
             $foreman = $productAudit->foreman;
+            if ($productAudit->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $productAudit->approved_date;
         }
         if($productionAudit == null){
             // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
@@ -491,7 +503,9 @@ class ProductionAuditController extends Controller
             $data = array(
                           'proses' => $proses,
                           'product' => $product,
+                          'approved_date' => $approved_date,
                           'foreman' => $foreman,
+                          'jml_null' => $jml_null,
                           'date_audit' => $date_audit,
                           'production_audit' => $productionAudit,
                           'departments' => $departments,
@@ -597,7 +611,7 @@ class ProductionAuditController extends Controller
           $origin_group = $request->get('product');
           $proses = $request->get('proses');
           $date = date('Y-m-d', strtotime($request->get('date')));
-          $queryProductionAudit = "select *, employees1.name as pic_name,
+          $queryProductionAudit = "select *,production_audits.id as id_production_audit, employees1.name as pic_name,
                     employees2.name as auditor_name
                     from production_audits 
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
@@ -613,7 +627,12 @@ class ProductionAuditController extends Controller
 
           foreach($productionAudit2 as $productionAudit2){
             $foreman = $productionAudit2->foreman;
-            // var_dump($foreman);
+            $id_production_audit = $productionAudit2->id_production_audit;
+            $production_audit = ProductionAudit::find($id_production_audit);
+            $production_audit->send_status = "Sent";
+            $production_audit->send_date = date('Y-m-d');
+            $production_audit->save();
+            // var_dump($id);
           }
 
           $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
@@ -630,5 +649,21 @@ class ProductionAuditController extends Controller
           else{
             return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data tidak tersedia.')->with('page', 'Production Audit');
           }
+
+      }
+
+      public function approval(Request $request,$id)
+      {
+          $approve = $request->get('approve');
+          foreach($approve as $approve){
+            $production_audit = ProductionAudit::find($approve);
+            $origin_group = $production_audit->point_check_audit->product;
+            $proses = $production_audit->point_check_audit->proses;
+            $date = $production_audit->date;
+            $production_audit->approval = "Approved";
+            $production_audit->approved_date = date('Y-m-d');
+            $production_audit->save();
+          }
+          return redirect('/index/production_audit/print_audit_email/'.$id.'/'.$date.'/'.$origin_group.'/'.$proses)->with('error', 'Approved.')->with('page', 'Production Audit');
       }
 }

@@ -9,6 +9,15 @@ table, th, td {
 }
 @media print {
 	body {-webkit-print-color-adjust: exact;}
+	#approval1 {
+	    display: none;
+	  }
+	  #approval2 {
+	    display: none;
+	  }
+	  #approval3 {
+	    display: none;
+	  }
 }
 </style>
 <table class="table table-bordered table-hover">
@@ -23,7 +32,17 @@ table, th, td {
 			<td>Department</td>
 			<td>{{ $departments }}</td>
 			<td rowspan="4" colspan="2" style="padding: 15px;"><center><b>{{ $activity_name }}</b></center></td>
-			<td rowspan="4"><center>Mengetahui<br><br><br><br>{{ $foreman }}<br>Foreman</center></td>
+			<td rowspan="4"><center>Mengetahui<br><br>
+				@if($jml_null == 0)
+					<b style='color:green'>Approved</b><br>
+					<b style='color:green'>{{ $approved_date }}</b>
+				@endif
+				<br>{{ $foreman }}
+				<br>Foreman</center>
+			</td>
+			@if($jml_null > 0)
+			<td rowspan="5" id="approval1"><center>Approval</center></td>
+			@endif
 		</tr>
 		<tr>
 			<td>Product</td>
@@ -45,6 +64,7 @@ table, th, td {
 			<td>PIC</td>
 			<td>Auditor</td>
 		</tr>
+		<form role="form" method="post" action="{{url('index/production_audit/approval/'.$id)}}">
 		@foreach($production_audit as $production_audit)
 		<tr>
 			<td><?php echo $production_audit->point_check ?></td>
@@ -58,8 +78,25 @@ table, th, td {
         	</td>
 			<td>{{ $production_audit->pic_name }}</td>
 			<td>{{ $production_audit->auditor_name }}</td>
+			@if($jml_null > 0)
+			<td id="approval2">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				@if($production_audit->approval == Null)
+				<div class="custom-control custom-checkbox">
+				    <input type="checkbox" class="custom-control-input" id="customCheck" name="approve[]" value="{{ $production_audit->id_production_audit }}">
+				    <label class="custom-control-label" for="customCheck">Approve</label>
+				</div>
+				@endif
+			</td>
+			@endif
 		</tr>
 		@endforeach
+		@if($jml_null > 0)
+		<tr id="approval3">
+			<td align="right" colspan="7"><button type="submit">Submit</button></td>
+		</tr>
+		@endif
+		</form>
 	</tbody>
 </table>
 <script>

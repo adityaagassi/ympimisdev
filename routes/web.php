@@ -567,10 +567,7 @@ Route::group(['nav' => 'M20', 'middleware' => 'permission'], function(){
 	Route::get('fetch/user_document_detail', 'UserDocumentController@fetchUserDocumentDetail');
 	Route::post('fetch/user_document_renew', 'UserDocumentController@fetchUserDocumentRenew');
 	Route::post('fetch/user_document_update', 'UserDocumentController@fetchUserDocumentUpdate');
-	Route::post('fetch/user_document_create', 'UserDocumentController@fetchUserDocumentCreate');
-
-
-	
+	Route::post('fetch/user_document_create', 'UserDocumentController@fetchUserDocumentCreate');	
 });
 
 
@@ -1217,6 +1214,7 @@ Route::get('fetch/production_audit/detail_stat/{id}', 'ProductionAuditController
 Route::get('index/production_audit/signature', 'ProductionAuditController@signature');
 Route::post('index/production_audit/save_signature', 'ProductionAuditController@save_signature');
 Route::post('index/production_audit/sendemail/{id}', 'ProductionAuditController@sendemail');
+Route::post('index/production_audit/approval/{id}', 'ProductionAuditController@approval');
 
 //point check master
 Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');

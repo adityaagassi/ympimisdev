@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
+		{{ $activity_name }} <span class="text-purple">{{ $departments }} - {{ $product }} - {{ $proses }}</span>
 		{{-- <small> <span class="text-purple">??</span></small> --}}
 	</h1>
 	<ol class="breadcrumb">
@@ -221,12 +221,10 @@ table.table-bordered > tfoot > tr > th{
 				  <div class="row">
 				    <div class="col-xs-12">
 				      <div class="box">
-				        <div class="box-body">
+				        <div class="box-body" style="overflow-x:auto;">
 				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
-				                <th>Product</th>
-				                <th>Proses</th>
 				                <th>Date</th>
 				                <th>Point Pengecekan</th>
 				                <th>Cara Cek</th>
@@ -234,6 +232,8 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Kondisi</th>
 				                <th>PIC</th>
 				                <th>Auditor</th>
+				                <th>Send Status</th>
+				                <th>Approve Status</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>
@@ -241,8 +241,6 @@ table.table-bordered > tfoot > tr > th{
 				              @if(count($production_audit) != 0)
 				              @foreach($production_audit as $production_audit)
 				              <tr>
-				                <td>{{$production_audit->point_check_audit->product}}</td>
-				                <td>{{$production_audit->point_check_audit->proses}}</td>
 				                <td>{{$production_audit->date}}</td>
 				                <td><?php echo $production_audit->point_check_audit->point_check?></td>
 				                <td><?php echo $production_audit->point_check_audit->cara_cek?></td>
@@ -257,6 +255,17 @@ table.table-bordered > tfoot > tr > th{
 				                </td>
 				                <td>{{$production_audit->employee_pic->name}}</td>
 				                <td>{{$production_audit->employee_auditor->name}}</td>
+				                <td>@if($production_audit->send_status == "")
+				                		<label class="label label-danger">Not Yet Sent</label>
+				                	@else
+				                		<label class="label label-success">Sent</label>
+				                	@endif
+				        		</td>
+				                <td>@if($production_audit->approval == "")
+				                		<label class="label label-danger">Not Approved</label>
+				                	@else
+				                		<label class="label label-success">Approved</label>
+				                	@endif</td>
 				                <td>
 				                  <center>
 				                    <a class="btn btn-info btn-sm" href="{{url('index/production_audit/show/'.$id.'/'.$production_audit->id)}}">View</a>

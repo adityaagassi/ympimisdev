@@ -22,6 +22,10 @@ class CreateProductionAuditsTable extends Migration
             $table->string('kondisi');
             $table->string('pic');
             $table->string('auditor');
+            $table->string('send_status');
+            $table->date('send_date');
+            $table->string('approval');
+            $table->date('approved_date');
             $table->string('created_by');
             $table->softDeletes();
             $table->timestamps();

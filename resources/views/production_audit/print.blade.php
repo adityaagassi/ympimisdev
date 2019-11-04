@@ -23,7 +23,14 @@ table, th, td {
 			<td>Department</td>
 			<td>{{ $departments }}</td>
 			<td rowspan="4" colspan="2" style="padding: 15px;"><center><b>{{ $activity_name }}</b></center></td>
-			<td rowspan="4"><center>Mengetahui<br><br><br><br>{{ $foreman }}<br>Foreman</center></td>
+			<td rowspan="4"><center>Mengetahui<br>
+				@if($jml_null == 0)
+					<b style='color:green'>Approved</b><br>
+					<b style='color:green'>{{ $approved_date }}</b>
+				@endif
+				<br>{{ $foreman }}
+				<br>Foreman</center>
+			</td>
 		</tr>
 		<tr>
 			<td>Product</td>
