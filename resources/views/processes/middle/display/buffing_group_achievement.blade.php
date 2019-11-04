@@ -312,12 +312,17 @@
 			if(result.status){
 				var key = [];
 				var plan = [];
+				var ok_kensa = [];
 				var bff = [];
 
 				for(var i = 0; i < result.data.length; i++){
 					key.push('Group '+result.data[i].kunci);
 					plan.push(Math.ceil(result.data[i].barrel));
-					bff.push(Math.ceil(result.data[i].bff));			
+					ok_kensa.push(Math.ceil(result.data[i].bff));			
+				}
+
+				for(var i = 0; i < result.bff.length; i++){
+					bff.push(Math.ceil(result.bff[i].jml));			
 				}
 
 				var chart = Highcharts.chart('container1', {
@@ -395,6 +400,11 @@
 						name:'Actual Result',
 						type: 'column',
 						color: 'rgb(169,255,151)',
+						data: ok_kensa,
+					},{
+						name:'Buffing Result',
+						type: 'column',
+						color: 'rgb(93,194,193)',
 						data: bff,
 					}]
 
@@ -449,7 +459,6 @@
 							fontSize: '26px',
 							fontWeight: 'bold'
 						},
-						type: 'logarithmic',
 						gridLineWidth: 0,
 						startOnTick: false,
 						endOnTick: false

@@ -1168,25 +1168,28 @@ class MiddleProcessController extends Controller
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
-		$query = "select barrel.kunci, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
-		(select LEFT(m.`key`,1) as kunci, sum(b.qty) as jml from barrel_logs b
-		left join materials m on m.material_number = b.material
-		where (b.`status` = 'reset' or b.`status` = 'plt')
-		and DATE_FORMAT(b.created_at,'%Y-%m-%d') = '".$tanggal."'
-		group by kunci) barrel
-		left join
-		(select LEFT(m.`key`,1) as kunci, sum(l.quantity) as jml from middle_logs l
-		left join materials m on m.material_number = l.material_number
-		where l.location = 'bff-kensa'
-		and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
-		group by kunci) bff
-		on barrel.kunci = bff.kunci";
+		$data = db::select("select barrel.kunci, COALESCE(barrel.jml,0) as barrel, COALESCE(bff.jml,0) as bff from
+			(select LEFT(m.`key`,1) as kunci, sum(b.qty) as jml from barrel_logs b
+			left join materials m on m.material_number = b.material
+			where (b.`status` = 'reset' or b.`status` = 'plt')
+			and DATE_FORMAT(b.created_at,'%Y-%m-%d') = '".$tanggal."'
+			group by kunci) barrel
+			left join
+			(select LEFT(m.`key`,1) as kunci, sum(l.quantity) as jml from middle_logs l
+			left join materials m on m.material_number = l.material_number
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+			group by kunci) bff
+			on barrel.kunci = bff.kunci");
 
-		$data = db::select($query);
+		$bff = db::connection('digital_kanban')->select("select LEFT(m.`key`,1) as kunci, sum(d.material_qty) as jml from data_log d left join materials m on d.material_number = m.material_number 
+			where date(d.selesai_start_time) = '".$tanggal."'
+			group by kunci");
 
 		$response = array(
 			'status' => true,
 			'data' => $data,
+			'bff' => $bff,
 			'tanggal' => $tanggal
 		);
 		return Response::json($response);
