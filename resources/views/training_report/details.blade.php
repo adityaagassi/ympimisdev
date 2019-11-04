@@ -634,7 +634,7 @@ table.table-bordered > tfoot > tr > th{
              {{-- url: "{{ url('index/training_report/cek_employee/') }}"; --}}
              $("#textnama").val(result.code);
              // window.location.href = url+'/'+result.code;
-             window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
+             // window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
              // console.log(result.code);
              
               // var redirect = '../materials/cek';

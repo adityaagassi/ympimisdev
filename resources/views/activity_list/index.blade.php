@@ -86,6 +86,7 @@
                       Delete
                     </a>
                   </center>
+                  
                 </td>
               </tr>
               @endforeach

@@ -119,7 +119,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date-print" name="date" required>
+										<input type="text" class="form-control pull-right" id="date-print" name="date" required autocomplete="off">
 									</div>
 								</div>
 							</div>
@@ -164,7 +164,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date-email" name="date" required>
+										<input type="text" class="form-control pull-right" id="date-email" name="date" required autocomplete="off">
 									</div>
 								</div>
 							</div>
