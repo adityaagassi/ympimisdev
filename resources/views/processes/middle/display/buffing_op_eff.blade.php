@@ -983,7 +983,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 			{
 				name:'Result',
 				type: 'column',
-				color: 'rgb(144,238,126)',
+				color: 'rgb(93,194,193)',
 				data: qty,
 			}
 			]

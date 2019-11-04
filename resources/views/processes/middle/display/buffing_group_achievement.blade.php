@@ -392,20 +392,20 @@
 						}
 					},
 					series: [{
-						name:'Incoming Instruction',
+						name:'Tumbling Picking',
 						type: 'column',
 						color: 'rgb(255,116,116)',
 						data: plan,
-					},{
-						name:'Actual Result',
-						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: ok_kensa,
 					},{
 						name:'Buffing Result',
 						type: 'column',
 						color: 'rgb(93,194,193)',
 						data: bff,
+					},{
+						name:'OK Kensa',
+						type: 'column',
+						color: 'rgb(169,255,151)',
+						data: ok_kensa,
 					}]
 
 				});
