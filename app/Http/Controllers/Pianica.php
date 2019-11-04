@@ -2738,4 +2738,218 @@ public function reportSpotWeldingData(Request $request){
         return Response::json($response);
     }
 
+
+public function reportSpotWeldingDataDetail(Request $request){
+        $tgl = $request->get('tgl');
+        $mesin = $request->get('mesin');
+
+        if ($mesin == "Mesin 1") {
+            $mesin = "H1";
+        }
+
+        if ($mesin == "Mesin 2") {
+            $mesin = "H2";
+        }
+
+        if ($mesin == "Mesin 3") {
+            $mesin = "H3";
+        }
+
+        if ($mesin == "Mesin 4") {
+            $mesin = "M1";
+        }
+
+        if ($mesin == "Mesin 5") {
+            $mesin = "M2";
+        }
+        if ($mesin == "Mesin 6") {
+            $mesin = "M3";
+        }
+        
+               
+        $query = "SELECT ng, COUNT(ng) as total from (
+        SELECT mesin, ng, header_bensukis.created_at FROM header_bensukis
+        LEFT JOIN detail_bensukis ON  header_bensukis.ID = detail_bensukis.id_bensuki
+        )a RIGHT JOIN (
+        SELECT ng_name from ng_lists WHERE location='PN_Bensuki_Mesin'
+        )b on a.mesin = b.ng_name where DATE_FORMAT(a.created_at,'%Y-%m-%d') = '".$tgl."' and mesin='".$mesin."' GROUP BY ng
+        ";
+
+        
+
+        $ng = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'ng' => $ng,    
+            'message' => 'Get Part Success',
+            
+        );
+        return Response::json($response);
+    }
+
+
+
+//report monthly new display spotwelding
+public function reportKensaAwalDaily()
+{
+
+    return view('pianica.reportKensaAwalDaily')->with('page', 'Report Kensa Awal');
+}
+
+public function getReportKensaAwalDaily(Request $request){
+        $tgl = $request->get('tgl');
+
+
+        if ($tgl !="") {
+            $to = $request->get('from');
+            $from = $request->get('tgl');            
+        }else{
+            $to = date('Y-m-d');
+            $from = date('Y-m-d',strtotime('-30 days'));
+        }
+               
+        $query = "
+        SELECT SUM(biri) as biri, SUM(oktaf) as oktaf, SUM(t_tinggi) as tinggi, SUM(t_renda) as rendah, tgl from(
+        SELECT qty as biri, 0 as Oktaf, 0 as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Awal' and ng in(select id from ng_lists WHERE location='PN_Kensa_Awal'  and ng_name='Biri') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, qty as Oktaf, 0 as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Awal' and ng in(select id from ng_lists WHERE location='PN_Kensa_Awal'  and ng_name='Oktaf') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, 0 as Oktaf, qty as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Awal' and ng in(select id from ng_lists WHERE location='PN_Kensa_Awal'  and ng_name='T. Tinggi') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, 0 as Oktaf, 0 as T_Tinggi, qty as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Awal' and ng in(select id from ng_lists WHERE location='PN_Kensa_Awal'  and ng_name='T. Rendah') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."')
+        as ng GROUP BY tgl
+        ";
+
+        $query2="SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'";
+
+        $ng = DB::select($query);
+        $tgl = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'ng' => $ng,
+            'tgl' => $tgl,
+            'message' => 'Get Part Success',
+            'a' => $query
+            
+        );
+        return Response::json($response);
+    }
+
+    //report monthly new display spotwelding
+public function reportKensaAkhirDaily()
+{
+
+    return view('pianica.reportKensaAkhirDaily')->with('page', 'Report Kensa Awal');
+}
+
+public function getReportKensaAkhirDaily(Request $request){
+        $tgl = $request->get('tgl');
+
+
+        if ($tgl !="") {
+            $to = $request->get('from');
+            $from = $request->get('tgl');            
+        }else{
+            $to = date('Y-m-d');
+            $from = date('Y-m-d',strtotime('-30 days'));
+        }
+               
+        $query = "
+        SELECT SUM(biri) as biri, SUM(oktaf) as oktaf, SUM(t_tinggi) as tinggi, SUM(t_renda) as rendah, tgl from(
+        SELECT qty as biri, 0 as Oktaf, 0 as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Akhir' and ng in(select id from ng_lists WHERE location='PN_Kensa_Akhir'  and ng_name='Biri') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, qty as Oktaf, 0 as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Akhir' and ng in(select id from ng_lists WHERE location='PN_Kensa_Akhir'  and ng_name='Oktaf') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, 0 as Oktaf, qty as T_Tinggi, 0 as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Akhir' and ng in(select id from ng_lists WHERE location='PN_Kensa_Akhir'  and ng_name='T. Tinggi') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as biri, 0 as Oktaf, 0 as T_Tinggi, qty as T_Renda, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kensa_Akhir' and ng in(select id from ng_lists WHERE location='PN_Kensa_Akhir'  and ng_name='T. Rendah') and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."')
+        as ng GROUP BY tgl
+        ";
+
+        $query2="SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'";
+
+        $ng = DB::select($query);
+        $tgl = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'ng' => $ng,
+            'tgl' => $tgl,
+            'message' => 'Get Part Success',
+            'a' => $query
+            
+        );
+        return Response::json($response);
+    }
+
+      //report monthly new display spotwelding
+public function reportVisualDaily()
+{
+
+    return view('pianica.reportKensaVisualDaily')->with('page', 'Report Kensa Awal');
+}
+
+public function getReportVisualDaily(Request $request){
+        $tgl = $request->get('tgl');
+
+
+        if ($tgl !="") {
+            $to = $request->get('from');
+            $from = $request->get('tgl');            
+        }else{
+            $to = date('Y-m-d');
+            $from = date('Y-m-d',strtotime('-30 days'));
+        }
+               
+        $query = "SELECT SUM(frame) frame, SUM(r_l) r_l, SUM(lower) lower, SUM(handle) handle, SUM(button) button, SUM(pianica) pianica, tgl from ( 
+        SELECT qty as frame, 0 as r_l, 0 as lower, 0 as handle, 0 as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Frame Assy'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as frame, qty as r_l, 0 as lower, 0 as handle, 0 as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Cover R/L'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as frame, 0 as r_l, qty as lower, 0 as handle, 0 as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Cover Lower'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as frame, 0 as r_l, 0 as lower, qty as handle, 0 as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Handle'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        union all
+
+        SELECT 0 as frame, 0 as r_l, 0 as lower, 0 as handle, qty as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Button'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+
+        ) ng GROUP BY tgl
+        ";
+
+        $query2="SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."' and location ='PN_Kakuning_Visual'";
+
+        $ng = DB::select($query);
+        $tgl = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'ng' => $ng,
+            'tgl' => $tgl,
+            'message' => 'Get Part Success',
+            'a' => $query
+            
+        );
+        return Response::json($response);
+    }
+
 }

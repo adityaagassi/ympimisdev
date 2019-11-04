@@ -76,40 +76,6 @@
 		</div>
 	</div>
 
- <div class="modal fade" id="modalProgress">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" id="modalProgressTitle"style="color: black"></h4>
-         <h4 class="modal-title" id="modalProgressTitle2" style="color: black"></h4>
-         <h4 class="modal-title" id="modalProgressTitle3"style="color: black"></h4>
-        <div class="modal-body table-responsive no-padding" style="min-height: 100px">
-          <center>
-            <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
-          </center>
-          <table class="table table-hover table-bordered table-striped" id="tableModal">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th>NG Name</th>
-                <th>Total</th>              
-              </tr>
-            </thead>
-            <tbody id="modalProgressBody">
-            </tbody>
-            <tfoot style="background-color: RGB(252, 248, 227);">
-              <th style="color: black;font-size:12pt">Total</th>
-              <th id="totalP" style="color: black;font-size:12pt"></th>
-                           
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 </section>
 @stop
 
@@ -365,17 +331,18 @@
 			from:tgl2
 		}
 
-		$.get('{{ url("fetch/reportSpotWeldingData") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/getReportVisualDaily") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					
 					var tgl_all = [];
-					var mesin1 = [];
-					var mesin2 = [];
-					var mesin3 = [];
-					var mesin4 = [];
-					var mesin5 = [];
-					var mesin6 = [];
+					var frame = [];
+					var r_l = [];
+					var lower = [];
+					var handle = [];
+					var button = [];
+					var pianica = [];
+					
 
 				
 
@@ -385,30 +352,13 @@
 					}
 
 
-					for(i = 0; i < result.ng.length; i++){
-						if ( result.ng[i].ng == "H1") {
-						mesin1.push(parseInt(result.ng[i].ng_all));
-						}
-
-						if ( result.ng[i].ng == "H2") {
-						mesin2.push(parseInt(result.ng[i].ng_all));
-						}
-
-						if ( result.ng[i].ng == "H3") {
-						mesin3.push(parseInt(result.ng[i].ng_all));
-						}
-
-						if ( result.ng[i].ng == "M1") {
-						mesin4.push(parseInt(result.ng[i].ng_all));
-						}
-
-						if ( result.ng[i].ng == "M2") {
-						mesin5.push(parseInt(result.ng[i].ng_all));
-						}
-
-						if ( result.ng[i].ng == "M3") {
-						mesin6.push(parseInt(result.ng[i].ng_all));
-						}
+					for(i = 0; i < result.ng.length; i++){						
+						frame.push(parseInt(result.ng[i].frame));
+						r_l.push(parseInt(result.ng[i].r_l));
+						lower.push(parseInt(result.ng[i].lower));
+						handle.push(parseInt(result.ng[i].handle));
+						button.push(parseInt(result.ng[i].button));
+						pianica.push(parseInt(result.ng[i].pianica));	
 						
 					}
 
@@ -418,7 +368,7 @@
 				        type: 'spline'
 				    },
 				    title: {
-				        text: 'Daily Total NG Spot Welding'
+				        text: 'Daily Total NG Kakunin Visual'
 				    },
 				    subtitle: {
 				        text: 'Last Update: '+getActualFullDate(),
@@ -442,78 +392,36 @@
 				    series: [{
 
       					animation: false,
-				        name: 'Mesin 1',
-				        data: mesin1,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
+				        name: 'Frame Assy',
+				        data: frame
 				    }, {
 
       					animation: false,
-				        name: 'Mesin 2',
-				        data: mesin2,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
+				        name: 'Cover R/L',
+				        data: r_l
 				    }, {
 
       					animation: false,
-				        name: 'Mesin 3',
-				        data: mesin3,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
+				        name: 'Cover Lower',
+				        data: lower
 				    }
 				    , {
 
       					animation: false,
-				        name: 'Mesin 4',
-				        data: mesin4,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
-				    }
-				    , {
-
-      					animation: false,
-				        name: 'Mesin 5',
-				        data: mesin5,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
+				        name: 'Handle',
+				        data: handle
 				    }, {
 
       					animation: false,
-				        name: 'Mesin 6',
-				        data: mesin6,
-				        point: {
-			                events: {
-			                  click: function () {
-			                    fillModal(this.category, this.series.name);
-			                  }
-			                }
-			              }
+				        name: 'Button',
+				        data: button
+				    }, {
+
+      					animation: false,
+				        name: 'Pianica',
+				        data: pianica
 				    }
+				    
 				    ]
 				});
 				}
@@ -521,45 +429,7 @@
 		});
 	}
 
-
-  function fillModal(tgl, mesin){
-    $('#modalProgress').modal('show');
-    $('#loading').show();
-    $('#modalProgressTitle').hide();
-    $('#tableModal').hide();
-
-    var data = {
-      tgl:tgl,
-      mesin:mesin
-    }
-    $.get('{{ url("fetch/reportSpotWeldingDataDetail") }}', data, function(result, status, xhr){
-      if(result.status){
-        $('#modalProgressBody').html('');
-        var resultData = '';
-        var total = 0;
-        
-        $.each(result.ng, function(key, value) {         
-          resultData += '<tr >';
-          resultData += '<td style="width: 40%; color:black; font-size:12pt">'+ value.ng +'</td>';
-          resultData += '<td style="width: 40% ;color:black; font-size:12pt">'+ value.total +'</td>';                    
-          resultData += '</tr>';   
-          total += value.total;       
-        });
-        
-        $('#loading').hide();
-        $('#modalProgressBody').append(resultData);
-        $('#totalP').text(total);
-        $('#modalProgressTitle2').text(mesin);
-        $('#modalProgressTitle3').text(tgl);  
-        
-        // $('#modalProgressTitle').show();
-        $('#tableModal').show();
-      }
-      else{
-        alert('Attempt to retrieve data failed');
-      }
-    });
-  }
+	
 
 </script>
 @stop

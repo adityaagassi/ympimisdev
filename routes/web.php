@@ -947,6 +947,21 @@ Route::get('index/getKensaBensuki3', 'Pianica@getKensaBensuki3');
 //detail spot welding
 Route::get('index/reportSpotWelding', 'Pianica@reportSpotWelding');
 Route::get('fetch/reportSpotWeldingData', 'Pianica@reportSpotWeldingData');
+Route::get('fetch/reportSpotWeldingDataDetail', 'Pianica@reportSpotWeldingDataDetail');
+
+//detail spot getReportKensaAwalDaily
+Route::get('index/reportKensaAwalDaily', 'Pianica@reportKensaAwalDaily');
+Route::get('fetch/getReportKensaAwalDaily', 'Pianica@getReportKensaAwalDaily');
+
+//end pianica
+
+//detail spot getReportKensaAkhirDaily
+Route::get('index/reportKensaAkhirDaily', 'Pianica@reportKensaAkhirDaily');
+Route::get('fetch/getReportKensaAkhirDaily', 'Pianica@getReportKensaAkhirDaily');
+
+//detail spot getReportVisualDaily
+Route::get('index/reportVisualDaily', 'Pianica@reportVisualDaily');
+Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 //end pianica
 
@@ -1309,6 +1324,7 @@ Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
+Route::get('getmaterialsbymaterialsnumber', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 
 
 
@@ -1319,10 +1335,14 @@ View::composer('*', function ($view) {
 });
 
 //CUBEACON
-Route::get('/mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
-Route::get('/mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
-Route::get('/index/beacon','BeaconController@index');
+Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
+Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
+Route::get('index/beacon','BeaconController@index');
 Route::get('fetch/user/beacon','BeaconController@getUser');
+Route::get('index/master_beacon','BeaconController@master_beacon');
+
+Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
+
 
 //ROOMS
 Route::get('/meetingroom1', function () {

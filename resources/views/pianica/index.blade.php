@@ -34,8 +34,7 @@
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			 <a href="{{ url("/index/DisplayPN") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Display</a>
-			  <a href="{{ url("/index/reportBensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Bentsuki</a>
-			  <a href="{{ url("/index/reportSpotWelding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Spot Welding</a>
+			  <a href="{{ url("/index/reportBensuki") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Bentsuki</a>			  
 			  <a href="{{ url("/index/reportAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Awal All Line</a>
 			   <a href="{{ url("/index/reportAwalLine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Awal / Line</a>
 			   <a href="{{ url("/index/reportAkhir") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Kensa Akhir All Line</a>
@@ -44,6 +43,14 @@
 			   <a href="{{ url("/index/record") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Pianica Inventories</a>
 
 			    <a href="{{ url("/index/reportDayAwal") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monthly Report </a>
+
+			    <a href="{{ url("/index/reportSpotWelding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Spot Welding</a>
+
+			    <a href="{{ url("/index/reportKensaAwalDaily") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Kensa Awal</a>
+
+			    <a href="{{ url("/index/reportKensaAkhirDaily") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Kensa Akhir</a>
+
+			    <a href="{{ url("/index/reportVisualDaily") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Kakunin Visual</a>
 		
 		</div>
 	</div>
