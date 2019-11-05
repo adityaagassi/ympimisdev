@@ -134,6 +134,8 @@
 
 	function fetchTable(){
 		var hpl = $('#hpl').val().split(',');
+		var page = "{{$_GET['page']}}";
+
 		var data = {
 			mrpc : $('#mrpc').val(),
 			hpl : hpl,
@@ -213,24 +215,52 @@
 							selesai_time = "";
 						}
 
+						// var key = [['C','D','E'],['F','G','H','J','82']];
 
-						buffingTableBody += '<tr '+color+'>';
-						buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
-						buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-						buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
-						buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
-						buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-						buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
-						buffingTableBody += '</tr>';
+						var key = {first:['C','D','E'], second:['F','G','H','J','82']};
+
+						console.log(page);
+
+						if(page != ''){
+							if(key[page].includes(value.ws.split("-")[1])){
+								buffingTableBody += '<tr '+color+'>';
+								buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
+								buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+								buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
+								buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
+								buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+								buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
+								buffingTableBody += '</tr>';
+							}
+						}else{
+							buffingTableBody += '<tr '+color+'>';
+							buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
+							buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+							buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
+							buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
+							buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+							buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
+							buffingTableBody += '</tr>';
+						}						
+
 						i += 1;
 
 						data2 = {
@@ -244,53 +274,53 @@
 						// }
 					});
 
-					$('#buffingTableBody').append(buffingTableBody);
-				}
-				else{
-					alert('Attempt to retrieve data failed.');
-				}
-			}
-		})
+$('#buffingTableBody').append(buffingTableBody);
+}
+else{
+	alert('Attempt to retrieve data failed.');
+}
+}
+})
+}
+
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+$.date = function(dateObject) {
+	var d = new Date(dateObject);
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (day < 10) {
+		day = "0" + day;
 	}
-
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
+	if (month < 10) {
+		month = "0" + month;
 	}
+	var date = day + "/" + month + "/" + year;
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
-
-	$.date = function(dateObject) {
-		var d = new Date(dateObject);
-		var day = d.getDate();
-		var month = d.getMonth() + 1;
-		var year = d.getFullYear();
-		if (day < 10) {
-			day = "0" + day;
-		}
-		if (month < 10) {
-			month = "0" + month;
-		}
-		var date = day + "/" + month + "/" + year;
-
-		return date;
-	};
+	return date;
+};
 </script>
 @endsection
