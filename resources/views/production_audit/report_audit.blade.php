@@ -188,9 +188,9 @@ table.table-bordered > tfoot > tr > th{
             jumlahnotgood.push(parseInt(value.jumlah_not_good));
           })
           $('#chart').highcharts({
-            chart: {
-              type: 'column'
-            },
+            // chart: {
+            //   type: 'column'
+            // },
             title: {
               text: 'Report Audit of '+month
             },
@@ -198,8 +198,7 @@ table.table-bordered > tfoot > tr > th{
               type: 'category',
               categories: week_date,
             },
-            yAxis: {
-              type: 'linear',
+            yAxis: [{
               title: {
                 text: 'Total Report'
               },
@@ -209,8 +208,23 @@ table.table-bordered > tfoot > tr > th{
                       fontWeight: 'bold',
                       color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
                   }
+              }},
+              { // Secondary yAxis
+                title: {
+                    text: 'Report',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
               }
-            },
+            ],
             legend: {
               align: 'right',
               x: -30,
@@ -255,11 +269,25 @@ table.table-bordered > tfoot > tr > th{
                 return this.series.name+' : ' + this.y;
               }
             },
-            series: [{
+            series: [
+            {
+                type: 'column',
                 name: 'Good',
                 color: '#1faa00',
                 data: jumlahgood
             }, {
+               type: 'column',
+                name: 'Not Good',
+                data: jumlahnotgood,
+                color : '#d50000'
+            },
+            {
+                type: 'spline',
+                name: 'Good',
+                color: '#1faa00',
+                data: jumlahgood
+            }, {
+               type: 'spline',
                 name: 'Not Good',
                 data: jumlahnotgood,
                 color : '#d50000'

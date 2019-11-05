@@ -57,8 +57,11 @@ class SendEmail extends Mailable
         if($this->remark == 'cpar'){
             return $this->from('ympimis@gmail.com')->subject('MIS CPAR')->view('mails.cpar');
         }
+        if($this->remark == 'user_document'){
+            return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (??)')->view('mails.user_document');
+        }
         if($this->remark == 'audit'){
-            return $this->from('ympimis@gmail.com')->subject('Production Audit')->view('mails.audit');
+            return $this->from('ympimis@gmail.com')->subject('Production Audit Report (??)')->view('mails.audit');
         }
     }
 }

@@ -36,9 +36,13 @@ class SamplingCheckController extends Controller
         // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
+        $subsection2 = DB::select($querySubSection);
+        $subsection3 = DB::select($querySubSection);
 
     	$data = array('sampling_check' => $samplingCheck,
                       'subsection' => $subsection,
+                      'subsection2' => $subsection2,
+                      'subsection3' => $subsection3,
     				  'departments' => $departments,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -523,5 +527,68 @@ class SamplingCheckController extends Controller
 
       return DataTables::of($detail)->make(true);
 
+    }
+
+    function print_sampling(Request $request,$id)
+    {
+        $activityList = ActivityList::find($id);
+        // var_dump($request->get('product'));
+        // var_dump($request->get('date'));
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+
+        if($request->get('subsection') != null && $request->get('month') != null){
+            $subsection = $request->get('subsection');
+            $month = $request->get('month');
+            $querySamplingCheck = "select *
+                from sampling_checks
+                join sampling_check_details on sampling_checks.id = sampling_check_details.sampling_check_id
+                join activity_lists on activity_lists.id = sampling_checks.activity_list_id
+                where activity_lists.department_id = '".$id_departments."'
+                and sampling_checks.subsection = '".$subsection."' 
+                and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."' 
+                and sampling_checks.deleted_at is null";
+            $samplingCheck = DB::select($querySamplingCheck);
+            $samplingCheck2 = DB::select($querySamplingCheck);
+        }
+        // var_dump($subsection);
+
+        foreach($samplingCheck2 as $samplingCheck2){
+            // $product = $samplingCheck->product;
+            // $proses = $samplingCheck->proses;
+            $date = $samplingCheck2->date;
+            $foreman = $samplingCheck2->foreman;
+            $section = $samplingCheck2->section;
+            $subsection = $samplingCheck2->subsection;
+            $month = $samplingCheck2->month;
+            $leader = $samplingCheck2->leader;
+        }
+        if($samplingCheck == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'leader' => $leader,
+                          'foreman' => $foreman,
+                          'section' => $section,
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'date' => $date,
+                          'samplingCheck' => $samplingCheck,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('sampling_check.print', $data
+                )->with('page', 'Sampling Check');
+        }
     }
 }

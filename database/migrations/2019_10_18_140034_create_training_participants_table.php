@@ -17,6 +17,7 @@ class CreateTrainingParticipantsTable extends Migration
             $table->increments('id');
             $table->integer('training_id');
             $table->string('participant_name');
+            $table->string('participant_absence');
             $table->integer('created_by');
             $table->softDeletes();
             $table->timestamps();
