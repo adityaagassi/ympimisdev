@@ -40,7 +40,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     CPAR <span class="text-purple">Grafik</span>
-    <small>Berdasarkan Departemen<span class="text-purple"> </span></small>
+    <small>Berdasarkan Bulan<span class="text-purple"> </span></small>
   </h1>
   <ol class="breadcrumb" id="last_update">
   </ol>
@@ -56,7 +56,7 @@ table.table-bordered > tfoot > tr > th{
       <div class="col-md-12">
         <div class="col-md-2 pull-right">
           <select class="form-control" id="fq" data-placeholder="Pilih Fiscal year" onchange="drawChart()" style="border-color: #605ca8" >
-              <option value="" disabled selected>Select Fiscal Year</option>
+              <option value="" selected>Semua Fiscal Year</option>
               <option value="196">FY196</option>
               <option value="195">FY195</option>
             </select>
@@ -64,10 +64,27 @@ table.table-bordered > tfoot > tr > th{
         </div>
         <div class="col-md-2 pull-right">
           <select class="form-control" id="kategori" data-placeholder="Pilih Kategori" onchange="drawChart()" style="border-color: #605ca8" >
-              <option value="" disabled selected>Select Kategori</option>
+              <option value="" selected>Semua Kategori</option>
               <option value="Eksternal">Eksternal</option>
               <option value="Internal">Internal</option>
               <option value="Supplier">Supplier</option>
+            </select>
+          <br>
+        </div>
+        <!-- <div class="col-md-2 pull-right">
+              <select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="changeFy()">
+                @foreach($fys as $fy)
+                <option value="{{ $fy->fiscal_year }}">{{ $fy->fiscal_year }}</option>
+                @endforeach
+              </select>
+              <input type="text" name="fy" id="fy" hidden>
+          </div> -->
+        <div class="col-md-2 pull-right">
+          <select class="form-control" id="departemen" data-placeholder="Pilih Departemen" onchange="drawChart()" style="border-color: #605ca8" >
+              <option value="" selected>Semua Departemen</option>
+              @foreach($departemen as $dept)
+                <option value="{{ $dept->id }}">{{ $dept->department_name }}</option>
+              @endforeach
             </select>
           <br>
         </div>
@@ -156,6 +173,7 @@ table.table-bordered > tfoot > tr > th{
     $('#myModal').on('hidden.bs.modal', function () {
       $('#example2').DataTable().clear();
     });
+    $('.select2').select2();
 
     drawChart();
   });
@@ -172,10 +190,12 @@ table.table-bordered > tfoot > tr > th{
     var fq = $('#fq').val();
     var tgl = $('#tgl').val();
     var kategori = $('#kategori').val();
+    var departemen = $('#departemen').val();
 
     var data = {
       tahun: fq,
-      kategori: kategori
+      kategori: kategori,
+      departemen: departemen
     };
 
 
@@ -189,11 +209,13 @@ table.table-bordered > tfoot > tr > th{
           //   inTransitCount.push(data[i].intransit);
           //   fstkCount.push(data[i].fstk);
           // }
-          
-          var departemen = [], jml = [], statusopen = [], statusclose = [];
+          var monthtitle = result.monthTitle;
+
+          var month = [], jml = [], statusopen = [], statusclose = [];
 
           $.each(result.datas, function(key, value) {
-            departemen.push(value.department_name);
+            // departemen.push(value.department_name);
+            month.push(value.bulan);
             jml.push(value.jumlah);
             statusopen.push(parseInt(value.open));
             statusclose.push(parseInt(value.close));
@@ -204,17 +226,18 @@ table.table-bordered > tfoot > tr > th{
               type: 'column'
             },
             title: {
-              text: 'CPAR By Departement'
+              text: 'CPAR Report Per Bulan'
             },
             xAxis: {
               type: 'category',
-              categories: departemen
+              categories: month
             },
             yAxis: {
               type: 'linear',
               title: {
                 text: 'Total CPAR'
               },
+              tickInterval: 1,
               stackLabels: {
                   enabled: true,
                   style: {
@@ -269,12 +292,12 @@ table.table-bordered > tfoot > tr > th{
             },
             series: [{
                 name: 'Open',
-                color: 'green',
+                color: '#388e3c',
                 data: statusopen
             }, {
                 name: 'Closed',
                 data: statusclose,
-                color : '#f57c00'
+                color : '#c62828'
 
             }
             ]
@@ -286,7 +309,7 @@ table.table-bordered > tfoot > tr > th{
     })
   }
 
-  function ShowModal(departemen, status) {
+  function ShowModal(bulan, status) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -348,7 +371,7 @@ table.table-bordered > tfoot > tr > th{
           "type" : "get",
           "url" : "{{ url("index/qc_report/detail_cpar") }}",
           "data" : {
-            departemen : departemen,
+            bulan : bulan,
             status : status
           }
         },
@@ -366,7 +389,7 @@ table.table-bordered > tfoot > tr > th{
         ]    });
 
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center>'+departemen+'<center>');
+    $('#judul_table').append('<center><b>bulan '+bulan+'</center></b>');
     
   }
 

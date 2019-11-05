@@ -3,38 +3,38 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <style type="text/css">
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
@@ -45,9 +45,9 @@ table.table-bordered > tfoot > tr > th{
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
+   <li><a href="#">Examples</a></li>
+   <li class="active">Blank page</li> --}}
+ </ol>
 </section>
 
 @endsection
@@ -88,11 +88,11 @@ table.table-bordered > tfoot > tr > th{
             <select class="form-control select2" name="employee_id" style="width: 100%;" data-placeholder="Pilih Manager" required>
               <option value=""></option>
               @foreach($managers as $manager)
-                @if($manager->employee_id == $cpars->employee_id)
-                  <option value="{{ $manager->employee_id }}" selected="">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
-                @else
-                  <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
-                @endif
+              @if($manager->employee_id == $cpars->employee_id)
+              <option value="{{ $manager->employee_id }}" selected="">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
+              @else
+              <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
+              @endif
               @endforeach
             </select>
           </div>
@@ -133,36 +133,36 @@ table.table-bordered > tfoot > tr > th{
               <option value='Other'>Other</option>
             </select>
           </div>
-          <label class="col-sm-1">CPAR Kepada<span class="text-red">*</span></label>
+          <label class="col-sm-1">Departemen<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" required>
-                <optgroup label="Production">
-                  @foreach($productions as $production)
-                  @if($production->id == $cpars->department_id)
-                  <option value="{{ $production->id }}" selected>{{ $production->department_name }}</option>
-                  @else
-                  <option value="{{ $production->id }}">{{ $production->department_name }}</option>
-                  @endif
-                  @endforeach
-                </optgroup>
-                <optgroup label="Procurement">
-                  @foreach($procurements as $procurment)
-                  @if($procurment->id == $cpars->department_id)
-                  <option value="{{ $procurment->id }}" selected>{{ $procurment->department_name }}</option>
-                  @else
-                  <option value="{{ $procurment->id }}">{{ $procurment->department_name }}</option>
-                  @endif
-                  @endforeach
-                </optgroup>
-                <optgroup label="Other">
-                  @foreach($others as $other)
-                  @if($other->id == $cpars->department_id)
-                  <option value="{{ $other->id }}" selected>{{ $other->department_name }}</option>
-                  @else
-                  <option value="{{ $other->id }}">{{ $other->department_name }}</option>
-                  @endif
-                  @endforeach
-                </optgroup>
+            <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
+              <optgroup label="Production">
+                @foreach($productions as $production)
+                @if($production->id == $cpars->department_id)
+                <option value="{{ $production->id }}" selected>{{ $production->department_name }}</option>
+                @else
+                <option value="{{ $production->id }}">{{ $production->department_name }}</option>
+                @endif
+                @endforeach
+              </optgroup>
+              <optgroup label="Procurement">
+                @foreach($procurements as $procurment)
+                @if($procurment->id == $cpars->department_id)
+                <option value="{{ $procurment->id }}" selected>{{ $procurment->department_name }}</option>
+                @else
+                <option value="{{ $procurment->id }}">{{ $procurment->department_name }}</option>
+                @endif
+                @endforeach
+              </optgroup>
+              <optgroup label="Other">
+                @foreach($others as $other)
+                @if($other->id == $cpars->department_id)
+                <option value="{{ $other->id }}" selected>{{ $other->department_name }}</option>
+                @else
+                <option value="{{ $other->id }}">{{ $other->department_name }}</option>
+                @endif
+                @endforeach
+              </optgroup>
             </select>
           </div>
         </div>
@@ -178,7 +178,7 @@ table.table-bordered > tfoot > tr > th{
           </div>
           <label class="col-sm-1">Sumber Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="sumber_komplain" style="width: 100%;" data-placeholder="Sumber Komplain" required>
+            <select class="form-control select2" id="sumber_komplain" name="sumber_komplain" style="width: 100%;" data-placeholder="Sumber Komplain" onchange="selectsumber()" required>
               @if($cpars->sumber_komplain == "Eksternal Complaint")
               <option value="Eksternal Complaint" selected>Eksternal Complaint</option>
               <option value="Audit QA">Audit QA</option>
@@ -198,38 +198,71 @@ table.table-bordered > tfoot > tr > th{
         <div class="form-group row" align="left">
           <label class="col-sm-1">Tanggal Balas<span class="text-red">*</span></label>
           <div class="col-sm-5">
-             <div class="input-group date">
-              <div class="input-group-addon">
-                <i class="fa fa-calendar"></i>
-              </div>
-              <input type="text" class="form-control pull-right" id="tgl_balas" name="tgl_balas" placeholder="Masukkan Tanggal Balas" value="{{ date('d/m/Y', strtotime($cpars->tgl_balas)) }}" required>
+           <div class="input-group date">
+            <div class="input-group-addon">
+              <i class="fa fa-calendar"></i>
             </div>
-          </div>
-          <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" name="cpar_no" placeholder="Masukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
+            <input type="text" class="form-control pull-right" id="tgl_balas" name="tgl_balas" placeholder="Masukkan Tanggal Balas" value="{{ date('d/m/Y', strtotime($cpars->tgl_balas)) }}" required>
           </div>
         </div>
+        <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" name="cpar_no" id="cpar_no" placeholder="Masukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
+          <input type="hidden" class="form-control" name="kategori" id="kategori" placeholder="kategori" value="{{ $cpars->kategori }}">
+            <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
+            <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
+        </div>
+      </div>
 
-        <div class="form-group row increment" align="left">
-          <label class="col-sm-1">File</label>
-          <div class="col-sm-5">
-            <input type="file" name="files[]">
-            {{ $cpars->file }}
-            <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
-          </div>
+      <div class="form-group row increment" align="left">
+        <label class="col-sm-1">File</label>
+        <div class="col-sm-5">
+          <input type="file" name="files[]">
+          {{ $cpars->file }}
+          <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
         </div>
-        <div class="clone hide">
-          <div class="form-group row control-group" style="margin-top:10px">
-            <label class="col-sm-1">File</label>
-            <div class="col-sm-6">
-              <input type="file" name="files[]">
-              <div class="input-group-btn"> 
-                <button class="btn btn-danger" type="button"><i class="glyphicon glyphicon-remove"></i> Remove</button>
-              </div>
+        <span id="customer">
+            <label class="col-sm-1">Customer<span class="text-red">*</span></label>
+            <div class="col-sm-5" align="left">
+              <select class="form-control select2" name="customer" style="width: 100%;" data-placeholder="Pilih Customer">
+                @foreach($destinations as $destination)
+                @if($destination->destination_code == $cpars->destination_code)
+                <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_name }}</option>
+                @else
+                <option value=""></option>
+                <option value="{{ $destination->destination_code }}">{{ $destination->destination_name }}</option>
+                @endif
+                @endforeach
+              </select>
+            </div>
+          </span>
+          <span id="supplier">
+            <label class="col-sm-1">Supplier<span class="text-red">*</span></label>
+            <div class="col-sm-5" align="left">
+              <select class="form-control select2" name="supplier" style="width: 100%;" data-placeholder="Pilih Supplier">
+                @foreach($vendors as $vendor)
+                @if($vendor->vendor == $cpars->vendor)
+                <option value="{{ $vendor->vendor }}" selected>{{ $vendor->name }}</option>
+                @else
+                <option value=""></option>
+                <option value="{{ $vendor->vendor }}">{{ $vendor->name }}</option>
+                @endif
+                @endforeach
+              </select>
+            </div>
+          </span>
+      </div>
+      <div class="clone hide">
+        <div class="form-group row control-group" style="margin-top:10px">
+          <label class="col-sm-1">File</label>
+          <div class="col-sm-6">
+            <input type="file" name="files[]">
+            <div class="input-group-btn"> 
+              <button class="btn btn-danger" type="button"><i class="glyphicon glyphicon-remove"></i> Remove</button>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- <div class="form-group row" align="left">
           <label class="col-sm-1">File</span></label>
@@ -313,7 +346,7 @@ table.table-bordered > tfoot > tr > th{
   </div>
 
   <div class="modal fade" id="createModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 1100px">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -326,378 +359,439 @@ table.table-bordered > tfoot > tr > th{
             
             <input type="hidden" id="cpar_no" value="{{ $cpars->cpar_no }}">
             <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
+              <div class="col-sm-1"></div>
               <label class="col-sm-2">CPAR No<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                 {{ $cpars->cpar_no }}
-              </div>
+              <div class="col-sm-8">
+               {{ $cpars->cpar_no }}
+             </div>
+           </div>
+           <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Part Item<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control select3" id="part_item" name="part_item" style="width: 100%;" data-placeholder="Pilih Material" required>
+                <option value=""></option>
+                @foreach($materials as $material)
+                <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+                @endforeach
+              </select>
             </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Part Item<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <select class="form-control select2" id="part_item" style="width: 100%;" data-placeholder="Pilih Material" required>
-                  <option value=""></option>
-                  @foreach($materials as $material)
-                      <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
-                  @endforeach
-                </select>
-              </div>
+          </div>
+          <div class="form-group row" align="left" id="desc">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Material Description<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="material_description" placeholder="Material Description" required readonly>
             </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" id="no_invoice" placeholder="No Invoice" required>
-              </div>
+          </div>
+          <div class="form-group row" align="left" id="hp">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">HPL<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="hpl" placeholder="HPL" required readonly>
             </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <div class="input-group">
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="no_invoice" placeholder="No Invoice" required>
+            </div>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <div class="input-group">
                 <input type="number" class="form-control" id="lot_qty" placeholder="Lot Quantity" required>
                 <span class="input-group-addon">pc(s)</span>
               </div>
-              </div>
             </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <div class="input-group">
-                  <input type="number" class="form-control" id="sample_qty" placeholder="Sample Quantity" required>
-                  <span class="input-group-addon">pc(s)</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <textarea class="form-control" id="detail_problem" placeholder="Detail Masalah" required></textarea>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <div class="input-group">
-                  <input type="number" class="form-control" id="defect_qty" placeholder="Defect Quantity" required>
-                  <span class="input-group-addon">pc(s)</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Defect Presentase<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <input type="number" class="form-control" id="defect_presentase" placeholder="Defect Presentase" required>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <input type="number" class="form-control" id="sample_qty" placeholder="Sample Quantity" onkeyup="getPersen()" required>
+                <span class="input-group-addon">pc(s)</span>
               </div>
             </div>
           </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <textarea class="form-control" id="detail_problem" placeholder="Detail Masalah" required></textarea>
+            </div>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <div class="input-group">
+                <input type="number" class="form-control" id="defect_qty" placeholder="Defect Quantity" onkeyup="getPersen()" required>
+                <span class="input-group-addon">pc(s)</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Defect Presentase (Persen)<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <input type="text" class="form-control" id="defect_presentase" placeholder="Defect Presentase" disabled required>
+            </div>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" onclick="create()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+        <button type="button" onclick="create()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="ViewModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Detail Material</h4>
-        </div>
-        <div class="modal-body">
-          <div class="box-body">
-            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Nomor CPAR</label>
-              <div class="col-sm-6" align="left" id="cpar_no_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Part Item</label>
-              <div class="col-sm-6" align="left" id="part_item_view"></div>
-            </div>          
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">No Invoice</label>
-              <div class="col-sm-6" align="left" id="no_invoice_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Lot Qty</label>
-              <div class="col-sm-6" align="left" id="lot_qty_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Sample Qty</label>
-              <div class="col-sm-6" align="left" id="sample_qty_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Detail Problem</label>
-              <div class="col-sm-6" align="left" id="detail_problem_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Defect Qty</label>
-              <div class="col-sm-6" align="left" id="defect_qty_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Defect Presentase</label>
-              <div class="col-sm-6" align="left" id="defect_presentase_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Last Update</label>
-              <div class="col-sm-6" align="left" id="last_updated_view"></div>
-            </div>
-            <div class="form-group row" align="left">
-              <label class="col-sm-4"></label>
-              <label class="col-sm-2">Created At</label>
-              <div class="col-sm-6" align="left" id="created_at_view"></div>
-            </div>
-          </div>    
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-        </div>
+<div class="modal fade" id="ViewModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Detail Material</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Nomor CPAR</label>
+            <div class="col-sm-6" align="left" id="cpar_no_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Part Item</label>
+            <div class="col-sm-6" align="left" id="part_item_view"></div>
+          </div>          
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">No Invoice</label>
+            <div class="col-sm-6" align="left" id="no_invoice_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Lot Qty</label>
+            <div class="col-sm-6" align="left" id="lot_qty_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Sample Qty</label>
+            <div class="col-sm-6" align="left" id="sample_qty_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Detail Problem</label>
+            <div class="col-sm-6" align="left" id="detail_problem_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Defect Qty</label>
+            <div class="col-sm-6" align="left" id="defect_qty_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Defect Presentase</label>
+            <div class="col-sm-6" align="left" id="defect_presentase_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Last Update</label>
+            <div class="col-sm-6" align="left" id="last_updated_view"></div>
+          </div>
+          <div class="form-group row" align="left">
+            <label class="col-sm-4"></label>
+            <label class="col-sm-2">Created At</label>
+            <div class="col-sm-6" align="left" id="created_at_view"></div>
+          </div>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="EditModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Create Material CPAR</h4>
+<div class="modal fade" id="EditModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Material CPAR</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">CPAR No<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+             {{ $cpars->cpar_no }}
+           </div>
+         </div>
+         <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Part Item<span class="text-red">*</span></label>
+          <div class="col-sm-8">
+            <select class="form-control select4" id="part_item_edit" style="width: 100%;" data-placeholder="Pilih Material" required>
+              <option value=""></option>
+              @foreach($materials as $material)
+              <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+              @endforeach
+            </select>
+          </div>
         </div>
-        <div class="modal-body">
-          <div class="box-body">
-            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">CPAR No<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                 {{ $cpars->cpar_no }}
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Part Item<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <select class="form-control select2" id="part_item_edit" style="width: 100%;" data-placeholder="Pilih Material" required>
-                  <option value=""></option>
-                  @foreach($materials as $material)
-                      <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" id="no_invoice_edit" placeholder="No Invoice" required>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
-              
-              <div class="col-sm-6">
-                <div class="input-group">
-                <input type="number" class="form-control" id="lot_qty_edit" placeholder="Lot Quantity" required>
-                <span class="input-group-addon">pc(s)</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
-              
-              <div class="col-sm-6">
-                <div class="input-group">
-                <input type="number" class="form-control" id="sample_qty_edit" placeholder="Sample Quantity" required>
-                <span class="input-group-addon">pc(s)</span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <textarea class="form-control" id="detail_problem_edit" placeholder="Detail Masalah" required></textarea>
-              </div>
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <div class="input-group">
-                <input type="number" class="form-control" id="defect_qty_edit" placeholder="Defect Quantity" required>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="no_invoice_edit" placeholder="No Invoice" required>
+          </div>
+        </div>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
+          
+          <div class="col-sm-8">
+            <div class="input-group">
+              <input type="number" class="form-control" id="lot_qty_edit" placeholder="Lot Quantity" required>
               <span class="input-group-addon">pc(s)</span>
-                </div>
-              </div>
-
-            </div>
-            <div class="form-group row" align="left">
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2">Defect Presentase<span class="text-red">*</span></label>
-              <div class="col-sm-6" align="left">
-                <input type="number" class="form-control" id="defect_presentase_edit" placeholder="Defect Presentase" required>
-              </div>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <input type="hidden" id="id_edit">
-          <button type="button" onclick="edit()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
+          
+          <div class="col-sm-8">
+            <div class="input-group">
+              <input type="number" class="form-control" id="sample_qty_edit" placeholder="Sample Quantity" onkeyup="getPersenEdit()" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
+          <div class="col-sm-8" align="left">
+            <textarea class="form-control" id="detail_problem_edit" placeholder="Detail Masalah" required></textarea>
+          </div>
+        </div>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
+          <div class="col-sm-8" align="left">
+            <div class="input-group">
+              <input type="number" class="form-control" id="defect_qty_edit" placeholder="Defect Quantity" onkeyup="getPersenEdit()" required>
+              <span class="input-group-addon">pc(s)</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group row" align="left">
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Defect Presentase<span class="text-red">*</span></label>
+          <div class="col-sm-8" align="left">
+            <input type="number" class="form-control" id="defect_presentase_edit" placeholder="Defect Presentase" disabled required>
+          </div>
         </div>
       </div>
     </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      <input type="hidden" id="id_edit">
+      <button type="button" onclick="edit()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+    </div>
   </div>
+</div>
+</div>
 
-  @endsection
+@endsection
 
-  
-  @section('scripts')
 
-  <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-  <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-  <script src="{{ url("js/buttons.flash.min.js")}}"></script>
-  <script src="{{ url("js/jszip.min.js")}}"></script>
-  <script src="{{ url("js/vfs_fonts.js")}}"></script>
-  <script src="{{ url("js/buttons.html5.min.js")}}"></script>
-  <script src="{{ url("js/buttons.print.min.js")}}"></script>
-  <script>
-    $(document).ready(function() {
+@section('scripts')
 
-      $(".plusdata").click(function(){ 
-          var html = $(".clone").html();
-          $(".increment").after(html);
-      });
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script>
+  $(document).ready(function() {
 
-      $("body").on("click",".btn-danger",function(){ 
-          $(this).parents(".control-group").remove();
-      });
-
+    $(".plusdata").click(function(){ 
+      var html = $(".clone").html();
+      $(".increment").after(html);
     });
 
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    $("body").on("click",".btn-danger",function(){ 
+      $(this).parents(".control-group").remove();
+    });
+
+    // var kategori_cpar = document.getElementById("kategori")
+
+    if (document.getElementById("kategori").value == "Eksternal") {
+      $("#customer").show();
+      $("#supplier").hide();
+    } else if (document.getElementById("kategori").value == "Supplier"){
+      $("#supplier").show();
+      $("#customer").hide();
+    } else if (document.getElementById("kategori").value == "Internal"){
+      $("#customer").hide();
+      $("#supplier").hide();
+    }
+
+   
+
+  });
+
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  jQuery(document).ready(function() {
+    $('#example1 tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+    } );
+    var table = $('#example1').DataTable({
+      "order": [],
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("index/qc_report/fetch_item",$cpars->id) }}"
+      },
+      "columns": [
+      { "data": "cpar_no" },
+      { "data": "part_item"},
+      { "data": "no_invoice" },
+      { "data": "lot_qty" },
+      { "data": "sample_qty" },
+      { "data": "detail_problem" , "width": "10%" },
+      { "data": "defect_qty" },
+      { "data": "defect_presentase" },
+      { "data": "action", "width": "15%" }
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
       }
     });
-    jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
-      var table = $('#example1').DataTable({
-        "order": [],
-        'dom': 'Bfrtip',
-        'responsive': true,
-        'lengthMenu': [
-        [ 10, 25, 50, -1 ],
-        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-        ],
-        'paging': true,
-        'lengthChange': true,
-        'searching': true,
-        'ordering': true,
-        'order': [],
-        'info': true,
-        'autoWidth': true,
-        "sPaginationType": "full_numbers",
-        "bJQueryUI": true,
-        "bAutoWidth": false,
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-          "type" : "get",
-          "url" : "{{ url("index/qc_report/fetch_item",$cpars->id) }}"
-        },
-        "columns": [
-        { "data": "cpar_no" },
-        { "data": "part_item"},
-        { "data": "no_invoice" },
-        { "data": "lot_qty" },
-        { "data": "sample_qty" },
-        { "data": "detail_problem" , "width": "10%" },
-        { "data": "defect_qty" },
-        { "data": "defect_presentase" },
-        { "data": "action", "width": "15%" }
-        ],
-        'buttons': {
-          buttons:[
-          {
-            extend: 'pageLength',
-            className: 'btn btn-default',
-          },
-          {
-            extend: 'copy',
-            className: 'btn btn-success',
-            text: '<i class="fa fa-copy"></i> Copy',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'excel',
-            className: 'btn btn-info',
-            text: '<i class="fa fa-file-excel-o"></i> Excel',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          {
-            extend: 'print',
-            className: 'btn btn-warning',
-            text: '<i class="fa fa-print"></i> Print',
-            exportOptions: {
-              columns: ':not(.notexport)'
-            }
-          },
-          ]
+
+    table.columns().every( function () {
+      var that = this;
+
+      $( 'input', this.footer() ).on( 'keyup change', function () {
+        if ( that.search() !== this.value ) {
+          that
+          .search( this.value )
+          .draw();
         }
-      });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
       } );
+    } );
 
       // var detail = json_decode($columns,true);
       // console.log($columns[4]);
 
       $('#example1 tfoot tr').appendTo('#example1 thead');
-      });
-      
+    });
+  
   </script>
   <script>
 
 
+        $("#desc").hide();
+        $("#hp").hide();
+        $("#part_item").change(function(){
+          $("#desc").show();
+          $("#hp").show();
+          // console.log($(this).val());
+            $.ajax({
+                url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
+                method: 'GET',
+                success: function(data) {
+                  var json = data,
+                  obj = JSON.parse(json);
+                  console.log(obj);
+                  $('#material_description').val(obj.material_description);
+                  $('#hpl').val(obj.hpl);
+                }
+            });
+        });
+
+    // $('.select2').select2({
+    //     dropdownParent: $('#createModal')
+    //   });
 
     $(function () {
       $('.select2').select2()
+    })
+    
+    $(function () {
+      $('.select3').select2({
+        dropdownParent: $('#createModal')
+      });
+      $('.select4').select2({
+        dropdownParent: $('#EditModal')
+      });
     })
 
     $('#tgl_permintaan').datepicker({
@@ -711,12 +805,131 @@ table.table-bordered > tfoot > tr > th{
     });
 
     CKEDITOR.replace('detail_problem' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
 
     CKEDITOR.replace('detail_problem_edit' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
+
+    function getPersen() {
+      var def = document.getElementById("defect_qty").value;
+      var samp = document.getElementById("sample_qty").value;
+      var hasil = parseInt(def) / parseInt(samp) * 100;
+
+      if (!isNaN(hasil)) {
+         document.getElementById('defect_presentase').value = hasil;
+      }
+
+    }
+
+    function getPersenEdit() {
+      var def = document.getElementById("defect_qty_edit").value;
+      var samp = document.getElementById("sample_qty_edit").value;
+      var hasiledit = parseInt(def) / parseInt(samp) * 100;
+
+      if (!isNaN(hasiledit)) {
+         document.getElementById('defect_presentase_edit').value = hasiledit;
+      }
+
+    }
+
+    //menjadikan angka ke romawi
+    function romanize (num) {
+      if (!+num)
+        return false;
+      var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+      while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+      return Array(+digits.join("") + 1).join("M") + roman;
+    }
+
+    function addZero(i) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      return i;
+    }
+
+    function selectdepartemen(){
+
+      $.ajax({
+           url: "{{ url('index/qc_report/get_fiscal_year') }}", // your php file
+           type : 'GET', // type of the HTTP request
+           success : function(data){
+              var obj = jQuery.parseJSON(data);
+              var lastthree = obj.substr(obj.length - 3);
+              // nomorcpar.value = "no/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
+              $('#lastthree').val(lastthree);
+           }
+        });
+    }
+
+
+    function selectsumber() {
+
+        var sumber = document.getElementById("sumber_komplain");
+        var departemen = document.getElementById("department_id");
+        var nomorcpar = document.getElementById("cpar_no");
+        var kategori_cpar = document.getElementById("kategori");
+        var getdepartemen = departemen.options[departemen.selectedIndex].value;
+        var getsumber = sumber.options[sumber.selectedIndex].value;
+        var kategori;
+
+        var lastthree = $('#lastthree').val();
+
+        if (getsumber == "Eksternal Complaint"){
+          kategori = "E";
+        }
+        else if ((getdepartemen == 7 && getsumber == "Audit QA") || (getdepartemen == 7 && getsumber == "Production Finding")){
+          kategori = "S";
+        }
+        else if (getdepartemen != 7 && getsumber == "Production Finding" || getsumber == "Audit QA"){
+          kategori = "I";
+        }
+
+        if (kategori == "E") {
+          kategori_cpar.value = "Eksternal";
+          $("#customer").show();
+          $("#supplier").hide();
+        } else if (kategori == "S"){
+          kategori_cpar.value = "Supplier";
+          $("#supplier").show();
+          $("#customer").hide();
+        } else if (kategori == "I"){
+          kategori_cpar.value = "Internal";
+          $("#customer").hide();
+          $("#supplier").hide();
+        }
+
+        var bulan = new Date().getMonth()+1;
+        var romawi = romanize(bulan);
+        var year = new Date().getFullYear();
+
+        $.ajax({
+           url: "{{ url('index/qc_report/get_nomor_depan') }}?kategori=" + kategori_cpar.value, 
+           type : 'GET', 
+           success : function(data){
+              var obj = jQuery.parseJSON(data);
+              var nomordepan = obj;
+              // if (nomordepan == "") {
+              //   nomordepan = 1;
+              // }
+              var no = nomordepan.split("/");
+              var number = parseInt(no[0])
+              $('#nomordepan').val(number+1);
+              var nomordepan = $('#nomordepan').val();
+              var truenumber = addZero(nomordepan);
+              // var nomorsplit = nomor.split("/");
+              nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
+           }
+        });
+    }
 
 
     function create() {
@@ -745,6 +958,17 @@ table.table-bordered > tfoot > tr > th{
       })
     }
 
+    $.fn.modal.Constructor.prototype.enforceFocus = function() {
+      modal_this = this
+      $(document).on('focusin.modal', function (e) {
+        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length 
+        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') 
+        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+          modal_this.$element.focus()
+        }
+      })
+    };
+
     function modalView(id) {
       $("#ViewModal").modal("show");
       var data = {
@@ -770,7 +994,7 @@ table.table-bordered > tfoot > tr > th{
       var data = {
         id:id
       };
-     
+      
       $.get('{{ url("index/qc_report/edit_item") }}', data, function(result, status, xhr){
         $("#id_edit").val(id);
         $("#part_item_edit").val(result.datas.part_item).trigger('change.select2');
@@ -822,9 +1046,9 @@ table.table-bordered > tfoot > tr > th{
     }
 
     function deleteConfirmation(url, name, id) {
-        jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
-        jQuery('#modalDeleteButton').attr("href", url+'/'+id);
-      }
+      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+    }
 
     function openSuccessGritter(title, message){
       jQuery.gritter.add({
@@ -848,5 +1072,6 @@ table.table-bordered > tfoot > tr > th{
       });
     }
 
+
   </script>
-@stop
+  @stop

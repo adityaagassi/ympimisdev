@@ -10,6 +10,6 @@ class QcCar extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'cpar_no','deskripsi','tinjauan','tindakan','penyebab','perbaikan'
+		'cpar_no','deskripsi','tinjauan','tindakan','penyebab','perbaikan','created_by'
 	];
 }

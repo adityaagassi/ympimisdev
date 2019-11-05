@@ -48,11 +48,7 @@
           </div>
           <label class="col-sm-1">Via Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="via_komplain" style="width: 100%;" data-placeholder="Via Komplain" required>
-              <option value=""></option>
-              <option value="Email">Email</option>
-              <option value="Telepon">Telepon</option>
-            </select>
+            <input type="text" class="form-control" name="via_komplain" id="via_komplain" value="Email" required readonly>
           </div>
         </div>
 
@@ -66,7 +62,7 @@
               <option value='Body Process'>Body Process</option>
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
-              <option value='Lacquering'>Lacquering</option>
+              <option value='Lacquering'>Lacquering</optiofn>
               <option value='Meeting Room'>Meeting Room</option>
               <option value='Part Process'>Part Process</option>
               <option value='Pianica'>Pianica</option>
@@ -80,7 +76,7 @@
               <option value='Other'>Other</option>
             </select>
           </div>
-          <label class="col-sm-1">CPAR Ke<span class="text-red">*</span></label>
+          <label class="col-sm-1">Departemen<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
               <option value=""></option>
@@ -147,7 +143,31 @@
             <input type="file" name="files[]">
             <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
           </div>
+          <span id="customer">
+            <label class="col-sm-1">Customer<span class="text-red">*</span></label>
+            <div class="col-sm-5" align="left">
+              <select class="form-control select2" name="customer" style="width: 100%;" data-placeholder="Pilih Customer">
+                <option value=""></option>
+                @foreach($destinations as $destination)
+                <option value="{{ $destination->destination_code }}">{{ $destination->destination_name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </span>
+          <span id="supplier">
+            <label class="col-sm-1">Supplier<span class="text-red">*</span></label>
+            <div class="col-sm-5" align="left">
+              <select class="form-control select2" name="supplier" style="width: 100%;" data-placeholder="Pilih Supplier">
+                <option value=""></option>
+                @foreach($vendors as $vendor)
+                <option value="{{ $vendor->vendor }}">{{ $vendor->name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </span>
         </div>
+          
+
         <div class="clone hide">
           <div class="form-group row control-group" style="margin-top:10px">
             <label class="col-sm-1">File</label>
@@ -188,10 +208,11 @@
           $(this).parents(".control-group").remove();
       });
 
+      $("#customer").hide();
+      $("#supplier").hide();
     });
-    
-</script>
 
+</script>
   <script>
     $(function () {
       $('.select2').select2()
@@ -268,10 +289,16 @@
 
         if (kategori == "E") {
           kategori_cpar.value = "Eksternal";
+          $("#customer").show();
+          $("#supplier").hide();
         } else if (kategori == "S"){
           kategori_cpar.value = "Supplier";
+          $("#supplier").show();
+          $("#customer").hide();
         } else if (kategori == "I"){
           kategori_cpar.value = "Internal";
+          $("#customer").hide();
+          $("#supplier").hide();
         }
 
         var bulan = new Date().getMonth()+1;
@@ -279,8 +306,8 @@
         var year = new Date().getFullYear();
 
         $.ajax({
-           url: "{{ url('index/qc_report/get_nomor_depan') }}?kategori=" + kategori_cpar.value, // your php file
-           type : 'GET', // type of the HTTP request
+           url: "{{ url('index/qc_report/get_nomor_depan') }}?kategori=" + kategori_cpar.value, 
+           type : 'GET', 
            success : function(data){
               var obj = jQuery.parseJSON(data);
               var nomordepan = obj;
@@ -296,7 +323,6 @@
               nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
            }
         });
-        
     }
   
   </script>

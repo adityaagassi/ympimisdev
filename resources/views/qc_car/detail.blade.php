@@ -228,5 +228,17 @@ table.table-bordered > tfoot > tr > th{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
 
+    CKEDITOR.replace('tindakan' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    CKEDITOR.replace('penyebab' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    CKEDITOR.replace('perbaikan' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
   </script>
 @stop

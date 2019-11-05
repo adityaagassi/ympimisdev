@@ -41,7 +41,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     List of {{ $page }}s
-    <small>Validate Your CPAR</small>
+    <small>Create Your CAR</small>
   </h1>
   <!-- <ol class="breadcrumb">
     <li><a href="{{ url("index/qc_report/create")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>

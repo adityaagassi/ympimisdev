@@ -17,6 +17,10 @@ use App\Employee;
 use App\Material;
 use App\Status;
 use App\WeeklyCalendar;
+use App\Destination;
+use App\Vendor;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 // use App\QcTtdCoba;
 
 
@@ -138,16 +142,25 @@ class QcReportController extends Controller
         ->whereNotIn('departments.id',['1','2','3','4','7'])
         ->get();
 
+        $destinations = Destination::select('destinations.*')->get();
+
+        $vendors = "select id, vendor, name from vendors";
+        $vendor = DB::select($vendors);
+
         return view('qc_report.create', array(
             'managers' => $managers,
             'productions'  => $productions,
             'procurements' => $procurements,
-            'others' =>  $others
+            'others' =>  $others,
+            'destinations' => $destinations,
+            'vendors' => $vendor
         ))->with('page', 'CPAR');
     }
 
     public function create_action(request $request)
     {
+      
+
       try{
           
           $files=array();
@@ -178,6 +191,8 @@ class QcReportController extends Controller
           //   $file == "";
           // }
 
+          $id_user = Auth::id();
+
           $tgl_permintaan = $request->get('tgl_permintaan');
           $tgl_balas = $request->get('tgl_balas');
 
@@ -194,7 +209,10 @@ class QcReportController extends Controller
             'tgl_balas' => date("Y-m-d", strtotime($date_balas)),
             'file' => $file->filename,
             'via_komplain' => $request->get('via_komplain'),
-            'sumber_komplain' => $request->get('sumber_komplain')
+            'sumber_komplain' => $request->get('sumber_komplain'),
+            'destination_code' => $request->get('customer'),
+            'vendor' => $request->get('supplier'),
+            'created_by' => $id_user
           ]);
 
           // $cpar_detailsTable = DB::table('qc_cpars')->where('qc_cpars.id');
@@ -246,6 +264,11 @@ class QcReportController extends Controller
 
         $cpars = QcCpar::find($id);
 
+        $destinations = Destination::select('destinations.*')->get();
+
+        $vendors = "select id, vendor, name from vendors";
+        $vendor = DB::select($vendors);
+
         $parts = QcCparItem::select('qc_cpar_items.*')
         ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
         // ->where('qc_cpar_items.cpar_no','=',$cpars->cpar_no)
@@ -261,6 +284,8 @@ class QcReportController extends Controller
             'productions'  => $productions,
             'procurements' => $procurements,
             'others' =>  $others,
+            'destinations' => $destinations,
+            'vendors' => $vendor,
             'parts' => $parts,
             'materials' =>  $materials
         ))->with('page', 'CPAR');
@@ -310,6 +335,8 @@ class QcReportController extends Controller
             $cpars->tgl_balas = date("Y-m-d", strtotime($date_balas));
             $cpars->via_komplain = $request->get('via_komplain');
             $cpars->sumber_komplain = $request->get('sumber_komplain');
+            $cpars->destination_code = $request->get('customer');
+            $cpars->vendor = $request->get('supplier');
 
             $cpars->save();
             return redirect('/index/qc_report/update/'.$cpars->id)->with('status', 'CPAR data has been updated.')->with('page', 'CPAR');
@@ -372,6 +399,8 @@ class QcReportController extends Controller
     {
         try
         {
+            $id_user = Auth::id();
+
             $parts = new QcCparItem([
                 'cpar_no' => $request->get('cpar_no'),
                 'part_item' => $request->get('part_item'),
@@ -380,7 +409,8 @@ class QcReportController extends Controller
                 'sample_qty' => $request->get('sample_qty'),
                 'detail_problem' => $request->get('detail_problem'),
                 'defect_qty' => $request->get('defect_qty'),
-                'defect_presentase' => $request->get('defect_presentase')
+                'defect_presentase' => $request->get('defect_presentase'),
+                'created_by' => $id_user
             ]);
 
             $parts->save();
@@ -512,8 +542,15 @@ class QcReportController extends Controller
     //grafik CPAR
 
     public function grafik_cpar(){
-       return view('qc_report.grafik',  array('title' => 'QC Report', 'title_jp' => 'QC Report'
-        ))->with('page', 'CPAR Graph');
+      $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $dept = db::select("select id, department_name from departments where departments.id not in (1,2,3,4,11)");
+       return view('qc_report.grafik',  
+        array('title' => 'QC Report', 
+              'title_jp' => 'QC Report',
+              'fys' => $fys,
+              'departemen' => $dept
+            )
+        )->with('page', 'CPAR Graph');
     }
 
     public function fetchReport(Request $request)
@@ -522,18 +559,37 @@ class QcReportController extends Controller
       //   $tgl = $request->get("tgl");
       // }else{
       //   $tgl = date("Y-m-d");
+      // }
+
+      // if($request->get('tgl') != null){
+      //   $bulan = $request->get('tgl');
+      //   $fynow = DB::select("select DISTINCT(fiscal_year) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$bulan."'");
+      //   foreach($fynow as $fynow){
+      //       $fy = $fynow->fiscal_year;
+      //   }
+      // }
+      // else{
+      //   $bulan = date('Y-m');
+      //   $fynow = DB::select("select fiscal_year from weekly_calendars where CURDATE() = week_date");
+      //   foreach($fynow as $fynow){
+      //       $fy = $fynow->fiscal_year;
+      //   }
       // }        
 
       $fy = $request->get('tahun');
       $kategori = $request->get('kategori');
+      $departemen = $request->get('departemen');
 
-      $data = db::select("select count(cpar_no) as jumlah, department_name,sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from departments LEFT JOIN qc_cpars on qc_cpars.department_id = departments.id LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where departments.id not in (1,2,3,4,11) and cpar_no like '%".$fy."%' and kategori like '%".$kategori."%' GROUP BY departments.department_name ");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where cpar_no like '%".$fy."%' and kategori like '%".$kategori."%' and department_id like '%".$departemen."%' GROUP BY bulan order by month(tgl_permintaan) ASC");
 
-      // $monthTitle = date("F Y", strtotime($tgl));
+      $bulan = date('Y-m');
+
+      $monthTitle = date("F Y", strtotime($bulan));
 
       $response = array(
         'status' => true,
         'datas' => $data,
+        'monthTitle' => $monthTitle,
         'departemen' => $request->get("departemen")
 
       );
@@ -543,10 +599,10 @@ class QcReportController extends Controller
 
     public function detail_cpar(Request $request){
 
-      $departemen = $request->get("departemen");
+      $bulan = $request->get("bulan");
       $status = $request->get("status");
 
-      $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.deleted_at is null and departments.department_name = '".$departemen."' and statuses.status_name ='".$status."'";
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name, employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."'";
 
       $detail = db::select($query);
 
@@ -577,8 +633,9 @@ class QcReportController extends Controller
         ->where('qc_cpars.id','=',$id)
         ->get();
 
-      $parts = QcCparItem::select('qc_cpar_items.*')
+      $parts = QcCparItem::select('qc_cpar_items.*','materials.material_description')
       ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
+      ->join('materials','qc_cpar_items.part_item','=','materials.material_number')
       ->where('qc_cpars.id','=',$id)
       ->get();
 
@@ -592,8 +649,9 @@ class QcReportController extends Controller
         'parts'=>$parts
       ));
       
+      $cpar = str_replace("/"," ",$cpars[0]->cpar_no);
       // $pdf = PDF::loadview('qc_report.print_cpar',['cpars'=>$cpars,'parts'=>$parts]);
-      return $pdf->stream();
+      return $pdf->stream("CPAR ".$cpar. ".pdf");
     }
 
      public function coba_print($id)
@@ -641,5 +699,32 @@ class QcReportController extends Controller
           ]);
 
           $ttd->save();
+      }
+
+      //------ Email ------
+
+      public function sendemail($id)
+      {
+          $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id=".$id;
+          $cpars = db::select($query);
+          
+          if($cpars != null){
+              Mail::to("rioirvansyah6@gmail.com")->send(new SendEmail($cpars, 'cpar'));
+          }
+      }
+
+      public function getmaterialsbymaterialsnumber(Request $request)
+      {
+          $html = array();
+          $materials_number = Material::where('material_number',$request->materials_number)->get();
+          foreach ($materials_number as $material) {
+              $html = array(
+                'material_description' => $material->material_description,
+                'hpl' => $material->hpl,
+              );
+
+          }
+
+          return json_encode($html);
       }
 }

@@ -1,7 +1,8 @@
 <html>
 <head>
-	<title>laporan PDF</title>
+	<title>YMPI 情報システム</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="shortcut icon" type="image/x-icon" href="{{ public_path() . '/logo_mirai.png' }}" />
 	<link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
 </head>
 <body>
@@ -13,13 +14,18 @@
 			border-collapse: collapse;
 		}
 
+		.centera{
+			text-align: center;
+			vertical-align: middle !important;
+		}
+
 	</style>
 	
  	
 	<table class="table table-bordered">
 		<thead>
 			<tr>
-				<td colspan="2" style="text-align: center; vertical-align: middle;">
+				<td colspan="2" class="centera">
 					<img width="80px" src="{{ public_path() . '/waves.jpg' }}" alt="">
 
 				</td>
@@ -35,7 +41,7 @@
 			@php $i=1 @endphp
 			@foreach($cpars as $cpar)
 			<tr>
-				<td rowspan="11">{{ $i++ }}</td>	
+				<td rowspan="12">{{ $i++ }}</td>	
 				<td colspan="5" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
 				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">CPAR No : <b>{{$cpar->cpar_no}}</b></td>
 			</tr>
@@ -67,7 +73,7 @@
 			<tr>
 				<?php if ($part != null) { ?>
 					<td rowspan="2">{{$part->part_item}}</td>
-					<td rowspan="2">Part Description</td>
+					<td rowspan="2">{{$part->material_description}}</td>
 					<td rowspan="2">{{$part->no_invoice}}</td>
 					<td rowspan="2">{{$part->lot_qty}}</td>
 					<td rowspan="2">{{$part->sample_qty}}</td>
@@ -96,9 +102,8 @@
 				<td rowspan="2"></td>
 			</tr>
 			<?php } ?>
-			
-
 			<tr></tr>
+			
 			<tr>
 				<td colspan="8">&nbsp;</td>
 			</tr>
@@ -125,6 +130,16 @@
 			</tr>
 			<tr></tr>
 			<tr>
+				<td>Staff</td>
+				<td>Chief</td>
+				<td>Manager</td>
+				<td>GM</td>
+				<td>GM</td>
+				<td>Staff</td>
+				<td>Chief</td>
+				<td>Manager</td>
+			</tr>
+			<tr>
 				<td rowspan="4">2</td>
 				<td colspan="8">Immediate Action (Filled By QA)</td>
 			</tr>
@@ -150,7 +165,7 @@
 				<td colspan="8">Open / Closed</td>
 			</tr>
 			<tr>
-				<td rowspan="9">5</td>
+				<td rowspan="10">5</td>
 				<td colspan="8">Cost Estimation : PT YMPI / Customer</td>
 			</tr>
 			<tr>
@@ -184,6 +199,14 @@
 				<td colspan="3" rowspan="2"></td>
 			</tr>
 			<tr></tr>
+			<tr>
+				<td>Staff</td>
+				<td>Chief</td>
+				<td>Manager</td>
+				<td>DGM</td>
+				<td>GM</td>
+				<td colspan="3"></td>
+			</tr>
 			@endforeach
 		</tbody>
 	</table>

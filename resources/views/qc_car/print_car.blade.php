@@ -1,8 +1,9 @@
 <html>
 <head>
-	<title>laporan PDF</title>
+	<title>YMPI 情報システム</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ public_path() . '/logo_mirai.png' }}" />
 </head>
 <body>
 	<style type="text/css">
@@ -16,17 +17,24 @@
 			text-align: center;
 			vertical-align: middle !important;
 		}
+		.square {
+			height: 5px;
+			width: 5px;
+			border: 1px solid black;
+			background-color: transparent;
+		}
 	</style>
 	
  	
 	<table class="table table-bordered">
+		@foreach($cars as $car)
 		<thead>
 			<tr>
 				<td colspan="2" rowspan="5" class="centera">
 					<img width="80px" src="{{ public_path() . '/waves.jpg' }}" alt="">
 				</td>
 				<td>Departemen</td>
-				<td>Ini departemen</td>
+				<td>{{ $car->department_name }}</td>
 				<td colspan="3" rowspan="5" class="centera" style="font-size: 14px;font-weight: bold">CORRECTIVE ACTION REPORT</td>
 				<td class="centera">Approved By</td>
 				<td class="centera">Approved By</td>
@@ -34,22 +42,22 @@
 			</tr>
 			<tr>
 				<td>Section</td>
-				<td>Ini Section</td>
+				<td>{{ $car->section }}</td>
 				<td rowspan="3">&nbsp;</td>
 				<td rowspan="3">&nbsp;</td>
 				<td rowspan="3">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>Location</td>
-				<td>Ini lokasi</td>
+				<td>{{ $car->lokasi }}</td>
 			</tr>
 			<tr>
 				<td>Date</td>
-				<td>Tanggal</td>
+				<td>{{ $car->tgl_permintaan }}</td>
 			</tr>
 			<tr>
 				<td>No Report</td>
-				<td>Ini No Report</td>
+				<td>&nbsp;</td>
 				<td class="centera">GM</td>
 				<td class="centera">DGM</td>
 				<td class="centera">Manager</td>
@@ -57,45 +65,45 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td colspan="10">Kategori Komplain : </td>
+				<td colspan="10">Kategori Komplain : {{ $car->kategori }}</td>
 			</tr>
 			<tr>
-				<td rowspan="6" colspan="7">Deskripsi : </td>
+				<td rowspan="6" colspan="7">Deskripsi : <br><?= $car->deskripsi ?></td>
 				<td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
 			</tr>
 			<tr>
 			</tr>
 			<tr>
-				<td colspan="3">&nbsp;</td>
+				<td colspan="3" class="centera">Man</td>
 			</tr>
 			<tr>
-				<td colspan="3">&nbsp;</td>
+				<td colspan="3" class="centera">Machine</td>
 			</tr>
 			<tr>
-				<td colspan="3">&nbsp;</td>
+				<td colspan="3" class="centera">Material</td>
 			</tr>
 			<tr>
-				<td colspan="3">&nbsp;</td>
+				<td colspan="3" class="centera">Method</td>
 			</tr>
 			<tr>
 				<td colspan="10">A. Immediately Action </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"></td>
+				<td rowspan="4" colspan="10"><?= $car->tindakan ?></td>
 			</tr>
 			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td colspan="10">B. Possibility Cause </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"></td>
+				<td rowspan="4" colspan="10"><?= $car->penyebab ?></td>
 			</tr>
 			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td colspan="10">C. Corrective Action </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"></td>
+				<td rowspan="4" colspan="10"><?= $car->perbaikan ?></td>
 			</tr>
 			<tr></tr><tr></tr><tr></tr>
 			<tr>
@@ -113,6 +121,13 @@
 				<td rowspan="2" colspan="6"></td>
 			</tr>
 			<tr></tr>
+			<tr>
+				<td>Staff</td>
+				<td>Leader</td>
+				<td>Foreman</td>
+				<td>Chief</td>
+				<td colspan="6"></td>
+			</tr>
 			<tr>
 				<td colspan="10"></td>
 			</tr>
@@ -140,7 +155,16 @@
 				<td>Open</td>
 				<td colspan="3"></td>
 			</tr>
+			<tr>
+				<td colspan="6"></td>
+				<td class="centera">Manager</td>
+				<td class="centera">QA Staff</td>
+				<td class="centera">QA Chief</td>
+				<td class="centera">QA Manager</td>
+			</tr>
 		</tbody>
+		@endforeach
 	</table>
+	<span style="font-size: 8pt">No FM : YMPI/QA/FM/899</span>
 </body>
 </html>
