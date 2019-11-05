@@ -50,6 +50,17 @@ class MiddleProcessController extends Controller
 			'plt-kensa-sx',
 		];
 	}
+	
+	public function indexReportOpTime(){
+		$title = 'Operator Buffing Time';
+		$title_jp = '';
+
+		return view('processes.middle.report.operator_time', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Operator Buffing Time');
+	}
+
 
 	public function indexBuffingAdjustment(){
 		$title = 'Saxophone Buffing Adjustment';
@@ -619,6 +630,45 @@ class MiddleProcessController extends Controller
 		}
 		
 	}
+
+	public function fetchReportOpTime(Request $request){
+		$tanggal = "";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and date(selesai_start_time) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and date(selesai_start_time) <= '".$dateto."' ";
+			}
+		}
+
+		$data = db::connection('digital_kanban')->select("select d.operator_id, IFNULL(u.`name`, 'Not Found') `name`, m.`key`, m.model, d.sedang_start_time, d.selesai_start_time, TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) as act_time, s.time * d.material_qty as std_time from data_log d
+			left join users u on d.operator_id = u.username
+			left join materials m on m.material_number = d.material_number
+			left join standart_times s on s.material_number = d.material_number
+			where TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) < (s.time * d.material_qty * ".$request->get('condition').") ".$tanggal);
+
+		return DataTables::of($data)->make(true);
+	}
+
+	public function fetchReportOpTimeQty(Request $request){
+		$tanggal = "";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and date(selesai_start_time) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and date(selesai_start_time) <= '".$dateto."' ";
+			}
+		}
+
+		$qty = db::connection('digital_kanban')->select("select d.operator_id, u.`name`, count(idx) as jml from data_log d
+			left join users u on d.operator_id = u.username left join standart_times s on s.material_number = d.material_number
+			where TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) < (s.time * d.material_qty * ".$request->get('condition').") ".$tanggal." GROUP BY d.operator_id, u.`name` ORDER BY jml desc");
+
+		return DataTables::of($qty)->make(true);
+	}
+
 
 	
 	public function fetchBuffingAdjustment(Request $request){

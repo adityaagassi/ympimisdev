@@ -251,6 +251,7 @@ Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')-
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('post/ekaizen', 'EmployeeController@postKaizen');
+Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
 Route::post('post/hrqa', 'EmployeeController@postChat');
@@ -743,6 +744,10 @@ Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuf
 Route::get('fetch/middle/bff_op_ng_monthly', 'MiddleProcessController@fetchBuffingOpNgMonthly');
 Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
 Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
+Route::get('index/middle/report_buffing_operator_time', 'MiddleProcessController@indexReportOpTime');
+Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController@fetchReportOpTime');
+Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessController@fetchReportOpTimeQty');
+
 
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
@@ -1264,6 +1269,7 @@ Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@d
 Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
 Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
 Route::get('index/training_report/cek_employee/{nik}','TrainingReportController@cek_employee');
+Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
@@ -1324,9 +1330,7 @@ Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
-Route::get('getmaterialsbymaterialsnumber', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
-
-
+Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
@@ -1340,8 +1344,10 @@ Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
 Route::get('index/beacon','BeaconController@index');
 Route::get('fetch/user/beacon','BeaconController@getUser');
 Route::get('index/master_beacon','BeaconController@master_beacon');
-
 Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
+Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
+Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
+
 
 
 //ROOMS

@@ -461,7 +461,6 @@
 
 		$('#tableInactive tfoot tr').appendTo('#tableInactive thead');
 
-
 	}
 
 

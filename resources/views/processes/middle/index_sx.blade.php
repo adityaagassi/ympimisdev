@@ -65,6 +65,7 @@
 			<a href="{{ url("index/middle/report_production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_buffing_ng?bulan=&fy=&hpl=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
+			<a href="{{ url("index/middle/report_buffing_operator_time") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Operator Time</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Barrel<i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/report_middle", "slip-fulfillment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">ID Slip Fulfillment</a>
 			<a href="{{ url("index/middle/barrel_log") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Barrel Log</a>

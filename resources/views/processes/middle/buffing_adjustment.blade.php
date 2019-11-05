@@ -455,6 +455,8 @@
 					$('#add').prop('selectedIndex',0);
 
 					$("#create_modal").modal('hide');
+
+					location.reload(true);
 					
 					$('#tableAdjust').DataTable().ajax.reload();
 					openSuccessGritter('Success','Insert Queue Success');
