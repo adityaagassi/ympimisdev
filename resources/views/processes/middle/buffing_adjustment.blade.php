@@ -169,7 +169,7 @@
 									<label class="col-sm-4">Rack<span class="text-red">*</span></label>
 									<div class="col-sm-3" align="left">
 										<select class="form-control select2" data-placeholder="Select Rack" name="rack" id="rack" style="width: 100%">
-											<option value=""></option>
+											<option style="color:grey;">Select Rack</option>
 											<option value="SXKEY-82">SXKEY-82</option>
 											<option value="SXKEY-C">SXKEY-C</option>
 											<option value="SXKEY-D">SXKEY-D</option>
@@ -266,7 +266,7 @@
 			class_name: 'growl-success',
 			image: '{{ url("images/image-screen.png") }}',
 			sticky: false,
-			time: '3000'
+			time: '2000'
 		});
 	}
 
@@ -277,7 +277,7 @@
 			class_name: 'growl-danger',
 			image: '{{ url("images/image-stop.png") }}',
 			sticky: false,
-			time: '3000'
+			time: '2000'
 		});
 	}
 
@@ -449,10 +449,15 @@
 					$("#kanban").val("");
 					$("#add").val("");
 
+					$('#rack').prop('selectedIndex',0);
+					$('#material').prop('selectedIndex',0);
+					$('#kanban').prop('selectedIndex',0);
+					$('#add').prop('selectedIndex',0);
+
 					$("#create_modal").modal('hide');
 					
 					$('#tableAdjust').DataTable().ajax.reload();
-					openSuccessGritter('Success','Insert Inactive Success');
+					openSuccessGritter('Success','Insert Queue Success');
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Insert Failed');

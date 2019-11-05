@@ -41,6 +41,9 @@
 				<div id="container1" style="width: 100%;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container3" style="height: 300px;"></div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>
 			
@@ -314,16 +317,34 @@
 				var plan = [];
 				var ok_kensa = [];
 				var bff = [];
+				var repair = [];
+				var kensa = [];
 
 				for(var i = 0; i < result.data.length; i++){
 					key.push('Group '+result.data[i].kunci);
 					plan.push(Math.ceil(result.data[i].barrel));
-					ok_kensa.push(Math.ceil(result.data[i].bff));			
+					ok_kensa.push(Math.ceil(result.data[i].bff));
 				}
 
 				for(var i = 0; i < result.bff.length; i++){
-					bff.push(Math.ceil(result.bff[i].jml));			
+					bff.push(Math.ceil(result.bff[i].jml));
+
+					var isEmpty = true;
+					for(var j = 0; j < result.repair.length; j++){
+						if(result.bff[i].kunci == result.repair[j].kunci){
+							repair.push(result.repair[j].qty);
+							var isEmpty = false;
+						}
+					}
+					if(isEmpty){
+						repair.push(0);
+					}
 				}
+
+				for(var i = 0; i < result.bff.length; i++){
+					kensa.push(bff[i] - ok_kensa[i] - repair[i]);
+				}
+
 
 				var chart = Highcharts.chart('container1', {
 					title: {
@@ -410,42 +431,17 @@
 
 				});
 
-			}
 
-		});
-
-		$.get('{{ url("fetch/middle/buffing_accumulated_achievement") }}', data, function(result, status, xhr) {
-			if(result.status){
-
-				var tgl= [];
-				var barrel = [];
-				var bff = [];
-
-				var week_name = '';
-				var diff = 0;
-
-				for (var i = 0; i < result.akumulasi.length; i++) {
-					week_name = result.akumulasi[i].week_name;
-					tgl.push(result.akumulasi[i].tgl);
-					barrel.push(parseInt(result.akumulasi[i].barrel) + diff);
-					bff.push(parseInt(result.akumulasi[i].bff));
-
-					diff = barrel[i] - bff[i];
-				}
-
-				var chart = Highcharts.chart('container2', {
-					chart: {
-						type: 'areaspline'
-					},
+				var chart = Highcharts.chart('container3', {
 					title: {
-						text: 'Weekly Group Achievements Accumulation',
+						text: 'Kensa & Repair',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
-						text: 'on WEEK '+week_name.substr(1),
+						text: 'on '+result.tanggal,
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'
@@ -458,20 +454,126 @@
 						style: {
 							fontSize: '26px',
 							fontWeight: 'bold'
-						},
-						gridLineWidth: 0,
-						startOnTick: false,
-						endOnTick: false
+						}
 					},
 					xAxis: {
-						categories: tgl,
-						gridLineWidth: 0,
+						categories: key,
+						type: 'category',
+						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
 								fontSize: '26px'
 							}
 						},
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					legend : {
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									textOutline: false,
+									fontSize: '26px'
+								}
+							},
+							animation: false,
+							cursor: 'pointer'
+						}
+					},
+					series: [{
+						name:'Kensa',
+						type: 'column',
+						color: 'rgb(169,255,151)',
+						data: kensa,
+					},{
+						name:'Repair',
+						type: 'column',
+						color: 'rgb(255,116,116)',
+						data: repair,
+					}]
+
+				});
+
+			}
+
+		});
+
+$.get('{{ url("fetch/middle/buffing_accumulated_achievement") }}', data, function(result, status, xhr) {
+	if(result.status){
+
+		var tgl= [];
+		var barrel = [];
+		var bff = [];
+
+		var week_name = '';
+		var diff = 0;
+
+		for (var i = 0; i < result.akumulasi.length; i++) {
+			week_name = result.akumulasi[i].week_name;
+			tgl.push(result.akumulasi[i].tgl);
+			barrel.push(parseInt(result.akumulasi[i].barrel) + diff);
+			bff.push(parseInt(result.akumulasi[i].bff));
+
+			diff = barrel[i] - bff[i];
+		}
+
+		var chart = Highcharts.chart('container2', {
+			chart: {
+				type: 'areaspline'
+			},
+			title: {
+				text: 'Weekly Group Achievements Accumulation',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'on WEEK '+week_name.substr(1),
+				style: {
+					fontSize: '18px',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'PC(s)'
+				},
+				style: {
+					fontSize: '26px',
+					fontWeight: 'bold'
+				},
+				gridLineWidth: 0,
+				startOnTick: false,
+				endOnTick: false
+			},
+			xAxis: {
+				categories: tgl,
+				gridLineWidth: 0,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					style: {
+						fontSize: '26px'
+					}
+				},
 						plotBands: [{ // visualize the weekend
 							from: 4.5,
 							to: 6.5,
@@ -525,10 +627,10 @@
 				});				
 
 
-			}
-		});
-
 	}
+});
+
+}
 
 
 

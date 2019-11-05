@@ -1186,10 +1186,17 @@ class MiddleProcessController extends Controller
 			where date(d.selesai_start_time) = '".$tanggal."'
 			group by kunci");
 
+		$repair = db::connection('digital_kanban')->select("SELECT LEFT(m.`key`,1) as kunci, SUM(material_qty) as qty FROM buffing_inventories i left join materials m on m.material_number = i.material_num
+			where date(i.created_at) = '".$tanggal."'
+			and lokasi = 'BUFFING-KENSA'
+			GROUP BY LEFT(m.`key`,1)");
+
+
 		$response = array(
 			'status' => true,
 			'data' => $data,
 			'bff' => $bff,
+			'repair' => $repair,
 			'tanggal' => $tanggal
 		);
 		return Response::json($response);
