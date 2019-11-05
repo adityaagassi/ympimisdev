@@ -273,24 +273,24 @@ table.table-bordered > tfoot > tr > th{
             {
                 type: 'column',
                 name: 'Good',
-                color: '#1faa00',
+                color: '#a9ff97',
                 data: jumlahgood
             }, {
                type: 'column',
                 name: 'Not Good',
                 data: jumlahnotgood,
-                color : '#d50000'
+                color : '#ff7474'
             },
             {
                 type: 'spline',
                 name: 'Good',
-                color: '#1faa00',
+                color: '#69d453',
                 data: jumlahgood
             }, {
                type: 'spline',
                 name: 'Not Good',
                 data: jumlahnotgood,
-                color : '#d50000'
+                color : '#e85858'
             }
             ]
           })
