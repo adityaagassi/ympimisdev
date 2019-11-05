@@ -434,7 +434,7 @@
 
 				var chart = Highcharts.chart('container3', {
 					title: {
-						text: 'Kensa & Repair',
+						text: 'Belum Kensa & Repair',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -499,7 +499,7 @@
 						}
 					},
 					series: [{
-						name:'Kensa',
+						name:'Belum Kensa',
 						type: 'column',
 						color: 'rgb(169,255,151)',
 						data: kensa,
