@@ -46,8 +46,11 @@
 				<div id="container2" style="width: 100%; margin: 0 auto;"></div>
 			</div>
 			<div class="col-md-12">
+
+                <div class="table-responsive">
 				<table id="tableStock" class="table table-bordered">
 				</table>
+			</div>
 			</div>
 		</div>
 	</section>
@@ -357,7 +360,7 @@ function fetchTableStock(){
 				$('#tableHead').append(tableHead);
 
 				tableBody += '<tr>';
-				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold;">Stamping-Kariawase</td>';
+				tableBody += '<td style="background-color: rgb(220,220,220); text-align: center; color: black; font-size: 16px; font-weight: bold; width:50%;">Stamping-Kariawase</td>';
 				total1 = 0;
 				$.each(result.inventory, function(index, value){
 					if(value.process_code == 1){
