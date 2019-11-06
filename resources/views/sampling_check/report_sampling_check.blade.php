@@ -195,9 +195,6 @@ table.table-bordered > tfoot > tr > th{
           })
 
           $('#chart').highcharts({
-            chart: {
-              type: 'column'
-            },
             title: {
               text: 'Sampling Check Report of '+month
             },
@@ -205,8 +202,7 @@ table.table-bordered > tfoot > tr > th{
               type: 'category',
               categories: week_date
             },
-            yAxis: {
-              type: 'linear',
+            yAxis: [{
               title: {
                 text: 'Total Sampling Check'
               },
@@ -218,8 +214,33 @@ table.table-bordered > tfoot > tr > th{
                   }
               }
             },
+            { // Secondary yAxis
+                title: {
+                    text: 'Report',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+              }
+            ],
             legend: {
-              enabled: false
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 25,
+              floating: true,
+              backgroundColor:
+                  Highcharts.defaultOptions.legend.backgroundColor || 'white',
+              borderColor: '#CCC',
+              borderWidth: 1,
+              shadow: false
             },
             plotOptions: {
               series: {
@@ -247,11 +268,18 @@ table.table-bordered > tfoot > tr > th{
                 return this.series.name+' Sampling Check <br> Tanggal '+this.key + ' : ' + '<br><b>'+this.y+'</b>';
               }
             },
-            "series": [
+            series: [
             {
-              "name": 'Jumlah',
-              "colorByPoint": true,
-              "data": jumlah_sampling_check
+              type: 'column',
+              name: 'Jumlah',
+              color : '#a9ff97',
+              data: jumlah_sampling_check
+            },
+            {
+              type: 'spline',
+              name: 'Jumlah',
+              color : '#69d453',
+              data: jumlah_sampling_check
             }
             ]
           })

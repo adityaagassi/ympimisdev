@@ -95,11 +95,11 @@ table.table-bordered > tfoot > tr > th{
                     <th>Audit Date</th>
                     <th>Product</th>
                     <th>Process</th>
-                    <th>Point Check Details</th>
                     <th>Kondisi</th>
                     <th>PIC</th>
                     <th>Auditor</th>
                     <th>Foreman</th>
+                    <th>Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -171,13 +171,6 @@ table.table-bordered > tfoot > tr > th{
       if(xhr.status == 200){
         if(result.status){
 
-          // var xAxis = [], productionCount = [], inTransitCount = [], fstkCount = []
-          // for (i = 0; i < data.length; i++) {
-          //   xAxis.push(data[i].destination);
-          //   productionCount.push(data[i].production);
-          //   inTransitCount.push(data[i].intransit);
-          //   fstkCount.push(data[i].fstk);
-          // }
           var month = result.monthTitle;
           
           var week_date = [], jml = [], jumlahgood = [], jumlahnotgood = [];
@@ -188,9 +181,6 @@ table.table-bordered > tfoot > tr > th{
             jumlahnotgood.push(parseInt(value.jumlah_not_good));
           })
           $('#chart').highcharts({
-            // chart: {
-            //   type: 'column'
-            // },
             title: {
               text: 'Report Audit of '+month
             },
@@ -208,7 +198,8 @@ table.table-bordered > tfoot > tr > th{
                       fontWeight: 'bold',
                       color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
                   }
-              }},
+              }
+            },
               { // Secondary yAxis
                 title: {
                     text: 'Report',
@@ -372,19 +363,19 @@ table.table-bordered > tfoot > tr > th{
       { "data": "date" },
       { "data": "product" },
       { "data": "proses" },
-      { "data": "point_check_audit_id",
-        "render": function ( data ) {
-          return '<a class="btn btn-info btn-xs" href="../../../index/point_check_audit/show2/'+ data + '">Details</a>';
-        } 
-      },
       { "data": "kondisi" },
       { "data": "pic_name" },
       { "data": "auditor_name" },
       { "data": "foreman" },
+      { "data": "urllink",
+        "render": function ( data ) {
+          return '<a target="_blank" class="btn btn-info btn-xs" href="../../../index/production_audit/print_audit_chart/'+ data + '">Details</a>';
+        } 
+      },
       ]
     });
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center> Report of '+ activity_name+ ' in ' + kondisi +' Condition<center>');
+    $('#judul_table').append('<center> Report on '+ week_date + ' in ' + kondisi +' Condition<center>');
     
   }
 

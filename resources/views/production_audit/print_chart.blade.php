@@ -46,9 +46,6 @@ table, th, td {
 				<br>{{ $foreman }}
 				<br>Foreman</center>
 			</td>
-			@if($jml_null > 0)
-			<td rowspan="5" id="approval1"><center>Approval</center></td>
-			@endif
 		</tr>
 		<tr>
 			<td>Product</td>
@@ -70,7 +67,6 @@ table, th, td {
 			<td>PIC</td>
 			<td>Auditor</td>
 		</tr>
-		<form role="form" method="post" action="{{url('index/production_audit/approval/'.$id)}}">
 		@foreach($production_audit as $production_audit)
 		<tr>
 			<td><?php echo $production_audit->point_check ?></td>
@@ -84,26 +80,8 @@ table, th, td {
         	</td>
 			<td>{{ $production_audit->pic_name }}</td>
 			<td>{{ $production_audit->auditor_name }}</td>
-			@if($jml_null > 0)
-			<td id="approval2">
-				<input type="hidden" value="{{csrf_token()}}" name="_token" />
-				@if($production_audit->approval == Null)
-				<div class="custom-control custom-checkbox">
-				    <span class="label success"><input type="checkbox" class="custom-control-input" id="customCheck" name="approve[]" value="{{ $production_audit->id_production_audit }}">
-				    <label class="custom-control-label" for="customCheck">Approve</label>
-				    </span>
-				</div>
-				@endif
-			</td>
-			@endif
 		</tr>
 		@endforeach
-		@if($jml_null > 0)
-		<tr id="approval3">
-			<td align="right" colspan="7"><button class="label success" type="submit">Submit</button></td>
-		</tr>
-		@endif
-		</form>
 	</tbody>
 </table>
 <script>

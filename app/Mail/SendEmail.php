@@ -63,5 +63,8 @@ class SendEmail extends Mailable
         if($this->remark == 'audit'){
             return $this->from('ympimis@gmail.com')->subject('Production Audit Report (??)')->view('mails.audit');
         }
+        if($this->remark == 'sampling_check'){
+            return $this->from('ympimis@gmail.com')->subject('Sampling Check Report (??)')->view('mails.sampling_check');
+        }
     }
 }

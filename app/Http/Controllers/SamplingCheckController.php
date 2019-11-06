@@ -14,6 +14,8 @@ use App\SamplingCheckDetail;
 use Response;
 use DataTables;
 use Excel;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class SamplingCheckController extends Controller
 {
@@ -25,7 +27,7 @@ class SamplingCheckController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$samplingCheck = SamplingCheck::where('activity_list_id',$id)
+    	$samplingCheck = SamplingCheck::where('activity_list_id',$id)->orderBy('sampling_checks.id','desc')
             ->get();
 
 
@@ -66,34 +68,51 @@ class SamplingCheckController extends Controller
         // var_dump($request->get('date'));
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $sub_section = DB::select($querySubSection);
+        $subsection2 = DB::select($querySubSection);
+        $subsection3 = DB::select($querySubSection);
 
         if($request->get('subsection') != null && strlen($request->get('month')) != null){
             $subsection = $request->get('subsection');
-            $month = $request->get('month');
+            // $date = date('Y-m',$request->get('month'));
+            // $year = date_format($date, 'Y');
+            // $month = date_format($date, 'm');
+            $year = substr($request->get('month'),0,4);
+            $month = substr($request->get('month'),-2);
             $samplingCheck = SamplingCheck::where('activity_list_id',$id)
                 ->where('subsection',$subsection)
-                ->where('month',$month)
+                // ->where(DATE_FORMAT('date',"%Y-%m"),$month)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->orderBy('sampling_checks.id','desc')
                 ->get();
         }
         elseif ($request->get('month') > null && $request->get('subsection') == null) {
-            $month = $request->get('month');
+            $year = substr($request->get('month'),0,4);
+            $month = substr($request->get('month'),-2);
             $samplingCheck = SamplingCheck::where('activity_list_id',$id)
-                ->where('month',$month)
+                // ->where(DATE_FORMAT('date',"%Y-%m"),$month)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->orderBy('sampling_checks.id','desc')
                 ->get();
         }
         elseif($request->get('subsection') > null && strlen($request->get('month')) == null){
             $subsection = $request->get('subsection');
             $samplingCheck = SamplingCheck::where('activity_list_id',$id)
                 ->where('subsection',$subsection)
+                ->orderBy('sampling_checks.id','desc')
                 ->get();
         }
         else{
             $samplingCheck = SamplingCheck::where('activity_list_id',$id)
+                ->orderBy('sampling_checks.id','desc')
                 ->get();
         }
         $data = array(
                       'sampling_check' => $samplingCheck,
                       'subsection' => $sub_section,
+                      'subsection2' => $subsection2,
+                      'subsection3' => $subsection3,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -543,11 +562,11 @@ class SamplingCheckController extends Controller
         if($request->get('subsection') != null && $request->get('month') != null){
             $subsection = $request->get('subsection');
             $month = $request->get('month');
-            $querySamplingCheck = "select *
+            $querySamplingCheck = "select *, sampling_checks.id as id_sampling_check
                 from sampling_checks
-                join sampling_check_details on sampling_checks.id = sampling_check_details.sampling_check_id
                 join activity_lists on activity_lists.id = sampling_checks.activity_list_id
-                where activity_lists.department_id = '".$id_departments."'
+                where activity_lists.id = '".$id."'
+                and activity_lists.department_id = '".$id_departments."'
                 and sampling_checks.subsection = '".$subsection."' 
                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."' 
                 and sampling_checks.deleted_at is null";
@@ -555,7 +574,7 @@ class SamplingCheckController extends Controller
             $samplingCheck2 = DB::select($querySamplingCheck);
         }
         // var_dump($subsection);
-
+        $jml_null = 0;
         foreach($samplingCheck2 as $samplingCheck2){
             // $product = $samplingCheck->product;
             // $proses = $samplingCheck->proses;
@@ -565,6 +584,10 @@ class SamplingCheckController extends Controller
             $subsection = $samplingCheck2->subsection;
             $month = $samplingCheck2->month;
             $leader = $samplingCheck2->leader;
+            if ($samplingCheck2->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $samplingCheck2->approved_date;
         }
         if($samplingCheck == null){
             // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
@@ -581,6 +604,8 @@ class SamplingCheckController extends Controller
                           'subsection' => $subsection,
                           'month' => $month,
                           'date' => $date,
+                          'jml_null' => $jml_null,
+                          'approved_date' => $approved_date,
                           'samplingCheck' => $samplingCheck,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
@@ -591,4 +616,136 @@ class SamplingCheckController extends Controller
                 )->with('page', 'Sampling Check');
         }
     }
+
+    function print_sampling_email($id,$subsection,$month)
+    {
+        $activityList = ActivityList::find($id);
+        // var_dump($request->get('product'));
+        // var_dump($request->get('date'));
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+
+        if($subsection != null && $month != null){
+            $querySamplingCheck = "select *, sampling_checks.id as id_sampling_check
+                from sampling_checks
+                join activity_lists on activity_lists.id = sampling_checks.activity_list_id
+                where activity_lists.id = '".$id."'
+                and activity_lists.department_id = '".$id_departments."'
+                and sampling_checks.subsection = '".$subsection."' 
+                and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."' 
+                and sampling_checks.deleted_at is null";
+            $samplingCheck = DB::select($querySamplingCheck);
+            $samplingCheck2 = DB::select($querySamplingCheck);
+        }
+        // var_dump($subsection);
+        $jml_null = 0;
+        foreach($samplingCheck2 as $samplingCheck2){
+            // $product = $samplingCheck->product;
+            // $proses = $samplingCheck->proses;
+            $date = $samplingCheck2->date;
+            $foreman = $samplingCheck2->foreman;
+            $section = $samplingCheck2->section;
+            $subsection = $samplingCheck2->subsection;
+            $month = $samplingCheck2->month;
+            $leader = $samplingCheck2->leader;
+            if ($samplingCheck2->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $samplingCheck2->approved_date;
+        }
+        if($samplingCheck == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'leader' => $leader,
+                          'foreman' => $foreman,
+                          'section' => $section,
+                          'jml_null' => $jml_null,
+                          'approved_date' => $approved_date,
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'date' => $date,
+                          'samplingCheck' => $samplingCheck,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('sampling_check.print_email', $data
+                )->with('page', 'Sampling Check');
+        }
+    }
+
+    public function sendemail(Request $request,$id)
+      {
+          $subsection = $request->get('subsection');
+          $month = $request->get('month');
+          // $date = date('Y-m-d', strtotime($request->get('date')));
+          $query_sampling_check = "select *, sampling_checks.id as id_sampling_check
+            from sampling_checks
+            join activity_lists on activity_lists.id =  sampling_checks.activity_list_id
+            join departments on departments.id =  activity_lists.department_id
+            where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+            and subsection = '".$subsection."'
+            and activity_list_id = '".$id."'
+            and sampling_checks.deleted_at is null";
+          $sampling_check = DB::select($query_sampling_check);
+          $sampling_check2 = DB::select($query_sampling_check);
+          $sampling_check3 = DB::select($query_sampling_check);
+
+          // var_dump($sampling_check2);
+
+          foreach($sampling_check2 as $sampling_check2){
+            $leader = $sampling_check2->leader;
+            $id_sampling_check = $sampling_check2->id_sampling_check;
+            $send_status = $sampling_check2->send_status;
+          }
+
+          foreach ($sampling_check3 as $sampling_check3) {
+                $scheck = SamplingCheck::find($sampling_check3->id_sampling_check);
+                $scheck->send_status = "Sent";
+                $scheck->send_date = date('Y-m-d');
+                $scheck->save();
+          }
+
+          $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$leader."'";
+          $email = DB::select($queryEmail);
+          foreach($email as $email){
+            $mail_to = $email->email;            
+          }
+
+          if($send_status == "Sent"){
+            return redirect('/index/sampling_check/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Sampling Check');
+          }
+          elseif($sampling_check != null){
+              Mail::to($mail_to)->send(new SendEmail($sampling_check, 'sampling_check'));
+              return redirect('/index/sampling_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Sampling Check');
+          }
+          else{
+            return redirect('/index/sampling_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'Sampling Check');
+          }
+      }
+
+      public function approval(Request $request,$id)
+      {
+          $approve = $request->get('approve');
+          foreach($approve as $approve){
+            $sampling_check = SamplingCheck::find($approve);
+            $subsection = $sampling_check->subsection;
+            $month = substr($sampling_check->date,0,7);
+            $date = $sampling_check->date;
+            $sampling_check->approval = "Approved";
+            $sampling_check->approved_date = date('Y-m-d');
+            $sampling_check->save();
+          }
+          return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('error', 'Approved.')->with('page', 'Sampling Check');
+      }
 }

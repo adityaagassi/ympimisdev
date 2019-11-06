@@ -53,6 +53,7 @@ class ProductionAuditController extends Controller
                 ->whereHas('point_check_audit', function ($query2) use($prosesproses) {
                         $query2->where('proses','=', $prosesproses);
                     })
+                ->orderBy('production_audits.id','desc')
                 ->get();
 
         $pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)->where('product',$productproduct)->where('proses',$prosesproses)->get();
@@ -120,6 +121,7 @@ class ProductionAuditController extends Controller
                         $query2->where('proses','=', $proses);
                     })
                 ->where('date',$date)
+                ->orderBy('production_audits.id','desc')
                 ->get();
         }
         else{
@@ -130,6 +132,7 @@ class ProductionAuditController extends Controller
                 ->whereHas('point_check_audit', function ($query2) use($proses) {
                         $query2->where('proses','=', $proses);
                     })
+                ->orderBy('production_audits.id','desc')
                 ->get();
         }
 
@@ -518,6 +521,67 @@ class ProductionAuditController extends Controller
         }
     }
 
+    function print_audit_chart($id,$date,$product,$proses)
+    {
+        $activityList = ActivityList::find($id);
+        // var_dump($request->get('product'));
+        // var_dump($request->get('date'));
+        if($product != null && $date != null && $proses != null){
+            $origin_group = $product;
+            $proses = $proses;            
+            $queryProductionAudit = "select *,production_audits.id as id_production_audit, employees1.name as pic_name,
+                    employees2.name as auditor_name
+                    from production_audits 
+                    join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
+                    join activity_lists on activity_lists.id =  production_audits.activity_list_id
+                    join departments on departments.id =  activity_lists.department_id
+                    join employees as employees1 on employees1.employee_id = production_audits.pic
+                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    where production_audits.date='".$date."' 
+                    and point_check_audits.product = '".$origin_group."' 
+                    and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
+            $productionAudit = DB::select($queryProductionAudit);
+        }
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+        $jml_null = 0;
+        foreach($productionAudit as $productAudit){
+            $product = $productAudit->product;
+            $proses = $productAudit->proses;
+            $date_audit = $productAudit->date;
+            $foreman = $productAudit->foreman;
+            if ($productAudit->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $productAudit->approved_date;
+        }
+        if($productionAudit == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'proses' => $proses,
+                          'product' => $product,
+                          'approved_date' => $approved_date,
+                          'foreman' => $foreman,
+                          'jml_null' => $jml_null,
+                          'date_audit' => $date_audit,
+                          'production_audit' => $productionAudit,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('production_audit.print_chart', $data
+                )->with('page', 'Production Audit');
+        }
+    }
+
     function report_audit($id)
     {
         $queryDepartments = "SELECT * FROM departments where id='".$id."'";
@@ -571,7 +635,7 @@ class ProductionAuditController extends Controller
     public function detailProductionAudit(Request $request, $id){
       $week_date = $request->get("week_date");
       $kondisi = $request->get("kondisi");
-        $query = "select *,employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
+        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
 
       $detail = db::select($query);
 
@@ -653,7 +717,6 @@ class ProductionAuditController extends Controller
           else{
             return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data tidak tersedia.')->with('page', 'Production Audit');
           }
-
       }
 
       public function approval(Request $request,$id)

@@ -1237,6 +1237,7 @@ Route::post('index/production_audit/update/{id}/{audit_id}/{product}/{proses}', 
 Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
 Route::post('index/production_audit/print_audit/{id}', 'ProductionAuditController@print_audit');
 Route::get('index/production_audit/print_audit_email/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit_email');
+Route::get('index/production_audit/print_audit_chart/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit_chart');
 Route::get('index/production_audit/report_audit/{id}', 'ProductionAuditController@report_audit');
 Route::get('index/production_audit/fetchReport/{id}', 'ProductionAuditController@fetchReport');
 Route::get('fetch/production_audit/detail_stat/{id}', 'ProductionAuditController@detailProductionAudit');

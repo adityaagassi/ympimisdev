@@ -173,30 +173,16 @@ table.table-bordered > tfoot > tr > th{
     $.get('{{ url("index/training_report/fetchReport/".$id) }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
         if(result.status){
-
-          // var xAxis = [], productionCount = [], inTransitCount = [], fstkCount = []
-          // for (i = 0; i < data.length; i++) {
-          //   xAxis.push(data[i].destination);
-          //   productionCount.push(data[i].production);
-          //   inTransitCount.push(data[i].intransit);
-          //   fstkCount.push(data[i].fstk);
-          // }
           var month = result.monthTitle;
           
           var training_id = [], week_date = [], jumlah_training = [];
 
           $.each(result.datas, function(key, value) {
-            // training_id.push(value.training_id);
             week_date.push(value.week_date);
             jumlah_training.push(value.jumlah_training);
-            // statusopen.push(value.open);
-            // statusclose.push(value.close);
           })
 
           $('#chart').highcharts({
-            chart: {
-              type: 'column'
-            },
             title: {
               text: 'Training Report of '+month
             },
@@ -204,8 +190,8 @@ table.table-bordered > tfoot > tr > th{
               type: 'category',
               categories: week_date
             },
-            yAxis: {
-              type: 'linear',
+            yAxis: [{
+              // type: 'linear',
               title: {
                 text: 'Total Training Report'
               },
@@ -217,8 +203,33 @@ table.table-bordered > tfoot > tr > th{
                   }
               }
             },
+            { // Secondary yAxis
+                title: {
+                    text: 'Report',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+              }
+            ],
             legend: {
-              enabled: false
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 25,
+              floating: true,
+              backgroundColor:
+                  Highcharts.defaultOptions.legend.backgroundColor || 'white',
+              borderColor: '#CCC',
+              borderWidth: 1,
+              shadow: false
             },
             plotOptions: {
               series: {
@@ -246,12 +257,21 @@ table.table-bordered > tfoot > tr > th{
                 return this.series.name+' Training <br> Tanggal '+this.key + ' : ' + '<br><b>'+this.y+'</b>';
               }
             },
-            "series": [
+            series: [
             {
-              "name": 'Jumlah',
-              "colorByPoint": true,
-              "data": jumlah_training
-            }
+              type: 'column',
+              name: 'Jumlah',
+              color: '#a9ff97',
+              data: jumlah_training
+            },
+            {
+              // type: 'spline',
+              // renderTo: 'lineChart',
+              type: 'spline',
+              name: 'Jumlah',
+              color: '#69d453',
+              data: jumlah_training
+            },
             ]
           })
         } else{

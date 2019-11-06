@@ -31,7 +31,7 @@ class PointCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
 
     	$pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
-            ->get();
+            ->orderBy('point_check_audits.id','desc')->get();
 
     	$data = array('pointCheckAudit' => $pointCheckAudit,
     				  'product' => $product,
@@ -57,6 +57,7 @@ class PointCheckController extends Controller
             // $date = date('Y-m-d', strtotime($request->get('date')));
             $pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
                 ->where('product',$origin_group)
+                ->orderBy('point_check_audits.id','desc')
                 ->get();
         }
         // elseif (strlen($request->get('date')) > null && $request->get('product') == null) {
@@ -73,7 +74,7 @@ class PointCheckController extends Controller
         // }
         else{
             $pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
-            ->get();
+            ->orderBy('point_check_audits.id','desc')->get();
         }
         // foreach ($activityList as $activityList) {
         $activity_name = $activityList->activity_name;

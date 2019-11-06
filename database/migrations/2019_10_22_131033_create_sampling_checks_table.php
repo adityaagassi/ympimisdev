@@ -26,6 +26,10 @@ class CreateSamplingChecksTable extends Migration
             $table->string('jumlah_cek');
             $table->string('leader');
             $table->string('foreman');
+            $table->string('send_status');
+            $table->date('send_date');
+            $table->string('approval');
+            $table->date('approval_date');
             $table->timestamps();
         });
     }
