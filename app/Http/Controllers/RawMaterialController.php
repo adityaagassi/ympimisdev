@@ -295,7 +295,7 @@ class RawMaterialController extends Controller
 				foreach ($rows as $row){
 					if(strlen($row) > 0){
 						$row = explode("\t", $row);
-						if($row[0] != 'Plant'){
+						if($row[0] != 'Plant' && strlen($row[0] > 0)){
 							if(strlen($row[5]) == 6){
 								$material_child = "0" . $row[5];
 							}
