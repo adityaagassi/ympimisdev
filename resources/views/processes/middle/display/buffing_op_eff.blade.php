@@ -134,7 +134,7 @@
 							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Finish Buffing</th>
+										<th style="width: 20%">Finish Buffing</th>
 										<th>Model</th>
 										<th>Key</th>
 										<th>OP Kensa</th>
@@ -150,7 +150,7 @@
 							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th>Finish Buffing</th>
+										<th style="width: 20%">Finish Buffing</th>
 										<th>Model</th>
 										<th>Key</th>
 										<th>OP Kensa</th>
@@ -168,9 +168,9 @@
 									<tr>
 										<th>Model</th>
 										<th>Key</th>
-										<th>Akan</th>
-										<th>Sedang</th>
-										<th>Selesai</th>
+										<th style="width: 13%">Akan</th>
+										<th style="width: 13%">Sedang</th>
+										<th style="width: 13%">Selesai</th>
 										<th>Standart time</th>
 										<th>Actual time</th>
 										<th>Material Qty</th>
@@ -625,7 +625,8 @@
 						}
 					},
 					yAxis: {
-						visible: false
+						visible: false,
+						min: 0
 					},
 					xAxis: {
 						categories: op_name,
@@ -732,7 +733,8 @@
 						}
 					},
 					yAxis: {
-						visible: false
+						visible: false,
+						min: 0
 					},
 					xAxis: {
 						categories: op_name,
