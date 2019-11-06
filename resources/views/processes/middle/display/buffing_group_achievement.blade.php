@@ -40,9 +40,9 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
+			{{-- <div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container3" style="height: 300px;"></div>
-			</div>
+			</div> --}}
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>
