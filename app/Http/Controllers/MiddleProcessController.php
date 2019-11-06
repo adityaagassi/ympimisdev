@@ -706,13 +706,13 @@ class MiddleProcessController extends Controller
 
 		$nama = Employee::where('employee_id','=',$nik[0])->select('name')->first();
 
-		$data_log = db::connection('digital_kanban')->select("select d.material_number, m.model, m.`key`, TIME(akan_start_time) as akan, TIME(sedang_start_time) as sedang, TIME(selesai_start_time) as selesai, material_qty, ROUND(TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time)/60,2) as act, ROUND((s.time * material_qty)/60,2) as std from data_log d
+		$data_log = db::connection('digital_kanban')->select("select d.material_number, m.model, m.`key`, akan_start_time as akan, sedang_start_time as sedang, selesai_start_time as selesai, material_qty, ROUND(TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time)/60,2) as act, ROUND((s.time * material_qty)/60,2) as std from data_log d
 			left join materials m on d.material_number = m.material_number
 			left join standart_times s on d.material_number = s.material_number
 			where operator_id = '".$nik[0]."'
 			and date(selesai_start_time) = '".$tgl."' order by selesai_start_time asc");
 
-		$good = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_logs l
+		$good = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from middle_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
@@ -720,13 +720,13 @@ class MiddleProcessController extends Controller
 			order by buffing_time asc");
 
 		$ng = db::select("SELECT a.buffing_time, a.material_number, a.model, a.`key`, a.remark, concat(SPLIT_STRING(a.op_kensa, ' ', 1), ' ', SPLIT_STRING(a.op_kensa, ' ', 2)) as op_kensa, SUM(quantity) as quantity from (
-			select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from middle_ng_logs l
+			select l.buffing_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from middle_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark order by buffing_time asc");
 
-		$ng_ng = db::select("select time(l.buffing_time) as buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_ng_logs l
+		$ng_ng = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
 			where l.operator_id = '".$nik[0]."'
@@ -761,9 +761,21 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$op_result = db::connection('digital_kanban')->select("select l.operator_id, sum(material_qty) as qty from data_log l
-			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY l.operator_id");
+		$group = '';
+		if($request->get('group') != null){
+			$groups =  explode(",", $request->get('group'));
+			for ($i=0; $i < count($groups); $i++) {
+				$group = $group."'".$groups[$i]."'";
+				if($i != (count($groups)-1)){
+					$group = $group.',';
+				}
+			}
+			$group = " and e.`group` in (".$group.") ";
+		}
+
+		$op_result = db::connection('digital_kanban')->select("select e.`group`, l.operator_id, sum(material_qty) as qty from data_log l left join employee_groups e on e.employee_id = l.operator_id
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."' ".$group."
+			GROUP BY e.`group`, l.operator_id");
 
 		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
@@ -1319,12 +1331,23 @@ class MiddleProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$working_time = db::connection('digital_kanban')->select("select l.operator_id,
-			sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act,
-			sum((l.material_qty*t.time))/60 as std from data_log l
+		$group = '';
+		if($request->get('group') != null){
+			$groups =  explode(",", $request->get('group'));
+			for ($i=0; $i < count($groups); $i++) {
+				$group = $group."'".$groups[$i]."'";
+				if($i != (count($groups)-1)){
+					$group = $group.',';
+				}
+			}
+			$group = " and e.`group` in (".$group.") ";
+		}
+
+		$working_time = db::connection('digital_kanban')->select("select e.`group`, l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act, sum((l.material_qty*t.time))/60 as std from data_log l
 			left join standart_times t on l.material_number = t.material_number
-			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY l.operator_id");
+			left join employee_groups e on e.employee_id = l.operator_id
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."' ".$group."
+			GROUP BY e.`group`, l.operator_id");
 
 		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
@@ -1404,17 +1427,19 @@ class MiddleProcessController extends Controller
 
 		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
-			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY shift, m.operator_id) g
 			left join
-			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
@@ -1426,7 +1451,7 @@ class MiddleProcessController extends Controller
 		$time_eff = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
 			from data_log l left join standart_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY l.operator_id;");
+			GROUP BY l.operator_id");
 
 		$response = array(
 			'status' => true,

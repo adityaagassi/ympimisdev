@@ -441,7 +441,6 @@
 						series: series
 					});
 
-
 					//Chart By Key
 					
 					var key = [];

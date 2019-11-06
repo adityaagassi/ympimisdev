@@ -69,36 +69,68 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
-				<div class="col-xs-2">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border: none;">
-							<i class="fa fa-calendar"></i>
+				<form method="GET" action="{{ action('MiddleProcessController@indexBuffingOpEff') }}">
+					<div class="col-xs-2">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border: none;">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Select Date">
 						</div>
-						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
-				</div>
-				<div class="col-xs-1">
-					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-				</div>
+					<div class="col-xs-2" style="color: black;">
+						<div class="form-group">
+							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="change()" data-placeholder="Select Group" style="width: 100%;">
+								<option value="A">GROUP A</option>
+								<option value="B">GROUP B</option>
+								<option value="C">GROUP C</option>
+							</select>
+							<input type="text" name="group" id="group" hidden>			
+						</div>
+					</div>
+					<div class="col-xs-1">
+						<button class="btn btn-success" type="submit">Update Chart</button>
+					</div>
+				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
+
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div class="col-xs-4" style="padding-left: 0px;">
-					<div id="container1_shift3" style="width: 100%;"></div>
+				<div id="shifta">
+					<div id="container1_shifta" style="width: 100%;"></div>					
 				</div>
-				<div class="col-xs-4">
-					<div id="container1_shift1" style="width: 100%;"></div>
+				<div id="shiftb">
+					<div id="container1_shiftb" style="width: 100%;"></div>					
 				</div>
-				<div class="col-xs-4" style="padding-right: 0px;">
-					<div id="container1_shift2" style="width: 100%;"></div>
+				<div id="shiftc">
+					<div id="container1_shiftc" style="width: 100%;"></div>					
 				</div>
 			</div>
+
 			<div class="col-xs-12" style="margin-top: 1%;">
-				<div id="container2" style="width: 100%;"></div>
+				<div id="shifta2">
+					<div id="container2_shifta" style="width: 100%;"></div>
+				</div>
+				<div id="shiftb2">
+					<div id="container2_shiftb" style="width: 100%;"></div>
+				</div>
+				<div id="shiftc2">
+					<div id="container2_shiftc" style="width: 100%;"></div>
+				</div>
 			</div>
+
 			<div class="col-xs-12" style="margin-top: 1%;">
-				<div id="container3" style="width: 100%;"></div>
+				<div id="shifta3">
+					<div id="container3_shifta" style="width: 100%;"></div>
+				</div>
+				<div id="shiftb3">
+					<div id="container3_shiftb" style="width: 100%;"></div>
+				</div>
+				<div id="shiftc3">
+					<div id="container3_shiftc" style="width: 100%;"></div>
+				</div>
 			</div>
+
 		</div>
 	</div>
 
@@ -207,10 +239,16 @@
 	
 
 	jQuery(document).ready(function(){
+		$('.select2').select2();
+
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 
 	});
+
+	function change() {
+		$("#group").val($("#groupSelect").val());
+	}
 
 	$('.datepicker').datepicker({
 		<?php $tgl_max = date('d-m-Y') ?>
@@ -233,8 +271,7 @@
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
+				[0, '#2a2a2b']
 				]
 			},
 			style: {
@@ -564,25 +601,98 @@
 
 
 	function fillChart() {
-		var tanggal = $('#tanggal').val();
+		var group = "{{$_GET['group']}}";
+		var tanggal = "{{$_GET['tanggal']}}";
+
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 		var data = {
 			tanggal:tanggal,
+			group:group,
 		}
+
+		//Show Group				
+		group = group.split(',');
+
+		if(group != ''){
+			$('#shifta').hide();
+			$('#shiftb').hide();
+			$('#shiftc').hide();
+
+			$('#shifta2').hide();
+			$('#shiftb2').hide();
+			$('#shiftc2').hide();
+
+			$('#shifta3').hide();
+			$('#shiftb3').hide();
+			$('#shiftc3').hide();
+
+
+			if(group.length == 1){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()).show();
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()+'2').show();
+
+					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()+'3').show();
+				}
+			}else if(group.length == 2){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()).show();
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()+'2').show();
+
+					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()+'3').show();
+				}
+			}else if(group.length == 3){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()).show();
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()+'2').show();
+
+					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()+'3').show();
+				}
+			}
+
+		}else{
+			$('#shifta').addClass("col-xs-4");
+			$('#shiftb').addClass("col-xs-4");
+			$('#shiftc').addClass("col-xs-4");
+
+			$('#shifta2').addClass("col-xs-4");
+			$('#shiftb2').addClass("col-xs-4");
+			$('#shiftc2').addClass("col-xs-4");
+
+			$('#shifta3').addClass("col-xs-4");
+			$('#shiftb3').addClass("col-xs-4");
+			$('#shiftc3').addClass("col-xs-4");
+		}
+
+
+
 
 		$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
 			if(result.status){
 				
-				// Shift 3
+				// Shift A
 				var eff = [];
 				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].shift == 's3'){
+					if(result.rate[i].shift == 'A'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
 
 								var name_temp = result.rate[i].name.split(" ");
 								var xAxis = '';
+								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
 								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
@@ -592,7 +702,12 @@
 
 								}
 
-								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff_value = (result.rate[i].rate * result.time_eff[j].eff * 100);
+								if(eff_value < 0){
+									eff_value = 0;
+								}
+
+								eff.push([xAxis, eff_value]);
 							}
 						}
 					}					
@@ -606,7 +721,7 @@
 					eff_value.push(eff[i][1]);
 				}
 
-				var chart = Highcharts.chart('container1_shift3', {
+				var chart = Highcharts.chart('container1_shifta', {
 					chart: {
 						animation: false
 					},
@@ -618,7 +733,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 3 on '+ result.date,
+						text: 'Group A on '+ result.date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -649,6 +764,7 @@
 					},
 					plotOptions: {
 						series:{
+							minPointLength: 5,
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
@@ -683,14 +799,15 @@
 				});
 
 
-				// Shift 1
+				// Shift B
 				var eff = [];
 				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].shift == 's1'){
+					if(result.rate[i].shift == 'B'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
 								var name_temp = result.rate[i].name.split(" ");
 								var xAxis = '';
+								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
 								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
@@ -700,7 +817,12 @@
 
 								}
 
-								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff_value = (result.rate[i].rate * result.time_eff[j].eff * 100);
+								if(eff_value < 0){
+									eff_value = 0;
+								}
+
+								eff.push([xAxis, eff_value]);
 							}
 						}
 					}					
@@ -714,7 +836,7 @@
 					eff_value.push(eff[i][1]);
 				}
 
-				var chart = Highcharts.chart('container1_shift1', {
+				var chart = Highcharts.chart('container1_shiftb', {
 					chart: {
 						animation: false
 					},
@@ -726,7 +848,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 1 on '+ result.date,
+						text: 'Group B on '+ result.date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -757,6 +879,7 @@
 					},
 					plotOptions: {
 						series:{
+							minPointLength: 5,
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
@@ -791,14 +914,15 @@
 				});
 
 
-				// Shift 2
+				// Shift C
 				var eff = [];
 				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].shift == 's2'){
+					if(result.rate[i].shift == 'C'){
 						for(var j = 0; j < result.time_eff.length; j++){
 							if(result.rate[i].operator_id == result.time_eff[j].operator_id){
 								var name_temp = result.rate[i].name.split(" ");
 								var xAxis = '';
+								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
 								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
@@ -808,7 +932,12 @@
 
 								}
 
-								eff.push([xAxis, (result.rate[i].rate * result.time_eff[j].eff * 100)]);
+								eff_value = (result.rate[i].rate * result.time_eff[j].eff * 100);
+								if(eff_value < 0){
+									eff_value = 0;
+								}
+
+								eff.push([xAxis, eff_value]);
 							}
 						}
 					}					
@@ -822,7 +951,7 @@
 					eff_value.push(eff[i][1]);
 				}
 
-				var chart = Highcharts.chart('container1_shift2', {
+				var chart = Highcharts.chart('container1_shiftc', {
 					chart: {
 						animation: false
 					},
@@ -834,7 +963,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 2 on '+ result.date,
+						text: 'Group C on '+ result.date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -864,6 +993,7 @@
 					},
 					plotOptions: {
 						series:{
+							minPointLength: 5,
 							dataLabels: {
 								enabled: true,
 								format: '{point.y:.2f}%',
@@ -897,45 +1027,56 @@
 
 				});
 
-
 			}
 
 
 		});
+
+
+
 $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, status, xhr) {
 	if(result.status){
 
+
+		//Group A
 		var op = [];
 		var qty = [];
 
 		for(var i = 0; i < result.op_result.length; i++){
-			for(var j = 0; j < result.emp_name.length; j++){
-				if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
-					var name_temp = result.emp_name[j].name.split(" ");
-					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-					}else{
-						if(name_temp[1].length > 7){
-							op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+			if(result.op_result[i].group == 'A'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
-							op.push(result.emp_name[j].name);
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
 						}
 					}
-
 				}
+				qty.push(Math.ceil(result.op_result[i].qty));
 			}
-			qty.push(Math.ceil(result.op_result[i].qty));
 		}
 
-
-		var chart = Highcharts.chart('container2', {
+		var chart = Highcharts.chart('container2_shifta', {
 			chart: {
 				animation: false
 			},
 			title: {
-				text: 'Operators Result on '+ result.date,
+				text: 'Operators Result',
 				style: {
 					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group A on '+ result.date,
+				style: {
+					fontSize: '1vw',
 					fontWeight: 'bold'
 				}
 			},
@@ -944,6 +1085,207 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 					enabled: true,
 					text: "PC(s)"
 				},
+				labels: {
+					enabled: false
+				}
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '1vw'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Result',
+				type: 'column',
+				color: 'rgb(93,194,193)',
+				data: qty,
+			}
+			]
+
+		});
+
+		//Group B
+		var op = [];
+		var qty = [];
+
+		for(var i = 0; i < result.op_result.length; i++){
+			if(result.op_result[i].group == 'B'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+						}else{
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
+						}
+					}
+				}
+				qty.push(Math.ceil(result.op_result[i].qty));
+			}
+		}
+
+
+		var chart = Highcharts.chart('container2_shiftb', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Operators Result',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group B on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+				labels: {
+					enabled: false
+				}
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '1vw'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Result',
+				type: 'column',
+				color: 'rgb(93,194,193)',
+				data: qty,
+			}
+			]
+
+		});
+
+		//Group C
+		var op = [];
+		var qty = [];
+
+		for(var i = 0; i < result.op_result.length; i++){
+			if(result.op_result[i].group == 'C'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+						}else{
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
+						}
+					}
+				}
+				qty.push(Math.ceil(result.op_result[i].qty));
+			}
+		}
+
+
+		var chart = Highcharts.chart('container2_shiftc', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Operators Result',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group C on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+				labels: {
+					enabled: false
+				}
 			},
 			xAxis: {
 				categories: op,
@@ -999,40 +1341,51 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
 	if(result.status){
 
+
+		//Group A
 		var op = [];
 		var act = [];
 		var std = [];
 		var target = [];
 
 		for(var i = 0; i < result.working_time.length; i++){
-			for(var j = 0; j < result.emp_name.length; j++){
-				if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
-					var name_temp = result.emp_name[j].name.split(" ");
-					if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
-						op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-					}else{
-						if(name_temp[1].length > 7){
-							op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+			if(result.working_time[i].group == 'A'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
-							op.push(result.emp_name[j].name);
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
 						}
 					}
 				}
-			}
-			act.push(Math.ceil(result.working_time[i].act));
-			std.push(Math.ceil(result.working_time[i].std));
-			target.push(parseInt(480));
+				act.push(Math.ceil(result.working_time[i].act));
+				std.push(Math.ceil(result.working_time[i].std));
+				target.push(parseInt(480));
+			}			
 		}
 
 
-		var chart = Highcharts.chart('container3', {
+		var chart = Highcharts.chart('container3_shifta', {
 			chart: {
 				animation: false
 			},
 			title: {
-				text: 'Operators Working time on '+ result.date,
+				text: 'Operators Working Time',
 				style: {
 					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group A on '+ result.date,
+				style: {
+					fontSize: '1vw',
 					fontWeight: 'bold'
 				}
 			},
@@ -1056,7 +1409,274 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 							fontWeight: 'bold'
 						}
 					}
-				}]
+				}],
+				labels: {
+					enabled: false
+				}
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				align: 'center',
+				verticalAlign: 'bottom',
+				x: 0,
+				y: 0,
+
+				backgroundColor: (
+					Highcharts.theme && Highcharts.theme.background2) || 'white',
+				shadow: false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '1vw'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Standart time',
+				type: 'column',
+				color: 'rgb(255,116,116)',
+				data: std
+			},
+			{
+				name:'Actual Time',
+				type: 'column',
+				color: 'rgb(144,238,126)',
+				data: act,
+			}
+			]
+
+		});
+
+		//Group B
+		var op = [];
+		var act = [];
+		var std = [];
+		var target = [];
+
+		for(var i = 0; i < result.working_time.length; i++){
+			if(result.working_time[i].group == 'B'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+						}else{
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
+						}
+					}
+				}
+				act.push(Math.ceil(result.working_time[i].act));
+				std.push(Math.ceil(result.working_time[i].std));
+				target.push(parseInt(480));
+			}			
+		}
+
+
+		var chart = Highcharts.chart('container3_shiftb', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Operators Working Time',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group B on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Minutes"
+				},
+				max: 500,
+				plotLines: [{
+					color: '#FF0000',
+					width: 2,
+					value: 480,
+					label: {
+						align:'right',
+						text: '480 Minutes',
+						x:-7,
+						style: {
+							fontSize: '1vw',
+							color: '#FF0000',
+							fontWeight: 'bold'
+						}
+					}
+				}],
+				labels: {
+					enabled: false
+				}
+			},
+			xAxis: {
+				categories: op,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				align: 'center',
+				verticalAlign: 'bottom',
+				x: 0,
+				y: 0,
+
+				backgroundColor: (
+					Highcharts.theme && Highcharts.theme.background2) || 'white',
+				shadow: false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '1vw'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+			},
+			series: [
+			{
+				name:'Standart time',
+				type: 'column',
+				color: 'rgb(255,116,116)',
+				data: std
+			},
+			{
+				name:'Actual Time',
+				type: 'column',
+				color: 'rgb(144,238,126)',
+				data: act,
+			}
+			]
+
+		});
+
+		//Group C
+		var op = [];
+		var act = [];
+		var std = [];
+		var target = [];
+
+		for(var i = 0; i < result.working_time.length; i++){
+			if(result.working_time[i].group == 'C'){
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
+						var name_temp = result.emp_name[j].name.split(" ");
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+						}else{
+							if(name_temp[1].length > 7){
+								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
+							}else{
+								op.push(result.emp_name[j].name);
+							}
+						}
+					}
+				}
+				act.push(Math.ceil(result.working_time[i].act));
+				std.push(Math.ceil(result.working_time[i].std));
+				target.push(parseInt(480));
+			}			
+		}
+
+
+		var chart = Highcharts.chart('container3_shiftc', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Operators Working Time',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group C on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Minutes"
+				},
+				max: 500,
+				plotLines: [{
+					color: '#FF0000',
+					width: 2,
+					value: 480,
+					label: {
+						align:'right',
+						text: '480 Minutes',
+						x:-7,
+						style: {
+							fontSize: '1vw',
+							color: '#FF0000',
+							fontWeight: 'bold'
+						}
+					}
+				}],
+				labels: {
+					enabled: false
+				}
 			},
 			xAxis: {
 				categories: op,
@@ -1122,136 +1742,6 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 
 });
 
-
-// $.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status, xhr) {
-// 	if(result.status){
-
-// 		var seriesData = [];
-// 		var data = [];
-
-
-// 		for (var i = 0; i < result.op.length; i++) {
-// 			data = [];
-
-// 			for (var j = 0; j < result.rate.length; j++) {
-
-// 				if(result.op[i].operator_id == result.rate[j].operator_id){
-// 					var isEmpty = true;
-// 					for (var k = 0; k < result.time_eff.length; k++) {
-// 						if((result.rate[j].week_date == result.time_eff[k].tgl) && (result.rate[j].operator_id == result.time_eff[k].operator_id)){
-
-// 							if(Date.parse(result.rate[j].week_date) > Date.parse('2019-10-01')){
-// 								if(result.rate[j].rate == 0){
-// 									data.push([Date.parse(result.rate[j].week_date), null]);
-// 								}else{
-// 									data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
-// 								}
-
-// 							}else{
-// 								data.push([Date.parse(result.rate[j].week_date), null]);
-
-// 							}
-// 							isEmpty = false;						
-// 						}
-// 					}
-// 					if(isEmpty){
-// 						data.push([Date.parse(result.rate[j].week_date), null]);
-// 					}				
-// 				}
-// 			}
-// 			seriesData.push({name : result.op[i].name, data: data});
-// 		}
-
-
-// 		var chart = Highcharts.stockChart('container2', {
-// 			chart:{
-// 				type:'spline',
-// 			},
-// 			rangeSelector: {
-// 				selected: 0
-// 			},
-// 			scrollbar:{
-// 				enabled:false
-// 			},
-// 			navigator:{
-// 				enabled:false
-// 			},
-// 			title: {
-// 				text: 'Daily Operators Overall Efficiency',
-// 				style: {
-// 					fontSize: '30px',
-// 					fontWeight: 'bold'
-// 				}
-// 			},
-// 			subtitle: {
-// 				text: 'Last Update: '+getActualFullDate(),
-// 				style: {
-// 					fontSize: '18px',
-// 					fontWeight: 'bold'
-// 				}
-// 			},
-// 			yAxis: {
-// 				title: {
-// 					text: 'NG Rate (%)'
-// 				},
-// 				plotLines: [{
-// 					color: '#FFFFFF',
-// 					width: 2,
-// 					value: 0,
-// 					dashStyles: 'longdashdot'
-// 				}]
-// 			},
-// 			xAxis: {
-// 				categories: 'datetime',
-// 				tickInterval: 24 * 3600 * 1000 
-// 			},
-// 			tooltip: {
-// 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
-// 				split: false,
-// 			},
-// 			legend : {
-// 				enabled:false
-// 			},
-// 			credits: {
-// 				enabled:false
-// 			},
-// 			plotOptions: {
-// 				series: {
-// 					dataLabels: {
-// 						enabled: true,
-// 						format: '{point.y:,.2f}%',
-// 					},
-// 					connectNulls: true,
-// 					shadow: {
-// 						width: 3,
-// 						opacity: 0.4
-// 					},
-// 					label: {
-// 						connectorAllowed: false
-// 					},
-
-// 				}
-// 			},
-// 			series: seriesData,
-// 			responsive: {
-// 				rules: [{
-// 					condition: {
-// 						maxWidth: 500
-// 					},
-// 					chartOptions: {
-// 						legend: {
-// 							layout: 'horizontal',
-// 							align: 'center',
-// 							verticalAlign: 'bottom'
-// 						}
-// 					}
-// 				}]
-// 			}
-// 		});
-
-
-// 	}
-// });
 
 }
 
