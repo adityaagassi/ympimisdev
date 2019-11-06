@@ -163,11 +163,14 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        @if(isset($page) && $page == "Upload Storage")<li class="active">@else<li>@endif
-          <a href="{{ url("index/material/storage") }}"><i class="fa fa-cubes"></i>Storage Loc Stock</a>
-        </li>
         @if(isset($page) && $page == "Upload SMBMR")<li class="active">@else<li>@endif
           <a href="{{ url("index/material/smbmr") }}"><i class="fa fa-list-ol"></i>Material List By Model</a>
+        </li>
+        @if(isset($page) && $page == "Material Usage")<li class="active">@else<li>@endif
+          <a href="{{ url("index/material/usage") }}"><i class="fa fa-calendar-plus-o"></i>Material Usage</a>
+        </li>
+        @if(isset($page) && $page == "Upload Storage")<li class="active">@else<li>@endif
+          <a href="{{ url("index/material/storage") }}"><i class="fa fa-cubes"></i>Storage Loc Stock</a>
         </li>
       </ul>
     </li>
@@ -412,6 +415,12 @@
     <a href="{{ url("/index/process_middle_sx") }}"><i class="fa fa-list-ol"></i> Saxophone</a>
   </li>
 </ul>
+</li>
+@endif
+
+@if(in_array('S21', $navs))
+@if(isset($page) && $page == "Kaizen")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/kaizen") }}"><i class="fa fa-list-alt"></i> <span>E - kaizen</span></a>
 </li>
 @endif
 

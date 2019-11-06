@@ -250,6 +250,7 @@ Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
+Route::get('create/ekaizen/{id}/{name}', 'EmployeeController@makeKaizen');
 Route::get('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
@@ -788,6 +789,12 @@ Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 	Route::get('fetch/hr/hrqa', 'EmployeeController@fetchMasterQuestion');
 	Route::get('fetch/hr/hrqa/detail', 'EmployeeController@fetchDetailQuestion');
 });
+
+//E - Kaizen
+Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
+	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
+});
+
 Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');
 Route::get('index/initial/stock_trend/{id}', 'InitialProcessController@indexStockTrend');
 Route::get('fetch/initial/stock_monitoring', 'InitialProcessController@fetchStockMonitoring');
@@ -1294,6 +1301,9 @@ Route::get('index/sampling_check/report_sampling_check/{id}', 'SamplingCheckCont
 Route::get('index/sampling_check/fetchReport/{id}', 'SamplingCheckController@fetchReport');
 Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@detail_sampling_check');
 Route::post('index/sampling_check/print_sampling/{id}', 'SamplingCheckController@print_sampling');
+Route::get('index/sampling_check/print_sampling_email/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_email');
+Route::post('index/sampling_check/approval/{id}', 'SamplingCheckController@approval');
+Route::post('index/sampling_check/send_email/{id}', 'SamplingCheckController@sendemail');
 
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
