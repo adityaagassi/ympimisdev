@@ -926,7 +926,8 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 					width: 2,
 					value: 0,
 					dashStyles: 'longdashdot'
-				}]
+				}],
+				max: 100
 			},
 			xAxis: {
 				categories: 'datetime',
