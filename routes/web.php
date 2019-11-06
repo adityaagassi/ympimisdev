@@ -872,7 +872,7 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 
 
 	//----------bensuki
-	Route::get('index/Pianica', 'Pianica@index');	
+		
 	Route::get('index/Bensuki', 'Pianica@bensuki');
 	Route::post('index/Save', 'Pianica@input');
 	Route::post('index/Incoming', 'Pianica@input2');
@@ -901,6 +901,8 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	
 	Route::get('index/FillOp', 'Pianica@fillop');
 });
+
+Route::get('index/Pianica', 'Pianica@index');
 Route::get('index/Op_Code', 'Pianica@opcode');
 	//record
 Route::get('index/record', 'Pianica@recordPianica');
