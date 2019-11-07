@@ -96,7 +96,7 @@
 				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta">
 					<div id="container1_shifta" style="width: 100%;"></div>					
 				</div>
@@ -105,353 +105,353 @@
 				</div>
 				<div id="shiftc">
 					<div id="container1_shiftc" style="width: 100%;"></div>					
-				</div>			</div>
-				<div class="col-xs-12" style="margin-top: 5px;">
-					<div id="container2" style="width: 100%;"></div>
-				</div>
+				</div>			
+			</div>
+			<div class="col-xs-12" style="margin-top: 1%;">
+				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
+	</div>
 
-		<!-- start modal -->
-		<div class="modal fade" id="myModal" style="color: black;">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
-						<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
+	<!-- start modal -->
+	<div class="modal fade" id="myModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
 
-							<div class="col-md-12" style="margin-bottom: 20px;">
-								<div class="col-md-6">
-									<h5 class="modal-title">NG Rate</h5><br>
-									<h5 class="modal-title" id="ng_rate"></h5>
-								</div>
-								<div class="col-md-6">
-									<div id="modal_ng" style="height: 200px"></div>
-								</div>
+						<div class="col-md-12" style="margin-bottom: 20px;">
+							<div class="col-md-6">
+								<h5 class="modal-title">NG Rate</h5><br>
+								<h5 class="modal-title" id="ng_rate"></h5>
 							</div>
-
-							<div class="col-md-5">
-								<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
-								<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
-									<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
-										<tr>
-											<th>Finish Buffing</th>
-											<th>Model</th>
-											<th>Key</th>
-											<th>OP Kensa</th>
-											<th>Material Qty</th>
-										</tr>
-									</thead>
-									<tbody id="middle-log-body">
-									</tbody>
-								</table>
+							<div class="col-md-6">
+								<div id="modal_ng" style="height: 200px"></div>
 							</div>
-							<div class="col-md-7">
-								<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
-								<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
-									<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
-										<tr>
-											<th style="width: 15%;">Finish Buffing</th>
-											<th>Model</th>
-											<th>Key</th>
-											<th>OP Kensa</th>
-											<th>NG Name</th>
-											<th style="width: 5%;">Material Qty</th>
-										</tr>
-									</thead>
-									<tbody id="middle-ng-log-body">
-									</tbody>
-								</table>
-							</div>						
 						</div>
+
+						<div class="col-md-5">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
+							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Finish Buffing</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-log-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-7">
+							<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
+							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 15%;">Finish Buffing</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>NG Name</th>
+										<th style="width: 5%;">Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-ng-log-body">
+								</tbody>
+							</table>
+						</div>						
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
 		</div>
-		<!-- end modal -->
+	</div>
+	<!-- end modal -->
 
 
-	</section>
-	@endsection
-	@section('scripts')
-	<script src="{{ url("js/highstock.js")}}"></script>
-	<script src="{{ url("js/highcharts-3d.js")}}"></script>
-	<script src="{{ url("js/exporting.js")}}"></script>
-	<script src="{{ url("js/export-data.js")}}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
-		jQuery(document).ready(function(){
-			$('.select2').select2();
-
-			fillChart();
-			setInterval(fillChart, 10000);
-		});
-
-		function change() {
-			$("#group").val($("#groupSelect").val());
+</section>
+@endsection
+@section('scripts')
+<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
+	});
 
-		$('.datepicker').datepicker({
-			<?php $tgl_max = date('d-m-Y') ?>
-			autoclose: true,
-			format: "dd-mm-yyyy",
-			todayHighlight: true,	
-			endDate: '<?php echo $tgl_max ?>'
-		});
+	jQuery(document).ready(function(){
+		$('.select2').select2();
 
-		Highcharts.createElement('link', {
-			href: '{{ url("fonts/UnicaOne.css")}}',
-			rel: 'stylesheet',
-			type: 'text/css'
-		}, null, document.getElementsByTagName('head')[0]);
+		fillChart();
+		setInterval(fillChart, 10000);
+	});
 
-		Highcharts.theme = {
-			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-			'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-			chart: {
-				backgroundColor: {
-					linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-					stops: [
-					[0, '#2a2a2b'],
-					[1, '#3e3e40']
-					]
-				},
-				style: {
-					fontFamily: 'sans-serif'
-				},
-				plotBorderColor: '#606063'
-			},
-			title: {
-				style: {
-					color: '#E0E0E3',
-					textTransform: 'uppercase',
-					fontSize: '20px'
-				}
-			},
-			subtitle: {
-				style: {
-					color: '#E0E0E3',
-					textTransform: 'uppercase'
-				}
-			},
-			xAxis: {
-				gridLineColor: '#707073',
-				labels: {
-					style: {
-						color: '#E0E0E3'
-					}
-				},
-				lineColor: '#707073',
-				minorGridLineColor: '#505053',
-				tickColor: '#707073',
-				title: {
-					style: {
-						color: '#A0A0A3'
+	function change() {
+		$("#group").val($("#groupSelect").val());
+	}
 
-					}
-				}
+	$('.datepicker').datepicker({
+		<?php $tgl_max = date('d-m-Y') ?>
+		autoclose: true,
+		format: "dd-mm-yyyy",
+		todayHighlight: true,	
+		endDate: '<?php echo $tgl_max ?>'
+	});
+
+	Highcharts.createElement('link', {
+		href: '{{ url("fonts/UnicaOne.css")}}',
+		rel: 'stylesheet',
+		type: 'text/css'
+	}, null, document.getElementsByTagName('head')[0]);
+
+	Highcharts.theme = {
+		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		chart: {
+			backgroundColor: {
+				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+				stops: [
+				[0, '#2a2a2b']
+				]
 			},
-			yAxis: {
-				gridLineColor: '#707073',
-				labels: {
-					style: {
-						color: '#E0E0E3'
-					}
-				},
-				lineColor: '#707073',
-				minorGridLineColor: '#505053',
-				tickColor: '#707073',
-				tickWidth: 1,
-				title: {
-					style: {
-						color: '#A0A0A3'
-					}
-				}
+			style: {
+				fontFamily: 'sans-serif'
 			},
-			tooltip: {
-				backgroundColor: 'rgba(0, 0, 0, 0.85)',
-				style: {
-					color: '#F0F0F0'
-				}
-			},
-			plotOptions: {
-				series: {
-					dataLabels: {
-						color: 'white'
-					},
-					marker: {
-						lineColor: '#333'
-					}
-				},
-				boxplot: {
-					fillColor: '#505053'
-				},
-				candlestick: {
-					lineColor: 'white'
-				},
-				errorbar: {
-					color: 'white'
-				}
-			},
-			legend: {
-				itemStyle: {
-					color: '#E0E0E3'
-				},
-				itemHoverStyle: {
-					color: '#FFF'
-				},
-				itemHiddenStyle: {
-					color: '#606063'
-				}
-			},
-			credits: {
-				style: {
-					color: '#666'
-				}
-			},
+			plotBorderColor: '#606063'
+		},
+		title: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase',
+				fontSize: '20px'
+			}
+		},
+		subtitle: {
+			style: {
+				color: '#E0E0E3',
+				textTransform: 'uppercase'
+			}
+		},
+		xAxis: {
+			gridLineColor: '#707073',
 			labels: {
 				style: {
-					color: '#707073'
+					color: '#E0E0E3'
 				}
 			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			title: {
+				style: {
+					color: '#A0A0A3'
 
-			drilldown: {
-				activeAxisLabelStyle: {
-					color: '#F0F0F3'
+				}
+			}
+		},
+		yAxis: {
+			gridLineColor: '#707073',
+			labels: {
+				style: {
+					color: '#E0E0E3'
+				}
+			},
+			lineColor: '#707073',
+			minorGridLineColor: '#505053',
+			tickColor: '#707073',
+			tickWidth: 1,
+			title: {
+				style: {
+					color: '#A0A0A3'
+				}
+			}
+		},
+		tooltip: {
+			backgroundColor: 'rgba(0, 0, 0, 0.85)',
+			style: {
+				color: '#F0F0F0'
+			}
+		},
+		plotOptions: {
+			series: {
+				dataLabels: {
+					color: 'white'
 				},
-				activeDataLabelStyle: {
-					color: '#F0F0F3'
+				marker: {
+					lineColor: '#333'
 				}
 			},
-
-			navigation: {
-				buttonOptions: {
-					symbolStroke: '#DDDDDD',
-					theme: {
-						fill: '#505053'
-					}
-				}
+			boxplot: {
+				fillColor: '#505053'
 			},
+			candlestick: {
+				lineColor: 'white'
+			},
+			errorbar: {
+				color: 'white'
+			}
+		},
+		legend: {
+			itemStyle: {
+				color: '#E0E0E3'
+			},
+			itemHoverStyle: {
+				color: '#FFF'
+			},
+			itemHiddenStyle: {
+				color: '#606063'
+			}
+		},
+		credits: {
+			style: {
+				color: '#666'
+			}
+		},
+		labels: {
+			style: {
+				color: '#707073'
+			}
+		},
 
-			rangeSelector: {
-				buttonTheme: {
-					fill: '#505053',
-					stroke: '#000000',
-					style: {
-						color: '#CCC'
+		drilldown: {
+			activeAxisLabelStyle: {
+				color: '#F0F0F3'
+			},
+			activeDataLabelStyle: {
+				color: '#F0F0F3'
+			}
+		},
+
+		navigation: {
+			buttonOptions: {
+				symbolStroke: '#DDDDDD',
+				theme: {
+					fill: '#505053'
+				}
+			}
+		},
+
+		rangeSelector: {
+			buttonTheme: {
+				fill: '#505053',
+				stroke: '#000000',
+				style: {
+					color: '#CCC'
+				},
+				states: {
+					hover: {
+						fill: '#707073',
+						stroke: '#000000',
+						style: {
+							color: 'white'
+						}
 					},
-					states: {
-						hover: {
-							fill: '#707073',
-							stroke: '#000000',
-							style: {
-								color: 'white'
-							}
-						},
-						select: {
-							fill: '#000003',
-							stroke: '#000000',
-							style: {
-								color: 'white'
-							}
+					select: {
+						fill: '#000003',
+						stroke: '#000000',
+						style: {
+							color: 'white'
 						}
 					}
-				},
-				inputBoxBorderColor: '#505053',
-				inputStyle: {
-					backgroundColor: '#333',
-					color: 'silver'
-				},
-				labelStyle: {
-					color: 'silver'
 				}
 			},
-
-			navigator: {
-				handles: {
-					backgroundColor: '#666',
-					borderColor: '#AAA'
-				},
-				outlineColor: '#CCC',
-				maskFill: 'rgba(255,255,255,0.1)',
-				series: {
-					color: '#7798BF',
-					lineColor: '#A6C7ED'
-				},
-				xAxis: {
-					gridLineColor: '#505053'
-				}
+			inputBoxBorderColor: '#505053',
+			inputStyle: {
+				backgroundColor: '#333',
+				color: 'silver'
 			},
-
-			scrollbar: {
-				barBackgroundColor: '#808083',
-				barBorderColor: '#808083',
-				buttonArrowColor: '#CCC',
-				buttonBackgroundColor: '#606063',
-				buttonBorderColor: '#606063',
-				rifleColor: '#FFF',
-				trackBackgroundColor: '#404043',
-				trackBorderColor: '#404043'
-			},
-
-			legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-			background2: '#505053',
-			dataLabelsColor: '#B0B0B3',
-			textColor: '#C0C0C0',
-			contrastTextColor: '#F0F0F3',
-			maskColor: 'rgba(255,255,255,0.3)'
-		};
-		Highcharts.setOptions(Highcharts.theme);
-
-		function addZero(i) {
-			if (i < 10) {
-				i = "0" + i;
+			labelStyle: {
+				color: 'silver'
 			}
-			return i;
+		},
+
+		navigator: {
+			handles: {
+				backgroundColor: '#666',
+				borderColor: '#AAA'
+			},
+			outlineColor: '#CCC',
+			maskFill: 'rgba(255,255,255,0.1)',
+			series: {
+				color: '#7798BF',
+				lineColor: '#A6C7ED'
+			},
+			xAxis: {
+				gridLineColor: '#505053'
+			}
+		},
+
+		scrollbar: {
+			barBackgroundColor: '#808083',
+			barBorderColor: '#808083',
+			buttonArrowColor: '#CCC',
+			buttonBackgroundColor: '#606063',
+			buttonBorderColor: '#606063',
+			rifleColor: '#FFF',
+			trackBackgroundColor: '#404043',
+			trackBorderColor: '#404043'
+		},
+
+		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+		background2: '#505053',
+		dataLabelsColor: '#B0B0B3',
+		textColor: '#C0C0C0',
+		contrastTextColor: '#F0F0F3',
+		maskColor: 'rgba(255,255,255,0.3)'
+	};
+	Highcharts.setOptions(Highcharts.theme);
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
+	}
+
+
+	function showDetail(tgl, nama) {
+		var data = {
+			tgl:tgl,
+			nama:nama,
 		}
 
-		function getActualFullDate() {
-			var d = new Date();
-			var day = addZero(d.getDate());
-			var month = addZero(d.getMonth()+1);
-			var year = addZero(d.getFullYear());
-			var h = addZero(d.getHours());
-			var m = addZero(d.getMinutes());
-			var s = addZero(d.getSeconds());
-			return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
-		}
+		$('#myModal').modal('show');
+		$('#middle-log-body').append().empty();
+		$('#middle-ng-log-body').append().empty();
+		$('#ng_rate').append().empty();
+		$('#posh_rate').append().empty();
+		$('#judul').append().empty();
 
 
-		function showDetail(tgl, nama) {
-			var data = {
-				tgl:tgl,
-				nama:nama,
-			}
+		$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
 
-			$('#myModal').modal('show');
-			$('#middle-log-body').append().empty();
-			$('#middle-ng-log-body').append().empty();
-			$('#ng_rate').append().empty();
-			$('#posh_rate').append().empty();
-			$('#judul').append().empty();
-
-
-			$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
-				if(result.status){
-
-					$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
+				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
 
 				//Middle log
 				var total_good = 0;
@@ -571,19 +571,19 @@
 			}
 
 		});
+	}
+
+
+	function fillChart() {
+		var group = "{{$_GET['group']}}";
+		var tanggal = "{{$_GET['tanggal']}}";
+
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+		var data = {
+			tanggal:tanggal,
+			group:group,
 		}
-
-
-		function fillChart() {
-			var group = "{{$_GET['group']}}";
-			var tanggal = "{{$_GET['tanggal']}}";
-
-			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
-			var data = {
-				tanggal:tanggal,
-				group:group,
-			}
 
 		//Show Group				
 		group = group.split(',');

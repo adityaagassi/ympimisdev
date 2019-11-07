@@ -96,7 +96,7 @@
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 
-			<div class="col-xs-12" style="margin-top: 5px;">
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta">
 					<div id="container1_shifta" style="width: 100%;"></div>					
 				</div>
@@ -108,7 +108,7 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12" style="margin-top: 1%;">
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta2">
 					<div id="container2_shifta" style="width: 100%;"></div>
 				</div>
@@ -120,7 +120,7 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12" style="margin-top: 1%;">
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta3">
 					<div id="container3_shifta" style="width: 100%;"></div>
 				</div>
