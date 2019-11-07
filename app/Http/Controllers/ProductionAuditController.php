@@ -689,22 +689,26 @@ class ProductionAuditController extends Controller
           $productionAudit = DB::select($queryProductionAudit);
           $productionAudit2 = DB::select($queryProductionAudit);
 
-          foreach($productionAudit2 as $productionAudit2){
-            $foreman = $productionAudit2->foreman;
-            $id_production_audit = $productionAudit2->id_production_audit;
-            $send_status = $productionAudit2->send_status;
-            $production_audit = ProductionAudit::find($id_production_audit);
-            $production_audit->send_status = "Sent";
-            $production_audit->send_date = date('Y-m-d');
-            $production_audit->save();
-            // var_dump($id);
+          if($productionAudit2 != null){
+            foreach($productionAudit2 as $productionAudit2){
+              $foreman = $productionAudit2->foreman;
+              $id_production_audit = $productionAudit2->id_production_audit;
+              $send_status = $productionAudit2->send_status;
+              $production_audit = ProductionAudit::find($id_production_audit);
+              $production_audit->send_status = "Sent";
+              $production_audit->send_date = date('Y-m-d');
+              $production_audit->save();
+              // var_dump($id);
+            }
+            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $email = DB::select($queryEmail);
+            foreach($email as $email){
+              $mail_to = $email->email;
+              // var_dump($mail_to);
+            }
           }
-
-          $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
-          $email = DB::select($queryEmail);
-          foreach($email as $email){
-            $mail_to = $email->email;
-            // var_dump($mail_to);
+          else{
+            return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data tidak tersedia.')->with('page', 'Production Audit');
           }
 
           if($send_status == "Sent"){
