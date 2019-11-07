@@ -36,6 +36,7 @@
 	table.table-bordered > tbody > tr > td{
 		border:1px solid black;
 		text-align: center;
+		vertical-align: middle;
 		padding:0;
 	}
 	table.table-bordered > tfoot > tr > th{
@@ -69,379 +70,388 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
-				<div class="col-xs-2">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border: none;">
-							<i class="fa fa-calendar"></i>
+				<form method="GET" action="{{ action('MiddleProcessController@indexBuffingOpNg') }}">
+
+					<div class="col-xs-2">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border: none;">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Select Date">
 						</div>
-						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
-				</div>
-				<div class="col-xs-2" style="padding-right: 0; color:black;">
-					<select class="form-control select2" multiple="multiple" id='origin_group' data-placeholder="Select Products" style="width: 100%;">
-						@foreach($origin_groups as $origin_group)
-						<option value="{{ $origin_group->origin_group_code }}-{{ $origin_group->origin_group_name }}">{{ $origin_group->origin_group_name }}</option>
-						@endforeach
-					</select>
-				</div>
-				<div class="col-xs-2">
-					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-				</div>
+					<div class="col-xs-2" style="color: black;">
+						<div class="form-group">
+							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="change()" data-placeholder="Select Group" style="width: 100%;">
+								<option value="A">GROUP A</option>
+								<option value="B">GROUP B</option>
+								<option value="C">GROUP C</option>
+							</select>
+							<input type="text" name="group" id="group" hidden>			
+						</div>
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-success" type="submit">Update Chart</button>
+					</div>
+				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div class="col-xs-4" style="padding-left: 0px;">
-					<div id="container1_shift3" style="width: 100%;"></div>
+				<div id="shifta">
+					<div id="container1_shifta" style="width: 100%;"></div>					
 				</div>
-				<div class="col-xs-4">
-					<div id="container1_shift1" style="width: 100%;"></div>
+				<div id="shiftb">
+					<div id="container1_shiftb" style="width: 100%;"></div>					
 				</div>
-				<div class="col-xs-4" style="padding-right: 0px;">
-					<div id="container1_shift2" style="width: 100%;"></div>
+				<div id="shiftc">
+					<div id="container1_shiftc" style="width: 100%;"></div>					
+				</div>			</div>
+				<div class="col-xs-12" style="margin-top: 5px;">
+					<div id="container2" style="width: 100%;"></div>
 				</div>
-			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
-	</div>
 
-	<!-- start modal -->
-	<div class="modal fade" id="myModal" style="color: black;">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
-					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
+		<!-- start modal -->
+		<div class="modal fade" id="myModal" style="color: black;">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
+						<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							{{-- <h5 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Resume</b></h5> --}}
 
-						<div class="col-md-12" style="margin-bottom: 20px;">
-							<div class="col-md-6">
-								<h5 class="modal-title">NG Rate</h5><br>
-								<h5 class="modal-title" id="ng_rate"></h5>
+							<div class="col-md-12" style="margin-bottom: 20px;">
+								<div class="col-md-6">
+									<h5 class="modal-title">NG Rate</h5><br>
+									<h5 class="modal-title" id="ng_rate"></h5>
+								</div>
+								<div class="col-md-6">
+									<div id="modal_ng" style="height: 200px"></div>
+								</div>
 							</div>
-							<div class="col-md-6">
-								<div id="modal_ng" style="height: 200px"></div>
-							</div>
-						</div>
 
-						<div class="col-md-5">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
-							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th>Finish Buffing</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="middle-log-body">
-								</tbody>
-							</table>
+							<div class="col-md-5">
+								<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
+								<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
+									<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th>Finish Buffing</th>
+											<th>Model</th>
+											<th>Key</th>
+											<th>OP Kensa</th>
+											<th>Material Qty</th>
+										</tr>
+									</thead>
+									<tbody id="middle-log-body">
+									</tbody>
+								</table>
+							</div>
+							<div class="col-md-7">
+								<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
+								<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+									<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th style="width: 15%;">Finish Buffing</th>
+											<th>Model</th>
+											<th>Key</th>
+											<th>OP Kensa</th>
+											<th>NG Name</th>
+											<th style="width: 5%;">Material Qty</th>
+										</tr>
+									</thead>
+									<tbody id="middle-ng-log-body">
+									</tbody>
+								</table>
+							</div>						
 						</div>
-						<div class="col-md-7">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
-							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th style="width: 10%;">Finish Buffing</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>NG Name</th>
-										<th style="width: 5%;">Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="middle-ng-log-body">
-								</tbody>
-							</table>
-						</div>						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-				</div>
 			</div>
 		</div>
-	</div>
-	<!-- end modal -->
+		<!-- end modal -->
 
 
-</section>
-@endsection
-@section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/highcharts-3d.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
-<script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	</section>
+	@endsection
+	@section('scripts')
+	<script src="{{ url("js/highstock.js")}}"></script>
+	<script src="{{ url("js/highcharts-3d.js")}}"></script>
+	<script src="{{ url("js/exporting.js")}}"></script>
+	<script src="{{ url("js/export-data.js")}}"></script>
+	<script>
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+
+		jQuery(document).ready(function(){
+			$('.select2').select2();
+
+			fillChart();
+			setInterval(fillChart, 10000);
+		});
+
+		function change() {
+			$("#group").val($("#groupSelect").val());
 		}
-	});
 
-	jQuery(document).ready(function(){
-		$('.select2').select2();
-		fillChart();
-		setInterval(fillChart, 10000);
-		
-	});
+		$('.datepicker').datepicker({
+			<?php $tgl_max = date('d-m-Y') ?>
+			autoclose: true,
+			format: "dd-mm-yyyy",
+			todayHighlight: true,	
+			endDate: '<?php echo $tgl_max ?>'
+		});
 
-	$('.datepicker').datepicker({
-		<?php $tgl_max = date('d-m-Y') ?>
-		autoclose: true,
-		format: "dd-mm-yyyy",
-		todayHighlight: true,	
-		endDate: '<?php echo $tgl_max ?>'
-	});
+		Highcharts.createElement('link', {
+			href: '{{ url("fonts/UnicaOne.css")}}',
+			rel: 'stylesheet',
+			type: 'text/css'
+		}, null, document.getElementsByTagName('head')[0]);
 
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
+		Highcharts.theme = {
+			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+			'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+			chart: {
+				backgroundColor: {
+					linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+					stops: [
+					[0, '#2a2a2b'],
+					[1, '#3e3e40']
+					]
+				},
 				style: {
-					color: '#E0E0E3'
-				}
+					fontFamily: 'sans-serif'
+				},
+				plotBorderColor: '#606063'
 			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
 			title: {
 				style: {
-					color: '#A0A0A3'
-
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
+					color: '#E0E0E3',
+					textTransform: 'uppercase',
+					fontSize: '20px'
 				}
 			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
+			subtitle: {
 				style: {
-					color: '#A0A0A3'
+					color: '#E0E0E3',
+					textTransform: 'uppercase'
 				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
+			},
+			xAxis: {
+				gridLineColor: '#707073',
+				labels: {
+					style: {
+						color: '#E0E0E3'
+					}
 				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
+				lineColor: '#707073',
+				minorGridLineColor: '#505053',
+				tickColor: '#707073',
+				title: {
+					style: {
+						color: '#A0A0A3'
 
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
-
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
 					}
 				}
 			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
+			yAxis: {
+				gridLineColor: '#707073',
+				labels: {
+					style: {
+						color: '#E0E0E3'
+					}
+				},
+				lineColor: '#707073',
+				minorGridLineColor: '#505053',
+				tickColor: '#707073',
+				tickWidth: 1,
+				title: {
+					style: {
+						color: '#A0A0A3'
+					}
+				}
 			},
-			labelStyle: {
-				color: 'silver'
+			tooltip: {
+				backgroundColor: 'rgba(0, 0, 0, 0.85)',
+				style: {
+					color: '#F0F0F0'
+				}
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						color: 'white'
+					},
+					marker: {
+						lineColor: '#333'
+					}
+				},
+				boxplot: {
+					fillColor: '#505053'
+				},
+				candlestick: {
+					lineColor: 'white'
+				},
+				errorbar: {
+					color: 'white'
+				}
+			},
+			legend: {
+				itemStyle: {
+					color: '#E0E0E3'
+				},
+				itemHoverStyle: {
+					color: '#FFF'
+				},
+				itemHiddenStyle: {
+					color: '#606063'
+				}
+			},
+			credits: {
+				style: {
+					color: '#666'
+				}
+			},
+			labels: {
+				style: {
+					color: '#707073'
+				}
+			},
+
+			drilldown: {
+				activeAxisLabelStyle: {
+					color: '#F0F0F3'
+				},
+				activeDataLabelStyle: {
+					color: '#F0F0F3'
+				}
+			},
+
+			navigation: {
+				buttonOptions: {
+					symbolStroke: '#DDDDDD',
+					theme: {
+						fill: '#505053'
+					}
+				}
+			},
+
+			rangeSelector: {
+				buttonTheme: {
+					fill: '#505053',
+					stroke: '#000000',
+					style: {
+						color: '#CCC'
+					},
+					states: {
+						hover: {
+							fill: '#707073',
+							stroke: '#000000',
+							style: {
+								color: 'white'
+							}
+						},
+						select: {
+							fill: '#000003',
+							stroke: '#000000',
+							style: {
+								color: 'white'
+							}
+						}
+					}
+				},
+				inputBoxBorderColor: '#505053',
+				inputStyle: {
+					backgroundColor: '#333',
+					color: 'silver'
+				},
+				labelStyle: {
+					color: 'silver'
+				}
+			},
+
+			navigator: {
+				handles: {
+					backgroundColor: '#666',
+					borderColor: '#AAA'
+				},
+				outlineColor: '#CCC',
+				maskFill: 'rgba(255,255,255,0.1)',
+				series: {
+					color: '#7798BF',
+					lineColor: '#A6C7ED'
+				},
+				xAxis: {
+					gridLineColor: '#505053'
+				}
+			},
+
+			scrollbar: {
+				barBackgroundColor: '#808083',
+				barBorderColor: '#808083',
+				buttonArrowColor: '#CCC',
+				buttonBackgroundColor: '#606063',
+				buttonBorderColor: '#606063',
+				rifleColor: '#FFF',
+				trackBackgroundColor: '#404043',
+				trackBorderColor: '#404043'
+			},
+
+			legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+			background2: '#505053',
+			dataLabelsColor: '#B0B0B3',
+			textColor: '#C0C0C0',
+			contrastTextColor: '#F0F0F3',
+			maskColor: 'rgba(255,255,255,0.3)'
+		};
+		Highcharts.setOptions(Highcharts.theme);
+
+		function addZero(i) {
+			if (i < 10) {
+				i = "0" + i;
 			}
-		},
+			return i;
+		}
 
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
+		function getActualFullDate() {
+			var d = new Date();
+			var day = addZero(d.getDate());
+			var month = addZero(d.getMonth()+1);
+			var year = addZero(d.getFullYear());
+			var h = addZero(d.getHours());
+			var m = addZero(d.getMinutes());
+			var s = addZero(d.getSeconds());
+			return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
+		}
+
+
+		function showDetail(tgl, nama) {
+			var data = {
+				tgl:tgl,
+				nama:nama,
 			}
-		},
 
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
-
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
-
-	function addZero(i) {
-		if (i < 10) {
-			i = "0" + i;
-		}
-		return i;
-	}
-	
-	function getActualFullDate() {
-		var d = new Date();
-		var day = addZero(d.getDate());
-		var month = addZero(d.getMonth()+1);
-		var year = addZero(d.getFullYear());
-		var h = addZero(d.getHours());
-		var m = addZero(d.getMinutes());
-		var s = addZero(d.getSeconds());
-		return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
-	}
+			$('#myModal').modal('show');
+			$('#middle-log-body').append().empty();
+			$('#middle-ng-log-body').append().empty();
+			$('#ng_rate').append().empty();
+			$('#posh_rate').append().empty();
+			$('#judul').append().empty();
 
 
-	function showDetail(tgl, nama) {
-		var data = {
-			tgl:tgl,
-			nama:nama,
-		}
+			$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
+				if(result.status){
 
-		$('#myModal').modal('show');
-		$('#middle-log-body').append().empty();
-		$('#middle-ng-log-body').append().empty();
-		$('#ng_rate').append().empty();
-		$('#posh_rate').append().empty();
-		$('#judul').append().empty();
-
-
-		$.get('{{ url("fetch/middle/buffing_op_eff_detail") }}', data, function(result, status, xhr) {
-			if(result.status){
-
-				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
+					$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
 
 				//Middle log
 				var total_good = 0;
@@ -561,38 +571,69 @@
 			}
 
 		});
-	}
+		}
 
 
-	function fillChart() {
-		var hpl = $('#origin_group').val();
-		var tanggal = $('#tanggal').val();
+		function fillChart() {
+			var group = "{{$_GET['group']}}";
+			var tanggal = "{{$_GET['tanggal']}}";
 
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-		
-		var data = {
-			tanggal:tanggal,
-			code:hpl
+			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+			var data = {
+				tanggal:tanggal,
+				group:group,
+			}
+
+		//Show Group				
+		group = group.split(',');
+
+		if(group != ''){
+			$('#shifta').hide();
+			$('#shiftb').hide();
+			$('#shiftc').hide();
+
+			if(group.length == 1){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()).show();
+				}
+			}else if(group.length == 2){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()).show();
+				}
+			}else if(group.length == 3){
+				for (var i = 0; i < group.length; i++) {
+					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()).show();
+				}
+			}
+
+		}else{
+			$('#shifta').addClass("col-xs-4");
+			$('#shiftb').addClass("col-xs-4");
+			$('#shiftc').addClass("col-xs-4");
 		}
 
 		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr) {
 			if(result.status){
 
-				var date = result.date; 
+				var date = result.date;
 
-				// SHIFT 3
+				// GROUP A
 				var op_name = [];
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
-					if(result.ng_rate[i].shift == 's3'){
+					if(result.ng_rate[i].shift == 'A'){
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
 
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+							xAxis += name_temp[0]+' '+name_temp[1].charAt(0);
 						}
 
 						op_name.push(xAxis);
@@ -600,7 +641,7 @@
 					}
 				}
 
-				var chart = Highcharts.chart('container1_shift3', {
+				var chart = Highcharts.chart('container1_shifta', {
 					chart: {
 						animation: false
 					},
@@ -612,7 +653,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 3 on '+date,
+						text: 'Shift A on '+date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -675,16 +716,16 @@
 
 				
 
-				// SHIFT 1
+				// GROUP B
 				var op_name = [];
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
-					if(result.ng_rate[i].shift == 's1'){
+					if(result.ng_rate[i].shift == 'B'){
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
 
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
 							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -695,7 +736,7 @@
 					}
 				}
 
-				var chart = Highcharts.chart('container1_shift1', {
+				var chart = Highcharts.chart('container1_shiftb', {
 					chart: {
 						animation: false
 					},
@@ -707,7 +748,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 1 on '+date,
+						text: 'Group B on '+date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -769,16 +810,16 @@
 				});
 
 
-				// SHIFT 2
+				// GROUP C
 				var op_name = [];
 				var rate = [];
 				for(var i = 0; i < result.ng_rate.length; i++){
-					if(result.ng_rate[i].shift == 's2'){
+					if(result.ng_rate[i].shift == 'C'){
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
 
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
 							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -789,7 +830,7 @@
 					}
 				}
 
-				var chart = Highcharts.chart('container1_shift2', {
+				var chart = Highcharts.chart('container1_shiftc', {
 					chart: {
 						animation: false
 					},
@@ -801,7 +842,7 @@
 						}
 					},
 					subtitle: {
-						text: 'Shift 2 on '+date,
+						text: 'Group C on '+date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -944,6 +985,7 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 			},
 			plotOptions: {
 				series: {
+					animation: false,
 					dataLabels: {
 						enabled: true,
 						format: '{point.y:,.1f}%',

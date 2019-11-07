@@ -1544,18 +1544,6 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchBuffingDetailOpNg(Request $request){
-		$detail = db::select("select ng.created_at, e.`name`, m.model, m.`key`, ng.ng_name, ng.quantity from middle_ng_logs ng
-			left join employees e on e.employee_id = ng.operator_id
-			left join materials m on m.material_number = ng.material_number
-			where ng.location = 'bff-kensa'
-			and DATE_FORMAT(ng.created_at,'%Y-%m-%d') = '".$request->get('tgl')."'
-			and e.`name` = '".$request->get('nama')."'
-			order by ng.created_at");
-
-		return DataTables::of($detail)->make(true);
-	}
-
 	public function fetchBuffingOpNg(Request $request){
 		$tanggal = '';
 		if(strlen($request->get("tanggal")) > 0){
@@ -1563,33 +1551,22 @@ class MiddleProcessController extends Controller
 		}else{
 			$tanggal = date('Y-m-d');
 		}
-		$where = "";
-		if($request->get('code') != null) {
-			$codes = $request->get('code');
-			$code = "";
-
-			for($x = 0; $x < count($codes); $x++) {
-				$code = $code."'".substr($codes[$x],0,3)."'";
-				if($x != count($codes)-1){
-					$code = $code.",";
-				}
-			}
-			$where = "and mt.origin_group_code in (".$code.") ";
-		}
 
 		$ng_rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
 			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/g.jml*100) as rate from
-			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null ".$where."
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
+			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY shift, m.operator_id) g
 			left join
-			(select if(TIME(m.buffing_time) > '16:00:00', 's2', if(TIME(m.buffing_time) > '07:00:00', 's1', 's3')) as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null ".$where."
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
+			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY shift, m.operator_id) ng
 			on g.shift = ng.shift and g.operator_id = ng.operator_id) rate

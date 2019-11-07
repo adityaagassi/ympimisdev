@@ -36,6 +36,7 @@
 	table.table-bordered > tbody > tr > td{
 		border:1px solid black;
 		text-align: center;
+		vertical-align: middle;
 		padding:0;
 	}
 	table.table-bordered > tfoot > tr > th{
@@ -242,7 +243,7 @@
 		$('.select2').select2();
 
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 10000);
 
 	});
 
@@ -695,7 +696,7 @@
 								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -810,7 +811,7 @@
 								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -925,7 +926,7 @@
 								var eff_value = 0;
 								xAxis += result.rate[i].operator_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.'){
+								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -1047,7 +1048,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1145,7 +1146,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1244,7 +1245,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1353,7 +1354,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1485,7 +1486,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1617,7 +1618,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.'){
+						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
