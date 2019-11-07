@@ -13,6 +13,14 @@
 		/*font-size: 1vw;*/
 	}
 
+	table{
+    table-layout: fixed;
+	}
+
+	td{
+    word-wrap:break-word
+	}
+
 	tbody>tr>td {
 		color: white;
 	}
@@ -156,14 +164,14 @@
 			<br><br>
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="15%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 1</td	>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle;width:150px;">Mesin 1</td	>
 
 				</tr>
-				<tr id="HeadMesin1">
+				<tr id="HeadMESIN1">
 
 				</tr>
-				<tr id="BodyMesin1">
+				<tr id="BodyMESIN1">
 
 
 				</tr>
@@ -171,8 +179,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 2</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle;width:150px;">Mesin 2</td>
 
 				</tr>
 				<tr id="HeadMESIN2">
@@ -186,8 +194,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 3</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 3</td>
 
 				</tr>
 				<tr id="HeadMESIN3">
@@ -201,8 +209,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 4</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 4</td>
 
 				</tr>
 				<tr id="HeadMESIN4">
@@ -216,8 +224,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 5</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 5</td>
 
 				</tr>
 				<tr id="HeadMESIN5">
@@ -231,8 +239,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 6</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 6</td>
 
 				</tr>
 				<tr id="HeadMESIN6">
@@ -246,8 +254,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 7</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 7</td>
 
 				</tr>
 				<tr id="HeadMESIN7">
@@ -261,8 +269,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 8</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 8</td>
 
 				</tr>
 				<tr id="HeadMESIN8">
@@ -276,8 +284,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 9</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 9</td>
 
 				</tr>
 				<tr id="HeadMESIN9">
@@ -291,8 +299,8 @@
 
 			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
 				<tr>
-					<td width="10%" rowspan="3" style="text-align: center;
-					vertical-align: middle;">Mesin 11</td>
+					<td  rowspan="3" style="text-align: center;
+					vertical-align: middle; width:150px;">Mesin 11</td>
 
 				</tr>
 				<tr id="HeadMESIN11">
@@ -353,6 +361,36 @@
 				var MESIN9_r2 = [[],[],[],[],[],[],[]];
 				var MESIN11_r2 = [[],[],[],[],[],[],[]];
 
+				var HeadMesin1 = '';
+				var BodyMesin1 = '';
+
+				var HeadMesin2 = '';
+				var BodyMesin2 = '';
+
+				var HeadMesin3 = '';
+				var BodyMesin3 = '';
+
+				var HeadMesin4 = '';
+				var BodyMesin4 = '';
+
+				var HeadMesin5 = '';
+				var BodyMesin5 = '';
+
+				var HeadMesin6 = '';
+				var BodyMesin6 = '';
+
+				var HeadMesin7 = '';
+				var BodyMesin7 = '';
+
+				var HeadMesin8 = '';
+				var BodyMesin8 = '';
+
+				var HeadMesin9 = '';
+				var BodyMesin9 = '';
+
+				var HeadMesin11 = '';
+				var BodyMesin11 = '';
+
 	function makeSchedule() {
 
 		$.get('{{ url("fetch/Schedulepart") }}',  function(result, status, xhr){
@@ -380,8 +418,7 @@
 					var unik = [];
 					var judul = "";
 
-					var HeadMesin1 = '';
-					var BodyMesin1 = '';
+					
 
 					// for (var i = 0; i < result.part.length; i++) {
 					// 	if (String(result.part[i].working).match(/MESIN1.*/)) {				
@@ -1352,10 +1389,10 @@
 
 
 					if (mesin1_r2[i].length === 1) {
-						HeadMesin1 +='<td style="font-size:20px;">'+mesin1_r2[i][0][0]+'</td>';
+						HeadMesin1 +='<td style="font-size:20px; width:10px;">'+mesin1_r2[i][0][0]+'</td>';
 
 						BodyMesin1 += '<td style="padding: 0px">';
-						BodyMesin1 +='<table border="1"  >';	
+						BodyMesin1 +='<table border="1"  style="width:100%">';	
 						BodyMesin1 +='<tr>';
 						BodyMesin1 +='<td style="font-size:20px;">'+mesin1_r2[i][0][0] +'</td>';
 						BodyMesin1 +='<td style="font-size:20px;">'+mesin1_r2[i][0][1]+'</td>';
@@ -1369,7 +1406,7 @@
 						
 
 						BodyMesin1 += '<td style="padding: 0px">';
-						BodyMesin1 +='<table border="1"  >';
+						BodyMesin1 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < mesin1_r2[i].length; a++) {
 							
@@ -1399,9 +1436,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMesin1 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMesin1 +='<td style="font-size:20px; background-color: #ffd03a; width:10px;">'+unique(unik)+'</td>';	
 						}else{
-						HeadMesin1 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMesin1 +='<td style="font-size:20px;  width:10px;">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMesin1 +='</table>';
@@ -1410,8 +1447,8 @@
 
 				}			
 
-				$('#HeadMesin1').append(HeadMesin1);
-				$('#BodyMesin1').append(BodyMesin1);
+				$('#HeadMESIN1').append(HeadMesin1);
+				$('#BodyMESIN1').append(BodyMesin1);
 
 				// ---------------- End Mesin1 Table  ------------------
 
@@ -1423,10 +1460,10 @@
 
 
 					if (MESIN2_r2[i].length === 1) {
-						HeadMESIN2 +='<td style="font-size:20px;">'+MESIN2_r2[i][0][0]+'</td>';
+						HeadMESIN2 +='<td style="font-size:20px; width:10px">'+MESIN2_r2[i][0][0]+'</td>';
 
 						BodyMESIN2 += '<td style="padding: 0px">';
-						BodyMESIN2 +='<table border="1"  >';	
+						BodyMESIN2 +='<table border="1" style="width:100%">';	
 						BodyMESIN2 +='<tr>';
 						BodyMESIN2 +='<td style="font-size:20px;">'+MESIN2_r2[i][0][0] +'</td>';
 						BodyMESIN2 +='<td style="font-size:20px;">'+MESIN2_r2[i][0][1]+'</td>';
@@ -1440,7 +1477,7 @@
 						
 
 						BodyMESIN2 += '<td style="padding: 0px">';
-						BodyMESIN2 +='<table border="1"  >';
+						BodyMESIN2 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN2_r2[i].length; a++) {
 							
@@ -1470,9 +1507,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN2 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN2 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN2 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN2 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN2 +='</table>';
@@ -1481,8 +1518,8 @@
 
 				}			
 
-				$('#HeadMESIN2').append(HeadMESIN2);
-				$('#BodyMESIN2').append(BodyMESIN2);
+				// $('#HeadMESIN2').append(HeadMESIN2);
+				// $('#BodyMESIN2').append(BodyMESIN2);
 
 				// ---------------- End MESIN2 Table  ------------------
 
@@ -1496,10 +1533,10 @@
 
 
 					if (MESIN3_r2[i].length === 1) {
-						HeadMESIN3 +='<td style="font-size:20px;">'+MESIN3_r2[i][0][0]+'</td>';
+						HeadMESIN3 +='<td style="font-size:20px; width:10px">'+MESIN3_r2[i][0][0]+'</td>';
 
 						BodyMESIN3 += '<td style="padding: 0px">';
-						BodyMESIN3 +='<table border="1"  >';	
+						BodyMESIN3 +='<table border="1"  style="width:100%">';	
 						BodyMESIN3 +='<tr>';
 						BodyMESIN3 +='<td style="font-size:20px;">'+MESIN3_r2[i][0][0] +'</td>';
 						BodyMESIN3 +='<td style="font-size:20px;">'+MESIN3_r2[i][0][1]+'</td>';
@@ -1513,7 +1550,7 @@
 						
 
 						BodyMESIN3 += '<td style="padding: 0px">';
-						BodyMESIN3 +='<table border="1"  >';
+						BodyMESIN3 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN3_r2[i].length; a++) {
 							
@@ -1543,9 +1580,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN3 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN3 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN3 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN3 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN3 +='</table>';
@@ -1554,8 +1591,8 @@
 
 				}			
 
-				$('#HeadMESIN3').append(HeadMESIN3);
-				$('#BodyMESIN3').append(BodyMESIN3);
+				// $('#HeadMESIN3').append(HeadMESIN3);
+				// $('#BodyMESIN3').append(BodyMESIN3);
 
 				// ---------------- End MESIN3 Table  ------------------
 
@@ -1568,10 +1605,10 @@
 
 
 					if (MESIN4_r2[i].length === 1) {
-						HeadMESIN4 +='<td style="font-size:20px;">'+MESIN4_r2[i][0][0]+'</td>';
+						HeadMESIN4 +='<td style="font-size:20px; width:10px">'+MESIN4_r2[i][0][0]+'</td>';
 
 						BodyMESIN4 += '<td style="padding: 0px">';
-						BodyMESIN4 +='<table border="1"  >';	
+						BodyMESIN4 +='<table border="1"  style="width:100%">';	
 						BodyMESIN4 +='<tr>';
 						BodyMESIN4 +='<td style="font-size:20px;">'+MESIN4_r2[i][0][0] +'</td>';
 						BodyMESIN4 +='<td style="font-size:20px;">'+MESIN4_r2[i][0][1]+'</td>';
@@ -1585,7 +1622,7 @@
 						
 
 						BodyMESIN4 += '<td style="padding: 0px">';
-						BodyMESIN4 +='<table border="1"  >';
+						BodyMESIN4 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN4_r2[i].length; a++) {
 							
@@ -1615,9 +1652,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN4 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN4 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN4 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN4 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN4 +='</table>';
@@ -1626,8 +1663,8 @@
 
 				}			
 
-				$('#HeadMESIN4').append(HeadMESIN4);
-				$('#BodyMESIN4').append(BodyMESIN4);
+				// $('#HeadMESIN4').append(HeadMESIN4);
+				// $('#BodyMESIN4').append(BodyMESIN4);
 
 				// ---------------- End MESIN4 Table  ------------------
 
@@ -1640,10 +1677,10 @@
 
 
 					if (MESIN5_r2[i].length === 1) {
-						HeadMESIN5 +='<td style="font-size:20px;">'+MESIN5_r2[i][0][0]+'</td>';
+						HeadMESIN5 +='<td style="font-size:20px; width:10px">'+MESIN5_r2[i][0][0]+'</td>';
 
 						BodyMESIN5 += '<td style="padding: 0px">';
-						BodyMESIN5 +='<table border="1"  >';	
+						BodyMESIN5 +='<table border="1"  style="width:100%">';	
 						BodyMESIN5 +='<tr>';
 						BodyMESIN5 +='<td style="font-size:20px;">'+MESIN5_r2[i][0][0] +'</td>';
 						BodyMESIN5 +='<td style="font-size:20px;">'+MESIN5_r2[i][0][1]+'</td>';
@@ -1657,7 +1694,7 @@
 						
 
 						BodyMESIN5 += '<td style="padding: 0px">';
-						BodyMESIN5 +='<table border="1"  >';
+						BodyMESIN5 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN5_r2[i].length; a++) {
 							
@@ -1687,9 +1724,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN5 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN5 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN5 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN5 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN5 +='</table>';
@@ -1698,8 +1735,8 @@
 
 				}			
 
-				$('#HeadMESIN5').append(HeadMESIN5);
-				$('#BodyMESIN5').append(BodyMESIN5);
+				// $('#HeadMESIN5').append(HeadMESIN5);
+				// $('#BodyMESIN5').append(BodyMESIN5);
 
 				// ---------------- End MESIN5 Table  ------------------
 
@@ -1713,10 +1750,10 @@
 
 
 					if (MESIN6_r2[i].length === 1) {
-						HeadMESIN6 +='<td style="font-size:20px;">'+MESIN6_r2[i][0][0]+'</td>';
+						HeadMESIN6 +='<td style="font-size:20px; width:10px">'+MESIN6_r2[i][0][0]+'</td>';
 
 						BodyMESIN6 += '<td style="padding: 0px">';
-						BodyMESIN6 +='<table border="1"  >';	
+						BodyMESIN6 +='<table border="1"  style="width:100%">';	
 						BodyMESIN6 +='<tr>';
 						BodyMESIN6 +='<td style="font-size:20px;">'+MESIN6_r2[i][0][0] +'</td>';
 						BodyMESIN6 +='<td style="font-size:20px;">'+MESIN6_r2[i][0][1]+'</td>';
@@ -1730,7 +1767,7 @@
 						
 
 						BodyMESIN6 += '<td style="padding: 0px">';
-						BodyMESIN6 +='<table border="1"  >';
+						BodyMESIN6 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN6_r2[i].length; a++) {
 							
@@ -1760,9 +1797,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN6 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN6 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN6 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN6 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN6 +='</table>';
@@ -1771,8 +1808,8 @@
 
 				}			
 
-				$('#HeadMESIN6').append(HeadMESIN6);
-				$('#BodyMESIN6').append(BodyMESIN6);
+				// $('#HeadMESIN6').append(HeadMESIN6);
+				// $('#BodyMESIN6').append(BodyMESIN6);
 
 				// ---------------- End MESIN6 Table  ------------------
 
@@ -1786,10 +1823,10 @@
 
 
 					if (MESIN7_r2[i].length === 1) {
-						HeadMESIN7 +='<td style="font-size:20px;">'+MESIN7_r2[i][0][0]+'</td>';
+						HeadMESIN7 +='<td style="font-size:20px; width:10px">'+MESIN7_r2[i][0][0]+'</td>';
 
 						BodyMESIN7 += '<td style="padding: 0px">';
-						BodyMESIN7 +='<table border="1"  >';	
+						BodyMESIN7 +='<table border="1"  style="width:100%">';	
 						BodyMESIN7 +='<tr>';
 						BodyMESIN7 +='<td style="font-size:20px;">'+MESIN7_r2[i][0][0] +'</td>';
 						BodyMESIN7 +='<td style="font-size:20px;">'+MESIN7_r2[i][0][1]+'</td>';
@@ -1803,7 +1840,7 @@
 						
 
 						BodyMESIN7 += '<td style="padding: 0px">';
-						BodyMESIN7 +='<table border="1"  >';
+						BodyMESIN7 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN7_r2[i].length; a++) {
 							
@@ -1833,9 +1870,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN7 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN7 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN7 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN7 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN7 +='</table>';
@@ -1844,8 +1881,8 @@
 
 				}			
 
-				$('#HeadMESIN7').append(HeadMESIN7);
-				$('#BodyMESIN7').append(BodyMESIN7);
+				// $('#HeadMESIN7').append(HeadMESIN7);
+				// $('#BodyMESIN7').append(BodyMESIN7);
 
 				// ---------------- End MESIN7 Table  ------------------
 
@@ -1859,10 +1896,10 @@
 
 
 					if (MESIN8_r2[i].length === 1) {
-						HeadMESIN8 +='<td style="font-size:20px;">'+MESIN8_r2[i][0][0]+'</td>';
+						HeadMESIN8 +='<td style="font-size:20px; width:10px">'+MESIN8_r2[i][0][0]+'</td>';
 
 						BodyMESIN8 += '<td style="padding: 0px">';
-						BodyMESIN8 +='<table border="1"  >';	
+						BodyMESIN8 +='<table border="1"  style="width:100%">';	
 						BodyMESIN8 +='<tr>';
 						BodyMESIN8 +='<td style="font-size:20px;">'+MESIN8_r2[i][0][0] +'</td>';
 						BodyMESIN8 +='<td style="font-size:20px;">'+MESIN8_r2[i][0][1]+'</td>';
@@ -1876,7 +1913,7 @@
 						
 
 						BodyMESIN8 += '<td style="padding: 0px">';
-						BodyMESIN8 +='<table border="1"  >';
+						BodyMESIN8 +='<table border="1" style="width:100%" >';
 
 						for (var a = 0; a < MESIN8_r2[i].length; a++) {
 							
@@ -1906,9 +1943,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN8 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN8 +='<td style="font-size:20px; background-color: #ffd03a; width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN8 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN8 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN8 +='</table>';
@@ -1917,8 +1954,8 @@
 
 				}			
 
-				$('#HeadMESIN8').append(HeadMESIN8);
-				$('#BodyMESIN8').append(BodyMESIN8);
+				// $('#HeadMESIN8').append(HeadMESIN8);
+				// $('#BodyMESIN8').append(BodyMESIN8);
 
 				// ---------------- End MESIN8 Table  ------------------
 
@@ -1932,10 +1969,10 @@
 
 
 					if (MESIN9_r2[i].length === 1) {
-						HeadMESIN9 +='<td style="font-size:20px;">'+MESIN9_r2[i][0][0]+'</td>';
+						HeadMESIN9 +='<td style="font-size:20px; width:10px">'+MESIN9_r2[i][0][0]+'</td>';
 
 						BodyMESIN9 += '<td style="padding: 0px">';
-						BodyMESIN9 +='<table border="1"  >';	
+						BodyMESIN9 +='<table border="1" style="width:100%" >';	
 						BodyMESIN9 +='<tr>';
 						BodyMESIN9 +='<td style="font-size:20px;">'+MESIN9_r2[i][0][0] +'</td>';
 						BodyMESIN9 +='<td style="font-size:20px;">'+MESIN9_r2[i][0][1]+'</td>';
@@ -1949,7 +1986,7 @@
 						
 
 						BodyMESIN9 += '<td style="padding: 0px">';
-						BodyMESIN9 +='<table border="1"  >';
+						BodyMESIN9 +='<table border="1"  style="width:100%">';
 
 						for (var a = 0; a < MESIN9_r2[i].length; a++) {
 							
@@ -1979,9 +2016,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN9 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN9 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN9 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN9 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN9 +='</table>';
@@ -1990,8 +2027,8 @@
 
 				}			
 
-				$('#HeadMESIN9').append(HeadMESIN9);
-				$('#BodyMESIN9').append(BodyMESIN9);
+				// $('#HeadMESIN9').append(HeadMESIN9);
+				// $('#BodyMESIN9').append(BodyMESIN9);
 
 				// ---------------- End MESIN9 Table  ------------------
 
@@ -2005,10 +2042,10 @@
 
 
 					if (MESIN11_r2[i].length === 1) {
-						HeadMESIN11 +='<td style="font-size:20px;">'+MESIN11_r2[i][0][0]+'</td>';
+						HeadMESIN11 +='<td style="font-size:20px; width:10px">'+MESIN11_r2[i][0][0]+'</td>';
 
 						BodyMESIN11 += '<td style="padding: 0px">';
-						BodyMESIN11 +='<table border="1"  >';	
+						BodyMESIN11 +='<table border="1" style="width:100%" >';	
 						BodyMESIN11 +='<tr>';
 						BodyMESIN11 +='<td style="font-size:20px;">'+MESIN11_r2[i][0][0] +'</td>';
 						BodyMESIN11 +='<td style="font-size:20px;">'+MESIN11_r2[i][0][1]+'</td>';
@@ -2022,7 +2059,7 @@
 						
 
 						BodyMESIN11 += '<td style="padding: 0px">';
-						BodyMESIN11 +='<table border="1"  >';
+						BodyMESIN11 +='<table border="1" style="width:100%" >';
 
 						for (var a = 0; a < MESIN11_r2[i].length; a++) {
 							
@@ -2052,9 +2089,9 @@
 						}
 
 						if (unique(unik).length > 1	) {
-						HeadMESIN11 +='<td style="font-size:20px; background-color: #ffd03a;">'+unique(unik)+'</td>';	
+						HeadMESIN11 +='<td style="font-size:20px; background-color: #ffd03a;width:10px">'+unique(unik)+'</td>';	
 						}else{
-						HeadMESIN11 +='<td style="font-size:20px; ">'+unique(unik)+'</td>';
+						HeadMESIN11 +='<td style="font-size:20px; width:10px">'+unique(unik)+'</td>';
 						}		
 						
 						BodyMESIN11 +='</table>';
@@ -2063,8 +2100,8 @@
 
 				}			
 
-				$('#HeadMESIN11').append(HeadMESIN11);
-				$('#BodyMESIN11').append(BodyMESIN11);
+				// $('#HeadMESIN11').append(HeadMESIN11);
+				// $('#BodyMESIN11').append(BodyMESIN11);
 
 				// ---------------- End MESIN11 Table  ------------------
 				
@@ -2103,7 +2140,7 @@
 function fjudul() {
 	var akhir = [];
 	var total = [];
-	var max = [];
+	var max = 0;
 
 	for (var i = 0; i < mesin1_r2.length; i++) {		
 			if (mesin1_r2[i].length >= 1) {
@@ -2111,6 +2148,7 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	max = parseInt(akhir.slice(0,1))+1
 	akhir = [];
 
 	for (var i = 0; i < MESIN2_r2.length; i++) {		
@@ -2119,6 +2157,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN3_r2.length; i++) {		
@@ -2127,6 +2168,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN4_r2.length; i++) {		
@@ -2135,6 +2179,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN5_r2.length; i++) {		
@@ -2143,6 +2190,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN6_r2.length; i++) {		
@@ -2151,6 +2201,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN7_r2.length; i++) {		
@@ -2159,6 +2212,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN8_r2.length; i++) {		
@@ -2167,6 +2223,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN9_r2.length; i++) {		
@@ -2175,6 +2234,9 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
 	for (var i = 0; i < MESIN11_r2.length; i++) {		
@@ -2183,23 +2245,102 @@ function fjudul() {
 			}		
 	}
 	total.push(parseInt(akhir.reverse().slice(0,1))+1);
+	if (max < parseInt(akhir.slice(0,1))+1) {
+		max = parseInt(akhir.slice(0,1))+1;
+	}
 	akhir = [];
 
-
-
-	// alert(total.sort(function(a, b){return b - a}).slice(0,1));
-
-	for (var i = 0; i < total.length; i++) {
 	
-		// if (total[i] <= total.sort(function(a, b){return b - a}).slice(0,1)) {
 
-			max.push(total.sort(function(a, b){return b - a}).slice(0,1) - total[i])
-			alert(max +' '+ total[i])
-// 
-		// }
-		// Things[i]
-	}
+	// for (var a = 0; a < (max - total[0]); a++) {
+	// 			if (total[0] < max ) {
+	// 				HeadMESIN1 +='<td style="font-size:20px;">OFF</td>';
+	// 				BodyMESIN1 +='<td style="font-size:20px;">OFF</td>';
+	// 			}else{
+	// 				HeadMESIN1 +='';
+	// 				BodyMESIN1 +='';
+	// 			}						
+	// }		
+	// $('#HeadMESIN1').append(HeadMESIN1);
+	// $('#BodyMESIN1').append(BodyMESIN1);
+
+	for (var a = 0; a < (max - total[1]); a++) {
+		if (total[2] < max) {
+				HeadMESIN2 +='<td style="font-size:20px;width:10px">OFF</td>';
+				BodyMESIN2 +='<td style="font-size:20px;width:10px">OFF</td>';
+				}else{
+				HeadMESIN2 +='';
+				BodyMESIN2 +='';	
+				}						
+	}		
+	$('#HeadMESIN2').append(HeadMESIN2);
+	$('#BodyMESIN2').append(BodyMESIN2);
+
+	for (var a = 0; a < (max - total[2]); a++) {
+				if (total[2] < max) {
+				HeadMESIN3 +='<td style="font-size:20px;width:10px">OFF</td>';
+				BodyMESIN3 +='<td style="font-size:20px;width:10px">OFF</td>';
+				}else{
+				HeadMESIN3 +='';
+				BodyMESIN3 +='';	
+				}						
+	}		
+	$('#HeadMESIN3').append(HeadMESIN3);
+	$('#BodyMESIN3').append(BodyMESIN3);
+
+	for (var a = 0; a < (max - total[3]); a++) {
+				HeadMESIN4 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN4 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN4').append(HeadMESIN4);
+	$('#BodyMESIN4').append(BodyMESIN4);
+
+	for (var a = 0; a < (max - total[4]); a++) {
+				HeadMESIN5 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN5 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN5').append(HeadMESIN5);
+	$('#BodyMESIN5').append(BodyMESIN5);
+
+	for (var a = 0; a < (max - total[5]); a++) {
+				HeadMESIN6 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN6 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN6').append(HeadMESIN6);
+	$('#BodyMESIN6').append(BodyMESIN6);
+
+	for (var a = 0; a < (max - total[6]); a++) {
+				HeadMESIN7 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN7 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN7').append(HeadMESIN7);
+	$('#BodyMESIN7').append(BodyMESIN7);
+
+	for (var a = 0; a < (max - total[7]); a++) {
+				HeadMESIN8 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN8 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN8').append(HeadMESIN8);
+	$('#BodyMESIN8').append(BodyMESIN8);
+
+	for (var a = 0; a < (max - total[8]); a++) {
+				HeadMESIN9 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN9 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN9').append(HeadMESIN9);
+	$('#BodyMESIN9').append(BodyMESIN9);
+
+	for (var a = 0; a < (max - total[9]); a++) {
+				HeadMESIN11 +='<td style="font-size:20px;">OFF</td>';
+				BodyMESIN11 +='<td style="font-size:20px;">OFF</td>';						
+	}		
+	$('#HeadMESIN11').append(HeadMESIN11);
+	$('#BodyMESIN11').append(BodyMESIN11);
+
 	
+
+
+		
 }
 
 function getMesin() {
