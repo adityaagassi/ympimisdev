@@ -235,7 +235,7 @@
 	var audio_error = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 
 	function mesin1(){
-		$.get("{{ 'http://172.17.129.99/zed/dashboard/getDataSystem' }}", function(result, status, xhr){
+		$.get("{{ 'http://172.17.129.10/zed/dashboard/getDataSystem' }}", function(result, status, xhr){
 			var mesin = result.split('(ime)');
 			
 			//Zpro

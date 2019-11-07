@@ -181,7 +181,7 @@
                         <td>
                             <span style="font-weight: bold;">Plant Maintenance (工場保全管理)</span>
                             <br>
-                            <a href="http://172.17.129.99/zed/dashboard/awal">
+                            <a href="http://172.17.129.10/zed/dashboard/awal">
                                 <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                             </a>
                             <br>
