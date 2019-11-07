@@ -637,7 +637,14 @@
 						}
 
 						op_name.push(xAxis);
-						rate.push(result.ng_rate[i].rate);						
+
+						if(result.ng_rate[i].rate > 100){
+							rate.push(100);						
+						}else{
+							rate.push(result.ng_rate[i].rate);						
+
+						}
+
 					}
 				}
 
@@ -732,7 +739,13 @@
 						}
 
 						op_name.push(xAxis);
-						rate.push(result.ng_rate[i].rate);				
+
+						if(result.ng_rate[i].rate > 100){
+							rate.push(100);						
+						}else{
+							rate.push(result.ng_rate[i].rate);						
+
+						}		
 					}
 				}
 
@@ -826,7 +839,13 @@
 						}
 
 						op_name.push(xAxis);
-						rate.push(result.ng_rate[i].rate);	
+
+						if(result.ng_rate[i].rate > 100){
+							rate.push(100);						
+						}else{
+							rate.push(result.ng_rate[i].rate);						
+
+						}
 					}
 				}
 
@@ -920,7 +939,16 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 						if(result.ng_rate[j].ng_rate == 0){
 							data.push([Date.parse(result.ng_rate[j].week_date), null]);
 						}else{
-							data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+
+							// data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+
+
+							if(result.ng_rate[j].ng_rate > 100){
+								data.push([Date.parse(result.ng_rate[j].week_date), 100]);
+
+							}else{
+								data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+							}
 						}
 					}else{
 						data.push([Date.parse(result.ng_rate[j].week_date), null]);
