@@ -2914,7 +2914,9 @@ public function getReportVisualDaily(Request $request){
             $from = date('Y-m-d',strtotime('-30 days'));
         }
                
-        $query = "SELECT SUM(frame) frame, SUM(r_l) r_l, SUM(lower) lower, SUM(handle) handle, SUM(button) button, SUM(pianica) pianica, tgl from ( 
+        $query = "SELECT COALESCE(frame,0)frame, COALESCE(r_l,0)r_l, COALESCE(lower,0) lower, COALESCE(handle,0) handle, COALESCE(button,0) button, COALESCE(pianica,0) pianica, date_a from (
+
+        SELECT SUM(frame) frame, SUM(r_l) r_l, SUM(lower) lower, SUM(handle) handle, SUM(button) button, SUM(pianica) pianica, tgl from ( 
         SELECT qty as frame, 0 as r_l, 0 as lower, 0 as handle, 0 as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Frame Assy'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
 
         union all
@@ -2933,11 +2935,15 @@ public function getReportVisualDaily(Request $request){
 
         SELECT 0 as frame, 0 as r_l, 0 as lower, 0 as handle, qty as button, 0 as pianica, DATE_FORMAT(created_at,'%Y-%m-%d') as tgl from pn_log_ngs WHERE location ='PN_Kakuning_Visual' and ng in(select id from ng_lists WHERE location='PN_Kakuning_Visual_Button'  ) and DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
 
-        ) ng GROUP BY tgl
+        ) ng GROUP BY tgl ) ng
+                RIGHT JOIN(
+                SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
+        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."'
+                ) tgl2 on ng.tgl = tgl2.date_a
         ";
 
         $query2="SELECT DISTINCT (DATE_FORMAT(created_at,'%Y-%m-%d')) as date_a from 
-        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."' and location ='PN_Kakuning_Visual'";
+        pn_log_ngs where DATE_FORMAT(created_at,'%Y-%m-%d') >= '".$from."' and DATE_FORMAT(created_at,'%Y-%m-%d') <= '".$to."' ";
 
         $ng = DB::select($query);
         $tgl = DB::select($query2);

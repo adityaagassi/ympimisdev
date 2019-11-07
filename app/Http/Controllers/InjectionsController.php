@@ -270,11 +270,11 @@ class InjectionsController extends Controller
         
         $query = "SELECT target_all.*, CEILING(ROUND((target - stock) / qty_hako,1)) as target_hako, ((CEILING(ROUND((target - stock) / qty_hako,1))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working  FROM (
         SELECT total_all.material_number, total_all.model, total_all.part, total_all.part_code, total_all.color, 
-        (total_all.total+(total_all.total / 10))  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako from (
+        (total_all.total+(total_all.total / 10))  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako, total_all.cycle, total_all.shoot from (
 
 
         SELECT target.*,cycle_time_mesin_injections.cycle, cycle_time_mesin_injections.shoot, cycle_time_mesin_injections.qty, 
-        ROUND((82800  / cycle_time_mesin_injections.cycle  )*cycle_time_mesin_injections.shoot,0) as max_day,cycle_time_mesin_injections.qty_hako from (
+        ROUND((82800  / cycle_time_mesin_injections.cycle  )*cycle_time_mesin_injections.shoot,0) as max_day,cycle_time_mesin_injections.qty_hako  from (
         SELECT target_model.*,detail_part_injections.part,detail_part_injections.part_code,detail_part_injections.color, SUM(quantity) as total from (
         SELECT target.material_number,target.due_date,target.quantity,materials.model  from (
         SELECT material_number,due_date,quantity from production_schedules WHERE 
