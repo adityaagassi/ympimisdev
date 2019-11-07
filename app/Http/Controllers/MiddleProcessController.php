@@ -2126,9 +2126,41 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
 
+		$ngICKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select DISTINCT l.ng_name from middle_ng_logs l
+			where location = 'lcq-incoming') a
+			cross join
+			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-incoming'
+			and m.hpl = 'ASKEY'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
+
 		$ngICKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-incoming' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
+
+		$ngICKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select DISTINCT l.ng_name from middle_ng_logs l
+			where location = 'lcq-incoming') a
+			cross join
+			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-incoming'
+			and m.hpl = 'TSKEY'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
 
 
 		// Kensa
@@ -2162,9 +2194,41 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'ASKEY' group by m.`key` order by jml desc LIMIT 10;");
 
+		$ngKensaKey_alto_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select DISTINCT l.ng_name from middle_ng_logs l
+			where location = 'lcq-kensa') a
+			cross join
+			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa'
+			and m.hpl = 'ASKEY'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
+
 		$ngKensaKey_tenor = db::select("select m.`key`, sum(l.quantity) as jml from middle_ng_logs l
 			left join materials m on l.material_number = m.material_number
 			where ".$bulan." location = 'lcq-kensa' and m.surface not like '%PLT%' and m.hpl = 'TSKEY' group by m.`key` order by jml desc LIMIT 10;");
+
+		$ngKensaKey_tenor_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select DISTINCT l.ng_name from middle_ng_logs l
+			where location = 'lcq-kensa') a
+			cross join
+			(select distinct `key` from materials where `key` != '' order by `key` asc) b
+			order by `key` asc) ng_name
+			left join
+			(select m.`key`, l.ng_name, sum(l.quantity) as jml from middle_ng_logs l
+			left join materials m on l.material_number = m.material_number
+			where ".$bulan." location = 'lcq-kensa'
+			and m.hpl = 'TSKEY'
+			group by m.`key`, l.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
 
 		$bulan = substr($bulan,37,7);
 
@@ -2176,14 +2240,18 @@ class MiddleProcessController extends Controller
 			'totalCekIC_alto' => $totalCekIC_alto,
 			'totalCekIC_tenor' => $totalCekIC_tenor,
 			'ngICKey_alto' => $ngICKey_alto,	
+			'ngICKey_alto_detail' => $ngICKey_alto_detail,	
 			'ngICKey_tenor' => $ngICKey_tenor,
+			'ngICKey_tenor_detail' => $ngICKey_tenor_detail,
 
 			'ngKensa_alto' => $ngKensa_alto,
 			'ngKensa_tenor' => $ngKensa_tenor,
 			'totalCekKensa_alto' => $totalCekKensa_alto,
 			'totalCekKensa_tenor' => $totalCekKensa_tenor,
 			'ngKensaKey_alto' => $ngKensaKey_alto,
+			'ngKensaKey_alto_detail' => $ngKensaKey_alto_detail,
 			'ngKensaKey_tenor' => $ngKensaKey_tenor,
+			'ngKensaKey_tenor_detail' => $ngKensaKey_tenor_detail,
 
 			'bulan' => $bulan
 		);
@@ -2372,7 +2440,7 @@ class MiddleProcessController extends Controller
 			$queues = db::connection('digital_kanban')->table('buffing_queues')
 			// ->where('rack', '=', $work_station->dev_name)
 			->whereRaw('rack = concat(SPLIT_STRING("'.$work_station->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$work_station->dev_name.'", "-", 2))')
-			->orderBy('idx', 'asc')
+			->orderBy('created_at', 'asc')
 			->limit(10)
 			->get();
 
@@ -2533,7 +2601,7 @@ class MiddleProcessController extends Controller
 			$queues_q = db::connection('digital_kanban')->table('buffing_queues')
 			// ->where('rack', '=', $work_station->dev_name)
 			->whereRaw('rack = concat(SPLIT_STRING("'.$ws->dev_name.'", "-", 1), "-",SPLIT_STRING("'.$ws->dev_name.'", "-", 2))')
-			->orderBy('idx', 'asc')
+			->orderBy('created_at', 'asc')
 			->limit(50)
 			->get();
 

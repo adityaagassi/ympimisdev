@@ -1014,13 +1014,14 @@ $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, sta
 			plotOptions: {
 				series: {
 					animation: false,
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:,.1f}%',
-					},
+					// dataLabels: {
+					// 	enabled: true,
+					// 	format: '{point.y:,.1f}%',
+					// },
 					connectNulls: true,
+					lineWidth: 1,
 					shadow: {
-						width: 3,
+						width: 1,
 						opacity: 0.4
 					},
 					label: {
