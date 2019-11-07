@@ -250,6 +250,7 @@ table.table-bordered > tfoot > tr > th{
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="form-group" align="right">
+									<input type="hidden" value="{{ $id }}" id="id_training">
 									<select class="form-control select2" name="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
 						                <option value=""></option>
 						                @foreach($operator as $operator)
@@ -265,6 +266,7 @@ table.table-bordered > tfoot > tr > th{
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
 				                <th>Patricipant Name</th>
+				                <th>Patricipant Absence</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>
@@ -273,6 +275,9 @@ table.table-bordered > tfoot > tr > th{
 				              <tr>
 				                <td>
 				                	{{ $training_participant->participant_name }}
+				                </td>
+				                <td>
+				                	{{ $training_participant->participant_absence }}
 				                </td>
 				                <td>
 				                  <center>
@@ -289,6 +294,7 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				                <th></th>
 				                <th></th>
 				                <th></th>
 				              </tr>
@@ -385,7 +391,9 @@ table.table-bordered > tfoot > tr > th{
             <div class="form-group">
               <label for="exampleInputEmail1">Participant Name</label>
               <select class="form-control select2" name="participant_name" id="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
-              	
+              	@foreach($operator2 as $operator2)
+              	<option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
+              	@endforeach
               </select>
             </div>
           </div>
@@ -588,7 +596,17 @@ table.table-bordered > tfoot > tr > th{
       // console.log($('#formedit').attr("action"));
     }
     function editparticipant(url, name, id, participant_id) {
-      $('#participant_name').append('<option value="'+name+'">-- '+name+' --</option>@foreach($operator2 as $operator2)<option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>@endforeach').find('.select2').select2();
+    	$.ajax({
+                url: "{{ route('admin.participantedit') }}?id=" + participant_id,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  // obj = JSON.parse(json);
+                  var participant = data.participant_name;
+                  $("#participant_name").val(participant).trigger('change.select2');
+                  // console.log(data.participant_name);
+                }
+            });
       jQuery('#formedit2').attr("action", url+'/'+id+'/'+participant_id);
       // console.log($('#formedit2').attr("action"));
     }
@@ -632,16 +650,16 @@ table.table-bordered > tfoot > tr > th{
              // $.post("../cek.php", { noijazah: result.code} );
              
              {{-- url: "{{ url('index/training_report/cek_employee/') }}"; --}}
-             $("#textnama").val(result.code);
+             // $("#textnama").val(result.code);
              // window.location.href = url+'/'+result.code;
-             // window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
+             
+             window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
              // console.log(result.code);
              
               // var redirect = '../materials/cek';
               // $.redirectPost(redirect, {materials_code: result.code});
           }
       };
-      console.log('camerabisa');
       var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
       decoder.buildSelectMenu("select");
       decoder.play();
@@ -665,5 +683,20 @@ table.table-bordered > tfoot > tr > th{
           }
       });
 
+  </script>
+  <script type="text/javascript">
+  	$("#textnama").on("input", function(e) {
+	  var input = $(this);
+	  var val = input.val();
+
+	  // if (input.data("lastval") != val) {
+	  //   input.data("lastval", val);
+
+	  //   //your change action goes here 
+	  //   console.log(val);
+	  // }
+	  alert(val);
+
+	});
   </script>
 @endsection

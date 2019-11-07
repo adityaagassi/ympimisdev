@@ -879,7 +879,7 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 
 
 	//----------bensuki
-		
+
 	Route::get('index/Bensuki', 'Pianica@bensuki');
 	Route::post('index/Save', 'Pianica@input');
 	Route::post('index/Incoming', 'Pianica@input2');
@@ -978,6 +978,11 @@ Route::get('index/reportVisualDaily', 'Pianica@reportVisualDaily');
 Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 //end pianica
+
+
+Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
+	Route::get('index/stocktaking/silver/{id}', 'StockTakingController@indexSilver');
+});
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -1303,6 +1308,7 @@ Route::get('index/sampling_check/fetchReport/{id}', 'SamplingCheckController@fet
 Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@detail_sampling_check');
 Route::post('index/sampling_check/print_sampling/{id}', 'SamplingCheckController@print_sampling');
 Route::get('index/sampling_check/print_sampling_email/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_email');
+Route::get('index/sampling_check/print_sampling_chart/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_chart');
 Route::post('index/sampling_check/approval/{id}', 'SamplingCheckController@approval');
 Route::post('index/sampling_check/send_email/{id}', 'SamplingCheckController@sendemail');
 

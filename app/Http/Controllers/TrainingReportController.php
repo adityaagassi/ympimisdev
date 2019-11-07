@@ -28,7 +28,7 @@ class TrainingReportController extends Controller
     {
         $activityList = ActivityList::find($id);
     	$trainingReport = TrainingReport::where('activity_list_id',$id)
-            ->get();
+            ->orderBy('training_reports.id','desc')->get();
 
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
@@ -63,23 +63,26 @@ class TrainingReportController extends Controller
             $trainingReport = TrainingReport::where('activity_list_id',$id)
                 ->where('product',$origin_group)
                 ->where('date',$date)
+                ->orderBy('training_reports.id','desc')
                 ->get();
         }
         elseif (strlen($request->get('date')) > null && $request->get('product') == null) {
             $date = date('Y-m-d', strtotime($request->get('date')));
             $trainingReport = TrainingReport::where('activity_list_id',$id)
                 ->where('date',$date)
+                ->orderBy('training_reports.id','desc')
                 ->get();
         }
         elseif($request->get('product') > null && strlen($request->get('date')) == null){
             $origin_group = $request->get('product');
             $trainingReport = TrainingReport::where('activity_list_id',$id)
                 ->where('product',$origin_group)
+                ->orderBy('training_reports.id','desc')
                 ->get();
         }
         else{
             $trainingReport = TrainingReport::where('activity_list_id',$id)
-            ->get();
+            ->orderBy('training_reports.id','desc')->get();
         }
 
         // foreach ($activityList as $activityList) {
@@ -526,7 +529,7 @@ class TrainingReportController extends Controller
     {
             $data = array(
                           'id' => $id);
-            return view('training_report.scan_employee', $data
+            return view('training_report.scan_employee2', $data
                 )->with('page', 'Training Report');
     }
 
@@ -542,9 +545,53 @@ class TrainingReportController extends Controller
             'participant_name' => $nik,
             'created_by' => $id_user
         ]);
+
+        // $training = TrainingParticipant::where("participant_name",$nik)->where("id",$id_training)->get();
+        // $training->participant_absence = 'Hadir';
+        // $training->save();
+
+        // DB::table('training_participants')->where('participant_name',$nik)->where('training_id',$id_training)->update([
+        //     'participant_absence' => "Hadir"
+        // ]);
         
 
         return redirect('index/training_report/details/2/view')
-            ->with('page', 'Training Report')->with('status', 'New Participant has been created.');
+            ->with('page', 'Training Report')->with('status', 'Participant has been absence.');
+    }
+
+    public function getparticipant(Request $request)
+    {
+         try{
+            $participant = TrainingParticipant::find($request->get("id"));
+            $participant_name = $participant->participant_name;
+            // $name = $beacon->name;
+            // $beacon->uuid = $request->get('uuid');
+            // $beacon->name = $request->get('name');
+           
+
+            $response = array(
+              'status' => true,
+              'participant_name' => $participant_name
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
     }
 }

@@ -363,9 +363,9 @@ table.table-bordered > tfoot > tr > th{
       { "data": "date" },
       { "data": "product" },
       { "data": "no_seri_part" },
-      { "data": "sampling_check_id",
+      { "data": "linkurl",
       	"render": function ( data ) {
-      		return '<a class="btn btn-info btn-xs" href="../../../index/sampling_check/details/' + data + '">Details</a>';
+      		return '<a target="_blank" class="btn btn-info btn-xs" href="../../../index/sampling_check/print_sampling_chart/' + data + '">Details</a>';
     	  } 
       }
       ]

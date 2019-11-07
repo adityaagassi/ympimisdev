@@ -355,7 +355,7 @@ table.table-bordered > tfoot > tr > th{
       { "data": "trainer" },
       { "data": "training_id",
       	"render": function ( data ) {
-      		return '<a class="btn btn-info btn-xs" href="../../../index/training_report/details/' + data + '/chart">Details</a>';
+      		return '<a target="_blank" class="btn btn-info btn-xs" href="../../../index/training_report/print/' + data + '">Details</a>';
     	  } 
       }
       ]

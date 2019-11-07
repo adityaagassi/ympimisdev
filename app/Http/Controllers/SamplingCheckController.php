@@ -540,7 +540,7 @@ class SamplingCheckController extends Controller
 
     public function detail_sampling_check(Request $request, $id){
       $week_date = $request->get("week_date");
-        $query = "select *, sampling_checks.id as sampling_check_id from sampling_checks join activity_lists on activity_lists.id = sampling_checks.activity_list_id where department_id = '".$id."' and activity_type = 'Sampling Check' and date = '".$week_date."' and sampling_checks.deleted_at is null";
+        $query = "select *,CONCAT(activity_lists.id, '/', sampling_checks.subsection, '/', DATE_FORMAT(sampling_checks.date,'%Y-%m')) as linkurl, sampling_checks.id as sampling_check_id from sampling_checks join activity_lists on activity_lists.id = sampling_checks.activity_list_id where department_id = '".$id."' and activity_type = 'Sampling Check' and date = '".$week_date."' and sampling_checks.deleted_at is null";
 
       $detail = db::select($query);
 
@@ -680,6 +680,73 @@ class SamplingCheckController extends Controller
                           'id' => $id,
                           'id_departments' => $id_departments);
             return view('sampling_check.print_email', $data
+                )->with('page', 'Sampling Check');
+        }
+    }
+
+    function print_sampling_chart($id,$subsection,$month)
+    {
+        $activityList = ActivityList::find($id);
+        // var_dump($request->get('product'));
+        // var_dump($request->get('date'));
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+
+        if($subsection != null && $month != null){
+            $querySamplingCheck = "select *, sampling_checks.id as id_sampling_check
+                from sampling_checks
+                join activity_lists on activity_lists.id = sampling_checks.activity_list_id
+                where activity_lists.id = '".$id."'
+                and activity_lists.department_id = '".$id_departments."'
+                and sampling_checks.subsection = '".$subsection."' 
+                and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."' 
+                and sampling_checks.deleted_at is null";
+            $samplingCheck = DB::select($querySamplingCheck);
+            $samplingCheck2 = DB::select($querySamplingCheck);
+        }
+        // var_dump($subsection);
+        $jml_null = 0;
+        foreach($samplingCheck2 as $samplingCheck2){
+            // $product = $samplingCheck->product;
+            // $proses = $samplingCheck->proses;
+            $date = $samplingCheck2->date;
+            $foreman = $samplingCheck2->foreman;
+            $section = $samplingCheck2->section;
+            $subsection = $samplingCheck2->subsection;
+            $month = $samplingCheck2->month;
+            $leader = $samplingCheck2->leader;
+            if ($samplingCheck2->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            $approved_date = $samplingCheck2->approved_date;
+        }
+        if($samplingCheck == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'leader' => $leader,
+                          'foreman' => $foreman,
+                          'section' => $section,
+                          'jml_null' => $jml_null,
+                          'approved_date' => $approved_date,
+                          'subsection' => $subsection,
+                          'month' => $month,
+                          'date' => $date,
+                          'samplingCheck' => $samplingCheck,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('sampling_check.print_chart', $data
                 )->with('page', 'Sampling Check');
         }
     }
