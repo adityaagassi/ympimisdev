@@ -265,8 +265,8 @@ table.table-bordered > tfoot > tr > th{
 				          <table id="example2" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
-				                <th>Patricipant Name</th>
-				                <th>Patricipant Absence</th>
+				                <th>Name</th>
+				                <th>Attendance</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>

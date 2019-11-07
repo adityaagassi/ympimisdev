@@ -117,14 +117,16 @@
 				<td></td>
 				<td class="head">No.</td>
 				<td class="head">Nama Peserta</td>
+				<td class="head">Attendance</td>
 				<td></td>
 			</tr>
 			<?php $no = 1 ?>
 			@foreach($trainingParticipant as $trainingParticipant)
 			<tr>
-				<td></td>
+				{{-- <td></td> --}}
 				<td class="head">{{ $no }}</td>
 				<td class="head">{{ $trainingParticipant->participant_name }}</td>
+				<td class="head">{{ $trainingParticipant->participant_absence }}</td>
 				<td></td>
 			</tr>
 			<?php $no++ ?>
@@ -141,6 +143,9 @@
 				<td class="bodytraining" colspan="6">
 					<?php echo  $training->notes ?> 
 				</td>
+			</tr>
+			<tr>
+				<td></td>
 			</tr>
 			<tr>
 				<td class="bodytraining" colspan="6">

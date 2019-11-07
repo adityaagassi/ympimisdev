@@ -770,23 +770,27 @@ class SamplingCheckController extends Controller
 
           // var_dump($sampling_check2);
 
-          foreach($sampling_check2 as $sampling_check2){
-            $leader = $sampling_check2->leader;
-            $id_sampling_check = $sampling_check2->id_sampling_check;
-            $send_status = $sampling_check2->send_status;
-          }
+          if($sampling_check2 != null){
+            foreach($sampling_check2 as $sampling_check2){
+                $leader = $sampling_check2->leader;
+                $id_sampling_check = $sampling_check2->id_sampling_check;
+                $send_status = $sampling_check2->send_status;
+              }
 
-          foreach ($sampling_check3 as $sampling_check3) {
-                $scheck = SamplingCheck::find($sampling_check3->id_sampling_check);
-                $scheck->send_status = "Sent";
-                $scheck->send_date = date('Y-m-d');
-                $scheck->save();
-          }
+              foreach ($sampling_check3 as $sampling_check3) {
+                    $scheck = SamplingCheck::find($sampling_check3->id_sampling_check);
+                    $scheck->send_status = "Sent";
+                    $scheck->send_date = date('Y-m-d');
+                    $scheck->save();
+              }
 
-          $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$leader."'";
-          $email = DB::select($queryEmail);
-          foreach($email as $email){
-            $mail_to = $email->email;            
+              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$leader."'";
+              $email = DB::select($queryEmail);
+              foreach($email as $email){
+                $mail_to = $email->email;            
+              }
+          }else{
+            return redirect('/index/sampling_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'Sampling Check');
           }
 
           if($send_status == "Sent"){
