@@ -994,7 +994,7 @@
 										MESIN4[i+1][3] -= 0;
 									}else{
 
-										MESIN4_r2[x].push([(MESIN4[i+][0]+' '+MESIN4[i+][1]),MESIN4[i+1][2], 
+										MESIN4_r2[x].push([(MESIN4[i+1][0]+' '+MESIN4[i+1][1]),MESIN4[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
 										]);
 
