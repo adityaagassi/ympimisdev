@@ -262,13 +262,13 @@ class RawMaterialController extends Controller
 
 				$now = date("Y-m-d H:i:s");
 
-				DB::insert("
-					insert into raw_material_stocks(material_number, material_description, storage_location, quantity, stock_date, created_by, created_at, updated_at)
-					select material_number, material_description, storage_location, round(sum(quantity),6) as quantity, stock_date, '".$id."' as created_by, '".$now."' as created_at, '".$now."' as updated_at from 
-					(
-					select if(material_list_by_models.material_parent is null, storage_location_stocks.material_number, material_list_by_models.material_child) as material_number, if(material_list_by_models.material_parent is null, storage_location_stocks.material_description, material_list_by_models.material_child_description) as material_description, storage_location_stocks.storage_location, if(material_list_by_models.material_parent is null, storage_location_stocks.unrestricted, storage_location_stocks.unrestricted*material_list_by_models.usage) as quantity, storage_location_stocks.stock_date from storage_location_stocks left join material_list_by_models on material_list_by_models.material_parent = storage_location_stocks.material_number where storage_location_stocks.stock_date = '".$stock_date."'
-					) as raw_material_stocks group by material_number, material_description, storage_location, stock_date
-					");
+				// DB::insert("
+				// 	insert into raw_material_stocks(material_number, material_description, storage_location, quantity, stock_date, created_by, created_at, updated_at)
+				// 	select material_number, material_description, storage_location, round(sum(quantity),6) as quantity, stock_date, '".$id."' as created_by, '".$now."' as created_at, '".$now."' as updated_at from 
+				// 	(
+				// 	select if(material_list_by_models.material_parent is null, storage_location_stocks.material_number, material_list_by_models.material_child) as material_number, if(material_list_by_models.material_parent is null, storage_location_stocks.material_description, material_list_by_models.material_child_description) as material_description, storage_location_stocks.storage_location, if(material_list_by_models.material_parent is null, storage_location_stocks.unrestricted, storage_location_stocks.unrestricted*material_list_by_models.usage) as quantity, storage_location_stocks.stock_date from storage_location_stocks left join material_list_by_models on material_list_by_models.material_parent = storage_location_stocks.material_number where storage_location_stocks.stock_date = '".$stock_date."'
+				// 	) as raw_material_stocks group by material_number, material_description, storage_location, stock_date
+				// 	");
 
 				return redirect('/index/material/storage')->with('success', 'Storage Location Stock Uploaded')->with('page', 'Upload Storage')->with('head', 'Raw Material Monitoring');
 			}

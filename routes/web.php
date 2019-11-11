@@ -88,6 +88,7 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 //----- Start mesin injeksi
 
 Route::get('index/injeksi', 'InjectionsController@index');
+Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
 //in
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
@@ -133,7 +134,7 @@ Route::get('fetch/getDataMesinShoot', 'InjectionsController@getDataMesinShoot');
 
 // operator
 Route::get('index/opmesin', 'InjectionsController@opmesin');
-Route::post('input/statusmesin', 'InjectionsController@inputStatusMesin');
+Route::get('input/statusmesin', 'InjectionsController@inputStatusMesin');
 Route::post('delete/statusmesin', 'InjectionsController@deleteStatusMesin');
 Route::get('get/statusmesin', 'InjectionsController@getStatusMesin');
 Route::post('input/logmesin', 'InjectionsController@logmesin');
@@ -992,6 +993,9 @@ Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
 	Route::post('input/stocktaking/silver_count', 'StockTakingController@inputSilverCount');
 	Route::post('input/stocktaking/silver_final', 'StockTakingController@inputSilverFinal');
 });
+Route::get('index/stocktaking/silver_report', 'StockTakingController@indexSilverReport');
+Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilverReport');
+Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -1328,6 +1332,13 @@ Route::get('index/sampling_check/print_sampling_chart/{id}/{subsection}/{month}'
 Route::post('index/sampling_check/approval/{id}', 'SamplingCheckController@approval');
 Route::post('index/sampling_check/send_email/{id}', 'SamplingCheckController@sendemail');
 
+//Laporan AKtivitas Audit
+Route::get('index/audit_report_activity/index/{id}', 'AuditReportActivityController@index');
+Route::post('index/audit_report_activity/filter_audit_report/{id}', 'AuditReportActivityController@filter_audit_report');
+Route::get('index/audit_report_activity/create/{id}', 'AuditReportActivityController@create');
+Route::post('index/audit_report_activity/store/{id}', 'AuditReportActivityController@store');
+Route::get('index/audit_report_activity/show/{id}/{audit_report_id}', 'AuditReportActivityController@show');
+Route::get('index/audit_report_activity/destroy/{id}/{audit_report_id}', 'AuditReportActivityController@destroy');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR

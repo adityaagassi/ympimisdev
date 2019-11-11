@@ -170,11 +170,6 @@
                                 <i class="fa fa-caret-right"></i> Emergency Condition (??)
                             </a>
                             <br>
-                            <a href="{{ url("index/activity_list") }}">
-                                <i class="fa fa-caret-right"></i> Activity Lists (活動リスト)
-                            </a>
-                            <br>
-                            
                         </td>
                     </tr>
                     <tr>
@@ -267,7 +262,19 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">INITIAL Process (イニシアル工程)</span>
+                            <span style="font-weight: bold;">MATERIAL Process (イニシアル工程)</span>
+                            <br>
+                            <a href="{{ url("/index/initial", "cl_mpro") }}">
+                                <i class="fa fa-caret-right"></i> Clarinet (?)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/initial", "fl_mpro") }}">
+                                <i class="fa fa-caret-right"></i> Flute (?)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/initial", "sx_mpro") }}">
+                                <i class="fa fa-caret-right"></i> Saxophone (?)
+                            </a>
                             <br>
                             <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
                                 <i class="fa fa-caret-right"></i> M-PRO Stock Monitoring (部品加工の仕掛品監視)
@@ -276,7 +283,23 @@
                             <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
                                 <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
                             </a>
-
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">BODY Process (イニシアル工程)</span>
+                            <br>
+                            <a href="{{ url("/index/initial", "cl_bpro") }}">
+                                <i class="fa fa-caret-right"></i> Clarinet(?)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/initial", "fl_bpro") }}">
+                                <i class="fa fa-caret-right"></i> Flute(?)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/initial", "sx_bpro") }}">
+                                <i class="fa fa-caret-right"></i> Saxophone(?)
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -347,6 +370,15 @@
                             <br>
                             <a href="http://172.17.128.114/cdm-new/">
                                 <i class="fa fa-caret-right"></i> T-Pro CDM Charts<br>(T-ProのCDMチャート)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Stock Taking (?)</span>
+                            <br>
+                            <a href="{{ url("/index/stocktaking/silver_report") }}">
+                                <i class="fa fa-caret-right"></i> Silver Stock Taking Report (?)
                             </a>
                         </td>
                     </tr>
