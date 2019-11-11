@@ -17,6 +17,8 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
+			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Stock Taking <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/stocktaking/silver", "fl_assembly") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Silver</i></b></a>
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_assy_fl_1") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp <b><i>IoT</i></b></a>
 			<a href="{{ url("index/process_assy_fl_0") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp-Kariawase</a>
