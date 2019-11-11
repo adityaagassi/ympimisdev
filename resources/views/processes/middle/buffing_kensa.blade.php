@@ -457,6 +457,7 @@
 			operator_id: $('#opbuffing').text().split(' ')[0],
 			started_at: $('#started_at').val(),
 			buffing_time: $('#buffing_time').val(),
+			cek: $('#material_quantity').val(),
 			ng: ng,
 			count_text: count_text,
 			// total_ng: total,

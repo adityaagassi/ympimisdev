@@ -25,6 +25,8 @@ use App\BarrelMachineLog;
 use App\CodeGenerator;
 use App\MiddleNgLog;
 use App\MiddleLog;
+use App\MiddleCheckLog;
+use App\MiddleTempLog;
 use App\ErrorLog;
 use App\Material;
 use App\MiddleRequestHelper;
@@ -2036,7 +2038,7 @@ class MiddleProcessController extends Controller
 			}
 		}
 
-		$query1 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
+		$query1 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
 		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
@@ -2050,7 +2052,7 @@ class MiddleProcessController extends Controller
 		GROUP BY tgl) c on a.tgl = c.tgl";
 		$monthly_ic = db::select($query1);
 
-		$query2 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, (b.ng+c.g) as total FROM
+		$query2 = "SELECT a.tgl, COALESCE(b.ng,b.ng,0) as ng, COALESCE(c.g,c.g,0) as g, c.g as total FROM
 		(SELECT DATE_FORMAT(week_date,'%m-%Y') as tgl from weekly_calendars where fiscal_year in (".$fy.") GROUP BY tgl ORDER BY week_date asc) a
 		left join
 		(SELECT DATE_FORMAT(n.created_at,'%m-%Y') as tgl, sum(n.quantity) ng from middle_ng_logs n
@@ -2100,14 +2102,14 @@ class MiddleProcessController extends Controller
 
 
 		// IC
-		$totalCekIC_alto = db::select("select (a.g+b.ng) as total from
+		$totalCekIC_alto = db::select("select a.g as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY') b");
 
-		$totalCekIC_tenor = db::select("select (a.g+b.ng) as total from
+		$totalCekIC_tenor = db::select("select a.g as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'TSKEY') a
 			cross join
@@ -2164,14 +2166,14 @@ class MiddleProcessController extends Controller
 
 
 		// Kensa
-		$totalCekKensa_alto = db::select("select (a.g+b.ng) as total from
+		$totalCekKensa_alto = db::select("select a.g as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY') b");
 
-		$totalCekKensa_tenor = db::select("select (a.g+b.ng) as total from
+		$totalCekKensa_tenor = db::select("select a.g as total from
 			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'TSKEY') a
 			cross join
@@ -2275,7 +2277,7 @@ class MiddleProcessController extends Controller
 		}
 
 		// IC
-		$dailyICAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
+		$dailyICAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -2286,7 +2288,7 @@ class MiddleProcessController extends Controller
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-incoming' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
 
-		$dailyICTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
+		$dailyICTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -2299,7 +2301,7 @@ class MiddleProcessController extends Controller
 
 
 		// Kensa
-		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
+		$dailyKensaAlto = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -2310,7 +2312,7 @@ class MiddleProcessController extends Controller
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%PLT%' and location = 'lcq-kensa' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
 
-		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, (COALESCE(b.ng,0)+COALESCE(c.g,0)) as total FROM
+		$dailyKensaTenor = db::select("SELECT a.tgl, b.hpl, b.ng, COALESCE(c.g,0) as total FROM
 			(SELECT DATE_FORMAT(week_date,'%d-%m-%Y') as tgl from weekly_calendars ".$bulan.") a
 			left join
 			(SELECT DATE_FORMAT(n.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(n.quantity) as ng from middle_ng_logs n
@@ -4180,7 +4182,7 @@ class MiddleProcessController extends Controller
 		$started_at = date('Y-m-d H:i:s');
 		try{
 			$tags = db::connection('digital_kanban')->table('buffing_inventories')
-			->select('material_num','operator_id',"material_tag_id","material_qty", 'updated_at')
+			->select('material_num','operator_id','material_tag_id','material_qty','lokasi','updated_at')
 			->where('material_tag_id','=', $request->get("tag"))
 			->first();
 
@@ -4254,11 +4256,40 @@ class MiddleProcessController extends Controller
 					return Response::json($response);
 				}
 			}
-			$response = array(
-				'status' => true,
-				'message' => 'NG has been recorded.',
-			);
-			return Response::json($response);
+
+			try{
+
+				$middle_check_log = new MiddleCheckLog([
+					'employee_id' => $request->get('employee_id'),
+					'tag' => $request->get('tag'),
+					'material_number' => $request->get('material_number'),
+					'quantity' => $request->get('cek'),
+					'location' => $request->get('loc'),
+					'operator_id' => $request->get('operator_id'),
+					'buffing_time' => $request->get('buffing_time'),
+				]);
+				$middle_check_log->save();
+
+				$middle_temp_log = new MiddleTempLog([
+					'material_number' => $request->get('material_number'),
+					'quantity' => $request->get('cek'),
+					'location' => $request->get('loc'),
+				]);
+				$middle_temp_log->save();
+
+
+				$response = array(
+					'status' => true,
+					'message' => 'NG has been recorded.',
+				);
+				return Response::json($response);
+			}catch(\Exception $e){
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
 		} else {
 			try{
 				// $buffing_inventory = RfidBuffingInventory::where('material_tag_id', '=', $request->get('tag'))->update([
@@ -4270,7 +4301,6 @@ class MiddleProcessController extends Controller
 				->update([
 					'lokasi' => 'BUFFING-AFTER',
 				]);
-
 				$middle_log = new MiddleLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
@@ -4281,8 +4311,30 @@ class MiddleProcessController extends Controller
 					'buffing_time' => $request->get('buffing_time'),
 					'started_at' => $request->get('started_at'),
 				]);
-
 				$middle_log->save();
+
+				$temp = MiddleTempLog::where('material_number','=',$request->get('material_number'))
+				->where('location','=',$request->get('loc'))
+				->first();
+
+				if(count($temp) > 0){
+					$delete = MiddleTempLog::where('material_number','=',$request->get('material_number'))
+					->where('location','=',$request->get('loc'))
+					->delete();
+				}else{
+					$middle_check_log = new MiddleCheckLog([
+						'employee_id' => $request->get('employee_id'),
+						'tag' => $request->get('tag'),
+						'material_number' => $request->get('material_number'),
+						'quantity' => $request->get('cek'),
+						'location' => $request->get('loc'),
+						'operator_id' => $request->get('operator_id'),
+						'buffing_time' => $request->get('buffing_time'),
+					]);
+					$middle_check_log->save();
+				}
+
+
 
 				$response = array(
 					'status' => true,
