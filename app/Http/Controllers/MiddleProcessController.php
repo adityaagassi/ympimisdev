@@ -4320,7 +4320,9 @@ class MiddleProcessController extends Controller
 				if(count($temp) > 0){
 					$delete = MiddleTempLog::where('material_number','=',$request->get('material_number'))
 					->where('location','=',$request->get('loc'))
-					->delete();
+					->first();
+
+					$delete->delete();
 				}else{
 					$middle_check_log = new MiddleCheckLog([
 						'employee_id' => $request->get('employee_id'),
