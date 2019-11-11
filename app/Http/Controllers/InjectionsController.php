@@ -347,7 +347,281 @@ class InjectionsController extends Controller
         return Response::json($response);
     }
 
+    public function getDateWorking(Request $request){ 
 
+        $max = $request->get('max');            
+        
+        
+        $query = "SELECT week_date from ympimis.weekly_calendars WHERE 
+        week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' ORDER BY week_date asc limit ".$max."";
+
+        $mesin = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'tgl' => $mesin,
+            'message' => 'Get Date Success',
+            
+        );
+        return Response::json($response);
+    }
+
+
+
+    public function saveSchedule(Request $request){
+
+        $id = Auth::id();
+    try{
+
+        // m1
+
+        $m1s = $request->get('PostMESIN1');
+
+        foreach ($m1s as $m1 ) {
+            if (strlen($m1) > 0) {
+                 $m1 = explode("#", $m1);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 1',
+            'part' => $m1[2], 
+            'qty' =>  $m1[3], 
+            'color' =>  $m1[1],
+            'due_date' =>  $m1[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m1
+
+        // m2
+
+        $m2s = $request->get('PostMESIN2');
+
+        foreach ($m2s as $m2 ) {
+            if (strlen($m2) > 0) {
+                 $m2 = explode("#", $m2);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 2',
+            'part' => $m2[2], 
+            'qty' =>  $m2[3], 
+            'color' =>  $m2[1],
+            'due_date' =>  $m2[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m2
+
+        // m3
+
+        $m3s = $request->get('PostMESIN3');
+
+        foreach ($m3s as $m3 ) {
+            if (strlen($m3) > 0) {
+                 $m3 = explode("#", $m3);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 3',
+            'part' => $m3[2], 
+            'qty' =>  $m3[3], 
+            'color' =>  $m3[1],
+            'due_date' =>  $m3[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m3
+
+        // m4
+
+        $m4s = $request->get('PostMESIN4');
+
+        foreach ($m4s as $m4 ) {
+            if (strlen($m4) > 0) {
+                 $m4 = explode("#", $m4);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 4',
+            'part' => $m4[2], 
+            'qty' =>  $m4[3], 
+            'color' =>  $m4[1],
+            'due_date' =>  $m4[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m4
+
+        // m5
+
+        $m5s = $request->get('PostMESIN5');
+
+        foreach ($m5s as $m5 ) {
+            if (strlen($m5) > 0) {
+                 $m5 = explode("#", $m5);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 5',
+            'part' => $m5[2], 
+            'qty' =>  $m5[3], 
+            'color' =>  $m5[1],
+            'due_date' =>  $m5[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m5
+
+        // m6
+
+        $m6s = $request->get('PostMESIN6');
+
+        foreach ($m6s as $m6 ) {
+            if (strlen($m6) > 0) {
+                 $m6 = explode("#", $m6);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 6',
+            'part' => $m6[2], 
+            'qty' =>  $m6[3], 
+            'color' =>  $m6[1],
+            'due_date' =>  $m6[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m6
+
+        // m7
+
+        $m7s = $request->get('PostMESIN7');
+
+        foreach ($m7s as $m7 ) {
+            if (strlen($m7) > 0) {
+                 $m7 = explode("#", $m7);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 7',
+            'part' => $m7[2], 
+            'qty' =>  $m7[3], 
+            'color' =>  $m7[1],
+            'due_date' =>  $m7[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m7
+
+        // m8
+
+        $m8s = $request->get('PostMESIN8');
+
+        foreach ($m8s as $m8 ) {
+            if (strlen($m8) > 0) {
+                 $m8 = explode("#", $m8);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 8',
+            'part' => $m8[2], 
+            'qty' =>  $m8[3], 
+            'color' =>  $m8[1],
+            'due_date' =>  $m8[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m8
+
+        // m9
+
+        $m9s = $request->get('PostMESIN9');
+
+        foreach ($m9s as $m9 ) {
+            if (strlen($m9) > 0) {
+                 $m9 = explode("#", $m9);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 9',
+            'part' => $m9[2], 
+            'qty' =>  $m9[3], 
+            'color' =>  $m9[1],
+            'due_date' =>  $m9[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m9
+
+
+
+        // m11
+
+        $m11s = $request->get('PostMESIN11');
+
+        foreach ($m11s as $m11 ) {
+            if (strlen($m11) > 0) {
+                 $m11 = explode("#", $m11);
+
+            $plan = new PlanMesinInjection([
+            'mesin' => 'Mesin 11',
+            'part' => $m11[2], 
+            'qty' =>  $m11[3], 
+            'color' =>  $m11[1],
+            'due_date' =>  $m11[0],    
+            'created_by' => $id,
+            ]);
+
+            $plan->save();
+            }
+        }
+
+        // end  m11
+        
+        
+       
+        $response = array(
+            'status' => true,   
+            'message' => 'Make Schedule Success',
+            
+        );
+        return Response::json($response);
+
+        }
+        catch (QueryException $e){
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
 
  // ------------------------- end shchedule
 

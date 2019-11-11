@@ -110,6 +110,9 @@ Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 Route::get('index/Schedule', 'InjectionsController@schedule');
 Route::get('fetch/Schedulepart', 'InjectionsController@getSchedule');
 Route::get('fetch/getStatusMesin', 'InjectionsController@getStatusMesin');
+
+Route::get('fetch/getDateWorking', 'InjectionsController@getDateWorking');
+Route::post('save/Schedule', 'InjectionsController@saveSchedule');
 //end schedule
 
 //report stock
@@ -793,6 +796,7 @@ Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 //E - Kaizen
 Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
+	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 });
 
 Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');
@@ -982,6 +986,11 @@ Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
 	Route::get('index/stocktaking/silver/{id}', 'StockTakingController@indexSilver');
+	Route::get('fetch/stocktaking/silver_list', 'StockTakingController@fetchSilverList');
+	Route::get('fetch/stocktaking/silver_count', 'StockTakingController@fetchSilverCount');
+	Route::get('fetch/stocktaking/silver_resume', 'StockTakingController@fetchSilverResume');
+	Route::post('input/stocktaking/silver_count', 'StockTakingController@inputSilverCount');
+	Route::post('input/stocktaking/silver_final', 'StockTakingController@inputSilverFinal');
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -1209,6 +1218,13 @@ Route::get('index/production_report/index/{id}', 'ProductionReportController@ind
 Route::get('index/production_report/activity/{id}', 'ProductionReportController@activity');
 Route::get('index/production_report/report_all/{id}', 'ProductionReportController@report_all');
 Route::get('index/production_report/fetchReport/{id}', 'ProductionReportController@fetchReport');
+Route::get('index/production_report/fetchReportDaily/{id}', 'ProductionReportController@fetchReportDaily');
+Route::get('index/production_report/fetchReportWeekly/{id}', 'ProductionReportController@fetchReportWeekly');
+Route::get('index/production_report/fetchReportMonthly/{id}', 'ProductionReportController@fetchReportMonthly');
+Route::get('index/production_report/fetchReportConditional/{id}', 'ProductionReportController@fetchReportConditional');
+Route::get('index/production_report/fetchReportAudit/{id}', 'ProductionReportController@fetchReportAudit');
+Route::get('index/production_report/fetchReportTraining/{id}', 'ProductionReportController@fetchReportTraining');
+Route::get('index/production_report/fetchReportSampling/{id}', 'ProductionReportController@fetchReportSampling');
 Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportController@detailProductionReport');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 
@@ -1331,9 +1347,14 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
 	Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
 	Route::get('index/qc_report/sign', 'QcReportController@sign');
+
 	Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
 	Route::get('index/qc_report/sendemail/{id}', 'QcReportController@sendemail');
+
+	//verifikasi CPAR
+
+	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
 
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
@@ -1347,7 +1368,9 @@ Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
+Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
+Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 

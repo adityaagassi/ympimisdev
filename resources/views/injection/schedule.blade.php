@@ -159,6 +159,14 @@
 
 		</div>
 
+		<div class="col-xs-12">
+			<div class="col-xs-2">
+			<button type="button" class="btn btn-warning" style="margin-right: 20px" onclick="makeSchedule()">Calculate</button>
+			<button type="button" class="btn btn-success" style="margin-right: 20px" onclick="saveSchedule()">Save</button>
+			</div>
+		</div>
+
+
 		
 		<div class="col-xs-12">
 			<br><br>
@@ -339,7 +347,7 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		getMesin();
-		makeSchedule();
+		// makeSchedule();
 	});
 
 	function unique(list) {
@@ -390,6 +398,21 @@
 
 				var HeadMesin11 = '';
 				var BodyMesin11 = '';
+
+				var max = 0;
+
+				var dateMax = [];
+
+				var PostMESIN1 = [];
+				var PostMESIN2 = [];
+				var PostMESIN3 = [];
+				var PostMESIN4 = [];
+				var PostMESIN5 = [];
+				var PostMESIN6 = [];
+				var PostMESIN7 = [];
+				var PostMESIN8 = [];
+				var PostMESIN9 = [];
+				var PostMESIN11 = [];
 
 	function makeSchedule() {
 
@@ -763,7 +786,7 @@
 							mesin1_r2[x].push([(MESIN1[i][0]+' '+MESIN1[i][1]),MESIN1[i][2], MESIN1[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
-								mesin1_r2[x].push([(MESIN1[i][0]+' '+MESIN1[i][1]),MESIN1[i][2], d]);
+								mesin1_r2[x].push([(MESIN1[i+1][0]+' '+MESIN1[i+1][1]),MESIN1[i+1][2], d]);
 								MESIN1[i+1][3] -= d;
 								MESIN1[i+1][7] = Math.floor((Math.floor(MESIN1[i+1][3] / MESIN1[i+1][6]) * MESIN1[i+1][5]) / 60);
 							} else {
@@ -781,7 +804,7 @@
 										MESIN1[i+1][3] -= 0;
 									}else{
 
-										mesin1_r2[x].push([(MESIN1[i][0]+' '+MESIN1[i][1]),MESIN1[i+1][2], 
+										mesin1_r2[x].push([(MESIN1[i+1][0]+' '+MESIN1[i+1][1]),MESIN1[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
 										]);
 
@@ -826,7 +849,7 @@
 							MESIN2_r2[x].push([(MESIN2[i][0]+' '+MESIN2[i][1]),MESIN2[i][2], MESIN2[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN2[i+1][5]) * MESIN2[i+1][6];
-								MESIN2_r2[x].push([(MESIN2[i][0]+' '+MESIN2[i][1]),MESIN2[i][2], d]);
+								MESIN2_r2[x].push([(MESIN2[i+1][0]+' '+MESIN2[i+1][1]),MESIN2[i+1][2], d]);
 								MESIN2[i+1][3] -= d;
 								MESIN2[i+1][7] = Math.floor((Math.floor(MESIN2[i+1][3] / MESIN2[i+1][6]) * MESIN2[i+1][5]) / 60);
 							} else {
@@ -844,7 +867,7 @@
 										MESIN2[i+1][3] -= 0;
 									}else{
 
-										MESIN2_r2[x].push([(MESIN2[i][0]+' '+MESIN2[i][1]),MESIN2[i+1][2], 
+										MESIN2_r2[x].push([(MESIN2[i+1][0]+' '+MESIN2[i+1][1]),MESIN2[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6])
 										]);
 
@@ -871,6 +894,7 @@
 
 				}
 				console.log(MESIN2_r2);
+				console.table(MESIN2);
 
 				// ---------------- End MESIN2  ------------------
 
@@ -889,7 +913,7 @@
 							MESIN3_r2[x].push([(MESIN3[i][0]+' '+MESIN3[i][1]),MESIN3[i][2], MESIN3[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN3[i+1][5]) * MESIN3[i+1][6];
-								MESIN3_r2[x].push([(MESIN3[i][0]+' '+MESIN3[i][1]),MESIN3[i][2], d]);
+								MESIN3_r2[x].push([(MESIN3[i+1][0]+' '+MESIN3[i+1][1]),MESIN3[i+1][2], d]);
 								MESIN3[i+1][3] -= d;
 								MESIN3[i+1][7] = Math.floor((Math.floor(MESIN3[i+1][3] / MESIN3[i+1][6]) * MESIN3[i+1][5]) / 60);
 							} else {
@@ -907,7 +931,7 @@
 										MESIN3[i+1][3] -= 0;
 									}else{
 
-										MESIN3_r2[x].push([(MESIN3[i][0]+' '+MESIN3[i][1]),MESIN3[i+1][2], 
+										MESIN3_r2[x].push([(MESIN3[i+1][0]+' '+MESIN3[i+1][1]),MESIN3[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6])
 										]);
 
@@ -952,7 +976,7 @@
 							MESIN4_r2[x].push([(MESIN4[i][0]+' '+MESIN4[i][1]),MESIN4[i][2], MESIN4[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN4[i+1][5]) * MESIN4[i+1][6];
-								MESIN4_r2[x].push([(MESIN4[i][0]+' '+MESIN4[i][1]),MESIN4[i][2], d]);
+								MESIN4_r2[x].push([(MESIN4[i+1][0]+' '+MESIN4[i+1][1]),MESIN4[i+1][2], d]);
 								MESIN4[i+1][3] -= d;
 								MESIN4[i+1][7] = Math.floor((Math.floor(MESIN4[i+1][3] / MESIN4[i+1][6]) * MESIN4[i+1][5]) / 60);
 							} else {
@@ -970,7 +994,7 @@
 										MESIN4[i+1][3] -= 0;
 									}else{
 
-										MESIN4_r2[x].push([(MESIN4[i][0]+' '+MESIN4[i][1]),MESIN4[i+1][2], 
+										MESIN4_r2[x].push([(MESIN4[i+][0]+' '+MESIN4[i+][1]),MESIN4[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
 										]);
 
@@ -1015,7 +1039,7 @@
 							MESIN5_r2[x].push([(MESIN5[i][0]+' '+MESIN5[i][1]),MESIN5[i][2], MESIN5[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN5[i+1][5]) * MESIN5[i+1][6];
-								MESIN5_r2[x].push([(MESIN5[i][0]+' '+MESIN5[i][1]),MESIN5[i][2], d]);
+								MESIN5_r2[x].push([(MESIN5[i+1][0]+' '+MESIN5[i+1][1]),MESIN5[i+1][2], d]);
 								MESIN5[i+1][3] -= d;
 								MESIN5[i+1][7] = Math.floor((Math.floor(MESIN5[i+1][3] / MESIN5[i+1][6]) * MESIN5[i+1][5]) / 60);
 							} else {
@@ -1033,7 +1057,7 @@
 										MESIN5[i+1][3] -= 0;
 									}else{
 
-										MESIN5_r2[x].push([(MESIN5[i][0]+' '+MESIN5[i][1]),MESIN5[i+1][2], 
+										MESIN5_r2[x].push([(MESIN5[i+1][0]+' '+MESIN5[i+1][1]),MESIN5[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6])
 										]);
 
@@ -1078,7 +1102,7 @@
 							MESIN6_r2[x].push([(MESIN6[i][0]+' '+MESIN6[i][1]),MESIN6[i][2], MESIN6[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN6[i+1][5]) * MESIN6[i+1][6];
-								MESIN6_r2[x].push([(MESIN6[i][0]+' '+MESIN6[i][1]),MESIN6[i][2], d]);
+								MESIN6_r2[x].push([(MESIN6[i+1][0]+' '+MESIN6[i+1][1]),MESIN6[i+1][2], d]);
 								MESIN6[i+1][3] -= d;
 								MESIN6[i+1][7] = Math.floor((Math.floor(MESIN6[i+1][3] / MESIN6[i+1][6]) * MESIN6[i+1][5]) / 60);
 							} else {
@@ -1096,7 +1120,7 @@
 										MESIN6[i+1][3] -= 0;
 									}else{
 
-										MESIN6_r2[x].push([(MESIN6[i][0]+' '+MESIN6[i][1]),MESIN6[i+1][2], 
+										MESIN6_r2[x].push([(MESIN6[i+1][0]+' '+MESIN6[i+1][1]),MESIN6[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6])
 										]);
 
@@ -1141,7 +1165,7 @@
 							MESIN7_r2[x].push([(MESIN7[i][0]+' '+MESIN7[i][1]),MESIN7[i][2], MESIN7[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN7[i+1][5]) * MESIN7[i+1][6];
-								MESIN7_r2[x].push([(MESIN7[i][0]+' '+MESIN7[i][1]),MESIN7[i][2], d]);
+								MESIN7_r2[x].push([(MESIN7[i+1][0]+' '+MESIN7[i+1][1]),MESIN7[i+1][2], d]);
 								MESIN7[i+1][3] -= d;
 								MESIN7[i+1][7] = Math.floor((Math.floor(MESIN7[i+1][3] / MESIN7[i+1][6]) * MESIN7[i+1][5]) / 60);
 							} else {
@@ -1159,7 +1183,7 @@
 										MESIN7[i+1][3] -= 0;
 									}else{
 
-										MESIN7_r2[x].push([(MESIN7[i][0]+' '+MESIN7[i][1]),MESIN7[i+1][2], 
+										MESIN7_r2[x].push([(MESIN7[i+1][0]+' '+MESIN7[i+1][1]),MESIN7[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6])
 										]);
 
@@ -1204,7 +1228,7 @@
 							MESIN8_r2[x].push([(MESIN8[i][0]+' '+MESIN8[i][1]),MESIN8[i][2], MESIN8[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN8[i+1][5]) * MESIN8[i+1][6];
-								MESIN8_r2[x].push([(MESIN8[i][0]+' '+MESIN8[i][1]),MESIN8[i][2], d]);
+								MESIN8_r2[x].push([(MESIN8[i+1][0]+' '+MESIN8[i+1][1]),MESIN8[i+1][2], d]);
 								MESIN8[i+1][3] -= d;
 								MESIN8[i+1][7] = Math.floor((Math.floor(MESIN8[i+1][3] / MESIN8[i+1][6]) * MESIN8[i+1][5]) / 60);
 							} else {
@@ -1222,7 +1246,7 @@
 										MESIN8[i+1][3] -= 0;
 									}else{
 
-										MESIN8_r2[x].push([(MESIN8[i][0]+' '+MESIN8[i][1]),MESIN8[i+1][2], 
+										MESIN8_r2[x].push([(MESIN8[i+1][0]+' '+MESIN8[i+1][1]),MESIN8[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6])
 										]);
 
@@ -1267,7 +1291,7 @@
 							MESIN9_r2[x].push([(MESIN9[i][0]+' '+MESIN9[i][1]),MESIN9[i][2], MESIN9[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN9[i+1][5]) * MESIN9[i+1][6];
-								MESIN9_r2[x].push([(MESIN9[i][0]+' '+MESIN9[i][1]),MESIN9[i][2], d]);
+								MESIN9_r2[x].push([(MESIN9[i+1][0]+' '+MESIN9[i+1][1]),MESIN9[i+1][2], d]);
 								MESIN9[i+1][3] -= d;
 								MESIN9[i+1][7] = Math.floor((Math.floor(MESIN9[i+1][3] / MESIN9[i+1][6]) * MESIN9[i+1][5]) / 60);
 							} else {
@@ -1285,7 +1309,7 @@
 										MESIN9[i+1][3] -= 0;
 									}else{
 
-										MESIN9_r2[x].push([(MESIN9[i][0]+' '+MESIN9[i][1]),MESIN9[i+1][2], 
+										MESIN9_r2[x].push([(MESIN9[i+1][0]+' '+MESIN9[i+1][1]),MESIN9[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6])
 										]);
 
@@ -1330,14 +1354,14 @@
 							MESIN11_r2[x].push([(MESIN11[i][0]+' '+MESIN11[i][1]),MESIN11[i][2], MESIN11[i][3]]);
 							if (c == 1) {
 								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
-								MESIN11_r2[x].push([(MESIN11[i][0]+' '+MESIN11[i][1]),MESIN11[i][2], d]);
+								MESIN11_r2[x].push([(MESIN11[i+1][0]+' '+MESIN11[i+1][1]),MESIN11[i+1][2], d]);
+
 								MESIN11[i+1][3] -= d;
 								MESIN11[i+1][7] = Math.floor((Math.floor(MESIN11[i+1][3] / MESIN11[i+1][6]) * MESIN11[i+1][5]) / 60);
 							} else {
 								if (MESIN11[i][3] != MESIN11[i][4]) {
 									
-									// ------minus
-
+									// ------ minus
 
 									if ((Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]) < 0) {
 
@@ -1345,10 +1369,12 @@
 										(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 										]);
 
+										if (Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6] < 0) console.log(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]); 
+
 										MESIN11[i+1][3] -= 0;
 									}else{
 
-										MESIN11_r2[x].push([(MESIN11[i][0]+' '+MESIN11[i][1]),MESIN11[i+1][2], 
+										MESIN11_r2[x].push([(MESIN11[i+1][0]+' '+MESIN11[i+1][1]),MESIN11[i+1][2], 
 										(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 										]);
 
@@ -1378,7 +1404,7 @@
 
 				// ---------------- End MESIN11  ------------------
 
-
+console.table(MESIN11);
 
 
 				// ---------------- Mesin1 Table  ------------------
@@ -2140,7 +2166,7 @@
 function fjudul() {
 	var akhir = [];
 	var total = [];
-	var max = 0;
+	// var max = 0;
 
 	for (var i = 0; i < mesin1_r2.length; i++) {		
 			if (mesin1_r2[i].length >= 1) {
@@ -2252,20 +2278,20 @@ function fjudul() {
 
 	
 
-	// for (var a = 0; a < (max - total[0]); a++) {
-	// 			if (total[0] < max ) {
-	// 				HeadMESIN1 +='<td style="font-size:20px;">OFF</td>';
-	// 				BodyMESIN1 +='<td style="font-size:20px;">OFF</td>';
-	// 			}else{
-	// 				HeadMESIN1 +='';
-	// 				BodyMESIN1 +='';
-	// 			}						
-	// }		
-	// $('#HeadMESIN1').append(HeadMESIN1);
-	// $('#BodyMESIN1').append(BodyMESIN1);
+	for (var a = 0; a < (max - total[0]); a++) {
+				if (total[0] < max ) {
+					HeadMESIN1 +='<td style="font-size:20px;">OFF</td>';
+					BodyMESIN1 +='<td style="font-size:20px;">OFF</td>';
+				}else{
+					HeadMESIN1 +='';
+					BodyMESIN1 +='';
+				}						
+	}		
+	$('#HeadMESIN1').append(HeadMESIN1);
+	$('#BodyMESIN1').append(BodyMESIN1);
 
 	for (var a = 0; a < (max - total[1]); a++) {
-		if (total[2] < max) {
+		if (total[1] < max) {
 				HeadMESIN2 +='<td style="font-size:20px;width:10px">OFF</td>';
 				BodyMESIN2 +='<td style="font-size:20px;width:10px">OFF</td>';
 				}else{
@@ -2337,7 +2363,7 @@ function fjudul() {
 	$('#HeadMESIN11').append(HeadMESIN11);
 	$('#BodyMESIN11').append(BodyMESIN11);
 
-	
+	getDateWorking();
 
 
 		
@@ -2351,6 +2377,8 @@ function getMesin() {
 		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
+
+
 
 				openSuccessGritter('Success!', result.message);
 
@@ -2366,6 +2394,293 @@ function getMesin() {
 			alert('Disconnected from sever');
 		}
 	});
+	
+}
+
+function getDateWorking() {
+
+	var data = {
+			max:max,
+			
+		}
+
+	$.get('{{ url("fetch/getDateWorking") }}', data,  function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+
+				for (var i = 0; i < result.tgl.length; i++) {
+					dateMax.push(result.tgl[i].week_date);
+				}
+
+
+				openSuccessGritter('Success!', result.message);
+
+
+			}
+			else{
+				audio_error.play();
+
+			}
+		}
+		else{
+			audio_error.play();
+			alert('Disconnected from sever');
+		}
+	});
+	
+}
+
+function saveSchedule() {
+
+	
+	// mesin1
+
+	for (var i = 0; i < max; i++) {
+		if (mesin1_r2[i].length < 1) {
+			if (mesin1_r2[i] > 0) {
+				PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][0]+'#'+mesin1_r2[i][1]+'#'+mesin1_r2[i][2])
+			}else{
+				PostMESIN1.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < mesin1_r2[i].length; a++) {
+				if (mesin1_r2[i][a][2] > 0) {
+					PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][a][0]+'#'+mesin1_r2[i][a][1]+'#'+mesin1_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end mesin1
+
+	// MESIN2
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN2_r2[i].length < 1) {
+			if (MESIN2_r2[i] > 0) {
+				PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][0]+'#'+MESIN2_r2[i][1]+'#'+MESIN2_r2[i][2])
+			}else{
+				PostMESIN2.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN2_r2[i].length; a++) {
+				if (MESIN2_r2[i][a][2] > 0) {
+					PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][a][0]+'#'+MESIN2_r2[i][a][1]+'#'+MESIN2_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN2
+	// MESIN3
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN3_r2[i].length < 1) {
+			if (MESIN3_r2[i] > 0) {
+				PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][0]+'#'+MESIN3_r2[i][1]+'#'+MESIN3_r2[i][2])
+			}else{
+				PostMESIN3.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN3_r2[i].length; a++) {
+				if (MESIN3_r2[i][a][2] > 0) {
+					PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][a][0]+'#'+MESIN3_r2[i][a][1]+'#'+MESIN3_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN3
+	// MESIN4
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN4_r2[i].length < 1) {
+			if (MESIN4_r2[i] > 0) {
+				PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][0]+'#'+MESIN4_r2[i][1]+'#'+MESIN4_r2[i][2])
+			}else{
+				PostMESIN4.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN4_r2[i].length; a++) {
+				if (MESIN4_r2[i][a][2] > 0) {
+					PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][a][0]+'#'+MESIN4_r2[i][a][1]+'#'+MESIN4_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN4
+	// MESIN5
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN5_r2[i].length < 1) {
+			if (MESIN5_r2[i] > 0) {
+				PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][0]+'#'+MESIN5_r2[i][1]+'#'+MESIN5_r2[i][2])
+			}else{
+				PostMESIN5.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN5_r2[i].length; a++) {
+				if (MESIN5_r2[i][a][2] > 0) {
+					PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][a][0]+'#'+MESIN5_r2[i][a][1]+'#'+MESIN5_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN5
+	// MESIN6
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN6_r2[i].length < 1) {
+			if (MESIN6_r2[i] > 0) {
+				PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][0]+'#'+MESIN6_r2[i][1]+'#'+MESIN6_r2[i][2])
+			}else{
+				PostMESIN6.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN6_r2[i].length; a++) {
+				if (MESIN6_r2[i][a][2] > 0) {
+					PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][a][0]+'#'+MESIN6_r2[i][a][1]+'#'+MESIN6_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN6
+	// MESIN7
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN7_r2[i].length < 1) {
+			if (MESIN7_r2[i] > 0) {
+				PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][0]+'#'+MESIN7_r2[i][1]+'#'+MESIN7_r2[i][2])
+			}else{
+				PostMESIN7.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN7_r2[i].length; a++) {
+				if (MESIN7_r2[i][a][2] > 0) {
+					PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][a][0]+'#'+MESIN7_r2[i][a][1]+'#'+MESIN7_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN7
+	// MESIN8
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN8_r2[i].length < 1) {
+			if (MESIN8_r2[i] > 0) {
+				PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][0]+'#'+MESIN8_r2[i][1]+'#'+MESIN8_r2[i][2])
+			}else{
+				PostMESIN8.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN8_r2[i].length; a++) {
+				if (MESIN8_r2[i][a][2] > 0) {
+					PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][a][0]+'#'+MESIN8_r2[i][a][1]+'#'+MESIN8_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN8
+	// MESIN9
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN9_r2[i].length < 1) {
+			if (MESIN9_r2[i] > 0) {
+				PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][0]+'#'+MESIN9_r2[i][1]+'#'+MESIN9_r2[i][2])
+			}else{
+				PostMESIN9.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN9_r2[i].length; a++) {
+				if (MESIN9_r2[i][a][2] > 0) {
+					PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][a][0]+'#'+MESIN9_r2[i][a][1]+'#'+MESIN9_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end MESIN9
+
+
+	// mesin11
+
+	for (var i = 0; i < max; i++) {
+		if (MESIN11_r2[i].length < 1) {
+			if (MESIN11_r2[i] > 0) {
+				PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][0]+'#'+MESIN11_r2[i][1]+'#'+MESIN11_r2[i][2])
+			}else{
+				PostMESIN11.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+			}
+			
+		}else{
+			for (var a = 0; a < MESIN11_r2[i].length; a++) {
+				if (MESIN11_r2[i][a][2] > 0) {
+					PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][a][0]+'#'+MESIN11_r2[i][a][1]+'#'+MESIN11_r2[i][a][2])
+				}				
+			}			
+		}		
+	}
+
+	// end mesin11
+
+	// alert(PostMESIN11);
+
+	var data = {
+		PostMESIN1:PostMESIN1,
+		PostMESIN2:PostMESIN2,
+		PostMESIN3:PostMESIN3,
+		PostMESIN4:PostMESIN4,
+		PostMESIN5:PostMESIN5,
+		PostMESIN6:PostMESIN6,
+		PostMESIN7:PostMESIN7,
+		PostMESIN8:PostMESIN8,
+		PostMESIN9:PostMESIN9,
+		PostMESIN11:PostMESIN11,
+			
+		}
+
+	$.post('{{ url("save/Schedule") }}', data,  function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
+		if(xhr.status == 200){
+			if(result.status){
+				
+
+				openSuccessGritter('Success!', result.message);
+
+
+			}
+			else{
+				audio_error.play();
+
+			}
+		}
+		else{
+			audio_error.play();
+			alert('Disconnected from sever');
+		}
+	});
+
+
+
 	
 }
 
