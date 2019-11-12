@@ -1123,10 +1123,16 @@ public function overtimeControl(Request $request)
 	->select(db::raw("count(employee_id) as jml"))
 	->get();
 
+	$employee_fc = db::table('manpower_forecasts')
+	->where('period','=',date('Y-m-01', strtotime($tanggal1)))
+	->select(db::raw("sum(forecast_mp) as jml_fc"))
+	->get();
+
 	$response = array(
 		'status' => true,
 		'report_control' => $report_control,
-		'emp_total' => $employee
+		'emp_total' => $employee,
+		'emp_fc' => $employee_fc
 	);
 
 	return Response::json($response);

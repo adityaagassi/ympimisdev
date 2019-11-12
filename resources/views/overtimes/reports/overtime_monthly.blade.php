@@ -83,14 +83,55 @@
 				<div class="box box-solid">
 					<div class="box-body">
 						<div class="col-md-12">
-							<div class="col-md-3">
-								<div class="description-block border-right" style="color: #02ff17">
-									<h5 class="description-header" style="font-size: 50px;">
-										<span class="description-percentage" id="tot_budget"></span>
-									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
-								</div>
-							</div>
+              <table width="100%">
+                <tr>
+                  <td width="1%">
+                    <div class="description-block border-right" style="color: #02ff17">
+                      <h5 class="description-header" style="font-size: 50px;">
+                        <span class="description-percentage" id="tot_budget"></span>
+                      </h5>      
+                      <span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <div class="description-block border-right" style="color: #7300ab" >
+                      <h5 class="description-header" style="font-size: 50px; ">
+                        <span class="description-percentage" id="tot_act"></span>
+                      </h5>      
+                      <span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <div class="description-block border-right text-green" id="diff_text">
+                      <h5 class="description-header" style="font-size: 50px;">
+                        <span class="description-percentage" id="tot_diff"></span>
+                      </h5>      
+                      <span class="description-text" style="font-size: 35px;">Difference</span>
+                      <br><span class="description-text" style="font-size: 18px">(ACT-FQ)</span>
+                      <br><span class="description-text" style="font-size: 35px;">差異</span>   
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <div class="description-block border-right" style="color: #02ff17">
+                      <h5 class="description-header" style="font-size: 50px;">
+                        <span class="description-percentage" id="avg_fc"></span>
+                      </h5>      
+                      <span class="description-text" style="font-size: 35px;">Forecast Average<br><span >見込みの平均値</span></span>   
+                    </div>
+                  </td>
+                  <td width="1%">
+                    <div class="description-block border-right text-yellow">
+                     <h5 class="description-header" style="font-size: 50px;">
+                      <span class="description-percentage" id="avg"></span>
+                    </h5>      
+                    <span class="description-text" style="font-size: 35px;">Average<br><span >平均</span></span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div class="col-md-3">
+
+            </div>
 
 						<!-- 	<div class="col-md-3">
 								<div class="description-block border-right" style="color: #02ff17">
@@ -102,85 +143,71 @@
 							</div> -->
 
 							<div class="col-md-3">
-								<div class="description-block border-right" style="color: #7300ab" >
-									<h5 class="description-header" style="font-size: 50px; ">
-										<span class="description-percentage" id="tot_act"></span>
-									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
-								</div>
+								
 							</div>
-							<div class="col-md-3">
-								<div class="description-block border-right text-green" id="diff_text">
-									<h5 class="description-header" style="font-size: 50px;">
-										<span class="description-percentage" id="tot_diff"></span>
-									</h5>      
-									<span class="description-text" style="font-size: 35px;">Difference</span>
-									<br><span class="description-text" style="font-size: 18px">(ACT-FQ)</span>
-									<br><span class="description-text" style="font-size: 35px;">差異</span>   
-								</div>
+							<div class="col-md-2">
+								
 							</div>
-							<div class="col-md-3">
-								<div class="description-block border-right text-yellow">
-									<h5 class="description-header" style="font-size: 50px;">
-										<span class="description-percentage" id="avg"></span>
-									</h5>      
-									<span class="description-text" style="font-size: 35px;">Average<br><span >平均</span></span>   
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+              <div class="col-md-2">
 
-			<div class="modal fade" id="myModal">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 style="float: right; " id="modal-title"></h4> 
-							<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div class="col-md-12">
-									<div id="progressbar2">
-										<center>
-											<i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
-											<br><h4>Loading ...</h4>
-										</center>
-									</div>
-									<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>No</th>
-												<th>NIK</th>
-												<th>Nama</th>
-												<th>Total Lembur (jam)</th>
-												<th>Keperluan</th>
-											</tr>
-										</thead>
-										<tbody id="tabelDetail"></tbody>
-										<tfoot>
-											
-                      <th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
-                      <th id="tot" style="font-weight: bold; size: 25px"></th>
-                      <th  style="font-weight: bold; size: 25px"></th>
+              </div>
+              <div class="col-md-2">
 
-                    </tfoot>
-                  </table>
-                </div>
               </div>
             </div>
-            <div class="modal-footer">
-             <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-           </div>
-         </div>
-         <!-- /.modal-content -->
-       </div>
-       <!-- /.modal-dialog -->
-     </div>
+          </div>
+        </div>
+      </div>
 
-   </div>
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+          <div class="modal-header">
+           <h4 style="float: right; " id="modal-title"></h4> 
+           <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+         </div>
+         <div class="modal-body">
+           <div class="row">
+            <div class="col-md-12">
+             <div id="progressbar2">
+              <center>
+               <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
+               <br><h4>Loading ...</h4>
+             </center>
+           </div>
+           <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
+            <thead style="background-color: rgba(126,86,134,.7);">
+             <tr>
+              <th>No</th>
+              <th>NIK</th>
+              <th>Nama</th>
+              <th>Total Lembur (jam)</th>
+              <th>Keperluan</th>
+            </tr>
+          </thead>
+          <tbody id="tabelDetail"></tbody>
+          <tfoot>
+
+            <th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
+            <th id="tot" style="font-weight: bold; size: 25px"></th>
+            <th  style="font-weight: bold; size: 25px"></th>
+
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+   <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
  </div>
+</div>
+<!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div>
+
+</div>
+</div>
 
 </section>
 @endsection
@@ -222,7 +249,7 @@
     var seriesDataBudget = [];
     var seriesDataAktual = [];
     var budgetHarian = [];
-    var ctg, tot_act = 0, avg = 0, tot_budget = 0;
+    var ctg, tot_act = 0, avg = 0, tot_budget = 0, avg_fc = 0;
     var tot_day_budget = 0, tot_diff;
 
     for(var i = 0; i < result.report_control.length; i++){
@@ -266,7 +293,11 @@
 
     avg = tot_act / result.emp_total[0].jml;
     avg = Math.round(avg * 100) / 100;
+
+    avg_fc = tot_day_budget / result.emp_fc[0].jml_fc;
+    avg_fc = Math.round(avg_fc * 100) / 100;
     $("#avg").html(avg);
+    $("#avg_fc").html(avg_fc);
 
     // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
     // 	return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
