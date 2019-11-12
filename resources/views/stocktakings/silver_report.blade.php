@@ -90,6 +90,7 @@
 								<th>PI</th>
 								<th>Book</th>
 								<th>Diff</th>
+								<th>Diff Abs</th>
 							</tr>
 						</thead>
 						<tbody id="modalDetailBody">
@@ -101,6 +102,7 @@
 							<th id="modalDetailTotal1"></th>
 							<th id="modalDetailTotal2"></th>
 							<th id="modalDetailTotal3"></th>
+							<th id="modalDetailTotal4"></th>
 						</tfoot>
 					</table>
 				</div>
@@ -416,7 +418,7 @@
 					},
 
 					title: {
-						text: 'asdasd',
+						text: 'Silver Stock Taking Report',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -582,18 +584,21 @@ function fillModal(cat, name){
 			var resultTotal1 = 0;
 			var resultTotal2 = 0;
 			var resultTotal3 = 0;
+			var resultTotal4 = 0;
 			$.each(result.variance, function(key, value) {
 				resultData += '<tr>';
-				resultData += '<td style="width: 10%">'+ value.material_number +'</td>';
-				resultData += '<td style="width: 40%">'+ value.material_description +'</td>';
-				resultData += '<td style="width: 5%">'+ value.storage_location +'</td>';
-				resultData += '<td style="width: 15%">'+ value.pi.toLocaleString() +'</td>';
-				resultData += '<td style="width: 15%">'+ value.book.toLocaleString() +'</td>';
-				resultData += '<td style="width: 15%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
+				resultData += '<td style="width: 1%">'+ value.material_number +'</td>';
+				resultData += '<td style="width: 5%">'+ value.material_description +'</td>';
+				resultData += '<td style="width: 1%">'+ value.storage_location +'</td>';
+				resultData += '<td style="width: 1%">'+ value.pi.toLocaleString() +'</td>';
+				resultData += '<td style="width: 1%">'+ value.book.toLocaleString() +'</td>';
+				resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
+				resultData += '<td style="width: 1%; font-weight: bold;">'+ Math.abs(value.diff_qty.toLocaleString()) +'</td>';
 				resultData += '</tr>';
 				resultTotal1 += value.pi;
 				resultTotal2 += value.book;
-				resultTotal3 += value.diff_qty;				
+				resultTotal3 += value.diff_qty;	
+				resultTotal4 += Math.abs(value.diff_qty);				
 			});
 			$('#modalDetailBody').append(resultData);
 			$('#modalDetailTotal1').html('');
@@ -602,6 +607,8 @@ function fillModal(cat, name){
 			$('#modalDetailTotal2').append(resultTotal2.toLocaleString());
 			$('#modalDetailTotal3').html('');
 			$('#modalDetailTotal3').append(resultTotal3.toLocaleString());
+			$('#modalDetailTotal4').html('');
+			$('#modalDetailTotal4').append(resultTotal4.toLocaleString());
 			$('#loading').hide();
 			$('#tableModal').show();
 		}

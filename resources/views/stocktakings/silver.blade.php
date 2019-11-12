@@ -5,6 +5,7 @@
 	thead>tr>th{
 		font-size: 16px;
 	}
+	#loading { display: none; }
 </style>
 @stop
 @section('header')
@@ -18,6 +19,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
 	<div class="row">
 		<div class="col-xs-6">
@@ -141,6 +147,7 @@
 	}
 
 	function finalConfirm(){
+		$("#loading").show();
 		var data = {
 			location : $("#location").val()
 		}
@@ -149,9 +156,11 @@
 				if(result.status){
 					itemResume();					
 					openSuccessGritter('Success', result.message);
+					$("#loading").hide();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
+					$("#loading").hide();
 				}
 			});
 		}
@@ -188,6 +197,7 @@
 	}
 
 	function confirmCount(){
+		$("#loading").show();
 		var data = {
 			id : $("#id_silver").val(),
 			count : $("#countMaterial").val(),
@@ -201,10 +211,12 @@
 				$('#countMaterial').val("0");
 				itemResume();
 				openSuccessGritter('Success', result.message);
+				$("#loading").hide();
 			}
 			else{
 				openErrorGritter('Error!', result.message);
 				$('#countMaterial').val("0");
+				$("#loading").hide();
 			}
 		});
 	}
