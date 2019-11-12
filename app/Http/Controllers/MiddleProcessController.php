@@ -728,6 +728,13 @@ class MiddleProcessController extends Controller
 			where l.operator_id = '".$nik[0]."'
 			and date(l.buffing_time) = '".$tgl."') a   GROUP BY remark order by buffing_time asc");
 
+		$cek = db::select("SELECT l.buffing_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity FROM middle_check_logs l
+			left join materials m on l.material_number = m.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where operator_id = '".$nik[0]."'
+			and date(l.buffing_time) = '".$tgl."'
+			order by buffing_time asc");
+
 		$ng_ng = db::select("select l.buffing_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from middle_ng_logs l
 			left join materials m on m.material_number = l.material_number
 			left join employees e on e.employee_id = l.employee_id
@@ -747,6 +754,7 @@ class MiddleProcessController extends Controller
 			'data_log' => $data_log,
 			'good' => $good,
 			'ng' => $ng,
+			'cek' => $cek,
 			'ng_ng' => $ng_ng,
 			'ng_qty' => $ng_qty,
 		);
@@ -1428,15 +1436,15 @@ class MiddleProcessController extends Controller
 		}
 
 		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
-			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, ((c.jml-COALESCE(ng.jml,0))/c.jml) as rate from
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employee_groups eg on eg.employee_id = m.operator_id
 			where m.location = 'bff-kensa'
 			and m.operator_id is not null
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY shift, m.operator_id) g
+			GROUP BY shift, m.operator_id) c
 			left join
 			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
@@ -1446,7 +1454,7 @@ class MiddleProcessController extends Controller
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY shift, m.operator_id) ng
-			on g.shift = ng.shift and g.operator_id = ng.operator_id) rate
+			on c.shift = ng.shift and c.operator_id = ng.operator_id) rate
 			left join employees e on e.employee_id = rate.operator_id
 			ORDER BY shift, rate.rate desc");
 
@@ -1555,14 +1563,14 @@ class MiddleProcessController extends Controller
 		}
 
 		$ng_rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
-			(select g.shift, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/g.jml*100) as rate from
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/c.jml*100) as rate from
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employee_groups eg on eg.employee_id = m.operator_id
 			where m.location = 'bff-kensa'
 			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
-			GROUP BY shift, m.operator_id) g
+			GROUP BY shift, m.operator_id) c
 			left join
 			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
@@ -1571,7 +1579,7 @@ class MiddleProcessController extends Controller
 			and m.operator_id is not null
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY shift, m.operator_id) ng
-			on g.shift = ng.shift and g.operator_id = ng.operator_id) rate
+			on c.shift = ng.shift and c.operator_id = ng.operator_id) rate
 			left join employees e on e.employee_id = rate.operator_id
 			ORDER BY shift, rate.rate desc");
 

@@ -163,9 +163,11 @@
 						</div>
 
 						<div class="col-md-6">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Good</b></h5>
 							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th colspan="5" style="text-align: center;">GOOD</th>
+									</tr>
 									<tr>
 										<th style="width: 20%">Finish Buffing</th>
 										<th>Model</th>
@@ -179,9 +181,11 @@
 							</table>
 						</div>
 						<div class="col-md-6">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Not Good</b></h5>
 							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th colspan="5" style="text-align: center;">NOT GOOD</th>
+									</tr>
 									<tr>
 										<th style="width: 20%">Finish Buffing</th>
 										<th>Model</th>
@@ -194,19 +198,39 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="col-md-8">
+							<table id="middle-cek" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="middle-cek-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th colspan="5" style="text-align: center;">TOTAL CEK</th>
+									</tr>
+									<tr>
+										<th>Finish Buffing</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="middle-cek-body">
+								</tbody>
+							</table>
+						</div>
 						<div class="col-md-12">
-							<h5 class="modal-title" style="text-transform: uppercase;"><b>Buffing Result</b></h5>
 							<table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th colspan="8" style="text-align: center;">BUFFING RESULT</th>
+									</tr>
 									<tr>
 										<th>Model</th>
 										<th>Key</th>
 										<th style="width: 13%">Akan</th>
 										<th style="width: 13%">Sedang</th>
 										<th style="width: 13%">Selesai</th>
-										<th>Standart time</th>
-										<th>Actual time</th>
-										<th>Material Qty</th>
+										<th style="width: 10%">Standart time</th>
+										<th style="width: 10%">Actual time</th>
+										<th style="width: 10%">Material Qty</th>
 									</tr>
 								</thead>
 								<tbody id="data-log-body">
@@ -491,6 +515,7 @@
 		$('#data-log-body').append().empty();
 		$('#middle-log-body').append().empty();
 		$('#middle-ng-log-body').append().empty();
+		$('#middle-cek-body').append().empty();
 		$('#ng_rate').append().empty();
 		$('#posh_rate').append().empty();
 		$('#op_eff').append().empty();
@@ -523,7 +548,6 @@
 				$('#middle-log-body').append(body);
 
 
-
 				//Middle log
 				var total_ng = 0;
 				var body = '';
@@ -543,6 +567,28 @@
 				body += '<td>'+total_ng+'</td>';
 				body += '</tr>';
 				$('#middle-ng-log-body').append(body);
+
+
+				//Middle cek
+				var total_cek = 0;
+				var body = '';
+				for (var i = 0; i < result.cek.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.cek[i].buffing_time+'</td>';
+					body += '<td>'+result.cek[i].model+'</td>';
+					body += '<td>'+result.cek[i].key+'</td>';
+					body += '<td>'+result.cek[i].op_kensa+'</td>';
+					body += '<td>'+result.cek[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_cek += parseInt(result.cek[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_cek+'</td>';
+				body += '</tr>';
+				$('#middle-cek-body').append(body);
+
 
 
 				//Data log
@@ -576,15 +622,15 @@
 
 
 				//Resume
-				var ng_rate = total_ng / total_good * 100;
-				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Good</sub> x 100%';
-				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_good +'</sub> x 100%';
+				var ng_rate = total_ng / total_cek * 100;
+				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Cek</sub> x 100%';
+				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_cek +'</sub> x 100%';
 				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
 				$('#ng_rate').append(text_ng_rate);
 
-				var posh_rate = ((total_good - total_ng) / total_good) * 100;
-				var text_posh_rate = '= <sup>(Total Good - Total NG)</sup>/<sub>Total Good</sub> x 100%';
-				text_posh_rate += '<br>= <sup>('+ total_good + ' - ' + total_ng +')</sup>/<sub>'+ total_good +'</sub> x 100%';
+				var posh_rate = ((total_cek - total_ng) / total_cek) * 100;
+				var text_posh_rate = '= <sup>(Total Cek - Total NG)</sup>/<sub>Total Cek</sub> x 100%';
+				text_posh_rate += '<br>= <sup>('+ total_cek + ' - ' + total_ng +')</sup>/<sub>'+ total_cek +'</sub> x 100%';
 				text_posh_rate += '<br>= <b>'+ posh_rate.toFixed(2) +'%</b>';
 				$('#posh_rate').append(text_posh_rate);
 
@@ -598,19 +644,19 @@
 
 		});
 
+}
+
+
+function fillChart() {
+	var group = "{{$_GET['group']}}";
+	var tanggal = "{{$_GET['tanggal']}}";
+
+	$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+	var data = {
+		tanggal:tanggal,
+		group:group,
 	}
-
-
-	function fillChart() {
-		var group = "{{$_GET['group']}}";
-		var tanggal = "{{$_GET['tanggal']}}";
-
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
-		var data = {
-			tanggal:tanggal,
-			group:group,
-		}
 
 		//Show Group				
 		group = group.split(',');
