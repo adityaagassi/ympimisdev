@@ -1070,6 +1070,74 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchBuffingHourlyNg(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$jam = [
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '00:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '01:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '01:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '03:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '03:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '05:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '05:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '07:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '07:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '09:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '09:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '11:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '11:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '14:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '14:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '16:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '16:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '18:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '18:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '20:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '20:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '22:00:00'",
+			"DATE_FORMAT(m.buffing_time,'%H:%m:%s') >= '22:00:00' and DATE_FORMAT(m.buffing_time,'%H:%m:%s') < '23:59:59'"
+		];
+
+		$ng = [];
+		$detail = [];
+
+		for ($i=0; $i < count($jam) ; $i++) {
+			$ng[$i] = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
+				(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, (COALESCE(ng.jml,0)/c.jml) as rate from
+				(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+				left join materials mt on mt.material_number = m.material_number
+				left join employee_groups eg on eg.employee_id = m.operator_id
+				where m.location = 'bff-kensa'
+				and m.operator_id is not null
+				and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+				and ".$jam[$i]."
+				GROUP BY shift, m.operator_id) c
+				left join
+				(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+				left join materials mt on mt.material_number = m.material_number
+				left join employee_groups eg on eg.employee_id = m.operator_id
+				where m.location = 'bff-kensa'
+				and m.operator_id is not null
+				and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+				and ".$jam[$i]."
+				GROUP BY shift, m.operator_id) ng
+				on c.shift = ng.shift and c.operator_id = ng.operator_id) rate
+				left join employees e on e.employee_id = rate.operator_id
+				ORDER BY shift, rate.rate desc
+				limit 5");
+
+			$detail[$i] = db::select("select m.operator_id, m.ng_name, sum(m.quantity) as qty from middle_ng_logs m
+				where date(m.buffing_time) = '".$date."'
+				and ".$jam[$i]."
+				and location = 'bff-kensa'
+				GROUP BY m.operator_id, m.ng_name");
+
+		}
+		
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+			'detail' => $detail,
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchBuffingDailyOpEff(){
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");

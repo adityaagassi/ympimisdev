@@ -61,6 +61,46 @@
 		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
+	.taranai {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #2b908f;
+		display: inline-block;
+	}
+	.solder {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #90ee7e;
+		display: inline-block;
+	}
+	.kizu {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #f45b5b;
+		display: inline-block;
+	}
+	.others {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #7798BF;
+		display: inline-block;
+	}
+	.nagare {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #aaeeee;
+		display: inline-block;
+	}
 </style>
 @endsection
 @section('header')
@@ -108,7 +148,68 @@
 				</div>			
 			</div>
 			<div class="col-xs-12" style="margin-top: 1%;">
-				<div id="container2" style="width: 100%;"></div>
+
+				<table class="table table-striped table-bordered" style="width: 100%; margin: 0px;"> 
+					<thead id="" style="background-color: rgba(126,86,134,.7);">
+						<tr>
+							<th colspan="12" style="text-align: center;">Hourly NG Rate</th>
+						</tr>
+						<tr>
+							<th style="width: 16.67%;">00.00 - 01.00</th>
+							<th style="width: 16.67%;">01.00 - 03.00</th>
+							<th style="width: 16.67%;">03.00 - 05.00</th>
+							<th style="width: 16.67%;">05.00 - 07.00</th>
+							<th style="width: 16.67%;">07.00 - 09.00</th>
+							<th style="width: 16.67%;">09.00 - 11.00</th>
+						</tr>
+					</thead>
+					<tbody id="">
+						<tr>
+							<td style="background-color: #333;"><div id="time0" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time1" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time2" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time3" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time4" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time5" style="width: 100%;"></div></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-striped table-bordered" style="width: 100%; margin: 0px;"> 
+					<thead id="" style="background-color: rgba(126,86,134,.7);">
+						<tr>
+							<th style="width: 16.67%;">11.00 - 14.00</th>
+							<th style="width: 16.67%;">14.00 - 16.00</th>
+							<th style="width: 16.67%;">16.00 - 18.00</th>
+							<th style="width: 16.67%;">18.00 - 20.00</th>
+							<th style="width: 16.67%;">20.00 - 22.00</th>
+							<th style="width: 16.67%;">22.00 - 24.00</th>
+						</tr>
+					</thead>
+					<tbody id="">
+						<tr>
+							<td style="background-color: #333;"><div id="time6" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time7" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time8" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time9" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time10" style="width: 100%;"></div></td>
+							<td style="background-color: #333;"><div id="time11" style="width: 100%;"></div></td>
+						</tr>
+						
+					</tbody>
+				</table>
+				<table class="table table-striped table-bordered" style="width: 100%; margin: 0px;"> 
+					<thead id="">
+						<tr>
+							<th colspan="6">
+								<div class="taranai"></div> Buff Tarinai
+								<div class="solder"></div> NG Soldering
+								<div class="kizu"></div> Kizu
+								<div class="others"></div> Buff Others (Aus, Nami, dll)
+								<div class="nagare"></div> Buff Nagare
+							</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -221,7 +322,7 @@
 		$('.select2').select2();
 
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 	});
 
 	function change() {
@@ -576,7 +677,6 @@
 						plotBorderWidth: null,
 						plotBackgroundImage: null
 					},
-
 					title: {
 						text: '',
 						style: {
@@ -661,7 +761,7 @@
 			$('#shiftc').addClass("col-xs-4");
 		}
 
-		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr){
 			if(result.status){
 
 				var date = result.date;
@@ -969,130 +1069,289 @@
 			}
 		});
 
-$.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, status, xhr) {
+$.get('{{ url("fetch/middle/buffing_hourly_ng") }}', data, function(result, status, xhr) {
 	if(result.status){
 
-		var seriesData = [];
-		var data = [];
+		for (var h = 0; h < 12; h++) {
+			var operator = [];
 
+			var buff_tarinai = [];
+			var ng_soldering = [];
+			var kizu = [];
+			var others = [];
+			var buff_nagare = [];
 
-		for (var i = 0; i < result.op.length; i++) {
-			data = [];
-			for (var j = 0; j < result.ng_rate.length; j++) {
-				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
-					if(Date.parse(result.ng_rate[j].week_date) > Date.parse('2019-10-01')){
-						if(result.ng_rate[j].ng_rate == 0){
-							data.push([Date.parse(result.ng_rate[j].week_date), null]);
-						}else{
+			for (var i = 0; i < result.ng[h].length; i++) {
+				var name_temp = result.ng[h][i].name.split(" ");
 
-							// data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
-
-
-							if(result.ng_rate[j].ng_rate > 100){
-								data.push([Date.parse(result.ng_rate[j].week_date), 100]);
-
-							}else{
-								data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
-							}
-						}
+				if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+					operator.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
+				}else{
+					if(name_temp[1].length > 7){
+						operator.push(name_temp[0]+'. '+name_temp[1].charAt(0));
 					}else{
-						data.push([Date.parse(result.ng_rate[j].week_date), null]);
+						operator.push(result.ng[h][i].name);
+					}
+				}
 
+				buff_tarinai.push(0);
+				ng_soldering.push(0);
+				kizu.push(0);
+				others.push(0);
+				buff_nagare.push(0);
+
+				for (var j = 0; j < result.detail[h].length; j++) {
+					if(result.ng[h][i].operator_id == result.detail[h][j].operator_id){
+						if(result.detail[h][j].ng_name == 'Buff Tarinai'){
+							buff_tarinai[i] = result.detail[h][j].qty / result.ng[h][i].tot * 100;
+						}else if(result.detail[h][j].ng_name == 'NG Soldering'){
+							ng_soldering[i] = result.detail[h][j].qty / result.ng[h][i].tot * 100;
+						}else if(result.detail[h][j].ng_name == 'Kizu'){
+							kizu[i] = result.detail[h][j].qty / result.ng[h][i].tot * 100;
+						}else if(result.detail[h][j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+							others[i] = result.detail[h][j].qty / result.ng[h][i].tot * 100;
+						}else if(result.detail[h][j].ng_name == 'Buff Nagare'){
+							buff_nagare[i] = result.detail[h][j].qty / result.ng[h][i].tot * 100;
+						}
 					}
 				}
 			}
-			seriesData.push({name : result.op[i].name, data: data});
+
+			Highcharts.chart('time'+h, {
+				chart: {
+					type: 'column',
+					backgroundColor: null,
+				},
+				title: {
+					text: '',
+					style: {
+						display: 'none'
+					}
+				},
+				xAxis: {
+					categories: operator,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				yAxis: {
+					title: {
+						text: ''
+					},
+					labels: {
+						enabled:false
+					},
+					stackLabels: {
+						enabled: true,
+						formatter: function () {
+							return this.total.toFixed(2) + "%";
+						},
+						rotation: -90,
+						style: {
+							fontWeight: 'bold',
+							color: 'white',
+							fontSize: '1vw'
+						}
+					},
+				},
+				exporting: {
+					enabled: false 
+				},
+				legend: {
+					enabled:false
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="font-weight: bold;">{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				plotOptions: {
+					column: {
+						stacking: 'normal',
+					},
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							color: '#212121',
+							style:{
+								fontSize: '12px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer'
+					}
+				},credits: {
+					enabled: false
+				},
+				series: [
+				{
+					name: 'Buff Tarinai',
+					data: buff_tarinai,
+					color: '#2b908f'
+				},
+				{
+					name: 'NG Soldering',
+					data: ng_soldering,
+					color: '#90ee7e'
+				},
+				{
+					name: 'Kizu',
+					data: kizu,
+					color: '#f45b5b'
+				},
+				{
+					name: 'Buff Others (Aus, Nami, dll)',
+					data: others,
+					color: '#7798BF'
+				},
+				{
+					name: 'BUff Nagare',
+					data: buff_nagare,
+					color: '#aaeeee'
+				}
+				]
+			});
+
 		}
 
-		var chart = Highcharts.stockChart('container2', {
-			chart:{
-				type:'spline',
-			},
-			rangeSelector: {
-				selected: 0
-			},
-			scrollbar:{
-				enabled:false
-			},
-			navigator:{
-				enabled:false
-			},
-			title: {
-				text: 'Daily NG Rate By Operators',
-				style: {
-					fontSize: '30px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Last Update: '+getActualFullDate(),
-				style: {
-					fontSize: '18px',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					text: 'NG Rate (%)'
-				},
-				plotLines: [{
-					color: '#FFFFFF',
-					width: 2,
-					value: 0,
-					dashStyles: 'longdashdot'
-				}],
-			},
-			xAxis: {
-				categories: 'datetime',
-				tickInterval: 24 * 3600 * 1000 
-			},
-			tooltip: {
-				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
-				split: false,
-			},
-			legend : {
-				enabled:false
-			},
-			credits: {
-				enabled:false
-			},
-			plotOptions: {
-				series: {
-					animation: false,
-					// dataLabels: {
-					// 	enabled: true,
-					// 	format: '{point.y:,.1f}%',
-					// },
-					connectNulls: true,
-					lineWidth: 1,
-					shadow: {
-						width: 1,
-						opacity: 0.4
-					},
-					label: {
-						connectorAllowed: false
-					},
-					cursor: 'pointer',
-				}
-			},
-			series: seriesData,
-			responsive: {
-				rules: [{
-					condition: {
-						maxWidth: 500
-					},
-					chartOptions: {
-						legend: {
-							layout: 'horizontal',
-							align: 'center',
-							verticalAlign: 'bottom'
-						}
-					}
-				}]
-			}
-		});
+
 	}
 });
+
+// $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, status, xhr) {
+// 	if(result.status){
+
+// 		var seriesData = [];
+// 		var data = [];
+
+
+// 		for (var i = 0; i < result.op.length; i++) {
+// 			data = [];
+// 			for (var j = 0; j < result.ng_rate.length; j++) {
+// 				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
+// 					if(Date.parse(result.ng_rate[j].week_date) > Date.parse('2019-10-01')){
+// 						if(result.ng_rate[j].ng_rate == 0){
+// 							data.push([Date.parse(result.ng_rate[j].week_date), null]);
+// 						}else{
+
+// 							// data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+
+
+// 							if(result.ng_rate[j].ng_rate > 100){
+// 								data.push([Date.parse(result.ng_rate[j].week_date), 100]);
+
+// 							}else{
+// 								data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+// 							}
+// 						}
+// 					}else{
+// 						data.push([Date.parse(result.ng_rate[j].week_date), null]);
+
+// 					}
+// 				}
+// 			}
+// 			seriesData.push({name : result.op[i].name, data: data});
+// 		}
+
+// 		var chart = Highcharts.stockChart('container2', {
+// 			chart:{
+// 				type:'spline',
+// 			},
+// 			rangeSelector: {
+// 				selected: 0
+// 			},
+// 			scrollbar:{
+// 				enabled:false
+// 			},
+// 			navigator:{
+// 				enabled:false
+// 			},
+// 			title: {
+// 				text: 'Daily NG Rate By Operators',
+// 				style: {
+// 					fontSize: '30px',
+// 					fontWeight: 'bold'
+// 				}
+// 			},
+// 			subtitle: {
+// 				text: 'Last Update: '+getActualFullDate(),
+// 				style: {
+// 					fontSize: '18px',
+// 					fontWeight: 'bold'
+// 				}
+// 			},
+// 			yAxis: {
+// 				title: {
+// 					text: 'NG Rate (%)'
+// 				},
+// 				plotLines: [{
+// 					color: '#FFFFFF',
+// 					width: 2,
+// 					value: 0,
+// 					dashStyles: 'longdashdot'
+// 				}],
+// 			},
+// 			xAxis: {
+// 				categories: 'datetime',
+// 				tickInterval: 24 * 3600 * 1000 
+// 			},
+// 			tooltip: {
+// 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+// 				split: false,
+// 			},
+// 			legend : {
+// 				enabled:false
+// 			},
+// 			credits: {
+// 				enabled:false
+// 			},
+// 			plotOptions: {
+// 				series: {
+// 					animation: false,
+// 					// dataLabels: {
+// 					// 	enabled: true,
+// 					// 	format: '{point.y:,.1f}%',
+// 					// },
+// 					connectNulls: true,
+// 					lineWidth: 1,
+// 					shadow: {
+// 						width: 1,
+// 						opacity: 0.4
+// 					},
+// 					label: {
+// 						connectorAllowed: false
+// 					},
+// 					cursor: 'pointer',
+// 				}
+// 			},
+// 			series: seriesData,
+// 			responsive: {
+// 				rules: [{
+// 					condition: {
+// 						maxWidth: 500
+// 					},
+// 					chartOptions: {
+// 						legend: {
+// 							layout: 'horizontal',
+// 							align: 'center',
+// 							verticalAlign: 'bottom'
+// 						}
+// 					}
+// 				}]
+// 			}
+// 		});
+// 	}
+// });
 }
 
 </script>
