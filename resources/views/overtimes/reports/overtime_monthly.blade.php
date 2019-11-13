@@ -62,7 +62,7 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px;">
+<section class="content" style="padding-left: 0px; padding-right: 0px; padding-top: 0px">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-12">
