@@ -111,9 +111,14 @@ Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 Route::get('index/Schedule', 'InjectionsController@schedule');
 Route::get('fetch/Schedulepart', 'InjectionsController@getSchedule');
 Route::get('fetch/getStatusMesin', 'InjectionsController@getStatusMesin');
+Route::get('fetch/schedule', 'InjectionsController@fetchSchedule');
 
 Route::get('fetch/getDateWorking', 'InjectionsController@getDateWorking');
 Route::post('save/Schedule', 'InjectionsController@saveSchedule');
+
+Route::post('save/Scheduletmp', 'InjectionsController@saveScheduleTmp');
+
+Route::get('fetch/getChartPlan', 'InjectionsController@getChartPlan');
 //end schedule
 
 //report stock
@@ -137,8 +142,10 @@ Route::get('index/opmesin', 'InjectionsController@opmesin');
 Route::get('input/statusmesin', 'InjectionsController@inputStatusMesin');
 Route::post('delete/statusmesin', 'InjectionsController@deleteStatusMesin');
 Route::get('get/statusmesin', 'InjectionsController@getStatusMesin');
+
 Route::post('input/logmesin', 'InjectionsController@logmesin');
 Route::get('get/getDataMesinShootLog', 'InjectionsController@getDataMesinShootLog');
+Route::get('get/getDataMesinStatusLog', 'InjectionsController@getDataMesinStatusLog');
 
 // end operator
 
@@ -754,6 +761,7 @@ Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController
 Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessController@fetchReportOpTimeQty');
 
 
+Route::get('fetch/middle/buffing_hourly_ng', 'MiddleProcessController@fetchBuffingHourlyNg');
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingNgKey');
@@ -1229,7 +1237,9 @@ Route::get('index/production_report/fetchReportConditional/{id}', 'ProductionRep
 Route::get('index/production_report/fetchReportAudit/{id}', 'ProductionReportController@fetchReportAudit');
 Route::get('index/production_report/fetchReportTraining/{id}', 'ProductionReportController@fetchReportTraining');
 Route::get('index/production_report/fetchReportSampling/{id}', 'ProductionReportController@fetchReportSampling');
+Route::get('index/production_report/fetchReportLaporanAktivitas/{id}', 'ProductionReportController@fetchReportLaporanAktivitas');
 Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportController@detailProductionReport');
+Route::get('fetch/production_report/detail_training/{id}', 'ProductionReportController@detailTraining');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 
 
@@ -1339,6 +1349,24 @@ Route::get('index/audit_report_activity/create/{id}', 'AuditReportActivityContro
 Route::post('index/audit_report_activity/store/{id}', 'AuditReportActivityController@store');
 Route::get('index/audit_report_activity/show/{id}/{audit_report_id}', 'AuditReportActivityController@show');
 Route::get('index/audit_report_activity/destroy/{id}/{audit_report_id}', 'AuditReportActivityController@destroy');
+Route::get('index/audit_report_activity/edit/{id}/{audit_report_id}', 'AuditReportActivityController@edit');
+Route::post('index/audit_report_activity/update/{id}/{audit_report_id}', 'AuditReportActivityController@update');
+Route::get('index/audit_report_activity/report_audit_activity/{id}', 'AuditReportActivityController@report_audit_activity');
+Route::get('index/audit_report_activity/fetchReport/{id}', 'AuditReportActivityController@fetchReport');
+Route::get('fetch/audit_report_activity/detail_laporan_aktivitas/{id}', 'AuditReportActivityController@detail_laporan_aktivitas');
+Route::post('index/audit_report_activity/print_audit_report/{id}', 'AuditReportActivityController@print_audit_report');
+Route::get('index/audit_report_activity/print_audit_report_chart/{id}/{subsection}/{month}', 'AuditReportActivityController@print_audit_report_chart');
+Route::get('index/audit_report_activity/print_audit_report_email/{id}/{subsection}/{month}', 'AuditReportActivityController@print_audit_report_email');
+Route::post('index/audit_report_activity/send_email/{id}', 'AuditReportActivityController@sendemail');
+Route::post('index/audit_report_activity/approval/{id}', 'AuditReportActivityController@approval');
+
+//Interview
+Route::get('index/interview/index/{id}', 'InterviewController@index');
+Route::post('index/interview/filter_interview/{id}', 'InterviewController@filter_interview');
+Route::get('index/interview/show/{id}/{interview_id}', 'InterviewController@show');
+Route::get('index/interview/destroy/{id}/{interview_id}', 'InterviewController@destroy');
+Route::get('index/interview/create/{id}', 'InterviewController@create');
+Route::post('index/interview/store/{id}', 'InterviewController@store');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
@@ -1361,11 +1389,12 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 	Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
-	Route::get('index/qc_report/sendemail/{id}', 'QcReportController@sendemail');
+	Route::get('index/qc_report/sendemail/{id}/{posisi}', 'QcReportController@sendemail');
 
 	//verifikasi CPAR
-
+	Route::get('index/qc_report/statuscpar/{id}', 'QcReportController@statuscpar');
 	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
+	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
 
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
