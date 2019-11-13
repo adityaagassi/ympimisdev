@@ -1152,11 +1152,11 @@ $.get('{{ url("fetch/middle/buffing_hourly_ng") }}', data, function(result, stat
 						formatter: function () {
 							return this.total.toFixed(2) + "%";
 						},
-						rotation: -90,
+						// rotation: -90,
 						style: {
 							fontWeight: 'bold',
 							color: 'white',
-							fontSize: '1vw'
+							fontSize: '12px'
 						}
 					},
 				},
@@ -1228,130 +1228,6 @@ $.get('{{ url("fetch/middle/buffing_hourly_ng") }}', data, function(result, stat
 	}
 });
 
-// $.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}', function(result, status, xhr) {
-// 	if(result.status){
-
-// 		var seriesData = [];
-// 		var data = [];
-
-
-// 		for (var i = 0; i < result.op.length; i++) {
-// 			data = [];
-// 			for (var j = 0; j < result.ng_rate.length; j++) {
-// 				if(result.op[i].operator_id == result.ng_rate[j].operator_id){
-// 					if(Date.parse(result.ng_rate[j].week_date) > Date.parse('2019-10-01')){
-// 						if(result.ng_rate[j].ng_rate == 0){
-// 							data.push([Date.parse(result.ng_rate[j].week_date), null]);
-// 						}else{
-
-// 							// data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
-
-
-// 							if(result.ng_rate[j].ng_rate > 100){
-// 								data.push([Date.parse(result.ng_rate[j].week_date), 100]);
-
-// 							}else{
-// 								data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
-// 							}
-// 						}
-// 					}else{
-// 						data.push([Date.parse(result.ng_rate[j].week_date), null]);
-
-// 					}
-// 				}
-// 			}
-// 			seriesData.push({name : result.op[i].name, data: data});
-// 		}
-
-// 		var chart = Highcharts.stockChart('container2', {
-// 			chart:{
-// 				type:'spline',
-// 			},
-// 			rangeSelector: {
-// 				selected: 0
-// 			},
-// 			scrollbar:{
-// 				enabled:false
-// 			},
-// 			navigator:{
-// 				enabled:false
-// 			},
-// 			title: {
-// 				text: 'Daily NG Rate By Operators',
-// 				style: {
-// 					fontSize: '30px',
-// 					fontWeight: 'bold'
-// 				}
-// 			},
-// 			subtitle: {
-// 				text: 'Last Update: '+getActualFullDate(),
-// 				style: {
-// 					fontSize: '18px',
-// 					fontWeight: 'bold'
-// 				}
-// 			},
-// 			yAxis: {
-// 				title: {
-// 					text: 'NG Rate (%)'
-// 				},
-// 				plotLines: [{
-// 					color: '#FFFFFF',
-// 					width: 2,
-// 					value: 0,
-// 					dashStyles: 'longdashdot'
-// 				}],
-// 			},
-// 			xAxis: {
-// 				categories: 'datetime',
-// 				tickInterval: 24 * 3600 * 1000 
-// 			},
-// 			tooltip: {
-// 				pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
-// 				split: false,
-// 			},
-// 			legend : {
-// 				enabled:false
-// 			},
-// 			credits: {
-// 				enabled:false
-// 			},
-// 			plotOptions: {
-// 				series: {
-// 					animation: false,
-// 					// dataLabels: {
-// 					// 	enabled: true,
-// 					// 	format: '{point.y:,.1f}%',
-// 					// },
-// 					connectNulls: true,
-// 					lineWidth: 1,
-// 					shadow: {
-// 						width: 1,
-// 						opacity: 0.4
-// 					},
-// 					label: {
-// 						connectorAllowed: false
-// 					},
-// 					cursor: 'pointer',
-// 				}
-// 			},
-// 			series: seriesData,
-// 			responsive: {
-// 				rules: [{
-// 					condition: {
-// 						maxWidth: 500
-// 					},
-// 					chartOptions: {
-// 						legend: {
-// 							layout: 'horizontal',
-// 							align: 'center',
-// 							verticalAlign: 'bottom'
-// 						}
-// 					}
-// 				}]
-// 			}
-// 		});
-// 	}
-// });
 }
 
 </script>

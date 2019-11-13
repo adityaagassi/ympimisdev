@@ -30,10 +30,30 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
+				<div class="col-xs-3" style="padding-right: 0; color:#212121;">
+					<select class="form-control select2" multiple="multiple" id='operator' data-placeholder="Select Operators" style="width: 100%;">
+						@foreach($emps as $emp)
+						<option value="{{ $emp->employee_id }}">{{ $emp->employee_id }} - {{ $emp->name }}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 
-			<div id="container1" style="width: 100%; height: 550px;"></div>
+			<div class="col-xs-12">
+				<div id="content1">
+					<div id="container1" style="width: 100%; margin-top: 1%;"></div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div id="content2">
+					<div id="container2" style="width: 100%; margin-top: 1%;"></div>					
+				</div>
+			</div>
+
 		</div>
 	</div>
 
@@ -53,6 +73,8 @@
 	
 
 	jQuery(document).ready(function(){
+		$('.select2').select2();
+
 		fillChart();
 		setInterval(fillChart, 10000);
 
@@ -71,8 +93,7 @@
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
+				[0, '#2a2a2b']
 				]
 			},
 			style: {
@@ -284,7 +305,14 @@
 	function fillChart() {
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-		$.get('{{ url("fetch/middle/buffing_daily_op_eff") }}', function(result, status, xhr) {
+
+		var operator = $('#operator').val();;
+
+		var data = {
+			operator:operator,
+		}
+
+		$.get('{{ url("fetch/middle/buffing_daily_op_eff") }}',data, function(result, status, xhr) {
 			if(result.status){
 
 				var seriesData = [];
@@ -327,6 +355,7 @@
 				var chart = Highcharts.stockChart('container1', {
 					chart:{
 						type:'spline',
+						animation: false,
 					},
 					rangeSelector: {
 						selected: 0
@@ -341,13 +370,6 @@
 						text: 'Daily Operators Overall Efficiency',
 						style: {
 							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Last Update: '+getActualFullDate(),
-						style: {
-							fontSize: '18px',
 							fontWeight: 'bold'
 						}
 					},
@@ -382,14 +404,18 @@
 								enabled: true,
 								format: '{point.y:,.2f}%',
 							},
+
+							animation: false,
 							connectNulls: true,
+							lineWidth: 1,
 							shadow: {
-								width: 3,
+								width: 1,
 								opacity: 0.4
 							},
 							label: {
 								connectorAllowed: false
 							},
+							cursor: 'pointer',
 
 						}
 					},
@@ -414,7 +440,126 @@
 			}
 		});
 
-}
+
+
+		$.get('{{ url("fetch/middle/buffing_daily_op_ng_rate") }}',data, function(result, status, xhr) {
+			if(result.status){
+
+				var seriesData = [];
+				var data = [];
+
+
+				for (var i = 0; i < result.op.length; i++) {
+					data = [];
+					for (var j = 0; j < result.ng_rate.length; j++) {
+						if(result.op[i].operator_id == result.ng_rate[j].operator_id){
+							if(Date.parse(result.ng_rate[j].week_date) > Date.parse('2019-10-01')){
+								if(result.ng_rate[j].ng_rate == 0){
+									data.push([Date.parse(result.ng_rate[j].week_date), null]);
+								}else{
+									if(result.ng_rate[j].ng_rate > 100){
+										data.push([Date.parse(result.ng_rate[j].week_date), 100]);
+
+									}else{
+										data.push([Date.parse(result.ng_rate[j].week_date), result.ng_rate[j].ng_rate]);
+									}
+								}
+							}else{
+								data.push([Date.parse(result.ng_rate[j].week_date), null]);
+
+							}
+						}
+					}
+					seriesData.push({name : result.op[i].name, data: data});
+				}
+
+				var chart = Highcharts.stockChart('container2', {
+					chart:{
+						type:'spline',
+						animation: false,
+					},
+					rangeSelector: {
+						selected: 0
+					},
+					scrollbar:{
+						enabled:false
+					},
+					navigator:{
+						enabled:false
+					},
+					title: {
+						text: 'Daily NG Rate By Operators',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'NG Rate (%)'
+						},
+						plotLines: [{
+							color: '#FFFFFF',
+							width: 2,
+							value: 0,
+							dashStyles: 'longdashdot'
+						}],
+					},
+					xAxis: {
+						categories: 'datetime',
+						tickInterval: 24 * 3600 * 1000 
+					},
+					tooltip: {
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b>',
+						split: false,
+					},
+					legend : {
+						enabled:false
+					},
+					credits: {
+						enabled:false
+					},
+					plotOptions: {
+						series: {
+							animation: false,
+							connectNulls: true,
+							lineWidth: 1,
+							shadow: {
+								width: 1,
+								opacity: 0.4
+							},
+							label: {
+								connectorAllowed: false
+							},
+							cursor: 'pointer',
+						}
+					},
+					series: seriesData,
+					responsive: {
+						rules: [{
+							condition: {
+								maxWidth: 500
+							},
+							chartOptions: {
+								legend: {
+									layout: 'horizontal',
+									align: 'center',
+									verticalAlign: 'bottom'
+								}
+							}
+						}]
+					}
+				});
+			}
+		});
+
+
+
+
+
+
+
+	}
 
 
 

@@ -86,9 +86,14 @@ class MiddleProcessController extends Controller
 		$title = 'Daily Buffing Efficiency';
 		$title_jp = '';
 
+		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
+			left join employees e on eg.employee_id = e.employee_id
+			order by e.`name`");
+
 		return view('processes.middle.display.buffing_trend_eff', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
+			'emps' => $emps,
 		))->with('page', 'Daily Buffing Efficiency')->with('head', 'Middle Process');
 	}
 
@@ -690,7 +695,7 @@ class MiddleProcessController extends Controller
 		}
 
 		$queue = db::connection('digital_kanban')->select("SELECT q.idx, q.rack, q.material_num, m.material_description, q.material_qty, q.created_at FROM buffing_queues q left join materials m on q.material_num = m.material_number ".$rack."
-			order by idx asc");
+			order by created_at asc");
 
 		return DataTables::of($queue)
 		->addColumn('check', function($queue){
@@ -1138,34 +1143,52 @@ class MiddleProcessController extends Controller
 
 	}
 
-	public function fetchBuffingDailyOpEff(){
+	public function fetchBuffingDailyOpEff(Request $request){
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");
+
+		$where_op = "";
+		$where_op2 = "";
+		if($request->get('operator') != null) {
+			$operators = $request->get('operator');
+			$operator = "";
+
+			for($x = 0; $x < count($operators); $x++) {
+				$operator = $operator."'".$operators[$x]."'";
+				if($x != count($operators)-1){
+					$operator = $operator.",";
+				}
+			}
+			$where_op = " and m.operator_id in (".$operator.") ";
+			$where_op2 = " and operator_id in (".$operator.") ";
+		}else{
+			$where_op = " and m.operator_id is not null ";
+		}
 
 		$rate = db::select("select date.week_date, date.operator_id, e.`name`, COALESCE(pr.rate,0) as rate  from
 			(select week_date, operator_id from
 			(select week_date from weekly_calendars where week_date BETWEEN '".$datefrom."' and '".$dateto."') tgl
 			cross join
-			(select DISTINCT operator_id from middle_logs where DATE_FORMAT(buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op) date
+			(select DISTINCT m.operator_id from middle_check_logs m
+			where m.operator_id in ('18084766', '18084818')
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op) date
 			left join
 			(select rate.tgl, rate.operator_id, rate.tot, rate.ng, rate.rate from
-			(select g.tgl, g.operator_id, g.jml as tot, COALESCE(ng.jml,0) as ng, ((g.jml-COALESCE(ng.jml,0))/g.jml) as rate from
-			(select DATE_FORMAT(m.buffing_time,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select c.tgl, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, ((c.jml-COALESCE(ng.jml,0))/c.jml) as rate from
+			(select DATE_FORMAT(m.buffing_time,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null
+			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-			GROUP BY tgl, m.operator_id) g
+			GROUP BY tgl, m.operator_id) c
 			left join
 			(select DATE_FORMAT(m.buffing_time,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null
+			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl, m.operator_id) ng
-			on g.tgl = ng.tgl and g.operator_id = ng.operator_id) rate
+			on c.tgl = ng.tgl and c.operator_id = ng.operator_id) rate
 			ORDER BY tgl desc) pr
 			on date.week_date = pr.tgl and date.operator_id = pr.operator_id
 			left join employees e on e.employee_id = date.operator_id
@@ -1174,7 +1197,8 @@ class MiddleProcessController extends Controller
 		$time_eff = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
 			from data_log l left join standart_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-			GROUP BY tgl, l.operator_id;");
+			".$where_op2."
+			GROUP BY tgl, l.operator_id");
 
 		$op = db::select("select DISTINCT m.operator_id, e.`name` from middle_logs m left join employees e on m.operator_id = e.employee_id where DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'");
 
@@ -1439,36 +1463,49 @@ class MiddleProcessController extends Controller
 	}
 
 
-	public function fetchBuffingOpNgRate(){
+	public function fetchBuffingOpNgRate(Request $request){
 		$datefrom = date("Y-m-d", strtotime("-3 Months"));
 		$dateto = date("Y-m-d");
+
+		$where_op = "";
+		if($request->get('operator') != null) {
+			$operators = $request->get('operator');
+			$operator = "";
+
+			for($x = 0; $x < count($operators); $x++) {
+				$operator = $operator."'".$operators[$x]."'";
+				if($x != count($operators)-1){
+					$operator = $operator.",";
+				}
+			}
+			$where_op = " and m.operator_id in (".$operator.") ";
+		}else{
+			$where_op = " and m.operator_id is not null ";
+		}
 
 		$ng_rate = db::select("select date.week_date, date.operator_id, date.`name`, (COALESCE(rate.rate,0)*100) as ng_rate  from
 			(select * from (select week_date from weekly_calendars
 			WHERE week_date BETWEEN '".$datefrom."' and '".$dateto."') calender
 			cross join
-			(select distinct m.operator_id, e.`name` from middle_logs m
+			(select distinct m.operator_id, e.`name` from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employees e on e.employee_id = m.operator_id
-			where location = 'bff-kensa'
-			and m.operator_id is not null
+			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op
 			order by week_date, operator_id asc) date
 			left join
 			(select g.tgl, g.operator_id, g.jml as g, ng.jml as ng, (ng.jml/g.jml) as rate from
-			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_logs m
+			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null
+			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl, m.operator_id) g
 			left join
 			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
-			where location = 'bff-kensa'
-			and m.operator_id is not null
+			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
 			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl, m.operator_id) ng

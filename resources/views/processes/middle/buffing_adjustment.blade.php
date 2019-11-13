@@ -105,12 +105,13 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-8 pull-left">
+		<div class="col-xs-9 pull-left">
 			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th>id</th>
-						<th width="15%">Rack</th>
+						<th width="1%">No</th>
+						<th width="10%">Idx</th>
+						<th width="9%">Rack</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
 						<th width="1%">Quantity</th>
@@ -129,11 +130,12 @@
 						<th></th>
 						<th></th>
 						<th></th>
+						<th></th>
 					</tr>
 				</tfoot>
 			</table>	
 		</div>
-		<div class="col-xs-4 pull-right">
+		<div class="col-xs-3 pull-right">
 			<div class="row">
 				<div class="col-xs-12" style="padding-right: 0px">
 					<b style="font-size: 13pt">item selected : </b><br>
@@ -340,11 +342,15 @@
 					}
 				}
 				]},
+				"columnDefs": [ {
+					"searchable": false,
+					"orderable": false,
+					"targets": 0
+				} ],
 				'paging': true,
 				'lengthChange': true,
 				'searching': true,
 				'ordering': false,
-				'order': [],
 				'info': true,
 				'autoWidth': true,
 				"sPaginationType": "full_numbers",
@@ -356,7 +362,9 @@
 					"url" : "{{ url("fetch/middle/buffing_adjustment") }}",
 					"data" : data
 				},
+
 				"columns": [
+				{ "data": "idx"},
 				{ "data": "idx"},
 				{ "data": "rack"},
 				{ "data": "material_num"},
@@ -379,6 +387,13 @@
 		} );
 
 		$('#tableAdjust tfoot tr').appendTo('#tableAdjust thead');
+
+
+		table.on( 'order.dt search.dt', function () {
+			table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 	}
 
 
