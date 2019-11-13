@@ -53,6 +53,9 @@
     margin-top: 0px!important;
   }
   #loading, #error { display: none; }
+  .description-block {
+    margin-top: 0px
+  }
 </style>
 @stop
 @section('header')
@@ -81,50 +84,50 @@
 			</div>
 			<div class="col-md-12">
 				<div class="box box-solid">
-					<div class="box-body">
+					<div class="box-body" style="padding-top: 0px">
 						<div class="col-md-12">
               <table width="100%">
                 <tr>
                   <td width="1%">
                     <div class="description-block border-right" style="color: #02ff17">
-                      <h5 class="description-header" style="font-size: 50px;">
+                      <h5 class="description-header" style="font-size: 48px;">
                         <span class="description-percentage" id="tot_budget"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
+                      <span class="description-text" style="font-size: 32px;">Total Forecast<br><span>単月見込み</span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right" style="color: #7300ab" >
-                      <h5 class="description-header" style="font-size: 50px; ">
+                      <h5 class="description-header" style="font-size: 48px; ">
                         <span class="description-percentage" id="tot_act"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
+                      <span class="description-text" style="font-size: 32px;">Total Actual<br><span >単月実績</span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right text-green" id="diff_text">
-                      <h5 class="description-header" style="font-size: 50px;">
+                      <h5 class="description-header" style="font-size: 48px;">
                         <span class="description-percentage" id="tot_diff"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 35px;">Difference</span>
-                      <br><span class="description-text" style="font-size: 18px">(ACT-FQ)</span>
-                      <br><span class="description-text" style="font-size: 35px;">差異</span>   
+                      <span class="description-text" style="font-size: 32px;">Difference</span>
+                      <br><span class="description-text" style="font-size: 16px">(ACT-FQ)</span>
+                      <br><span class="description-text" style="font-size: 32px;">差異</span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right" style="color: #02ff17">
-                      <h5 class="description-header" style="font-size: 50px;">
+                      <h5 class="description-header" style="font-size: 48px;">
                         <span class="description-percentage" id="avg_fc"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 35px;">Forecast Average<br><span >見込みの平均値</span></span>   
+                      <span class="description-text" style="font-size: 32px;">Forecast Average<br><span >見込みの平均値</span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right text-yellow">
-                     <h5 class="description-header" style="font-size: 50px;">
+                     <h5 class="description-header" style="font-size: 48px;">
                       <span class="description-percentage" id="avg"></span>
                     </h5>      
-                    <span class="description-text" style="font-size: 35px;">Average<br><span >平均</span></span>
+                    <span class="description-text" style="font-size: 32px;">Average<br><span >平均</span></span>
                   </div>
                 </td>
               </tr>
