@@ -36,7 +36,7 @@
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-1">
-					<label style="color: white;">Stuffing Date From:</label>
+					<label style="color: white;">Date From:</label>
 				</div>
 				<div class="col-xs-2">
 					<div class="form-group">
@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				<div class="col-xs-1">
-					<label style="color: white;">Stuffing Date To:</label>
+					<label style="color: white;">Date To:</label>
 				</div>
 				<div class="col-xs-2">
 					<div class="form-group">
@@ -513,62 +513,62 @@
 						name: 'Variance',
 						data: varFL91,
 						stack: 'FL91',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
 						data: varFL51,
 						stack: 'FL51',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
 						data: varFL21,
 						stack: 'FL21',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
 						data: varFLA1,
 						stack: 'FLA1',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
 						data: varFLA0,
 						stack: 'FLA0',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
 						data: varMSCR,
 						stack: 'MSCR',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgb(255,116,116)'
 					}, {
 						name: 'OK',
 						data: okFL91,
 						stack: 'FL91',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okFL51,
 						stack: 'FL51',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okFL21,
 						stack: 'FL21',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okFLA1,
 						stack: 'FLA1',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okFLA0,
 						stack: 'FLA0',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okMSCR,
 						stack: 'MSCR',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgb(144,238,126)'
 					}]
 				});
 				$('.highcharts-xaxis-labels text').on('click', function () {
