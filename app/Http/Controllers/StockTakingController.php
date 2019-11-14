@@ -24,31 +24,32 @@ class StockTakingController extends Controller
 	public function indexSilver($id){
 		if($id == 'fl_assembly'){
 			$title = 'Silver Stock Taking (Flute Assembly)';
-			$title_jp = '????';
+			$title_jp = 'FL組み立て職場の銀材棚卸';
 			$location = 'FL ASSEMBLY';
 		}
 
 		if($id == 'fl_middle'){
 			$title = 'Silver Stock Taking (Flute Middle)';
-			$title_jp = '????';
+			$title_jp = 'FL中間工程の銀材棚卸';
 			$location = 'FL MIDDLE';
 		}
 
 		if($id == 'fl_welding'){
 			$title = 'Silver Stock Taking (Flute Welding)';
-			$title_jp = '????';
+			$title_jp = 'FL溶接職場の銀材棚卸';
 			$location = 'FL WELDING';
+
 		}
 
 		if($id == 'fl_bpro'){
 			$title = 'Silver Stock Taking (Flute Body Process)';
-			$title_jp = '????';
+			$title_jp = 'FL管体職場の銀材棚卸';
 			$location = 'FL BODY PROCESS';
 		}
 
 		if($id == 'fl_mpro'){
 			$title = 'Silver Stock Taking (Flute Material Process)';
-			$title_jp = '????';
+			$title_jp = 'FL部品加工職場の銀材棚卸';
 			$location = 'FL MATERIAL PROCESS';
 		}
 
