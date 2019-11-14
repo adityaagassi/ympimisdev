@@ -191,7 +191,7 @@
 										<select class="form-control select2" data-placeholder="Select Material" name="material" id="material" style="width: 100%">
 											<option value=""></option>
 											@foreach($materials as $material) 
-											<option value="{{ $material->material_number }}-{{ $material->model }}">{{ $material->material_description }}</option>
+											<option value="{{ $material->material_number }}-{{ $material->model }}">{{ $material->key }} - {{ $material->model }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -203,7 +203,7 @@
 										<input type="number" class="form-control" id="kanban" placeholder="Kanban Qty" required>
 									</div>
 								</div>
-								<div class="form-group row" align="right">
+								{{-- <div class="form-group row" align="right">
 									<label class="col-sm-4">Position<span class="text-red">*</span></label>
 									<div class="col-sm-3" align="left">
 										<select class="form-control select2" data-placeholder="Select Position" name="add" id="add" style="width: 100%">
@@ -212,9 +212,36 @@
 											<option value="bottom">Bottom</option>
 										</select>
 									</div>
+								</div> --}}
 
-
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Date<span class="text-red">*</span></label>
+									<div class="col-sm-3" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-green" style="border: none;">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control datepicker" id="date" placeholder="select Date" >
+										</div>
+									</div>
 								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Time<span class="text-red">*</span></label>
+									<div class="col-sm-3" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-green" style="border: none;">
+												<i class="fa fa-clock-o"></i>
+											</div>
+											<input type="text" class="form-control timepicker" id="time" placeholder="select Time">
+										</div>
+									</div>
+								</div>
+
+
+
+
+
 							</div>
 						</div>
 					</div>
@@ -259,7 +286,26 @@
 		$('.select2').select2();
 
 		fillTable();
+
+		$('.datetime').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm:ss'
+		});
 	});	
+
+	$('.datepicker').datepicker({
+		autoclose: true,
+		format: "yyyy-mm-dd",
+		todayHighlight: true,	
+	});
+
+	$('.timepicker').timepicker({
+		use24hours: true,
+		showInputs: false,
+		showMeridian: false,
+		minuteStep: 1,
+		defaultTime: '00:00',
+		timeFormat: 'h:mm'
+	})
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
@@ -447,14 +493,16 @@
 		var rack = $('#rack').val();
 		var material = $('#material').val();
 		var kanban = $('#kanban').val();
-		var add = $('#add').val();
+		var date = $('#date').val();
+		var time = $('#time').val();
 
-		if (rack != "" && material != "" && kanban != "" && add != "") {
+		if (rack != "" && material != "" && kanban != "" && date != "" && time != "") {
 			var data = {
 				rack:rack,
 				material:material,
 				kanban:kanban,
-				add:add,
+				date:date,
+				time:time,
 			}
 			
 			$.post('{{ url("post/middle/buffing_add_queue") }}', data, function(result, status, xhr){
@@ -462,12 +510,14 @@
 					$("#rack").val("");
 					$("#material").val("");
 					$("#kanban").val("");
-					$("#add").val("");
+					$("#date").val("");
+					$("#time").val("");
 
 					$('#rack').prop('selectedIndex',0);
 					$('#material').prop('selectedIndex',0);
 					$('#kanban').prop('selectedIndex',0);
-					$('#add').prop('selectedIndex',0);
+					$('#date').prop('selectedIndex',0);
+					$('#time').prop('selectedIndex',0);
 
 					$("#create_modal").modal('hide');
 

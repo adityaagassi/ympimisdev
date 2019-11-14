@@ -69,7 +69,7 @@ class MiddleProcessController extends Controller
 		$title_jp = '';
 
 		$materials = Material::where('mrpc','=','s41')
-		->select('material_number', 'hpl', 'model', 'material_description')
+		->select('material_number', 'hpl', 'model', 'key', 'material_description')
 		->orderBy('key', 'asc')
 		->orderBy('model', 'asc')
 		->get();
@@ -533,7 +533,8 @@ class MiddleProcessController extends Controller
 		$rack = $request->get('rack');
 		$material = explode('-', $request->get('material'));;
 		$kanban = $request->get('kanban');
-		$add = $request->get('add');
+		$date = $request->get('date');
+		$time = $request->get('time');
 
 		$material_number = $material[0];
 		$model = $material[1];
@@ -551,46 +552,21 @@ class MiddleProcessController extends Controller
 
 
 		try{
-			if($add == 'top'){
-				$queue = db::connection('digital_kanban')->table('buffing_queues')
-				->where('rack','=',$rack)
-				->select('rack','material_num','created_by','created_at','updated_at', 'material_qty', 'material_tag_id')
-				->get();
-
-				$delete_queue = db::connection('digital_kanban')->delete("DELETE FROM buffing_queues where rack = '".$rack."'");
-
-				for ($i=0; $i < $kanban; $i++) {
-					$new_queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
-						array('rack' => $rack,
-							'material_num' => $material_number,
-							'created_by' => Auth::id(),
-							'created_at' => date("Y-m-d H:i:s"),
-							'updated_at' => date("Y-m-d H:i:s"),
-							'material_qty' => $qty,
-						)
-					);
-				}
-
-				$ex_queue = json_decode(json_encode($queue), True);
-
-				$ex_queue = db::connection('digital_kanban')->table('buffing_queues')->insert($ex_queue);
-
-			}else if($add == 'bottom'){
-				for ($i=0; $i < $kanban; $i++) {
-					$queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
-						array('rack' => $rack,
-							'material_num' => $material_number,
-							'created_by' => Auth::id(),
-							'created_at' => date("Y-m-d H:i:s"),
-							'updated_at' => date("Y-m-d H:i:s"),
-							'material_qty' => $qty,
-						)
-					);
-				}
+			for ($i=0; $i < $kanban; $i++) {
+				$queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
+					array('rack' => $rack,
+						'material_num' => $material_number,
+						'created_by' => Auth::id(),
+						'created_at' => date('Y-m-d H:i:s', strtotime($date.' '.$time)),
+						'updated_at' => date('Y-m-d H:i:s', strtotime($date.' '.$time)),
+						'material_qty' => $qty,
+					)
+				);
 			}
+			
 
 			$response = array(
-				'status' => true,
+				'status' => true
 			);
 			return Response::json($response);
 
@@ -1423,6 +1399,53 @@ class MiddleProcessController extends Controller
 			'key' => $key,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchBuffingOpEffTarget(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$group = '';
+		if($request->get('group') != null){
+			$groups =  explode(",", $request->get('group'));
+			for ($i=0; $i < count($groups); $i++) {
+				$group = $group."'".$groups[$i]."'";
+				if($i != (count($groups)-1)){
+					$group = $group.',';
+				}
+			}
+			$group = " and e.`group` in (".$group.") ";
+		}
+
+		$target = db::connection('digital_kanban')->select("select *, std/act as eff from(
+			select e.`group`, l.operator_id, CONCAT(m.model,' ',m.`key`) as `key` ,time(l.selesai_start_time) as finish,
+			TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)/60 as act,
+			(l.material_qty*t.time)/60 as std
+			from data_log l
+			left join materials m on l.material_number = m.material_number 
+			left join standart_times t on l.material_number = t.material_number
+			left join employee_groups e on e.employee_id = l.operator_id
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."' ".$group."
+			order by l.selesai_start_time desc) a
+			where std/act < 0.85
+			limit 15");
+
+
+		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'emp_name' => $emp_name,
+			'target' => $target,
+			'group' => $group,
+		);
+		return Response::json($response);
+
 	}
 
 	public function fetchBuffingOpWorking(Request $request){
