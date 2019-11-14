@@ -403,11 +403,11 @@
 					}
 				}
 
-				if(xCategories.length <= 4){
+				if(xCategories.length <= 3){
 					var scrollMax = xCategories.length-1;
 				}
 				else{
-					var scrollMax = 3;
+					var scrollMax = 2;
 				}
 
 				var yAxisLabels = [0,25,50,75,100,110];
@@ -544,6 +544,31 @@
 						data: okFL91,
 						stack: 'FL91',
 						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'OK',
+						data: okFL51,
+						stack: 'FL51',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'OK',
+						data: okFL21,
+						stack: 'FL21',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'OK',
+						data: okFLA1,
+						stack: 'FLA1',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'OK',
+						data: okFLA0,
+						stack: 'FLA0',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'OK',
+						data: okMSCR,
+						stack: 'MSCR',
+						color: 'rgba(0, 255, 0, 0.90)'
 					}]
 				});
 				$('.highcharts-xaxis-labels text').on('click', function () {
@@ -593,7 +618,7 @@ function fillModal(cat, name){
 				resultData += '<td style="width: 1%">'+ value.pi.toLocaleString() +'</td>';
 				resultData += '<td style="width: 1%">'+ value.book.toLocaleString() +'</td>';
 				resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
-				resultData += '<td style="width: 1%; font-weight: bold;">'+ Math.abs(value.diff_qty.toLocaleString()) +'</td>';
+				resultData += '<td style="width: 1%; font-weight: bold;">'+ Math.abs(value.diff_qty).toLocaleString() +'</td>';
 				resultData += '</tr>';
 				resultTotal1 += value.pi;
 				resultTotal2 += value.book;
