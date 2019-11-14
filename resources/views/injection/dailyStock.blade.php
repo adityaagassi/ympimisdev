@@ -355,6 +355,8 @@
 					var seriesP3 = "";
 					var seriesP4 = "";
 
+					var targetAssy = [];
+
 					for(i = 0; i < result.part.length; i++){
 					if ( location == "Yrf" || location == "Brown" ) {
 						if ( result.part[i].part == result.model[0].part) {
@@ -422,6 +424,10 @@
 
 					}
 
+					for (var i = 0; i < result.assy.length; i++) {
+						targetAssy.push(parseInt(result.assy[i].target))
+					}
+
 					
 
 
@@ -463,9 +469,19 @@
 					    },
 					    plotOptions: {
 					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
 					            pointPadding: 0.2,
 					            borderWidth: 0
-					        }
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
 					    },
 					    series: [{
 
@@ -501,7 +517,12 @@
 					        // if (location == "Red") {
 					        // 	visible: false
 					        // }
-					    }]
+					    },{
+					    animation: false,
+				    	type: 'spline',
+				        name: 'Target Assy',
+				        data: targetAssy
+				    },]
 					});
 				}
 			}

@@ -29,6 +29,10 @@
 			<a href="{{ url("index/out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - Out</a>
 
 			<a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
+
+			<a href="{{ url("index/opmesin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Operationing</a>
+
+			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>
 			
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">

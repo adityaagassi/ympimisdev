@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MesinLogInjection extends Model
+class PlanMesinInjectionTmp extends Model
 {
-    use SoftDeletes;
+   use SoftDeletes;
 
 	protected $fillable = [
-		'mesin', 'status', 'reason' , 'created_by'
+		'mesin', 'part', 'qty', 'color', 'due_date', 'created_by'
 	];
 }

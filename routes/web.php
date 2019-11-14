@@ -1237,6 +1237,8 @@ Route::get('index/production_report/fetchReport/{id}', 'ProductionReportControll
 Route::get('index/production_report/fetchReportDaily/{id}', 'ProductionReportController@fetchReportDaily');
 Route::get('index/production_report/fetchReportWeekly/{id}', 'ProductionReportController@fetchReportWeekly');
 Route::get('index/production_report/fetchReportMonthly/{id}', 'ProductionReportController@fetchReportMonthly');
+Route::get('index/production_report/fetchReportDetailMonthly/{id}', 'ProductionReportController@fetchReportDetailMonthly');
+Route::get('index/production_report/fetchReportDetailConditional/{id}', 'ProductionReportController@fetchReportDetailConditional');
 Route::get('index/production_report/fetchReportConditional/{id}', 'ProductionReportController@fetchReportConditional');
 Route::get('index/production_report/fetchReportAudit/{id}', 'ProductionReportController@fetchReportAudit');
 Route::get('index/production_report/fetchReportTraining/{id}', 'ProductionReportController@fetchReportTraining');
@@ -1407,6 +1409,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
 	Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
+	Route::post('index/qc_car/create_pic/{id}', 'QcCarController@create_pic');
 	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
 	Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
