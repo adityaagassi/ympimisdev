@@ -17,6 +17,8 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Stock Taking <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/stocktaking/silver", "fl_middle") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Silver</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/request/Flute") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Flute</a>
 		</div>

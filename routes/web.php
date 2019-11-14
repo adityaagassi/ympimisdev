@@ -775,6 +775,10 @@ Route::get('fetch/middle/buffing_op_eff_detail', 'MiddleProcessController@fetchB
 Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBuffingDailyOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
 Route::get('fetch/middle/buffing_op_result', 'MiddleProcessController@fetchBuffingOpResult');
+
+Route::get('fetch/middle/buffing_op_eff_target', 'MiddleProcessController@fetchBuffingOpEffTarget');
+
+
 Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
 Route::get('fetch/middle/buffing_daily_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@indexBuffingOpNgRate');
@@ -1367,6 +1371,10 @@ Route::get('index/interview/show/{id}/{interview_id}', 'InterviewController@show
 Route::get('index/interview/destroy/{id}/{interview_id}', 'InterviewController@destroy');
 Route::get('index/interview/create/{id}', 'InterviewController@create');
 Route::post('index/interview/store/{id}', 'InterviewController@store');
+Route::get('index/interview/edit/{id}/{interview_id}', 'InterviewController@edit');
+Route::post('index/interview/update/{id}/{interview_id}', 'InterviewController@update');
+Route::get('index/interview/details/{interview_id}', 'InterviewController@details');
+Route::post('index/interview/create_participant/{interview_id}', 'InterviewController@create_participant');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR

@@ -28,6 +28,30 @@ class StockTakingController extends Controller
 			$location = 'FL ASSEMBLY';
 		}
 
+		if($id == 'fl_middle'){
+			$title = 'Silver Stock Taking (Flute Middle)';
+			$title_jp = '????';
+			$location = 'FL MIDDLE';
+		}
+
+		if($id == 'fl_welding'){
+			$title = 'Silver Stock Taking (Flute Welding)';
+			$title_jp = '????';
+			$location = 'FL WELDING';
+		}
+
+		if($id == 'fl_bpro'){
+			$title = 'Silver Stock Taking (Flute Body Process)';
+			$title_jp = '????';
+			$location = 'FL BODY PROCESS';
+		}
+
+		if($id == 'fl_mpro'){
+			$title = 'Silver Stock Taking (Flute Material Process)';
+			$title_jp = '????';
+			$location = 'FL MATERIAL PROCESS';
+		}
+
 		return view('stocktakings.silver', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
