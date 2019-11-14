@@ -60,6 +60,14 @@ table.table-bordered > tfoot > tr > th{
     {{ session('status') }}
   </div>   
   @endif
+
+  @if (session('error'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Error!</h4>
+    {{ session('error') }}
+  </div>   
+  @endif
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -327,10 +335,10 @@ table.table-bordered > tfoot > tr > th{
           { "data": "tgl_permintaan" },
           { "data": "tgl_balas" },
           { "data": "via_komplain" },
-          { "data": "department_name" },
+          { "data": "department_name" , "width": "15%"},
           { "data": "sumber_komplain" },
           { "data": "status_name" },
-          { "data": "action", "width": "15%"}
+          { "data": "action", "width": "10%"}
         ]
       });
 

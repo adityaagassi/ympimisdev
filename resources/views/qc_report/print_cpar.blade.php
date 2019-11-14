@@ -33,15 +33,23 @@
 				<td colspan="2" style="font-size: 9px;">
 					No Dokumen : YMPI/QA/FM/988 <br>
 					Revisi : 01<br>
-					Tanggal : 8 Oktober 2019<br>
+					Tanggal : <?= date('d-m-Y') ?><br>
 				</td>
 			</tr>
 		</thead>
 		<tbody>
-			@php $i=1 @endphp
+			<?php $i=1;
+			$jumlahparts = count($parts);
+
+			if($jumlahparts < 2)
+				$jumlah = 0;
+			else
+				$jumlah = 2;
+			?>
+
 			@foreach($cpars as $cpar)
 			<tr>
-				<td rowspan="12">{{ $i++ }}</td>	
+				<td rowspan="{{ 12 + $jumlah }}">{{ $i++ }}</td>
 				<td colspan="5" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
 				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">CPAR No : <b>{{$cpar->cpar_no}}</b></td>
 			</tr>
@@ -68,29 +76,32 @@
 				<td>% Defect</td>
 			</tr>
 
-			<?php if(count($parts) != 0) { ?>
+			<?php 
+			$jumlahparts = count($parts);
+			if($jumlahparts != 0) { 
+
+			?>
 			@foreach($parts as $part)
 			<tr>
-				<?php if ($part != null) { ?>
-					<td rowspan="2">{{$part->part_item}}</td>
-					<td rowspan="2">{{$part->material_description}}</td>
-					<td rowspan="2">{{$part->no_invoice}}</td>
-					<td rowspan="2">{{$part->lot_qty}}</td>
-					<td rowspan="2">{{$part->sample_qty}}</td>
-					<td rowspan="2" width="80">
-						<?= $part->detail_problem ?>
-						<!-- <img src="http://172.17.128.87/miraidev/public/kcfinderimages/files/foto.png"> -->
-						<!-- <img src="{{ base_path() }}/public/kcfinderimages/files/yamaha3.png" /> -->
-						<!-- <img src="{{ public_path('/kcfinderimages/files/yamaha3.png') }}"> -->
-					</td>
-					<td rowspan="2">{{$part->defect_qty}}</td>
-					<td rowspan="2">{{$part->defect_presentase}}</td>
-				<?php } else { ?>
-					<td colspan="8"></td>
-				<?php } ?>
+				<td rowspan="2">{{$part->part_item}}</td>
+				<td rowspan="2">{{$part->material_description}}</td>
+				<td rowspan="2">{{$part->no_invoice}}</td>
+				<td rowspan="2">{{$part->lot_qty}}</td>
+				<td rowspan="2">{{$part->sample_qty}}</td>
+				<td rowspan="2" width="80">
+					<?= $part->detail_problem ?>
+					<!-- <img src="http://172.17.128.87/miraidev/public/kcfinderimages/files/foto.png"> -->
+					<!-- <img src="{{ base_path() }}/public/kcfinderimages/files/yamaha3.png" /> -->
+					<!-- <img src="{{ public_path('/kcfinderimages/files/yamaha3.png') }}"> -->
+				</td>
+				<td rowspan="2">{{$part->defect_qty}}</td>
+				<td rowspan="2">{{$part->defect_presentase}}</td>
 			</tr>
+			<tr></tr>
 			@endforeach
-			<?php } else { ?>
+			<?php }
+			else { 
+			?>
 			<tr>
 				<td rowspan="2">&nbsp;</td>
 				<td rowspan="2"></td>
@@ -101,9 +112,8 @@
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 			</tr>
-			<?php } ?>
 			<tr></tr>
-			
+			<?php } ?>
 			<tr>
 				<td colspan="8">&nbsp;</td>
 			</tr>
@@ -115,29 +125,64 @@
 				<td>Approved By</td>
 				<td>Approved By</td>
 				<td>Received By</td>
-				<td>Received By</td>
-				<td>Received By</td>
+				<td colspan="2" rowspan="4">&nbsp;</td>
 			</tr>
 			<tr>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->posisi != "staff")
+						{{$cpar->staffname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->checked_chief == "Checked")
+						{{$cpar->chiefname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->checked_manager == "Checked")
+						{{$cpar->managername}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->approved_dgm == "Checked")
+						{{$cpar->dgmname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->approved_gm == "Checked")
+						{{$cpar->gmname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->received_manager == "Received")
+						{{$cpar->name}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<!-- <td colspan="2" rowspan="2" style="vertical-align: middle;">&nbsp;</td> -->
+					
+				</td>
 			</tr>
 			<tr></tr>
 			<tr>
 				<td>Staff</td>
 				<td>Chief</td>
 				<td>Manager</td>
+				<td>DGM</td>
 				<td>GM</td>
-				<td>GM</td>
-				<td>Staff</td>
-				<td>Chief</td>
 				<td>Manager</td>
+				<!-- <td colspan="2"></td> -->
 			</tr>
 			<tr>
 				<td rowspan="4">2</td>

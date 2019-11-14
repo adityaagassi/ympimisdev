@@ -40,8 +40,8 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Edit {{ $page }}
-    <small>Edit CPAR</small>
+    Detail {{ $page }}
+    <small>Detail CPAR</small>
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -78,7 +78,31 @@
   <div class="box box-primary">
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
+      <label class="label label-default">Posisi CPAR : <b>{{$cpars->posisi}}</b></label>
+       
+       <a href="{{url('index/qc_report/print_cpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank">Preview Report</a>
+
+       <a data-toggle="modal" data-target="#statusmodal{{$cpars->id}}" class="btn btn-primary btn-sm pull-right" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
+
+       @if($cpars->email_status == NULL && $cpars->posisi == "staff" && Auth::user()->username == "clark") <!-- Mas Said -->
+           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Chief</a>
+          
+          <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
+
+
+       <!-- @elseif($cpars->email_status == "SentChief" && $cpars->posisi == "chief" && Auth::user()->username == "aclark") Bu Ratri
+           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Manager</a> -->
+
+       @else
+           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+       @endif
+
+       
+
+       <!-- <a href="{{url('index/qc_report/statuscpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-primary btn-sm pull-right" title="Status Verifikasi" style="margin-right: 5px">Cek Status Verifikasi</a> -->
+    
     </div>  
+
     <form role="form" method="post" action="{{url('index/qc_report/update_action', $cpars->id)}}" enctype="multipart/form-data">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -278,7 +302,7 @@
             <a class="btn btn-danger" href="{{ url('index/qc_report') }}">Cancel</a>
           </div>
           <div class="btn-group">
-            <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
+            <button type="submit" class="btn btn-primary col-sm-14">Update</button>
           </div>
         </div>
       </div>
@@ -288,6 +312,7 @@
         <div class="box">
           <div class="box-body">
             <a data-toggle="modal" data-target="#createModal" class="btn btn-primary btn-sm" style="color:white">Create Material</a>
+           
             <br><br>
             <table id="example1" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">
@@ -353,10 +378,8 @@
           <h4 class="modal-title" id="myModalLabel"><center>CPAR <b>{{ $cpars->cpar_no }}</b></center></h4>
         </div>
         <div class="modal-body">
-          <div class="box-body">
-            
-            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-            
+          <div class="box-body">s
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />ss
             <input type="hidden" id="cpar_no" value="{{ $cpars->cpar_no }}">
             <div class="form-group row" align="left">
               <div class="col-sm-1"></div>
@@ -521,6 +544,114 @@
   </div>
 </div>
 
+<div class="modal fade" id="statusmodal{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <table class="table table-hover">
+          <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
+            <tbody>
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />  
+                <tr style="background-color: #4caf50;color: white">
+                    <td colspan="2" style="width: 33%"><b>Position</b></td>
+                    <td colspan="2" style="width: 33%"><b>Action</b></td>
+                    <td colspan="2" style="width: 33%"><b>Email</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Staff</b></td>
+                    <td colspan="2"><b><span class="label label-success">Already Created</span></b></td>
+                    @if($cpars->email_status == NULL && $cpars->posisi == "staff")
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Chief</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->checked_chief == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cpars->email_status == "SentManager" || $cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") &&  ($cpars->posisi == "manager" || $cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Manager</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->checked_manager == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>DGM</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->approved_dgm == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>GM</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->approved_gm == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if($cpars->email_status == "SentBagian" && $cpars->posisi == "bagian")
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Bagian</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->received_manager == "Received")
+                      <span class="label label-success">Received</span>
+                      @else
+                      <span class="label label-danger">Not Received</span>
+                      @endif</b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="EditModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -550,6 +681,20 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Material Description<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="material_description_edit" placeholder="Material Description" required readonly>
+            </div>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">HPL<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="hpl_edit" placeholder="HPL" required readonly>
+            </div>
+          </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
           <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
@@ -651,9 +796,6 @@
       $("#customer").hide();
       $("#supplier").hide();
     }
-
-   
-
   });
 
   $.ajaxSetup({
@@ -697,10 +839,10 @@
       { "data": "no_invoice" },
       { "data": "lot_qty" },
       { "data": "sample_qty" },
-      { "data": "detail_problem" , "width": "10%" },
+      { "data": "detail_problem" , "width": "15%" },
       { "data": "defect_qty" },
       { "data": "defect_presentase" },
-      { "data": "action", "width": "15%" }
+      { "data": "action", "width": "10%" }
       ],
       'buttons': {
         buttons:[
@@ -777,9 +919,22 @@
             });
         });
 
-    // $('.select2').select2({
-    //     dropdownParent: $('#createModal')
-    //   });
+        $("#part_item_edit").change(function(){
+          $("#desc").show();
+          $("#hp").show();
+          // console.log($(this).val());
+            $.ajax({
+                url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
+                method: 'GET',
+                success: function(data) {
+                  var json = data,
+                  obj = JSON.parse(json);
+                  console.log(obj);
+                  $('#material_description_edit').val(obj.material_description);
+                  $('#hpl_edit').val(obj.hpl);
+                }
+            });
+        });
 
     $(function () {
       $('.select2').select2()
@@ -969,25 +1124,25 @@
       })
     };
 
-    function modalView(id) {
-      $("#ViewModal").modal("show");
-      var data = {
-        id:id
-      }
+    // function modalView(id) {
+    //   $("#ViewModal").modal("show");
+    //   var data = {
+    //     id:id
+    //   }
 
-      $.get('{{ url("index/qc_report/view_item") }}', data, function(result, status, xhr){
-        $("#cpar_no_view").text(result.datas[0].cpar_no);
-        $("#part_item_view").text(result.datas[0].part_item);
-        $("#no_invoice_view").text(result.datas[0].no_invoice);
-        $("#lot_qty_view").text(result.datas[0].lot_qty);
-        $("#sample_qty_view").text(result.datas[0].sample_qty);
-        $("#detail_problem_view").text(result.datas[0].detail_problem);
-        $("#defect_qty_view").text(result.datas[0].defect_qty);
-        $("#defect_presentase_view").text(result.datas[0].defect_presentase)
-        $("#last_updated_view").text(result.datas[0].updated_at);
-        $("#created_at_view").text(result.datas[0].created_at);
-      })
-    }
+    //   $.get('{{ url("index/qc_report/view_item") }}', data, function(result, status, xhr){
+    //     $("#cpar_no_view").text(result.datas[0].cpar_no);
+    //     $("#part_item_view").text(result.datas[0].part_item);
+    //     $("#no_invoice_view").text(result.datas[0].no_invoice);
+    //     $("#lot_qty_view").text(result.datas[0].lot_qty);
+    //     $("#sample_qty_view").text(result.datas[0].sample_qty);
+    //     $("#detail_problem_view").text(result.datas[0].detail_problem);
+    //     $("#defect_qty_view").text(result.datas[0].defect_qty);
+    //     $("#defect_presentase_view").text(result.datas[0].defect_presentase)
+    //     $("#last_updated_view").text(result.datas[0].updated_at);
+    //     $("#created_at_view").text(result.datas[0].created_at);
+    //   })
+    // }
 
     function modalEdit(id) {
       $('#EditModal').modal("show");
@@ -1004,7 +1159,18 @@
         $("#detail_problem_edit").html(CKEDITOR.instances.detail_problem_edit.setData(result.datas.detail_problem));
         $("#defect_qty_edit").val(result.datas.defect_qty);
         $("#defect_presentase_edit").val(result.datas.defect_presentase);
-      })
+        $.ajax({
+                url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + result.datas.part_item,
+                method: 'GET',
+                success: function(data) {
+                  var json = data,
+                  obj = JSON.parse(json);
+                  console.log(obj);
+                  $('#material_description_edit').val(obj.material_description);
+                  $('#hpl_edit').val(obj.hpl);
+                }
+            });
+      });
     }
 
     function edit() {
@@ -1035,13 +1201,28 @@
         id: id
       };
 
-      if (!confirm("Apakah anda yaking ingin menghapus material ini?")) {
+      if (!confirm("Apakah anda yakin ingin menghapus material ini?")) {
         return false;
       }
 
       $.post('{{ url("index/qc_report/delete_item") }}', data, function(result, status, xhr){
         $('#example1').DataTable().ajax.reload(null, false);
         openSuccessGritter("Success","Delete Material");
+      })
+    }
+
+    function sendemail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim CPAR ini?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/qc_report/sendemail/$cpars->id/$cpars->posisi") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        window.location.reload();
       })
     }
 

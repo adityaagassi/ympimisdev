@@ -28,7 +28,6 @@ table.table-bordered > thead > tr > th{
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(211,211,211);
   padding-top: 0;
-  padding-bottom: 0;
 }
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
@@ -52,6 +51,8 @@ table.table-bordered > tfoot > tr > th{
 
 @section('content')
 
+
+
 <section class="content">
   @if (session('status'))
   <div class="alert alert-success alert-dismissible">
@@ -69,6 +70,7 @@ table.table-bordered > tfoot > tr > th{
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <table id="example1" class="table table-bordered table-striped table-hover">
+            <?php var_dump($users[0]->department_name); ?>
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>No CPAR</th>
@@ -98,7 +100,7 @@ table.table-bordered > tfoot > tr > th{
                 <td style="width: 15%">
                   <center>
                     <a href="{{url('index/qc_car/detail', $car['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a>
-                    <a href="{{url('index/qc_car/print_car', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a>
+                    <!-- <a href="{{url('index/qc_car/print_car', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a> -->
                   </center>
                 </td>
               </tr>

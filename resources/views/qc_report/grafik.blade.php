@@ -54,48 +54,135 @@ table.table-bordered > tfoot > tr > th{
   <div class="row">
     <div class="col-md-12">
       <div class="col-md-12">
-        <div class="col-md-2 pull-right">
+        <div class="col-md-2">
+          <div class="input-group date">
+            <div class="input-group-addon bg-green" style="border-color: #00a65a">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari" style="border-color: #00a65a">
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="input-group date">
+            <div class="input-group-addon bg-green" style="border-color: #00a65a">
+              <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke" style="border-color: #00a65a">
+          </div>
+        </div>
+
+        <div class="col-md-3" style="width:230px">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue" style="border-color: #00a65a">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" multiple="multiple" id="kategori" data-placeholder="Select Kategori">
+                <option value="Eksternal">Eksternal</option>
+                <option value="Internal">Internal</option>
+                <option value="Supplier">Supplier</option>
+              </select>
+          </div>
+
+            <!-- <div class="form-group">
+              <select class="form-control select2" multiple="multiple" id="kategori" data-placeholder="Select Kategori">
+                <option value="Eksternal">Eksternal</option>
+                <option value="Internal">Internal</option>
+                <option value="Supplier">Supplier</option>
+              </select>
+            -->
+          </div>
+
+         <div class="col-md-3">
+            <div class="input-group">
+              <div class="input-group-addon bg-blue" style="border-color: #00a65a">
+                <i class="fa fa-search"></i>
+              </div>
+              <select class="form-control select2" multiple="multiple" id="departemen" data-placeholder="Pilih Departemen" style="border-color: #605ca8" >
+                  <!-- <option value="" selected>Semua Departemen</option> -->
+                  @foreach($departemens as $departemen)
+                    <option value="{{ $departemen->id }}">{{ $departemen->department_name }}</option>
+                  @endforeach
+                </select>
+            </div>
+          </div>
+
+        <div class="col-xs-2">
+          <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
+        </div>
+        <br>
+        <br>
+
+        <!-- <div class="col-md-2 pull-right">
           <select class="form-control" id="fq" data-placeholder="Pilih Fiscal year" onchange="drawChart()" style="border-color: #605ca8" >
               <option value="" selected>Semua Fiscal Year</option>
               <option value="196">FY196</option>
               <option value="195">FY195</option>
             </select>
           <br>
-        </div>
-        <div class="col-md-2 pull-right">
-          <select class="form-control" id="kategori" data-placeholder="Pilih Kategori" onchange="drawChart()" style="border-color: #605ca8" >
-              <option value="" selected>Semua Kategori</option>
-              <option value="Eksternal">Eksternal</option>
-              <option value="Internal">Internal</option>
-              <option value="Supplier">Supplier</option>
-            </select>
-          <br>
-        </div>
+        </div> -->
+
         <!-- <div class="col-md-2 pull-right">
-              <select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="changeFy()">
+              <select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="drawChart()">
                 @foreach($fys as $fy)
                 <option value="{{ $fy->fiscal_year }}">{{ $fy->fiscal_year }}</option>
                 @endforeach
               </select>
               <input type="text" name="fy" id="fy" hidden>
           </div> -->
-        <div class="col-md-2 pull-right">
-          <select class="form-control" id="departemen" data-placeholder="Pilih Departemen" onchange="drawChart()" style="border-color: #605ca8" >
-              <option value="" selected>Semua Departemen</option>
-              @foreach($departemen as $dept)
-                <option value="{{ $dept->id }}">{{ $dept->department_name }}</option>
-              @endforeach
+       
+        
+
+        <!-- <div class="col-md-2">
+          <select class="form-control" id="bulanfrom" data-placeholder="Bulan Dari" style="border-color: #605ca8" onchange="getbulanke()">
+              <option value="">Bulan Dari</option>
+              @foreach($bulans as $bulan)
+                <option value="{{ $bulan->bulan }}">{{ $bulan->namabulan }}</option>
+                @endforeach
             </select>
-          <br>
+        </div> -->
+
+        <!-- <div class="col-md-2">
+          <select class="form-control" id="bulanto" data-placeholder="Bulan Ke" style="border-color: #605ca8" >
+              <option value="">Bulan Ke</option>
+             
+            </select>
         </div>
+
+        <div class="col-md-2">
+          <select class="form-control" id="tahun" data-placeholder="Pilih Tahun" style="border-color: #605ca8" >
+              <option value="">Semua Tahun</option>
+               @foreach($years as $year)
+                <option value="{{ $year->tahun }}"
+                  <?php if($year->tahun == date('Y')){ echo "selected";}?>
+                  >{{ $year->tahun }}</option>
+                @endforeach
+            </select>
+        </div>
+ -->
+
+
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12" style="margin-top: 20px">
         <div class="box">
           <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
           <div class="nav-tabs-custom">
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
                 <div id="chart" style="width: 99%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12" style="margin-top: 20px">
+        <div class="box">
+          <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
+          <div class="nav-tabs-custom">
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
+                <div id="chartdept" style="width: 99%;"></div>
               </div>
             </div>
           </div>
@@ -128,6 +215,7 @@ table.table-bordered > tfoot > tr > th{
                     <th>Departemen</th>
                     <th>Sumber Komplain</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -176,24 +264,61 @@ table.table-bordered > tfoot > tr > th{
     $('.select2').select2();
 
     drawChart();
+    drawChartDepartemen();
   });
 
-  $('#tgl').datepicker({
-    format: "yyyy-mm-dd",
+  // $('#tgl').datepicker({
+  //   format: "yyyy-mm-dd",
+  //   autoclose: true,
+  //   todayHighlight: true
+  // });
+
+  $('.datepicker').datepicker({
+    format: "yyyy-mm",
+    startView: "months", 
+    minViewMode: "months",
     autoclose: true,
-    todayHighlight: true
+
   });
+
+  // function changekategori() {
+  //   $("#kategori").val($("#kategoriselect").val());
+  // }
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+  function getbulanke(){
+    var bulanfrom = document.getElementById("bulanfrom");
+    var bulanto = document.getElementById("bulanto");
+    var getbulanfrom = bulanfrom.options[bulanfrom.selectedIndex].value;
+
+    // console.log(bulanfrom.options[10].value);
+    var txt;
+    var i;
+    if (getbulanfrom != "") {
+      for (i = 1; i < bulanfrom.options.length; i++) {
+        if (getbulanfrom < i) 
+        {
+          // console.log(i);
+          // console.log(bulanfrom.options[i].value);
+          $('#bulanto').append($("<option></option>").attr("value",bulanfrom.options[i].value).text(bulanfrom.options[i].text)); 
+        }
+        // console.log(bulanfrom.options.length);
+      }
+    }
+  }
+
   function drawChart() {
-    var fq = $('#fq').val();
-    var tgl = $('#tgl').val();
+    // var tahun = $('#tahun').val();
+    var tglfrom = $('#tglfrom').val();
+    var tglto = $('#tglto').val();
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
 
     var data = {
-      tahun: fq,
+      // tahun: tahun,
+      tglfrom: tglfrom,
+      tglto: tglto,
       kategori: kategori,
       departemen: departemen
     };
@@ -209,7 +334,11 @@ table.table-bordered > tfoot > tr > th{
           //   inTransitCount.push(data[i].intransit);
           //   fstkCount.push(data[i].fstk);
           // }
-          var monthtitle = result.monthTitle;
+          // console.log(result.tgt);
+          var years = result.tahun;
+          if(years == null){
+            years = "All"
+          }
 
           var month = [], jml = [], statusopen = [], statusclose = [];
 
@@ -226,7 +355,7 @@ table.table-bordered > tfoot > tr > th{
               type: 'column'
             },
             title: {
-              text: 'CPAR Report Per Bulan'
+              text: 'CPAR Report'
             },
             xAxis: {
               type: 'category',
@@ -264,7 +393,7 @@ table.table-bordered > tfoot > tr > th{
                 point: {
                   events: {
                     click: function () {
-                      ShowModal(this.category,this.series.name);
+                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
                     }
                   }
                 },
@@ -298,7 +427,12 @@ table.table-bordered > tfoot > tr > th{
                 name: 'Closed',
                 data: statusclose,
                 color : '#c62828'
-
+            },
+            {
+                type: 'spline',
+                name: 'Open',
+                color: '#388e3c',
+                data: statusopen
             }
             ]
           })
@@ -309,7 +443,120 @@ table.table-bordered > tfoot > tr > th{
     })
   }
 
-  function ShowModal(bulan, status) {
+  function drawChartDepartemen() {
+
+    var departemen = $('#departemen').val();
+
+    var data = {
+      departemen: departemen
+    };
+
+    $.get('{{ url("index/qc_report/fetchDept") }}', data, function(result, status, xhr) {
+      if(xhr.status == 200){
+        if(result.status){
+          var departemen = [], jml = [], statusopen = [], statusclose = [];
+
+          $.each(result.datas, function(key, value) {
+            departemen.push(value.department_name);
+            jml.push(value.jumlah);
+            statusopen.push(parseInt(value.open));
+            statusclose.push(parseInt(value.close));
+          })
+
+          $('#chartdept').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'CPAR Report By Departement'
+            },
+            xAxis: {
+              type: 'category',
+              categories: departemen
+            },
+            yAxis: {
+              type: 'linear',
+              title: {
+                text: 'Total CPAR'
+              },
+              tickInterval: 1,
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 25,
+              floating: true,
+              backgroundColor:
+                  Highcharts.defaultOptions.legend.backgroundColor || 'white',
+              borderColor: '#CCC',
+              borderWidth: 1,
+              shadow: false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModalDept(this.category,this.series.name);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  stacking: 'normal',
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [{
+                name: 'Open',
+                color: '#388e3c',
+                data: statusopen
+            }, {
+                name: 'Closed',
+                data: statusclose,
+                color : '#c62828'
+            },
+            {
+                type: 'spline',
+                name: 'Open',
+                color: '#388e3c',
+                data: statusopen
+            }
+            ]
+          })
+        } else{
+          alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function ShowModal(bulan, status, tglfrom, tglto, kategori, departemen) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -385,11 +632,98 @@ table.table-bordered > tfoot > tr > th{
           { "data": "via_komplain" },
           { "data": "department_name" },
           { "data": "sumber_komplain" },
-          { "data": "status_name" }
+          { "data": "status_name" },
+          { "data": "action", "width": "15%"}
         ]    });
 
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>bulan '+bulan+'</center></b>');
+    $('#judul_table').append('<center><b>Bulan '+bulan+'</center></b>');
+    
+  }
+
+
+  function ShowModalDept(departemen, status) {
+    tabel = $('#example2').DataTable();
+    tabel.destroy();
+
+    $("#myModal").modal("show");
+
+    var table = $('#example2').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+          "type" : "get",
+          "url" : "{{ url("index/qc_report/detail_cpar_dept") }}",
+          "data" : {
+            departemen : departemen,
+            status : status
+          }
+        },
+      "columns": [
+          { "data": "cpar_no" },
+          { "data": "kategori" },
+          { "data": "name" },
+          { "data": "lokasi" },
+          { "data": "tgl_permintaan" },
+          { "data": "tgl_balas" },
+          { "data": "via_komplain" },
+          { "data": "department_name" },
+          { "data": "sumber_komplain" },
+          { "data": "status_name" },
+          { "data": "action", "width": "15%"}
+        ]    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center><b>Departemen '+departemen+'</center></b>');
     
   }
 

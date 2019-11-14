@@ -81,11 +81,27 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>  
+
     <form role="form" method="post" action="{{url('index/qc_car/detail_action', $cars->id)}}" enctype="multipart/form-data">
       <div class="box-body">
+         <?php if ($cars->pic == NULL) { ?>
+           <a class="btn btn-danger" data-toggle="modal" href="#modalkaryawan">Pilih Karyawan</a>
+         <?php } ?>
+         <input type="hidden" name="checkpic" id="checkpic" value="{{$cars->pic}}">
+
+         <a href="{{url('index/qc_report/print_cpar', $cpar[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain"  target="_blank">Preview CPAR Report</a>
+
+         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Print CAR</a><br/><br/>
+
+         <?php if ($cars->pic != NULL) { ?>
+            <b>PIC</b> : <label class="label label-success"> {{$cars->employee_pic->name}} </label>
+            <br><br>
+         
+
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
           <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
+
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cars->cpar_no }}" readonly="">
           </div>
@@ -94,7 +110,15 @@ table.table-bordered > tfoot > tr > th{
           <div class="col-sm-4">
             <?php 
               $tinjauan = $cars->tinjauan; 
-              $split = explode (",", $tinjauan);?>
+              
+              if($tinjauan != NULL){
+                $split = explode (",", $tinjauan);
+                $hitungsplit = count($split);
+              }else{
+                $split = 0;
+              }
+            ?>
+
             <label class="checkbox-inline">
               <?php if ($split[0] == "0" ){ ?>
               <input type="hidden" name="tinjauan[]" value="0" id="manhidden">
@@ -173,15 +197,67 @@ table.table-bordered > tfoot > tr > th{
             <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
           </div>
         </div>
+
+        <?php } ?>
       </div>
     </form>
-    
+  </div>
+  
+  <?php foreach ($cpar as $cpars){ ?>
+  <div class="modal fade" id="modalkaryawan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Pilih Karyawan Yang Mengerjakan CPAR {{$cpars->cpar_no}}</h4>
+        </div>
+        <div class="modal-body">
+
+          <div class="box-body">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <input type="hidden" id="cars" value="{{ $cars->id }}">
+            <center><a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain"  target="_blank">Preview CPAR Report</a></center><br><br>
+
+            <!-- Kategori : {{$cpars->kategori}}
+            Lokasi : {{$cpars->lokasi}} -->
+            <div class="form-group row" align="left">
+              <div class="col-sm-1"></div>
+              <label class="col-sm-2">Foreman<span class="text-red">*</span></label>
+              <div class="col-sm-8">
+                <select class="form-control select3" id="pic" name="pic" style="width: 100%;" data-placeholder="Pilih PIC" required>
+                  <option value=""></option>
+                  @foreach($pic as $pic)
+                    <option value="{{ $pic->employee_id }}">{{ $pic->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+            <button type="button" onclick="create_pic()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  @endsection
-
+  <?php } ?>
   
-  @section('scripts')      
+  @endsection
+  @section('scripts')
+  <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+  <script type="text/javascript">
+
+    var checkpic = $("#checkpic").val()
+
+    if(checkpic == "") {
+      $(window).on('load',function(){
+          $('#modalkaryawan').modal('show');
+      });
+    }
+  </script>
+
   <script>
     
     $.ajaxSetup({
@@ -189,6 +265,16 @@ table.table-bordered > tfoot > tr > th{
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
+
+    $(function () {
+      $('.select2').select2()
+    })
+
+    $(function () {
+      $('.select3').select2({
+        dropdownParent: $('#modalkaryawan')
+      });
+    })
 
     $(function(){
         $('#man').click(function() {
@@ -220,9 +306,25 @@ table.table-bordered > tfoot > tr > th{
         });
     });
 
-    $(function () {
-      $('.select2').select2()
-    })
+    function create_pic() {
+
+      var data = {
+        id: $("#id").val(),
+        pic: $("#pic").val()
+      };
+
+      // console.log(data);
+
+      $.post('{{ url("index/qc_car/create_pic/".$cars->id) }}', data, function(result, status, xhr){
+        // console.log(result.status);
+        if (result.status == true) {
+          openSuccessGritter("Success","Pic has been choosen");
+          window.location.reload();
+        } else {
+          openErrorGritter("Error","Cannot Create PIC");
+        }
+      })
+    }
 
     CKEDITOR.replace('deskripsi' ,{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
@@ -239,6 +341,28 @@ table.table-bordered > tfoot > tr > th{
     CKEDITOR.replace('perbaikan' ,{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
+
+    function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-danger',
+        image: '{{ url("images/image-stop.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
 
   </script>
 @stop

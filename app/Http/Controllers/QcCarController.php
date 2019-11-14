@@ -29,16 +29,52 @@ class QcCarController extends Controller
        ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
        ->get();
 
-       return view('qc_car.index', array('cars' => $cars))->with('page', 'CAR');
+       $id = Auth::id();
+
+       //get departemen by login
+
+       $user = "select department_name from users join mutation_logs on users.username = mutation_logs.employee_id join departments on departments.department_name = mutation_logs.department where users.id=14 and valid_to IS NULL;";
+       $users = DB::select($user);
+
+       return view('qc_car.index', array(
+        'cars' => $cars,
+        'users' => $users
+       ))->with('page', 'CAR');
     }
 
     public function detail($id)
     {
        $cars = QcCar::find($id);
 
-       return view('qc_car.detail', array(
-        'cars' => $cars,
-    ))->with('page', 'CAR');
+       $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')
+       ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+       ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
+       ->get();
+
+       $id = Auth::id();
+
+       //get departemen by login
+
+       $user = "select department_name from users join mutation_logs on users.username = mutation_logs.employee_id join departments on departments.department_name = mutation_logs.department where users.id=14 and valid_to IS NULL;";
+       $users = DB::select($user);
+
+       if($cpar[0]->kategori == "Internal"){
+          $tabel = "position";
+          $position = "Foreman";
+       } else if($cpar[0]->kategori == "Eksternal" || $cpar[0]->kategori == "Supplier"){
+          $tabel = "grade_name";
+          $position = "Staff";
+       }
+       
+       $getpic = "select employees.employee_id, employees.name, departments.department_name from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join departments on departments.department_name = mutation_logs.department join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$users[0]->department_name."' and promotion_logs.".$tabel."='".$position."' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL;";
+       $pic = DB::select($getpic);
+
+        return view('qc_car.detail', array(
+          'cars' => $cars,
+          'cpar' => $cpar,
+          'users' => $users,
+          'pic' => $pic
+        ))->with('page', 'CAR');
     }
 
     public function detail_action(Request $request, $id)
@@ -63,17 +99,16 @@ class QcCarController extends Controller
          
          $cars->save();
          return redirect('/index/qc_car/detail/'.$cars->id)->with('status', 'CAR data has been Inserted.')->with('page', 'CAR');
-     }
-     catch (QueryException $e){
-        $error_code = $e->errorInfo[1];
-        if($error_code == 1062){
-          return back()->with('error', 'CAR error.')->with('page', 'CAR');
+       }
+       catch (QueryException $e){
+          $error_code = $e->errorInfo[1];
+          if($error_code == 1062){
+            return back()->with('error', 'CAR error.')->with('page', 'CAR');
+        }
+        else{
+            return back()->with('error', $e->getMessage())->with('page', 'CAR');
+        }
       }
-      else{
-          return back()->with('error', $e->getMessage())->with('page', 'CAR');
-      }
-    }
-
     }
 
     public function print_car($id)
@@ -113,6 +148,42 @@ class QcCarController extends Controller
 
       return view('qc_car.print_car', array(
         'cars' => $cars,
-    ))->with('page', 'CPAR');
+      ))->with('page', 'CPAR');
     }
+
+    public function create_pic(Request $request,$id)
+    {
+        try{
+            $cars = QcCar::find($id);
+            $cars->pic = $request->get('pic'); 
+            $cars->save();
+            // kirim email
+            // $query = "select qc_cars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_car.id='".$id."'";
+            // $cpars = db::select($query);
+
+            $response = array(
+              'status' => true,
+              'cars' => $cars
+            );
+            return Response::json($response);
+        }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'parts' => "Material already exist"
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'parts' => "Material not created."
+            );
+             return Response::json($response);
+           }
+        }
+    }
+
 }

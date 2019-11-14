@@ -12,4 +12,9 @@ class QcCar extends Model
 	protected $fillable = [
 		'cpar_no','deskripsi','tinjauan','tindakan','penyebab','perbaikan','created_by'
 	];
+
+	public function employee_pic()
+    {
+        return $this->belongsTo('App\Employee', 'pic', 'employee_id')->withTrashed();
+    }
 }

@@ -134,6 +134,12 @@
             <input type="hidden" class="form-control" name="kategori" id="kategori" placeholder="kategori" required>
             <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
             <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
+
+            <!-- <input type="text" class="form-control" name="staff" id="staff" placeholder="staff" required value="O11081664">
+            <input type="text" class="form-control" name="chief" id="chief" placeholder="chief" required value="G03110980">
+            <input type="text" class="form-control" name="manager" id="manager" placeholder="manager" required value="A97100056">
+            <input type="text" class="form-control" name="dgm" id="dgm" placeholder="dgm" required value="E01090823">
+            <input type="text" class="form-control" name="gm" id="gm" placeholder="gm" required value="P12061848"> -->
           </div>
         </div>
 
