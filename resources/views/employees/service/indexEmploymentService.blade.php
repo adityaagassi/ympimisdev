@@ -37,7 +37,7 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
-	.dataTable > thead > tr > th[class*="sort"]:after{
+	#fill_kaizen > thead > tr > th[class*="sort"]:after{
 		content: "" !important;
 	}
 	#queueTable.dataTable {
@@ -51,7 +51,17 @@
 		height:480px;
 		overflow-y: scroll;
 	}
-	
+	#kz_detail_1 > tbody > tr > td, #kz_detail_2 > tbody > tr > td, #kz_detail_3 > tbody > tr > td, #kz_detail_4 > tbody > tr > td {
+		text-align: left;
+	}
+	#kz_detail_1, #kz_detail_2, #kz_detail_3, #kz_detail_4{
+		margin-bottom: 10px
+	}
+	#kz_sekarang > p > img, #kz_perbaikan > p > img {
+	/*	max-width: 25%;
+	max-height: 25%;*/
+}
+
 </style>
 @stop
 @section('header')
@@ -87,7 +97,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<ul class="list-group list-group-unbordered">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
-								<span class="label label-warning">Under development</span>
+								<span class="label label-warning">{{ $sisa_cuti[0]->sisa_cuti }}</span>
 								<!-- <span class="label label-danger">-</span>/
 									<span class="label label-danger">-</span> -->
 								</a>
@@ -151,6 +161,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<div class="col-md-9" style="margin-bottom: 10px">
 					<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
+
+					<!-- <button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; E - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button> -->
 				</div>
 				<div class="col-md-9">
 					<div class="box" id="boxing">
@@ -164,7 +176,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						</div>
 						<!-- /.box-header -->
 						<div class="box-body">
-							<table class="table table-bordered table-striped">
+							<table class="table table-bordered table-striped" id="history">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
 										<th style="width: 10%">Periode</th>
@@ -282,6 +294,44 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</div>
 						</div>
 					</div>
+
+					<!-- E-KAIZEN -->
+
+					<div class="box" id="kaizen" style="display: none;">
+						<div class="box-header">
+							<h3 class="box-title">E-Kaizen</h3>
+							<a class="btn btn-primary pull-right" href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+						</div>
+						<div class="box-body">
+							<div class="row">
+								<div class="col-xs-4 col-xs-offset-2">
+									<label>Tanggal Dari :</label>
+									<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
+								</div>
+								<div class="col-xs-4">
+									<label>Tanggal Sampai :</label>
+									<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
+								</div>
+							</div>
+							<hr>
+							<table class="table table-bordered" id="tableKaizen" width="100%">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Id</th>
+										<th>Tanggal</th>
+										<th>Usulan</th>
+										<th>Status</th>
+										<th>Posisi</th>
+										<th>Aplikasi</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
 				</div>
 				<!-- /.col -->
 			</div>
@@ -312,16 +362,82 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 				</div>
 			</div>
+
+			<!-- DETAIL -->
+
+			<div class="modal fade" id="modalKaizenDetail" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<center><b><h5 class="modal-title" style="font-weight: bold;">Kaizen Teian</h5>(Usulan Perbaikan)</b></center>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-xs-12">
+									<table border="1" class="table table-bordered" width="100%" id="kz_detail_1">
+										<tr>
+											<td>Nama :</td>
+											<td id="kz_nama"> Muhammad Nasiqul Ibat</td>
+											<td>Tgl. :</td>
+											<td id="kz_tanggal"> 12-11-2019</td>
+											<td>Nama Sub Leader</td>
+										</tr>
+										<tr>
+											<td>NIK :</td>
+											<td id="kz_nik"> 19014987</td>
+											<td>Bagian :</td>
+											<td id="kz_bagian"> Management Information System</td>
+											<td id="kz_leader">Agus Y</td>
+										</tr>
+									</table>
+
+									<table class="table table-bordered" width="100%" id="kz_detail_2">
+										<tr>
+											<td>
+												<label>Judul Usulan</label>
+												<div id="kz_judul"></div>
+											</td>
+										</tr>
+									</table>
+
+									<table class="table table-bordered" width="100%" id="kz_detail_3">
+										<tr>
+											<td>
+												<label>Kondisi Sekarang</label>
+												<div id="kz_sekarang"></div>
+											</td>
+										</tr>
+									</table>
+
+									<table class="table table-bordered" width="100%" id="kz_detail_4">
+										<tr>
+											<td>
+												<label>Usulan Perbaikan</label>
+												<div id="kz_perbaikan"></div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</section>
 		@endsection
 		@section('scripts')
 		<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+		<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 		<script>
 			$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				}
-			});
+			});			
 
 			var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 			var chat = 0;
@@ -338,6 +454,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 				});
 
+				// $('#kz_sub_leader').select2({ width: 'resolve' });
+
 				name = "{{ $profil[0]->name }}";
 				name = name.replace('&#039;','');
 
@@ -346,8 +464,16 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 				fill_chat();
 
-			// setInterval(check_chart, 10000);
-		});
+				$('.datepicker').datepicker({
+					autoclose: true,
+					format: 'yyyy-mm-dd',
+				})
+			});
+
+			$(window).on('pageshow', function(){
+				fill_kaizen();
+			});
+
 			$("#editData").click(function() {
 				var data = {
 					employee_id: "{{ $emp_id }}",
@@ -368,7 +494,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						}
 					})
 				}
-				
+
 			});
 
 			function check_chart() {
@@ -496,23 +622,134 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				})
 			}
 
+			function fill_kaizen() {
+				var data = {
+					employee_id : "{{ $emp_id }}"
+				}
+				$('#tableKaizen').DataTable().destroy();
+				var table2 = $('#tableKaizen').DataTable({
+					'dom': 'Bfrtip',
+					'responsive': true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"processing": true,
+					"serverSide": true,
+					"ajax": {
+						"type" : "get",
+						"url" : "{{ url("fetch/report/kaizen") }}",
+						"data" : data
+					},
+					"columns": [
+					{ "data": "id" },
+					{ "data": "propose_date" },
+					{ "data": "title" },
+					{ "data": "section" },
+					{ "data": "posisi" },
+					{ "data": "application" },
+					{ "data": "action" }
+					]
+				});
+
+				$('#tableKaizen tfoot th').each( function () {
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
+				});
+
+				table2.columns().every( function () {
+					var that = this;
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					});
+				});
+				$('#tableKaizen tfoot tr').appendTo('#tableKaizen thead');
+			}
+
+
+			$("#kz_buat").click( function() {
+				var data = {
+					employee_id: $("#kz_nik").val(),
+					employee_name: $("#kz_nama").val(),
+					propose_date: $("#kz_tanggal").val(),
+					section: 'dd',
+					sub_leader: $("#kz_sub_leader").val(),
+					title: $("#kz_judul").val(),
+					condition: CKEDITOR.instances.kz_sekarang.getData(),
+					improvement: CKEDITOR.instances.kz_perbaikan.getData()
+				};
+
+				// if ($("kz_sub_leader").val() != '' && $("kz_judul").val() != '') {
+					$.post('{{ url("post/ekaizen") }}', data, function(result, status, xhr){
+						console.log(result.datas);
+					})
+				// }
+
+			});
+
+			function detail(id) {
+				var data = {
+					id : id
+				};
+
+				$.get('{{ url("get/ekaizen") }}', data, function(result, status, xhr){
+					$("#modalKaizenDetail").modal('show');
+					$("#kz_nama").text(result.employee_name);
+					$("#kz_tanggal").text(result.propose_date);
+					$("#kz_nik").text(result.employee_id);
+					$("#kz_bagian").text(result.section);
+					$("#kz_leader").text(result.leader);
+					$("#kz_judul").text(result.title);
+					$("#kz_sekarang").html(result.condition);
+					$("#kz_perbaikan").html(result.improvement);
+				})
+			}
+
+			function load_leader() {
+				$.get('{{ url("fetch/sub_leader") }}', function(result, status, xhr){
+					
+					fill_chat();
+				})
+			}
+
 			function questionForm() {
 				$("#boxing").hide();
 				$("#question").show();
 				$("#btnTanya").hide();
 				$("#btnKembali").show();
+				$("#btnKaizen").hide();
 				chat = 1;
 			}
 
 			function kembali() {
 				$("#boxing").show();
 				$("#question").hide();
+				$("#kaizen").hide();
 				$("#btnKembali").hide();
 				$("#btnTanya").show();
+				$("#btnKaizen").show();
 				chat = 0;
 			}
 
-
+			function ekaizen() {
+				$("#boxing").hide();
+				$("#kaizen").show();
+				$("#btnTanya").hide();
+				$("#btnKaizen").hide();
+				$("#btnKembali").show();
+			}
 
 			function openSuccessGritter(title, message){
 				jQuery.gritter.add({

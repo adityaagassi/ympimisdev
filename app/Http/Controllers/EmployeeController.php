@@ -106,218 +106,242 @@ class EmployeeController extends Controller
       'all_question' => $question))->with('page', 'qna');
   }
 
-  public function updateEmp($id){
-    $keluarga = $this->keluarga;
-    $emp = Employee::where('employee_id','=',$id)
-    ->get();
-    return view('employees.master.updateEmp', array(
-      'emp' => $emp,
-      'keluarga' => $keluarga))->with('page', 'Update Employee');
-  }
-
-  public function insertEmp(){
-    $dev = OrganizationStructure::where('status','LIKE','DIV%')->get();
-    $dep = OrganizationStructure::where('status','LIKE','DEP%')->get();
-    $sec = OrganizationStructure::where('status','LIKE','SEC%')->get();
-    $sub = OrganizationStructure::where('status','LIKE','SSC%')->get();
-    $grup = OrganizationStructure::where('status','LIKE','GRP%')->get();
-    $kode =  DB::table('total_meeting_codes')->select('code')->groupBy('code')->get();
-    $grade = Grade::orderBy('id', 'asc')->get();
-    $position = Position::orderBy('id', 'asc')->get();
-    $cc = CostCenter::get();
-
-
-
-    return view('employees.master.insertEmp', array(
-      'dev' => $dev,
-      'dep' => $dep,
-      'sec' => $sec,
-      'sub' => $sub,
-      'grup' => $grup,
-      'grade' => $grade,
-      'cc' => $cc,
-      'kode' => $kode,
-      'position' => $position, 
-      'keluarga' => $this->keluarga ))->with('page', 'Master Employee');
-  }
-
-  public function fetchMasterEmp(Request $request){
-    $where = "";
-
-    if ($request->get("filter") != "") {
-      if($request->get("filter") == "ofc") {
-        $where = "where code in ('OFC')";
-      }
-      else if($request->get("filter") == "prod") {
-        $where = "where code in ('WH', 'AP', 'EI', 'MTC', 'PP', 'PE', 'QA', 'WST')";
-      }
-    }
-
-    $emp = "select employees.employee_id,name, department, section, DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
-    LEFT JOIN (select employee_id, department, section, `group` from mutation_logs where valid_to is null group by employee_id, department, section, `group`) mutation_logs on employees.employee_id = mutation_logs.employee_id
-    left join (
-    select employee_id, status from employment_logs 
-    WHERE id IN (
-    SELECT MAX(id)
-    FROM employment_logs
-    GROUP BY employment_logs.employee_id
-    )
-    ) stat on stat.employee_id = employees.employee_id
-    LEFT JOIN ympimis.total_meeting_codes AS helper ON mutation_logs.`group` = helper.group_name
-    ".$where."
-    ORDER BY employees.remark asc";
-    $masteremp = DB::select($emp);
-
-    return DataTables::of($masteremp)
-    ->addColumn('action', function($masteremp){
-
-      if ($masteremp->status != 'Tetap') {
-        return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
-        <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>
-        <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Upgrade" onclick="modalUpgrade(\''.$masteremp->employee_id.'\', \''.$masteremp->name.'\',\''.$masteremp->status.'\')"><i class="fa fa-arrow-up"></i></button>';
-      }
-      else {
-        return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
-        <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>';
-      }
-    })
-
-    ->rawColumns(['action' => 'action'])
-    ->make(true);
-  }
-
-  public function fetchdetail(Request $request){
-
-    $detail ="select employees.employee_id,employees.name,employees.avatar,employees.direct_superior,employees.birth_place, DATE_FORMAT(employees.birth_date,' %d %b %Y') birth_date,employees.gender,employees.address,employees.family_id, DATE_FORMAT(employees.hire_date,' %d %b %Y') hire_date,employees.remark,employees.phone,employees.account,employees.card_id,employees.npwp,employees.bpjstk,employees.jp,employees.bpjskes,mutation_logs.division,mutation_logs.department,mutation_logs.section,mutation_logs.sub_section,mutation_logs.group,promotion_logs.grade_code,promotion_logs.position,promotion_logs.grade_name from employees
-    LEFT JOIN (select employee_id,cost_center, division, department, section, sub_section, `group` from mutation_logs where employee_id = '".$request->get('nik')."' and valid_to is null) mutation_logs on employees.employee_id = mutation_logs.employee_id 
-    LEFT JOIN (select employee_id,grade_code, grade_name, position from promotion_logs where employee_id = '".$request->get('nik')."' and valid_to is null) promotion_logs on employees.employee_id = promotion_logs.employee_id
-    where employees.employee_id ='".$request->get('nik')."'
-    ORDER BY employees.remark asc";
-
-    $detail2 = DB::select($detail);
-    $response = array(
-      'status' => true,
-      'detail' => $detail2,
-    );
-    return Response::json($response);
-  }
-
-
-  public function empCreate(Request $request)
+  public function indexKaizen()
   {
-    $id = Auth::id();
+   return view('employees.service.indexKaizen', array(
+    'title' => 'E - Kaizen',
+    'title_jp' => '??'))->with('page', 'Kaizen');
+ }
 
-    try{
+ public function makeKaizen($id,$name){
+  $q_subleader = "select employees.name, position from employees 
+  left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+  where valid_to is null and position = 'Leader'
+  and end_date is null
+  order by name asc";
 
-      $hire_date = $request->get('tglM');
+  $subleader = db::select($q_subleader);
 
-      if($request->hasFile('foto')){
-        $files = $request->file('foto');
-        foreach ($files as $file) 
-        {
-          $number= $request->get('nik');
-          $data = file_get_contents($file);
-          $ext = $file->getClientOriginalExtension();
-          $photo_number = $number.".".$ext;
-          $filepath = public_path() . "/uploads/employee_photos/" . $photo_number;
+  return view('employees.service.ekaizenForm', array(
+    'title' => 'E - Kaizen',
+    'emp_id' => $id,
+    'name' => $name,
+    'subleaders' => $subleader,
+    'title_jp' => '??'));
+}
 
-          $emp = new Employee([
-            'employee_id' => $request->get('nik'),
-            'name' => $request->get('nama'),
-            'gender' => $request->get('jk'),
-            'family_id' => $request->get('statusK'),
-            'birth_place' => $request->get('tmptL'),
-            'birth_date' => $request->get('tglL'),
-            'address' => $request->get('alamat'),
-            'phone' => $request->get('hp'),
-            'card_id' => $request->get('ktp'), 
-            'account' => $request->get('no_rek'),  
-            'bpjstk' => $request->get('bpjstk'),
-            'jp' => $request->get('jp'), 
-            'bpjskes' => $request->get('bpjskes'), 
-            'npwp' => $request->get('npwp'),                 
-            'direct_superior' => $request->get('leader'), 
-            'hire_date' => $hire_date, 
-            'avatar' => $photo_number, 
-            'remark' => $request->get('pin'), 
-            'created_by' => $id
-          ]);
+public function updateEmp($id){
+  $keluarga = $this->keluarga;
+  $emp = Employee::where('employee_id','=',$id)
+  ->get();
+  return view('employees.master.updateEmp', array(
+    'emp' => $emp,
+    'keluarga' => $keluarga))->with('page', 'Update Employee');
+}
 
-          $emp->save();
-          File::put($filepath, $data);
-        }
-      }else{
-       $emp = new Employee([
-        'employee_id' => $request->get('nik'),
-        'name' => $request->get('nama'),
-        'gender' => $request->get('jk'),
-        'family_id' => $request->get('statusK'),
-        'birth_place' => $request->get('tmptL'),
-        'birth_date' => $request->get('tglL'),
-        'address' => $request->get('alamat'),
-        'phone' => $request->get('hp'),
-        'card_id' => $request->get('ktp'), 
-        'account' => $request->get('no_rek'),  
-        'bpjstk' => $request->get('bpjstk'), 
-        'jp' => $request->get('jp'), 
-        'bpjskes' => $request->get('bpjskes'), 
-        'npwp' => $request->get('npwp'),                 
-        'direct_superior' => $request->get('leader'), 
-        'hire_date' => $hire_date, 
-        'remark' => $request->get('pin'), 
-        'created_by' => $id
-      ]);
+public function insertEmp(){
+  $dev = OrganizationStructure::where('status','LIKE','DIV%')->get();
+  $dep = OrganizationStructure::where('status','LIKE','DEP%')->get();
+  $sec = OrganizationStructure::where('status','LIKE','SEC%')->get();
+  $sub = OrganizationStructure::where('status','LIKE','SSC%')->get();
+  $grup = OrganizationStructure::where('status','LIKE','GRP%')->get();
+  $kode =  DB::table('total_meeting_codes')->select('code')->groupBy('code')->get();
+  $grade = Grade::orderBy('id', 'asc')->get();
+  $position = Position::orderBy('id', 'asc')->get();
+  $cc = CostCenter::get();
 
-       $emp->save();
-     }
+
+
+  return view('employees.master.insertEmp', array(
+    'dev' => $dev,
+    'dep' => $dep,
+    'sec' => $sec,
+    'sub' => $sub,
+    'grup' => $grup,
+    'grade' => $grade,
+    'cc' => $cc,
+    'kode' => $kode,
+    'position' => $position, 
+    'keluarga' => $this->keluarga ))->with('page', 'Master Employee');
+}
+
+public function fetchMasterEmp(Request $request){
+  $where = "";
+
+  if ($request->get("filter") != "") {
+    if($request->get("filter") == "ofc") {
+      $where = "where code in ('OFC')";
+    }
+    else if($request->get("filter") == "prod") {
+      $where = "where code in ('WH', 'AP', 'EI', 'MTC', 'PP', 'PE', 'QA', 'WST')";
+    }
+  }
+
+  $emp = "select employees.employee_id,name, department, section, DATE_FORMAT(hire_date,' %d %b %Y') hire_date, stat.status from employees
+  LEFT JOIN (select employee_id, department, section, `group` from mutation_logs where valid_to is null group by employee_id, department, section, `group`) mutation_logs on employees.employee_id = mutation_logs.employee_id
+  left join (
+  select employee_id, status from employment_logs 
+  WHERE id IN (
+  SELECT MAX(id)
+  FROM employment_logs
+  GROUP BY employment_logs.employee_id
+  )
+  ) stat on stat.employee_id = employees.employee_id
+  LEFT JOIN ympimis.total_meeting_codes AS helper ON mutation_logs.`group` = helper.group_name
+  ".$where."
+  ORDER BY employees.remark asc";
+  $masteremp = DB::select($emp);
+
+  return DataTables::of($masteremp)
+  ->addColumn('action', function($masteremp){
+
+    if ($masteremp->status != 'Tetap') {
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
+      <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>
+      <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Upgrade" onclick="modalUpgrade(\''.$masteremp->employee_id.'\', \''.$masteremp->name.'\',\''.$masteremp->status.'\')"><i class="fa fa-arrow-up"></i></button>';
+    }
+    else {
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $masteremp->employee_id . '">Details</a>
+      <a href="'. url("index/updateEmp")."/".$masteremp->employee_id.'" class="btn btn-xs btn-warning"  id="' . $masteremp->employee_id . '">Update</a>';
+    }
+  })
+
+  ->rawColumns(['action' => 'action'])
+  ->make(true);
+}
+
+public function fetchdetail(Request $request){
+
+  $detail ="select employees.employee_id,employees.name,employees.avatar,employees.direct_superior,employees.birth_place, DATE_FORMAT(employees.birth_date,' %d %b %Y') birth_date,employees.gender,employees.address,employees.family_id, DATE_FORMAT(employees.hire_date,' %d %b %Y') hire_date,employees.remark,employees.phone,employees.account,employees.card_id,employees.npwp,employees.bpjstk,employees.jp,employees.bpjskes,mutation_logs.division,mutation_logs.department,mutation_logs.section,mutation_logs.sub_section,mutation_logs.group,promotion_logs.grade_code,promotion_logs.position,promotion_logs.grade_name from employees
+  LEFT JOIN (select employee_id,cost_center, division, department, section, sub_section, `group` from mutation_logs where employee_id = '".$request->get('nik')."' and valid_to is null) mutation_logs on employees.employee_id = mutation_logs.employee_id 
+  LEFT JOIN (select employee_id,grade_code, grade_name, position from promotion_logs where employee_id = '".$request->get('nik')."' and valid_to is null) promotion_logs on employees.employee_id = promotion_logs.employee_id
+  where employees.employee_id ='".$request->get('nik')."'
+  ORDER BY employees.remark asc";
+
+  $detail2 = DB::select($detail);
+  $response = array(
+    'status' => true,
+    'detail' => $detail2,
+  );
+  return Response::json($response);
+}
+
+
+public function empCreate(Request $request)
+{
+  $id = Auth::id();
+
+  try{
+
+    $hire_date = $request->get('tglM');
+
+    if($request->hasFile('foto')){
+      $files = $request->file('foto');
+      foreach ($files as $file) 
+      {
+        $number= $request->get('nik');
+        $data = file_get_contents($file);
+        $ext = $file->getClientOriginalExtension();
+        $photo_number = $number.".".$ext;
+        $filepath = public_path() . "/uploads/employee_photos/" . $photo_number;
+
+        $emp = new Employee([
+          'employee_id' => $request->get('nik'),
+          'name' => $request->get('nama'),
+          'gender' => $request->get('jk'),
+          'family_id' => $request->get('statusK'),
+          'birth_place' => $request->get('tmptL'),
+          'birth_date' => $request->get('tglL'),
+          'address' => $request->get('alamat'),
+          'phone' => $request->get('hp'),
+          'card_id' => $request->get('ktp'), 
+          'account' => $request->get('no_rek'),  
+          'bpjstk' => $request->get('bpjstk'),
+          'jp' => $request->get('jp'), 
+          'bpjskes' => $request->get('bpjskes'), 
+          'npwp' => $request->get('npwp'),                 
+          'direct_superior' => $request->get('leader'), 
+          'hire_date' => $hire_date, 
+          'avatar' => $photo_number, 
+          'remark' => $request->get('pin'), 
+          'created_by' => $id
+        ]);
+
+        $emp->save();
+        File::put($filepath, $data);
+      }
+    }else{
+     $emp = new Employee([
+      'employee_id' => $request->get('nik'),
+      'name' => $request->get('nama'),
+      'gender' => $request->get('jk'),
+      'family_id' => $request->get('statusK'),
+      'birth_place' => $request->get('tmptL'),
+      'birth_date' => $request->get('tglL'),
+      'address' => $request->get('alamat'),
+      'phone' => $request->get('hp'),
+      'card_id' => $request->get('ktp'), 
+      'account' => $request->get('no_rek'),  
+      'bpjstk' => $request->get('bpjstk'), 
+      'jp' => $request->get('jp'), 
+      'bpjskes' => $request->get('bpjskes'), 
+      'npwp' => $request->get('npwp'),                 
+      'direct_superior' => $request->get('leader'), 
+      'hire_date' => $hire_date, 
+      'remark' => $request->get('pin'), 
+      'created_by' => $id
+    ]);
+
+     $emp->save();
+   }
 
        // --------------- Promotion Log insert
 
-     $grade1 = $request->get('grade');
-     $grade2 = explode("#", $grade1);
-     $grade = new PromotionLog([
-      'employee_id' => $request->get('nik'),
-      'grade_code' => $grade2[0],
-      'grade_name' => $grade2[1],
-      'position' => $request->get('jabatan'),
-      'valid_from' => $hire_date,
-      'created_by' => $id
+   $grade1 = $request->get('grade');
+   $grade2 = explode("#", $grade1);
+   $grade = new PromotionLog([
+    'employee_id' => $request->get('nik'),
+    'grade_code' => $grade2[0],
+    'grade_name' => $grade2[1],
+    'position' => $request->get('jabatan'),
+    'valid_from' => $hire_date,
+    'created_by' => $id
 
-    ]);
+  ]);
 
-     $grade->save();
+   $grade->save();
 
         // --------------- Mutation Log insert
-     $jabatan = new Mutationlog ([
-       'employee_id' => $request->get('nik'), 
-       'cost_center' => $request->get('cs'),
-       'division' => $request->get('devisi'), 
-       'department' => $request->get('departemen'), 
-       'section' => $request->get('section'), 
-       'sub_section' => $request->get('subsection'), 
-       'group' => $request->get('group'), 
-       'valid_from' => $hire_date,
-       'created_by' => $id
-     ]);
+   $jabatan = new Mutationlog ([
+     'employee_id' => $request->get('nik'), 
+     'cost_center' => $request->get('cs'),
+     'division' => $request->get('devisi'), 
+     'department' => $request->get('departemen'), 
+     'section' => $request->get('section'), 
+     'sub_section' => $request->get('subsection'), 
+     'group' => $request->get('group'), 
+     'valid_from' => $hire_date,
+     'created_by' => $id
+   ]);
 
-     $jabatan->save();
+   $jabatan->save();
 
      // --------------- Employment Log insert
 
-     $emp = new EmploymentLog ([
-       'employee_id' => $request->get('nik'), 
-       'status' => $request->get('statusKar'),
-       'valid_from' => $hire_date,
-       'created_by' => $id
-     ]);
+   $emp = new EmploymentLog ([
+     'employee_id' => $request->get('nik'), 
+     'status' => $request->get('statusKar'),
+     'valid_from' => $hire_date,
+     'created_by' => $id
+   ]);
 
-     $emp->save();
+   $emp->save();
 
-     return redirect('/index/insertEmp')->with('status', 'Input Employee success')->with('page', 'Master Employee');
-   }
-   catch (QueryException $e){
-    return redirect('/index/insertEmp')->with('error', "Employee already exists")->with('page', 'Master Employee');
-  }
+   return redirect('/index/insertEmp')->with('status', 'Input Employee success')->with('page', 'Master Employee');
+ }
+ catch (QueryException $e){
+  return redirect('/index/insertEmp')->with('error', "Employee already exists")->with('page', 'Master Employee');
+}
 }
 
 
@@ -879,6 +903,15 @@ public function indexEmployeeService()
 
 $absences = db::connection('mysql3')->select($absence);
 
+$ct = db::connection('mysql3')->select("select SUM(leave_quota) - SUM(cuti) as sisa_cuti from
+  (
+  select leave_quota, 0 as cuti from 
+  (select YEAR(now()) - YEAR(hire_date)
+  - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
+  join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed
+  union all
+  select 0 leave_quota, COUNT(nik) as cuti from presensi where nik = '".$emp_id."' and shift in ('CT','I','A','S') and year(tanggal) = '2019') as ct;");
+
 $datas = db::select($query);
 
 if($datas) {
@@ -888,7 +921,8 @@ if($datas) {
     'title_jp' => $title_jp,
     'emp_id' => $emp_id,
     'profil' => $datas,
-    'absences' => $absences
+    'absences' => $absences,
+    'sisa_cuti' => $ct
   ))->with('page', 'Employment Services');
 } else {
   return view('home')->with('page', 'Dashboard');
@@ -1445,15 +1479,29 @@ public function editNumber(Request $request)
 public function fetchKaizen(Request $request)
 {
   $kz = KaizenForm::where('employee_id',$request->get('employee_id'))->get();
-  // $kz = DB::select($q_kz);
 
   return DataTables::of($kz)
   ->addColumn('action', function($kz){
-    return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->employee_id . '"><i class="fa fa-eye"></i> Details</a>
-    <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->employee_id . '"><i class="fa fa-pencil"></i> Ubah</a>';
+
+    if ($kz->status == 0) {
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
+      <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->id . '"><i class="fa fa-pencil"></i> Ubah</a>';
+    } else {
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>';
+    }
+    
   })
 
   ->rawColumns(['action' => 'action'])
+  ->addColumn('posisi', function($kz){
+
+
+    return 'Foreman';
+
+    
+  })
+
+  ->rawColumns(['posisi' => 'posisi'])
   ->make(true);
 }
 
@@ -1468,7 +1516,8 @@ public function postKaizen(Request $request)
       'sub_leader' => $request->get('sub_leader'),
       'title' => $request->get('title'),
       'condition' => $request->get('condition'),
-      'improvement' => $request->get('improvement')
+      'improvement' => $request->get('improvement'),
+      'status' => '-1'
     ]);
 
     $kz->save();
@@ -1495,11 +1544,38 @@ public function fetchSubLeader()
   ->whereNull("valid_to")
   ->get();
 
-  $response = array(
-    'status' => true,
-    'datas' => $ldr
-  );
-  return Response::json($response);
+  return Response::json($ldr);
+}
+
+public function getKaizen(Request $request)
+{
+  $kzn = KaizenForm::where('id',$request->get('id'))->first();
+
+  return Response::json($kzn);
+}
+
+public function fetchDataKaizen()
+{
+  $kzn = KaizenForm::get();
+
+  return DataTables::of($kzn)
+  ->addColumn('stat', function($kzn){
+
+    if ($kzn->status == '-1') {
+      return '
+      <input type="radio" name="kz_radio" value="1">Kaizen
+      <input type="radio" name="kz_radio" value="0">Tidak
+      ';
+    } else {
+      return 'sudah dinilai';
+    }
+    
+  })
+  ->addColumn('action', function($kzn){
+    return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kzn->id . '"><i class="fa fa-eye"></i> Details</a>';
+  })
+  ->rawColumns(['stat', 'action'])
+  ->make(true);
 }
 
 
