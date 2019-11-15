@@ -30,7 +30,7 @@
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
 	<div class="row">
-		<div class="col-xs-6">
+		<div class="col-xs-5">
 			<div class="box">
 				<div class="box-body">
 					<span style="font-size: 20px; font-weight: bold;">ITEM LIST:</span>
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-7">
 			<div class="row">
 				<input type="hidden" id="id_silver">
 				<div class="col-xs-12">

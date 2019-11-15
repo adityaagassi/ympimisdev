@@ -65,7 +65,8 @@
 					<button id="search" onClick="fillChart()" class="btn btn-primary bg-purple">Update Chart</button>
 				</div>
 			</div>
-			<div id="container" style="height: 680px;"></div>
+			<div id="container" style=""></div>
+			<div id="container2" style=""></div>
 		</div>
 	</div>
 </section>
@@ -351,6 +352,115 @@
 		};
 		$.get('{{ url("fetch/stocktaking/silver_report") }}', data, function(result, status, xhr){
 			if(result.status){
+
+				console.table(result.variances);
+
+
+				var tanggal = [];
+				var fl91 = [];
+				
+				var xCategories = [];
+
+
+				var fl51 = [];
+				var fl21 = [];
+				var fla1 = [];
+				var fla0 = [];
+				var mscr = [];
+				var cat;
+
+				for (var i = 0; i < result.variances.length; i++) {
+
+					cat = result.variances[i].stock_date;
+					if(xCategories.indexOf(cat) === -1){
+						xCategories[xCategories.length] = cat;
+					}
+
+					if(result.variances[i].storage_location == 'FL91'){
+						fl91.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+					if(result.variances[i].storage_location == 'FL51'){
+						fl51.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+					if(result.variances[i].storage_location == 'FL21'){
+						fl21.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+					if(result.variances[i].storage_location == 'FLA1'){
+						fla1.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+					if(result.variances[i].storage_location == 'FLA0'){
+						fla0.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+					if(result.variances[i].storage_location == 'MSCR'){
+						mscr.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+					}
+
+				}
+
+				Highcharts.chart('container2', {
+					chart: {
+						type: 'spline'
+					},
+					title: {
+						text: 'Silver Stock Taking Report Trend',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'Percent'
+						}
+					},
+					xAxis: {
+						categories: xCategories,
+						type: 'category',
+						labels: {
+							style: {
+								fontSize: '20px'
+							}
+						},
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle'
+					},
+
+					plotOptions: {
+						series: {
+							label: {
+								connectorAllowed: false
+							},
+						}
+					},
+
+					series: [
+					{
+						name: 'FL91',
+						data: fl91
+					},{
+						name: 'FL51',
+						data: fl51
+					},{
+						name: 'FL21',
+						data: fl21
+					},{
+						name: 'FLA1',
+						data: fla1
+					},{
+						name: 'FLA0',
+						data: fla0
+					},{
+						name: 'MSCR',
+						data: mscr
+					}
+					],
+
+				});
+
+
 				var data = result.variances;
 				var xCategories = [];
 				var varFL91 = [];
@@ -402,6 +512,9 @@
 						okMSCR.push(intVal(data[i].ok));
 					}
 				}
+
+				// console.log(cat);
+				// console.log(xCategories);
 
 				if(xCategories.length <= 3){
 					var scrollMax = xCategories.length-1;
@@ -611,19 +724,37 @@ function fillModal(cat, name){
 			var resultTotal3 = 0;
 			var resultTotal4 = 0;
 			$.each(result.variance, function(key, value) {
-				resultData += '<tr>';
-				resultData += '<td style="width: 1%">'+ value.material_number +'</td>';
-				resultData += '<td style="width: 5%">'+ value.material_description +'</td>';
-				resultData += '<td style="width: 1%">'+ value.storage_location +'</td>';
-				resultData += '<td style="width: 1%">'+ value.pi.toLocaleString() +'</td>';
-				resultData += '<td style="width: 1%">'+ value.book.toLocaleString() +'</td>';
-				resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
-				resultData += '<td style="width: 1%; font-weight: bold;">'+ Math.abs(value.diff_qty).toLocaleString() +'</td>';
-				resultData += '</tr>';
-				resultTotal1 += value.pi;
-				resultTotal2 += value.book;
-				resultTotal3 += value.diff_qty;	
-				resultTotal4 += Math.abs(value.diff_qty);				
+
+				if(value.diff_abs > 0){
+					resultData += '<tr style="background-color: rgb(255, 204, 255)">';
+					resultData += '<td style="width: 1%">'+ value.material_number +'</td>';
+					resultData += '<td style="width: 5%">'+ value.material_description +'</td>';
+					resultData += '<td style="width: 1%">'+ value.storage_location +'</td>';
+					resultData += '<td style="width: 1%">'+ value.pi.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%">'+ value.book.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_abs.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal1 += value.pi;
+					resultTotal2 += value.book;
+					resultTotal3 += value.diff_qty;	
+					resultTotal4 += Math.abs(value.diff_qty);				
+				}else{
+					resultData += '<tr style="background-color: rgb(204, 255, 255);">';
+					resultData += '<td style="width: 1%">'+ value.material_number +'</td>';
+					resultData += '<td style="width: 5%">'+ value.material_description +'</td>';
+					resultData += '<td style="width: 1%">'+ value.storage_location +'</td>';
+					resultData += '<td style="width: 1%">'+ value.pi.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%">'+ value.book.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_qty.toLocaleString() +'</td>';
+					resultData += '<td style="width: 1%; font-weight: bold;">'+ value.diff_abs.toLocaleString() +'</td>';
+					resultData += '</tr>';
+					resultTotal1 += value.pi;
+					resultTotal2 += value.book;
+					resultTotal3 += value.diff_qty;	
+					resultTotal4 += Math.abs(value.diff_qty);				
+				}
+
 			});
 			$('#modalDetailBody').append(resultData);
 			$('#modalDetailTotal1').html('');

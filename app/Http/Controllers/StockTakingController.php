@@ -117,7 +117,7 @@ class StockTakingController extends Controller
 			$loc = "";
 		}
 
-		$query = "select material_number, material_description, storage_location, sum(pi) as pi, sum(book) as book, sum(pi)-sum(book) as diff_qty from
+		$query = "select material_number, material_description, storage_location, sum(pi) as pi, sum(book) as book, sum(pi)-sum(book) as diff_qty, ABS(sum(pi)-sum(book)) as diff_abs from
 		(
 		select storage_location_stocks.material_number, storage_location_stocks.material_description, storage_location_stocks.storage_location, storage_location_stocks.unrestricted as book, 0 as pi, storage_location_stocks.stock_date from storage_location_stocks where storage_location_stocks.storage_location in (select distinct storage_location from stocktaking_silver_lists) and storage_location_stocks.material_number in (select distinct material_number from stocktaking_silver_lists) and storage_location_stocks.stock_date = '".$stock_date."'
 
@@ -126,7 +126,7 @@ class StockTakingController extends Controller
 		select stocktaking_silver_logs.material_number, stocktaking_silver_logs.material_description, stocktaking_silver_logs.storage_location, 0 as book, stocktaking_silver_logs.quantity as pi, date(created_at) as stock_date from stocktaking_silver_logs where date(stocktaking_silver_logs.created_at) = '".$stock_date."') as variance 
 		group by material_number, material_description, storage_location
 		".$loc."
-		order by diff_qty asc";
+		order by diff_abs desc, diff_qty asc";
 
 		$variance = DB::select($query);
 
