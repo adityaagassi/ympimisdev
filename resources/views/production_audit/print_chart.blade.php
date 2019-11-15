@@ -32,7 +32,7 @@ table, th, td {
 			<td colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 		</tr>
 		<tr>
-			<td rowspan="5" style="width: 20px"><center><img width="80px" src="{{ asset('images/logo_yamaha.jpg') }}" alt=""></center></td>
+			<td rowspan="5" style="width: 20px"><center><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></center></td>
 		</tr>
 		<tr>
 			<td>Department</td>
