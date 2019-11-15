@@ -68,6 +68,8 @@ table.table-bordered > tfoot > tr > th{
                 <th>Frequency</th>
                 <th>Department</th>
                 <th>Activity Type</th>
+                <th>Leader</th>
+                <th>Foreman</th>
                 <th>Details</th>
                 <th>Action</th>
               </tr>
@@ -80,6 +82,8 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$activity_list->frequency}}</td>
                 <td>{{$activity_list->departments->department_name}}</td>
                 <td>{{$activity_list->activity_type}}</td>
+                <td>{{$activity_list->leader_dept}}</td>
+                <td>{{$activity_list->foreman_dept}}</td>
                 <td><a class="btn btn-primary btn-sm" href="{{url("index/production_report/activity/".$activity_list->id)}}">Details</a>
                   @if($activity_list->activity_type == "Audit")
                   <a class="btn btn-info btn-sm" href="{{url("index/point_check_audit/index/".$activity_list->id)}}">Point Check Master</a>
@@ -99,6 +103,8 @@ table.table-bordered > tfoot > tr > th{
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

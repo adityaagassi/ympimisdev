@@ -78,7 +78,7 @@ table.table-bordered > tfoot > tr > th{
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off">
+									<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Choose a Date">
 								</div>
 							</div>
 						</div>

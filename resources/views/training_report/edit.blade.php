@@ -155,31 +155,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
-                <option value=""></option>
-                @foreach($leaderForeman as $leaderForeman)
-                @if($training_report->leader == $leaderForeman->name)
-                  <option value="{{ $leaderForeman->name }}" selected>{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
-                @else
-                  <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
-                @endif
-                @endforeach
-              </select>
+              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" required value="{{ $training_report->leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
-                <option value=""></option>
-                @foreach($foreman as $foreman)
-                @if($training_report->foreman == $foreman->name)
-                  <option value="{{ $foreman->name }}" selected>{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
-                @else
-                  <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
-                @endif
-                @endforeach
-              </select>
+              <input type="text" class="form-control" name="foreman" placeholder="Enter Foreman" required value="{{ $training_report->foreman }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">

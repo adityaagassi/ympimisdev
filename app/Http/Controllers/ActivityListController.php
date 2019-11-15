@@ -83,9 +83,23 @@ class ActivityListController extends Controller
     {
     	$queryDepartments = "SELECT * FROM departments where id_division=5";
     	$department = DB::select($queryDepartments);
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where mutation_logs.`group` = 'leader' or mutation_logs.`group`='foreman'";
+      $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where mutation_logs.`group`='foreman'";
+      $leader = DB::select($queryLeader);
+      $foreman = DB::select($queryForeman);
+
     	$data = array('department' => $department,
     				  'activity_type' => $this->activity_type,
               'id' => 0,
+              'leader' => $leader,
+              'foreman' => $foreman,
               'dept_name' => null);
     	return view('activity_list.create', $data
     		)->with('page', 'Activity List');
@@ -101,10 +115,24 @@ class ActivityListController extends Controller
 
       $queryDepartments = "SELECT * FROM departments where id_division=5";
       $department = DB::select($queryDepartments);
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $leader = DB::select($queryLeader);
+      $foreman = DB::select($queryForeman);
+
       $data = array('department' => $department,
                     'activity_type' => $this->activity_type,
                     'dept_name' => $dept_name,
                     'id' => $id,
+                    'leader' => $leader,
+                    'foreman' => $foreman,
                     'no' => $no);
       return view('activity_list.create', $data
         )->with('page', 'Activity List');
@@ -120,6 +148,8 @@ class ActivityListController extends Controller
             'frequency' => $request->get('frequency'),
             'department_id' => $request->get('department_id'),
             'activity_type' => $request->get('activity_type'),
+            'leader_dept' => $request->get('leader'),
+            'foreman_dept' => $request->get('foreman'),
             'created_by' => $id
           ]);
 
@@ -147,6 +177,8 @@ class ActivityListController extends Controller
             'frequency' => $request->get('frequency'),
             'department_id' => $request->get('department_id'),
             'activity_type' => $request->get('activity_type'),
+            'leader_dept' => $request->get('leader'),
+            'foreman_dept' => $request->get('foreman'),
             'created_by' => $id_user
           ]);
 
@@ -176,10 +208,24 @@ class ActivityListController extends Controller
     {
       $queryDepartments = "SELECT * FROM departments where id_division=5";
       $department = DB::select($queryDepartments);
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where mutation_logs.`group` = 'leader' or mutation_logs.`group`='foreman'";
+      $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where mutation_logs.`group`='foreman'";
+      $leader = DB::select($queryLeader);
+      $foreman = DB::select($queryForeman);
+
       $activity_list = ActivityList::find($id);
       $data = array(
               'id_department' => 0,
               'department' => $department,
+              'leader' => $leader,
+              'foreman' => $foreman,
       				'activity_list' => $activity_list,
   					  'activity_type' => $this->activity_type);
     	return view('activity_list.edit', $data
@@ -192,11 +238,26 @@ class ActivityListController extends Controller
       $department = DB::select($queryDepartments);
       $activity_list = ActivityList::find($id);
       $id_department = $activity_list->department_id;
+      $dept_name = $activity_list->departments->department_name;
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $queryForeman = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $leader = DB::select($queryLeader);
+      $foreman = DB::select($queryForeman);
+
       $data = array(
               'id_department' => $id_department,
               'department' => $department,
               'no' => $no,
               'activity_list' => $activity_list,
+              'leader' => $leader,
+              'foreman' => $foreman,
               'activity_type' => $this->activity_type);
       return view('activity_list.edit', $data
         )->with('page', 'Activity List');
@@ -211,6 +272,8 @@ class ActivityListController extends Controller
             $activity_list->frequency = $request->get('frequency');
             $activity_list->department_id = $request->get('department_id');
             $activity_list->activity_type = $request->get('activity_type');
+            $activity_list->leader_dept = $request->get('leader');
+            $activity_list->foreman_dept = $request->get('foreman');
             $activity_list->save();
             return redirect('/index/activity_list')->with('status', 'Activity data has been updated.')->with('page', 'Activity List');
           }
@@ -234,6 +297,8 @@ class ActivityListController extends Controller
             $activity_list->frequency = $request->get('frequency');
             $activity_list->department_id = $request->get('department_id');
             $activity_list->activity_type = $request->get('activity_type');
+            $activity_list->leader_dept = $request->get('leader');
+            $activity_list->foreman_dept = $request->get('foreman');
             $activity_list->save();
             return redirect('/index/activity_list/filter/'.$id_department.'/'.$no)->with('status', 'Activity data has been updated.')->with('page', 'Activity List');
           }

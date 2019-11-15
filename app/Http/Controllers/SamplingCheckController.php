@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use App\SamplingCheck;
 use App\SamplingCheckDetail;
+use App\WeeklyCalendar;
 use Response;
 use DataTables;
 use Excel;
@@ -56,9 +57,6 @@ class SamplingCheckController extends Controller
 
     function filter_sampling(Request $request,$id)
     {
-        $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
-
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -158,18 +156,8 @@ class SamplingCheckController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
-
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-
-        $leaderForeman = DB::select($queryLeaderForeman);
-        $foreman = DB::select($queryForeman);
+        $leader = $activityList->leader_dept;
+        $foreman = $activityList->foreman_dept;
 
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);
@@ -181,7 +169,7 @@ class SamplingCheckController extends Controller
         $product = DB::select($queryProduct);
 
         $data = array('product' => $product,
-                      'leaderForeman' => $leaderForeman,
+                      'leader' => $leader,
                       'foreman' => $foreman,
                       'departments' => $departments,
                       'section' => $section,
@@ -195,6 +183,10 @@ class SamplingCheckController extends Controller
     function store(Request $request,$id)
     {
             $month = date("m",strtotime($request->input('date')));
+            $week = WeeklyCalendar::where('week_date',$request->get('date'))->get();
+            foreach($week as $week){
+                $week_name = $week->week_name;
+            }
             $id_user = Auth::id();
             SamplingCheck::create([
                 'activity_list_id' => $id,
@@ -203,6 +195,7 @@ class SamplingCheckController extends Controller
                 'subsection' => $request->input('subsection'),
                 'month' => $month,
                 'date' => $request->input('date'),
+                'week_name' => $week_name,
                 'product' => $request->input('product'),
                 'no_seri_part' => $request->input('no_seri_part'),
                 'jumlah_cek' => $request->input('jumlah_cek'),
@@ -224,18 +217,8 @@ class SamplingCheckController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
-
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-
-        $leaderForeman = DB::select($queryLeaderForeman);
-        $foreman = DB::select($queryForeman);
+        $leader = $activityList->leader_dept;
+        $foreman = $activityList->foreman_dept;
 
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);
@@ -249,7 +232,7 @@ class SamplingCheckController extends Controller
         $sampling_check = SamplingCheck::find($sampling_check_id);
 
         $data = array('product' => $product,
-                      'leaderForeman' => $leaderForeman,
+                      'leader' => $leader,
                       'foreman' => $foreman,
                       'departments' => $departments,
                       'section' => $section,
@@ -265,6 +248,10 @@ class SamplingCheckController extends Controller
     {
         try{
                 $month = date("m",strtotime($request->get('date')));
+                $week = WeeklyCalendar::where('week_date',$request->get('date'))->get();
+                foreach($week as $week){
+                    $week_name = $week->week_name;
+                }
                 $sampling_check = SamplingCheck::find($sampling_check_id);
                 $sampling_check->activity_list_id = $id;
                 $sampling_check->department = $request->get('department');
@@ -273,6 +260,7 @@ class SamplingCheckController extends Controller
                 $sampling_check->month = $month;
                 $sampling_check->subsection = $request->get('subsection');
                 $sampling_check->date = $request->get('date');
+                $sampling_check->week_name = $week_name;
                 $sampling_check->no_seri_part = $request->get('no_seri_part');
                 $sampling_check->jumlah_cek = $request->get('jumlah_cek');
                 $sampling_check->leader = $request->get('leader');
@@ -602,7 +590,6 @@ class SamplingCheckController extends Controller
                           'foreman' => $foreman,
                           'section' => $section,
                           'subsection' => $subsection,
-                          'month' => $month,
                           'date' => $date,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
@@ -772,7 +759,7 @@ class SamplingCheckController extends Controller
 
           if($sampling_check2 != null){
             foreach($sampling_check2 as $sampling_check2){
-                $leader = $sampling_check2->leader;
+                $foreman = $sampling_check2->foreman;
                 $id_sampling_check = $sampling_check2->id_sampling_check;
                 $send_status = $sampling_check2->send_status;
               }
@@ -784,7 +771,7 @@ class SamplingCheckController extends Controller
                     $scheck->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$leader."'";
+              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            

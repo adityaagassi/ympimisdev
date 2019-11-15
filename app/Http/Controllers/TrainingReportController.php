@@ -139,6 +139,8 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $leader_dept = $activityList->leader_dept;
+        $foreman_dept = $activityList->foreman_dept;
 
         $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
@@ -169,6 +171,8 @@ class TrainingReportController extends Controller
         $data = array('product' => $product,
                       'leaderForeman' => $leaderForeman,
                       'foreman' => $foreman,
+                      'foreman_dept' => $foreman_dept,
+                      'leader_dept' => $leader_dept,
                       'departments' => $departments,
                       'section' => $section,
                       'periode' => $periode,
@@ -303,6 +307,16 @@ class TrainingReportController extends Controller
         $trainingParticipant = TrainingParticipant::where('training_id',$id)
             ->get();
 
+        $trainingParticipant2 = TrainingParticipant::where('training_id',$id)
+            ->get();
+
+        $jml_null = 0;
+        foreach($trainingParticipant2 as $trainingParticipant2){
+            if($trainingParticipant2->participant_absence == null){
+                $jml_null = $jml_null + 1;
+            }
+        }
+
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
 
@@ -320,6 +334,7 @@ class TrainingReportController extends Controller
                       'training_picture' => $trainingPicture,
                       'training_participant' => $trainingParticipant,
                       'product' => $product,
+                      'jml_null' => $jml_null,
                       'operator' => $operator,
                       'operator2' => $operator2,
                       'departments' => $departments,
@@ -540,23 +555,24 @@ class TrainingReportController extends Controller
         // return view('materials.cek', $data);
         $id_user = Auth::id();
 
-        TrainingParticipant::create([
-            'training_id' => '2',
-            'participant_name' => $nik,
-            'created_by' => $id_user
-        ]);
+        // TrainingParticipant::create([
+        //     'training_id' => '2',
+        //     'participant_name' => $nik,
+        //     'created_by' => $id_user
+        // ]);
 
-        // $training = TrainingParticipant::where("participant_name",$nik)->where("id",$id_training)->get();
-        // $training->participant_absence = 'Hadir';
-        // $training->save();
+        $training = TrainingParticipant::find($nik);
+        $training->participant_absence = 'Hadir';
+        $training_id = $training->training_id;
+        $training->save();
 
         // DB::table('training_participants')->where('participant_name',$nik)->where('training_id',$id_training)->update([
         //     'participant_absence' => "Hadir"
         // ]);
         
 
-        return redirect('index/training_report/details/2/view')
-            ->with('page', 'Training Report')->with('status', 'Participant has been absence.');
+        return redirect('index/training_report/details/'.$training_id.'/view')
+            ->with('page', 'Training Report')->with('status', 'Participant has been attend.');
     }
 
     public function getparticipant(Request $request)

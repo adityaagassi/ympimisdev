@@ -123,7 +123,7 @@
 			<?php $no = 1 ?>
 			@foreach($trainingParticipant as $trainingParticipant)
 			<tr>
-				{{-- <td></td> --}}
+				<td></td>
 				<td class="head">{{ $no }}</td>
 				<td class="head">{{ $trainingParticipant->participant_name }}</td>
 				<td class="head">{{ $trainingParticipant->participant_absence }}</td>

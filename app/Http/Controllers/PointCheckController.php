@@ -143,18 +143,15 @@ class PointCheckController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
-
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $foreman = DB::select($queryForeman);
+        $leader = $activityList->leader_dept;
+        $foreman = $activityList->foreman_dept;
 
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
 
         $data = array('product' => $product,
                       'foreman' => $foreman,
+                      'leader' => $leader,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'id' => $id);
@@ -177,6 +174,7 @@ class PointCheckController extends Controller
                 'proses' => $request->input('proses'),
                 'point_check' => $request->input('point_check'),
                 'cara_cek' => $request->input('cara_cek'),
+                'leader' => $request->input('leader'),
                 'foreman' => $request->input('foreman'),
                 'created_by' => $id_user
             ]);
@@ -193,12 +191,8 @@ class PointCheckController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
-
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $foreman = DB::select($queryForeman);
+        $leader = $activityList->leader_dept;
+        $foreman = $activityList->foreman_dept;
 
         $pointCheckAudit = PointCheckAudit::find($point_check_audit_id);
 
@@ -211,6 +205,8 @@ class PointCheckController extends Controller
                       'departments' => $departments,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
+                      'foreman' => $foreman,
+                      'leader' => $leader,
                       'id' => $id);
         return view('point_check_audit.edit', $data
             )->with('page', 'Point Check Audit');
@@ -225,6 +221,7 @@ class PointCheckController extends Controller
                 $pointCheckAudit->proses = $request->get('proses');
                 $pointCheckAudit->point_check = $request->get('point_check');
                 $pointCheckAudit->cara_cek = $request->get('cara_cek');
+                $pointCheckAudit->leader = $request->get('leader');
                 $pointCheckAudit->foreman = $request->get('foreman');
                 $pointCheckAudit->save();
 

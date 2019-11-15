@@ -10,7 +10,7 @@ class ActivityList extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'activity_name', 'activity_alias', 'frequency', 'department_id', 'activity_type', 'created_by'
+		'activity_name', 'activity_alias', 'frequency', 'department_id', 'activity_type', 'leader_dept', 'foreman_dept', 'created_by'
 	];
 
 	public function departments()

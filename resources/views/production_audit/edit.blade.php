@@ -107,11 +107,17 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Kondisi<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="kondisi" style="width: 100%;" data-placeholder="Choose a Kondisi..." required>
+              {{-- <select class="form-control select2" name="kondisi" style="width: 100%;" data-placeholder="Choose a Kondisi..." required>
                 <option value=""></option>
                 <option value="Good" @if($production_audit->kondisi == "Good") selected @endif>Good</option>
                 <option value="Not Good" @if($production_audit->kondisi == "Not Good") selected @endif>Not Good</option>
-              </select>
+              </select> --}}
+              <div class="radio">
+                <label><input type="radio" name="kondisi" value="Good" @if($production_audit->kondisi == "Good") checked @endif>OK</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="kondisi" value="Not Good" @if($production_audit->kondisi == "Not Good") checked @endif>NG</label>
+              </div>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -132,7 +138,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Auditor<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="auditor" style="width: 100%;" data-placeholder="Choose a Auditor..." required>
+              {{-- <select class="form-control select2" name="auditor" style="width: 100%;" data-placeholder="Choose a Auditor..." required>
                 <option value=""></option>
                 @foreach($leaderForeman2 as $leaderForeman2)
                   @if($leaderForeman2->employee_id == $production_audit->auditor)
@@ -141,7 +147,9 @@
                     <option value="{{ $leaderForeman2->employee_id }}">{{ $leaderForeman2->employee_id }} - {{ $leaderForeman2->name }}</option>
                   @endif
                 @endforeach
-              </select>
+              </select> --}}
+              <input type="text" name="auditor" id="auditor_contoh" class="form-control" value="{{ $empid_leader }} - {{ $leader }}" readonly>
+              <input type="hidden" name="auditor" id="auditor" class="form-control" value="{{ $empid_leader }}">
             </div>
           </div>
         </div>

@@ -95,6 +95,36 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Leader<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
+              <option value=""></option>
+              @foreach($leader as $leader)
+                @if($leader->name == $activity_list->leader_dept)
+                  <option value="{{ $leader->name }}" selected>{{ $leader->employee_id }} - {{ $leader->name }}</option>
+                @else
+                  <option value="{{ $leader->name }}">{{ $leader->employee_id }} - {{ $leader->name }}</option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
+          <div class="col-sm-4" align="left">
+            <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
+              <option value=""></option>
+              @foreach($foreman as $foreman)
+                @if($foreman->name == $activity_list->foreman_dept)
+                  <option value="{{ $foreman->name }}" selected>{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
+                @else
+                  <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+        </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             @if($id_department != 0)

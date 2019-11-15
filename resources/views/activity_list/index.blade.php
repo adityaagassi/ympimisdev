@@ -67,6 +67,8 @@
                 <th>Frequency</th>
                 <th>Department</th>
                 <th>Activity Type</th>
+                <th>Leader</th>
+                <th>Foreman</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -78,6 +80,8 @@
                 <td>{{$activity_list->frequency}}</td>
                 <td>{{$activity_list->departments->department_name}}</td>
                 <td>{{$activity_list->activity_type}}</td>
+                <td>{{$activity_list->leader_dept}}</td>
+                <td>{{$activity_list->foreman_dept}}</td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
@@ -93,6 +97,8 @@
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

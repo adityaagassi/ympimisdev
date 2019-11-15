@@ -139,23 +139,25 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
+              <input type="text" class="form-control" name="leader" placeholder="Enter Tujuan" required value="{{ $leader_dept }}" readonly>
+              {{-- <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
                 <option value=""></option>
                 @foreach($leaderForeman as $leaderForeman)
                   <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
                 @endforeach
-              </select>
+              </select> --}}
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
+              <input type="text" class="form-control" name="foreman" placeholder="Enter Tujuan" required value="{{ $foreman_dept }}" readonly>
+              {{-- <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
                 <option value=""></option>
                 @foreach($foreman as $foreman)
                   <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
                 @endforeach
-              </select>
+              </select> --}}
             </div>
           </div>
           <div class="form-group row" align="right">

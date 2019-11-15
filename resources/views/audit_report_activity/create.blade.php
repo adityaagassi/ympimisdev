@@ -39,7 +39,7 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('index/sampling_check/store/'.$id)}}" enctype="multipart/form-data">
+    <form role="form" method="post" action="{{url('index/audit_report_activity/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -72,57 +72,80 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Product<span class="text-red">*</span></label>
-            <div class="col-sm-8" align="left">
-              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
-                <option value=""></option>
-                @foreach($product as $product)
-                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-                @endforeach
-              </select> --}}
-              <input type="text" class="form-control" name="product" placeholder="Enter Product" required>
+            <label class="col-sm-4">Nama Dokumen<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="nama_dokumen" placeholder="Enter Nama Dokumen" required>
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Date<span class="text-red">*</span></label>
+            <label class="col-sm-4">Nomor Dokumen<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <div class="input-group date">
-                <div class="input-group-addon">
-                  <i class="fa fa-calendar"></i>
-                </div>
-                <input type="text" class="form-control pull-right" id="date" name="date">
-              </div>
+              <input type="text" class="form-control" name="no_dokumen" placeholder="Nomor Dokumen" required>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Kesesuaian Aktual Proses<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <textarea id="editor1" class="form-control" style="height: 200px;" name="kesesuaian_aktual_proses"></textarea>
             </div>
           </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Nomor Seri / Part<span class="text-red">*</span></label>
+            <label class="col-sm-4">Tindakan Perbaikan<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="no_seri_part" placeholder="Enter Nomor Seri / Part" required>
+              <input type="text" class="form-control" name="tindakan_perbaikan" placeholder="Tindakan Perbaikan" value="-">
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Jumlah Cek<span class="text-red">*</span></label>
+            <label class="col-sm-4">Target<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="number" class="form-control" name="jumlah_cek" placeholder="Enter Jumlah Cek" required>
+              <div class="input-group date">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control pull-right" id="date" name="target">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Kelengkapan Point Safety<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="kelengkapan_point_safety" placeholder="Kelengkapan Point Safety">
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Kesesuaian QC Kouteihyo<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo">
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">Operator<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
+                <option value=""></option>
+                @foreach($operator as $operator)
+                <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
+                @endforeach
+              </select>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+              <input type="text" class="form-control" name="leader" placeholder="" value="{{ $leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="foreman" placeholder="Enter Foreman" value="{{ $foreman }}" readonly>
+              <input type="text" class="form-control" name="foreman" placeholder="" value="{{ $foreman }}" readonly>
             </div>
           </div>
           <div class="col-sm-4 col-sm-offset-6">
             <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('index/sampling_check/index/'.$id) }}">Cancel</a>
+              <a class="btn btn-danger" href="{{ url('index/audit_report_activity/index/'.$id) }}">Cancel</a>
             </div>
             <div class="btn-group">
               <button type="submit" class="btn btn-primary col-sm-14">Submit</button>

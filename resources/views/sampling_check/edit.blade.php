@@ -82,7 +82,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
+              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
                 <option value=""></option>
                 @foreach($product as $product)
                   @if($sampling_check->product == $product->origin_group_name)
@@ -91,7 +91,8 @@
                     <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
                   @endif
                 @endforeach
-              </select>
+              </select> --}}
+              <input type="text" class="form-control" name="product" placeholder="Enter Product" required value="{{ $sampling_check->product }}">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -101,7 +102,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="date" name="date" value="{{ $sampling_check->date }}">
+                <input type="text" class="form-control pull-right" id="date" name="date" value="{{ $sampling_check->date }}" readonly>
               </div>
             </div>
           </div>
@@ -122,31 +123,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
-                <option value=""></option>
-                @foreach($leaderForeman as $leaderForeman)
-                  @if($sampling_check->leader == $leaderForeman->name)
-                    <option value="{{ $leaderForeman->name }}" selected>{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
-                  @else
-                    <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
-                  @endif
-                @endforeach
-              </select>
+              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" value="{{ $sampling_check->leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
-                <option value=""></option>
-                @foreach($foreman as $foreman)
-                  @if($sampling_check->foreman == $foreman->name)
-                    <option value="{{ $foreman->name }}" selected>{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
-                  @else
-                    <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
-                  @endif
-                @endforeach
-              </select>
+              <input type="text" class="form-control" name="foreman" placeholder="Enter Leader" value="{{ $sampling_check->foreman }}" readonly>
             </div>
           </div>
           <div class="col-sm-4 col-sm-offset-6">

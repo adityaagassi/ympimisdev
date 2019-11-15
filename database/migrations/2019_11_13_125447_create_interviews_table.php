@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSamplingChecksTable extends Migration
+class CreateInterviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,21 @@ class CreateSamplingChecksTable extends Migration
      */
     public function up()
     {
-        Schema::create('sampling_checks', function (Blueprint $table) {
+        Schema::create('interviews', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('activity_list_id');
             $table->string('department');
             $table->string('section');
             $table->string('subsection');
-            $table->string('month');
+            $table->string('periode');
             $table->date('date');
-            $table->string('product');
-            $table->string('no_seri_part');
-            $table->string('jumlah_cek');
             $table->string('leader');
             $table->string('foreman');
             $table->string('send_status');
             $table->date('send_date');
             $table->string('approval');
-            $table->date('approval_date');
+            $table->date('approved_date');
+            $table->string('created_by');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -42,6 +40,6 @@ class CreateSamplingChecksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sampling_checks');
+        Schema::dropIfExists('interviews');
     }
 }

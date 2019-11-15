@@ -229,7 +229,8 @@ Route::get('fetch/report/detail_stat', 'EmployeeController@detailReport');
 Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 
 //OVERTIME
-Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
+Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
+Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
 Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
 Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
@@ -1239,13 +1240,16 @@ Route::get('index/production_report/fetchReportWeekly/{id}', 'ProductionReportCo
 Route::get('index/production_report/fetchReportMonthly/{id}', 'ProductionReportController@fetchReportMonthly');
 Route::get('index/production_report/fetchReportDetailMonthly/{id}', 'ProductionReportController@fetchReportDetailMonthly');
 Route::get('index/production_report/fetchReportDetailConditional/{id}', 'ProductionReportController@fetchReportDetailConditional');
+Route::get('index/production_report/fetchReportDetailWeekly/{id}', 'ProductionReportController@fetchReportDetailWeekly');
 Route::get('index/production_report/fetchReportConditional/{id}', 'ProductionReportController@fetchReportConditional');
 Route::get('index/production_report/fetchReportAudit/{id}', 'ProductionReportController@fetchReportAudit');
 Route::get('index/production_report/fetchReportTraining/{id}', 'ProductionReportController@fetchReportTraining');
 Route::get('index/production_report/fetchReportSampling/{id}', 'ProductionReportController@fetchReportSampling');
 Route::get('index/production_report/fetchReportLaporanAktivitas/{id}', 'ProductionReportController@fetchReportLaporanAktivitas');
+Route::get('index/production_report/fetchPlanReport/{id}', 'ProductionReportController@fetchPlanReport');
 Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportController@detailProductionReport');
 Route::get('fetch/production_report/detail_training/{id}', 'ProductionReportController@detailTraining');
+Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionReportController@detailSamplingCheck');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 
 
@@ -1413,6 +1417,10 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
 	Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
+
+	//Verifikasi CAR
+	Route::get('index/qc_report/verifikasicar/{id}', 'QcReportController@verifikasicar');
+
 });
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
@@ -1425,12 +1433,6 @@ Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_d
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 
-View::composer('*', function ($view) {
-	$controller = new \App\Http\Controllers\EmployeeController;
-	$notif = $controller->getNotif();
-	$view->with('notif', $notif);
-});
-
 //CUBEACON
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
@@ -1441,7 +1443,9 @@ Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
-
+// BUFFING TOILET
+Route::get('index/buffing/toilet', 'RoomController@indexBuffingToilet');
+Route::get('fetch/buffing/toilet', 'RoomController@fetchPLC');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
@@ -1458,4 +1462,10 @@ Route::get('/trainingroom2', function () {
 });
 Route::get('/trainingroom3', function () {
 	return view('rooms.trainingroom3');
+});
+
+View::composer('*', function ($view) {
+	$controller = new \App\Http\Controllers\EmployeeController;
+	$notif = $controller->getNotif();
+	$view->with('notif', $notif);
 });

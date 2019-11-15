@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SamplingCheck extends Model
+class AuditReportActivity extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'sampling_checks';
+    protected $table = 'audit_report_activities';
 
 	protected $fillable = [
-        'activity_list_id', 'department', 'section','subsection', 'month', 'date','week_name', 'product', 'no_seri_part', 'jumlah_cek', 'leader','foreman', 'created_by'
+        'activity_list_id', 'department', 'section','subsection', 'date', 'nama_dokumen', 'no_dokumen','kesesuaian_aktual_proses','tindakan_perbaikan','target','kelengkapan_point_safety','kesesuaian_qc_kouteihyo','operator', 'leader','foreman', 'created_by'
     ];
     
     public function activity_lists()

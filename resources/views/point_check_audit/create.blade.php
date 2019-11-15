@@ -70,14 +70,15 @@
             </div>
           </div>
           <div class="form-group row" align="right">
+            <label class="col-sm-4">Leader<span class="text-red">*</span></label>
+            <div class="col-sm-4" align="left">
+              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" required value="{{ $leader }}" readonly>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-4" align="left">
-              <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
-                <option value=""></option>
-                @foreach($foreman as $foreman)
-                  <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
-                @endforeach
-              </select>
+              <input type="text" class="form-control" name="foreman" placeholder="Enter Foreman" required value="{{ $foreman }}" readonly>
             </div>
           </div>
         {{-- </div> --}}

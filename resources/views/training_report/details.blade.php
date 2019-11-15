@@ -37,6 +37,79 @@ table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
+.cbx {
+  margin: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+.cbx span {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate3d(0, 0, 0);
+}
+.cbx span:first-child {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  transform: scale(1);
+  vertical-align: middle;
+  border: 1px solid #9098A9;
+  transition: all 0.2s ease;
+}
+.cbx span:first-child svg {
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16px;
+  stroke-dashoffset: 16px;
+  transition: all 0.3s ease;
+  transition-delay: 0.1s;
+  transform: translate3d(0, 0, 0);
+}
+.cbx span:first-child:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #506EEC;
+  display: block;
+  transform: scale(0);
+  opacity: 1;
+  border-radius: 50%;
+}
+.cbx span:last-child {
+  padding-left: 8px;
+}
+.cbx:hover span:first-child {
+  border-color: #506EEC;
+}
+
+.inp-cbx:checked + .cbx span:first-child {
+  background: #506EEC;
+  border-color: #506EEC;
+  animation: wave 0.4s ease;
+}
+.inp-cbx:checked + .cbx span:first-child svg {
+  stroke-dashoffset: 0;
+}
+.inp-cbx:checked + .cbx span:first-child:before {
+  transform: scale(3.5);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+@keyframes wave {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
 </style>
 @stop
 @section('header')
@@ -265,6 +338,9 @@ table.table-bordered > tfoot > tr > th{
 				          <table id="example2" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
+				              	@if($jml_null > 0)
+				              	<th>Attendance Checklist</th>
+				              	@endif
 				                <th>Name</th>
 				                <th>Attendance</th>
 				                <th>Action</th>
@@ -273,11 +349,24 @@ table.table-bordered > tfoot > tr > th{
 				            <tbody>
 				              @foreach($training_participant as $training_participant)
 				              <tr>
+				              	@if($jml_null > 0)
+								<td id="approval2">
+									<input type="hidden" value="{{csrf_token()}}" name="_token" />
+									@if($training_participant->participant_absence == Null)
+									    {{-- <input type="checkbox" id="checklist_participant" name="approve[]" value="{{ $training_participant->id }}"> --}}
+									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->id }}">
+									@endif
+								</td>
+								@endif
 				                <td>
 				                	{{ $training_participant->participant_name }}
 				                </td>
 				                <td>
-				                	{{ $training_participant->participant_absence }}
+				                	@if($training_participant->participant_absence == Null)
+				                		Belum Hadir
+				                	@else
+				                		{{ $training_participant->participant_absence }}
+				                	@endif
 				                </td>
 				                <td>
 				                  <center>
@@ -294,6 +383,9 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				              	@if($jml_null > 0)
+				                <th></th>
+				                @endif
 				                <th></th>
 				                <th></th>
 				                <th></th>
@@ -410,6 +502,19 @@ table.table-bordered > tfoot > tr > th{
 
 
 @section('scripts')
+<script>
+	function getValue(value){
+    	// alert(value);
+    	var url = '{{ url("index/training_report/cek_employee") }}';
+    	var conf = confirm('Are you sure you want to attend?');
+    	if(conf){
+    		window.location.href = url+'/'+value;
+    		// console.log(url+'/'+value);
+    	}else{
+
+    	}
+	}
+</script>
 <script>
 	$.ajaxSetup({
 		headers: {

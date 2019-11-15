@@ -11,7 +11,7 @@ class PointCheckAudit extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'activity_list_id', 'product', 'proses', 'point_check', 'cara_cek','foreman', 'created_by'
+		'activity_list_id', 'product', 'proses', 'point_check', 'cara_cek','leader','foreman', 'created_by'
 	];
 
 	public function activity_lists()

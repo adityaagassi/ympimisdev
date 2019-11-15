@@ -55,7 +55,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
         }
         if($this->remark == 'cpar'){
-            return $this->from('ympimis@gmail.com')->subject('MIS CPAR')->view('mails.cpar');
+            return $this->from('ympimis@gmail.com')->subject('Corrective and Preventive Action Request (CPAR) (??)')->view('mails.cpar');
         }
         if($this->remark == 'user_document'){
             return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (??)')->view('mails.user_document');
@@ -65,6 +65,9 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'sampling_check'){
             return $this->from('ympimis@gmail.com')->subject('Sampling Check Report (??)')->view('mails.sampling_check');
+        }
+        if($this->remark == 'laporan_aktivitas'){
+            return $this->from('ympimis@gmail.com')->subject('Laporan Aktivitas Audit (??)')->view('mails.laporan_aktivitas');
         }
     }
 }

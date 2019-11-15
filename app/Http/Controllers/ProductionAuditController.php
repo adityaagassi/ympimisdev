@@ -86,13 +86,14 @@ class ProductionAuditController extends Controller
     function details($id)
     {
         $activityList = ActivityList::find($id);
-        $queryProductionAudit = "select DISTINCT(proses), product from point_check_audits where activity_list_id='".$id."'";
-        $productionAudit = DB::select($queryProductionAudit);
-
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
+
+        $queryProductionAudit = "select DISTINCT(proses), product from point_check_audits where activity_list_id='".$id."' and leader = '".$leader."'";
+        $productionAudit = DB::select($queryProductionAudit);
 
         $data = array('production_audit' => $productionAudit,
                       // 'product' => $product,
@@ -193,14 +194,13 @@ class ProductionAuditController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')
-            or (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $leaderForeman = DB::select($queryLeaderForeman);
-        $leaderForeman2 = DB::select($queryLeaderForeman);
+        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $lead = DB::select($queryLeader);
+        foreach($lead as $lead){
+          $empid_leader = $lead->employee_id;
+        }
 
         $pointCheckAudit = PointCheckAudit::find(0);
 
@@ -215,9 +215,9 @@ class ProductionAuditController extends Controller
         $data = array(
                       'point_check_audit' => $pointCheckAudit,
                       'product' => $product,
-                      'leaderForeman' => $leaderForeman,
+                      'leader' => $leader,
+                      'empid_leader' => $empid_leader,
                       'pic' => $pic,
-                      'leaderForeman2' => $leaderForeman2,
                       'departments' => $departments,
                       'proses' => $proses,
                       'activity_name' => $activity_name,
@@ -233,17 +233,13 @@ class ProductionAuditController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')
-            or (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $leaderForeman = DB::select($queryLeaderForeman);
-        $leaderForeman2 = DB::select($queryLeaderForeman);
-
-        // $queryProduct = "select * from origin_groups";
-        // $product = DB::select($queryProduct);
+        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $lead = DB::select($queryLeader);
+        foreach($lead as $lead){
+          $empid_leader = $lead->employee_id;
+        }
 
         $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $pic = DB::select($querypic);
@@ -255,9 +251,9 @@ class ProductionAuditController extends Controller
         $data = array(
                       'point_check_audit' => $pointCheckAudit,
                       'product' => $product,
-                      'leaderForeman' => $leaderForeman,
+                      'leader' => $leader,
                       'pic' => $pic,
-                      'leaderForeman2' => $leaderForeman2,
+                      'empid_leader' => $empid_leader,
                       'departments' => $departments,
                       'proses' => $proses,
                       'activity_name' => $activity_name,
@@ -305,14 +301,13 @@ class ProductionAuditController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')
-            or (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $leaderForeman = DB::select($queryLeaderForeman);
-        $leaderForeman2 = DB::select($queryLeaderForeman);
+        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $lead = DB::select($queryLeader);
+        foreach($lead as $lead){
+          $empid_leader = $lead->employee_id;
+        }
 
         $productionAudit = ProductionAudit::find($audit_id);
 
@@ -327,8 +322,8 @@ class ProductionAuditController extends Controller
                       'pointcheck' => $pointcheck,
                       'pic' => $pic,
                       'proses' => $proses,
-                      'leaderForeman' => $leaderForeman,
-                      'leaderForeman2' => $leaderForeman2,
+                      'empid_leader' => $empid_leader,
+                      'leader' => $leader,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'id' => $id);
@@ -634,11 +629,16 @@ class ProductionAuditController extends Controller
 
     public function detailProductionAudit(Request $request, $id){
       $week_date = $request->get("week_date");
+      $dateformat = date( 'format', strtotime($week_date) );
       $kondisi = $request->get("kondisi");
+      if(strlen($week_date) == 10){
         $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
+      }
+      else{
+        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
+      }
 
       $detail = db::select($query);
-
       return DataTables::of($detail)->make(true);
     }
 
@@ -714,6 +714,7 @@ class ProductionAuditController extends Controller
           if($send_status == "Sent"){
             return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('error', 'Data pernah dikirim.')->with('page', 'Production Audit');
           }
+          
           elseif($productionAudit != null){
               Mail::to($mail_to)->send(new SendEmail($productionAudit, 'audit'));
               return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('status', 'Your E-mail has been sent.')->with('page', 'Production Audit');

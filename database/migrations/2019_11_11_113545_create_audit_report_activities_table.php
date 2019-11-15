@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSamplingChecksTable extends Migration
+class CreateAuditReportActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,26 @@ class CreateSamplingChecksTable extends Migration
      */
     public function up()
     {
-        Schema::create('sampling_checks', function (Blueprint $table) {
+        Schema::create('audit_report_activities', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('activity_list_id');
             $table->string('department');
             $table->string('section');
             $table->string('subsection');
-            $table->string('month');
             $table->date('date');
-            $table->string('product');
-            $table->string('no_seri_part');
-            $table->string('jumlah_cek');
+            $table->string('nama_dokumen');
+            $table->string('no_dokumen');
+            $table->string('kesesuaian_aktual_proses');
+            $table->string('tindakan_perbaikan');
+            $table->date('target');
+            $table->string('kelengkapan_point_safety');
+            $table->string('kesesuaian_qc_kouteihyo');
+            $table->string('operator');
             $table->string('leader');
             $table->string('foreman');
             $table->string('send_status');
             $table->date('send_date');
+            $table->string('oprator_sign');
             $table->string('approval');
             $table->date('approval_date');
             $table->softDeletes();
@@ -42,6 +47,6 @@ class CreateSamplingChecksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sampling_checks');
+        Schema::dropIfExists('audit_report_activities');
     }
 }

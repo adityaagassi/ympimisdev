@@ -66,53 +66,16 @@ table.table-bordered > tfoot > tr > th{
 			<div class="box box-primary">
 				<div class="box-header">
 					<h3 class="box-title">Point Check <span class="text-purple">{{ $activity_name }}</span></h3>
-				</div>
-				<div class="box-body">
-					<form role="form" method="post" action="{{url('index/point_check_audit/filter_point_check/'.$id)}}">
-					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Origin Group</label>
-								<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
-						            <option value=""></option>
-						              @foreach($product as $product)
-						                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-						              @endforeach
-						        </select>
-							</div>
-						</div>
-					</div>
-					{{-- <div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Proses</label>
-								<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
-						            <option value=""></option>
-						              @foreach($product as $product)
-						                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-						              @endforeach
-						        </select>
-							</div>
-						</div>
-					</div> --}}
-					<div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group pull-right">
-								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1') }}" class="btn btn-warning">Back</a>
-								<a href="{{ url('index/point_check_audit/index/'.$id) }}" class="btn btn-danger">Clear</a>
-								<button type="submit" class="btn btn-primary col-sm-14">Search</button>
-							</div>
-						</div>
-					</div>
 					<div class="col-md-12 col-md-offset-9">
 						<div class="col-md-3">
 							<div class="form-group pull-right">
+								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1') }}" class="btn btn-warning">Back</a>
 								<a href="{{ url('index/point_check_audit/create/'.$id) }}" class="btn btn-primary">Create Point Check</a>
 							</div>
 						</div>
 					</div>
-					</form>
+				</div>
+				<div class="box-body">
 				  <div class="row">
 				    <div class="col-xs-12">
 				      <div class="box">
@@ -124,6 +87,7 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Proses</th>
 				                <th>Point Pengecekan</th>
 				                <th>Cara Cek</th>
+				                <th>Leader</th>
 				                <th>Foreman</th>
 				                <th>Action</th>
 				              </tr>
@@ -135,6 +99,7 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$pointCheckAudit->proses}}</td>
 				                <td><?php echo $pointCheckAudit->point_check?></td>
 				                <td><?php echo $pointCheckAudit->cara_cek?></td>
+				                <td>{{$pointCheckAudit->leader}}</td>
 				                <td>{{$pointCheckAudit->foreman}}</td>
 				                <td>
 				                  <center>
@@ -150,6 +115,7 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				                <th></th>
 				                <th></th>
 				                <th></th>
 				                <th></th>
