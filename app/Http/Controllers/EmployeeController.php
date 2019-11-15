@@ -903,7 +903,7 @@ public function indexEmployeeService()
 
 $absences = db::connection('mysql3')->select($absence);
 
-$ct = db::connection('mysql3')->select("select SUM(leave_quota) - SUM(cuti) as sisa_cuti from
+$ct = db::connection('mysql3')->select("select SUM(leave_quota) as cuti ,SUM(leave_quota) - SUM(cuti) as sisa_cuti from
   (
   select leave_quota, 0 as cuti from 
   (select YEAR(now()) - YEAR(hire_date)
