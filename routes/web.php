@@ -229,8 +229,9 @@ Route::get('fetch/report/detail_stat', 'EmployeeController@detailReport');
 Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 
 //OVERTIME
-Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
-Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
+// Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
+Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
+// Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
 Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
 Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
@@ -768,6 +769,7 @@ Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
 Route::get('fetch/middle/buffing_ng_key', 'MiddleProcessController@fetchBuffingNgKey');
 Route::get('index/middle/buffing_op_ng', 'MiddleProcessController@indexBuffingOpNg');
 Route::get('fetch/middle/buffing_op_ng', 'MiddleProcessController@fetchBuffingOpNg');
+Route::get('fetch/middle/buffing_op_ng_target', 'MiddleProcessController@fetchBuffingOpNgTarget');
 Route::get('fetch/middle/buffing_detail_op_ng', 'MiddleProcessController@fetchBuffingDetailOpNg');
 Route::get('index/middle/buffing_trend_op_eff', 'MiddleProcessController@indexTrendBuffingOpEff');
 Route::get('index/middle/buffing_op_eff', 'MiddleProcessController@indexBuffingOpEff');

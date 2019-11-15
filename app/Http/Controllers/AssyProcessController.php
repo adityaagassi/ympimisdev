@@ -597,7 +597,6 @@ class AssyProcessController extends Controller
 			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Delete" onclick="modalEdit('.$assy_schedules->id.')">Edit</button>
 			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$assy_schedules->id.')">Delete</button>';
 		})
-
 		->rawColumns(['action' => 'action'])
 		->make(true);
 	}
@@ -606,14 +605,17 @@ class AssyProcessController extends Controller
 	{
 		try{
 			if($request->hasFile('assy_schedule')){
-                // ProductionSchedule::truncate();
-
 				$id = Auth::id();
 
 				$file = $request->file('assy_schedule');
 				$data = file_get_contents($file);
 
 				$rows = explode("\r\n", $data);
+
+				$date = date('Y-m', strtotime(str_replace('/','-', explode("\t",$rows[0])[1])));
+
+				$delete_assy = AssyPickingSchedule::where(db::raw('date_format(assy_picking_schedules.due_date,"%Y-%m")'), '=', $date)->forceDelete();
+
 				foreach ($rows as $row)
 				{
 					if (strlen($row) > 0) {
