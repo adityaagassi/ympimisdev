@@ -238,7 +238,7 @@
             @endforeach
           </select>
           <label>ON OR ABOUT</label>
-          <input type="text" name="etd_sub" class="form-control" ID= "etd_sub" required>
+          <input type="text" name="etd_sub" class="form-control" ID= "etd_sub" autocomplete="off" required>
 
 
           
@@ -249,10 +249,10 @@
           <input type="text" name="invoice" class="form-control" id="invoice" required>
 
           <label>INVOICE DATE</label>
-          <input type="text" name="invoice_date" class="form-control" id="invoice_date" required>
+          <input type="text" name="invoice_date" class="form-control" id="invoice_date" autocomplete="off" required>
 
           <label>STUFFING DATE</label>
-          <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" required>
+          <input type="text" name="Stuffing_date" class="form-control" id="Stuffing_date" autocomplete="off" required>
 
           
           <label>PAYMENT</label>
