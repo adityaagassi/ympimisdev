@@ -5,6 +5,10 @@
 	thead>tr>th{
 		font-size: 16px;
 	}
+	#tableBodyList > tr:hover {
+		cursor: pointer;
+		background-color: #7dfa8c;
+	}
 	#loading { display: none; }
 </style>
 @stop
@@ -37,7 +41,6 @@
 								<th style="width: 2%;">Material Number</th>
 								<th style="width: 5%;">Description</th>
 								<th style="width: 1%;">Category</th>
-								<th style="width: 1%;">Action</th>
 							</tr>					
 						</thead>
 						<tbody id="tableBodyList">
@@ -252,7 +255,7 @@
 				var tableData = "";
 				var count = 1;
 				$.each(result.lists, function(key, value) {
-					tableData += '<tr>';
+					tableData += '<tr onclick="fetchCount(\''+value.id+'\')">';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_description +'</td>';
@@ -262,7 +265,6 @@
 					else{
 						tableData += '<td style="background-color: rgb(135,206,250); font-size:20px; font-weight: bold; text-align: center;">'+ value.category +'</td>';
 					}
-					tableData += '<td style="text-align: center;"><button class="btn btn-success" onclick="fetchCount(\''+value.id+'\')">Check</button></td>';
 					tableData += '</tr>';
 
 					count += 1;
