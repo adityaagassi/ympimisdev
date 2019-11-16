@@ -545,9 +545,9 @@ $.get('{{ url("fetch/middle/lcq_ng_rate_weekly") }}', data, function(result, sta
 
 				ng.push(parseInt(result.weekly[i].ng));
 				g.push(parseInt(result.weekly[i].g));
-				// ng[i] = ng[i] || 0;
-				// g[i] = g[i] || 0;
-				perolehan[i] = ng[i] + g[i];
+				ng[i] = ng[i] || 0;
+				g[i] = g[i] || 0;
+				perolehan[i] = g[i];
 				ng_rate[i] = (ng[i] / perolehan[i]) * 100;
 				// ng_rate[i] = ng_rate[i] || 0;
 				ng_rate_weekly.push(ng_rate[i]);

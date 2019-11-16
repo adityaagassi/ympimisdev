@@ -305,6 +305,8 @@
 	function fillChart() {
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
+		var position = $(document).scrollTop();
+
 
 		var operator = $('#operator').val();;
 
@@ -317,6 +319,10 @@
 
 				var seriesData = [];
 				var data = [];
+
+				console.log(result.op);
+				console.log(result.rate);
+				console.log(result.time_eff);
 
 
 				for (var i = 0; i < result.op.length; i++) {
@@ -400,11 +406,6 @@
 					},
 					plotOptions: {
 						series: {
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:,.2f}%',
-							},
-
 							animation: false,
 							connectNulls: true,
 							lineWidth: 1,
@@ -436,7 +437,7 @@
 					}
 				});
 
-
+				$(document).scrollTop(position);
 			}
 		});
 
@@ -550,6 +551,8 @@
 						}]
 					}
 				});
+
+				$(document).scrollTop(position);
 			}
 		});
 

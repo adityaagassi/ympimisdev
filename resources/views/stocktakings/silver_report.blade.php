@@ -31,7 +31,7 @@
 @section('header')
 @endsection
 @section('content')
-<section class="content" style="padding-top: 0;">
+<section class="content">
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
@@ -65,10 +65,20 @@
 					<button id="search" onClick="fillChart()" class="btn btn-primary bg-purple">Update Chart</button>
 				</div>
 			</div>
-			<div id="container" style=""></div>
-			<div id="container2" style=""></div>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="container" style=""></div>
+		</div>
+	</div><br>
+
+	<div class="row">
+		<div class="col-xs-12">	
+			<div id="container2" style=""></div>
+		</div>
+	</div><br>
+
 </section>
 <div class="modal fade" id="modalDetail">
 	<div class="modal-dialog modal-lg">
@@ -137,8 +147,7 @@
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
+				[0, '#2a2a2b']
 				]
 			},
 			style: {
@@ -350,15 +359,15 @@
 			datefrom:datefrom,
 			dateto:dateto
 		};
+		var position = $(document).scrollTop();
+
+
 		$.get('{{ url("fetch/stocktaking/silver_report") }}', data, function(result, status, xhr){
 			if(result.status){
 
-				console.table(result.variances);
-
-
 				var tanggal = [];
 				var fl91 = [];
-				
+
 				var xCategories = [];
 
 
@@ -377,29 +386,30 @@
 					}
 
 					if(result.variances[i].storage_location == 'FL91'){
-						fl91.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						fl91.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 					if(result.variances[i].storage_location == 'FL51'){
-						fl51.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						fl51.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 					if(result.variances[i].storage_location == 'FL21'){
-						fl21.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						fl21.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 					if(result.variances[i].storage_location == 'FLA1'){
-						fla1.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						fla1.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 					if(result.variances[i].storage_location == 'FLA0'){
-						fla0.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						fla0.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 					if(result.variances[i].storage_location == 'MSCR'){
-						mscr.push(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)));
+						mscr.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 
 				}
 
-				Highcharts.chart('container2', {
+				window.chart2 = Highcharts.chart('container2', {
 					chart: {
-						type: 'spline'
+						type: 'spline',
+						animation: false,
 					},
 					title: {
 						text: 'Silver Stock Taking Report Trend',
@@ -410,7 +420,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Percent'
+							text: 'Percent(%)'
 						}
 					},
 					xAxis: {
@@ -423,13 +433,21 @@
 						},
 					},
 					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle'
+						enabled: true
 					},
-
+					credits:{
+						enabled:false
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}%</b> <br/>',
+					},
 					plotOptions: {
+						column: {
+							type: 'percent'
+						},
 						series: {
+							animation: false,
 							label: {
 								connectorAllowed: false
 							},
@@ -524,8 +542,8 @@
 				}
 
 				var yAxisLabels = [0,25,50,75,100,110];
-				var chart = Highcharts.chart('container', {
-
+				
+				window.chart = Highcharts.chart('container', {
 					chart: {
 						type: 'column'
 					},
@@ -540,7 +558,7 @@
 					legend:{
 						enabled: false
 					},
-					credits:{
+					credits:{	
 						enabled:false
 					},
 					xAxis: {
@@ -699,11 +717,13 @@
 						$(this).css('fill', 'white');
 					});
 				});
+				$(document).scrollTop(position);
 			}
 			else{
 				alert('Attempt to retrieve data failed.');
 			}
 		});
+
 }
 
 function fillModal(cat, name){

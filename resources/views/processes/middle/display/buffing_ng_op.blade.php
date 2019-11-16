@@ -147,8 +147,20 @@
 					<div id="container1_shiftc" style="width: 100%;"></div>					
 				</div>			
 			</div>
-			<div class="col-xs-12" style="margin-top: 1%;">
 
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
+				<div id="shifta2">
+					<div id="container2_shifta" style="width: 100%;"></div>					
+				</div>
+				<div id="shiftb2">
+					<div id="container2_shiftb" style="width: 100%;"></div>					
+				</div>
+				<div id="shiftc2">
+					<div id="container2_shiftc" style="width: 100%;"></div>					
+				</div>			
+			</div>
+
+			<div class="col-xs-12" style="margin-top: 1%; display: none;">
 				<table class="table table-striped table-bordered" style="width: 100%; margin: 0px;"> 
 					<thead id="" style="background-color: rgba(126,86,134,.7);">
 						<tr>
@@ -337,227 +349,6 @@
 		endDate: '<?php echo $tgl_max ?>'
 	});
 
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
-
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
-
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
-
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					}
-				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
-			}
-		},
-
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
-		},
-
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
-
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
-
-	function addZero(i) {
-		if (i < 10) {
-			i = "0" + i;
-		}
-		return i;
-	}
-
-	function getActualFullDate() {
-		var d = new Date();
-		var day = addZero(d.getDate());
-		var month = addZero(d.getMonth()+1);
-		var year = addZero(d.getFullYear());
-		var h = addZero(d.getHours());
-		var m = addZero(d.getMinutes());
-		var s = addZero(d.getSeconds());
-		return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
-	}
-
 
 	function showDetail(tgl, nama) {
 		var data = {
@@ -725,6 +516,8 @@
 
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
+		var position = $(document).scrollTop();
+
 		var data = {
 			tanggal:tanggal,
 			group:group,
@@ -738,20 +531,37 @@
 			$('#shiftb').hide();
 			$('#shiftc').hide();
 
+			$('#shifta2').hide();
+			$('#shiftb2').hide();
+			$('#shiftc2').hide();
+
+
 			if(group.length == 1){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
 					$('#shift'+group[i].toLowerCase()).show();
+
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()+'2').show();
 				}
 			}else if(group.length == 2){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
 					$('#shift'+group[i].toLowerCase()).show();
+
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()+'2').show();
 				}
 			}else if(group.length == 3){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
 					$('#shift'+group[i].toLowerCase()).show();
+
+
+					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()+'2').show();
 				}
 			}
 
@@ -759,6 +569,10 @@
 			$('#shifta').addClass("col-xs-4");
 			$('#shiftb').addClass("col-xs-4");
 			$('#shiftc').addClass("col-xs-4");
+
+			$('#shifta2').addClass("col-xs-4");
+			$('#shiftb2').addClass("col-xs-4");
+			$('#shiftc2').addClass("col-xs-4");
 		}
 
 		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr){
@@ -769,8 +583,12 @@
 				// GROUP A
 				var op_name = [];
 				var rate = [];
+				var data = [];
+				var loop = 0;
+
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'A'){
+						loop += 1;
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
@@ -787,9 +605,13 @@
 							rate.push(100);						
 						}else{
 							rate.push(result.ng_rate[i].rate);						
-
 						}
 
+						if(rate[loop-1] > 15){
+							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						}else{
+							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+						}
 					}
 				}
 
@@ -798,7 +620,7 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate By Operators',
+						text: 'NG Rate Accumulation',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -812,7 +634,31 @@
 						}
 					},
 					yAxis: {
-						visible: false
+						title: {
+							enabled: true,
+							text: "Minutes"
+						},
+						min: 0,
+						plotLines: [{
+							color: '#FF0000',
+							value: 15,
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target 15%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -860,9 +706,7 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						color: 'rgb(68,169,168)',
-						data: rate,
-						showInLegend: false
+						data: data
 					}]
 				});
 
@@ -871,8 +715,12 @@
 				// GROUP B
 				var op_name = [];
 				var rate = [];
+				var data = [];
+				var loop = 0;
+
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'B'){
+						loop += 1;
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
@@ -880,7 +728,7 @@
 						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+							xAxis += name_temp[0]+' '+name_temp[1].charAt(0);
 						}
 
 						op_name.push(xAxis);
@@ -889,8 +737,13 @@
 							rate.push(100);						
 						}else{
 							rate.push(result.ng_rate[i].rate);						
+						}
 
-						}		
+						if(rate[loop-1] > 15){
+							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						}else{
+							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+						}
 					}
 				}
 
@@ -899,7 +752,7 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate By Operators',
+						text: 'NG Rate Accumulation',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -913,7 +766,31 @@
 						}
 					},
 					yAxis: {
-						visible: false
+						title: {
+							enabled: true,
+							text: "Minutes"
+						},
+						min: 0,
+						plotLines: [{
+							color: '#FF0000',
+							value: 15,
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target 15%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -961,9 +838,7 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: rate,
-						showInLegend: false
+						data: data
 					}]
 				});
 
@@ -971,8 +846,12 @@
 				// GROUP C
 				var op_name = [];
 				var rate = [];
+				var data = [];
+				var loop = 0;
+
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'C'){
+						loop += 1;
 						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
 						xAxis += result.ng_rate[i].operator_id + ' - ';
@@ -980,7 +859,7 @@
 						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+							xAxis += name_temp[0]+' '+name_temp[1].charAt(0);
 						}
 
 						op_name.push(xAxis);
@@ -989,7 +868,12 @@
 							rate.push(100);						
 						}else{
 							rate.push(result.ng_rate[i].rate);						
+						}
 
+						if(rate[loop-1] > 15){
+							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						}else{
+							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
 						}
 					}
 				}
@@ -999,7 +883,7 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate By Operators',
+						text: 'NG Rate Accumulation',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -1013,7 +897,31 @@
 						}
 					},
 					yAxis: {
-						visible: false
+						title: {
+							enabled: true,
+							text: "Minutes"
+						},
+						min: 0,
+						plotLines: [{
+							color: '#FF0000',
+							value: 15,
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target 15%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+						labels: {
+							enabled: false
+						}
 					},
 					xAxis: {
 						categories: op_name,
@@ -1061,13 +969,576 @@
 					series: [{
 						name:'NG Rate',
 						type: 'column',
-						color: 'rgb(255,116,116)',
-						data: rate,
-						showInLegend: false
+						data: data
 					}]
 				});
+
+				$(document).scrollTop(position);
 			}
 		});
+
+
+
+$.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, status, xhr){
+
+	if(result.status){
+		var key = [];
+		var buff_tarinai = [];
+		var ng_soldering = [];
+		var kizu = [];
+		var others = [];
+		var buff_nagare = [];
+
+		var ng_rate = [];
+		var ng = [];
+		var qty = [];
+
+		var plotBands = [];
+
+		var loop = 0;
+		for (var i = 0; i < result.operator.length; i++) {
+
+			if(result.operator[i].group == 'A'){
+				loop = loop + 1;
+
+				buff_tarinai.push(0);
+				ng_soldering.push(0);
+				kizu.push(0);
+				others.push(0);
+				buff_nagare.push(0);
+
+				for (var j = 0; j < result.target.length; j++) {
+					if(result.operator[i].employee_id == result.target[j].employee_id){
+
+						if(result.target[j].ng_name == 'Buff Tarinai'){
+							buff_tarinai[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'NG Soldering'){
+							ng_soldering[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Kizu'){
+							kizu[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+							others[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Nagare'){
+							buff_nagare[loop-1] = result.target[j].quantity;
+						}
+
+						if(j == 0){
+							key.push(result.target[j].key || 'Not Found');
+						}else if(result.target[j].employee_id != result.target[j-1].employee_id){
+							key.push(result.target[j].key || 'Not Found');
+						}
+
+					}
+
+				}
+
+				ng.push(buff_tarinai[loop-1] + ng_soldering[loop-1] + kizu[loop-1] + others[loop-1] + buff_nagare[loop-1]);
+
+				if(key[loop-1] != 'Not Found'){
+					if(key[loop-1] != 'A82Z'){
+						if(key[loop-1][0] == 'A'){
+							qty.push(15);
+						}else if(key[loop-1][0] == 'T'){
+							qty.push(8);
+						}
+					}else{
+						qty.push(10);
+					}
+				}else{
+					qty.push(0);
+				}
+
+
+				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+				if(ng_rate[loop-1] > 15){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
+				}			
+
+			}
+
+		}
+
+		var chart = Highcharts.chart('container2_shifta', {
+			chart: {
+				type: 'column',
+			},
+			title: {
+				text: 'Last NG Rate By Operator',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group A on '+result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+				labels: {
+					enabled:false
+				},
+				stackLabels: {
+					enabled: true,
+					style: {
+						fontWeight: 'bold',
+						color: 'white',
+						fontSize: '1vw'
+					}
+				},
+			},
+			xAxis: {
+				categories: key,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+				plotBands: plotBands
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			plotOptions: {
+				column: {
+					stacking: 'normal',
+				},
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				}
+			},
+			series: [
+			{
+				name: 'Buff Tarinai',
+				data: buff_tarinai,
+				color: '#2b908f'
+			},
+			{
+				name: 'NG Soldering',
+				data: ng_soldering,
+				color: '#90ee7e'
+			},
+			{
+				name: 'Kizu',
+				data: kizu,
+				color: '#f45b5b'
+			},
+			{
+				name: 'Buff Others (Aus, Nami, dll)',
+				data: others,
+				color: '#7798BF'
+			},
+			{
+				name: 'BUff Nagare',
+				data: buff_nagare,
+				color: '#aaeeee'
+			}
+			]
+		});
+
+
+
+
+
+
+		var key = [];
+		var buff_tarinai = [];
+		var ng_soldering = [];
+		var kizu = [];
+		var others = [];
+		var buff_nagare = [];
+
+		var ng_rate = [];
+		var ng = [];
+		var qty = [];
+
+		var plotBands = [];
+
+		var loop = 0;
+		for (var i = 0; i < result.operator.length; i++) {
+
+			if(result.operator[i].group == 'B'){
+				loop = loop + 1;
+
+				buff_tarinai.push(0);
+				ng_soldering.push(0);
+				kizu.push(0);
+				others.push(0);
+				buff_nagare.push(0);
+
+				for (var j = 0; j < result.target.length; j++) {
+					if(result.operator[i].employee_id == result.target[j].employee_id){
+
+						if(result.target[j].ng_name == 'Buff Tarinai'){
+							buff_tarinai[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'NG Soldering'){
+							ng_soldering[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Kizu'){
+							kizu[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+							others[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Nagare'){
+							buff_nagare[loop-1] = result.target[j].quantity;
+						}
+
+						if(j == 0){
+							key.push(result.target[j].key || 'Not Found');
+						}else if(result.target[j].employee_id != result.target[j-1].employee_id){
+							key.push(result.target[j].key || 'Not Found');
+						}
+
+					}
+
+				}
+
+				ng.push(buff_tarinai[loop-1] + ng_soldering[loop-1] + kizu[loop-1] + others[loop-1] + buff_nagare[loop-1]);
+
+				if(key[loop-1] != 'Not Found'){
+					if(key[loop-1] != 'A82Z'){
+						if(key[loop-1][0] == 'A'){
+							qty.push(15);
+						}else if(key[loop-1][0] == 'T'){
+							qty.push(8);
+						}
+					}else{
+						qty.push(10);
+					}
+				}else{
+					qty.push(0);
+				}
+
+
+				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+				if(ng_rate[loop-1] > 15){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
+				}			
+
+			}
+
+		}
+
+
+		var chart = Highcharts.chart('container2_shiftb', {
+			chart: {
+				type: 'column',
+			},
+			title: {
+				text: 'Last NG Rate By Operator',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group B on '+result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				},
+				plotBands: plotBands
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+				labels: {
+					enabled:false
+				},
+				stackLabels: {
+					enabled: true,
+					style: {
+						fontWeight: 'bold',
+						color: 'white',
+						fontSize: '1vw'
+					}
+				},
+			},
+			xAxis: {
+				categories: key,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			plotOptions: {
+				column: {
+					stacking: 'normal',
+				},
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				}
+			},
+			series: [
+			{
+				name: 'Buff Tarinai',
+				data: buff_tarinai,
+				color: '#2b908f'
+			},
+			{
+				name: 'NG Soldering',
+				data: ng_soldering,
+				color: '#90ee7e'
+			},
+			{
+				name: 'Kizu',
+				data: kizu,
+				color: '#f45b5b'
+			},
+			{
+				name: 'Buff Others (Aus, Nami, dll)',
+				data: others,
+				color: '#7798BF'
+			},
+			{
+				name: 'BUff Nagare',
+				data: buff_nagare,
+				color: '#aaeeee'
+			}
+			]
+		});
+
+
+
+
+
+		var key = [];
+		var buff_tarinai = [];
+		var ng_soldering = [];
+		var kizu = [];
+		var others = [];
+		var buff_nagare = [];
+
+		var ng_rate = [];
+		var ng = [];
+		var qty = [];
+
+		var plotBands = [];
+
+		var loop = 0;
+		for (var i = 0; i < result.operator.length; i++) {
+
+			if(result.operator[i].group == 'C'){
+				loop = loop + 1;
+
+				buff_tarinai.push(0);
+				ng_soldering.push(0);
+				kizu.push(0);
+				others.push(0);
+				buff_nagare.push(0);
+
+				for (var j = 0; j < result.target.length; j++) {
+					if(result.operator[i].employee_id == result.target[j].employee_id){
+
+						if(result.target[j].ng_name == 'Buff Tarinai'){
+							buff_tarinai[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'NG Soldering'){
+							ng_soldering[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Kizu'){
+							kizu[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Others (Aus, Nami, dll)'){
+							others[loop-1] = result.target[j].quantity;
+						}else if(result.target[j].ng_name == 'Buff Nagare'){
+							buff_nagare[loop-1] = result.target[j].quantity;
+						}
+
+						if(j == 0){
+							key.push(result.target[j].key || 'Not Found');
+						}else if(result.target[j].employee_id != result.target[j-1].employee_id){
+							key.push(result.target[j].key || 'Not Found');
+						}
+
+					}
+
+				}
+
+				ng.push(buff_tarinai[loop-1] + ng_soldering[loop-1] + kizu[loop-1] + others[loop-1] + buff_nagare[loop-1]);
+
+				if(key[loop-1] != 'Not Found'){
+					if(key[loop-1] != 'A82Z'){
+						if(key[loop-1][0] == 'A'){
+							qty.push(15);
+						}else if(key[loop-1][0] == 'T'){
+							qty.push(8);
+						}
+					}else{
+						qty.push(10);
+					}
+				}else{
+					qty.push(0);
+				}
+
+
+				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+				if(ng_rate[loop-1] > 15){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
+				}			
+
+			}
+
+		}
+
+
+		var chart = Highcharts.chart('container2_shiftc', {
+			chart: {
+				type: 'column',
+			},
+			title: {
+				text: 'Last NG Rate By Operator',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group C on '+result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "PC(s)"
+				},
+				labels: {
+					enabled:false
+				},
+				stackLabels: {
+					enabled: true,
+					style: {
+						fontWeight: 'bold',
+						color: 'white',
+						fontSize: '1vw'
+					}
+				},
+			},
+			xAxis: {
+				categories: key,
+				type: 'category',
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+				plotBands: plotBands
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			plotOptions: {
+				column: {
+					stacking: 'normal',
+				},
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				}
+			},
+			series: [
+			{
+				name: 'Buff Tarinai',
+				data: buff_tarinai,
+				color: '#2b908f'
+			},
+			{
+				name: 'NG Soldering',
+				data: ng_soldering,
+				color: '#90ee7e'
+			},
+			{
+				name: 'Kizu',
+				data: kizu,
+				color: '#f45b5b'
+			},
+			{
+				name: 'Buff Others (Aus, Nami, dll)',
+				data: others,
+				color: '#7798BF'
+			},
+			{
+				name: 'BUff Nagare',
+				data: buff_nagare,
+				color: '#aaeeee'
+			}
+			]
+		});
+
+		$(document).scrollTop(position);	
+	}
+
+});
+
+
 
 $.get('{{ url("fetch/middle/buffing_hourly_ng") }}', data, function(result, status, xhr) {
 	if(result.status){
@@ -1224,9 +1695,232 @@ $.get('{{ url("fetch/middle/buffing_hourly_ng") }}', data, function(result, stat
 
 		}
 
+		$(document).scrollTop(position);
 
 	}
 });
+
+Highcharts.createElement('link', {
+	href: '{{ url("fonts/UnicaOne.css")}}',
+	rel: 'stylesheet',
+	type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+			[0, '#2a2a2b']
+			]
+		},
+		style: {
+			fontFamily: 'sans-serif'
+		},
+		plotBorderColor: '#606063'
+	},
+	title: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase',
+			fontSize: '20px'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase'
+		}
+	},
+	xAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		title: {
+			style: {
+				color: '#A0A0A3'
+
+			}
+		}
+	},
+	yAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		tickWidth: 1,
+		title: {
+			style: {
+				color: '#A0A0A3'
+			}
+		}
+	},
+	tooltip: {
+		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+		style: {
+			color: '#F0F0F0'
+		}
+	},
+	plotOptions: {
+		series: {
+			dataLabels: {
+				color: 'white'
+			},
+			marker: {
+				lineColor: '#333'
+			}
+		},
+		boxplot: {
+			fillColor: '#505053'
+		},
+		candlestick: {
+			lineColor: 'white'
+		},
+		errorbar: {
+			color: 'white'
+		}
+	},
+	legend: {
+		itemStyle: {
+			color: '#E0E0E3'
+		},
+		itemHoverStyle: {
+			color: '#FFF'
+		},
+		itemHiddenStyle: {
+			color: '#606063'
+		}
+	},
+	credits: {
+		style: {
+			color: '#666'
+		}
+	},
+	labels: {
+		style: {
+			color: '#707073'
+		}
+	},
+
+	drilldown: {
+		activeAxisLabelStyle: {
+			color: '#F0F0F3'
+		},
+		activeDataLabelStyle: {
+			color: '#F0F0F3'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			symbolStroke: '#DDDDDD',
+			theme: {
+				fill: '#505053'
+			}
+		}
+	},
+
+	rangeSelector: {
+		buttonTheme: {
+			fill: '#505053',
+			stroke: '#000000',
+			style: {
+				color: '#CCC'
+			},
+			states: {
+				hover: {
+					fill: '#707073',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				},
+				select: {
+					fill: '#000003',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
+				}
+			}
+		},
+		inputBoxBorderColor: '#505053',
+		inputStyle: {
+			backgroundColor: '#333',
+			color: 'silver'
+		},
+		labelStyle: {
+			color: 'silver'
+		}
+	},
+
+	navigator: {
+		handles: {
+			backgroundColor: '#666',
+			borderColor: '#AAA'
+		},
+		outlineColor: '#CCC',
+		maskFill: 'rgba(255,255,255,0.1)',
+		series: {
+			color: '#7798BF',
+			lineColor: '#A6C7ED'
+		},
+		xAxis: {
+			gridLineColor: '#505053'
+		}
+	},
+
+	scrollbar: {
+		barBackgroundColor: '#808083',
+		barBorderColor: '#808083',
+		buttonArrowColor: '#CCC',
+		buttonBackgroundColor: '#606063',
+		buttonBorderColor: '#606063',
+		rifleColor: '#FFF',
+		trackBackgroundColor: '#404043',
+		trackBorderColor: '#404043'
+	},
+
+	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+	background2: '#505053',
+	dataLabelsColor: '#B0B0B3',
+	textColor: '#C0C0C0',
+	contrastTextColor: '#F0F0F3',
+	maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
+
+function addZero(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+}
+
+function getActualFullDate() {
+	var d = new Date();
+	var day = addZero(d.getDate());
+	var month = addZero(d.getMonth()+1);
+	var year = addZero(d.getFullYear());
+	var h = addZero(d.getHours());
+	var m = addZero(d.getMinutes());
+	var s = addZero(d.getSeconds());
+	return year + "-" + month + "-" + day + " (" + h + ":" + m + ":" + s +")";
+}
+
 
 }
 
