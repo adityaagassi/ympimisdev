@@ -368,6 +368,9 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
 	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
+	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
+	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
+	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
 	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
 	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
@@ -803,6 +806,10 @@ Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@inde
 Route::get('index/middle/muzusumashi', 'MiddleProcessController@indexMizusumashi');
 Route::get('fetch/middle/muzusumashi', 'MiddleProcessController@fetchMisuzumashi');
 
+//WELDING
+Route::get('index/process_welding_fl', 'WeldingProcessController@indexWeldingFL');
+
+
 Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 	Route::get('index/qnaHR', 'EmployeeController@indexHRQA');
 	Route::get('fetch/hr/hrqa', 'EmployeeController@fetchMasterQuestion');
@@ -813,6 +820,7 @@ Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
+	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 });
 
 Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');

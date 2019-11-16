@@ -68,6 +68,12 @@
 					<span style="font-weight: bold; font-size: 16px;">PI Count:</span>
 				</div>	
 				<div class="col-xs-12">
+					<input id="countMaterial" style="font-size: 50px; height: 60px; text-align: center;" type="text" class="form-control" value="0" disabled>
+				</div>
+				<div class="col-xs-12">
+					<span style="font-weight: bold; font-size: 16px;">Add Count:</span>
+				</div>
+				<div class="col-xs-12">
 					<div class="row">
 						<div class="col-xs-7">
 							<div class="input-group">
@@ -75,7 +81,7 @@
 									<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-minus" onclick="minusCount()"></span></button>
 								</div>
 								<!-- /btn-group -->
-								<input id="countMaterial" style="font-size: 50px; height: 60px; text-align: center;" type="text" class="form-control" value="0">
+								<input id="addCount" style="font-size: 50px; height: 60px; text-align: center;" type="text" class="form-control" value="0">
 								<div class="input-group-btn">
 									<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-plus" onclick="plusCount()"></span></button>
 								</div>
@@ -140,13 +146,11 @@
 	});
 
 	function plusCount(){
-		$('#countMaterial').val(parseInt($('#countMaterial').val())+1);
+		$('#addCount').val(parseInt($('#addCount').val())+1);
 	}
 
 	function minusCount(){
-		if($('#countMaterial').val() > 0){
-			$('#countMaterial').val(parseInt($('#countMaterial').val())-1);
-		}
+		$('#addCount').val(parseInt($('#addCount').val())-1);
 	}
 
 	function finalConfirm(){
@@ -203,7 +207,7 @@
 		$("#loading").show();
 		var data = {
 			id : $("#id_silver").val(),
-			count : $("#countMaterial").val(),
+			count : parseFloat($("#countMaterial").val())+parseFloat($("#addCount").val()),
 		}
 		$.post('{{ url("input/stocktaking/silver_count") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -212,6 +216,7 @@
 				$('#material_description').val("");
 				$('#category').val("");
 				$('#countMaterial').val("0");
+				$('#addCount').val("0");
 				itemResume();
 				openSuccessGritter('Success', result.message);
 				$("#loading").hide();
@@ -219,6 +224,7 @@
 			else{
 				openErrorGritter('Error!', result.message);
 				$('#countMaterial').val("0");
+				$('#addCount').val("0");
 				$("#loading").hide();
 			}
 		});
@@ -234,7 +240,14 @@
 				$('#material_number').val(result.count.material_number);
 				$('#material_description').val(result.count.material_description);
 				$('#category').val(result.count.category);
+				if(result.count.category == 'SINGLE'){
+					$('#category').css('background-color', 'rgb(250,250,210)');
+				}
+				else{
+					$('#category').css('background-color', 'rgb(135,206,250)');
+				}
 				$('#countMaterial').val(result.count.quantity_check);
+				$('#addCount').val("0");
 			}
 			else{
 				alert('Attempt to retrieve data failed');

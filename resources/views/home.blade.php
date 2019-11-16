@@ -79,8 +79,12 @@
                         <td>
                             <span style="font-weight: bold;">Overtime Information (残業の情報)</span>
                             <br>
-                            <a href="{{ url("index/report/overtime_monthly") }}">
-                                <i class="fa fa-caret-right"></i> OT Monitor By CC (コストセンターによる残業管理)
+                            <a href="{{ url("index/report/overtime_monthly_fq") }}">
+                                <i class="fa fa-caret-right"></i> OT Monitor By CC - Forecast <br> (コストセンターによる残業管理)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/report/overtime_monthly_bdg") }}">
+                                <i class="fa fa-caret-right"></i> OT Monitor By CC - Budget <br> (コストセンターによる残業管理)
                             </a>
                             <br>
                             <a href="http://172.17.128.4/myhris/management/overtime_control">
@@ -167,8 +171,13 @@
                             </a>
                             <br>
                             <a href="{{ url("index/emergency_response") }}">
-                                <i class="fa fa-caret-right"></i> Emergency Condition (??)
+                                <i class="fa fa-caret-right"></i> Emergency Condition ()
                             </a>
+                            <br>
+                            <a href="{{ url("index/buffing/toilet") }}">
+                                <i class="fa fa-caret-right"></i> Toilet Information ()
+                            </a>
+
                             <br>
                         </td>
                     </tr>
@@ -306,6 +315,10 @@
                         <td>
                             <span style="font-weight: bold;">WELDING Process (溶接工程)</span>
                             <br>
+                            <a href="{{ url("/index/process_welding_fl") }}">
+                                <i class="fa fa-caret-right"></i> Flute (フルート溶接)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/process_stamp_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
                             </a>
@@ -324,7 +337,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/process_middle_fl") }}">
-                                <i class="fa fa-caret-right"></i> Flute ()
+                                <i class="fa fa-caret-right"></i> Flute (フルート表面処理)
                             </a>
                             <br>
                             <a href="{{ url("/index/process_middle_sx") }}">
