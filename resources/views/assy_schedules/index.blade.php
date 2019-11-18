@@ -390,136 +390,136 @@
   });
 
   function draw_table() {
-    var table = $('#example1').DataTable({
-      'dom': 'Bfrtip',
-      'responsive': true,
-      'lengthMenu': [
-      [ 10, 25, 50, -1 ],
-      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-      ],
-      'buttons': {
-        buttons:[
-        {
-          extend: 'pageLength',
-          className: 'btn btn-default',
-          // text: '<i class="fa fa-print"></i> Show',
-        },
-        {
-          extend: 'copy',
-          className: 'btn btn-success',
-          text: '<i class="fa fa-copy"></i> Copy',
-          exportOptions: {
-            columns: ':not(.notexport)'
-          }
-        },
-        {
-          extend: 'excel',
-          className: 'btn btn-info',
-          text: '<i class="fa fa-file-excel-o"></i> Excel',
-          exportOptions: {
-            columns: ':not(.notexport)'
-          }
-        },
-        {
-          extend: 'print',
-          className: 'btn btn-warning',
-          text: '<i class="fa fa-print"></i> Print',
-          exportOptions: {
-            columns: ':not(.notexport)'
-          }
-        },
-        ]
+   $('#example1 tfoot th').each( function () {
+    var title = $(this).text();
+    $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+  } );
+   var table = $('#example1').DataTable({
+    'dom': 'Bfrtip',
+    'responsive': true,
+    'paging': true,
+    'lengthChange': true,
+    'searching': true,
+    'ordering': true,
+    'order': [],
+    'info': true,
+    'autoWidth': true,
+    "sPaginationType": "full_numbers",
+    "bJQueryUI": true,
+    "bAutoWidth": false,
+    "processing": true,
+    "serverSide": true,
+    "ajax": {
+      "type" : "get",
+      "url" : "{{ url("fetch/assy_schedule") }}"
+    },
+    "columns": [
+    { "data": "material_number" },
+    { "data": "material_description"},
+    { "data": "origin_group_name" },
+    { "data": "due_date" },
+    { "data": "quantity" },
+    { "data": "action" }
+    ],
+    'lengthMenu': [
+    [ 10, 25, 50, -1 ],
+    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+    ],
+    'buttons': {
+      buttons:[
+      {
+        extend: 'pageLength',
+        className: 'btn btn-default',
       },
-      'paging': true,
-      'lengthChange': true,
-      'searching': true,
-      'ordering': true,
-      'order': [],
-      'info': true,
-      'autoWidth': true,
-      "sPaginationType": "full_numbers",
-      "bJQueryUI": true,
-      "bAutoWidth": false,
-      "processing": true,
-      "serverSide": true,
-      "ajax": {
-        "type" : "get",
-        "url" : "{{ url("fetch/assy_schedule") }}"
-      },
-      "columns": [
-      { "data": "material_number" },
-      { "data": "material_description"},
-      { "data": "origin_group_name" },
-      { "data": "due_date" },
-      { "data": "quantity" },
-      { "data": "action" }
-      ],
-    });
-
-    $('#example1 tfoot th').each( function () {
-      var title = $(this).text();
-      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
-    });
-
-    table.columns().every( function () {
-      var that = this;
-      $( 'input', this.footer() ).on( 'keyup change', function () {
-        if ( that.search() !== this.value ) {
-          that
-          .search( this.value )
-          .draw();
+      {
+        extend: 'copy',
+        className: 'btn btn-success',
+        text: '<i class="fa fa-copy"></i> Copy',
+        exportOptions: {
+          columns: ':not(.notexport)'
         }
-      });
-    });
-    $('#example1 tfoot tr').appendTo('#example1 thead');
-  }
+      },
+      {
+        extend: 'excel',
+        className: 'btn btn-info',
+        text: '<i class="fa fa-file-excel-o"></i> Excel',
+        exportOptions: {
+          columns: ':not(.notexport)'
+        }
+      },
+      {
+        extend: 'print',
+        className: 'btn btn-warning',
+        text: '<i class="fa fa-print"></i> Print',
+        exportOptions: {
+          columns: ':not(.notexport)'
+        }
+      },
+      ]
+    }
+  });
 
-  function create() {
-    var data = {
-      material_number: $("#material_number").val(),
-      due_date: $("#due_date").val(),
-      quantity: $("#quantity").val()
-    };
+   table.columns().every( function () {
+    var that = this;
 
-    $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
-      if (result.status == true) {
-        $('#example1').DataTable().ajax.reload(null, false);
-        openSuccessGritter("Success","New Assy schedule has been created.");
-      } else {
-        openErrorGritter("Error","Assy schedule not created.");
+    $( 'input', this.footer() ).on( 'keyup change', function () {
+      if ( that.search() !== this.value ) {
+        that
+        .search( this.value )
+        .draw();
       }
-    })
-  }
+    } );
+  } );
 
-  function modalEdit(id) {
-    $('#EditModal').modal("show");
+   $('#example1 tfoot tr').appendTo('#example1 thead');
+ }
 
-    var data  = {
-      id:id
-    };
-
-    $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
-      $("#id_edit").val(id);
-      $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
-      $("#due_date_edit").val(result.datas.due_date);
-      $("#quantity_edit").val(result.datas.quantity);
-    })
-  }
-
-  function edit() {
-   var data = {
-    id: $("#id_edit").val(),
-    quantity: $("#quantity_edit").val()
+ function create() {
+  var data = {
+    material_number: $("#material_number").val(),
+    due_date: $("#due_date").val(),
+    quantity: $("#quantity").val()
   };
 
-  $.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+  $.post('{{ url("create/assy_schedule") }}', data, function(result, status, xhr){
     if (result.status == true) {
       $('#example1').DataTable().ajax.reload(null, false);
-      openSuccessGritter("Success","New Assy schedule has been edited.");
+      openSuccessGritter("Success","New Assy schedule has been created.");
     } else {
-      openErrorGritter("Error","Failed to edit.");
+      openErrorGritter("Error","Assy schedule not created.");
     }
   })
+}
+
+function modalEdit(id) {
+  $('#EditModal').modal("show");
+
+  var data  = {
+    id:id
+  };
+
+  $.get('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+    $("#id_edit").val(id);
+    $('#material_number_edit').val(result.datas.material_number).trigger('change.select2');
+    $("#due_date_edit").val(result.datas.due_date);
+    $("#quantity_edit").val(result.datas.quantity);
+  })
+}
+
+function edit() {
+ var data = {
+  id: $("#id_edit").val(),
+  quantity: $("#quantity_edit").val()
+};
+
+$.post('{{ url("edit/assy_schedule") }}', data, function(result, status, xhr){
+  if (result.status == true) {
+    $('#example1').DataTable().ajax.reload(null, false);
+    openSuccessGritter("Success","New Assy schedule has been edited.");
+  } else {
+    openErrorGritter("Error","Failed to edit.");
+  }
+})
 }
 
 function modalView(id) {

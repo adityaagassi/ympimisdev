@@ -93,7 +93,7 @@
 			</table> -->
 
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; font-size: 1vw">
-				<tr id="modelAll">
+				<tr id="modelAll" style="font-size: 1.8vw">
 					<!-- <th>#</th> -->
 				</tr>
 				<tr id="quantity">
@@ -373,16 +373,33 @@
 					// }
 				})
 
-				max = (Math.max(...limit)) + 10;
+				max = (Math.max(...limit));
 
 				$.each(result.datas, function(index, value){
-					kosong = (max - (value.quantity / value.lot_transfer)) / max * 100;
-					chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+					if (value.quantity / value.lot_transfer >= 2) {
 
-					isi = (value.quantity / value.lot_transfer) / max * 100;
-					if ((value.quantity / value.lot_transfer) > 0) isi2 = (value.quantity / value.lot_transfer); else isi2 = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+isi+'%" id="welding">'+isi2+'</div>';
+						high = (value.quantity / value.lot_transfer) / max * 100;
+
+						if (value.quantity / value.lot_transfer >= 4) {
+							color = "#e0391f";
+						} else {
+							color = "#facf23";
+						}
+
+						chart += "<td style='height:400px'><div style='height:"+(100 - high)+"%'></div><div style='margin: 10px 3px 0px 3px; background-color: "+color+"; height:"+high+"%; font-size:1.5vw'>"+value.quantity / value.lot_transfer+"</div></td>";
+					}
+					// kosong = (max - (value.quantity / value.lot_transfer)) / max * 100;
+					// chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+
+					// isi = (value.quantity / value.lot_transfer) / max * 100;
+
+					// if ((value.quantity / value.lot_transfer) > 0) isi2 = (value.quantity / value.lot_transfer); else isi2 = '';
+					// chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+isi+'%" id="welding">'+isi2+'</div>';
 				})
+
+				// chart = "<td></td>";
+
+				// chart += "<td><div style='height:100px'>DD</div></td>";
 
 				$("#modelAll").append(model);
 				$("#quantity").append(quantity);

@@ -97,7 +97,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<ul class="list-group list-group-unbordered">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
-								<span class="label label-warning">{{ $sisa_cuti[0]->sisa_cuti }} / {{ $sisa_cuti[0]->cuti }}</span>
+								<span style="color: black">{{ $sisa_cuti[0]->sisa_cuti }} hari</span>
 								<!-- <span class="label label-danger">-</span>/
 									<span class="label label-danger">-</span> -->
 								</a>

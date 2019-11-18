@@ -89,52 +89,60 @@
               <table width="100%">
                 <tr>
                   <td width="1%">
-                    <div class="description-block border-right" style="color: #02ff17">
-                      <h5 class="description-header" style="font-size: 48px;">
+                    <div class="description-block border-right" style="color: #157fd6">
+                      <h5 class="description-header" style="font-size: 42px;">
                         <span class="description-percentage" id="tot_budget"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 32px;">Total Forecast<br><span>単月見込み</span></span>   
+                      <span class="description-text" style="font-size: 28px;">Acc Budget<br><span>??</span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right" style="color: #7300ab" >
-                      <h5 class="description-header" style="font-size: 48px; ">
+                      <h5 class="description-header" style="font-size: 42px; ">
                         <span class="description-percentage" id="tot_act"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 32px;">Total Actual<br><span >単月実績</span></span>   
+                      <span class="description-text" style="font-size: 28px;">Total Actual<br><span >単月実績</span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right text-green" id="diff_text">
-                      <h5 class="description-header" style="font-size: 48px;">
+                      <h5 class="description-header" style="font-size: 42px;">
                         <span class="description-percentage" id="tot_diff"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 32px;">Difference</span>
-                      <br><span class="description-text" style="font-size: 16px">(ACT-FQ)</span>
-                      <br><span class="description-text" style="font-size: 32px;">差異</span>   
+                      <span class="description-text" style="font-size: 30px;">Difference</span>
+                      <br><span class="description-text" style="font-size: 16px">(ACT-BDG)</span>
+                      <br><span class="description-text" style="font-size: 28px;">差異</span>   
                     </div>
                   </td>
                   <td width="1%">
-                    <div class="description-block border-right" style="color: #02ff17">
-                      <h5 class="description-header" style="font-size: 48px;">
-                        <span class="description-percentage" id="avg_fc"></span>
+                    <div class="description-block border-right" style="color: #157fd6">
+                      <h5 class="description-header" style="font-size: 42px;">
+                        <span class="description-percentage" id="avg_bdg"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 32px;">Forecast Average<br><span >見込みの平均値</span></span>   
+                      <span class="description-text" style="font-size: 28px;">Budget Average<br><span >?? </span></span>   
                     </div>
                   </td>
                   <td width="1%">
                     <div class="description-block border-right text-yellow">
-                     <h5 class="description-header" style="font-size: 48px;">
+                     <h5 class="description-header" style="font-size: 42px;">
                       <span class="description-percentage" id="avg"></span>
                     </h5>      
-                    <span class="description-text" style="font-size: 32px;">Average<br><span >平均</span></span>
+                    <span class="description-text" style="font-size: 28px;">Average<br><span >平均</span></span>
                   </div>
                 </td>
-              </tr>
-            </table>
-            <div class="col-md-3">
+                <td width="1%">
+                  <div class="description-block border-right text-yellow">
+                   <h5 class="description-header" style="font-size: 42px;">
+                    <span class="description-percentage" id="total_budget"></span>
+                  </h5>      
+                  <span class="description-text" style="font-size: 28px;">Total Budget<br><span>??</span></span>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <div class="col-md-3">
 
-            </div>
+          </div>
 
 						<!-- 	<div class="col-md-3">
 								<div class="description-block border-right" style="color: #02ff17">
@@ -269,7 +277,7 @@
     	}
     }
 
-    tot_diff = tot_act - tot_day_budget;
+    tot_diff = tot_act - tot_budget;
 
     tot_budget = Math.round(tot_budget * 100) / 100;
     tot_day_budget = Math.round(tot_day_budget * 100) / 100;
@@ -281,7 +289,7 @@
     var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 
-    $("#tot_budget").text(tot_day_budget2);
+    $("#tot_budget").text(tot_budget2);
     $("#tot_day_budget").text(tot_budget2);
     $("#tot_act").text(tot_act2);
 
@@ -297,10 +305,10 @@
     avg = tot_act / result.emp_total[0].jml;
     avg = Math.round(avg * 100) / 100;
 
-    avg_fc = tot_day_budget / result.emp_fc[0].jml_fc;
-    avg_fc = Math.round(avg_fc * 100) / 100;
+    avg_bdg = tot_budget / result.emp_bdg[0].jml_bdg;
+    avg_bdg = Math.round(avg_bdg * 100) / 100;
     $("#avg").html(avg);
-    $("#avg_fc").html(avg_fc);
+    $("#avg_bdg").html(avg_bdg);
 
     // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
     // 	return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
@@ -312,7 +320,7 @@
     		type: 'column'
     	},
     	title: {
-    		text: '<span style="font-size: 18pt;">Overtime Control - Forecast</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
+    		text: '<span style="font-size: 18pt;">Overtime Control - Budget</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
     		useHTML: true
     	},
     	credits:{
@@ -388,9 +396,9 @@
     		}
     	},
     	series: [{
-    		name: 'Forecast Accumulative',
-    		data: budgetHarian,
-    		color: "#02ff17"
+    		name: 'Budget Accumulative',
+    		data: seriesDataBudget,
+    		color: "#157fd6"
     	}, {
     		name: 'Actual Accumulative',
     		data: seriesDataAktual,
