@@ -63,13 +63,13 @@
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
               <option value='Lacquering'>Lacquering</optiofn>
-              <option value='Meeting Room'>Meeting Room</option>
+              <!-- <option value='Meeting Room'>Meeting Room</option> -->
               <option value='Part Process'>Part Process</option>
               <option value='Pianica'>Pianica</option>
               <option value='Plating'>Plating</option>
               <option value='Recorder'>Recorder</option>
               <option value='Sub Assy'>Sub Assy</option>
-              <option value='TR Room'>TR Room</option>
+              <!-- <option value='TR Room'>TR Room</option> -->
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
@@ -130,7 +130,7 @@
           </div>
           <label class="col-sm-1">Nomor CPAR<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" name="cpar_no" id="cpar_no" placeholder="Masukkan Nomor CPAR" required readonly>
+            <input type="text" class="form-control" name="cpar_no" id="cpar_no" placeholder="Nomor CPAR" required readonly>
             <input type="hidden" class="form-control" name="kategori" id="kategori" placeholder="kategori" required>
             <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
             <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>

@@ -121,17 +121,9 @@
             </select>
           </div>
           <label class="col-sm-1">Via Komplain<span class="text-red">*</span></label>
-          <div class="col-sm-5">
-            <select class="form-control select2" name="via_komplain" style="width: 100%;" data-placeholder="Via Komplain" required>
-              @if($cpars->via_komplain == "Email")
-              <option value="Email" selected>Email</option>
-              <option value="Telepon">Telepon</option>
-              @elseif($cpars->via_komplain == "Telepon") 
-              <option value="Email">Email</option>
-              <option value="Telepon" selected>Telepon</option>
-              @endif
-            </select>
-          </div>
+           <div class="col-sm-5">
+              <input type="text" class="form-control" name="via_komplain" id="via_komplain" value="{{$cpars->via_komplain}}" required readonly>
+            </div>
         </div>
         <div class="form-group row" align="left">
           <label class="col-sm-1">Lokasi<span class="text-red">*</span></label>
@@ -378,8 +370,8 @@
           <h4 class="modal-title" id="myModalLabel"><center>CPAR <b>{{ $cpars->cpar_no }}</b></center></h4>
         </div>
         <div class="modal-body">
-          <div class="box-body">s
-            <input type="hidden" value="{{csrf_token()}}" name="_token" />ss
+          <div class="box-body">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <input type="hidden" id="cpar_no" value="{{ $cpars->cpar_no }}">
             <div class="form-group row" align="left">
               <div class="col-sm-1"></div>
@@ -443,9 +435,9 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
+            <label class="col-sm-2">Detail Problem<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <textarea class="form-control" id="detail_problem" placeholder="Detail Masalah" required></textarea>
+              <textarea class="form-control" id="detail_problem" placeholder="Detail Problem" required></textarea>
             </div>
           </div>
           <div class="form-group row" align="left">

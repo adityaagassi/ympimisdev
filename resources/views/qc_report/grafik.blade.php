@@ -340,7 +340,7 @@ table.table-bordered > tfoot > tr > th{
             years = "All"
           }
 
-          var month = [], jml = [], statusopen = [], statusclose = [];
+          var month = [], jml = [], statusopen = [], statusclose = [], statusprogress = [];
 
           $.each(result.datas, function(key, value) {
             // departemen.push(value.department_name);
@@ -348,6 +348,7 @@ table.table-bordered > tfoot > tr > th{
             jml.push(value.jumlah);
             statusopen.push(parseInt(value.open));
             statusclose.push(parseInt(value.close));
+            statusprogress.push(parseInt(value.progress));
           })
 
           $('#chart').highcharts({
@@ -421,18 +422,28 @@ table.table-bordered > tfoot > tr > th{
             },
             series: [{
                 name: 'Open',
-                color: '#388e3c',
+                color: '#4caf50',
                 data: statusopen
+            }, {
+                name: 'Progress',
+                data: statusprogress,
+                color : '#ffeb3b'
             }, {
                 name: 'Closed',
                 data: statusclose,
-                color : '#c62828'
-            },
+                color : '#e53935'
+            }, 
             {
                 type: 'spline',
                 name: 'Open',
                 color: '#388e3c',
                 data: statusopen
+            },
+            {
+                type: 'spline',
+                name: 'Closed',
+                color: '#c62828',
+                data: statusclose
             }
             ]
           })
@@ -454,13 +465,14 @@ table.table-bordered > tfoot > tr > th{
     $.get('{{ url("index/qc_report/fetchDept") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
         if(result.status){
-          var departemen = [], jml = [], statusopen = [], statusclose = [];
+          var departemen = [], jml = [], statusopen = [], statusclose = [], statusprogress = [];
 
           $.each(result.datas, function(key, value) {
             departemen.push(value.department_name);
             jml.push(value.jumlah);
             statusopen.push(parseInt(value.open));
             statusclose.push(parseInt(value.close));
+            statusprogress.push(parseInt(value.progress));
           })
 
           $('#chartdept').highcharts({
@@ -534,18 +546,28 @@ table.table-bordered > tfoot > tr > th{
             },
             series: [{
                 name: 'Open',
-                color: '#388e3c',
+                color: '#4caf50',
                 data: statusopen
+            }, {
+                name: 'Progress',
+                data: statusprogress,
+                color : '#ffeb3b'
             }, {
                 name: 'Closed',
                 data: statusclose,
-                color : '#c62828'
-            },
+                color : '#e53935'
+            }, 
             {
                 type: 'spline',
                 name: 'Open',
                 color: '#388e3c',
                 data: statusopen
+            },
+            {
+                type: 'spline',
+                name: 'Closed',
+                color: '#c62828',
+                data: statusclose
             }
             ]
           })

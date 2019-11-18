@@ -9,9 +9,12 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Response;
 use DataTables;
+use PDF;
 use App\QcCar;
 use App\QcCpar;
 use App\Department;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class QcCarController extends Controller
 {
@@ -154,16 +157,46 @@ class QcCarController extends Controller
     public function create_pic(Request $request,$id)
     {
         try{
+            
             $cars = QcCar::find($id);
             $cars->pic = $request->get('pic'); 
             $cars->save();
+
+            $cpar = QcCpar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.status_code')
+           ->join('qc_cars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+           ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
+           ->get();
+
+             foreach ($cpar as $cpar) {
+              $idcpar = $cpar->id;
+              $cpar->status_code = "5";
+              $cpar->save();
+             }
+
+            $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$idcpar."'";
+
+            $cparemail = db::select($query);
+
             // kirim email
-            // $query = "select qc_cars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_car.id='".$id."'";
-            // $cpars = db::select($query);
+            $mailpic = "select qc_cars.pic,email FROM qc_cars join users on qc_cars.pic = users.username where qc_cars.id='".$id."'";
+            $mailto = db::select($mailpic);
+
+            foreach($mailto as $mail){
+              $mailtoo = $mail->email;
+            }
+
+            $cars->email_status = "SentStaff";
+            $cars->email_send_date = date('Y-m-d');
+            $cars->posisi = "staff";
+            $cars->save();
+
+            Mail::to($mailtoo)->send(new SendEmail($cparemail, 'cpar'));
 
             $response = array(
               'status' => true,
-              'cars' => $cars
+              'cars' => $cars,
+
+
             );
             return Response::json($response);
         }
@@ -172,14 +205,14 @@ class QcCarController extends Controller
             if($error_code == 1062){
              $response = array(
               'status' => false,
-              'parts' => "Material already exist"
+              'parts' => "PIC already exist"
             );
              return Response::json($response);
            }
            else{
              $response = array(
               'status' => false,
-              'parts' => "Material not created."
+              'parts' => "PIC not created."
             );
              return Response::json($response);
            }

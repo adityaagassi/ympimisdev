@@ -91,12 +91,17 @@ table.table-bordered > tfoot > tr > th{
 
          <a href="{{url('index/qc_report/print_cpar', $cpar[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain"  target="_blank">Preview CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Print CAR</a><br/><br/>
+         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Print CAR</a>
+
+         <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-md" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
+
+          <a class="btn btn-md btn-default" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email</a>
+
+         <br/><br/>
 
          <?php if ($cars->pic != NULL) { ?>
             <b>PIC</b> : <label class="label label-success"> {{$cars->employee_pic->name}} </label>
             <br><br>
-         
 
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
@@ -209,7 +214,7 @@ table.table-bordered > tfoot > tr > th{
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Pilih Karyawan Yang Mengerjakan CPAR {{$cpars->cpar_no}}</h4>
+          <h4 class="modal-title" id="myModalLabel">Pilih PIC Yang Mengerjakan CPAR {{$cpars->cpar_no}}</h4>
         </div>
         <div class="modal-body">
 
@@ -222,7 +227,7 @@ table.table-bordered > tfoot > tr > th{
             Lokasi : {{$cpars->lokasi}} -->
             <div class="form-group row" align="left">
               <div class="col-sm-1"></div>
-              <label class="col-sm-2">Foreman<span class="text-red">*</span></label>
+              <label class="col-sm-2">Foreman <span class="text-red">*</span></label>
               <div class="col-sm-8">
                 <select class="form-control select3" id="pic" name="pic" style="width: 100%;" data-placeholder="Pilih PIC" required>
                   <option value=""></option>
@@ -241,6 +246,40 @@ table.table-bordered > tfoot > tr > th{
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="statusmodal{{$cars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <table class="table table-hover">
+          <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
+            <tbody>
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />  
+                <tr style="background-color: #4caf50;color: white">
+                    <td colspan="2" style="width: 33%"><b>Position</b></td>
+                    <td colspan="2" style="width: 33%"><b>Action</b></td>
+                    <td colspan="2" style="width: 33%"><b>Email</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Staff</b></td>
+                    <td colspan="2"><b><span class="label label-warning">On Progress</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <?php } ?>
   
@@ -309,7 +348,6 @@ table.table-bordered > tfoot > tr > th{
     function create_pic() {
 
       var data = {
-        id: $("#id").val(),
         pic: $("#pic").val()
       };
 

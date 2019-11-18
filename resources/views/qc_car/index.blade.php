@@ -51,8 +51,6 @@ table.table-bordered > tfoot > tr > th{
 
 @section('content')
 
-
-
 <section class="content">
   @if (session('status'))
   <div class="alert alert-success alert-dismissible">
@@ -96,7 +94,7 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$car->tgl_balas}}</td>
                 <td>{{$car->department_name}}</td>
                 <td>{{$car->sumber_komplain}}</td>
-                <td><label class="label label-success">{{$car->status_name}}</label></td>
+                <td>{{$car->status_name}}</td>
                 <td style="width: 15%">
                   <center>
                     <a href="{{url('index/qc_car/detail', $car['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a>

@@ -106,6 +106,9 @@ class QcReportController extends Controller
             else if($cpar_details->status_name == "Closed"){
               return '<label class="label label-danger">'.$cpar_details->status_name. '</label>';
             }
+            else if($cpar_details->status_name == "Progress"){
+              return '<label class="label label-warning">'.$cpar_details->status_name. '</label>';
+            }
           })
 
         ->addColumn('action', function($cpar_details){
@@ -130,10 +133,11 @@ class QcReportController extends Controller
         $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
         ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
         ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
-        // ->join('departments','depar.employee_id','=','mutation_logs.employee_id')
+        ->join('departments','departments.department_name','=','mutation_logs.department')
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
+        ->whereNotIn('departments.id',['1','2','3','4','10','11','13','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -141,7 +145,7 @@ class QcReportController extends Controller
         $productions = Department::select('departments.*')
         ->join('divisions','departments.id_division','=','divisions.id')
         ->where('id_division','=','5')
-        ->where('departments.id','<>','11')
+        ->whereNotIn('departments.id',['10','11','13','14'])
         ->get();
 
         $procurements = Department::select('departments.*')
@@ -222,7 +226,7 @@ class QcReportController extends Controller
             'sumber_komplain' => $request->get('sumber_komplain'),
             'destination_code' => $request->get('customer'),
             'vendor' => $request->get('supplier'),
-            'staff' => $this->staff,
+            'staff' => Auth::user()->username,
             'chief' => $this->chief,
             'manager' => $this->manager,
             'dgm' => $this->dgm,
@@ -631,7 +635,7 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan order by month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as progress, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan order by month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -687,9 +691,9 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("SELECT count(cpar_no) as jumlah, department_name,sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from departments 
-        LEFT JOIN qc_cpars on qc_cpars.department_id = departments.id 
-        LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code 
+      $data = db::select("SELECT count(cpar_no) as jumlah, department_name,sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as progress, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from departments
+        LEFT JOIN qc_cpars on qc_cpars.department_id = departments.id
+        LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code
         where departments.id not in (1,2,3,4,5,11)
         GROUP BY departments.department_name ORDER BY departments.id;");
 
@@ -731,6 +735,9 @@ class QcReportController extends Controller
           else if($detail->status_name == "Closed"){
             return '<label class="label label-danger">'.$detail->status_name. '</label>';
           }
+          else if($detail->status_name == "Progress"){
+            return '<label class="label label-warning">'.$detail->status_name. '</label>';
+          }
           })
 
         ->addColumn('action', function($detail){
@@ -761,6 +768,9 @@ class QcReportController extends Controller
           }
           else if($detail->status_name == "Closed"){
             return '<label class="label label-danger">'.$detail->status_name. '</label>';
+          }
+          else if($detail->status_name == "Progress"){
+            return '<label class="label label-warning">'.$detail->status_name. '</label>';
           }
           })
 
@@ -902,7 +912,9 @@ class QcReportController extends Controller
                 $qc_cpars->email_send_date = date('Y-m-d');
                 $qc_cpars->posisi = "chief";
                 $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'),function ($message) {
+                    $message->attach('D:\xampp\htdocs\miraidev\public\files\JADWAL.pdf');
+                });
                 return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
               }
 
@@ -942,6 +954,10 @@ class QcReportController extends Controller
 
                 $cars = new QcCar([
                   'cpar_no' => $qc_cpars->cpar_no,
+                  'posisi' => 'manager',
+                  'email_status' => 'SentManager',
+                  'email_send_date' => date('Y-m-d'),
+                  'tinjauan' => '0,0,0,0',
                   'created_by' => $id_user
                 ]);
 
@@ -1054,7 +1070,27 @@ class QcReportController extends Controller
           }
           else{
             return redirect('/index/qc_report/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');
-          }
-          
+          }          
+      }
+
+
+
+
+
+
+      //Verifikasi CAR Oleh QA
+      public function verifikasicar($id)
+      {
+         $cars = QcCar::find($id);
+
+         $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')
+         ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+         ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
+         ->get();
+       
+          return view('qc_report.verifikasi_car', array(
+            'cars' => $cars,
+            'cpar' => $cpar,
+          ))->with('page', 'CAR');
       }
 }
