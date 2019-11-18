@@ -903,14 +903,17 @@ public function indexEmployeeService()
 
 $absences = db::connection('mysql3')->select($absence);
 
-$ct = db::connection('mysql3')->select("select SUM(leave_quota) as cuti ,SUM(leave_quota) - SUM(cuti) as sisa_cuti from
+$ct = db::connection('mysql3')->select("
+  select SUM(leave_quota) as cuti ,SUM(leave_quota) - SUM(cuti) as sisa_cuti from
   (
   select leave_quota, 0 as cuti from 
   (select YEAR(now()) - YEAR(hire_date)
   - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
   join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed
   union all
-  select 0 leave_quota, COUNT(nik) as cuti from presensi where nik = '".$emp_id."' and shift in ('CT','I','A','S') and year(tanggal) = '2019') as ct;");
+  select 0 leave_quota ,count(shift) as cuti from ympimis.employees left join
+  presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
+  and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d')) as ct;");
 
 $datas = db::select($query);
 
@@ -1576,6 +1579,15 @@ public function fetchDataKaizen()
   })
   ->rawColumns(['stat', 'action'])
   ->make(true);
+}
+
+public function fetchDetailKaizen(Request $request)
+{
+  $data = KaizenForm::select("employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement")
+  ->where('id','=',$request->get('id'))
+  ->first();
+
+  return Response::json($data);
 }
 
 
