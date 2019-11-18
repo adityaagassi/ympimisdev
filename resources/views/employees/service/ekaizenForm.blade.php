@@ -53,9 +53,25 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			</select>
 			<!-- <input type="text" id="kz_sub_leader" class="form-control"> -->
 		</div>
+		<div class="col-xs-4">
+			<label for="kz_bagian">Bagian yang Dituju</label><br>
+			<select id="kz_bagian" class="form-control select2" style="width: 100% !important;">
+				<option value="">dd</option>
+			</select>
+		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-3">
+			<label for="kz_judul">Purpose Kaizen</label>
+			<select class="form-control select2" id="kz_purpose" data-placeholder='Pilih Purpose'>
+				<option value="">&nbsp;</option>
+				<option>Save time</option>
+				<option>5S</option>
+				<option>Safety</option>
+				<option>Lingkungan</option>
+			</select>
+		</div>
+		<div class="col-xs-9">
 			<label for="kz_judul">Judul Usulan</label>
 			<input type="text" id="kz_judul" class="form-control" placeholder="Judul usulan">
 		</div>
@@ -75,14 +91,43 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	<div class="row">
 		<div class="col-xs-12">
 			<label>Estimasi Hasil</label><br>
-			<label><input type="radio" name="radio1"> Rp 0,- s/d Rp 100.000,-</label>
-			<label><input type="radio" name="radio1"> Rp 100.001,- s/d Rp 500.000,-</label>
+			<table class="table" style="color:white">
+				<thead>
+					<tr>
+						<th colspan="4">Perhitungan Kaizen / Efek</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>Manpower</th>
+						<td>:&nbsp;<input type="text" class="form-control" placeholder="Dalam satu bulan" id="kz_mp" style="width: 70%; display: inline-block;">&nbsp; Menit</td>
+						<td>X &nbsp; 500</td>
+						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_mp_bulan" style="width: 80%; display: inline-block;" readonly>&nbsp; / bulan</td>
+					</tr>
+					<tr>
+						<th>Space</th>
+						<td>:&nbsp;<input type="text" class="form-control" placeholder="Total" id="kz_space" style="width: 70%; display: inline-block;">&nbsp; m<sup>2</sup></td>
+						<td>X &nbsp; 500</td>
+						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_space_bulan" style="width: 80%; display: inline-block;" readonly>&nbsp; / bulan</td>
+					</tr>
+					<tr>
+						<th>Material</th>
+						<td>:&nbsp;<input type="text" class="form-control" placeholder="" id="kz_material" style="width: 70%; display: inline-block;"></td>
+						<td>X &nbsp; 500</td>
+						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_material_bulan" style="width: 80%; display: inline-block;" readonly>&nbsp; / bulan</td>
+					</tr>
+					<tr>
+						<td colspan="3" style="text-align: right; vertical-align: middle; font-size: 30px; padding-right: 0px">Total = Rp. &nbsp; </td>
+						<td><input type="text" class="form-control" style="width: 100%; display: inline-block; font-size: 22px; font-weight: bold" readonly id="total"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<button type="button" class="btn btn-primary" id="kz_buat"><i class="fa fa-edit"></i>&nbsp; Buat Kaizen</button>
-			<button type="button" class="btn btn-default pull-right" onclick="window.history.back();" ><i class="fa fa-share"></i>&nbsp; Kembali</button>
+			<button type="button" class="btn btn-primary pull-right" id="kz_buat"><i class="fa fa-edit"></i>&nbsp; Buat Kaizen</button>
+			<button type="button" class="btn btn-default" onclick="window.history.back();" ><i class="fa fa-share"></i>&nbsp; Kembali</button>
 		</div>
 	</div>
 </section>
@@ -108,6 +153,52 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 		});
 	})
+
+	$("#kz_mp").on('keypress keyup blur', function() {
+		$(this).val($(this).val().replace(/[^\d].+/, ""));
+		if ((event.which < 48 || event.which > 57)) {
+			event.preventDefault();
+		}
+	})
+
+	$("#kz_mp").on('change keyup paste', function() {
+		$("#kz_mp_bulan").val($(this).val() * 500);
+		total();
+	})
+
+	$("#kz_space").on('keypress keyup blur', function() {
+		$(this).val($(this).val().replace(/[^\d].+/, ""));
+		if ((event.which < 48 || event.which > 57)) {
+			event.preventDefault();
+		}
+	})
+
+	$("#kz_space").on('change keyup paste', function() {
+		$("#kz_space_bulan").val($(this).val() * 500);
+		total();
+	})
+
+	$("#kz_material").on('keypress keyup blur', function() {
+		$(this).val($(this).val().replace(/[^\d].+/, ""));
+		if ((event.which < 48 || event.which > 57)) {
+			event.preventDefault();
+		}
+	})
+
+	$("#kz_material").on('change keyup paste', function() {
+		$("#kz_material_bulan").val($(this).val() * 500);
+		total();
+	})
+
+	function total() {
+		var total = parseInt($("#kz_mp_bulan").val()) + parseInt($("#kz_space_bulan").val()) + parseInt($("#kz_material_bulan").val());
+
+		if (isNaN(total)) {
+			total = 0;
+		}
+
+		$("#total").val(total);
+	}
 
 	$("#kz_buat").click( function() {
 		var data = {

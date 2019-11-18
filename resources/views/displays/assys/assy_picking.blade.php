@@ -115,141 +115,141 @@
 		<div class="col-xs-12">
 			<!-- <div class="col-xs-3" style="padding: 0px 5px 0px 5px"> -->
 				<center><div id="judul" style="color:white; font-weight: bold; font-size: 2vw"></div></center>
-			<!-- </div> -->
-		</div>
-		<div class="col-xs-12" style="margin-top: 10px">
-			<form method="GET" action="{{ url('index/display/sub_assy/'.$option) }}">
-				<div class="col-xs-2" style="line-height: 1">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border-color: #00a65a">
-							<i class="fa fa-calendar"></i>
+				<!-- </div> -->
+			</div>
+			<div class="col-xs-12" style="margin-top: 10px">
+				<form method="GET" action="{{ url('index/display/sub_assy/'.$option) }}">
+					<div class="col-xs-2" style="line-height: 1">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border-color: #00a65a">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" id="tgl" name="date" placeholder="Select Date" style="border-color: #00a65a" <?php if (isset($_GET['date'])): ?>
+							<?php echo "value=".$_GET['date']; endif ?>>
 						</div>
-						<input type="text" class="form-control datepicker" id="tgl" name="date" placeholder="Select Date" style="border-color: #00a65a" <?php if (isset($_GET['date'])): ?>
-						<?php echo "value=".$_GET['date']; endif ?>>
+						<br>
 					</div>
-					<br>
-				</div>
-				<div class="col-xs-2">
-					<select class="form-control select2" multiple="multiple" id="key" onchange="change()" data-placeholder="Select Key">
-						@foreach($keys as $key)
-						<option value="{{ $key->key }}">{{ $key->key }}</option>
-						@endforeach
-					</select>
-					<input type="text" name="key2" id="dd" hidden>
-				</div>
-				<div class="col-xs-1">
-					<select class="form-control select2" multiple="multiple" id="modelselect" onchange="changeModel()" data-placeholder="Select Model">
-						@foreach($models as $model)
-						<option value="{{ $model->model }}">{{ $model->model }}</option>
-						@endforeach
-					</select>
-					<input type="text" name="model2" id="model2" hidden>
-				</div>
-
-				<!-- JIKA SUB ASSY -->
-				@if($option == "assy")
-				<div class="col-xs-2">
-					<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
-						@foreach($surfaces as $surface)
-						<option value="{{ $surface[0] }}">{{ $surface[1] }}</option>
-						@endforeach
-					</select>
-				</div>
-				@endif
-				<input type="text" name="surface2" id="surface2" hidden>
-
-				<div class="col-xs-1">
-					<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
-						@foreach($hpls as $hpl)
-						<option value="{{ $hpl }}">{{ $hpl }}</option>
-						@endforeach
-					</select>
-					<input type="text" name="hpl2" id="hpl2" hidden>
-				</div>
-
-				<div class="col-xs-2">
-					<select class="form-control select2" id="order" onchange="changeOrder()" placeholder="Order by">
-						<option value="">Diff</option>
-						<option value="1" <?php if($_GET['order2'] != '' ) echo "selected"; ?> >Stock Room</option>
-					</select>
-					<input type="text" name="order2" id="order2" hidden>
-				</div>
-				<div class="col-xs-1">
-					<button class="btn btn-success" type="submit">Cari</button>
-				</div>
-			</form>
-		</div>
-
-		<div class="modal fade" id="myModal">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 style="float: right; " id="modal-title"></h4> 
-						<h4 class="modal-title"><b id="titel"></b></h4>
+					<div class="col-xs-2">
+						<select class="form-control select2" multiple="multiple" id="key" onchange="change()" data-placeholder="Select Key">
+							@foreach($keys as $key)
+							<option value="{{ $key->key }}">{{ $key->key }}</option>
+							@endforeach
+						</select>
+						<input type="text" name="key2" id="dd" hidden>
 					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
-									<thead style="background-color: rgba(126,86,134,.7);">
-										<tr>
-											<th>Tag</th>
-											<th>GMC</th>
-											<th>Description</th>
-											<th>Quantity</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-									<tfoot style="background-color: rgba(126,86,134,.7);">
-										<tr>
-											<th colspan="3" style="text-align:right">Total : </th>
-											<th></th>
-										</tr>
-									</tfoot>
-								</table>
+					<div class="col-xs-1">
+						<select class="form-control select2" multiple="multiple" id="modelselect" onchange="changeModel()" data-placeholder="Select Model">
+							@foreach($models as $model)
+							<option value="{{ $model->model }}">{{ $model->model }}</option>
+							@endforeach
+						</select>
+						<input type="text" name="model2" id="model2" hidden>
+					</div>
+
+					<!-- JIKA SUB ASSY -->
+					@if($option == "assy")
+					<div class="col-xs-2">
+						<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
+							@foreach($surfaces as $surface)
+							<option value="{{ $surface[0] }}">{{ $surface[1] }}</option>
+							@endforeach
+						</select>
+					</div>
+					@endif
+					<input type="text" name="surface2" id="surface2" hidden>
+
+					<div class="col-xs-1">
+						<select class="form-control select2" id="hpl" multiple="multiple" onchange="changeHpl()" data-placeholder="Select HPL">
+							@foreach($hpls as $hpl)
+							<option value="{{ $hpl }}">{{ $hpl }}</option>
+							@endforeach
+						</select>
+						<input type="text" name="hpl2" id="hpl2" hidden>
+					</div>
+
+					<div class="col-xs-2">
+						<select class="form-control select2" id="order" onchange="changeOrder()" placeholder="Order by">
+							<option value="">Diff</option>
+							<option value="1" <?php if($_GET['order2'] != '' ) echo "selected"; ?> >Stock Room</option>
+						</select>
+						<input type="text" name="order2" id="order2" hidden>
+					</div>
+					<div class="col-xs-1">
+						<button class="btn btn-success" type="submit">Cari</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 style="float: right; " id="modal-title"></h4> 
+							<h4 class="modal-title"><b id="titel"></b></h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detailTabel">
+										<thead style="background-color: rgba(126,86,134,.7);">
+											<tr>
+												<th>Tag</th>
+												<th>GMC</th>
+												<th>Description</th>
+												<th>Quantity</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+										<tfoot style="background-color: rgba(126,86,134,.7);">
+											<tr>
+												<th colspan="3" style="text-align:right">Total : </th>
+												<th></th>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
 							</div>
 						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-					</div>
+					<!-- /.modal-content -->
 				</div>
-				<!-- /.modal-content -->
+				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal-dialog -->
 		</div>
-	</div>
 
-</section>
-@endsection
-@section('scripts')
-<script src="{{ url("js/highcharts.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
-<script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
-
-	jQuery(document).ready(function(){
-		fill_table();
-		setInterval(fill_table, 30000);
-
-		var kunci = "{{$_GET['key2']}}";
-		var kuncies = kunci.split(",");
-		var kunciFilter = [];
-		ctg = "";
-
-		for(var i = 0; i < kuncies.length; i++){
-			ctg = kuncies[i].charAt(0);
-
-			if(kunciFilter.indexOf(ctg) === -1){
-				kunciFilter[kunciFilter.length] = ctg;
+	</section>
+	@endsection
+	@section('scripts')
+	<script src="{{ url("js/highcharts.js")}}"></script>
+	<script src="{{ url("js/exporting.js")}}"></script>
+	<script src="{{ url("js/export-data.js")}}"></script>
+	<script>
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
-		}
+		});
+
+		jQuery(document).ready(function(){
+			fill_table();
+			setInterval(fill_table, 30000);
+
+			var kunci = "{{$_GET['key2']}}";
+			var kuncies = kunci.split(",");
+			var kunciFilter = [];
+			ctg = "";
+
+			for(var i = 0; i < kuncies.length; i++){
+				ctg = kuncies[i].charAt(0);
+
+				if(kunciFilter.indexOf(ctg) === -1){
+					kunciFilter[kunciFilter.length] = ctg;
+				}
+			}
 		// alert(kunciFilter);
 
 		$("#judul").text(kunciFilter+"-{{$_GET['model2']}}-{{$_GET['surface2']}}-{{$_GET['hpl2']}}");
@@ -264,32 +264,32 @@
 		});
 	});
 
-	function change() {
-		$("#dd").val($("#key").val());
-	}
-
-	function changeModel() {
-		$("#model2").val($("#modelselect").val());
-	}
-	function changeSurface() {
-		$("#surface2").val($("#surface").val());
-	}
-	function changeHpl() {
-		$("#hpl2").val($("#hpl").val());
-	}
-	function changeOrder() {
-		$("#order2").val($("#order").val());
-	}
-
-	function fill_table() {
-		var data = {
-			tanggal:"{{$_GET['date']}}",
-			key:"{{$_GET['key2']}}",
-			model:"{{$_GET['model2']}}",
-			surface:"{{$_GET['surface2']}}",
-			hpl:"{{$_GET['hpl2']}}",
-			order:"{{$_GET['order2']}}"
+		function change() {
+			$("#dd").val($("#key").val());
 		}
+
+		function changeModel() {
+			$("#model2").val($("#modelselect").val());
+		}
+		function changeSurface() {
+			$("#surface2").val($("#surface").val());
+		}
+		function changeHpl() {
+			$("#hpl2").val($("#hpl").val());
+		}
+		function changeOrder() {
+			$("#order2").val($("#order").val());
+		}
+
+		function fill_table() {
+			var data = {
+				tanggal:"{{$_GET['date']}}",
+				key:"{{$_GET['key2']}}",
+				model:"{{$_GET['model2']}}",
+				surface:"{{$_GET['surface2']}}",
+				hpl:"{{$_GET['hpl2']}}",
+				order:"{{$_GET['order2']}}"
+			}
 
 		// var values="{{$_GET['key2']}}";
 		// $.each(values.split(","), function(i,e){
