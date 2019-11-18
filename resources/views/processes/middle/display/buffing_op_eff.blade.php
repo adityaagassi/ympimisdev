@@ -151,8 +151,8 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12" id="target" style="margin-top: 1%; margin-left: 1%; width:99%; padding: 0px; background-color: #2a2a2b">
-				<table id="eff_target" class="table table-bordered" style="width:97.5%; margin-left: 2%; margin-top: 1%; margin-bottom: 1%;"> 
+			<div class="col-xs-12" id="target" style="margin-top: 1%; margin-left: 1%; width:98%; padding: 0px; background-color: #2a2a2b">
+				<table id="eff_target" class="table table-bordered" style="width:97%; margin-left: 2.5%; margin-top: 1%; margin-bottom: 1%;"> 
 					<thead id="eff_target_head">
 					</thead>
 					<tbody id="eff_target_body">
@@ -808,7 +808,7 @@ function fillChart() {
 								var xAxis = '';
 								xAxis += result.time_eff[i].employee_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -952,7 +952,7 @@ function fillChart() {
 								var xAxis = '';
 								xAxis += result.time_eff[i].employee_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -1096,7 +1096,7 @@ function fillChart() {
 								var xAxis = '';
 								xAxis += result.time_eff[i].employee_id + ' - ';
 
-								if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
 								}else{
 									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
@@ -1425,7 +1425,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1523,7 +1523,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1622,7 +1622,7 @@ $.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, stat
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1734,7 +1734,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1833,7 +1833,10 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 						}
 					},
 					animation: false,
-					cursor: 'pointer'
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
 				},
 			},
 			series: [
@@ -1859,7 +1862,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -1958,7 +1961,10 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 						}
 					},
 					animation: false,
-					cursor: 'pointer'
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
 				},
 			},
 			series: [
@@ -1984,7 +1990,7 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
 						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
 							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
 						}else{
 							if(name_temp[1].length > 7){
@@ -2083,7 +2089,10 @@ $.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, sta
 						}
 					},
 					animation: false,
-					cursor: 'pointer'
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
 				},
 			},
 			series: [
