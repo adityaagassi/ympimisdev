@@ -4534,6 +4534,7 @@ class MiddleProcessController extends Controller
 
 				$middle_temp_log = new MiddleTempLog([
 					'material_number' => $request->get('material_number'),
+					'operator_id' => $request->get('operator_id'),
 					'quantity' => $request->get('cek'),
 					'location' => $request->get('loc'),
 				]);
@@ -4577,11 +4578,13 @@ class MiddleProcessController extends Controller
 
 				$temp = MiddleTempLog::where('material_number','=',$request->get('material_number'))
 				->where('location','=',$request->get('loc'))
+				->where('operator_id','=',$request->get('operator_id'))
 				->first();
 
 				if(count($temp) > 0){
 					$delete = MiddleTempLog::where('material_number','=',$request->get('material_number'))
 					->where('location','=',$request->get('loc'))
+					->where('operator_id','=',$request->get('operator_id'))
 					->first();
 
 					$delete->delete();

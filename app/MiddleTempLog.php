@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MiddleTempLog extends Model
 {
     protected $fillable = [
-		'material_number','quantity','location'
+		'operator_id','material_number','quantity','location'
 	];
 
 	public function material()
