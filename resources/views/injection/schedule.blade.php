@@ -177,7 +177,7 @@
 		
 		<div class="col-xs-12">
 			<br><br>
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle;width:150px;">Mesin 1</td	>
@@ -192,7 +192,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle;width:150px;">Mesin 2</td>
@@ -207,7 +207,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 3</td>
@@ -222,7 +222,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 4</td>
@@ -237,7 +237,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 5</td>
@@ -252,7 +252,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 6</td>
@@ -267,7 +267,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 7</td>
@@ -282,7 +282,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 8</td>
@@ -297,7 +297,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 9</td>
@@ -312,7 +312,7 @@
 				</tr>
 			</table>
 
-			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main">
+			<table class="table table-bordered" style="color:white; font-size: 2vw" id="main" hidden="">
 				<tr>
 					<td  rowspan="3" style="text-align: center;
 					vertical-align: middle; width:150px;">Mesin 11</td>
@@ -2705,209 +2705,209 @@ function getDateWorking() {
 function saveSchedule() {
 
 	
-	// mesin1
+	// // mesin1
 
-	for (var i = 0; i < max; i++) {
-		if (mesin1_r2[i].length < 1) {
-			if (mesin1_r2[i] > 0) {
-				PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][0]+'#'+mesin1_r2[i][1]+'#'+mesin1_r2[i][2])
-			}else{
-				PostMESIN1.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (mesin1_r2[i].length < 1) {
+	// 		if (mesin1_r2[i] > 0) {
+	// 			PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][0]+'#'+mesin1_r2[i][1]+'#'+mesin1_r2[i][2])
+	// 		}else{
+	// 			PostMESIN1.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < mesin1_r2[i].length; a++) {
-				if (mesin1_r2[i][a][2] > 0) {
-					PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][a][0]+'#'+mesin1_r2[i][a][1]+'#'+mesin1_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < mesin1_r2[i].length; a++) {
+	// 			if (mesin1_r2[i][a][2] > 0) {
+	// 				PostMESIN1.push(dateMax[i]+'#'+mesin1_r2[i][a][0]+'#'+mesin1_r2[i][a][1]+'#'+mesin1_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end mesin1
+	// // end mesin1
 
-	// MESIN2
+	// // MESIN2
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN2_r2[i].length < 1) {
-			if (MESIN2_r2[i] > 0) {
-				PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][0]+'#'+MESIN2_r2[i][1]+'#'+MESIN2_r2[i][2])
-			}else{
-				PostMESIN2.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN2_r2[i].length < 1) {
+	// 		if (MESIN2_r2[i] > 0) {
+	// 			PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][0]+'#'+MESIN2_r2[i][1]+'#'+MESIN2_r2[i][2])
+	// 		}else{
+	// 			PostMESIN2.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN2_r2[i].length; a++) {
-				if (MESIN2_r2[i][a][2] > 0) {
-					PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][a][0]+'#'+MESIN2_r2[i][a][1]+'#'+MESIN2_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN2_r2[i].length; a++) {
+	// 			if (MESIN2_r2[i][a][2] > 0) {
+	// 				PostMESIN2.push(dateMax[i]+'#'+MESIN2_r2[i][a][0]+'#'+MESIN2_r2[i][a][1]+'#'+MESIN2_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN2
-	// MESIN3
+	// // end MESIN2
+	// // MESIN3
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN3_r2[i].length < 1) {
-			if (MESIN3_r2[i] > 0) {
-				PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][0]+'#'+MESIN3_r2[i][1]+'#'+MESIN3_r2[i][2])
-			}else{
-				PostMESIN3.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN3_r2[i].length < 1) {
+	// 		if (MESIN3_r2[i] > 0) {
+	// 			PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][0]+'#'+MESIN3_r2[i][1]+'#'+MESIN3_r2[i][2])
+	// 		}else{
+	// 			PostMESIN3.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN3_r2[i].length; a++) {
-				if (MESIN3_r2[i][a][2] > 0) {
-					PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][a][0]+'#'+MESIN3_r2[i][a][1]+'#'+MESIN3_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN3_r2[i].length; a++) {
+	// 			if (MESIN3_r2[i][a][2] > 0) {
+	// 				PostMESIN3.push(dateMax[i]+'#'+MESIN3_r2[i][a][0]+'#'+MESIN3_r2[i][a][1]+'#'+MESIN3_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN3
-	// MESIN4
+	// // end MESIN3
+	// // MESIN4
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN4_r2[i].length < 1) {
-			if (MESIN4_r2[i] > 0) {
-				PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][0]+'#'+MESIN4_r2[i][1]+'#'+MESIN4_r2[i][2])
-			}else{
-				PostMESIN4.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN4_r2[i].length < 1) {
+	// 		if (MESIN4_r2[i] > 0) {
+	// 			PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][0]+'#'+MESIN4_r2[i][1]+'#'+MESIN4_r2[i][2])
+	// 		}else{
+	// 			PostMESIN4.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN4_r2[i].length; a++) {
-				if (MESIN4_r2[i][a][2] > 0) {
-					PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][a][0]+'#'+MESIN4_r2[i][a][1]+'#'+MESIN4_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN4_r2[i].length; a++) {
+	// 			if (MESIN4_r2[i][a][2] > 0) {
+	// 				PostMESIN4.push(dateMax[i]+'#'+MESIN4_r2[i][a][0]+'#'+MESIN4_r2[i][a][1]+'#'+MESIN4_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN4
-	// MESIN5
+	// // end MESIN4
+	// // MESIN5
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN5_r2[i].length < 1) {
-			if (MESIN5_r2[i] > 0) {
-				PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][0]+'#'+MESIN5_r2[i][1]+'#'+MESIN5_r2[i][2])
-			}else{
-				PostMESIN5.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN5_r2[i].length < 1) {
+	// 		if (MESIN5_r2[i] > 0) {
+	// 			PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][0]+'#'+MESIN5_r2[i][1]+'#'+MESIN5_r2[i][2])
+	// 		}else{
+	// 			PostMESIN5.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN5_r2[i].length; a++) {
-				if (MESIN5_r2[i][a][2] > 0) {
-					PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][a][0]+'#'+MESIN5_r2[i][a][1]+'#'+MESIN5_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN5_r2[i].length; a++) {
+	// 			if (MESIN5_r2[i][a][2] > 0) {
+	// 				PostMESIN5.push(dateMax[i]+'#'+MESIN5_r2[i][a][0]+'#'+MESIN5_r2[i][a][1]+'#'+MESIN5_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN5
-	// MESIN6
+	// // end MESIN5
+	// // MESIN6
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN6_r2[i].length < 1) {
-			if (MESIN6_r2[i] > 0) {
-				PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][0]+'#'+MESIN6_r2[i][1]+'#'+MESIN6_r2[i][2])
-			}else{
-				PostMESIN6.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN6_r2[i].length < 1) {
+	// 		if (MESIN6_r2[i] > 0) {
+	// 			PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][0]+'#'+MESIN6_r2[i][1]+'#'+MESIN6_r2[i][2])
+	// 		}else{
+	// 			PostMESIN6.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN6_r2[i].length; a++) {
-				if (MESIN6_r2[i][a][2] > 0) {
-					PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][a][0]+'#'+MESIN6_r2[i][a][1]+'#'+MESIN6_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN6_r2[i].length; a++) {
+	// 			if (MESIN6_r2[i][a][2] > 0) {
+	// 				PostMESIN6.push(dateMax[i]+'#'+MESIN6_r2[i][a][0]+'#'+MESIN6_r2[i][a][1]+'#'+MESIN6_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN6
-	// MESIN7
+	// // end MESIN6
+	// // MESIN7
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN7_r2[i].length < 1) {
-			if (MESIN7_r2[i] > 0) {
-				PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][0]+'#'+MESIN7_r2[i][1]+'#'+MESIN7_r2[i][2])
-			}else{
-				PostMESIN7.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN7_r2[i].length < 1) {
+	// 		if (MESIN7_r2[i] > 0) {
+	// 			PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][0]+'#'+MESIN7_r2[i][1]+'#'+MESIN7_r2[i][2])
+	// 		}else{
+	// 			PostMESIN7.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN7_r2[i].length; a++) {
-				if (MESIN7_r2[i][a][2] > 0) {
-					PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][a][0]+'#'+MESIN7_r2[i][a][1]+'#'+MESIN7_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN7_r2[i].length; a++) {
+	// 			if (MESIN7_r2[i][a][2] > 0) {
+	// 				PostMESIN7.push(dateMax[i]+'#'+MESIN7_r2[i][a][0]+'#'+MESIN7_r2[i][a][1]+'#'+MESIN7_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN7
-	// MESIN8
+	// // end MESIN7
+	// // MESIN8
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN8_r2[i].length < 1) {
-			if (MESIN8_r2[i] > 0) {
-				PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][0]+'#'+MESIN8_r2[i][1]+'#'+MESIN8_r2[i][2])
-			}else{
-				PostMESIN8.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN8_r2[i].length < 1) {
+	// 		if (MESIN8_r2[i] > 0) {
+	// 			PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][0]+'#'+MESIN8_r2[i][1]+'#'+MESIN8_r2[i][2])
+	// 		}else{
+	// 			PostMESIN8.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN8_r2[i].length; a++) {
-				if (MESIN8_r2[i][a][2] > 0) {
-					PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][a][0]+'#'+MESIN8_r2[i][a][1]+'#'+MESIN8_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN8_r2[i].length; a++) {
+	// 			if (MESIN8_r2[i][a][2] > 0) {
+	// 				PostMESIN8.push(dateMax[i]+'#'+MESIN8_r2[i][a][0]+'#'+MESIN8_r2[i][a][1]+'#'+MESIN8_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN8
-	// MESIN9
+	// // end MESIN8
+	// // MESIN9
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN9_r2[i].length < 1) {
-			if (MESIN9_r2[i] > 0) {
-				PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][0]+'#'+MESIN9_r2[i][1]+'#'+MESIN9_r2[i][2])
-			}else{
-				PostMESIN9.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN9_r2[i].length < 1) {
+	// 		if (MESIN9_r2[i] > 0) {
+	// 			PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][0]+'#'+MESIN9_r2[i][1]+'#'+MESIN9_r2[i][2])
+	// 		}else{
+	// 			PostMESIN9.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN9_r2[i].length; a++) {
-				if (MESIN9_r2[i][a][2] > 0) {
-					PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][a][0]+'#'+MESIN9_r2[i][a][1]+'#'+MESIN9_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN9_r2[i].length; a++) {
+	// 			if (MESIN9_r2[i][a][2] > 0) {
+	// 				PostMESIN9.push(dateMax[i]+'#'+MESIN9_r2[i][a][0]+'#'+MESIN9_r2[i][a][1]+'#'+MESIN9_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end MESIN9
+	// // end MESIN9
 
 
-	// mesin11
+	// // mesin11
 
-	for (var i = 0; i < max; i++) {
-		if (MESIN11_r2[i].length < 1) {
-			if (MESIN11_r2[i] > 0) {
-				PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][0]+'#'+MESIN11_r2[i][1]+'#'+MESIN11_r2[i][2])
-			}else{
-				PostMESIN11.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
-			}
+	// for (var i = 0; i < max; i++) {
+	// 	if (MESIN11_r2[i].length < 1) {
+	// 		if (MESIN11_r2[i] > 0) {
+	// 			PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][0]+'#'+MESIN11_r2[i][1]+'#'+MESIN11_r2[i][2])
+	// 		}else{
+	// 			PostMESIN11.push(dateMax[i]+'#'+'OFF'+'#'+'OFF'+'#'+'0')
+	// 		}
 			
-		}else{
-			for (var a = 0; a < MESIN11_r2[i].length; a++) {
-				if (MESIN11_r2[i][a][2] > 0) {
-					PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][a][0]+'#'+MESIN11_r2[i][a][1]+'#'+MESIN11_r2[i][a][2])
-				}				
-			}			
-		}		
-	}
+	// 	}else{
+	// 		for (var a = 0; a < MESIN11_r2[i].length; a++) {
+	// 			if (MESIN11_r2[i][a][2] > 0) {
+	// 				PostMESIN11.push(dateMax[i]+'#'+MESIN11_r2[i][a][0]+'#'+MESIN11_r2[i][a][1]+'#'+MESIN11_r2[i][a][2])
+	// 			}				
+	// 		}			
+	// 	}		
+	// }
 
-	// end mesin11
+	// // end mesin11
 
 	// alert(PostMESIN11);
 
@@ -2970,6 +2970,22 @@ function chartplan() {
 			var mesin =[];
 			var molding =[];
 
+			var blue =[];
+			var green =[];
+			var pink =[];
+			var red =[];
+			var brown =[];
+			var ivory =[];
+			var yrf =[];
+
+			var Mesinblue =[];
+			var Mesingreen =[];
+			var Mesinpink =[];
+			var Mesinred =[];
+			var Mesinbrown =[];
+			var Mesinivory =[];
+			var Mesinyrf =[];
+
 			var gantimolding = [];
 			if(xhr.status == 200){
 				if(result.status){
@@ -2979,11 +2995,24 @@ function chartplan() {
 					}
 
 					for (var i = 0; i < result.part.length; i++) {
-						target.push(result.part[i].qty);
+						blue.push(result.part[i].blue);
+						green.push(result.part[i].green);
+						pink.push(result.part[i].pink);
+						red.push(result.part[i].red);
+						brown.push(result.part[i].brown);
+						ivory.push(result.part[i].ivory);
+						yrf.push(result.part[i].yrf);
+
 					}
 
 					for (var i = 0; i < result.plan.length; i++) {
-						mesin.push( parseInt(result.plan[i].total));
+						Mesinblue.push( parseInt(result.plan[i].blue));
+						Mesingreen.push( parseInt(result.plan[i].green));
+						Mesinpink.push( parseInt(result.plan[i].pink));
+						Mesinred.push( parseInt(result.plan[i].red));
+						Mesinbrown.push( parseInt(result.plan[i].brown));
+						Mesinivory.push( parseInt(result.plan[i].ivory));
+						Mesinyrf.push( parseInt(result.plan[i].yrf));
 					}
 
 					
@@ -3071,7 +3100,7 @@ function chartplan() {
 				        }
 				    },{
 			        title: {
-			            text: 'Minute'
+			            text: ''
 			        },
 			        opposite: true
 			    }],
@@ -3095,14 +3124,72 @@ function chartplan() {
 				        name: 'Frequency Change Molding',
 				        data: gantimolding,
 				        yAxis: 1
-				    },{
-				    	type: 'spline',
-				        name: 'Target Assy',
-				        data: target
 				    }, {
 				    	type: 'spline',
-				        name: 'Plan Injeksi',
-				        data: mesin
+				    	color: 'blue',
+				        name: 'Plan Injeksi YRS BLUE',
+				        data: Mesinblue
+				    }, {
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'blue',
+				        name: 'Target Assy YRS BLUE',
+				        data: blue
+				    }, {
+				    	type: 'spline',
+				    	color: 'green',
+				        name: 'Plan Injeksi YRS GREEN',
+				        data: Mesingreen
+				    },{
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'GREEN',
+				        name: 'Target Assy YRS GREEN',
+				        data: green
+				    }, {
+				    	type: 'spline',
+				    	color: 'pink',
+				        name: 'Plan Injeksi YRS PINK',
+				        data: Mesinpink
+				    },{
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'pink',
+				        name: 'Target Assy YRS PINK',
+				        data: pink
+				    }, {
+				    	type: 'spline',
+				    	color: 'brown',
+				        name: 'Plan Injeksi YRS BROWN',
+				        data: Mesinbrown
+				    },{
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'brown',
+				        name: 'Target Assy YRS BROWN',
+				        data: brown
+				    }, {
+				    	type: 'spline',
+				    	color: 'Red',
+				        name: 'Plan Injeksi YRS IVORY',
+				        data: Mesinivory
+				    },{
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'Red',
+				        name: 'Target Assy YRS IVORY',
+				        data: ivory
+				    }, {
+				    	type: 'spline',
+				    	color: 'gray',
+				        name: 'Plan Injeksi YRF IVORY',
+				        data: Mesinyrf
+				    },{
+				    	type: 'spline',
+				    	dashStyle: 'Dash',
+				    	color: 'gray',
+				        name: 'Target Assy YRF IVORY',
+				        data: yrf
 				    }]
 				});
 				}

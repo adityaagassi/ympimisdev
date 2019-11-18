@@ -31,6 +31,9 @@
 	.progress {
 		background-color: rgba(0,0,0,0);
 	}
+	.aa {
+  	text-decoration-color: pink !important;
+	}
 </style>
 @endsection
 @section('header')
@@ -151,7 +154,7 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
-		setInterval(fillTable, 10000);
+		// setInterval(fillTable, 10000);
 
 		$('#date').datepicker({
 			autoclose: true,
@@ -244,10 +247,20 @@
 					var reason = "";
 					var color = "white";
 
+					var garis = ""
 
-					if(value.stats == "DEPARTED"){
+
+					
+
+					if(value.stats == "DEPARTED" ){
 						size=20;
+						if (value.deleted_at != "-") {
+						
+						garis ="style='text-decoration: line-through; text-decoration-thickness: 3px;text-decoration-color: red;'";
+						
+						}
 						style = "style='background-color:rgb(6, 115, 82); color:white; font-size:"+size+"px'";
+						
 
 						var d2 = new Date(value.finish_stuffing);
 						var d1 = new Date(value.start_stuffing);
@@ -275,16 +288,31 @@
 						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
 
 						size=40;
+
+						if (value.deleted_at != "-") {
+						
+						garis ="style='text-decoration: line-through; text-decoration-thickness: 3px;text-decoration-color: red;'";
+						
+						}
 						style = "style='background-color:yellow; color: #cc1305; font-size:"+size+"px';";
+						
 						rs_color = "#dd4b39";
 					}
 					if(value.stats == "-"){				
 						size=25;
+
+						if (value.deleted_at != "-") {
+						
+						garis ="style='text-decoration: line-through; text-decoration-thickness: 3px;text-decoration-color: red;'";
+						
+						}
 						style = "style='background-color:white; color: black; font-size:"+size+"px';";
+					
 						rs_color = "#dd4b39";
 						dif = 0;
 						color = "black";
 					}
+				
 
 					var progress = ((value.total_actual/value.total_plan)*100).toFixed(2)+'%';
 
@@ -301,20 +329,20 @@
 					if(progress2 == 0) {dif = "";}
 
 					stuffingTableBody += "<tr onClick='showModal(\""+value.id_checkSheet+"\")' "+style+">";
-					stuffingTableBody += "<td>"+parseInt(index+1)+"</td>";
-					stuffingTableBody += "<td>"+value.stats+"</td>";
-					stuffingTableBody += "<td>"+progress+"</td>";
-					stuffingTableBody += "<td>"+value.id_checkSheet.substr(2,7)+"</td>";
-					stuffingTableBody += "<td>"+value.destination+"</td>";
-					stuffingTableBody += "<td>"+value.total_plan+"</td>";
-					stuffingTableBody += "<td>"+value.total_actual+"</td>";
+					stuffingTableBody += "<td "+garis+">"+parseInt(index+1)+"</td>";
+					stuffingTableBody += "<td "+garis+">"+value.stats+"</td>";
+					stuffingTableBody += "<td "+garis+">"+progress+"</td>";
+					stuffingTableBody += "<td "+garis+">"+value.id_checkSheet.substr(2,7)+"</td>";
+					stuffingTableBody += "<td "+garis+">"+value.destination+"</td>";
+					stuffingTableBody += "<td "+garis+">"+value.total_plan+"</td>";
+					stuffingTableBody += "<td "+garis+">"+value.total_actual+"</td>";
 					stuffingTableBody += "<td style='line-height:5px; padding:5px'><div class='progress "+cls+"' style='height:"+size+"px; border: 1px solid "+color+";'>";
 					stuffingTableBody += "<div class='progress-bar progress-bar-"+style2+" "+cls2+"' role='progressbar' aria-valuenow='"+dif+"' aria-valuemin='0' aria-valuemax='60' style='width: "+progress2+"%;' >";
 					stuffingTableBody += "<span style='line-height:"+(size-2)+"px; font-size:"+size+"px'>"+dif+"</span>";
-					stuffingTableBody += "</div></div><span style='color:"+rs_color+"; font-size:15px; line-height: 80%; font-weight: normal;'>"+reason+"</span></td>";
+					stuffingTableBody += "</div></div><span  style='color:"+rs_color+"; font-size:15px; line-height: 80%; font-weight: normal; '>"+reason+"</span></td>";
 
-					stuffingTableBody += "<td>"+start+"</td>";					
-					stuffingTableBody += "<td>"+finish+"</td>";
+					stuffingTableBody += "<td "+garis+">"+start+"</td>";					
+					stuffingTableBody += "<td "+garis+">"+finish+"</td>";
 					stuffingTableBody += "</tr>";
 
 				});

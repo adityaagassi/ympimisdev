@@ -58,7 +58,7 @@
 							<div class="input-group-addon">
 								<i class="fa fa-calendar"></i>
 							</div>
-							<input type="text" class="form-control pull-right" id="datefrom" nama="dateto">
+							<input type="text" class="form-control pull-right" id="dateto" nama="dateto">
 						</div>
 					</div>
 				</div>

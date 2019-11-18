@@ -39,6 +39,8 @@
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			 <a href="{{ url("index/dailyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Stock After Injection</a>
 
+			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a>
+
 		
 		</div>
 	</div>

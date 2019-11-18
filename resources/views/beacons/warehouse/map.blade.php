@@ -65,22 +65,22 @@
 
  #fstk { 
    position: absolute; 
-   right: 70px; 
+   right: 73px; 
    top: 132px; 
    width: 500px;
    height: 300px; 
-   border: solid 3px red; 
+   border: solid 0px red; 
    font-size: 24px; 
    text-align: center; 
  }
 
- #DM { 
+ #dm { 
    position: absolute; 
-   right: 320px; 
-   top: 500px; 
-   width: 150px;
-   height: 150px; 
-   border: solid 3px red; 
+   right: 73px; 
+   top: 490px; 
+   width: 500px;
+   height: 240px; 
+   border: solid 0px red; 
    font-size: 24px; 
    text-align: center; 
  }
@@ -91,7 +91,7 @@
    top: 313px; 
    width: 100px;
    height: 100px; 
-   border: solid 3px red; 
+   border: solid 0px red; 
    font-size: 24px; 
    text-align: center; 
  }
@@ -103,26 +103,52 @@
    top: 500px; 
    width: 100px;
    height: 100px; 
-   border: solid 3px red; 
+   border: solid 0px red; 
    font-size: 24px; 
    text-align: center; 
  }
 
  #ind { 
    position: absolute; 
-   right: 750px; 
-   top: 650px; 
-   width: 25px;
-   height: 25px; 
-   border: solid 3px red; 
+   right: 640px; 
+   top: 610px; 
+   width: 400px;
+   height: 118px; 
+   border: solid 0px red; 
    font-size: 24px; 
    text-align: center; 
  }
+
+#la { 
+   position: absolute; 
+   right: 745px; 
+   top: 107px; 
+   width: 180px;
+   height: 500px; 
+   border: solid 0px red; 
+   font-size: 24px; 
+   text-align: center; 
+ }
+
+#sc { 
+   position: absolute; 
+   right: 1038px; 
+   top: 610px; 
+   width: 165px;
+   height: 240px; 
+   border: solid 0px red; 
+   font-size: 24px; 
+   text-align: center; 
+ }
+
+
  #fstk > div, 
- #DM > div,
+ #dm > div,
  #who > div,
  #inc > div,
- #ind > div {
+ #ind > div;
+ #la > div; 
+ #sc > div {
   border-radius: 50%;
 }
 
@@ -152,23 +178,19 @@
 							<div id="parent">
 								<center><img src="{{ url("images/maps_WH.jpg") }}" width="1200"></center>
 								<div id="fstk" class="square"></div>
-								<div id="DM" class="square"></div>
-								<div id="who" class="square">
-
-                </div>
-                <div id="inc" class="square">
-
-                </div>
-                <div id="ind" class="square"></div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+								<div id="dm" class="square"></div>
+								<div id="who" class="square"></div>
+								<div id="inc" class="square"></div>
+								<div id="ind" class="square"></div>
+								<div id="la" class="square"></div>
+                <div id="sc" class="square"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -233,7 +255,7 @@
             }
             name = ' ';
           })
-        // console.log(data[0]);
+        
       }
     });
     }

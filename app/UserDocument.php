@@ -10,7 +10,7 @@ class UserDocument extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'document_number', 'employee_id', 'valid_from', 'valid_to', 'status', 'condition', 'created_by'
+		'category', 'document_number', 'employee_id', 'valid_from', 'valid_to', 'status', 'condition', 'created_by', 'reminder'
 	];
 
 	public function user()

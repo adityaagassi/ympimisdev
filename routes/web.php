@@ -125,6 +125,10 @@ Route::get('fetch/getChartPlan', 'InjectionsController@getChartPlan');
 
 Route::get('index/reportStock', 'InjectionsController@reportStock');
 Route::get('fetch/getDataStock', 'InjectionsController@getDataStock');
+
+Route::get('index/MonhtlyStock', 'InjectionsController@indexMonhtlyStock');
+Route::get('fetch/MonhtlyStock', 'InjectionsController@MonhtlyStock');
+
 //end report
 
 
@@ -311,7 +315,6 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_shipment_result', 'FinishedGoodsController@index_fg_shipment_result');
 	Route::get('fetch/fg_shipment_result', 'FinishedGoodsController@fetch_fg_shipment_result');
 	Route::get('fetch/tb_shipment_result', 'FinishedGoodsController@fetch_tb_shipment_result');
-	//
 	Route::get('index/fg_production_monitoring', 'ProductionScheduleController@indexProductionMonitoring');
 });
 
