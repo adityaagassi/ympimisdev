@@ -63,14 +63,14 @@ class OvertimeController extends Controller
 	public function indexReportControlFq()
 	{
 		return view('overtimes.reports.overtime_monthly', array(
-			'title' => 'Monthly Overtime Control with Forecast',
+			'title' => 'Monthly Overtime Control',
 			'title_jp' => '月次残業管理'))->with('page', 'Overtime Monthly Control Forecast');
 	}
 
 	public function indexReportControlBdg()
 	{
 		return view('overtimes.reports.overtime_monthly_budget', array(
-			'title' => 'Monthly Overtime Control with Budget',
+			'title' => 'Monthly Overtime Control',
 			'title_jp' => '月次残業管理'))->with('page', 'Overtime Monthly Control Budget');
 	}
 

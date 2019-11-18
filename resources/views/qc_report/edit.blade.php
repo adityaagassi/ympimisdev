@@ -84,7 +84,7 @@
 
        <a data-toggle="modal" data-target="#statusmodal{{$cpars->id}}" class="btn btn-primary btn-sm pull-right" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
 
-       @if($cpars->email_status == NULL && $cpars->posisi == "staff" && Auth::user()->username == "clark") <!-- Mas Said -->
+       @if($cpars->email_status == NULL && $cpars->posisi == "staff" && Auth::user()->username == $cpars->staff) <!-- Mas Said -->
            <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Chief</a>
           
           <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
