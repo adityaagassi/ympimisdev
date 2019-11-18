@@ -496,7 +496,7 @@ table.table-bordered > tfoot > tr > th{
           $.each(result.datas, function(key, value) {
             date.push(value.week_date);
             jml_plan.push(value.jumlah_plan);
-            jml_aktual.push(value.jumlah_aktual);
+            jml_aktual.push(value.jumlah_all);
             jml_good.push(parseInt(value.jumlah_good));
             jml_not_good.push(parseInt(value.jumlah_not_good));
           })

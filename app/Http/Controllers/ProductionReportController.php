@@ -138,7 +138,8 @@ class ProductionReportController extends Controller
                     where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
                     and  actlist.frequency = 'Daily'
                                 and production_audits.deleted_at is null 
-                              and actlist.department_id = '".$id."')
+                              and actlist.department_id = '".$id."'
+                              and production_audits.date = week_date)
             as jumlah_audit,
             (select count(*) as jumlah_training
                 from training_reports
@@ -146,7 +147,8 @@ class ProductionReportController extends Controller
                     where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$bulan."'
                     and actlist.frequency = 'Daily'
                                 and training_reports.deleted_at is null 
-                                and actlist.department_id = '".$id."')
+                                and actlist.department_id = '".$id."'
+                                and training_reports.date = week_date)
             as jumlah_training,
             (select count(DISTINCT(sampling_checks.leader)) as jumlah_sampling
                 from sampling_checks
@@ -154,7 +156,8 @@ class ProductionReportController extends Controller
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
                     and  actlist.frequency = 'Daily'
                                 and sampling_checks.deleted_at is null 
-                                and actlist.department_id = '".$id."')
+                                and actlist.department_id = '".$id."'
+                                and sampling_checks.date = week_date)
             as jumlah_sampling,
             (select count(DISTINCT(audit_report_activities.leader)) as jumlah_laporan
                 from audit_report_activities
@@ -162,7 +165,8 @@ class ProductionReportController extends Controller
                     where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$bulan."'
                     and  actlist.frequency = 'Daily'
                                 and audit_report_activities.deleted_at is null 
-                                and actlist.department_id = '".$id."')
+                                and actlist.department_id = '".$id."'
+                                and audit_report_activities.date = week_date)
             as jumlah_laporan_aktivitas,
             (select
                 sum(case when production_audits.kondisi = 'Good' then 1 else 0 end)
@@ -172,7 +176,8 @@ class ProductionReportController extends Controller
                         where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
                         and  actlist.frequency = 'Daily'
                                         and production_audits.deleted_at is null 
-                                        and actlist.department_id = '".$id."')
+                                        and actlist.department_id = '".$id."'
+                                        and production_audits.date = week_date)
             as jumlah_good,
             (select
                 sum(case when production_audits.kondisi = 'Not Good' then 1 else 0 end) 
@@ -182,7 +187,8 @@ class ProductionReportController extends Controller
                         where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
                         and actlist.frequency = 'Daily'
                                         and production_audits.deleted_at is null 
-                                        and actlist.department_id = '".$id."')
+                                        and actlist.department_id = '".$id."'
+                                        and production_audits.date = week_date)
             as jumlah_not_good
             from weekly_calendars
             where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') tot");

@@ -1,36 +1,46 @@
-<title>YMPI 情報システム</title>
-<link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
-<style>
-	.table{
-		width:100%;
-	}
-	table, th, td {
-		border-collapse: collapse;
-		font-family:"Arial";
-		padding: 5px;
-	}
-	.head {
-		border: 1px solid black;
-	}
-	.peserta {
-		border: 1px solid black;
-		width:50%;
-		text-align:center;
-	}
-	.bodytraining{
-		padding-left:100px;
-	}
-	p {
-		display: block;
-		margin-top: 0;
-		margin-bottom: 0;
-		margin-left: 0;
-		margin-right: 0;
-	}
+@extends('layouts.master')
+@section('header')
+<section class="content-header">
+  <h1>
+    Print {{ $activity_name }} - {{ $departments }}
+    <small>it all starts here</small>
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+  </h1>
+  <ol class="breadcrumb">
+    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Examples</a></li>
+    <li class="active">Blank page</li> --}}
+  </ol>
+</section>
+<style type="text/css">
 	@media print {
-		body {-webkit-print-color-adjust: exact;}
-	}
+	.table {-webkit-print-color-adjust: exact;}
+	#approval1 {
+	    display: none;
+	  }
+	  #approval2 {
+	    display: none;
+	  }
+	  #approval3 {
+	    display: none;
+	  }
 </style>
+@endsection
+@section('content')
+<section class="content">
+  @if ($errors->has('password'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+    {{ $errors->first() }}
+  </div>   
+  @endif
+  <!-- SELECT2 EXAMPLE -->
+  <div class="box box-primary">
+    {{-- <div class="box-header with-border">
+      <h3 class="box-title">Detail User</h3>
+    </div>   --}}
+      <div class="box-body">
 <table class="table">
 	<tbody>
 		<tr style="border:0px;">
@@ -159,6 +169,28 @@
 		<img width="250px" src="{{ url('/data_file/training/'.$trainingPicture->picture) }}">
 		@endforeach
 	</div></center>
-	<script>
+		</div>
+  </div>
+  @endsection
+<style>
+.table {
+	border: 1px solid black;
+  border-collapse: collapse;
+  font-family:"Arial";
+  padding: 5px;
+}
+.table2 {
+  border-collapse: collapse;
+  font-family:"Arial";
+  padding: 5px;
+}
+@media print {
+	body {-webkit-print-color-adjust: exact;}
+}
+</style>
+<script>
     // setTimeout(function () { window.print(); }, 200);
+    function myFunction() {
+	  window.print();
+	}
 </script>

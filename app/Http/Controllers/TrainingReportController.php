@@ -376,7 +376,7 @@ class TrainingReportController extends Controller
 
             TrainingParticipant::create([
                 'training_id' => $id,
-                'participant_name' => $request->input('participant_name'),
+                'participant_id' => $request->input('participant_id'),
                 'created_by' => $id_user
             ]);
         
@@ -544,11 +544,11 @@ class TrainingReportController extends Controller
     {
             $data = array(
                           'id' => $id);
-            return view('training_report.scan_employee2', $data
+            return view('training_report.scan_employee', $data
                 )->with('page', 'Training Report');
     }
 
-    function cek_employee($nik)
+    function cek_employee($nik,$id)
     {
         // $emp = DB::table('employees')->where('employees.employee_id',$nik)->paginate(1);
         // $data = array('employees' => $emp);
@@ -561,9 +561,10 @@ class TrainingReportController extends Controller
         //     'created_by' => $id_user
         // ]);
 
-        $training = TrainingParticipant::find($nik);
-        $training->participant_absence = 'Hadir';
-        $training_id = $training->training_id;
+        $training = TrainingParticipant::where('participant_id',$nik)->where('training_id',$id)->get();
+        foreach($training as $training){
+            $training->participant_absence = 'Hadir';
+        }
         $training->save();
 
         // DB::table('training_participants')->where('participant_name',$nik)->where('training_id',$id_training)->update([
@@ -571,7 +572,7 @@ class TrainingReportController extends Controller
         // ]);
         
 
-        return redirect('index/training_report/details/'.$training_id.'/view')
+        return redirect('index/training_report/details/'.$id.'/view')
             ->with('page', 'Training Report')->with('status', 'Participant has been attend.');
     }
 
@@ -579,7 +580,7 @@ class TrainingReportController extends Controller
     {
          try{
             $participant = TrainingParticipant::find($request->get("id"));
-            $participant_name = $participant->participant_name;
+            $participant_id = $participant->participant_id;
             // $name = $beacon->name;
             // $beacon->uuid = $request->get('uuid');
             // $beacon->name = $request->get('name');
@@ -587,7 +588,7 @@ class TrainingReportController extends Controller
 
             $response = array(
               'status' => true,
-              'participant_name' => $participant_name
+              'participant_id' => $participant_id
             );
             return Response::json($response);
 

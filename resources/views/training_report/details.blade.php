@@ -3,7 +3,9 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/font-awesome.css') }}">
 <link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/bootstrap.min.css') }}">
-<script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script>
+{{-- <script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <style type="text/css">
 thead input {
   width: 100%;
@@ -313,21 +315,19 @@ table.table-bordered > tfoot > tr > th{
 				      <div class="box">
 				      	<div class="box-header">
 							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
-							{{-- <a class="btn btn-xs btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}" target="_blank">Scan Employee</a>
+							{{-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Employee</a> --}}
 							<div class="panel-body text-center" >
-				              <canvas></canvas>
-				              <hr>
-				              <select></select>
-				            </div> --}}
+				              <video width="200px" id="preview"></video>
+				            </div>
 							<form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="form-group" align="right">
 									<input type="hidden" value="{{ $id }}" id="id_training">
-									<select class="form-control select2" name="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
+									<select class="form-control select2" name="participant_id" style="width: 100%;" data-placeholder="Choose a Participant..." required>
 						                <option value=""></option>
 						                @foreach($operator as $operator)
-						                  <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
+						                  <option value="{{ $operator->employee_id }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
 						                @endforeach
 						              </select>
 								</div>
@@ -359,7 +359,7 @@ table.table-bordered > tfoot > tr > th{
 								</td>
 								@endif
 				                <td>
-				                	{{ $training_participant->participant_name }}
+				                	{{ $training_participant->participant_name->name }}
 				                </td>
 				                <td>
 				                	@if($training_participant->participant_absence == Null)
@@ -370,10 +370,10 @@ table.table-bordered > tfoot > tr > th{
 				                </td>
 				                <td>
 				                  <center>
-				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/training_report/editparticipant") }}','{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
+				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal2" onclick="editparticipant('{{ url("index/training_report/editparticipant") }}','{{ $training_participant->participant_id }}','{{ $id }}', '{{ $training_participant->id }}');">
 						               <i class="fa fa-edit"></i>
 						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/training_report/destroyparticipant") }}', '{{ $training_participant->participant_name }}','{{ $id }}', '{{ $training_participant->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal2" onclick="deleteConfirmation2('{{ url("index/training_report/destroyparticipant") }}', '{{ $training_participant->participant_id }}','{{ $id }}', '{{ $training_participant->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
@@ -484,7 +484,7 @@ table.table-bordered > tfoot > tr > th{
               <label for="exampleInputEmail1">Participant Name</label>
               <select class="form-control select2" name="participant_name" id="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
               	@foreach($operator2 as $operator2)
-              	<option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
+              		<option value="{{ $operator2->employee_id }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
               	@endforeach
               </select>
             </div>
@@ -707,9 +707,9 @@ table.table-bordered > tfoot > tr > th{
                 success: function(data) {
                   var json = data;
                   // obj = JSON.parse(json);
-                  var participant = data.participant_name;
+                  var participant = data.participant_id;
                   $("#participant_name").val(participant).trigger('change.select2');
-                  // console.log(data.participant_name);
+                  console.log(participant);
                 }
             });
       jQuery('#formedit2').attr("action", url+'/'+id+'/'+participant_id);
@@ -746,36 +746,21 @@ table.table-bordered > tfoot > tr > th{
           }
     </script>
     {{-- <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/jquery.js') }}"></script> --}}
-  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/qrcodelib.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/webcodecamjquery.js') }}"></script>
-  <script type="text/javascript">
+  {{-- <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/qrcodelib.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/webcodecamjquery.js') }}"></script> --}}
+  {{-- <script type="text/javascript">
       var arg = {
           resultFunction: function(result) {
-              //$('.hasilscan').append($('<input name="noijazah" value=' + result.code + ' readonly><input type="submit" value="Cek"/>'));
-             // $.post("../cek.php", { noijazah: result.code} );
-             
-             {{-- url: "{{ url('index/training_report/cek_employee/') }}"; --}}
-             // $("#textnama").val(result.code);
-             // window.location.href = url+'/'+result.code;
              
              window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
-             // console.log(result.code);
-             
-              // var redirect = '../materials/cek';
-              // $.redirectPost(redirect, {materials_code: result.code});
           }
       };
       var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
       decoder.buildSelectMenu("select");
       decoder.play();
-      /*  Without visible select menu
-          decoder.buildSelectMenu(document.createElement('select'), 'environment|back').init(arg).play();
-      */
       $('select').on('change', function(){
           decoder.stop().play();
       });
-
-      // jquery extend function
       $.extend(
       {
           redirectPost: function(location, args)
@@ -788,7 +773,69 @@ table.table-bordered > tfoot > tr > th{
           }
       });
 
-  </script>
+  </script> --}}
+  <script type="text/javascript">
+  	let opts = {
+		  // Whether to scan continuously for QR codes. If false, use scanner.scan() to manually scan.
+		  // If true, the scanner emits the "scan" event when a QR code is scanned. Default true.
+		  continuous: true,
+		  
+		  // The HTML element to use for the camera's video preview. Must be a <video> element.
+		  // When the camera is active, this element will have the "active" CSS class, otherwise,
+		  // it will have the "inactive" class. By default, an invisible element will be created to
+		  // host the video.
+		  video: document.getElementById('preview'),
+		  
+		  // Whether to horizontally mirror the video preview. This is helpful when trying to
+		  // scan a QR code with a user-facing camera. Default true.
+		  mirror: false,
+		  
+		  // Whether to include the scanned image data as part of the scan result. See the "scan" event
+		  // for image format details. Default false.
+		  captureImage: false,
+		  
+		  // Only applies to continuous mode. Whether to actively scan when the tab is not active.
+		  // When false, this reduces CPU usage when the tab is not active. Default true.
+		  backgroundScan: true,
+		  
+		  // Only applies to continuous mode. The period, in milliseconds, before the same QR code
+		  // will be recognized in succession. Default 5000 (5 seconds).
+		  refractoryPeriod: 5000,
+		  
+		  // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
+		  // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
+		  scanPeriod: 1
+		};
+      let scanner = new Instascan.Scanner(opts);
+
+      scanner.addListener('scan', function (content) {
+
+        
+        var res = content.substring(0, 9);
+        // alert(res);
+        window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+res+"/{{ $id }}";
+
+      });
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+
+        if (cameras.length > 0) {
+
+          scanner.start(cameras[1]);
+
+        } else {
+
+          console.error('No cameras found.');
+
+        }
+
+      }).catch(function (e) {
+
+        console.error(e);
+
+      });
+
+    </script>
   <script type="text/javascript">
   	$("#textnama").on("input", function(e) {
 	  var input = $(this);

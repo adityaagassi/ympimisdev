@@ -1333,7 +1333,7 @@ Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@f
 Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
 Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
 Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
-Route::get('index/training_report/cek_employee/{nik}','TrainingReportController@cek_employee');
+Route::get('index/training_report/cek_employee/{nik}/{id}','TrainingReportController@cek_employee');
 Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
 
 //sampling check

@@ -12,12 +12,17 @@ class TrainingParticipant extends Model
     protected $table = 'training_participants';
 
 	protected $fillable = [
-        'training_id', 'participant_name','created_by'
+        'training_id', 'participant_id','created_by'
     ];
     
     public function training_reports()
     {
         return $this->belongsTo('App\TrainingReport', 'training_id', 'id')->withTrashed();
+    }
+
+    public function participant_name()
+    {
+        return $this->belongsTo('App\Employee', 'participant_id', 'employee_id')->withTrashed();
     }
 
     public function user()
