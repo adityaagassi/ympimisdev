@@ -60,11 +60,18 @@ class OvertimeController extends Controller
 			'cost_center' => $cc))->with('page', 'Overtime by Section');
 	}
 
-	public function indexReportControl()
+	public function indexReportControlFq()
 	{
 		return view('overtimes.reports.overtime_monthly', array(
-			'title' => 'Monthly Overtime Control',
-			'title_jp' => ' 月次残業管理'))->with('page', 'Overtime Monthly Control');
+			'title' => 'Monthly Overtime Control with Forecast',
+			'title_jp' => '月次残業管理'))->with('page', 'Overtime Monthly Control Forecast');
+	}
+
+	public function indexReportControlBdg()
+	{
+		return view('overtimes.reports.overtime_monthly_budget', array(
+			'title' => 'Monthly Overtime Control with Budget',
+			'title_jp' => '月次残業管理'))->with('page', 'Overtime Monthly Control Budget');
 	}
 
 	public function indexReportOutsouce()
@@ -1128,11 +1135,17 @@ public function overtimeControl(Request $request)
 	->select(db::raw("sum(forecast_mp) as jml_fc"))
 	->get();
 
+	$employee_bdg = db::table('manpower_budgets')
+	->where('period','=',date('Y-m-01', strtotime($tanggal1)))
+	->select(db::raw("sum(budget_mp) as jml_bdg"))
+	->get();
+
 	$response = array(
 		'status' => true,
 		'report_control' => $report_control,
 		'emp_total' => $employee,
-		'emp_fc' => $employee_fc
+		'emp_fc' => $employee_fc,
+		'emp_bdg' => $employee_bdg,
 	);
 
 	return Response::json($response);
