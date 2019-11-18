@@ -679,6 +679,9 @@
 					credits: {
 						enabled:false
 					},
+					legend: {
+						enabled:false
+					},
 					plotOptions: {
 						series:{
 							dataLabels: {
@@ -811,6 +814,9 @@
 					credits: {
 						enabled:false
 					},
+					legend: {
+						enabled:false
+					},
 					plotOptions: {
 						series:{
 							dataLabels: {
@@ -940,6 +946,9 @@
 						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
 					},
 					credits: {
+						enabled:false
+					},
+					legend: {
 						enabled:false
 					},
 					plotOptions: {
@@ -1262,7 +1271,6 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 					fontSize: '1vw',
 					fontWeight: 'bold'
 				},
-				plotBands: plotBands
 			},
 			yAxis: {
 				title: {
@@ -1292,6 +1300,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 						fontSize: '13px'
 					}
 				},
+				plotBands: plotBands
 			},
 			tooltip: {
 				headerFormat: '<span>{point.category}</span><br/>',

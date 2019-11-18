@@ -81,6 +81,10 @@
           <a href="{{ url("/index/middle/buffing_adjustment") }}"><i class="fa fa-exchange"></i> <span>Buffing Queue</span></a>
         </li>
 
+        @if(isset($page) && $page == "queue")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/middle/buffing_canceled") }}"><i class="fa fa-exchange"></i> <span>Buffing Canceled</span></a>
+        </li>
+
         @if(isset($page) && $page == "wip")<li class="active">@else<li>@endif
           <a href="{{ url("/index/middle/wip_adjustment") }}"><i class="fa fa-exchange"></i> <span>WIP</span></a>
         </li>

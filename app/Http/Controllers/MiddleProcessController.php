@@ -52,6 +52,10 @@ class MiddleProcessController extends Controller
 			'plt-kensa-sx',
 		];
 	}
+
+	public function indexBuffingCanceled(){
+		return view('processes.middle.buffing_cancel')->with('page', 'queue');
+	}
 	
 	public function indexReportOpTime(){
 		$title = 'Operator Buffing Time';
@@ -614,6 +618,77 @@ class MiddleProcessController extends Controller
 		
 	}
 
+	public function deleteBuffingCanceled(Request $request){
+
+		$model = $request->get('model');
+		$key = $request->get('key');
+
+		$rack = '';
+		if($model != 'A82Z'){
+			$rack = 'SXKEY-'.$key[0];
+		}else{
+			$rack = 'SXKEY-82';
+		}
+
+		try{
+
+			$data = db::connection('digital_kanban')->select("SELECT * FROM data_log where idx = ".$request->get('idx'));
+
+			$date = db::connection('digital_kanban')->select("select * from buffing_queues order by created_at asc limit 1");
+
+			$queue = db::connection('digital_kanban')->table('buffing_queues')->insert(
+				array('rack' => $rack,
+					'material_num' => $data[0]->material_number,
+					'created_by' => Auth::id(),
+					'created_at' => date('Y-m-d H:i:s', strtotime($date[0]->created_at)),
+					'updated_at' => date('Y-m-d H:i:s', strtotime($date[0]->created_at)),
+					'material_qty' => $data[0]->material_qty,
+				)
+			);
+
+			$delete = db::connection('digital_kanban')->delete("DELETE FROM data_log where idx = ".$request->get('idx'));
+
+			$response = array(
+				'status' => true,
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function fetchBuffingCanceled(Request $request){
+		try{
+
+			$cancel = db::connection('digital_kanban')->select("SELECT d.idx, d.operator_id, d.material_tag_id, d.material_number, m.model, m.`key`, d.selesai_start_time FROM data_log d
+				left join materials m on m.material_number = d.material_number
+				where material_tag_id = '".$request->get('tag')."'
+				order by idx desc
+				limit 1");
+
+			$operator = db::select("select name from employees where employee_id in ('".$cancel[0]->operator_id."')");
+
+			$response = array(
+				'status' => true,
+				'cancel' => $cancel,
+				'operator' => $operator,
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
 	public function fetchReportOpTime(Request $request){
 		$tanggal = "";
 		if(strlen($request->get('datefrom')) > 0){
@@ -653,7 +728,7 @@ class MiddleProcessController extends Controller
 	}
 
 
-	
+
 	public function fetchBuffingAdjustment(Request $request){
 
 		$rack = "";
@@ -1109,7 +1184,7 @@ class MiddleProcessController extends Controller
 				GROUP BY m.operator_id, m.ng_name");
 
 		}
-		
+
 		$response = array(
 			'status' => true,
 			'ng' => $ng,
@@ -1614,7 +1689,7 @@ class MiddleProcessController extends Controller
 			'emp_name' => $emp_name,
 		);
 		return Response::json($response);
-		
+
 	}
 
 
@@ -2875,7 +2950,7 @@ class MiddleProcessController extends Controller
 		}
 
 		$employee = db::table('employees')->where('employee_id', 'like', '%'.$nik.'%')->first();
-		
+
 		if(count($employee) > 0 ){
 			$response = array(
 				'status' => true,
