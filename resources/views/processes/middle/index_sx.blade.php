@@ -15,12 +15,23 @@
 @stop
 @section('content')
 <section class="content">
+	@foreach(Auth::user()->role->permissions as $perm)
+	@php
+	$navs[] = $perm->navigation_code;
+	@endphp
+	@endforeach
+
+
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/request/Saxophone") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
 			<a href="{{ url("index/middle/buffing_work_order", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Saxophone Work Order</a>
 			<a href="{{ url("index/process_buffing_kensa", "bff-kensa") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
+			@if(in_array('A9', $navs))
+			<a href="{{ url("/index/middle/buffing_canceled") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Canceled</a>
+			@endif
+
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Lacquering</a>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-plt") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Plating</a>
