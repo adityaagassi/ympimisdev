@@ -233,9 +233,9 @@ Route::get('fetch/report/detail_stat', 'EmployeeController@detailReport');
 Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 
 //OVERTIME
-// Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
-Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
-// Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
+Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
+// Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
+Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
 Route::get('index/report/overtime_section', 'OvertimeController@indexReportSection');
 Route::get('fetch/report/overtime_report_section', 'OvertimeController@fetchReportSection');
 Route::get('index/report/overtime_data', 'OvertimeController@indexOvertimeData');
@@ -371,8 +371,6 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
 	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
-	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
-	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
 	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
 	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
 	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
@@ -384,6 +382,11 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::post('post/middle/barrel_inactive_wip', 'MiddleProcessController@postInactiveWIP');
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
+});
+
+Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
+	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
+	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
 });
 
 Route::get('setting/user', 'UserController@index_setting');
