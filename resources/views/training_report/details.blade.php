@@ -508,7 +508,7 @@ table.table-bordered > tfoot > tr > th{
     	var url = '{{ url("index/training_report/cek_employee") }}';
     	var conf = confirm('Are you sure you want to attend?');
     	if(conf){
-    		window.location.href = url+'/'+value;
+    		window.location.href = url+'/'+value+'/{{ $id }}';
     		// console.log(url+'/'+value);
     	}else{
 

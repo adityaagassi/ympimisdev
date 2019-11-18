@@ -154,7 +154,7 @@ class TrainingReportController extends Controller
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
                         join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader')";
+            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='leader')";
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
@@ -231,7 +231,7 @@ class TrainingReportController extends Controller
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
                         join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader')";
+            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='leader')";
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
@@ -439,7 +439,7 @@ class TrainingReportController extends Controller
     {
         try{
             $training_participant = TrainingParticipant::find($participant_id);
-            $training_participant->participant_name = $request->input('participant_name');
+            $training_participant->participant_id = $request->input('participant_name');
             $training_participant->save();
 
             return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
@@ -520,7 +520,7 @@ class TrainingReportController extends Controller
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
-        $trainingParticipantQuery = "select * from training_participants where training_participants.training_id = '".$id."' and deleted_at is null";
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
         $trainingParticipant = DB::select($trainingParticipantQuery);
         if($training == null){
             return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
