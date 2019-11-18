@@ -708,8 +708,8 @@ public function delete($id){
 
      $master = MasterChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
      ->delete();
-     $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
-     ->delete();
+     // $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
+     // ->delete();
 
      $Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
      ->delete();
