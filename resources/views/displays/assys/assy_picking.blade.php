@@ -100,6 +100,12 @@
 				<tr id="stok">
 					
 				</tr>
+				<?php if($option != "assy") { ?>
+					<tr id="stok_all">
+
+					</tr>
+
+				<?php } ?>
 				<tr id="chart" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 12px;">
 				</tr>
 				<tr id="legend"></tr>
@@ -290,6 +296,7 @@
 				hpl:"{{$_GET['hpl2']}}",
 				order:"{{$_GET['order2']}}"
 			}
+			diffs = [];
 
 		// var values="{{$_GET['key2']}}";
 		// $.each(values.split(","), function(i,e){
@@ -317,13 +324,24 @@
 				model = "<th style='width:45px'>#</th>";
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
-				diff = "<th>Diff</th>";
+
+				if ("{{$option}}" == "assy") {
+					diff = "<th>Diff</th>";
+				} else {
+					$("#stok_all").empty();
+					diff = "<th>Target</th>";
+				}
 
 				planAcc = "<th>Plan acc</th>";
 				pickAcc = "<th>Pick acc</th>";
 				retunAcc = "<th>Return acc</th>";
 
-				stk = "<th style='border: 1px solid white;' rowspan='2'>Stock Room</th>";
+				if ("{{$option}}" == "assy") {
+					stk = "<th style='border: 1px solid white;' rowspan='2'>Stock Room</th>";
+				} else {
+					stk = "<th style='border: 1px solid white;'>Stock All</th>";
+					stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
+				}
 
 				var style = "";
 
@@ -362,9 +380,8 @@
 					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
-					diff += "<td "+style+">"+(-value.diff)+"</td>";
-
-					stk += "<td style='border: 1px solid white;"+color2+"'>"+value.stock+"</td>";
+					diff += "<td "+style+">"+value.diff+"</td>";
+					diffs.push(value.diff);
 				})
 
 				$("#model").append(model);
@@ -376,8 +393,6 @@
 				$("#picking_acc").append(pickAcc);
 				$("#return_acc").append(retunAcc);
 
-				$("#stok").append(stk);
-				
 
 				// -------- CHART ------------
 
@@ -394,11 +409,12 @@
 				var sisa = 0;
 
 				$.each(result.stok, function(index2, value2){
-					// barrel.push(parseInt(value2.barrel));
-					// lacquering.push(parseInt(value2.lacquering));
-					// plating.push(parseInt(value2.plating));
-					// stockroom.push(parseInt(value2.stockroom));
-					// welding.push(parseInt(value2.welding));
+					stk += "<td style='border: 1px solid white;'>"+(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
+						+ parseInt(value2.stockroom) + parseInt(value2.welding))+"</td>";
+					if ("{{$option}}" != "assy") {
+						stk_als += "<td style='border: 1px solid white;'>"+((parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
+						+ parseInt(value2.stockroom) + parseInt(value2.welding)) / diffs[index2]).toFixed(1)+"</td>";
+					}
 
 					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
 						+ parseInt(value2.stockroom) + parseInt(value2.welding));
@@ -412,6 +428,12 @@
 					categories.push(value2.model+" "+value2.key+" "+srf2);
 				})
 
+				$("#stok").append(stk);
+
+				if ("{{$option}}" != "assy") {
+					$("#stok_all").append(stk_als);
+				}
+
 				// console.table(result.stok);
 
 				max = (Math.max(...max_tmp)) + 10;
@@ -422,6 +444,7 @@
 
 				var chart = "";
 				for (var i = 0; i < result.stok.length; i++) {
+
 					chart += '<td style="padding: 0px; height:350px">';
 
 					kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating)
@@ -539,7 +562,9 @@
 				// 	}]
 				// });
 			}
+			diffs = [];
 		})
+
 }
 
 function openModal(kunci, lokasi) {
