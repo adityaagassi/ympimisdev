@@ -126,7 +126,7 @@
 							<div class="tab-pane active" id="tab_1">
 								<div class="row">
 									<div class="col-xs-12">
-										<div class="col-xs-3">
+										<div class="col-xs-3" style="display: none;">
 											<table id="table_op_ng" class="table table-bordered" style="margin:0">
 												<thead id="head_op_ng">
 													<tr>
@@ -138,8 +138,8 @@
 												</tbody>
 											</table>
 										</div>
-										<div class="col-xs-9">
-											<div id="chart2" style="width: 99%;"></div>			
+										<div class="col-xs-12" style="padding: 0px;">
+											<div id="chart2" style="width: 100%;"></div>			
 										</div>
 									</div>
 								</div>

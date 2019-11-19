@@ -965,7 +965,7 @@ class MiddleProcessController extends Controller
 			$addHpl = "and m.hpl in (".$hpl.") ";
 		}
 
-		$op_ng = db::select("SELECT g.`name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+		$op_ng = db::select("SELECT concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
@@ -978,8 +978,7 @@ class MiddleProcessController extends Controller
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
 			GROUP BY l.operator_id, e.`name`) g
 			on ng.operator_id = g.operator_id
-			order by ng_rate desc
-			limit 5");
+			order by ng_rate desc");
 
 		$hpl = '';	
 		if($request->get('hpl') != null) {
