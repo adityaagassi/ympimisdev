@@ -170,10 +170,10 @@ public function fetchMasterEmp(Request $request){
 
   if ($request->get("filter") != "") {
     if($request->get("filter") == "ofc") {
-      $where = "where code in ('OFC')";
+      $where = "where `remark` in ('0fc','Jps')";
     }
     else if($request->get("filter") == "prod") {
-      $where = "where code in ('WH', 'AP', 'EI', 'MTC', 'PP', 'PE', 'QA', 'WST')";
+      $where = "where `remark` in ('WH', 'AP', 'EI', 'MTC', 'PP', 'PE', 'QA', 'WST')";
     }
   }
 
@@ -187,7 +187,6 @@ public function fetchMasterEmp(Request $request){
   GROUP BY employment_logs.employee_id
   )
   ) stat on stat.employee_id = employees.employee_id
-  LEFT JOIN ympimis.total_meeting_codes AS helper ON mutation_logs.`group` = helper.group_name
   ".$where."
   ORDER BY employees.remark asc";
   $masteremp = DB::select($emp);
@@ -902,18 +901,16 @@ public function indexEmployeeService()
 ) ovr on ovr.period = abs.period";
 
 $absences = db::connection('mysql3')->select($absence);
+$yr = date("Y");
 
 $ct = db::connection('mysql3')->select("
-  select SUM(leave_quota) as cuti ,SUM(leave_quota) - SUM(cuti) as sisa_cuti from
-  (
-  select leave_quota, 0 as cuti from 
+    select leave_quota, leave_quota - (select COUNT(shift) + count((select tanggal as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= DATE_FORMAT(hire_date,'".$yr."-%m-01'))) as cuti from ympimis.employees left join
+presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
+and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d')) as sisa_cuti from 
   (select YEAR(now()) - YEAR(hire_date)
-  - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
+  - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
   join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed
-  union all
-  select 0 leave_quota ,count(shift) as cuti from ympimis.employees left join
-  presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
-  and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d')) as ct;");
+  ");
 
 $datas = db::select($query);
 
@@ -1073,15 +1070,16 @@ else if ($request->get("ctg") == 'Report Employee by Department') {
     GROUP BY log.department
     ORDER BY jml asc");
 } else if ($request->get("ctg") == 'Report Employee by Jabatan') {
-  $emp = db::select("select count(emp.employee_id) jml, log.position as `status` from
+  $emp = db::select("select count(emp.employee_id) jml, log.position as `status`, positions.position from
     (select employee_id from employees
     WHERE DATE_FORMAT(end_date,'%Y-%m') >= '".$tgl."' or end_date is null) emp
     left join
     (SELECT id, employee_id, position FROM promotion_logs
     WHERE id IN (SELECT MAX(id) FROM promotion_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' and position <> '-' GROUP BY employee_id)) log
     on emp.employee_id = log.employee_id
+    join positions on positions.position = log.position
     GROUP BY log.position
-    ORDER BY jml, `status` asc");
+    order by positions.id");
 }
 
 $monthTitle = date("F Y", strtotime($tgl));
@@ -1410,7 +1408,7 @@ public function fetchMasterQuestion(Request $request)
   $ctg = $request->get("ctg");
 
   $getQuestion = HrQuestionLog::leftJoin(db::raw('hr_question_logs as hr'),'hr.created_by' ,'=','hr_question_logs.created_by')
-  ->select('hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
+  ->select('hr_question_logs.message', db::raw('GROUP_CONCAT(hr.category) as category'), 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
   ->whereRaw('hr_question_logs.id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
 
   if($filter != "") {
@@ -1418,10 +1416,10 @@ public function fetchMasterQuestion(Request $request)
   }
 
   if($ctg != "") {
-    $getQuestion = $getQuestion->whereRaw('hr_question_logs.category = "'.$ctg.'"');
+    $getQuestion = $getQuestion->whereRaw('hr.category = "'.$ctg.'"');
   }
 
-  $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message','hr_question_logs.category', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
+  $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
   ->orderBy('hr_question_logs.created_at', 'desc')
   ->get();
 
