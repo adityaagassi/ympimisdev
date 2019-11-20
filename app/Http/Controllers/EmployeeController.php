@@ -84,6 +84,13 @@ class EmployeeController extends Controller
     return view('employees.index_employee_information');
   }
 
+  public function indexKaizenAssessment($id)
+  {
+    return view('employees.service.kaizenDetail', array(
+      'title' => 'Detail E-Kaizen',
+      'title_jp' => '??'))->with('page', 'E-Kaizen');
+  }
+
   public function attendanceData()
   {
     return view('employees.report.attendance_data'); 
@@ -113,20 +120,28 @@ class EmployeeController extends Controller
     'title_jp' => '??'))->with('page', 'Kaizen');
  }
 
- public function makeKaizen($id,$name){
-  $q_subleader = "select employees.name, position from employees 
+ public function makeKaizen($id, $name, $section, $group){
+  $q_subleader = "select employees.name, position, employees.employee_id from employees 
   left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-  where valid_to is null and position = 'Leader'
-  and end_date is null
+  left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+  where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
+  and end_date is null and section = '".$section."'
   order by name asc";
 
   $subleader = db::select($q_subleader);
+
+  $sections = "select distinct section from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id where end_date is null and valid_to is null order by section asc";
+
+  $sc = db::select($sections);
 
   return view('employees.service.ekaizenForm', array(
     'title' => 'E - Kaizen',
     'emp_id' => $id,
     'name' => $name,
+    'section' => $section,
+    'group' => $group,
     'subleaders' => $subleader,
+    'sc' => $sc,
     'title_jp' => '??'));
 }
 
@@ -904,9 +919,9 @@ $absences = db::connection('mysql3')->select($absence);
 $yr = date("Y");
 
 $ct = db::connection('mysql3')->select("
-    select leave_quota, leave_quota - (select COUNT(shift) + count((select tanggal as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= DATE_FORMAT(hire_date,'".$yr."-%m-01'))) as cuti from ympimis.employees left join
-presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
-and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d')) as sisa_cuti from 
+  select leave_quota, leave_quota - (select COUNT(shift) + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= DATE_FORMAT(hire_date,'".$yr."-%m-01')) as cuti from ympimis.employees left join
+  presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
+  and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d')) as sisa_cuti from 
   (select YEAR(now()) - YEAR(hire_date)
   - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
   join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed
@@ -1560,22 +1575,23 @@ public function fetchDataKaizen()
   $kzn = KaizenForm::get();
 
   return DataTables::of($kzn)
-  ->addColumn('stat', function($kzn){
-
-    if ($kzn->status == '-1') {
-      return '
-      <input type="radio" name="kz_radio" value="1">Kaizen
-      <input type="radio" name="kz_radio" value="0">Tidak
-      ';
-    } else {
-      return 'sudah dinilai';
-    }
+  ->addColumn('fr_stat', function($kzn){
+    return '<span class="label bg-red">NOT Verified</span>';
     
   })
   ->addColumn('action', function($kzn){
-    return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kzn->id . '"><i class="fa fa-eye"></i> Details</a>';
+    return '<a href="'.url("index/kaizen/detail/".$kzn->id).'" class="btn btn-xs btn-primary" id="' . $kzn->id . '"><i class="fa fa-eye"></i> Details</a>';
   })
-  ->rawColumns(['stat', 'action'])
+  ->addColumn('mg_stat', function($kzn){
+    return '<span class="label bg-red">NOT Verified</span>';
+  })
+  ->addColumn('fr_point', function($kzn){
+    return '';
+  })
+  ->addColumn('mg_point', function($kzn){
+    return '';
+  })
+  ->rawColumns(['fr_stat', 'mg_stat', 'fr_point', 'mg_point', 'action'])
   ->make(true);
 }
 
