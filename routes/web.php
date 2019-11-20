@@ -119,6 +119,16 @@ Route::post('save/Schedule', 'InjectionsController@saveSchedule');
 Route::post('save/Scheduletmp', 'InjectionsController@saveScheduleTmp');
 
 Route::get('fetch/getChartPlan', 'InjectionsController@getChartPlan');
+
+Route::get('fetch/percenMesin', 'InjectionsController@percenMesin');
+
+Route::get('fetch/mjblue', 'InjectionsController@detailPartMJBlue');
+Route::get('fetch/headblue', 'InjectionsController@detailPartHeadBlue');
+Route::get('fetch/footblue', 'InjectionsController@detailPartFootBlue');
+Route::get('fetch/blockblue', 'InjectionsController@detailPartBlockBlue');
+
+Route::get('fetch/chartWorkingMachine', 'InjectionsController@chartWorkingMachine');
+
 //end schedule
 
 //report stock
@@ -128,6 +138,10 @@ Route::get('fetch/getDataStock', 'InjectionsController@getDataStock');
 
 Route::get('index/MonhtlyStock', 'InjectionsController@indexMonhtlyStock');
 Route::get('fetch/MonhtlyStock', 'InjectionsController@MonhtlyStock');
+
+Route::get('fetch/MonhtlyStockHead', 'InjectionsController@MonhtlyStockHead');
+Route::get('fetch/MonhtlyStockFoot', 'InjectionsController@MonhtlyStockFoot');
+Route::get('fetch/MonhtlyStockBlock', 'InjectionsController@MonhtlyStockBlock');
 
 //end report
 
@@ -167,6 +181,24 @@ Route::get('fetch/getBalanceMesin', 'InjectionsController@getBalanceMesin');
 Route::post('input/makePlan', 'InjectionsController@makePlan');
 Route::get('fetch/getBalanceMesinChart', 'InjectionsController@getBalanceMesinChart');
 //end balance mesin
+
+
+
+//master machine
+Route::get('index/masterMachine', 'InjectionsController@masterMachine');
+Route::get('fetch/fillMasterMachine', 'InjectionsController@fillMasterMachine');
+Route::get('fetch/editMasterMachine', 'InjectionsController@editMasterMachine');
+Route::post('fetch/updateMasterMachine', 'InjectionsController@updateMasterMachine');
+Route::post('fetch/addMasterMachine', 'InjectionsController@addMasterMachine');
+
+Route::get('fetch/chartMasterMachine', 'InjectionsController@chartMasterMachine');
+
+Route::get('index/masterCycleMachine', 'InjectionsController@masterCycleMachine');
+Route::get('fetch/fillMasterCycleMachine', 'InjectionsController@fillMasterCycleMachine');
+Route::get('fetch/chartMasterCycleMachine', 'InjectionsController@chartMasterCycleMachine');
+
+
+//end master machine
 
 // end mesin injeksi
 
@@ -267,7 +299,7 @@ Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
 Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')->name('emp_service');
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
-Route::get('create/ekaizen/{id}/{name}', 'EmployeeController@makeKaizen');
+Route::get('create/ekaizen/{id}/{name}/{section}/{group}', 'EmployeeController@makeKaizen');
 Route::get('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
@@ -829,6 +861,8 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 });
 
+//INITIAL
+Route::get('index/initial/{id}', 'InitialProcessController@index');
 Route::get('index/initial/stock_monitoring/{id}', 'InitialProcessController@indexStockMonitoring');
 Route::get('index/initial/stock_trend/{id}', 'InitialProcessController@indexStockTrend');
 Route::get('fetch/initial/stock_monitoring', 'InitialProcessController@fetchStockMonitoring');
@@ -959,6 +993,8 @@ Route::get('index/TotalNgAllLine', 'Pianica@total_ng_all_line');
 Route::get('index/getTarget', 'Pianica@getTarget');
 Route::get('index/GetNgBensuki', 'Pianica@GetNgBensuki');
 Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
+
+Route::get('index/display_pn_ng_rate', 'Pianica@indexNgRate');
 
 	//---------- report bensuki
 Route::get('index/reportBensuki', 'Pianica@reportBensuki');
@@ -1257,6 +1293,7 @@ Route::get('index/production_report/fetchReportMonthly/{id}', 'ProductionReportC
 Route::get('index/production_report/fetchReportDetailMonthly/{id}', 'ProductionReportController@fetchReportDetailMonthly');
 Route::get('index/production_report/fetchReportDetailConditional/{id}', 'ProductionReportController@fetchReportDetailConditional');
 Route::get('index/production_report/fetchReportDetailWeekly/{id}', 'ProductionReportController@fetchReportDetailWeekly');
+Route::get('index/production_report/fetchReportDetailDaily/{id}', 'ProductionReportController@fetchReportDetailDaily');
 Route::get('index/production_report/fetchReportConditional/{id}', 'ProductionReportController@fetchReportConditional');
 Route::get('index/production_report/fetchReportAudit/{id}', 'ProductionReportController@fetchReportAudit');
 Route::get('index/production_report/fetchReportTraining/{id}', 'ProductionReportController@fetchReportTraining');
@@ -1267,6 +1304,7 @@ Route::get('fetch/production_report/detail_stat/{id}', 'ProductionReportControll
 Route::get('fetch/production_report/detail_training/{id}', 'ProductionReportController@detailTraining');
 Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionReportController@detailSamplingCheck');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
+Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
 
 
 //Activity List
@@ -1338,9 +1376,12 @@ Route::get('index/training_report/report_training/{id}', 'TrainingReportControll
 Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@fetchReport');
 Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
 Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
+Route::get('index/training_report/print_training_email/{id}', 'TrainingReportController@print_training_email');
 Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
 Route::get('index/training_report/cek_employee/{nik}/{id}','TrainingReportController@cek_employee');
 Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
+Route::get('index/training_report/sendemail/{id}', 'TrainingReportController@sendemail');
+Route::post('index/training_report/approval/{id}', 'TrainingReportController@approval');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
@@ -1365,7 +1406,7 @@ Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@det
 Route::post('index/sampling_check/print_sampling/{id}', 'SamplingCheckController@print_sampling');
 Route::get('index/sampling_check/print_sampling_email/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_email');
 Route::get('index/sampling_check/print_sampling_chart/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_chart');
-Route::post('index/sampling_check/approval/{id}', 'SamplingCheckController@approval');
+Route::post('index/sampling_check/approval/{id}/{subsection}/{month}', 'SamplingCheckController@approval');
 Route::post('index/sampling_check/send_email/{id}', 'SamplingCheckController@sendemail');
 
 //Laporan AKtivitas Audit
@@ -1433,15 +1474,20 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
 	Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
+	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
 
 	//Verifikasi CAR
-	Route::get('index/qc_report/verifikasicar/{id}', 'QcReportController@verifikasicar');
+	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
+
+	//Verifikasi QA
+	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasicar');
 
 });
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
+Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');

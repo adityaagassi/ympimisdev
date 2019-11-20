@@ -15,6 +15,25 @@ use Illuminate\Support\Facades\Auth;
 
 class InitialProcessController extends Controller
 {
+	public function index($id){
+		if($id == 'bpro_fl'){
+			$title = 'Body Process Flute';
+			$title_jp = '??';
+			return view('processes.initial.index_bpro_fl', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Body Process FL');
+		}
+		if($id == 'mpro_fl'){
+			$title = 'Material Process Flute';
+			$title_jp = '??';
+			return view('processes.initial.index_mpro_fl', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Material Process FL');
+		}
+	}
+
 	public function indexStockMonitoring($id){
 		$title = 'Initial Process Stock Monitoring';
 		$title_jp = '最初工程の在庫監視';
