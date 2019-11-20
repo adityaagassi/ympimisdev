@@ -126,7 +126,7 @@
             <span ><b id="opbentetx" style="color:red"> [ Op Bensuki ] - </b> <b class="destroy" id="posisi"></b> <b class="destroy" id="opben"></b></span><br>
             <div class="table-responsive">
 
-              <div class="col-xs-4">
+              <div class="col-xs-4 table-responsive">
                     <table>
                       <tr><td colspan="6" style="padding: 10px" align="center">HIGH</td></tr>
                     <tr>
@@ -149,7 +149,7 @@
                     </div> 
 
               
-                <div class="col-xs-4">
+                <div class="col-xs-4 table-responsive">
                 <table>
                   <tr><td colspan="6" style="padding: 10px" align="center">MIDDLE</td></tr>
                   <tr>
@@ -171,7 +171,7 @@
                     </table>
                   </div>
 
-                  <div class="col-xs-4">
+                  <div class="col-xs-4 table-responsive">
               <table>
                 <tr><td colspan="6" style="padding: 10px" align="center">LOW</td></tr>
                 <tr>                  
