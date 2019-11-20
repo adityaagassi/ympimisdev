@@ -76,7 +76,7 @@
 		$('.select2').select2();
 
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 60000);
 
 	});
 
@@ -339,7 +339,13 @@
 										if(result.rate[j].rate == 0){
 											data.push([Date.parse(result.rate[j].week_date), null]);
 										}else{
-											data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);
+
+											if((result.rate[j].rate * result.time_eff[k].eff * 100) < 0){
+												data.push([Date.parse(result.rate[j].week_date), 0]);
+											}else{
+												data.push([Date.parse(result.rate[j].week_date), (result.rate[j].rate * result.time_eff[k].eff * 100)]);	
+											}
+											
 										}
 
 									}else{

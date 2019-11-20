@@ -28,8 +28,8 @@
 
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container2" style="width: 100%;height: 20%;"></div>
-				<div id="container1" style="width: 100%;height: 20%;"></div>
+				<div id="container2" style="width: 100%;height: 20%; margin-bottom: 1%;"></div>
+				<div id="container1" style="width: 100%;height: 20%; margin-bottom: 1%;"></div>
 			</div>
 		</div>
 	</div>
@@ -61,7 +61,6 @@
 					linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 					stops: [
 					[0, '#2a2a2b'],
-					[1, '#3e3e40']
 					]
 				},
 				style: {
@@ -252,7 +251,7 @@
 
 		Highcharts.setOptions(Highcharts.theme);
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 30000);
 
 	});
 
@@ -276,6 +275,9 @@
 
 	function fillChart() {
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+		var position = $(document).scrollTop();
+
 		
 		$.get('{{ url("fetch/middle/buffing_daily_ng_rate") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
@@ -336,6 +338,7 @@
 						},
 						plotOptions: {
 							series: {
+								animation: false,
 								dataLabels: {
 									enabled: true,
 									format: '{point.y:,.1f}%',
@@ -452,6 +455,7 @@
 						},
 						plotOptions: {
 							series: {
+								animation: false,
 								dataLabels: {
 									enabled: true,
 									format: '{point.y:,.1f}%',
@@ -483,6 +487,9 @@
 							}]
 						}
 					});
+				
+				$(document).scrollTop(position);
+				
 				}
 			}
 		});
