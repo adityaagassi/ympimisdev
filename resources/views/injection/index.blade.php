@@ -18,7 +18,8 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 3vw; color: red;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/Op") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Master Part</a>
+			<a href="{{ url("index/masterMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Master Machine</a>
+			<a href="{{ url("index/masterCycleMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Cycle Time Machine</a>
 			
 			
 		</div>

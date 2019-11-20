@@ -30,7 +30,7 @@ table.table-bordered > tfoot > tr > th{
 </style>
 @stop
 @section('header')
-<section class="content-header">
+<section class="content-header" >
 	<h1>
 		{{ $page }}<span class="text-purple"> {{ $jpn }}</span>
 		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
@@ -38,7 +38,7 @@ table.table-bordered > tfoot > tr > th{
 </section>
 @stop
 @section('content')
-<section class="content">
+<section class="content" >
 	<div class="row">
 
 		<div class="col-xs-12" style="text-align: center;">

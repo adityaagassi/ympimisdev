@@ -26,8 +26,50 @@ use DataTables;
 use Carbon\Carbon;
 
 
+
+
 class InjectionsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->mesin = [
+          'MESIN1',
+          'MESIN2',
+          'MESIN3',
+          'MESIN4',
+          'MESIN5',
+          'MESIN6',
+          'MESIN7',
+          'MESIN8',
+          'MESIN9',
+          'MESIN11',
+      ];
+
+      $this->color = [
+          'BEIGE',
+          'IVORY',
+          'SKELTON',
+      ];
+
+      $this->part = [
+          'MJB',
+          'MJG',
+          'BJ',
+          'FJ',
+          'HJ',
+          'A YRF B',
+          'A YRF H',
+          'A YRF S',
+      ];
+
+      $this->model = [
+          'YRS',
+          'YRF',
+      ];
+  }
+
+
     // ----------------- in
     public function index(){
 
@@ -330,7 +372,7 @@ class InjectionsController extends Controller
         $month = date('Y-m');
         $years = date('Y');
 
-        $query2 = "SELECT target_all.material_number,  target_all.model, target_all.part, target_all.part_code, target_all.color,target_all.target,target_all.stock,target_all.max_day,target_all.qty_hako, target_all.cycle, target_all.shoot, CEILING(ROUND((target - stock) / qty_hako,2)) as target_hako, CEILING((CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working, target_all.due_date  FROM (
+        $query2week = "SELECT target_all.material_number,  target_all.model, target_all.part, target_all.part_code, target_all.color,target_all.target,target_all.stock,target_all.max_day,target_all.qty_hako, target_all.cycle, target_all.shoot, CEILING(ROUND((target - stock) / qty_hako,2)) as target_hako, CEILING((CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working, target_all.due_date  FROM (
         SELECT total_all.material_number, total_all.due_date, total_all.model, total_all.part, total_all.part_code, total_all.color, 
         (total_all.total+(total_all.total / 10))  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako, total_all.cycle, total_all.shoot from (
 
@@ -383,7 +425,7 @@ class InjectionsController extends Controller
         ORDER BY due_date
         ";
 
-        $query = "SELECT target_all.material_number,  target_all.model, target_all.part, target_all.part_code, target_all.color,target_all.target,target_all.stock,target_all.max_day,target_all.qty_hako, target_all.cycle, target_all.shoot, CEILING(ROUND((target - stock) / qty_hako,2)) as target_hako, CEILING((CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working, target_all.due_date  FROM (
+        $querymonth = "SELECT target_all.material_number,  target_all.model, target_all.part, target_all.part_code, target_all.color,target_all.target,target_all.stock,target_all.max_day,target_all.qty_hako, target_all.cycle, target_all.shoot, CEILING(ROUND((target - stock) / qty_hako,2)) as target_hako, CEILING((CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working, target_all.due_date  FROM (
         SELECT total_all.material_number, total_all.due_date, total_all.model, total_all.part, total_all.part_code, total_all.color, 
         (total_all.total)  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako, total_all.cycle, total_all.shoot from (
 
@@ -401,6 +443,59 @@ class InjectionsController extends Controller
         CROSS join  detail_part_injections on target_model.model = detail_part_injections.model
         WHERE due_date in ( SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d')<='".$to."' and DATE_FORMAT(week_date,'%Y')='".$years."')
         GROUP BY part,color,part_code,DAYOFWEEK(due_date) ORDER BY due_date
+        ) target
+
+        LEFT JOIN cycle_time_mesin_injections 
+        on target.part_code = cycle_time_mesin_injections.part 
+        and target.color = cycle_time_mesin_injections.color
+        ORDER BY part
+
+
+        ) total_all 
+
+        LEFT JOIN (
+        SELECT  part, (( SUM(stock_akhir) + SUM(total_in) )-SUM(total_out)) stock from (
+        SELECT  part, stock_akhir, 0 as total_in, 0 as total_out from stock_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m')='".$month."'
+        UNION all
+        SELECT part,0 as stock_akhir ,total as total_in, 0 as total_out from transaction_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='".$first."' and DATE_FORMAT(created_at,'%Y-%m-%d') <='".$last."' and `status` ='IN'
+        UNION all
+        SELECT part,0 as stock_akhir ,0 as total_in, total as total_out from transaction_part_injections WHERE DATE_FORMAT(created_at,'%Y-%m-%d') >='".$first."' and DATE_FORMAT(created_at,'%Y-%m-%d') <='".$last."' and `status` ='OUT'
+        ) as stock GROUP BY part
+
+        ) as stock on total_all.part = stock.part
+
+        ) as target_all
+
+        LEFT JOIN (
+        SELECT part,color, SUM(qty) as mesin, GROUP_CONCAT(working_mesin_injections.mesin) as working from working_mesin_injections
+        LEFT JOIN status_mesin_injections on working_mesin_injections.mesin = status_mesin_injections.mesin
+        where status_mesin_injections.`status` !='OFF'
+        GROUP BY part,color ORDER BY mesin
+        ) as mesin on target_all.part_code = mesin.part and target_all.color = mesin.color
+
+        
+        WHERE (CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako) > 0       
+        ORDER BY due_date
+        ";
+
+        $query = "SELECT target_all.material_number,  target_all.model, target_all.part, target_all.part_code, target_all.color,target_all.target,target_all.stock,target_all.max_day,target_all.qty_hako, target_all.cycle, target_all.shoot, CEILING(ROUND((target - stock) / qty_hako,2)) as target_hako, CEILING((CEILING(ROUND((target - stock) / qty_hako,2))* qty_hako)/ mesin) as target_hako_qty ,COALESCE(mesin.mesin,0) mesin, COALESCE(working,'-') working, target_all.due_date  FROM (
+        SELECT total_all.material_number, total_all.due_date, total_all.model, total_all.part, total_all.part_code, total_all.color, 
+        (total_all.total)  as target, stock.stock as stock, total_all.max_day,total_all.qty_hako, total_all.cycle, total_all.shoot from (
+
+
+        SELECT target.*,cycle_time_mesin_injections.cycle, cycle_time_mesin_injections.shoot, cycle_time_mesin_injections.qty, 
+        ROUND((82800  / cycle_time_mesin_injections.cycle  )*cycle_time_mesin_injections.shoot,0) as max_day,cycle_time_mesin_injections.qty_hako  from (
+        SELECT target_model.*,detail_part_injections.part,detail_part_injections.part_code,detail_part_injections.color, quantity as total from (
+        SELECT target.material_number,target.due_date,target.quantity,materials.model  from (
+        SELECT material_number,due_date,quantity from production_schedules WHERE 
+        material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+        DATE_FORMAT(due_date,'%Y-%m-%d') >='".$first."' and DATE_FORMAT(due_date,'%Y-%m-%d') <='".$last."'
+        ) target
+        LEFT JOIN materials on target.material_number = materials.material_number 
+        ) as target_model
+        CROSS join  detail_part_injections on target_model.model = detail_part_injections.model
+        WHERE due_date in ( SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='".$from."' and DATE_FORMAT(week_date,'%Y-%m-%d')<='".$to."' and DATE_FORMAT(week_date,'%Y')='".$years."')
+        ORDER BY due_date
         ) target
 
         LEFT JOIN cycle_time_mesin_injections 
@@ -1490,6 +1585,8 @@ public function saveScheduleTmp(Request $request){
         $tgl1 = $tgl.'-d';
         $tgl2 = $tgl.'-01';
 
+        $model2 = "AND color like 'MJ%'";
+
         if ($tgl !="") {
             $moth = $request->get('tgl');
             $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
@@ -1527,6 +1624,7 @@ public function saveScheduleTmp(Request $request){
         elseif ($location =="Yrf") {
             $reg = "YRF21";
             $reg2 = "YRF21|YRF21K";
+            $model2 ="AND color like '%A YRF B%'";
         }else{
             $reg = "YRS20BB|YRS20GB";
             $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
@@ -1543,7 +1641,7 @@ public function saveScheduleTmp(Request $request){
                 DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
                 ) target
                 LEFT JOIN materials on target.material_number = materials.material_number 
-                WHERE model REGEXP 'YRS20BG|YRS20GG|YRS20GGK'
+                WHERE model REGEXP '".$reg2."'
                 ) target
                 RIGHT JOIN (
                 SELECT week_date from ympimis.weekly_calendars WHERE 
@@ -1555,8 +1653,7 @@ public function saveScheduleTmp(Request $request){
                 SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
                 SELECT * from (
                 select a.*, SUM(qty) as target from (
-                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRS20BG|YRS20GG' AND
-                color like 'MJ%' 
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' ".$model2."
                 ) a GROUP BY due_date   
                 ) target                                                                                                         
                 ) as aa
@@ -1578,7 +1675,869 @@ public function saveScheduleTmp(Request $request){
         return Response::json($response);
     }
 
+    public function MonhtlyStockHead(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        $model2 = "AND color like 'HJ%'";
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+        if ($location =="Blue") {
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        elseif ($location =="Green") {
+            $reg = "YRS20BG|YRS20GG";
+            $reg2 = "YRS20BG|YRS20GG|YRS20GGK";
+        }
+        elseif ($location =="Pink") {
+            $reg = "YRS20BP|YRS20GP";
+            $reg2 = "YRS20BP|YRS20GP|YRS20GPK";
+        }
+        elseif ($location =="Red") {
+            $reg = "YRS20BR";
+            $reg2 = "YRS20BR";
+        }
+        elseif ($location =="Brown") {
+            $reg = "YRS24BUK";
+            $reg2 = "YRS24BUK";
+        }
+        elseif ($location =="Ivory") {
+            $reg = "YRS23|YRS24B MIDDLE";
+            $reg2 = "YRS23|YRS23BR|YRS23CA|YRS23K|YRS27III|YRS24B|YRS24BBR|YRS24BCA|YRS24BK|YRS28BIII";
+        }
+        elseif ($location =="Yrf") {
+            $reg = "YRF21";
+            $reg2 = "YRF21|YRF21K";
+            $model2 ="AND color like '%A YRF H%'";
+        }else{
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        
+        
+       
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP '".$reg2."'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' ".$model2."
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function MonhtlyStockFoot(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        $model2 = "AND color like 'FJ%'";
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+        if ($location =="Blue") {
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        elseif ($location =="Green") {
+            $reg = "YRS20BG|YRS20GG";
+            $reg2 = "YRS20BG|YRS20GG|YRS20GGK";
+        }
+        elseif ($location =="Pink") {
+            $reg = "YRS20BP|YRS20GP";
+            $reg2 = "YRS20BP|YRS20GP|YRS20GPK";
+        }
+        elseif ($location =="Red") {
+            $reg = "YRS20BR";
+            $reg2 = "YRS20BR";
+        }
+        elseif ($location =="Brown") {
+            $reg = "YRS24BUK";
+            $reg2 = "YRS24BUK";
+        }
+        elseif ($location =="Ivory") {
+            $reg = "YRS23|YRS24B MIDDLE";
+            $reg2 = "YRS23|YRS23BR|YRS23CA|YRS23K|YRS27III|YRS24B|YRS24BBR|YRS24BCA|YRS24BK|YRS28BIII";
+        }
+        elseif ($location =="Yrf") {
+            $reg = "YRF21";
+            $reg2 = "YRF21|YRF21K";
+            $model2 ="AND color like '%A YRF S%'";
+        }else{
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        
+        
+       
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP '".$reg2."'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' ".$model2."
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+        public function MonhtlyStockBlock(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        $model2 = "AND color like 'BJ%'";
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+        if ($location =="Blue") {
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        elseif ($location =="Green") {
+            $reg = "YRS20BG|YRS20GG";
+            $reg2 = "YRS20BG|YRS20GG|YRS20GGK";
+        }
+        elseif ($location =="Pink") {
+            $reg = "YRS20BP|YRS20GP";
+            $reg2 = "YRS20BP|YRS20GP|YRS20GPK";
+        }
+        elseif ($location =="Red") {
+            $reg = "YRS20BR";
+            $reg2 = "YRS20BR";
+        }
+        elseif ($location =="Brown") {
+            $reg = "YRS24BUK";
+            $reg2 = "YRS24BUK";
+        }
+        elseif ($location =="Ivory") {
+            $reg = "YRS23|YRS24B MIDDLE";
+            $reg2 = "YRS23|YRS23BR|YRS23CA|YRS23K|YRS27III|YRS24B|YRS24BBR|YRS24BCA|YRS24BK|YRS28BIII";
+        }
+        elseif ($location =="Yrf") {
+            $reg = "YRF21";
+            $reg2 = "YRF21|YRF21K";
+            $model2 ="AND color like '%A YRF S%'";
+        }else{
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        
+        
+       
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP '".$reg2."'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' ".$model2."
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+
+      
+
     // ------------- end monhtly report
+
+    // -------------------- start persen mesin
+
+    public function chartWorkingMachine(Request $request){
+
+        $query = "SELECT week_date, SUM(total_1) total_1, SUM(total_2) total_2, SUM(total_3)total_3, SUM(total_4) total_4, SUM(total_5) total_5, SUM(total_6) total_6, SUM(total_7) total_7, SUM(total_8) total_8, SUM(total_9) total_9, SUM(total_11) total_11 from (
+            SELECT mesin,week_date, SUM(qty) as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 1'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, SUM(qty) as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 2'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, SUM(qty) as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 3'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, SUM(qty) as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 4'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, SUM(qty) as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 5'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, SUM(qty) as total_6, 0 as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 6'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, SUM(qty) as total_7, 0 as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 7'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, SUM(qty) as total_8, 0 as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 8'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, SUM(qty) as total_9, 0 as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 9'
+            GROUP BY week_date,mesin 
+
+            UNION all
+
+            SELECT mesin,week_date, 0 as total_1, 0 as total_2, 0 as total_3, 0 as total_4, 0 as total_5, 0 as total_6, 0 as total_7, 0 as total_8, 0 as total_9, SUM(qty) as total_11 from plan_mesin_injection_tmps 
+            LEFT JOIN (
+            SELECT week_date from ympimis.weekly_calendars WHERE 
+            week_date not in ( SELECT tanggal from  ftm.kalender) and DATE_FORMAT(week_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d') <='2019-11-31'
+            ) as date on plan_mesin_injection_tmps.due_date = date.week_date
+            WHERE mesin='Mesin 11'
+            GROUP BY week_date,mesin 
+            ) as total GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function percenMesin(Request $request){
+
+        $query = "SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 1' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 2' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 3' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 4' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 5' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 6' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 7' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 8' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 9' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+
+        union all
+
+        SELECT mesin,COUNT(IF(OFF = '1', 1, NULL)) 'OFF', COUNT(IF(OFF = '0', 1, NULL)) 'ON' from (
+        SELECT mesin,COUNT(IF(color = 'OFF', 1, NULL)) 'OFF' from plan_mesin_injection_tmps WHERE mesin ='Mesin 11' GROUP BY due_date,mesin
+        ) a GROUP BY mesin
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+     // -------------------- end persen mesin
+
+    // -------------------- start mj mesin
+
+    public function detailPartMJBlue(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='".$from."' and DATE_FORMAT(due_date,'%Y-%m-%d') <='".$to."'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BB|YRS20GB|YRS20GBK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND color like 'MJ%'
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+     // -------------------- end mj mesin
+
+     // -------------------- start hj mesin
+
+    public function detailPartHeadBlue(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='".$from."' and DATE_FORMAT(due_date,'%Y-%m-%d') <='".$to."'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BB|YRS20GB|YRS20GBK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND color like 'HJ%'
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+     // -------------------- end hj mesin
+
+    // -------------------- start fj mesin
+
+    public function detailPartFootBlue(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='".$from."' and DATE_FORMAT(due_date,'%Y-%m-%d') <='".$to."'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BB|YRS20GB|YRS20GBK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND color like 'FJ%'
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+     // -------------------- end fj mesin
+
+    // -------------------- start fj mesin
+
+    public function detailPartBlockBlue(Request $request){
+
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(target) target FROM (                           
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as target     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='".$from."' and DATE_FORMAT(due_date,'%Y-%m-%d') <='".$to."'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BB|YRS20GB|YRS20GBK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(target,0) target FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as target from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND color like 'BJ%'
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+     // -------------------- end fj mesin
+
+    // ---------------------- master working machine
+
+     public function masterMachine(){
+        $mesin = $this->mesin;
+        $color = $this->color;
+        $part = $this->part;
+        $model = $this->model;
+
+        return view('injection.masterMachine',array(        
+            'mesin' => $mesin,
+            'color' => $color,
+            'part' => $part,
+            'model' => $model,
+        ))->with('page', 'Machine Injection')->with('jpn', '???');
+
+    }
+
+     public function fillMasterMachine(Request $request)
+    {
+        $op = "select id,mesin,part,color,model from working_mesin_injections";
+        $ops = DB::select($op);
+        return DataTables::of($ops)
+
+        ->addColumn('edit', function($ops){
+            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i></a>';
+        })
+        ->rawColumns(['edit' => 'edit'])
+
+        ->make(true);
+    }
+
+    public function editMasterMachine(Request $request)
+    {
+        $id_op = WorkingMesinInjection::where('id', '=', $request->get('id'))->get();
+
+        $response = array(
+            'status' => true,
+            'id_op' => $id_op,          
+        );
+        return Response::json($response);
+    }
+
+    public function updateMasterMachine(Request $request){
+        $id_user = Auth::id();
+
+        try {  
+            $op = WorkingMesinInjection::where('id','=', $request->get('id'))       
+            ->first(); 
+            $op->mesin = $request->get('mesin');
+            $op->part = $request->get('part');
+            $op->color = $request->get('color');
+            $op->model = $request->get('model');
+            $op->created_by = $id_user;
+
+            $op->save();
+
+            $response = array(
+              'status' => true,
+              'message' => 'Update Success',
+          );
+            return redirect('/index/masterMachine')->with('status', 'Update Machine success')->with('page', 'Master Operator');
+        }catch (QueryException $e){
+            return redirect('/index/masterMachine')->with('error', $e->getMessage())->with('page', 'Master Operator');
+        }
+
+    }
+
+    public function addMasterMachine(Request $request){
+        $id_user = Auth::id();
+
+        try { 
+
+            $head = new WorkingMesinInjection([
+                'mesin' => $request->get('mesin3'),
+                'part' => $request->get('part3'),
+                'color' => $request->get('color3'),
+                'model' => $request->get('model3'),
+                'qty' => '1',
+                'created_by' => $id_user
+            ]);
+            $head->save();
+
+
+
+            $response = array(
+              'status' => true,
+              'message' => 'Add Machine Success',
+          );
+            return redirect('/index/masterMachine')->with('status', 'Update Machine success')->with('page', 'Master Operator');
+        }catch (QueryException $e){
+            return redirect('/index/masterMachine')->with('error', $e->getMessage())->with('page', 'Master Operator');
+        }
+
+    }
+
+    public function chartMasterMachine(Request $request){
+       
+        $query = "SELECT a.*, CONVERT(SPLIT_STRING(mesin,'N',2),SIGNED INTEGER) as a FROM (
+        SELECT mesin, COUNT(part) as working from working_mesin_injections GROUP BY mesin 
+        )a ORDER BY a
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+
+
+    // ---------------- end
+
+    // ---------------------- master cycle machine
+
+     public function masterCycleMachine(){
+        $mesin = $this->mesin;
+        $color = $this->color;
+        $part = $this->part;
+        $model = $this->model;
+
+        return view('injection.masterCycleMachine',array(        
+            'mesin' => $mesin,
+            'color' => $color,
+            'part' => $part,
+            'model' => $model,
+        ))->with('page', 'Cycle Machine Injection')->with('jpn', '???');
+
+    }
+
+     public function fillMasterCycleMachine(Request $request)
+    {
+        $op = "select id,part,model,cycle,shoot,qty,qty_hako,qty_mesin,color from cycle_time_mesin_injections";
+        $ops = DB::select($op);
+        return DataTables::of($ops)
+
+        ->addColumn('edit', function($ops){
+            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editop(id)" id="' . $ops->id . '"><i class="fa fa-edit"></i></a>';
+        })
+        ->rawColumns(['edit' => 'edit'])
+
+        ->make(true);
+    }
+
+    public function chartMasterCycleMachine(Request $request){
+       
+        $query = "SELECT mesin.*, cycle,shoot,qty_hako from (
+        SELECT part,color,COUNT(part) as total from working_mesin_injections
+        GROUP BY part,color
+        ) as mesin
+         LEFT JOIN cycle_time_mesin_injections 
+         ON mesin.part = cycle_time_mesin_injections.part and mesin.color = cycle_time_mesin_injections.color
+         ORDER BY part
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+
+
+
+
+    // ---------------- end
 
 
 

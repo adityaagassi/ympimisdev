@@ -64,6 +64,8 @@
 					</div>
 			</div>
 		</div> -->
+
+
 		<div class="col-xs-12">
 			<div class="col-xs-2">
 				<div class="input-group date" style="margin-top: 10px;">
@@ -72,17 +74,26 @@
 					</div>
 					<input type="text" class="form-control datepicker" id="tanggal" name="tanggal" placeholder="Select Date From">
 				</div>
+			</div>
 
+			<div class="col-xs-2">
 				<div class="input-group date" style="margin-top: 10px;">
 					<div class="input-group-addon bg-green" style="border: none;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" id="tanggal22" name="tanggal22" placeholder="Select Date From">
+					<input type="text" class="form-control datepicker" id="tanggal22" name="tanggal22" placeholder="Select Date To">
 				</div>
+			</div>
+
+			<div class="col-xs-2">
+				<div class="input-group date" style="margin-top: 10px;">
+				<button type="button" class="btn btn-warning" style="margin-right: 20px" onclick="makeSchedule()">Calculate</button>
+				<button type="button" class="btn btn-success" style="margin-right: 20px" onclick="saveSchedule()">Save</button>
+			</div>
 			</div>
 			
 
-			<div class="col-xs-2">
+			<!-- <div class="col-xs-2">
 				<div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 1</button>
@@ -95,9 +106,9 @@
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
 				</div>  
-			</div>  
+			</div> -->  
 
-			<div class="col-xs-2">
+			<!-- <div class="col-xs-2">
 				<div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 3</button>
@@ -110,9 +121,9 @@
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
 				</div>  
-			</div> 
+			</div>  -->
 
-			<div class="col-xs-2">
+			<!-- <div class="col-xs-2">
 				<div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 5</button>
@@ -125,9 +136,9 @@
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
 				</div>  
-			</div> 
+			</div>  -->
 
-			<div class="col-xs-2">
+			<!-- <div class="col-xs-2">
 				<div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 7</button>
@@ -140,31 +151,30 @@
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
 				</div>  
-			</div> 
+			</div> --> 
 
-			<div class="col-xs-2">
+			<!-- <div class="col-xs-2">
 				<div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 9</button>
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
-				</div>  
-				<div class="input-group margin">
+				</div>   -->
+				<!-- <div class="input-group margin">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-info" style="margin-right: 20px">Mesin 11</button>
 					</div>
 					<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
-				</div>  
+				</div>  --> 
 			</div> 
 
-		</div>
 
-		<div class="col-xs-12">
+		<!-- <div class="col-xs-12">
 			<div class="col-xs-2">
 				<button type="button" class="btn btn-warning" style="margin-right: 20px" onclick="makeSchedule()">Calculate</button>
 				<button type="button" class="btn btn-success" style="margin-right: 20px" onclick="saveSchedule()">Save</button>
 			</div>
-		</div><br><br>
+		</div><br><br> -->
 
 		<div class="col-xs-12">
 
@@ -173,6 +183,62 @@
 			</div>
 
 		</div>
+
+		<div class="col-xs-12">
+
+			<div id="chartplanMesin2">
+				
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+
+			<div id="chartplanMesin">
+				
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+
+			<div class="col-xs-3" id="headblue">
+				
+			</div>
+
+			<div class="col-xs-3" id="blokblue">
+				
+			</div>
+
+			<div class="col-xs-3" id="mjblue">
+				
+			</div>
+
+			<div class="col-xs-3" id="footblue">
+				
+			</div>
+
+		</div>
+
+		<div class="modal fade" id="myModal">
+          <div class="modal-dialog modal-lg" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <center><h4 class="modal-title">Make Schedule</h4></center>
+              </div>
+              <div class="modal-body">
+                <div id="progressbar2">
+              <center>
+               <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
+               <br><h4>Loading ...</h4>
+             </center>
+           </div>
+              </div>
+              
+            </div>
+            <!-- /.modal-content -->
+          </div>
+      </div>
 
 		
 		<div class="col-xs-12">
@@ -330,6 +396,11 @@
 		
 		
 	</div>
+
+
+      
+          <!-- /.modal-dialog -->
+        
 </section>
 @endsection
 @section('scripts')
@@ -353,6 +424,7 @@
 		}
 	});
 	jQuery(document).ready(function() {
+
 		$('body').toggleClass("sidebar-collapse");
 		getMesin();
 		// makeSchedule();
@@ -623,6 +695,9 @@
 	var ganti = [];
 
 	function makeSchedule() {
+
+        $('#myModal').modal({backdrop: 'static', keyboard: false});
+		$("#myModal").modal('show');
 
 		var tgl1 = $('#tanggal').val();
 		var tgl22 = $('#tanggal22').val();
@@ -2703,6 +2778,8 @@ function getDateWorking() {
 }
 
 function saveSchedule() {
+	$('#myModal').modal({backdrop: 'static', keyboard: false});
+	$("#myModal").modal('show');
 
 	
 	// // mesin1
@@ -2934,17 +3011,20 @@ function saveSchedule() {
 				
 
 				openSuccessGritter('Success!', result.message);
+				$("#myModal").modal('hide');
 
 
 			}
 			else{
 				audio_error.play();
+				$("#myModal").modal('hide');
 
 			}
 		}
 		else{
 			audio_error.play();
 			alert('Disconnected from sever');
+			$("#myModal").modal('hide');
 		}
 	});
 
@@ -3100,7 +3180,7 @@ function chartplan() {
 				        }
 				    },{
 			        title: {
-			            text: ''
+			            text: 'Last Update: '+getActualFullDate(),
 			        },
 			        opposite: true
 			    }],
@@ -3192,6 +3272,8 @@ function chartplan() {
 				        data: yrf
 				    }]
 				});
+
+		$("#myModal").modal('hide');
 				}
 			}
 		});
@@ -3430,6 +3512,12 @@ function saveScheduletmp() {
 
 				openSuccessGritter('Success!', result.message);
 				chartplan();
+				percenMesin();
+				headblue();
+				blokblue();
+				mjblue();
+				footblue();
+				chartWorkingMachine();
 
 
 			}
@@ -3448,6 +3536,690 @@ function saveScheduletmp() {
 
 	
 }
+
+function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+function percenMesin() {
+
+	$.get('{{ url("fetch/percenMesin") }}',  function(result, status, xhr) {
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+
+			var mesin = [];
+			var on = [];
+			var off = [];
+			
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+							off.push(result.part[i].OFF);
+							on.push(result.part[i].ON);
+							mesin.push(result.part[i].mesin);
+					}
+
+						
+					
+					Highcharts.chart('chartplanMesin', {
+				    chart: {
+				        type: 'column'
+				    },
+				    title: {
+				        text: 'Machine Monitoring'
+				    },
+				    xAxis: {
+				        categories: mesin
+				    },
+				    yAxis: {
+				        min: 0,
+				        title: {
+				            text: 'Last Update: '+getActualFullDate(),
+				        }
+				    },
+				    tooltip: {
+				        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+				        shared: true
+				    },
+				    plotOptions: {
+				        column: {
+				            stacking: 'percent'
+				        }
+				    },
+				    series: [{
+				    	dataLabels: {
+				            enabled: true,
+				            format: '{point.percentage:.0f}%',
+				            },
+				        name: 'ON',
+				        data: on
+				    }, {
+				    	dataLabels: {
+				            enabled: true,
+				            format: '{point.percentage:.0f}%',
+				            },
+				        color: 'red',
+				        name: 'OFF',
+				        data: off
+				    }]
+				});
+
+					
+				}
+			}
+		})
+}
+
+function chartWorkingMachine() {
+
+	$.get('{{ url("fetch/chartWorkingMachine") }}',  function(result, status, xhr) {
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+
+			var tgl = [];
+			var total_1 = [];
+			var total_2 = [];
+			var total_3 = [];
+			var total_4 = [];
+			var total_5 = [];
+			var total_6 = [];
+			var total_7 = [];
+			var total_8 = [];
+			var total_9 = [];
+			var total_11 = [];
+			
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+							tgl.push(result.part[i].week_date);
+							total_1.push(parseInt( result.part[i].total_1));
+							total_2.push(parseInt( result.part[i].total_2));							
+							total_3.push(parseInt( result.part[i].total_3));
+							total_4.push(parseInt( result.part[i].total_4));
+							total_5.push(parseInt( result.part[i].total_5));
+							total_6.push(parseInt( result.part[i].total_6));
+							total_7.push(parseInt( result.part[i].total_7));
+							total_8.push(parseInt( result.part[i].total_8));
+							total_9.push(parseInt( result.part[i].total_9));
+							total_11.push(parseInt( result.part[i].total_11));
+					}
+
+						
+					
+					Highcharts.chart('chartplanMesin2', {
+				    chart: {
+				        type: 'spline'
+				    },
+				    title: {
+				        text: 'Working Machine Monitoring'
+				    },
+				    xAxis: {
+				        categories: tgl
+				    },
+				    yAxis: {
+				        min: 0,
+				        title: {
+				            text: 'Last Update: '+getActualFullDate(),
+				        }
+				    },
+				    tooltip: {
+				        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> <br/>',
+				        shared: true
+				    },
+				    plotOptions: {
+				        column: {
+				            stacking: 'percent'
+				        }
+				    },
+				    series: [{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 1',
+				        data: total_1
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 2',
+				        data: total_2
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 3',
+				        data: total_3
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 4',
+				        data: total_4
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 5',
+				        data: total_5
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 6',
+				        data: total_6
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 7',
+				        data: total_7
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 8',
+				        data: total_8
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 9',
+				        data: total_9
+				    },{
+				    	dataLabels: {
+				            enabled: true,
+				            },
+				        name: 'MESIN 11',
+				        data: total_11
+				    },]
+				});
+
+					
+				}
+			}
+		})
+}
+
+function mjblue() {	
+
+	var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+		$.get('{{ url("fetch/mjblue") }}', data,  function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					
+					Highcharts.chart('mjblue', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Middle Joint Blue',
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	color: 'blue',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	color: 'blue',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	color: 'blue',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function footblue() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/footblue") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					
+					Highcharts.chart('footblue', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Foot Joint Blue',
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	color: 'blue',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	color: 'blue',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	color: 'blue',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function blokblue() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/blockblue") }}', data,  function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					
+					Highcharts.chart('blokblue', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Block Joint Blue',
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	color: 'blue',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	color: 'blue',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	color: 'blue',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function headblue() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/headblue") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					
+					Highcharts.chart('headblue', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Head Joint Blue',
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '12px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	color: 'blue',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	color: 'blue',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	color: 'blue',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+	
+
 
 function openErrorGritter(title, message) {
 	jQuery.gritter.add({

@@ -859,6 +859,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
+	Route::get('index/kaizen/detail/{id}', 'EmployeeController@indexKaizenAssessment');
 });
 
 //INITIAL
@@ -1494,6 +1495,7 @@ Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
+Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
 
 //CUBEACON
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');

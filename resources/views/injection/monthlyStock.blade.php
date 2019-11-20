@@ -68,14 +68,28 @@
 					</div>
 					<div class="col-xs-1">
 						<div class="form-group">
-							<button class="btn btn-success" type="button" onclick="fillTable()">Update Chart</button>
+							<button class="btn btn-success" type="button" onclick="fillTable();block();foot();head2();">Update Chart</button>
 						</div>
 					</div>
 				<!-- </form> -->
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
+			
+
+			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
+				<div id="headJoint" style="height: 690px;"></div>
+			</div>
+
 			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
 				<div id="container" style="height: 690px;"></div>
+			</div>
+
+			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
+				<div id="blockJoint" style="height: 690px;"></div>
+			</div>
+
+			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
+				<div id="footJoint" style="height: 690px;"></div>
 			</div>
 		</div>
 	</div>
@@ -98,6 +112,9 @@
 	jQuery(document).ready(function() {
 		$('.select2').select2();
 		fillTable();
+		block();
+		foot();
+		head2();
 		setInterval(fillTable, 30000);
 	});
 
@@ -357,17 +374,17 @@
 						assy.push(parseInt( result.part[i].assy));
 						green.push(parseInt( result.part[i].target));
 
-						actgreen += (parseInt( result.part[i].target - parseInt( result.part[i].assy)) );
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
 						actgreen2 = actgreen;
-						act.push(actgreen2);
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
 
 					}
 
+					console.table(assy)
+					console.table(green)
 					console.table(act)
-					
-					
-
-					
 
 
 					Highcharts.chart('container', {
@@ -375,7 +392,7 @@
 					        type: 'spline'
 					    },
 					    title: {
-							text: 'Monhtly Target Injection',
+							text: 'Middle Joint',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -424,22 +441,380 @@
 					    },
 					    series: [{
       					animation: false,
-					    name: 'asas',
+					    name: 'Plan Assy',
 					    dashStyle: 'Dash',
-				    	color: 'Red',
+				    	// color: 'Red',
 					    data: assy
 
 					    },{
 				    	type: 'spline',				    	
       					animation: false,
-				        name: 'Target Assy',
-				    	color: 'Red',
+				        name: 'Plan Injeksi',
+				    	// color: 'Red',
 				        data: green
 				    },{
 				    	type: 'spline',				    	
       					animation: false,
+      					dashStyle: 'Dot',
 				        name: 'Stock',
-				    	color: 'Red',
+				    	// color: 'Red',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function head2() {
+		var tgl1 = $('#tanggal').val();
+		var location = $('#location').val();
+		var data = {
+			tgl:tgl1,
+			location:location
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/MonhtlyStockHead") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					console.table(assy)
+					console.table(green)
+					console.table(act)
+
+
+					Highcharts.chart('headJoint', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Head Joint Injection',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	// color: 'Red',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	// color: 'Red',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function foot() {
+		var tgl1 = $('#tanggal').val();
+		var location = $('#location').val();
+		var data = {
+			tgl:tgl1,
+			location:location
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/MonhtlyStockFoot") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					console.table(assy)
+					console.table(green)
+					console.table(act)
+
+
+					Highcharts.chart('footJoint', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Foot Joint Injection',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	// color: 'Red',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	// color: 'Red',
+				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function block() {
+		var tgl1 = $('#tanggal').val();
+		var location = $('#location').val();
+		var data = {
+			tgl:tgl1,
+			location:location
+		}
+
+		var assy = [];
+		var green = [];
+		var act = [];
+		var tgl = [];
+		var actgreen = 0;
+		var actgreen2 = 0;
+
+
+
+
+		$.get('{{ url("fetch/MonhtlyStockBlock") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						green.push(parseInt( result.part[i].target));
+
+						
+						actgreen = (parseInt( result.part[i].target - result.part[i].assy    ) + actgreen2);
+						actgreen2 = actgreen;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act.push(parseInt( actgreen2));
+
+					}
+
+					console.table(assy)
+					console.table(green)
+					console.table(act)
+
+
+					Highcharts.chart('blockJoint', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'Block Joint Injection',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi',
+				    	// color: 'Red',
+				        data: green
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock',
+				    	// color: 'Red',
 				        data: act
 				    },]
 					});
