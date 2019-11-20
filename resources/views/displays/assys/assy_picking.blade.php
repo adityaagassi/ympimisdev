@@ -55,6 +55,14 @@
 		background: #7cb5ec;
 		display: inline-block;
 	}
+	.bff {
+		margin-left:20px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #e096ff;
+		display: inline-block;
+	}
 	.plt {
 		margin-left:20px;
 		width: 12px;
@@ -398,6 +406,7 @@
 				var lacquering = 0;
 				var plating = 0;
 				var welding = 0;
+				var buffing = 0;
 				var legend = 0;
 
 				var categories = [];
@@ -409,7 +418,7 @@
 				$.each(result.stok, function(index2, value2){
 
 					if ("{{$option}}" != "assy") {
-						tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding));
+						tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
 						if (tmp >= diffs[index2]) {
 							color2 = "background-color:#00a65a";
 						} else {
@@ -447,7 +456,7 @@
 						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(parseInt(value2.stockroom) / plans[index2]).toFixed(1)+"</td>";
 					}
 
-					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding));
+					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
 
 					if (value2.surface) {
 						srf2 = value2.surface;
@@ -464,7 +473,7 @@
 				// console.table(result.stok);
 
 				max = (Math.max(...max_tmp)) + 10;
-				// console.log(max);
+				console.table(max_tmp);
 
 				$('#chart').empty();
 				$('#legend').empty();
@@ -474,13 +483,16 @@
 
 					chart += '<td style="padding: 0px; height:350px">';
 
-					kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating)
-						+ parseInt(result.stok[i].stockroom) + parseInt(result.stok[i].welding))) / max * 100;
+					kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating) + parseInt(result.stok[i].stockroom) + parseInt(result.stok[i].welding) + parseInt(result.stok[i].buffing))) / max * 100;
 					chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
 
 					welding = parseInt(result.stok[i].welding) / max * 100;
 					if (parseInt(result.stok[i].welding) > 0) wld = parseInt(result.stok[i].welding); else wld = '';
 					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+welding+'%" id="welding">'+wld+'</div>';
+
+					buffing = parseInt(result.stok[i].buffing) / max * 100;
+					if (parseInt(result.stok[i].buffing) > 0) bff = parseInt(result.stok[i].buffing); else bff = '';
+					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #e096ff; height: '+buffing+'%" id="buffing">'+bff+'</div>';
 
 					barrel = parseInt(result.stok[i].barrel) / max * 100;
 					if (parseInt(result.stok[i].barrel) > 0) brl = parseInt(result.stok[i].barrel); else brl = '';
@@ -506,6 +518,7 @@
 				legend += "<div class='plt'></div> Plating";
 				legend += "<div class='lcq'></div> Lacquering";
 				legend += "<div class='brl'></div> Barrel";
+				legend += "<div class='bff'></div> Buffing";
 				legend += "<div class='wld'></div> Welding";
 				legend += "</td>";
 

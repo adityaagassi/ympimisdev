@@ -244,10 +244,45 @@ class AssyProcessController extends Controller
 
 		$stok = db::select($picking2);
 
+		$bff_q = "select model, `key`, count(`key`) as buffing from buffing_inventories 
+		left join materials on buffing_inventories.material_num = materials.material_number
+		where lokasi in ('BUFFING','BUFFING-KENSA')
+		group by model, `key`";
+
+		$buffing = db::connection('digital_kanban')->select($bff_q);
+
+		$dd = [];
+		$stat = 0;
+
+		foreach ($stok as $stk) {
+			$row = array();
+			$row['key'] = $stk->key;
+			$row['model'] = $stk->model;
+			$row['stockroom'] = $stk->stockroom;
+			$row['barrel'] = $stk->barrel;
+			$row['lacquering'] = $stk->lacquering;
+			$row['plating'] = $stk->plating;
+			$row['welding'] = $stk->welding;
+
+			foreach ($buffing as $bf) {
+				if ($bf->model == $stk->model && $bf->key == $stk->key) {
+					$stat = 1;
+					$row['buffing'] = $bf->buffing;
+				}
+			}
+
+			if ($stat == 0) {
+				$row['buffing'] = 0;
+			}
+
+			$dd[] = $row;
+			$stat = 0;
+		}
+
 		$response = array(
 			'status' => true,
 			'plan' => $picking_assy,
-			'stok' => $stok,
+			'stok' => $dd,
 			'gmc' => $gmc
 		);
 		return Response::json($response);
@@ -425,10 +460,47 @@ class AssyProcessController extends Controller
 
 		$stok = db::select($picking2);
 
+		$bff_q = "select model, `key`, count(`key`) as buffing from buffing_inventories 
+		left join materials on buffing_inventories.material_num = materials.material_number
+		where lokasi in ('BUFFING','BUFFING-KENSA')
+		group by model, `key`";
+
+		$buffing = db::connection('digital_kanban')->select($bff_q);
+
+		$dd = [];
+		$stat = 0;
+
+		foreach ($stok as $stk) {
+			$row = array();
+			$row['key'] = $stk->key;
+			$row['model'] = $stk->model;
+			$row['stockroom'] = $stk->stockroom;
+			$row['barrel'] = $stk->barrel;
+			$row['lacquering'] = $stk->lacquering;
+			$row['plating'] = $stk->plating;
+			$row['welding'] = $stk->welding;
+
+			foreach ($buffing as $bf) {
+				if ($bf->model == $stk->model && $bf->key == $stk->key) {
+					$stat = 1;
+					$row['buffing'] = $bf->buffing;
+				}
+			}
+
+			if ($stat == 0) {
+				$row['buffing'] = 0;
+			}
+
+			$dd[] = $row;
+			$stat = 0;
+		}
+
 		$response = array(
 			'status' => true,
 			'plan' => $picking_assy,
-			'stok' => $stok,
+			// 'stok' => $stok,
+			// 'buffing' => $buffing,
+			'stok' => $dd,
 			'gmc' => $gmc
 		);
 		return Response::json($response);
