@@ -100,12 +100,9 @@
 				<tr id="stok">
 					
 				</tr>
-				<?php if($option != "assy") { ?>
-					<tr id="stok_all">
+				<tr id="stok_all">
 
-					</tr>
-
-				<?php } ?>
+				</tr>
 				<tr id="chart" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; font-size: 12px;">
 				</tr>
 				<tr id="legend"></tr>
@@ -190,7 +187,7 @@
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h4 style="float: right; " id="modal-title"></h4> 
+							<h4 style="float: right;" id="modal-title"></h4> 
 							<h4 class="modal-title"><b id="titel"></b></h4>
 						</div>
 						<div class="modal-body">
@@ -297,6 +294,7 @@
 				order:"{{$_GET['order2']}}"
 			}
 			diffs = [];
+			plans = [];
 
 		// var values="{{$_GET['key2']}}";
 		// $.each(values.split(","), function(i,e){
@@ -320,6 +318,7 @@
 				$("#return_acc").empty();
 
 				$("#stok").empty();
+				$("#stok_all").empty();
 
 				model = "<th style='width:45px'>#</th>";
 				totplan = "<th>Plan</th>";
@@ -328,7 +327,6 @@
 				if ("{{$option}}" == "assy") {
 					diff = "<th>Diff</th>";
 				} else {
-					$("#stok_all").empty();
 					diff = "<th>Target</th>";
 				}
 
@@ -337,11 +335,11 @@
 				retunAcc = "<th>Return acc</th>";
 
 				if ("{{$option}}" == "assy") {
-					stk = "<th style='border: 1px solid white;' rowspan='2'>Stock Room</th>";
+					stk = "<th style='border: 1px solid white;'>Stock Room</th>";
 				} else {
 					stk = "<th style='border: 1px solid white;'>Stock All</th>";
-					stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
 				}
+				stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
 
 				var style = "";
 
@@ -361,12 +359,6 @@
 						color = "style='background-color:#f2e127';";
 					}
 
-					if (value.stock >= value.diff) {
-						color2 = "background-color:#00a65a";
-					} else {
-						color2 = "background-color:#f24b4b";
-					}
-
 					if (value.surface) {
 						srf = value.surface;
 					} else {
@@ -380,8 +372,13 @@
 					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
-					diff += "<td "+style+">"+value.diff+"</td>";
+					if ("{{$option}}" == "assy") {
+						diff += "<td "+style+">"+(-value.diff)+"</td>";
+					} else {
+						diff += "<td "+style+">"+value.diff+"</td>";
+					}
 					diffs.push(value.diff);
+					plans.push(value.plan);
 				})
 
 				$("#model").append(model);
@@ -407,17 +404,50 @@
 				var max_tmp = [];
 				var max = 0;
 				var sisa = 0;
+				var tmp = 0;
 
 				$.each(result.stok, function(index2, value2){
-					stk += "<td style='border: 1px solid white;'>"+(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
-						+ parseInt(value2.stockroom) + parseInt(value2.welding))+"</td>";
+
 					if ("{{$option}}" != "assy") {
-						stk_als += "<td style='border: 1px solid white;'>"+((parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
-						+ parseInt(value2.stockroom) + parseInt(value2.welding)) / diffs[index2]).toFixed(1)+"</td>";
+						tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding));
+						if (tmp >= diffs[index2]) {
+							color2 = "background-color:#00a65a";
+						} else {
+							color2 = "background-color:#f24b4b";
+						}
+
+						if (tmp / plans[index2] >= 3) {
+							colour = "background-color:#00a65a";
+						} else {
+							colour = "background-color:#f24b4b";
+						}
+
+					} else {
+						if (value2.stockroom >= diffs[index2]) {
+							color2 = "background-color:#00a65a";
+						} else {
+							color2 = "background-color:#f24b4b";
+						}
+
+						if (parseInt(value2.stockroom) / plans[index2] >= 1) {
+							colour = "background-color:#00a65a";
+						} else {
+							colour = "background-color:#f24b4b";
+						}
+
 					}
 
-					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)
-						+ parseInt(value2.stockroom) + parseInt(value2.welding));
+					if ("{{$option}}" != "assy") {
+						stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
+
+						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / plans[index2]).toFixed(1)+"</td>";
+					} else {
+						stk += "<td style='border: 1px solid white; "+color2+"'>"+parseInt(value2.stockroom)+"</td>";
+
+						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(parseInt(value2.stockroom) / plans[index2]).toFixed(1)+"</td>";
+					}
+
+					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding));
 
 					if (value2.surface) {
 						srf2 = value2.surface;
@@ -429,10 +459,7 @@
 				})
 
 				$("#stok").append(stk);
-
-				if ("{{$option}}" != "assy") {
-					$("#stok_all").append(stk_als);
-				}
+				$("#stok_all").append(stk_als);
 
 				// console.table(result.stok);
 
