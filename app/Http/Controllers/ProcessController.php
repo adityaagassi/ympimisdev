@@ -1055,7 +1055,7 @@ class ProcessController extends Controller
 		$id_all = $id."%";
 		$now = date('Y-m-d');
 		if($id =="YCL"){
-			$query="SELECT * FROM log_processes WHERE model IN ('INDONESIA','CHINA') ORDER BY created_at desc";
+			$query="SELECT * FROM log_processes WHERE model IN ('INDONESIA','CHINA') and DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' ORDER BY created_at desc";
 			$log_processes = db::select($query);
 
 		}elseif($id =="YTS"){
