@@ -154,7 +154,7 @@
 
 	jQuery(document).ready(function(){
 		fillTable();
-		// setInterval(fillTable, 10000);
+		setInterval(fillTable, 10000);
 
 		$('#date').datepicker({
 			autoclose: true,
