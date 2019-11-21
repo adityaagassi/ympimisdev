@@ -206,8 +206,12 @@
                                 <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
                             </a>
                             <br>
-                            <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                            <a href="{{ url("index/qc_report/komplain_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
+                            </a>
+                            <br>                            
+                            <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                <i class="fa fa-caret-right"></i> QA Report
                             </a>
                         </td>
                     </tr>
@@ -261,11 +265,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Injections Process (???)</span>
+                            <span style="font-weight: bold;">INJECTION Process (???)</span>
 
                             <br>
                             <a href="{{ url("/index/injeksi") }}">
-                                <i class="fa fa-caret-right"></i> Injections Recorder (???)
+                                <i class="fa fa-caret-right"></i> Injection Recorder (???)
                             </a>
                         </td>
                     </tr>
@@ -273,15 +277,15 @@
                         <td>
                             <span style="font-weight: bold;">MATERIAL Process (イニシアル工程)</span>
                             <br>
-                            <a href="{{ url("/index/initial", "cl_mpro") }}">
+                            <a href="{{ url("/index/initial", "mpro_cl") }}">
                                 <i class="fa fa-caret-right"></i> Clarinet (?)
                             </a>
                             <br>
-                            <a href="{{ url("/index/initial", "fl_mpro") }}">
+                            <a href="{{ url("/index/initial", "mpro_fl") }}">
                                 <i class="fa fa-caret-right"></i> Flute (?)
                             </a>
                             <br>
-                            <a href="{{ url("/index/initial", "sx_mpro") }}">
+                            <a href="{{ url("/index/initial", "mpro_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (?)
                             </a>
                             <br>
@@ -298,15 +302,15 @@
                         <td>
                             <span style="font-weight: bold;">BODY Process (イニシアル工程)</span>
                             <br>
-                            <a href="{{ url("/index/initial", "cl_bpro") }}">
+                            <a href="{{ url("/index/initial", "bpro_cl") }}">
                                 <i class="fa fa-caret-right"></i> Clarinet(?)
                             </a>
                             <br>
-                            <a href="{{ url("/index/initial", "fl_bpro") }}">
+                            <a href="{{ url("/index/initial", "bpro_fl") }}">
                                 <i class="fa fa-caret-right"></i> Flute(?)
                             </a>
                             <br>
-                            <a href="{{ url("/index/initial", "sx_bpro") }}">
+                            <a href="{{ url("/index/initial", "bpro_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone(?)
                             </a>
                         </td>
