@@ -114,8 +114,11 @@
 						<h5 id="delete_confirmation_text"></h5>
 					</div>
 					<input type="hidden" id="idx">
+					<input type="hidden" id="operator_id">
+					<input type="hidden" id="tag">
 					<input type="hidden" id="model">
 					<input type="hidden" id="key">
+					<input type="hidden" id="qty">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -196,13 +199,19 @@
 	function deleteBuff(){
 
 		var idx = $("#idx").val();
+		var operator_id = $("#operator_id").val();
+		var tag = $("#tag").val();
 		var model = $("#model").val();
 		var key = $("#key").val();
+		var qty = $("#qty").val();
 		
 		var data = {
 			idx : idx,
+			operator_id : operator_id,
+			tag : tag,
 			model : model,
-			key : key
+			key : key,
+			qty : qty
 		}
 
 		$.post('{{ url("delete/middle/buffing_canceled") }}', data, function(result, status, xhr){
@@ -270,8 +279,11 @@
 					$('#delete_button').append(button);
 
 					document.getElementById("idx").value = result.cancel[0].idx;
+					document.getElementById("operator_id").value = result.cancel[0].operator_id;
+					document.getElementById("tag").value = result.cancel[0].material_tag_id;
 					document.getElementById("model").value = result.cancel[0].model;
 					document.getElementById("key").value = result.cancel[0].key;
+					document.getElementById("qty").value = result.cancel[0].material_qty;
 
 				}
 				else{

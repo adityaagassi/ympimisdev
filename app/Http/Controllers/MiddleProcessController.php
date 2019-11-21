@@ -54,7 +54,7 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBuffingCanceled(){
-		return view('processes.middle.buffing_cancel')->with('page', 'queue');
+		return view('processes.middle.buffing_cancel')->with('page', 'queue')->with('head', 'Buffing Canceled');
 	}
 	
 	public function indexReportOpTime(){
@@ -631,7 +631,6 @@ class MiddleProcessController extends Controller
 		}
 
 		try{
-
 			$data = db::connection('digital_kanban')->select("SELECT * FROM data_log where idx = ".$request->get('idx'));
 
 			$date = db::connection('digital_kanban')->select("select * from buffing_queues order by created_at asc limit 1");
@@ -647,6 +646,15 @@ class MiddleProcessController extends Controller
 			);
 
 			$delete = db::connection('digital_kanban')->delete("DELETE FROM data_log where idx = ".$request->get('idx'));
+			
+			$middle_return_log = new MiddleReturnLog([
+				'tag' => $request->get('tag'),
+				'employee_id' => $request->get('operator_id'),
+				'material_number' => $data[0]->material_number,
+				'quantity' => $request->get('qty'),
+				'location' => 'bff',
+			]);
+			$middle_return_log->save();
 
 			$response = array(
 				'status' => true,
@@ -665,7 +673,7 @@ class MiddleProcessController extends Controller
 	public function fetchBuffingCanceled(Request $request){
 		try{
 
-			$cancel = db::connection('digital_kanban')->select("SELECT d.idx, d.operator_id, d.material_tag_id, d.material_number, m.model, m.`key`, d.selesai_start_time FROM data_log d
+			$cancel = db::connection('digital_kanban')->select("SELECT d.idx, d.operator_id, d.material_tag_id, d.material_number, m.model, m.`key`, d.selesai_start_time, d.material_qty FROM data_log d
 				left join materials m on m.material_number = d.material_number
 				where material_tag_id = '".$request->get('tag')."'
 				order by idx desc
