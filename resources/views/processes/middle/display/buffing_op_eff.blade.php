@@ -97,12 +97,25 @@
 					</div>
 					<div class="col-xs-2" style="color: black;">
 						<div class="form-group">
-							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="change()" data-placeholder="Select Group" style="width: 100%;">
+							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="changeGroup()" data-placeholder="Select Group" style="width: 100%;">
 								<option value="A">GROUP A</option>
 								<option value="B">GROUP B</option>
 								<option value="C">GROUP C</option>
 							</select>
 							<input type="text" name="group" id="group" hidden>			
+						</div>
+					</div>
+					<div class="col-xs-2" style="color: black;">
+						<div class="form-group">
+							<select class="form-control select2" id='targetSelect' onchange="changeTarget()" data-placeholder="Select Target" style="width: 100%;">
+								<option value="">Select Target</option>
+								<option value="80">80%</option>
+								<option value="85">85%</option>
+								<option value="90">90%</option>
+								<option value="95">95%</option>
+								<option value="100">100%</option>
+							</select>
+							<input type="text" name="target" id="target" hidden>			
 						</div>
 					</div>
 					<div class="col-xs-1">
@@ -111,7 +124,9 @@
 				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
+			
 
+			{{-- OP Overall Eff --}}
 			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta">
 					<div id="container1_shifta" style="width: 100%;"></div>					
@@ -125,6 +140,7 @@
 			</div>
 
 			
+			{{-- OP Result --}}
 			<div class="col-xs-12" style="margin-top: 1%; padding: 0px; display: none;">
 				<div id="shifta2">
 					<div id="container2_shifta" style="width: 100%;"></div>
@@ -135,11 +151,11 @@
 				<div id="shiftc2">
 					<div id="container2_shiftc" style="width: 100%;"></div>
 				</div>
-			</div>
+			</div>			
 
-			
 
-			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
+			{{-- OP eff --}}
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px; display: none;">
 				<div id="shifta3">
 					<div id="container3_shifta" style="width: 100%;"></div>
 				</div>
@@ -151,22 +167,30 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12" id="target" style="margin-top: 1%; margin-left: 1%; width:98%; padding: 0px; background-color: #2a2a2b">
-				<table id="eff_target" class="table table-bordered" style="width:97%; margin-left: 2.5%; margin-top: 1%; margin-bottom: 1%;"> 
-					<thead id="eff_target_head">
-					</thead>
-					<tbody id="eff_target_body">
-					</tbody>
-				</table>
-			</div>
-
-			<div class="col-xs-12" style="margin-top: 1%; padding: 0px; display: none">
-				<div id="" class="col-xs-12">
-					<div id="container4" style="width: 100%;"></div>
+			{{-- Last NG --}}
+			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
+				<div id="shifta4">
+					<div id="container4_shifta" style="width: 100%;"></div>
+				</div>
+				<div id="shiftb4">
+					<div id="container4_shiftb" style="width: 100%;"></div>
+				</div>
+				<div id="shiftc4">
+					<div id="container4_shiftc" style="width: 100%;"></div>
 				</div>
 			</div>
 
-
+			{{-- Table Last NG --}}
+			<div style="display: none;">
+				<div class="col-xs-12" id="target" style="margin-top: 1%; margin-left: 1%; width:98%; padding: 0px; background-color: #2a2a2b">
+					<table id="eff_target" class="table table-bordered" style="width:97%; margin-left: 2.5%; margin-top: 1%; margin-bottom: 1%;"> 
+						<thead id="eff_target_head">
+						</thead>
+						<tbody id="eff_target_body">
+						</tbody>
+					</table>
+				</div>
+			</div>
 
 		</div>
 	</div>
@@ -307,8 +331,12 @@
 
 	});
 
-	function change() {
+	function changeGroup() {
 		$("#group").val($("#groupSelect").val());
+	}
+
+	function changeTarget() {
+		$("#target").val($("#targetSelect").val());
 	}
 
 	$('.datepicker').datepicker({
@@ -686,6 +714,11 @@
 function fillChart() {
 	var group = "{{$_GET['group']}}";
 	var tanggal = "{{$_GET['tanggal']}}";
+	var target = "{{$_GET['target']}}";
+
+	if(target == ''){
+		target = 85;
+	}
 
 	var position = $(document).scrollTop();
 
@@ -705,13 +738,9 @@ function fillChart() {
 			$('#shiftb').hide();
 			$('#shiftc').hide();
 
-			$('#shifta2').hide();
-			$('#shiftb2').hide();
-			$('#shiftc2').hide();
-
-			$('#shifta3').hide();
-			$('#shiftb3').hide();
-			$('#shiftc3').hide();
+			$('#shifta4').hide();
+			$('#shiftb4').hide();
+			$('#shiftc4').hide();
 
 
 			if(group.length == 1){
@@ -719,24 +748,24 @@ function fillChart() {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
 					$('#shift'+group[i].toLowerCase()).show();
 
-					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-12");
-					$('#shift'+group[i].toLowerCase()+'3').show();
+					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
+					$('#shift'+group[i].toLowerCase()+'4').show();
 				}
 			}else if(group.length == 2){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
 					$('#shift'+group[i].toLowerCase()).show();
 
-					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-6");
-					$('#shift'+group[i].toLowerCase()+'3').show();
+					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
+					$('#shift'+group[i].toLowerCase()+'4').show();
 				}
 			}else if(group.length == 3){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
 					$('#shift'+group[i].toLowerCase()).show();
 
-					$('#shift'+group[i].toLowerCase()+'3').addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()+'3').show();
+					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
+					$('#shift'+group[i].toLowerCase()+'4').show();
 				}
 			}
 
@@ -745,9 +774,9 @@ function fillChart() {
 			$('#shiftb').addClass("col-xs-4");
 			$('#shiftc').addClass("col-xs-4");
 
-			$('#shifta3').addClass("col-xs-4");
-			$('#shiftb3').addClass("col-xs-4");
-			$('#shiftc3').addClass("col-xs-4");
+			$('#shifta4').addClass("col-xs-4");
+			$('#shiftb4').addClass("col-xs-4");
+			$('#shiftc4').addClass("col-xs-4");
 		}
 
 
@@ -755,44 +784,6 @@ function fillChart() {
 
 		$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
 			if(result.status){
-				
-				// Shift A
-				// var eff = [];
-				// for(var i = 0; i < result.rate.length; i++){
-				// 	if(result.rate[i].shift == 'A'){
-				// 		for(var j = 0; j < result.time_eff.length; j++){
-				// 			if(result.rate[i].operator_id == result.time_eff[j].operator_id){
-
-				// 				var name_temp = result.rate[i].name.split(" ");
-				// 				var xAxis = '';
-				// 				var eff_value = 0;
-				// 				xAxis += result.rate[i].operator_id + ' - ';
-
-				// 				if(name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-				// 					xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-				// 				}else{
-				// 					xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-
-				// 				}
-
-				// 				eff_value = (result.rate[i].rate * result.time_eff[j].eff * 100);
-				// 				if(eff_value < 0){
-				// 					eff_value = 0;
-				// 				}
-
-				// 				eff.push([xAxis, eff_value]);
-				// 			}
-				// 		}
-				// 	}					
-				// }
-
-				// eff.sort(function(a, b){return b[1] - a[1]});
-				// var op_name = [];
-				// var eff_value = [];
-				// for (var i = 0; i < eff.length; i++) {
-				// 	op_name.push(eff[i][0]);
-				// 	eff_value.push(eff[i][1]);
-				// }
 
 				var op_name = [];
 				var eff_value = [];
@@ -829,7 +820,7 @@ function fillChart() {
 						}
 
 
-						if(eff_value[loop-1] > 85){
+						if(eff_value[loop-1] > parseInt(target)){
 							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
 						}else{
 							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
@@ -864,13 +855,13 @@ function fillChart() {
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 85,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 85%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -973,7 +964,7 @@ function fillChart() {
 						}
 
 
-						if(eff_value[loop-1] > 85){
+						if(eff_value[loop-1] > parseInt(target)){
 							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
 						}else{
 							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
@@ -1008,13 +999,13 @@ function fillChart() {
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 85,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 85%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -1117,7 +1108,7 @@ function fillChart() {
 						}
 
 
-						if(eff_value[loop-1] > 85){
+						if(eff_value[loop-1] > parseInt(target)){
 							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
 						}else{
 							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
@@ -1152,13 +1143,13 @@ function fillChart() {
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 85,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 85%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -1292,116 +1283,317 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 			$('#eff_target').css('display', 'none');
 		}
 
-		// var op = [];
-		// var key = [];
-		// var eff = [];
-		// var target = [];
 
 
 
-		// for(var i = 0; i < result.target.length; i++){
+		var op = [];
+		var key = [];
+		var eff = [];
+		var data = [];
 
-		// 	if(result.target[i].group == 'C'){
-		// 		for(var j = 0; j < result.emp_name.length; j++){
-		// 			if(result.emp_name[j].employee_id == result.target[i].employee_id){
-		// 				op.push(result.emp_name[j].name);
-		// 				key.push(result.target[i].key);
-		// 				eff.push(result.target[i].eff * 100);
-		// 				target.push(100);
-
-		// 			}
-		// 		}
-
-		// 	}			
-		// }
+		var loop = 0;
 
 
-		// var chart = Highcharts.chart('container4', {
-		// 	chart: {
-		// 		animation: false
-		// 	},
-		// 	title: {
-		// 		text: 'Operators Efficiency',
-		// 		style: {
-		// 			fontSize: '30px',
-		// 			fontWeight: 'bold'
-		// 		}
-		// 	},
-		// 	subtitle: {
-		// 		text: 'Group C on '+ result.date,
-		// 		style: {
-		// 			fontSize: '1vw',
-		// 			fontWeight: 'bold'
-		// 		}
-		// 	},
-		// 	yAxis: {
-		// 		title: {
-		// 			enabled: true,
-		// 			text: "Efficiency"
-		// 		},
-		// 		labels: {
-		// 			enabled: false
-		// 		},
-		// 		max: 200
-		// 	},
-		// 	xAxis:  {
-		// 		categories: op,
-		// 		gridLineWidth: 1,
-		// 		gridLineColor: 'RGB(204,255,255)',
-		// 		labels: {
-		// 			rotation: -45,
-		// 			style: {
-		// 				fontSize: '13px'
-		// 			}
-		// 		},
-		// 	},
-		// 	tooltip: {
-		// 		headerFormat: '<span>{point.category}</span><br/>',
-		// 		pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-		// 	},
-		// 	credits: {
-		// 		enabled:false
-		// 	},
-		// 	legend : {
-		// 		enabled:false
-		// 	},
-		// 	plotOptions: {
-		// 		series:{
-		// 			maxPointLength: 100,
-		// 			dataLabels: {
-		// 				enabled: true,
-		// 				format: '{point.y:.2f}%',
-		// 				rotation: -90,
-		// 				style:{
-		// 					fontSize: '15px'
-		// 				}
-		// 			},
-		// 			animation: false,
-		// 			cursor: 'pointer',
-		// 			grouping: false,
-		// 			shadow: false,
-		// 			borderWidth: 0.93
-		// 		},
-		// 	},
-		// 	series: [
-		// 	{
-		// 		name:'Target',
-		// 		type: 'column',
-		// 		color: 'rgb(255,116,116)',
-		// 		data: target,
-		// 		pointPadding: 0.01,
-		// 	}
-		// 	,{
-		// 		name:'Efficiency',
-		// 		type: 'column',
-		// 		color: 'rgb(144,238,126)',
-		// 		data: eff,
-		// 		pointPadding: 0.2,
-		// 	}
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'A'){
+				loop += 1;
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.emp_name[j].employee_id == result.target[i].employee_id){
+						op.push(result.emp_name[j].name);
+						key.push(result.target[i].key || 'Not Found');
+						eff.push(result.target[i].eff * 100);
+					}
+				}
 
-		// 	]
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+			}			
+		}
 
-		// });
+		var chart = Highcharts.chart('container4_shifta', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group A on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+
+		});
+
+
+		var op = [];
+		var key = [];
+		var eff = [];
+		var data = [];
+
+		var loop = 0;
+
+
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'B'){
+				loop += 1;
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.emp_name[j].employee_id == result.target[i].employee_id){
+						op.push(result.emp_name[j].name);
+						key.push(result.target[i].key || 'Not Found');
+						eff.push(result.target[i].eff * 100);
+
+					}
+				}
+
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+			}			
+		}
+
+		var chart = Highcharts.chart('container4_shiftb', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group B on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+
+		});
+
+
+
+
+		var op = [];
+		var key = [];
+		var eff = [];
+		var data = [];
+
+		var loop = 0;
+
+
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'C'){
+				loop += 1;
+				for(var j = 0; j < result.emp_name.length; j++){
+					if(result.emp_name[j].employee_id == result.target[i].employee_id){
+						op.push(result.emp_name[j].name);
+						key.push(result.target[i].key || 'Not Found');
+						eff.push(result.target[i].eff * 100);
+
+					}
+				}
+
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+			}			
+		}
+
+		var chart = Highcharts.chart('container4_shiftc', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group C on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+
+		});
 
 		
 

@@ -375,7 +375,7 @@
 
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: 'Group Balance',
+						text: 'Group Work Balance',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'

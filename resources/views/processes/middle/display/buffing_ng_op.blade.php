@@ -122,7 +122,7 @@
 					</div>
 					<div class="col-xs-2" style="color: black;">
 						<div class="form-group">
-							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="change()" data-placeholder="Select Group" style="width: 100%;">
+							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="changeGroup()" data-placeholder="Select Group" style="width: 100%;">
 								<option value="A">GROUP A</option>
 								<option value="B">GROUP B</option>
 								<option value="C">GROUP C</option>
@@ -130,6 +130,20 @@
 							<input type="text" name="group" id="group" hidden>			
 						</div>
 					</div>
+					<div class="col-xs-2" style="color: black;">
+						<div class="form-group">
+							<select class="form-control select2" id='targetSelect' onchange="changeTarget()" data-placeholder="Select Target" style="width: 100%;">
+								<option value="">Select Target</option>
+								<option value="15">15%</option>
+								<option value="20">20%</option>
+								<option value="25">25%</option>
+								<option value="30">30%</option>
+								<option value="35">35%</option>
+							</select>
+							<input type="text" name="target" id="target" hidden>			
+						</div>
+					</div>
+
 					<div class="col-xs-2">
 						<button class="btn btn-success" type="submit">Update Chart</button>
 					</div>
@@ -337,8 +351,12 @@
 		setInterval(fillChart, 10000);
 	});
 
-	function change() {
+	function changeGroup() {
 		$("#group").val($("#groupSelect").val());
+	}
+
+	function changeTarget() {
+		$("#target").val($("#targetSelect").val());
 	}
 
 	$('.datepicker').datepicker({
@@ -513,6 +531,11 @@
 	function fillChart() {
 		var group = "{{$_GET['group']}}";
 		var tanggal = "{{$_GET['tanggal']}}";
+		var target = "{{$_GET['target']}}";
+
+		if(target == ''){
+			target = 15;
+		}
 
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
@@ -607,7 +630,7 @@
 							rate.push(result.ng_rate[i].rate);						
 						}
 
-						if(rate[loop-1] > 15){
+						if(rate[loop-1] > parseInt(target)){
 							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
 						}else{
 							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
@@ -620,14 +643,14 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate Accumulation',
+						text: 'Movement Average',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
-						text: 'Shift A on '+date,
+						text: 'Group A on '+date,
 						style: {
 							fontSize: '1vw',
 							fontWeight: 'bold'
@@ -641,13 +664,13 @@
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 15,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 15%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -742,7 +765,7 @@
 							rate.push(result.ng_rate[i].rate);						
 						}
 
-						if(rate[loop-1] > 15){
+						if(rate[loop-1] > parseInt(target)){
 							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
 						}else{
 							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
@@ -755,7 +778,7 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate Accumulation',
+						text: 'Movement Average',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -776,13 +799,13 @@
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 15,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 15%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -876,7 +899,7 @@
 							rate.push(result.ng_rate[i].rate);						
 						}
 
-						if(rate[loop-1] > 15){
+						if(rate[loop-1] > parseInt(target)){
 							data.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
 						}else{
 							data.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
@@ -889,7 +912,7 @@
 						animation: false
 					},
 					title: {
-						text: 'NG Rate Accumulation',
+						text: 'Movement Average',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -910,13 +933,13 @@
 						min: 0,
 						plotLines: [{
 							color: '#FF0000',
-							value: 15,
+							value: parseInt(target),
 							dashStyle: 'shortdash',
 							width: 2,
 							zIndex: 5,
 							label: {
 								align:'right',
-								text: 'Target 15%',
+								text: 'Target '+parseInt(target)+'%',
 								x:-7,
 								style: {
 									fontSize: '12px',
@@ -1060,7 +1083,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
 
-				if(ng_rate[loop-1] > 15){
+				if(ng_rate[loop-1] > parseInt(target)){
 					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
 				}			
 
@@ -1073,7 +1096,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				type: 'column',
 			},
 			title: {
-				text: 'Last NG Rate By Operator',
+				text: 'Last NG Rate By Operator Over '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
@@ -1245,7 +1268,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
 
-				if(ng_rate[loop-1] > 15){
+				if(ng_rate[loop-1] > parseInt(target)){
 					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
 				}			
 
@@ -1259,7 +1282,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				type: 'column',
 			},
 			title: {
-				text: 'Last NG Rate By Operator',
+				text: 'Last NG Rate By Operator Over '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
@@ -1430,7 +1453,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 				ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
 
-				if(ng_rate[loop-1] > 15){
+				if(ng_rate[loop-1] > parseInt(target)){
 					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
 				}			
 
@@ -1444,7 +1467,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				type: 'column',
 			},
 			title: {
-				text: 'Last NG Rate By Operator',
+				text: 'Last NG Rate By Operator Over '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
