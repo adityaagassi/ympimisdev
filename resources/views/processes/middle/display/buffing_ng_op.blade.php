@@ -348,7 +348,7 @@
 		$('.select2').select2();
 
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 20000);
 	});
 
 	function changeGroup() {

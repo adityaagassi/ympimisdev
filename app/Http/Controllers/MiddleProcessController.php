@@ -52,6 +52,17 @@ class MiddleProcessController extends Controller
 			'plt-kensa-sx',
 		];
 	}
+	
+
+	public function indexBuffingOpRanking(){
+		$title = 'Operators Ranking';
+		$title_jp = '??';
+
+		return view('processes.middle.display.buffing_op_ranking', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Operators Ranking');
+	}
 
 	public function indexBuffingCanceled(){
 		return view('processes.middle.buffing_cancel')->with('page', 'queue')->with('head', 'Buffing Canceled');
@@ -59,7 +70,7 @@ class MiddleProcessController extends Controller
 	
 	public function indexReportOpTime(){
 		$title = 'Operator Buffing Time';
-		$title_jp = '';
+		$title_jp = '??';
 
 		return view('processes.middle.report.operator_time', array(
 			'title' => $title,
@@ -70,7 +81,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingAdjustment(){
 		$title = 'Saxophone Buffing Adjustment';
-		$title_jp = '';
+		$title_jp = '??';
 
 		$materials = Material::where('mrpc','=','s41')
 		->select('material_number', 'hpl', 'model', 'key', 'material_description')
@@ -88,7 +99,7 @@ class MiddleProcessController extends Controller
 
 	public function indexTrendBuffingOpEff(){
 		$title = 'Daily Buffing Efficiency';
-		$title_jp = '';
+		$title_jp = '??';
 
 		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
 			left join employees e on eg.employee_id = e.employee_id
@@ -878,14 +889,14 @@ class MiddleProcessController extends Controller
 			cross join
 			(select DISTINCT hpl from materials where hpl in ('ASKEY','TSKEY')) hpl ) tgl
 			left join
-			(SELECT DATE_FORMAT(n.created_at,'%Y-%m-%d') as tgl, m.hpl, sum(n.quantity) ng from middle_ng_logs n
+			(SELECT DATE_FORMAT(n.buffing_time,'%Y-%m-%d') as tgl, m.hpl, sum(n.quantity) ng from middle_ng_logs n
 			left join materials m on m.material_number = n.material_number
-			where n.location = 'bff-kensa' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
+			where n.location = 'bff-kensa' and DATE_FORMAT(n.buffing_time,'%m-%Y') = '".$bulan."'
 			GROUP BY tgl, m.hpl) ng on tgl.week_date = ng.tgl and tgl.hpl = ng.hpl
 			left join
-			(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, m.hpl, sum(g.quantity) g from middle_logs g
+			(SELECT DATE_FORMAT(g.buffing_time,'%Y-%m-%d') as tgl, m.hpl, sum(g.quantity) g from middle_check_logs g
 			left join materials m on m.material_number = g.material_number
-			where g.location = 'bff-kensa' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
+			where g.location = 'bff-kensa' and DATE_FORMAT(g.buffing_time,'%m-%Y') = '".$bulan."'
 			GROUP BY tgl, m.hpl) g on tgl.week_date = g.tgl and tgl.hpl = g.hpl");
 
 		$response = array(
@@ -925,7 +936,7 @@ class MiddleProcessController extends Controller
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
 			GROUP BY l.ng_name) ng
 			cross join
-			(SELECT sum(l.quantity) g from middle_logs l
+			(SELECT sum(l.quantity) g from middle_check_logs l
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl.") g
 			order by ng_rate desc");
@@ -951,6 +962,30 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function fetchBuffingOpWorkMonthly(Request $request){
+		$bulan="";
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}else{
+			$bulan = date('m-Y');
+		}
+		
+		$act = db::connection('digital_kanban')->select("select operator_id, DATE(selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,sedang_start_time,selesai_start_time)) as act from data_log
+			where DATE_FORMAT(selesai_start_time,'%m-%Y') = '".$bulan."'
+			GROUP BY operator_id, tgl");
+
+		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
+			where g.location = 'bff'");
+
+		$response = array(
+			'status' => true,
+			'act' => $act,
+			'emp' => $emp,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+	}
+
 
 	public function fetchBuffingOpNgMonthly(Request $request){
 		$bulan="";
@@ -973,14 +1008,14 @@ class MiddleProcessController extends Controller
 			$addHpl = "and m.hpl in (".$hpl.") ";
 		}
 
-		$op_ng = db::select("SELECT concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+		$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
 			GROUP BY l.operator_id, e.`name`) ng
 			left join
-			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_logs l
+			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
@@ -1047,7 +1082,7 @@ class MiddleProcessController extends Controller
 			where l.location = 'bff-kensa' ".$addHpl."
 			GROUP BY tgl) ng on tgl.tgl = ng.tgl
 			left join
-			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) g from middle_logs l
+			(SELECT DATE_FORMAT(l.created_at,'%m-%Y') as tgl, sum(l.quantity) g from middle_check_logs l
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' ".$addHpl."
 			GROUP BY tgl) g on tgl.tgl = g.tgl");

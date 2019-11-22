@@ -126,6 +126,14 @@ Route::get('fetch/mjblue', 'InjectionsController@detailPartMJBlue');
 Route::get('fetch/headblue', 'InjectionsController@detailPartHeadBlue');
 Route::get('fetch/footblue', 'InjectionsController@detailPartFootBlue');
 Route::get('fetch/blockblue', 'InjectionsController@detailPartBlockBlue');
+Route::get('fetch/injeksiVsAssyBlue', 'InjectionsController@injeksiVsAssyBlue');
+
+Route::get('fetch/injeksiVsAssyGreen', 'InjectionsController@injeksiVsAssyGreen');
+Route::get('fetch/injeksiVsAssyPink', 'InjectionsController@injeksiVsAssyPink');
+Route::get('fetch/injeksiVsAssyRed', 'InjectionsController@injeksiVsAssyRed');
+Route::get('fetch/injeksiVsAssyBrown', 'InjectionsController@injeksiVsAssyBrown');
+Route::get('fetch/injeksiVsAssyIvory', 'InjectionsController@injeksiVsAssyIvory');
+Route::get('fetch/injeksiVsAssyYrf', 'InjectionsController@injeksiVsAssyYrf');
 
 Route::get('fetch/chartWorkingMachine', 'InjectionsController@chartWorkingMachine');
 
@@ -139,6 +147,8 @@ Route::get('fetch/getDataStock', 'InjectionsController@getDataStock');
 Route::get('index/MonhtlyStock', 'InjectionsController@indexMonhtlyStock');
 Route::get('fetch/MonhtlyStock', 'InjectionsController@MonhtlyStock');
 
+Route::get('fetch/MonhtlyStockAllYrf', 'InjectionsController@MonhtlyStockAllYrf');
+Route::get('fetch/MonhtlyStockAll', 'InjectionsController@MonhtlyStockAll');
 Route::get('fetch/MonhtlyStockHead', 'InjectionsController@MonhtlyStockHead');
 Route::get('fetch/MonhtlyStockFoot', 'InjectionsController@MonhtlyStockFoot');
 Route::get('fetch/MonhtlyStockBlock', 'InjectionsController@MonhtlyStockBlock');
@@ -198,7 +208,19 @@ Route::get('fetch/fillMasterCycleMachine', 'InjectionsController@fillMasterCycle
 Route::get('fetch/chartMasterCycleMachine', 'InjectionsController@chartMasterCycleMachine');
 
 
+Route::get('get/workingPartMesin', 'InjectionsController@workingPartMesin');
+
+
 //end master machine
+
+
+// ------------- start 3 hari
+
+Route::get('index/indexPlanAll', 'InjectionsController@indexPlanAll');
+Route::get('fetch/getPlanAll', 'InjectionsController@getPlanAll');
+
+// ------------- end start 3 hari
+
 
 // end mesin injeksi
 
@@ -300,7 +322,7 @@ Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')-
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('create/ekaizen/{id}/{name}/{section}/{group}', 'EmployeeController@makeKaizen');
-Route::get('post/ekaizen', 'EmployeeController@postKaizen');
+Route::post('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
@@ -797,6 +819,7 @@ Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchRepor
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
 Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuffingNgRateMonthly');
 Route::get('fetch/middle/bff_op_ng_monthly', 'MiddleProcessController@fetchBuffingOpNgMonthly');
+Route::get('fetch/middle/bff_op_work_monthly', 'MiddleProcessController@fetchBuffingOpWorkMonthly');
 Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
 Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
 Route::get('index/middle/report_buffing_operator_time', 'MiddleProcessController@indexReportOpTime');
@@ -819,8 +842,11 @@ Route::get('fetch/middle/buffing_op_eff_detail', 'MiddleProcessController@fetchB
 Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBuffingDailyOpEff');
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
 Route::get('fetch/middle/buffing_op_result', 'MiddleProcessController@fetchBuffingOpResult');
-
 Route::get('fetch/middle/buffing_op_eff_target', 'MiddleProcessController@fetchBuffingOpEffTarget');
+
+Route::get('index/middle/buffing_op_ranking', 'MiddleProcessController@indexBuffingOpRanking');
+
+
 
 
 Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
@@ -860,6 +886,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 	Route::get('index/kaizen/detail/{id}', 'EmployeeController@indexKaizenAssessment');
+	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
 
 //INITIAL
@@ -1438,7 +1465,14 @@ Route::post('index/interview/store/{id}', 'InterviewController@store');
 Route::get('index/interview/edit/{id}/{interview_id}', 'InterviewController@edit');
 Route::post('index/interview/update/{id}/{interview_id}', 'InterviewController@update');
 Route::get('index/interview/details/{interview_id}', 'InterviewController@details');
-Route::post('index/interview/create_participant/{interview_id}', 'InterviewController@create_participant');
+Route::post('index/interview/create_participant', 'InterviewController@create_participant');
+Route::get('index/interview/getdetail','InterviewController@getdetail')->name('interview.getdetail');
+Route::post('index/interview/edit_participant/{interview_id}/{detail_id}', 'InterviewController@edit_participant');
+Route::get('index/interview/destroy_participant/{interview_id}/{detail_id}', 'InterviewController@destroy_participant');
+Route::get('index/interview/print_interview/{interview_id}', 'InterviewController@print_interview');
+Route::get('index/interview/print_email/{interview_id}', 'InterviewController@print_email');
+Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
+Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
@@ -1489,6 +1523,7 @@ Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
+Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
@@ -1496,6 +1531,7 @@ Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_d
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
+Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
 
 //CUBEACON
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');

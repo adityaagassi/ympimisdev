@@ -126,21 +126,7 @@
 							<div class="tab-pane active" id="tab_1">
 								<div class="row">
 									<div class="col-xs-12">
-										<div class="col-xs-3" style="display: none;">
-											<table id="table_op_ng" class="table table-bordered" style="margin:0">
-												<thead id="head_op_ng">
-													<tr>
-														<th style="padding: 0px;">OP Name</th>
-														<th style="padding: 0px;">Total NG</th>
-													</tr>
-												</thead>
-												<tbody id="body_op_ng">
-												</tbody>
-											</table>
-										</div>
-										<div class="col-xs-12" style="padding: 0px;">
-											<div id="chart2" style="width: 100%;"></div>			
-										</div>
+										<div id="chart2" style="width: 100%;"></div>			
 									</div>
 								</div>
 							</div>
@@ -543,11 +529,18 @@
 						series: [
 						{
 							name: 'Alto',
-							data: alto
+							color: '#f5ff0d',
+							data: alto,
+							lineWidth: 3,
+
 						},
 						{
 							name: 'Tenor',
-							data: tenor
+							color: '#00FF00',
+							data: tenor,
+							lineWidth: 3,
+
+
 						}
 						]
 					});
