@@ -179,8 +179,7 @@ class StockTakingController extends Controller
 			$now = date('Y-m-d');
 			$id = Auth::id();
 
-			$lists = StocktakingSilverList::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_silver_lists.storage_location')
-			->where('storage_locations.location', '=', $request->get('location'))
+			$lists = StocktakingSilverList::where('location', '=', $request->get('location'))
 			->where('stocktaking_silver_lists.quantity_check', '>', 0)
 			->get();
 
@@ -192,32 +191,32 @@ class StockTakingController extends Controller
 				return Response::json($response);				
 			}
 
-			$zero_quantity_final = DB::table('stocktaking_silver_lists')->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_silver_lists.storage_location')
-			->where('storage_locations.location', '=', $request->get('location'))
+			$zero_quantity_final = DB::table('stocktaking_silver_lists')
+			->where('location', '=', $request->get('location'))
 			->update([
 				'quantity_final' => 0,
 			]);
 
-			$delete_logs = DB::delete('delete from stocktaking_silver_logs where storage_location in (select storage_location from storage_locations where location = "'.$request->get('location').'") and date(created_at) = "'.$now.'"');
+			$delete_logs = DB::delete('delete from stocktaking_silver_logs where location = "'.$request->get('location').'" and date(created_at) = "'.$now.'"');
 
-			$update_final = DB::table('stocktaking_silver_lists')->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_silver_lists.storage_location')
-			->where('storage_locations.location', '=', $request->get('location'))
+			$update_final = DB::table('stocktaking_silver_lists')
+			->where('location', '=', $request->get('location'))
 			->where('stocktaking_silver_lists.quantity_check', '>', 0)
 			->update([
 				'quantity_final' => db::raw('quantity_check'),
 				'quantity_check' => 0,
 			]);
 
-			$update_log_assy = DB::insert("insert into stocktaking_silver_logs (material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
-				select material_child, material_child_description, storage_location, round(sum(quantity), 6) as quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
+			$update_log_assy = DB::insert("insert into stocktaking_silver_logs (location, material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
+				select location, material_child, material_child_description, storage_location, round(sum(quantity), 6) as quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
 				(
-				select stocktaking_silver_boms.material_child, stocktaking_silver_boms.material_child_description, stocktaking_silver_lists.storage_location, stocktaking_silver_lists.quantity_final*stocktaking_silver_boms.`usage` as quantity from stocktaking_silver_lists left join storage_locations on storage_locations.storage_location = stocktaking_silver_lists.storage_location left join stocktaking_silver_boms on stocktaking_silver_boms.material_parent = stocktaking_silver_lists.material_number where stocktaking_silver_lists.quantity_final > 0 and storage_locations.location = '".$request->get('location')."' and stocktaking_silver_lists.category = 'ASSY'
-			) as assy group by material_child, material_child_description, storage_location");
+				select stocktaking_silver_lists.location, stocktaking_silver_boms.material_child, stocktaking_silver_boms.material_child_description, stocktaking_silver_lists.storage_location, stocktaking_silver_lists.quantity_final*stocktaking_silver_boms.`usage` as quantity from stocktaking_silver_lists left join stocktaking_silver_boms on stocktaking_silver_boms.material_parent = stocktaking_silver_lists.material_number where stocktaking_silver_lists.quantity_final > 0 and stocktaking_silver_lists.location = '".$request->get('location')."' and stocktaking_silver_lists.category = 'ASSY'
+			) as assy group by location, material_child, material_child_description, storage_location");
 
-			$update_log_single = DB::insert("insert into stocktaking_silver_logs (material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
-				select material_number, material_description, storage_location, quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
+			$update_log_single = DB::insert("insert into stocktaking_silver_logs (location, material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
+				select location, material_number, material_description, storage_location, quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
 				(
-				select stocktaking_silver_lists.material_number, stocktaking_silver_lists.material_description, stocktaking_silver_lists.storage_location, round(sum(stocktaking_silver_lists.quantity_final),6) as quantity from stocktaking_silver_lists left join storage_locations on storage_locations.storage_location = stocktaking_silver_lists.storage_location where stocktaking_silver_lists.quantity_final > 0 and storage_locations.location = '".$request->get('location')."' and stocktaking_silver_lists.category = 'SINGLE' group by stocktaking_silver_lists.material_number, stocktaking_silver_lists.material_description, stocktaking_silver_lists.storage_location
+				select stocktaking_silver_lists.location, stocktaking_silver_lists.material_number, stocktaking_silver_lists.material_description, stocktaking_silver_lists.storage_location, round(sum(stocktaking_silver_lists.quantity_final),6) as quantity from stocktaking_silver_lists where stocktaking_silver_lists.quantity_final > 0 and stocktaking_silver_lists.location = '".$request->get('location')."' and stocktaking_silver_lists.category = 'SINGLE' group by stocktaking_silver_lists.location, stocktaking_silver_lists.material_number, stocktaking_silver_lists.material_description, stocktaking_silver_lists.storage_location
 			) as single");
 
 			$response = array(
@@ -238,8 +237,7 @@ class StockTakingController extends Controller
 
 	public function fetchSilverResume(Request $request){
 
-		$lists = StocktakingSilverList::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_silver_lists.storage_location')
-		->where('storage_locations.location', '=', $request->get('location'))
+		$lists = StocktakingSilverList::where('location', '=', $request->get('location'))
 		->where(db::raw('stocktaking_silver_lists.quantity_check+stocktaking_silver_lists.quantity_final'), '>', 0)
 		->get();
 
@@ -252,8 +250,7 @@ class StockTakingController extends Controller
 
 	public function fetchSilverList(Request $request){
 
-		$lists = StocktakingSilverList::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_silver_lists.storage_location')
-		->where('storage_locations.location', '=', $request->get('location'))
+		$lists = StocktakingSilverList::where('location', '=', $request->get('location'))
 		->select('stocktaking_silver_lists.material_number', 'stocktaking_silver_lists.category', 'stocktaking_silver_lists.id', 'stocktaking_silver_lists.material_description')
 		->get();
 
