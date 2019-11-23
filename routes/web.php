@@ -885,7 +885,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
-	Route::get('index/kaizen/detail/{id}', 'EmployeeController@indexKaizenAssessment');
+	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
 
@@ -1474,6 +1474,12 @@ Route::get('index/interview/print_email/{interview_id}', 'InterviewController@pr
 Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
 Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
 
+//DAILY CHECK FG
+Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');
+Route::get('index/daily_check_fg/index/{id}/{product}', 'DailyCheckController@index');
+Route::post('index/daily_check_fg/filter_daily_check/{id}/{product}', 'DailyCheckController@filter_daily_check');
+Route::get('index/daily_check_fg/show/{id}/{daily_check_id}', 'DailyCheckController@show');
+
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
 	Route::get('index/qc_report', 'QcReportController@index');
@@ -1544,8 +1550,9 @@ Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beac
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
 // BUFFING TOILET
-Route::get('index/buffing/toilet', 'RoomController@indexBuffingToilet');
-Route::get('fetch/buffing/toilet', 'RoomController@fetchPLC');
+Route::get('index/toilet', 'RoomController@indexToilet');
+Route::get('index/room/toilet/{id}', 'RoomController@indexRoomToilet');
+Route::get('fetch/room/toilet', 'RoomController@fetchToilet');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

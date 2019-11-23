@@ -174,8 +174,8 @@
                                 <i class="fa fa-caret-right"></i> Emergency Condition ()
                             </a>
                             <br>
-                            <a href="{{ url("index/buffing/toilet") }}">
-                                <i class="fa fa-caret-right"></i> Toilet Information ()
+                            <a href="{{ url("index/toilet") }}">
+                                <i class="fa fa-caret-right"></i> Toilet Availability ()
                             </a>
 
                             <br>
