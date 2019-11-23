@@ -229,7 +229,7 @@
 						var temp = 0;
 						for (var j = 0; j < result.act.length; j++) {
 							if(result.emp[i].employee_id == result.act[j].operator_id){
-								sum += parseInt(result.act[i].act);
+								sum += parseInt(result.act[j].act);
 								temp += 1;
 							}
 						}
