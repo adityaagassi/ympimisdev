@@ -10,26 +10,26 @@ use Response;
 class RoomController extends Controller
 {
 	public function fetchToilet(Request $request)
-	{	
+	{
 		$datas = array();
 
 		$location = $request->get('location');
 
 		if($location == 'buffing'){
 			$plc = new ActMLEasyIf(1);
-			for ($i=0; $i < 9 ; $i++) {
-				array_push($datas, $plc->read_data('D20', $i));
+			for ($i=1; $i < 9 ; $i++) {
+				array_push($datas, $plc->read_data('D'.$i, 1));
 			}
 
-			$datas = [1,1,0,0,1,1,1,1,0,1,0];
+			// $datas = [1,1,0,0,1,1,1,1,0,1,0];
 		}
 		if($location == 'office'){
 			$plc = new ActMLEasyIf(2);
 			for ($i=0; $i < 7 ; $i++) {
-				array_push($datas, $plc->read_data('D20', $i));
+				array_push($datas, $plc->read_data('D0', $i));
 			}
 
-			$datas = [1,1,0,0,1,1,1];
+			// $datas = [1,1,0,0,1,1,1];
 		}
 
 		$response = array(
