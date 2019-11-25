@@ -85,6 +85,8 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Lacquering <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/report_lcq_ng?bulan=&fy=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 			<a href="{{ url("index/middle/report_hourly_lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Hourly Report</a>
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report Plating <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/report_plt_ng?bulan=&fy=", "sax") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume Saxophone</a>
 		</div>
 	</div>
 </section>

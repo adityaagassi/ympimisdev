@@ -807,6 +807,13 @@ Route::get('index/middle/detail_monitoring', 'MiddleProcessController@fetchDetai
 // Report Middle Global
 Route::get('index/middle/display_kensa_time', 'MiddleProcessController@indexDisplayKensaTime');
 Route::get('fetch/middle/display_kensa_time', 'MiddleProcessController@fetchDisplayKensaTime');
+// Report Middle PLT
+Route::get('index/middle/report_plt_ng/{id}', 'MiddleProcessController@indexReportPltNg');
+Route::get('fetch/middle/plt_ng_rate_monthly/{id}', 'MiddleProcessController@fetchPltNgRateMonthly');
+Route::get('fetch/middle/plt_ng_rate_weekly/{id}', 'MiddleProcessController@fetchPltNgRateWeekly');
+Route::get('fetch/middle/plt_ng/{id}', 'MiddleProcessController@fetchPltNg');
+Route::get('fetch/middle/plt_ng_rate/{id}', 'MiddleProcessController@fetchPltNgRate');
+
 // Report Middle LCQ
 Route::get('index/middle/report_lcq_ng', 'MiddleProcessController@indexReportLcqNg');
 Route::get('fetch/middle/lcq_ng_rate_monthly', 'MiddleProcessController@fetchLcqNgRateMonthly');
@@ -827,6 +834,8 @@ Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController
 Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessController@fetchReportOpTimeQty');
 
 
+
+//Display Buffing
 Route::get('fetch/middle/buffing_hourly_ng', 'MiddleProcessController@fetchBuffingHourlyNg');
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
 Route::get('fetch/middle/buffing_ng', 'MiddleProcessController@fetchBuffingNg');
@@ -843,12 +852,7 @@ Route::get('fetch/middle/buffing_daily_op_eff', 'MiddleProcessController@fetchBu
 Route::get('fetch/middle/buffing_op_working', 'MiddleProcessController@fetchBuffingOpWorking');
 Route::get('fetch/middle/buffing_op_result', 'MiddleProcessController@fetchBuffingOpResult');
 Route::get('fetch/middle/buffing_op_eff_target', 'MiddleProcessController@fetchBuffingOpEffTarget');
-
 Route::get('index/middle/buffing_op_ranking', 'MiddleProcessController@indexBuffingOpRanking');
-
-
-
-
 Route::get('index/middle/buffing_daily_ng_rate', 'MiddleProcessController@indexBuffingNgRate');
 Route::get('fetch/middle/buffing_daily_ng_rate', 'MiddleProcessController@fetchBuffingNgRate');
 Route::get('index/middle/buffing_daily_op_ng_rate', 'MiddleProcessController@indexBuffingOpNgRate');
@@ -861,9 +865,6 @@ Route::get('index/middle/buffing_group_balance', 'MiddleProcessController@indexB
 Route::get('fetch/middle/buffing_group_balance', 'MiddleProcessController@fetchBuffingGroupBalance');
 Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuffingIcAtokotei');
 Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
-
-
-
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
 
 //MIZUSUMASHI
@@ -1333,6 +1334,7 @@ Route::get('fetch/production_report/detail_training/{id}', 'ProductionReportCont
 Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionReportController@detailSamplingCheck');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
+Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
 
 
 //Activity List
@@ -1479,6 +1481,9 @@ Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');
 Route::get('index/daily_check_fg/index/{id}/{product}', 'DailyCheckController@index');
 Route::post('index/daily_check_fg/filter_daily_check/{id}/{product}', 'DailyCheckController@filter_daily_check');
 Route::get('index/daily_check_fg/show/{id}/{daily_check_id}', 'DailyCheckController@show');
+Route::get('index/daily_check_fg/destroy/{id}/{daily_check_id}', 'DailyCheckController@destroy');
+Route::get('index/daily_check_fg/create/{id}/{product}', 'DailyCheckController@create');
+Route::post('index/daily_check_fg/store/{id}/{product}', 'DailyCheckController@store');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
@@ -1530,10 +1535,13 @@ Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depa
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
 Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
 Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
+Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_monitoring3');
+Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_monitoring4');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
+Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
