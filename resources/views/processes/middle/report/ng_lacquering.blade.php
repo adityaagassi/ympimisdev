@@ -67,7 +67,7 @@
 							<input type="text" class="form-control datepicker" name="bulan" placeholder="Select Month">
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-2" style="color:black;">
 						<div class="form-group">
 							<select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="change()">
 								@foreach($fys as $fy)
@@ -307,7 +307,7 @@
 		$('.select2').select2();
 
 		drawChart();
-		// setInterval(drawChart, 60000);
+		setInterval(drawChart, 60000);
 	});
 
 	function change() {

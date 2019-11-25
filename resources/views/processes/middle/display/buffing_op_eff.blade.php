@@ -1290,9 +1290,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 		var key = [];
 		var eff = [];
 		var data = [];
-
 		var loop = 0;
-
+		var plotBands = [];
 
 		for(var i = 0; i < result.target.length; i++){
 			if(result.target[i].group == 'A'){
@@ -1310,6 +1309,10 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}else{
 					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
 				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}	
 			}			
 		}
 
@@ -1350,6 +1353,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 						fontSize: '13px'
 					}
 				},
+				plotBands: plotBands
 			},
 			tooltip: {
 				headerFormat: '<span>{point.category}</span><br/>',
@@ -1392,8 +1396,9 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 		var key = [];
 		var eff = [];
 		var data = [];
-
 		var loop = 0;
+		var plotBands = [];
+
 
 
 		for(var i = 0; i < result.target.length; i++){
@@ -1413,6 +1418,10 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}else{
 					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
 				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}	
 			}			
 		}
 
@@ -1453,6 +1462,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 						fontSize: '13px'
 					}
 				},
+				plotBands: plotBands
 			},
 			tooltip: {
 				headerFormat: '<span>{point.category}</span><br/>',
@@ -1497,8 +1507,9 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 		var key = [];
 		var eff = [];
 		var data = [];
-
 		var loop = 0;
+		var plotBands = [];
+
 
 
 		for(var i = 0; i < result.target.length; i++){
@@ -1518,6 +1529,10 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}else{
 					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
 				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}	
 			}			
 		}
 
@@ -1558,6 +1573,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 						fontSize: '13px'
 					}
 				},
+				plotBands: plotBands
 			},
 			tooltip: {
 				headerFormat: '<span>{point.category}</span><br/>',

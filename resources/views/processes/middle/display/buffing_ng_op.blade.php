@@ -1187,7 +1187,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				color: '#7798BF'
 			},
 			{
-				name: 'BUff Nagare',
+				name: 'Buff Nagare',
 				data: buff_nagare,
 				color: '#aaeeee'
 			}
@@ -1373,7 +1373,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				color: '#7798BF'
 			},
 			{
-				name: 'BUff Nagare',
+				name: 'Buff Nagare',
 				data: buff_nagare,
 				color: '#aaeeee'
 			}
@@ -1558,7 +1558,7 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 				color: '#7798BF'
 			},
 			{
-				name: 'BUff Nagare',
+				name: 'Buff Nagare',
 				data: buff_nagare,
 				color: '#aaeeee'
 			}
