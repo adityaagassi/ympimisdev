@@ -270,13 +270,7 @@ class ProductionAuditController extends Controller
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
-            $file->getClientOriginalName();
             $file->move($tujuan_upload,$file->getClientOriginalName());
-
-            // $messages = ['required' => ':attributes tidak boleh kosong.'];
-            // $this->validate($request,['point_check' => 'required',
-            //     'cara_cek' => 'required',
-            //     'proses' => 'required'],$messages);
 
             ProductionAudit::create([
                 'activity_list_id' => $id,
@@ -736,6 +730,6 @@ class ProductionAuditController extends Controller
             $production_audit->approved_date = date('Y-m-d');
             $production_audit->save();
           }
-          return redirect('/index/production_audit/print_audit_email/'.$id.'/'.$date.'/'.$origin_group.'/'.$proses)->with('error', 'Approved.')->with('page', 'Production Audit');
+          return redirect('/index/production_audit/print_audit_email/'.$id.'/'.$date.'/'.$origin_group.'/'.$proses)->with('status', 'Approved.')->with('page', 'Production Audit');
       }
 }

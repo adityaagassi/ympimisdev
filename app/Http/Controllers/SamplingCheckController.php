@@ -792,18 +792,23 @@ class SamplingCheckController extends Controller
           }
       }
 
-      public function approval(Request $request,$id)
+      public function approval(Request $request,$id,$subsection,$month)
       {
           $approve = $request->get('approve');
-          foreach($approve as $approve){
-            $sampling_check = SamplingCheck::find($approve);
-            $subsection = $sampling_check->subsection;
-            $month = substr($sampling_check->date,0,7);
-            $date = $sampling_check->date;
-            $sampling_check->approval = "Approved";
-            $sampling_check->approved_date = date('Y-m-d');
-            $sampling_check->save();
+          if(count($approve) > 0){
+            foreach($approve as $approve){
+                $sampling_check = SamplingCheck::find($approve);
+                $subsection = $sampling_check->subsection;
+                $month = substr($sampling_check->date,0,7);
+                $date = $sampling_check->date;
+                $sampling_check->approval = "Approved";
+                $sampling_check->approved_date = date('Y-m-d');
+                $sampling_check->save();
+              }
+              return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('status', 'Approved.')->with('page', 'Sampling Check');
           }
-          return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('error', 'Approved.')->with('page', 'Sampling Check');
+          else{
+            return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('error', 'Not Approved.')->with('page', 'Sampling Check');
+          }
       }
 }

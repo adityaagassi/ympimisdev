@@ -1,46 +1,68 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+.progres-bar {
+    font-size: 20px;
+    height: 50px;
+  }
+
+  .picker {
+    text-align: center;
+  }
+  .button {
+    position: absolute;
+    top: 50%;
+  }
+  .nav-tabs-custom > ul.nav.nav-tabs {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .nav-tabs-custom > ul.nav.nav-tabs > li {
+    float: none;
+    display: table-cell;
+  }
+  .nav-tabs-custom > ul.nav.nav-tabs > li > a {
+    text-align: center;
+  }
+  .vendor-tab{
+    width:100%;
+  }
+  .btn-active {
+    border: 5px solid rgb(255,77,77) !important;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
 </style>
 @endsection
 @section('header')
 <section class="content-header">
   <h1>
-    Production Report <span class="text-purple">{{ $departments }}</span><br>
-    <small>Berdasarkan Jenis Aktivitas<span class="text-purple"> </span></small>
+    Leader Task Report <span class="text-purple">{{ strtoupper($departments) }}</span><br>
+    <small>by Frequency<span class="text-purple"> </span></small>
   </h1>
   <ol class="breadcrumb" id="last_update">
   </ol>
@@ -53,86 +75,88 @@ table.table-bordered > tfoot > tr > th{
 <section class="content">
   <div class="row">
     <div class="col-md-12">
-      {{-- <div class="col-md-12">
-        <div class="col-md-3 pull-right">
-          <select class="form-control select2" name="activity_type" style="width: 100%;" data-placeholder="Choose an Activity Type..." required id='activity_type' onchange="drawChart()">
-              <option value=""></option>
-              <option value="Semua">Semua</option>
-              @foreach($data as $data)
-                <option value="{{ $data->activity_type }}">{{ $data->activity_type }}</option>
-              @endforeach
-          </select>
-          <br>
-          <br>
-        </div>
-      </div> --}}
-      <div class="col-md-12">
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+          <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Daily Report<br><span class="text-purple">日次報告</span></a></li>
+          <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Weekly Report<br><span class="text-purple">週次報告</span></a></li>
+          <li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Monthly Report<br><span class="text-purple">月次報告</span></a></li>
+          <li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">Conditional Report<br><span class="text-purple">臨時報告</span></a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab_1" style="height: 580px;">
+            <div class="col-md-12">
               <div class="col-md-2">
                 <div class="input-group date">
                   <div class="input-group-addon bg-green" style="border-color: #00a65a">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control datepicker2" id="week_date" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
+                  <input type="text" class="form-control datepicker2" id="week_date" onchange="drawChart()" placeholder="Select Month"  style="border-color: #00a65a">
                 </div>
                 <br>
               </div>
             </div>
-      <div class="col-md-12">
-        <div class="box">
-          <div class="nav-tabs-custom">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_1">
-                <div id="chart" style="width: 99%;"></div>
+            <div class="col-md-12">
+              <div class="box">
+                <div class="nav-tabs-custom">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                      <div id="chart" style="width: 99%;"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-md-12">
+          <div class="tab-pane" id="tab_2" style="height: 580px;">
+            <div class="col-md-12">
               <div class="col-md-2">
                 <div class="input-group date">
                   <div class="input-group-addon bg-green" style="border-color: #00a65a">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control datepicker2" id="week_date2" onchange="drawChart2()" placeholder="Select Date" style="border-color: #00a65a">
+                  <input type="text" class="form-control datepicker2" id="week_date2" onchange="drawChart2()" placeholder="Select Month" style="border-color: #00a65a">
                 </div>
                 <br>
               </div>
             </div>
-      <div class="col-md-12">
-        <div class="box">
-          <div class="nav-tabs-custom">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_2">
-                <div id="chart2" style="width: 99%;"></div>
+            <div class="col-md-12">
+              <div class="box">
+                <div class="nav-tabs-custom">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_2">
+                      <div id="chart2" style="width: 99%;"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-md-12">
+          <div class="tab-pane" id="tab_3" style="height: 580px;">
+            <div class="col-md-12">
               <div class="col-md-2">
                 <div class="input-group date">
                   <div class="input-group-addon bg-green" style="border-color: #00a65a">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control datepicker" id="year" placeholder="Select Date" style="border-color: #00a65a" onchange="drawChart3()">
+                  <input type="text" class="form-control datepicker" id="year" placeholder="Select Year" style="border-color: #00a65a" onchange="drawChart3()">
                 </div>
                 <br>
               </div>
             </div>
-      <div class="col-md-12">
-        <div class="box">
-          <div class="nav-tabs-custom">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_3">
-                <div id="chart3" style="width: 99%;"></div>
+            <div class="col-md-12">
+              <div class="box">
+                <div class="nav-tabs-custom">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_3">
+                      <div id="chart3" style="width: 99%;"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-md-12">
+          <div class="tab-pane" id="tab_5" style="height: 580px;">
+            <div class="col-md-12">
               <div class="col-md-2">
                 <div class="input-group date">
                   <div class="input-group-addon bg-green" style="border-color: #00a65a">
@@ -143,12 +167,15 @@ table.table-bordered > tfoot > tr > th{
                 <br>
               </div>
             </div>
-      <div class="col-md-12">
-        <div class="box">
-          <div class="nav-tabs-custom">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_4">
-                <div id="chart4" style="width: 99%;"></div>
+            <div class="col-md-12">
+              <div class="box">
+                <div class="nav-tabs-custom">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_4">
+                      <div id="chart4" style="width: 99%;"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -409,7 +436,6 @@ table.table-bordered > tfoot > tr > th{
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
-<!-- <script src="{{ url("js/highcharts-3d.js")}}"></script> -->
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 
@@ -516,7 +542,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Daily of {{ $departments }}'
+              text: 'Daily Report of {{ strtoupper($departments) }}'
             },
             xAxis: {
                 tickInterval:  1,
@@ -535,8 +561,7 @@ table.table-bordered > tfoot > tr > th{
               stackLabels: {
                   enabled: true,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      color: 'white',
                   }
               }
             },
@@ -547,7 +572,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -564,7 +589,7 @@ table.table-bordered > tfoot > tr > th{
                       }
                       else if(seriesName == "Actual") {
                         // alert("Clicked Sea-Level Line");
-                        ShowModalChart(this.category,'Daily');
+                        ShowModalChartDaily(this.category,'Daily');
                       }
                       else if(seriesName == "Not Good") {
                         ShowModalAudit(this.category,seriesName);
@@ -576,7 +601,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                    textOutline : false,
+                    color : 'black',
+                    fontSize: '15px'
+                  }
                 }
               },
               column: {
@@ -598,16 +628,16 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
-                pointPadding: 0.05
+                pointPadding: -0.2
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
                 data: jml_aktual,
-                pointPadding: 0.2
+                pointPadding: -0.025
               },
               // {
               //   type: 'column',
@@ -620,10 +650,10 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
-                pointPadding: 0.2
+                pointPadding: -0.025
               }
             ]
           })
@@ -667,7 +697,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Weekly of {{ $departments }}'
+              text: 'Weekly Report of {{ strtoupper($departments) }}'
             },
             xAxis: {
                 tickInterval:  1,
@@ -686,8 +716,7 @@ table.table-bordered > tfoot > tr > th{
               stackLabels: {
                   enabled: true,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      color: 'white',
                   }
               }
             },
@@ -698,7 +727,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -727,7 +756,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                    textOutline : false,
+                    color : 'black',
+                    fontSize: '15px'
+                  }
                 }
               },
               column: {
@@ -749,16 +783,16 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
-                pointPadding: 0.05
+                pointPadding: -0.25
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
                 data: jml_aktual,
-                pointPadding: 0.2
+                pointPadding: -0.15
               },
               // {
               //   type: 'column',
@@ -771,10 +805,10 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
-                pointPadding: 0.2
+                pointPadding: -0.15
               }
             ]
           })
@@ -812,13 +846,12 @@ table.table-bordered > tfoot > tr > th{
           }
 
           $('#chart3').highcharts({
-            colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
             chart: {
                 type: 'column',
                 backgroundColor: null
             },
             title: {
-              text: 'Report Monthly of {{ $departments }}'
+              text: 'Monthly Report of {{ strtoupper($departments) }}'
             },
             xAxis: {
                 tickInterval:  1,
@@ -835,10 +868,11 @@ table.table-bordered > tfoot > tr > th{
                 text: 'Total Report'
               },
               stackLabels: {
-                  enabled: true,
+                  enabled: false,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      textOutline : false,
+                      color : 'white',
+                      fontSize: '15px'
                   }
               }
             },
@@ -849,7 +883,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -879,7 +913,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                    textOutline : false,
+                    color : 'black',
+                    fontSize: '15px'
+                  }
                 },
                 grouping: false,
                 shadow: false
@@ -898,16 +937,17 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
-                pointPadding: 0.05
+                pointPadding: -0.2
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
+                stacking: 'normal',
                 data: jml_aktual,
-                pointPadding: 0.2
+                pointPadding: -0.1
               },
               // {
               //   type: 'column',
@@ -920,10 +960,11 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
+                textOutline:false,
                 data: jml_not_good,
-                pointPadding: 0.25
+                pointPadding:-0.1
               }
             ]
           })
@@ -966,7 +1007,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Conditional of {{ $departments }}'
+              text: 'Conditional Report of {{ strtoupper($departments) }}'
             },
             xAxis: {
                 tickInterval:  1,
@@ -985,8 +1026,7 @@ table.table-bordered > tfoot > tr > th{
               stackLabels: {
                   enabled: true,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      color: 'white',
                   }
               }
             },
@@ -997,7 +1037,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1015,7 +1055,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                    textOutline : false,
+                    color : 'black',
+                    fontSize: '15px'
+                  }
                 }
               },
               column: {
@@ -1037,9 +1082,9 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
                 data: jml_aktual,
-                pointPadding: 0.05
+                pointPadding: -0.15
               },
               // {
               //   type: 'column',
@@ -1052,10 +1097,10 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
-                pointPadding: 0.2
+                pointPadding: -0.1
               }
             ]
           })
@@ -1106,8 +1151,7 @@ table.table-bordered > tfoot > tr > th{
                 stackLabels: {
                     enabled: true,
                     style: {
-                        fontWeight: 'bold',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                        color: 'white',
                     }
                 }
               },
@@ -1134,7 +1178,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1152,13 +1196,23 @@ table.table-bordered > tfoot > tr > th{
                   borderWidth: 0,
                   dataLabels: {
                     enabled: false,
-                    format: '{point.y}'
+                    format: '{point.y}',
+                    style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
                   }
                 },
                 column: {
                     stacking: 'normal',
                     dataLabels: {
-                        enabled: true
+                        enabled: true,
+                        style : {
+                        textOutline : false,
+                        color : 'black',
+                        fontSize: '15px'
+                      }
                     }
                 }
               },
@@ -1175,24 +1229,26 @@ table.table-bordered > tfoot > tr > th{
               {
                   type: 'column',
                   name: 'Good',
-                  color: '#a9ff97',
+                  color: '#00f57f',
                   data: jumlahgood
               }, {
                  type: 'column',
                   name: 'Not Good',
                   data: jumlahnotgood,
-                  color : '#ff7474'
+                  color: '#ff6666',
               },
               {
                   type: 'spline',
                   name: 'Good',
-                  color: '#69d453',
+                  color: '#00f57f',
+                  stacking: 'normal',
                   data: jumlahgood
               }, {
                  type: 'spline',
                   name: 'Not Good',
+                  stacking: 'normal',
                   data: jumlahnotgood,
-                  color : '#e85858'
+                  color: '#ff6666',
               }
               ]
             })
@@ -1207,6 +1263,9 @@ table.table-bordered > tfoot > tr > th{
     }
     else if(activity_type == 'Training'){
       // ShowModalTraining(week_date,frequency);
+      console.log(frequency);
+      console.log(week_date);
+      console.log(activity_type);
       tabel = $('#example3').DataTable();
       tabel.destroy();
 
@@ -1414,8 +1473,7 @@ table.table-bordered > tfoot > tr > th{
                 stackLabels: {
                     enabled: true,
                     style: {
-                        fontWeight: 'bold',
-                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                        color: 'white',
                     }
                 }
               },
@@ -1442,7 +1500,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1460,7 +1518,12 @@ table.table-bordered > tfoot > tr > th{
                   borderWidth: 0,
                   dataLabels: {
                     enabled: true,
-                    format: '{point.y}'
+                    format: '{point.y}',
+                    style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
                   }
                 }
               },
@@ -1477,13 +1540,13 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Jumlah',
-                color : '#a9ff97',
+                color: '#00f57f',
                 data: jumlah_laporan
               },
               {
                 type: 'spline',
                 name: 'Jumlah',
-                color : '#69d453',
+                color: '#00f57f',
                 data: jumlah_laporan
               }
               ]
@@ -1535,7 +1598,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Monthly of {{ $departments }} on '+week_date
+              text: 'Report Monthly of {{ strtoupper($departments) }} on '+week_date
             },
             xAxis: {
                 tickInterval:  1,
@@ -1552,11 +1615,12 @@ table.table-bordered > tfoot > tr > th{
                 text: 'Total Report'
               },
               stackLabels: {
-                  enabled: true,
-                  style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                  }
+                  enabled: false,
+                  style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
               }
             },
             legend: {
@@ -1566,7 +1630,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1584,7 +1648,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
                 }
               },
               column: {
@@ -1606,14 +1675,15 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
                 pointPadding: 0.05
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
+                stacking: 'normal',
                 data: jml_aktual,
                 pointPadding: 0.2
               },
@@ -1628,7 +1698,7 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
                 pointPadding: 0.2
@@ -1678,7 +1748,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Conditional of {{ $departments }} on '+week_date
+              text: 'Conditional Report of {{ strtoupper($departments) }} on '+week_date
             },
             xAxis: {
                 tickInterval:  1,
@@ -1697,8 +1767,7 @@ table.table-bordered > tfoot > tr > th{
               stackLabels: {
                   enabled: true,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      color: 'white',
                   }
               }
             },
@@ -1708,8 +1777,7 @@ table.table-bordered > tfoot > tr > th{
                 verticalAlign: 'top',
                 y: 25,
                 floating: true,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                backgroundColor: 'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1727,7 +1795,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
                 }
               },
               column: {
@@ -1749,14 +1822,14 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
                 pointPadding: 0.05
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
                 data: jml_aktual,
                 pointPadding: 0.2
               },
@@ -1771,7 +1844,7 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
                 pointPadding: 0.2
@@ -1821,7 +1894,7 @@ table.table-bordered > tfoot > tr > th{
                 backgroundColor: null
             },
             title: {
-              text: 'Report Weekly of {{ $departments }} on '+week_date
+              text: 'Weekly Report of {{ strtoupper($departments) }} on '+week_date
             },
             xAxis: {
                 tickInterval:  1,
@@ -1840,8 +1913,7 @@ table.table-bordered > tfoot > tr > th{
               stackLabels: {
                   enabled: true,
                   style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                      color: 'white',
                   }
               }
             },
@@ -1852,7 +1924,7 @@ table.table-bordered > tfoot > tr > th{
                 y: 25,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                    'white',
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
@@ -1870,7 +1942,12 @@ table.table-bordered > tfoot > tr > th{
                 borderWidth: 0,
                 dataLabels: {
                   enabled: true,
-                  format: '{point.y}'
+                  format: '{point.y}',
+                  style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
                 }
               },
               column: {
@@ -1892,14 +1969,14 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Plan',
-                color: '#8061a0',
+                color: 'rgba(151, 0, 245, 0.48)',
                 data: jml_plan,
                 pointPadding: 0.05
               },
               {
                 type: 'column',
                 name: 'Actual',
-                color: '#a9ff97',
+                color: '#00f57f',
                 data: jml_aktual,
                 pointPadding: 0.2
               },
@@ -1914,7 +1991,154 @@ table.table-bordered > tfoot > tr > th{
               {
                 type: 'column',
                 name: 'Not Good',
-                color: '#ff7474',
+                color: '#ff6666',
+                stacking: 'normal',
+                data: jml_not_good,
+                pointPadding: 0.2
+              }
+            ]
+          })
+        } else{
+          alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function ShowModalChartDaily(date,frequency) {
+    // var week_date = $('#week_date').val();
+    // if(activity_type != 'Training'){
+      $("#modal_chart").modal("show");
+    // }
+    var data = {
+        date: date
+    };
+    $.get('{{ url("index/production_report/fetchReportDetailDaily/".$id) }}', data, function(result, status, xhr) {
+      if(xhr.status == 200){
+        if(result.status){
+
+          var activity_type_daily = [], jml_plan = [], jml_aktual = [],jml_good = [],jml_not_good = [];
+
+          $.each(result.datas, function(key, value) {
+            activity_type_daily.push(value.activity_type);
+            jml_plan.push(value.jumlah_plan);
+            jml_aktual.push(value.jumlah_aktual);
+            jml_good.push(parseInt(value.jumlah_good));
+            jml_not_good.push(parseInt(value.jumlah_not_good));
+          })
+          var i;
+          var j = 0;
+          for (i = 0; i < jml_not_good.length; i++) {
+            if(jml_not_good[i] == 0){
+              jml_not_good[i] = null;
+            }
+          }
+
+          $('#chart_by_frequency').highcharts({
+            colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
+            chart: {
+                type: 'column',
+                backgroundColor: null
+            },
+            title: {
+              text: 'Daily Report of {{ strtoupper($departments) }} on '+date
+            },
+            xAxis: {
+                tickInterval:  1,
+                overflow: true,
+                categories: activity_type_daily,
+                labels:{
+                  rotation: -45,
+                },
+                min: 0          
+              },
+            yAxis: {
+              type: 'linear',
+              title: {
+                text: 'Total Report'
+              },
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      color: 'white',
+                  }
+              }
+            },
+            legend: {
+              align: 'right',
+                x: -30,
+                verticalAlign: 'top',
+                y: 25,
+                floating: true,
+                backgroundColor:
+                    'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModalChart(this.category,'Daily',date);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: true,
+                  format: '{point.y}',
+                  style : {
+                      textOutline : false,
+                      color : 'black',
+                      fontSize: '15px'
+                    }
+                }
+              },
+              column: {
+                  grouping: false,
+                  shadow: false,
+                  borderWidth: 0,
+                }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' '+this.key + ' : ' + '<b>'+this.y+'</b>';
+              }
+            },
+            series: [
+              {
+                type: 'column',
+                name: 'Plan',
+                color: 'rgba(151, 0, 245, 0.48)',
+                data: jml_plan,
+                pointPadding: 0.05
+              },
+              {
+                type: 'column',
+                name: 'Actual',
+                color: '#00f57f',
+                data: jml_aktual,
+                pointPadding: 0.2
+              },
+              // {
+              //   type: 'column',
+              //   name: 'Good',
+              //   stacking: 'normal',
+              //   color: '#c9c9c9',
+              //   data: jml_good,
+              //   pointPadding: 0.2
+              // },
+              {
+                type: 'column',
+                name: 'Not Good',
+                color: '#ff6666',
                 stacking: 'normal',
                 data: jml_not_good,
                 pointPadding: 0.2

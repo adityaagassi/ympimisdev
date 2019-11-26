@@ -78,7 +78,7 @@
 					<td>Point Check</td>
 					<td>Cara Cek</td>
 					<td>Foto Kondisi Aktual</td>
-					<td>Kondisi (OK / NG)</td>
+					<td>Kondisi (Good / Not Good)</td>
 					<td>PIC</td>
 					<td>Auditor</td>
 				</tr>
@@ -88,9 +88,9 @@
 					<td><?php echo $production_audit->cara_cek ?></td>
 					<td><img width="200px" src="{{ url('/data_file/'.$production_audit->foto_kondisi_aktual) }}"></td>
 					<td>@if($production_audit->kondisi == "Good")
-			              {{$production_audit->kondisi}}
+			              <label class="label label-success">{{$production_audit->kondisi}}</label>
 			            @else
-			              {{$production_audit->kondisi}}
+			              <label class="label label-danger">{{$production_audit->kondisi}}</label>
 			            @endif
 		        	</td>
 					<td>{{ $production_audit->pic_name }}</td>

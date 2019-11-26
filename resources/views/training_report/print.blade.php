@@ -53,9 +53,17 @@
 					<td style="border: 1px solid black;">Department</td>
 					<td style="border: 1px solid black;">{{ $departments }}</td>
 					<td rowspan="4" colspan="2" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Checked<br><br><br><br>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Checked<br><br>
+						@if($training->approval != Null)
+							<b style='color:green'>Approved</b><br>
+							<b style='color:green'>{{ $training->approved_date }}</b>
+						@endif<br><br>
 					{{ $training->foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Prepared<br><br><br><br>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Prepared<br><br>
+						@if($training->approval_leader != Null)
+							<b style='color:green'>Approved</b><br>
+							<b style='color:green'>{{ $training->approved_date_leader }}</b>
+						@endif<br><br>
 						{{ $training->leader }}<br>Leader</center></td>
 				</tr>
 				<tr>

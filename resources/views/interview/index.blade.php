@@ -72,14 +72,14 @@
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-body">
-					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					<div class="col-md-6 col-md-offset-3">
 						<div class="box-header">
 							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/interview/filter_interview/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label>Sub Section</label>
 										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section...">
@@ -92,7 +92,7 @@
 								</div>
 							</div>
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
@@ -104,7 +104,7 @@
 								</div>
 							</div>
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group pull-right">
 										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/7') }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/interview/index/'.$id) }}" class="btn btn-danger">Clear</a>
@@ -114,7 +114,7 @@
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					{{-- <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
 							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
@@ -153,15 +153,15 @@
 								</div>
 							</div>
 						</form>
-					</div>
-					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					</div> --}}
+					{{-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 						<div class="box-header">
 							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/interview/send_email/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group">
 										<label>Sub Section</label>
 										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
@@ -174,7 +174,7 @@
 								</div>
 							</div>
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group date">
 											<div class="input-group-addon bg-white">
@@ -186,14 +186,14 @@
 								</div>
 							</div>
 							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
+								<div class="col-md-6">
 									<div class="form-group pull-right">
 										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
-					</div>
+					</div> --}}
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="col-md-12">
 							<div class="col-md-12">
@@ -243,7 +243,11 @@
 								                	@endif</td>
 												<td>
 													<center>
-														<a class="btn btn-primary btn-xs" href="{{url('index/interview/details/'.$interview->id)}}">Details</a>
+														<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}">Details</a>
+														<a class="btn btn-success btn-sm" href="{{secure_url('index/interview/print_interview/'.$interview->id)}}">Print</a>
+														@if($interview->send_status == "")
+									                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}">Send Email</a>
+									                	@endif
 													</center>
 												</td>
 												<td>

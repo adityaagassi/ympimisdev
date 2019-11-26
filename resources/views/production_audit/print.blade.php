@@ -78,7 +78,7 @@
 					<td>Point Check</td>
 					<td>Cara Cek</td>
 					<td>Foto Kondisi Aktual</td>
-					<td>Kondisi (OK / NG)</td>
+					<td>Kondisi (Good / Not Good)</td>
 					<td>PIC</td>
 					<td>Auditor</td>
 				</tr>

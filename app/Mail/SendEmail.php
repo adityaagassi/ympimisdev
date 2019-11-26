@@ -57,6 +57,9 @@ class SendEmail extends Mailable
         if($this->remark == 'cpar'){
             return $this->from('ympimis@gmail.com')->subject('Corrective and Preventive Action Request (CPAR) (??)')->view('mails.cpar');
         }
+        if($this->remark == 'car'){
+            return $this->from('ympimis@gmail.com')->subject('Corrective Action Report (CAR) (??)')->view('mails.car');
+        }
         if($this->remark == 'user_document'){
             return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (??)')->view('mails.user_document');
         }
@@ -68,6 +71,18 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'laporan_aktivitas'){
             return $this->from('ympimis@gmail.com')->subject('Laporan Aktivitas Audit (??)')->view('mails.laporan_aktivitas');
+        }
+        if($this->remark == 'training'){
+            return $this->from('ympimis@gmail.com')->subject('Training Report (??)')->view('mails.training');
+        }
+        if($this->remark == 'interview'){
+            return $this->from('ympimis@gmail.com')->subject('Interview Yubisashikosou Report (??)')->view('mails.interview');
+        }
+        if($this->remark == 'daily_check'){
+            return $this->from('ympimis@gmail.com')->subject('Daily Check FG (??)')->view('mails.daily_check');
+        }
+        if($this->remark == 'labeling'){
+            return $this->from('ympimis@gmail.com')->subject('Labeling Safety Sign (??)')->view('mails.labeling');
         }
     }
 }

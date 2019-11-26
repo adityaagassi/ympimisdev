@@ -1,13 +1,20 @@
-<title>YMPI 情報システム</title>
-<link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
-<style>
-table, th, td {
-  border-collapse: collapse;
-  font-family:"Arial";
-  padding: 5px;
-}
-@media print {
-	body {-webkit-print-color-adjust: exact;}
+@extends('layouts.master')
+@section('header')
+<section class="content-header">
+  <h1>
+    Print {{ $activity_name }} - {{ $departments }}
+    <small>it all starts here</small>
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+  </h1>
+  <ol class="breadcrumb">
+    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Examples</a></li>
+    <li class="active">Blank page</li> --}}
+  </ol>
+</section>
+<style type="text/css">
+	@media print {
+	.table {-webkit-print-color-adjust: exact;}
 	#approval1 {
 	    display: none;
 	  }
@@ -17,29 +24,35 @@ table, th, td {
 	  #approval3 {
 	    display: none;
 	  }
-}
-.head{
-	border: 1px solid black;
-}
-.label {
-	color: white;
-	padding: 8px;
-	font-family: Arial;
-}
-.success {background-color: #4CAF50;} /* Green */
 </style>
+@endsection
+@section('content')
+<section class="content">
+  @if (session('status'))
+		<div class="alert alert-success alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+			{{ session('status') }}
+		</div>   
+	@endif
+	@if (session('error'))
+		<div class="alert alert-warning alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4> Warning!</h4>
+			{{ session('error') }}
+		</div>   
+	@endif
+  <div class="box box-primary">
+      <div class="box-body">
 		<table class="table">
 			<tbody>
-				{{-- <tr style="border:0px;">
-					<td colspan="6"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
-				</tr> --}}
 				<tr>
-					<td colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="9" style="border: 1px solid black;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Department</td>
 					<td colspan="2" class="head">{{ $departments }}</td>
-					<td class="head" rowspan="4" colspan="3" style="padding: 15px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="4" colspan="3" style="padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
 					<td class="head" rowspan="4"><center>Checked<br><br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
@@ -48,14 +61,14 @@ table, th, td {
 						<br><br>
 						{{ $foreman }}<br>Foreman</center></td>
 					<td class="head" rowspan="4"><center>Prepared<br><br>
-						{{-- @if($jml_null == 0)
+						@if($approval_leader != Null)
 							<b style='color:green'>Approved</b><br>
-							<b style='color:green'>{{ $approved_date }}</b>
-						@endif --}}
+							<b style='color:green'>{{ $approved_date_leader }}</b>
+						@endif
 						<br><br>
 						{{ $leader }}<br>Leader</center></td>
 					@if($jml_null > 0)
-					<td rowspan="7" class="head" id="approval1"><center>Approval</center></td>
+					<td rowspan="7" class="head" id="approval1" style="vertical-align: middle;"><center>Approval</center></td>
 					@endif
 				</tr>
 				<tr>
@@ -105,11 +118,8 @@ table, th, td {
 					<td class="head" id="approval2">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($laporanAktivitas->approval == Null)
-						<div class="custom-control custom-checkbox">
-						    <span class="label success"><input type="checkbox" class="custom-control-input" id="customCheck" name="approve[]" value="{{ $laporanAktivitas->id_audit_report }}">
-						    <label class="custom-control-label" for="customCheck">Approve</label>
-						    </span>
-						</div>
+						    <label class="label label-success"><input type="checkbox" id="customCheck" name="approve[]" value="{{ $laporanAktivitas->id_audit_report }}">Approve
+						    </label>
 						@endif
 					</td>
 					@endif
@@ -118,14 +128,31 @@ table, th, td {
 				@endforeach
 				@if($jml_null > 0)
 				<tr id="approval3">
-					<td class="head" align="right" colspan="10"><button class="label success" type="submit">Submit</button></td>
+					<td class="head" align="right" colspan="10"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>
 				@endif
 				</form>
 			</tbody>
 		</table>
-		
-	
-	<script>
+	</div>
+  </div>
+</section>
+  @endsection
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family:"Arial";
+  padding: 5px;
+  vertical-align:middle;
+}
+@media print {
+	body {-webkit-print-color-adjust: exact;}
+}
+</style>
+<script>
     // setTimeout(function () { window.print(); }, 200);
+    function myFunction() {
+	  window.print();
+	}
 </script>

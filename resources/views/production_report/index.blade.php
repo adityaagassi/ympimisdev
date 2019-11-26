@@ -20,7 +20,17 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Report <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
 			@foreach($activity_list as $activity_list)
-			<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
+				@if($activity_list->activity_type == "Pengecekan Foto")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Daily Check FG</a>
+				@elseif($activity_list->activity_type == "Laporan Aktivitas")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Laporan Aktivitas Audit IK</a>
+				@elseif($activity_list->activity_type == "Pengecekan")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Implementasi Pengecekan</a>
+				@elseif($activity_list->activity_type == "Labelisasi")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Labeling Safety Sign</a>
+				@else
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
+				@endif
 			<?php $no++ ?>
 			@endforeach
 		</div>
@@ -30,11 +40,11 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report All Activity</a>
-			<a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
+			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Leader Task Monitoring</a>
+			{{-- <a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
 			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
 			<a href="{{ url("index/sampling_check/report_sampling_check/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Sampling Check</a>
-			<a href="{{ url("index/audit_report_activity/report_audit_activity/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Laporan Aktivitas</a>
+			<a href="{{ url("index/audit_report_activity/report_audit_activity/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Laporan Aktivitas</a> --}}
 		</div>
 	</div>
 </section>

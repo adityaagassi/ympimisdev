@@ -368,6 +368,8 @@ class AuditReportActivityController extends Controller
             $date = $laporanAktivitas2->date;
             $foreman = $laporanAktivitas2->foreman;
             $section = $laporanAktivitas2->section;
+            $approval_leader = $laporanAktivitas2->approval_leader;
+            $approved_date_leader = $laporanAktivitas2->approved_date_leader;
             $subsection = $laporanAktivitas2->subsection;
             $leader = $laporanAktivitas2->leader;
             if ($laporanAktivitas2->approval == Null) {
@@ -391,6 +393,8 @@ class AuditReportActivityController extends Controller
                           'date' => $date,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
+                          'approval_leader' => $approval_leader,
+                          'approved_date_leader' => $approved_date_leader,
                           'laporanAktivitas' => $laporanAktivitas,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
@@ -434,6 +438,8 @@ class AuditReportActivityController extends Controller
             $date = $laporanAktivitas2->date;
             $foreman = $laporanAktivitas2->foreman;
             $section = $laporanAktivitas2->section;
+            $approval_leader = $laporanAktivitas2->approval_leader;
+            $approved_date_leader = $laporanAktivitas2->approved_date_leader;
             $subsection = $laporanAktivitas2->subsection;
             $leader = $laporanAktivitas2->leader;
             if ($laporanAktivitas2->approval == Null) {
@@ -457,6 +463,8 @@ class AuditReportActivityController extends Controller
                           'date' => $date,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
+                          'approval_leader' => $approval_leader,
+                          'approved_date_leader' => $approved_date_leader,
                           'laporanAktivitas' => $laporanAktivitas,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
@@ -500,6 +508,8 @@ class AuditReportActivityController extends Controller
             $date = $laporanAktivitas2->date;
             $foreman = $laporanAktivitas2->foreman;
             $section = $laporanAktivitas2->section;
+            $approval_leader = $laporanAktivitas2->approval_leader;
+            $approved_date_leader = $laporanAktivitas2->approved_date_leader;
             $subsection = $laporanAktivitas2->subsection;
             $leader = $laporanAktivitas2->leader;
             if ($laporanAktivitas2->approval == Null) {
@@ -518,6 +528,8 @@ class AuditReportActivityController extends Controller
                           'leader' => $leader,
                           'foreman' => $foreman,
                           'section' => $section,
+                          'approval_leader' => $approval_leader,
+                          'approved_date_leader' => $approved_date_leader,
                           'monthTitle' => $monthTitle,
                           'subsection' => $subsection,
                           'date' => $date,
@@ -571,6 +583,8 @@ class AuditReportActivityController extends Controller
                     $laktivitas = AuditReportActivity::find($laporan_aktivitas3->id_audit_report);
                     $laktivitas->send_status = "Sent";
                     $laktivitas->send_date = date('Y-m-d');
+                    $laktivitas->approval_leader = "Approved";
+                    $laktivitas->approved_date_leader = date('Y-m-d');
                     $laktivitas->save();
               }
 
@@ -607,6 +621,6 @@ class AuditReportActivityController extends Controller
             $audit_report_activity->approved_date = date('Y-m-d');
             $audit_report_activity->save();
           }
-          return redirect('/index/audit_report_activity/print_audit_report_email/'.$id.'/'.$subsection.'/'.$month)->with('error', 'Approved.')->with('page', 'Laporan Aktivitas Audit');
+          return redirect('/index/audit_report_activity/print_audit_report_email/'.$id.'/'.$subsection.'/'.$month)->with('status', 'Approved.')->with('page', 'Laporan Aktivitas Audit');
       }
 }

@@ -15,6 +15,8 @@ use App\TrainingParticipant;
 use Response;
 use DataTables;
 use Excel;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class TrainingReportController extends Controller
@@ -32,6 +34,7 @@ class TrainingReportController extends Controller
 
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
+        $product2 = DB::select($queryProduct);
 
     	$activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -40,6 +43,7 @@ class TrainingReportController extends Controller
         // var_dump($productionAudit);
     	$data = array('training_report' => $trainingReport,
                       'product' => $product,
+                      'product2' => $product2,
     				  'departments' => $departments,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -53,6 +57,7 @@ class TrainingReportController extends Controller
     {
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
+        $product2 = DB::select($queryProduct);
 
         $activityList = ActivityList::find($id);
         // var_dump($request->get('product'));
@@ -92,6 +97,7 @@ class TrainingReportController extends Controller
         $id_departments = $activityList->departments->id;
         // }
         $data = array('product' => $product,
+                      'product2' => $product2,
                       'training_report' => $trainingReport,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
@@ -540,11 +546,44 @@ class TrainingReportController extends Controller
         }
     }
 
+    function print_training_email($id)
+    {
+        $training = TrainingReport::find($id);
+        $activity_list_id = $training->activity_list_id;
+
+        $activityList = ActivityList::find($activity_list_id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+        $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
+        $trainingPicture = DB::select($trainingPictureQuery);
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
+        $trainingParticipant = DB::select($trainingParticipantQuery);
+        if($training == null){
+            return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
+        }else{
+            $data = array(
+                          'training' => $training,
+                          'trainingPicture' => $trainingPicture,
+                          'trainingParticipant' => $trainingParticipant,
+                          'activityList' => $activityList,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('training_report.print_email', $data
+                )->with('page', 'Training Report');
+        }
+    }
+
     function scan_employee($id)
     {
             $data = array(
                           'id' => $id);
-            return view('training_report.scan_employee', $data
+            return view('training_report.scan_employee2', $data
                 )->with('page', 'Training Report');
     }
 
@@ -611,4 +650,66 @@ class TrainingReportController extends Controller
             }
         }
     }
+
+    public function sendemail($id)
+      {
+          $query_training = "select *,training_reports.id as training_id from training_reports join activity_lists on activity_lists.id = training_reports.activity_list_id join departments on activity_lists.department_id = departments.id where training_reports.id = '".$id."'";
+          
+          $training = DB::select($query_training);
+          $training3 = DB::select($query_training);
+          // $training2 = DB::select($query_training);
+
+          if($training != null){
+            foreach($training as $training){
+              $foreman = $training->foreman;
+              $send_status = $training->send_status;
+              $activity_list_id = $training->activity_list_id;
+              $training2 = TrainingReport::find($id);
+              $training2->send_status = "Sent";
+              $training2->send_date = date('Y-m-d');
+              $training2->approval_leader = "Approved";
+              $training2->approved_date_leader = date('Y-m-d');
+              $training2->save();
+              // var_dump($id);
+            }
+            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $email = DB::select($queryEmail);
+            foreach($email as $email){
+              $mail_to = $email->email;
+              // var_dump($mail_to);
+            }
+          }
+          else{
+            return redirect('/index/training_report/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Training Report');
+          }
+
+          if($send_status == "Sent"){
+            return redirect('/index/training_report/index/'.$activity_list_id)->with('error', 'Data pernah dikirim.')->with('page', 'Training Report');
+          }
+          
+          elseif($training != null){
+              Mail::to($mail_to)->send(new SendEmail($training3, 'training'));
+              return redirect('/index/training_report/index/'.$activity_list_id)->with('status', 'Your E-mail has been sent.')->with('page', 'Training Report');
+          }
+          else{
+            return redirect('/index/training_report/index/'.$activity_list_id)->with('error', 'Data tidak tersedia.')->with('page', 'Training Report');
+          }
+      }
+
+      public function approval(Request $request,$id)
+      {
+          $approve = $request->get('approve');
+          $approvecount = count($approve);
+          if($approvecount < 10){
+            // echo "<script>alert('Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')</script>";
+            return redirect('/index/training_report/print_training_email/'.$id)->with('error', 'Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')->with('page', 'Training Report');
+          }
+          else{
+                $training = TrainingReport::find($id);
+                $training->approval = "Approved";
+                $training->approved_date = date('Y-m-d');
+                $training->save();
+            return redirect('/index/training_report/print_training_email/'.$id)->with('status', 'Approved.')->with('page', 'Training Report');
+          }
+      }
 }

@@ -64,55 +64,55 @@ table.table-bordered > tfoot > tr > th{
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
-				<div class="box-header">
-					<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
-				</div>
 				<div class="box-body">
-					<form role="form" method="post" action="{{url('index/training_report/filter_training/'.$id)}}">
-					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Date</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
+					<div class="col-xs-12">
+						<div class="box-header">
+							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+						</div>
+						<form role="form" method="post" action="{{url('index/training_report/filter_training/'.$id)}}">
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="col-md-12 col-md-offset-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Date</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Choose a Date">
 									</div>
-									<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Choose a Date">
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Origin Group</label>
-								<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
-						            <option value=""></option>
-						              @foreach($product as $product)
-						                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-						              @endforeach
-						        </select>
+						<div class="col-md-12 col-md-offset-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Origin Group</label>
+									<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
+							            <option value=""></option>
+							              @foreach($product as $product)
+							                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
+							              @endforeach
+							        </select>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-12 col-md-offset-4">
-						<div class="col-md-3">
-							<div class="form-group pull-right">
-								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/2') }}" class="btn btn-warning">Back</a>
-								<a href="{{ url('index/training_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
-								<button type="submit" class="btn btn-primary col-sm-14">Search</button>
+						<div class="col-md-12 col-md-offset-4">
+							<div class="col-md-3">
+								<div class="form-group pull-right">
+									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/2') }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/training_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
+									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
+								</div>
 							</div>
 						</div>
+						</form>
 					</div>
-					<div class="col-md-12 col-md-offset-9">
-						<div class="col-md-3">
-							<div class="form-group pull-right">
-								<a href="{{ url('index/training_report/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
-							</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="form-group pull-right">
+							<a href="{{ url('index/training_report/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
 						</div>
 					</div>
-					</form>
 				  <div class="row">
 				    <div class="col-xs-12">
 				      <div class="box">
@@ -126,6 +126,8 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Periode</th>
 				                <th>Date</th>
 				                <th>Trainer</th>
+				                <th>Send Status</th>
+				                <th>Approval Status</th>
 				                <th>Details</th>
 				                <th>Action</th>
 				              </tr>
@@ -140,10 +142,24 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$training_report->periode}}</td>
 				                <td>{{$training_report->date}}</td>
 				                <td>{{$training_report->trainer}}</td>
+				                <td>@if($training_report->send_status == "")
+				                		<label class="label label-danger">Not Yet Sent</label>
+				                	@else
+				                		<label class="label label-success">Sent</label>
+				                	@endif
+				        		</td>
+				                <td>@if($training_report->approval == "")
+				                		<label class="label label-danger">Not Approved</label>
+				                	@else
+				                		<label class="label label-success">Approved</label>
+				                	@endif</td>
 				                <td>
 				                  <center>
 				                    <a class="btn btn-primary btn-sm" href="{{secure_url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
 				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}">Print</a>
+				                    @if($training_report->send_status == "")
+				                		<a class="btn btn-info btn-sm" href="{{url('index/training_report/sendemail/'.$training_report->id)}}">Send Email</a>
+				                	@endif
 				                  </center>
 				                </td>
 				                <td>
@@ -161,6 +177,8 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				                <th></th>
+				                <th></th>
 				                <th></th>
 				                <th></th>
 				                <th></th>
@@ -214,6 +232,11 @@ table.table-bordered > tfoot > tr > th{
 
 	jQuery(document).ready(function() {
 		$('#date').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
+		});
+		$('#date2').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
 			todayHighlight: true

@@ -315,7 +315,7 @@ table.table-bordered > tfoot > tr > th{
 				      <div class="box">
 				      	<div class="box-header">
 							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
-							{{-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Employee</a> --}}
+							<a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a>
 							<div class="panel-body text-center" >
 				              <video width="200px" id="preview"></video>
 				            </div>
@@ -745,35 +745,6 @@ table.table-bordered > tfoot > tr > th{
               }
           }
     </script>
-    {{-- <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/jquery.js') }}"></script> --}}
-  {{-- <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/qrcodelib.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('/bower_components/qrcode/js/webcodecamjquery.js') }}"></script> --}}
-  {{-- <script type="text/javascript">
-      var arg = {
-          resultFunction: function(result) {
-             
-             window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+result.code;
-          }
-      };
-      var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
-      decoder.buildSelectMenu("select");
-      decoder.play();
-      $('select').on('change', function(){
-          decoder.stop().play();
-      });
-      $.extend(
-      {
-          redirectPost: function(location, args)
-          {
-              var form = '';
-              $.each( args, function( key, value ) {
-                  form += '<input type="hidden" name="'+key+'" value="'+value+'">';
-              });
-              $('<form action="'+location+'" method="POST">'+form+'</form>').appendTo('body').submit();
-          }
-      });
-
-  </script> --}}
   <script type="text/javascript">
   	let opts = {
 		  // Whether to scan continuously for QR codes. If false, use scanner.scan() to manually scan.
@@ -821,7 +792,7 @@ table.table-bordered > tfoot > tr > th{
 
         if (cameras.length > 0) {
 
-          scanner.start(cameras[1]);
+          scanner.start(cameras[0]);
 
         } else {
 

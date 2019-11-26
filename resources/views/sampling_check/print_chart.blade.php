@@ -1,70 +1,58 @@
-<title>YMPI 情報システム</title>
-<link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
-<style>
-	.table{
-		width:100%;
-	}
-	table, th, td {
-		border-collapse: collapse;
-		font-family:"Arial";
-		padding: 5px;
-	}
-	.head {
-		border: 1px solid black;
-	}
-	.peserta {
-		border: 1px solid black;
-		width:50%;
-		text-align:center;
-	}
-	.bodytraining{
-		padding-left:100px;
-	}
-	p {
-		display: block;
-		margin-top: 0;
-		margin-bottom: 0;
-		margin-left: 0;
-		margin-right: 0;
-	}
+@extends('layouts.master')
+@section('header')
+<section class="content-header">
+  <h1>
+    Print {{ $activity_name }} - {{ $departments }}
+    <small>it all starts here</small>
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+  </h1>
+  <ol class="breadcrumb">
+    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Examples</a></li>
+    <li class="active">Blank page</li> --}}
+  </ol>
+</section>
+<style type="text/css">
 	@media print {
-		body {-webkit-print-color-adjust: exact;}
-		  #approval1 {
-		    display: none;
-		  }
-		  #approval2 {
-		    display: none;
-		  }
-		  #approval3 {
-		    display: none;
-		  }
-	}
-	.label {
-	  color: white;
-	  padding: 8px;
-	  font-family: Arial;
-	}
-	.success {background-color: #4CAF50;} /* Green */
+	.table {-webkit-print-color-adjust: exact;}
+	#approval1 {
+	    display: none;
+	  }
+	  #approval2 {
+	    display: none;
+	  }
+	  #approval3 {
+	    display: none;
+	  }
 </style>
+@endsection
+@section('content')
+<section class="content">
+  @if ($errors->has('password'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+    {{ $errors->first() }}
+  </div>   
+  @endif
+  <div class="box box-primary">
+      <div class="box-body">
 		<table class="table">
 			<tbody>
-				{{-- <tr style="border:0px;">
-					<td colspan="6"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
-				</tr> --}}
 				<tr>
-					<td colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="9" style="border: 1px solid black;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Department</td>
 					<td colspan="2" class="head">{{ $departments }}</td>
-					<td class="head" rowspan="4" colspan="4" style="padding: 15px;"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="4"><center>Prepared<br><br>
+					<td class="head" rowspan="4" colspan="4" style="padding: 15px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="4"><center>Checked<br><br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
 						<br><br>
-						{{ $leader }}<br>Leader</center>
+						{{ $leader }}<br>Foreman</center>
 					</td>
 				</tr>
 				<tr>
@@ -94,25 +82,41 @@
 				<tr>
 					<?php $point_check = DB::select("select * from sampling_check_details where sampling_check_id = '".$samplingCheck->id_sampling_check."'");
 						$jumlah_point_check = count($point_check); ?>
-					<td class="head" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->date }}</center></td>
-					<td class="head" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->product }}</center></td>
-					<td class="head" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->no_seri_part }}</center></td>
-					<td class="head" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->jumlah_cek }}</center></td>
+					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->date }}</center></td>
+					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->product }}</center></td>
+					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->no_seri_part }}</center></td>
+					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->jumlah_cek }}</center></td>
 					@foreach($point_check as $point_check)
 						<tr>
-							<td class="head"><?php echo $point_check->point_check ?></td>
-							<td class="head"><?php echo $point_check->hasil_check ?></td>
-							<td class="head"><img width="200px" src="{{ url('/data_file/sampling_check/'.$point_check->picture_check) }}"></td>
-							<td class="head">{{ $point_check->pic_check }}</td>
-							<td class="head">{{ $point_check->sampling_by }}</td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><center><?php echo $point_check->point_check ?></center></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><center><?php echo $point_check->hasil_check ?></center></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><img width="200px" src="{{ url('/data_file/sampling_check/'.$point_check->picture_check) }}"></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><center>{{ $point_check->pic_check }}</center></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><center>{{ $point_check->sampling_by }}</center></td>
 						</tr>
 					@endforeach
 				</tr>
 				@endforeach
 			</tbody>
 		</table>
-		
-	
-	<script>
+	</div>
+  </div>
+  @endsection
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family:"Arial";
+  padding: 5px;
+  vertical-align:middle;
+}
+@media print {
+	body {-webkit-print-color-adjust: exact;}
+}
+</style>
+<script>
     // setTimeout(function () { window.print(); }, 200);
+    function myFunction() {
+	  window.print();
+	}
 </script>
