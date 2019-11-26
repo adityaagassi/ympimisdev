@@ -41,7 +41,7 @@
 		content: "" !important;
 	}
 	#queueTable.dataTable {
-		margin-top: 0px!important;
+		margin-top: 0px !important;
 	}
 	#loading, #error { display: none; }
 	.post .user-block {
@@ -162,7 +162,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
-					<!-- <button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; E - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button> -->
+					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; E - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				</div>
 				<div class="col-md-9">
 					<div class="box" id="boxing">
@@ -300,7 +300,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<div class="box" id="kaizen" style="display: none;">
 						<div class="box-header">
 							<h3 class="box-title">E-Kaizen</h3>
-							<a class="btn btn-primary pull-right" href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+							<a class="btn btn-primary pull-right" 
+							href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$profil[0]->group) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
 						</div>
 						<div class="box-body">
 							<div class="row">
@@ -317,7 +318,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<table class="table table-bordered" id="tableKaizen" width="100%">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
-										<th>Id</th>
+										<th style="width: 900px">Id</th>
 										<th>Tanggal</th>
 										<th>Usulan</th>
 										<th>Status</th>
@@ -657,6 +658,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					{ "data": "posisi" },
 					{ "data": "application" },
 					{ "data": "action" }
+					],
+					"columnDefs": [
+					{ "width": "2%", "targets": 0 },
+					{ "width": "99%", "targets": 1 },
+					{ "width": "5%", "targets": [3,4,5,6] }
 					]
 				});
 

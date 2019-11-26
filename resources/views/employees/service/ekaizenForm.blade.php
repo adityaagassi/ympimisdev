@@ -41,22 +41,25 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
-			<input type="text" id="kz_bagian" class="form-control" value="Management Information System" readonly>
+			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} - {{$group}}" readonly>
 		</div>
 		<div class="col-xs-4">
-			<label for="kz_sub_leader">Nama Leader</label><br>
-			<select id="kz_sub_leader" class="form-control select2" style=" width: 100% !important;">
+			<label for="kz_leader">Nama Leader</label><br>
+			<select id="kz_leader" class="form-control select2" style=" width: 100% !important;">
 				<option value="">Pilih Leader</option>
 				@foreach($subleaders as $subleader)
-				<option value="{{ $subleader->name }}">{{ $subleader->name }} - {{ $subleader->position }}</option>
+				<option value="{{ $subleader->employee_id }}">{{ $subleader->name }} - {{ $subleader->position }}</option>
 				@endforeach
 			</select>
 			<!-- <input type="text" id="kz_sub_leader" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
-			<label for="kz_bagian">Bagian yang Dituju</label><br>
-			<select id="kz_bagian" class="form-control select2" style="width: 100% !important;">
-				<option value="">dd</option>
+			<label for="kz_tujuan">Area Kaizen</label><br>
+			<select id="kz_tujuan" class="form-control select2" style="width: 100% !important;">
+				<option value="">Pilih Area</option>
+				@foreach($sc as $scc)
+				<option value="{{ $scc->section }}">{{ $scc->section }}</option>
+				@endforeach
 			</select>
 		</div>
 	</div>
@@ -69,6 +72,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<option>5S</option>
 				<option>Safety</option>
 				<option>Lingkungan</option>
+				<option>Save Cost (Selain Time)</option>
 			</select>
 		</div>
 		<div class="col-xs-9">
@@ -111,7 +115,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_space_bulan" style="width: 80%; display: inline-block;" readonly>&nbsp; / bulan</td>
 					</tr>
 					<tr>
-						<th>Material</th>
+						<th>Other (Material,listrik, kertas, dll)</th>
 						<td>:&nbsp;<input type="text" class="form-control" placeholder="" id="kz_material" style="width: 70%; display: inline-block;"></td>
 						<td>X &nbsp; 500</td>
 						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_material_bulan" style="width: 80%; display: inline-block;" readonly>&nbsp; / bulan</td>
@@ -205,12 +209,16 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			employee_id: $("#kz_nik").val(),
 			employee_name: $("#kz_nama").val(),
 			propose_date: $("#kz_tanggal").val(),
-			section: 'dd',
-			sub_leader: $("#kz_sub_leader").val(),
+			section: $("#kz_bagian").val(),
+			leader: $("#kz_leader").val(),
 			title: $("#kz_judul").val(),
+			area_kz: $("#kz_tujuan").val(),
+			purpose: $("#kz_purpose").val(),
 			condition: CKEDITOR.instances.kz_sekarang.getData(),
 			improvement: CKEDITOR.instances.kz_perbaikan.getData()
 		};
+
+		// console.log(data);
 
 				// if ($("kz_sub_leader").val() != '' && $("kz_judul").val() != '') {
 					$.post('{{ url("post/ekaizen") }}', data, function(result, status, xhr){

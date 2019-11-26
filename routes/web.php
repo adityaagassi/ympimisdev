@@ -887,6 +887,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
+	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
 
@@ -1023,7 +1024,11 @@ Route::get('index/getTarget', 'Pianica@getTarget');
 Route::get('index/GetNgBensuki', 'Pianica@GetNgBensuki');
 Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
 
+	//---------- display Pianica
 Route::get('index/display_pn_ng_rate', 'Pianica@indexNgRate');
+Route::get('fetch/pianica/ng_spot_welding', 'Pianica@fetchNgWelding');
+Route::get('fetch/pianica/ng_bentsuki_benage', 'Pianica@fetchNgBentsukiBenage');
+
 
 	//---------- report bensuki
 Route::get('index/reportBensuki', 'Pianica@reportBensuki');
@@ -1484,6 +1489,34 @@ Route::get('index/daily_check_fg/show/{id}/{daily_check_id}', 'DailyCheckControl
 Route::get('index/daily_check_fg/destroy/{id}/{daily_check_id}', 'DailyCheckController@destroy');
 Route::get('index/daily_check_fg/create/{id}/{product}', 'DailyCheckController@create');
 Route::post('index/daily_check_fg/store/{id}/{product}', 'DailyCheckController@store');
+Route::get('index/daily_check_fg/getdetail','DailyCheckController@getdetail')->name('daily_check_fg.getdetail');
+Route::post('index/daily_check_fg/update/{id}/{product}', 'DailyCheckController@update');
+Route::post('index/daily_check_fg/print_daily_check/{id}', 'DailyCheckController@print_daily_check');
+Route::post('index/daily_check_fg/sendemail/{id}', 'DailyCheckController@sendemail');
+Route::get('index/daily_check_fg/print_daily_check_email/{id}/{month}', 'DailyCheckController@print_daily_check_email');
+Route::post('index/daily_check_fg/approval/{id}/{month}', 'DailyCheckController@approval');
+
+//LABELING
+Route::get('index/labeling/index/{id}', 'LabelingController@index');
+Route::post('index/labeling/filter_labeling/{id}', 'LabelingController@filter_labeling');
+Route::get('index/labeling/show/{id}/{labeling_id}', 'LabelingController@show');
+Route::get('index/labeling/destroy/{id}/{labeling_id}', 'LabelingController@destroy');
+Route::get('index/labeling/create/{id}', 'LabelingController@create');
+Route::post('index/labeling/store/{id}', 'LabelingController@store');
+Route::get('index/labeling/edit/{id}/{labeling_id}', 'LabelingController@edit');
+Route::post('index/labeling/update/{id}/{labeling_id}', 'LabelingController@update');
+Route::post('index/labeling/print_labeling/{id}', 'LabelingController@print_labeling');
+Route::get('index/labeling/print_labeling_email/{id}/{month}', 'LabelingController@print_labeling_email');
+Route::post('index/labeling/sendemail/{id}', 'LabelingController@sendemail');
+Route::post('index/labeling/approval/{id}/{month}', 'LabelingController@approval');
+
+//AUDIT PROCESS
+Route::get('index/audit_process/index/{id}', 'AuditProcessController@index');
+Route::post('index/audit_process/filter_audit_process/{id}', 'AuditProcessController@filter_audit_process');
+Route::get('index/audit_process/show/{id}/{audit_process_id}', 'AuditProcessController@show');
+Route::get('index/audit_process/destroy/{id}/{audit_process_id}', 'AuditProcessController@destroy');
+Route::get('index/audit_process/create/{id}', 'AuditProcessController@create');
+Route::post('index/audit_process/store/{id}', 'AuditProcessController@store');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
@@ -1522,11 +1555,16 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
 
+	//Verifikator CAR
+	Route::get('index/qc_car/verifikator', 'QcCarController@verifikator');
+
 	//Verifikasi CAR
 	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
 
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasicar');
+
+
 
 });
 
@@ -1556,6 +1594,9 @@ Route::get('index/master_beacon','BeaconController@master_beacon');
 Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
+//suhu
+Route::get('index/suhu','TemperatureController@index');
+
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');

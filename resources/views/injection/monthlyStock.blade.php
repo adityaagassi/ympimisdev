@@ -68,13 +68,16 @@
 					</div>
 					<div class="col-xs-1">
 						<div class="form-group">
-							<button class="btn btn-success" type="button" onclick="fillTable();block();foot();head2();">Update Chart</button>
+							<button class="btn btn-success" type="button" onclick="ganti()">Update Chart</button>
 						</div>
 					</div>
 				<!-- </form> -->
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			
+			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
+				<div id="MonhtlyStockAll" style="height: 690px;"></div>
+			</div>
 
 			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
 				<div id="headJoint" style="height: 690px;"></div>
@@ -111,6 +114,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();
+		fillTableAll();
 		fillTable();
 		block();
 		foot();
@@ -347,6 +351,366 @@
 		endDate: '<?php echo $tgl_max ?>'
 	});
 
+	function ganti() {
+		
+		var location = $('#location').val();
+		if (location == "Yrf") {
+			fillTableAllYrf();
+		}else{
+			fillTableAll();
+			fillTable();
+			block();
+			foot();
+			head2();
+		}
+	}
+
+	function fillTableAllYrf() {
+		var tgl1 = $('#tanggal').val();
+		var location = $('#location').val();
+		var data = {
+			tgl:tgl1,
+			location:location
+		}
+
+		var assy = [];
+		var p_s = [];
+		var p_b = [];
+		var p_h = [];
+
+		var act_s = [];
+		var act_b = [];
+		var act_h = [];
+
+		var tgl = [];
+
+		var s = 0;
+		var s2 = 0;
+
+		var b = 0;
+		var b2 = 0;
+
+		var h = 0;
+		var h2 = 0;
+
+
+		$.get('{{ url("fetch/MonhtlyStockAllYrf") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_s.push(parseInt( result.part[i].s));
+						p_b.push(parseInt( result.part[i].b));
+						p_h.push(parseInt( result.part[i].h));
+
+						
+						s = (parseInt( result.part[i].s - result.part[i].assy    ) + s2);
+						s2 = s;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_s.push(parseInt( s2));
+
+						b = (parseInt( result.part[i].b - result.part[i].assy    ) + b2);
+						b2 = b;
+						act_b.push(parseInt( b2));
+
+						h = (parseInt( result.part[i].h - result.part[i].assy    ) + h2);
+						h2 = h;
+						act_h.push(parseInt( h2));
+
+					}
+
+
+					Highcharts.chart('MonhtlyStockAll', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'All Part ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Stopper Joint',
+				    	// color: 'Red',
+				        data: p_s
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_b
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Haed Joint',
+				    	// color: 'Red',
+				        data: p_h
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Stopper Joint',
+				    	// color: 'Red',
+				        data: act_s
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_b
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Haed Joint',
+				    	// color: 'Red',
+				        data: act_h
+				    }]
+					});
+				}
+			}
+		});
+	}
+
+	function fillTableAll() {
+		var tgl1 = $('#tanggal').val();
+		var location = $('#location').val();
+		var data = {
+			tgl:tgl1,
+			location:location
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/MonhtlyStockAll") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('MonhtlyStockAll', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'All Part ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
 	function fillTable() {
 		var tgl1 = $('#tanggal').val();
 		var location = $('#location').val();
@@ -361,9 +725,6 @@
 		var tgl = [];
 		var actgreen = 0;
 		var actgreen2 = 0;
-
-
-
 
 		$.get('{{ url("fetch/MonhtlyStock") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
@@ -480,9 +841,6 @@
 		var tgl = [];
 		var actgreen = 0;
 		var actgreen2 = 0;
-
-
-
 
 		$.get('{{ url("fetch/MonhtlyStockHead") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){

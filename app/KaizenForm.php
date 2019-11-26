@@ -10,7 +10,7 @@ class KaizenForm extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'employee_id', 'employee_name', 'propose_date', 'section', 'sub_leader', 'title', 'condition', 'improvement'
+		'employee_id', 'employee_name', 'propose_date', 'section', 'leader', 'title', 'condition', 'improvement', 'purpose', 'area', 'status'
 	];
 
 }

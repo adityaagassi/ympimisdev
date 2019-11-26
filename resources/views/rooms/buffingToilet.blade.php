@@ -84,7 +84,7 @@
 
 	jQuery(document).ready(function() {
 		getToiletStatus();
-		setInterval(getToiletStatus, 5000);
+		setInterval(getToiletStatus, 10000);
 	});
 
 	function getToiletStatus() {
