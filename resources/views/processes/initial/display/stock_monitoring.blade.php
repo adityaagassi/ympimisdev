@@ -170,6 +170,9 @@
 				style: {
 					color: '#A0A0A3'
 				}
+			},
+			title: {
+				text: 'Count Item'
 			}
 		},
 		tooltip: {
