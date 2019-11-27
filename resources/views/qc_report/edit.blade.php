@@ -89,15 +89,12 @@
           
           <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
-
-       <!-- @elseif($cpars->email_status == "SentChief" && $cpars->posisi == "chief" && Auth::user()->username == "aclark") Bu Ratri
-           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Manager</a> -->
+       @elseif($cpars->email_status == NULL && $cpars->posisi == "leader" && Auth::user()->username == $cpars->staff)
+           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Foreman</a>
 
        @else
            <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
        @endif
-
-       
 
        <!-- <a href="{{url('index/qc_report/statuscpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-primary btn-sm pull-right" title="Status Verifikasi" style="margin-right: 5px">Cek Status Verifikasi</a> -->
     
@@ -555,7 +552,15 @@
                     <td colspan="2" style="width: 33%"><b>Email</b></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><b>Staff</b></td>
+                    <td colspan="2">
+                      <b>
+                        @if($cpars->staff != NULL) 
+                            Staff
+                        @elseif($cpars->leader != NULL) 
+                            Leader
+                        @endif
+                      </b>
+                    </td>
                     <td colspan="2"><b><span class="label label-success">Already Created</span></b></td>
                     @if($cpars->email_status == NULL && $cpars->posisi == "staff")
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -564,9 +569,14 @@
                     @endif
                 </tr>
                 <tr>
-                    <td colspan="2"><b>Chief</b></td>
                     <td colspan="2"><b>
-                      @if($cpars->checked_chief == "Checked")
+                        @if($cpars->staff != NULL) 
+                            Chief
+                        @elseif($cpars->leader != NULL) 
+                            Foreman
+                        @endif</b></td>
+                    <td colspan="2"><b>
+                      @if($cpars->checked_chief == "Checked" || $cpars->checked_foreman == "Checked")
                       <span class="label label-success">Checked</span>
                       @else
                       <span class="label label-danger">Not Checked</span>

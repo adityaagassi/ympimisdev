@@ -9,6 +9,9 @@
   }
   thead>tr>th{
     text-align:center;
+    background-color: #7e5686;
+    color: white;
+    border: none;
   }
   tbody>tr>td{
     text-align:center;
@@ -19,6 +22,10 @@
   td:hover {
     overflow: visible;
   }
+  table.table-hover > tbody > tr > td{
+    border:1px solid #eeeeee;
+  }
+
   table.table-bordered{
     border:1px solid black;
   }
@@ -77,28 +84,20 @@
   <div class="box box-primary">
       <div class="box-body">
         
-        <?php foreach ($cpars as $cpars): ?>
+        <?php foreach ($cparss as $cpars): ?>
         
         <!-- From -->
-        @if($cpars->posisi == "chief")
+        @if($cpars->posisi == "chief" || $cpars->posisi == "foreman" || $cpars->posisi == "manager" || $cpars->posisi == "dgm" || $cpars->posisi == "gm")
           From : {{ $cpars->emplo }}
-
-        @elseif($cpars->posisi == "manager")
-          From : {{ $cpars->emplo }}
-        
-        @elseif($cpars->posisi == "dgm")
-          From : {{ $cpars->emplo }}
-
-        @elseif($cpars->posisi == "gm")
-          From : {{ $cpars->emplo }}
-        
         @else
           From :
         @endif
 
         <br> To : {{ $cpars->posisi }}
-        
-        <a href="{{url('index/qc_report/print_cpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank">Preview Report</a>
+
+        <a data-toggle="modal" data-target="#statusmodal{{$cpars->id}}" class="btn btn-primary btn-sm pull-right">Cek Status Verifikasi</a>
+
+        <a href="{{url('index/qc_report/print_cpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank" style="color:white;margin-right: 5px">Preview CPAR Report</a>
 
         <!-- Email Chief -->
 
@@ -106,6 +105,15 @@
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
         @elseif(Auth::user()->username == $cpars->chief && $cpars->email_status == "SentManager") <!-- Jika yang login Bu Ratri dan status-->
+          <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+        @endif
+
+        <!-- Email Foreman -->
+
+        @if($cpars->email_status == "SentForeman" && $cpars->checked_foreman == "Checked")
+          <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
+
+        @elseif(Auth::user()->username == $cpars->foreman && $cpars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
         @endif
 
@@ -144,28 +152,45 @@
 
         <br/><br/>
 
-        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->username == "clark")
+        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->username == "clark" )
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
+
+            <thead>
+              <tr>
+                <th colspan="6" style="background-color: #ef6c00; color: white; font-size: 20px;border: none"><b>VERIFIKASI CPAR {{ $cpars->cpar_no }} </b></th>
+              </tr>
+              <tr>
+                  <th colspan="2" style="width: 33%;border: none"><b>Point</b></th>
+                  <th colspan="2" style="width: 33%;border: none"><b>Content</b></th>
+                  <th colspan="2" style="width: 33%;border: none"><b>Checked</b></th>
+              </tr>
+            </thead>
             <tbody>
               <input type="hidden" value="{{csrf_token()}}" name="_token" />  
-                <tr>
-                  <td colspan="6" style="background-color: #ef6c00; color: white"><b>CPAR {{ $cpars->cpar_no }} Verification </b></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="width: 33%"><b>Point</b></td>
-                    <td colspan="2" style="width: 33%"><b>Content</b></td>
-                    <td colspan="2" style="width: 33%"><b>Checked</b></td>
-                </tr>
+                
                 <tr>
                   <td colspan="2">Manager</td>
                   <td colspan="2">{{ $cpars->name }}</td>
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
-                      @if(Auth::user()->username == $cpars->chief ) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                      @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
@@ -235,6 +260,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -292,6 +330,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -351,6 +402,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -408,6 +472,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -467,6 +544,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -524,6 +614,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -585,6 +688,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -642,6 +758,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -701,6 +830,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -758,6 +900,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -817,6 +972,19 @@
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
 
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
+
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
                           @if($cpars->checked_manager == NULL)
@@ -874,6 +1042,19 @@
                         @else
                           <span class="label label-danger">Sudah Dikirm Ke Manager</span>
                         @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @else
+                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                        @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
                         @if ($cpars->posisi == "manager")
@@ -934,19 +1115,138 @@
                 </span>
             </div>
         </label> -->
-        <div class="col-sm-4 col-sm-offset-5">
-          <div class="btn-group">
+        <div class="col-sm-12">
+          <!-- <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/qc_report/update',$cpars->id) }}">Cancel</a>
-          </div>
-          <div class="btn-group">
-            <button type="submit" class="btn btn-primary col-sm-14">Verified</button>
-          </div>
+          </div> -->
+          <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
         </div>
         @endif
-        <?php endforeach ?>
       </div>
     </form>
   </div>
+
+  <div class="modal fade" id="statusmodal{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+        </div>
+        <div class="modal-body">
+          <div class="box-body">
+            <table class="table table-hover">
+            <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
+              <tbody>
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />  
+                  <tr style="background-color: #4caf50;color: white">
+                      <td colspan="2" style="width: 33%"><b>Position</b></td>
+                      <td colspan="2" style="width: 33%"><b>Action</b></td>
+                      <td colspan="2" style="width: 33%"><b>Email</b></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <b>@if($cpars->staff != NULL) 
+                            Staff
+                         @elseif($cpars->leader != NULL) 
+                            Leader
+                          @endif
+                      </b>
+                    </td>
+                    <td colspan="2"><b><span class="label label-success">Already Created</span></b></td>
+                    @if($cpars->email_status == NULL && $cpars->posisi == "staff")
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @endif
+                  </tr>
+                  <tr>
+                      <td colspan="2"><b>
+                          @if($cpars->staff != NULL) 
+                              Chief
+                          @elseif($cpars->leader != NULL) 
+                              Foreman
+                          @endif</b></td>
+                      <td colspan="2"><b>
+                        @if($cpars->checked_chief == "Checked" || $cpars->checked_foreman == "Checked")
+                        <span class="label label-success">Checked</span>
+                        @else
+                        <span class="label label-danger">Not Checked</span>
+                        @endif</b>
+                      </td>
+                      @if(($cpars->email_status == "SentManager" || $cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") &&  ($cpars->posisi == "manager" || $cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                        <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                      @else
+                        <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                      @endif
+                  </tr>
+                  <tr>
+                      <td colspan="2"><b>Manager</b></td>
+                      <td colspan="2"><b>
+                        @if($cpars->checked_manager == "Checked")
+                        <span class="label label-success">Checked</span>
+                        @else
+                        <span class="label label-danger">Not Checked</span>
+                        @endif</b>
+                      </td>
+                      @if(($cpars->email_status == "SentDGM" || $cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "dgm" || $cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                        <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                      @else
+                        <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                      @endif
+                  </tr>
+                  <tr>
+                      <td colspan="2"><b>DGM</b></td>
+                      <td colspan="2"><b>
+                        @if($cpars->approved_dgm == "Checked")
+                        <span class="label label-success">Checked</span>
+                        @else
+                        <span class="label label-danger">Not Checked</span>
+                        @endif</b>
+                      </td>
+                      @if(($cpars->email_status == "SentGM" || $cpars->email_status == "SentBagian") && ($cpars->posisi == "gm" || $cpars->posisi == "bagian"))
+                        <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                      @else
+                        <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                      @endif
+                  </tr>
+                  <tr>
+                      <td colspan="2"><b>GM</b></td>
+                      <td colspan="2"><b>
+                        @if($cpars->approved_gm == "Checked")
+                        <span class="label label-success">Checked</span>
+                        @else
+                        <span class="label label-danger">Not Checked</span>
+                        @endif</b>
+                      </td>
+                      @if($cpars->email_status == "SentBagian" && $cpars->posisi == "bagian")
+                        <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                      @else
+                        <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                      @endif
+                  </tr>
+                  <tr>
+                      <td colspan="2"><b>Bagian</b></td>
+                      <td colspan="2"><b>
+                        @if($cpars->received_manager == "Received")
+                        <span class="label label-success">Received</span>
+                        @else
+                        <span class="label label-danger">Not Received</span>
+                        @endif</b>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          </div>    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+        <?php endforeach ?>
 
 @endsection
 
@@ -983,7 +1283,7 @@
         return false;
       }
 
-      $.get('{{ url("index/qc_report/sendemail/$cpars->id/$cpars->posisi") }}', data, function(result, status, xhr){
+      $.get('{{ url("index/qc_report/sendemail/$cpar->id/$cpar->posisi") }}', data, function(result, status, xhr){
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })

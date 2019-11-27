@@ -40,11 +40,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     List of {{ $page }}s
-    <small>Create Your CAR</small>
   </h1>
-  <ol class="breadcrumb">
-    <li><a href="{{ url("index/qc_car/verifikator")}}" class="btn btn-primary btn-sm" style="color:white">Check Verifikator</a></li>
-  </ol>
 </section>
 @endsection
 
@@ -63,43 +59,35 @@ table.table-bordered > tfoot > tr > th{
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">List Data <span class="text-purple">CAR</span></h3>
+          <h3 class="box-title">List Data <span class="text-purple">Verifikator</span></h3>
 
         </div>
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <table id="example1" class="table table-bordered table-striped table-hover">
-            <!-- <?php var_dump($users[0]->department_name); ?> -->
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th>No CPAR</th>
-                <th>Kategori</th> 
-                <!-- <th>Manager</th>     -->
-                <th>Lokasi</th>
-                <th>Tgl Permintaan</th>
-                <th>Tgl Balas</th>
-                <th>Departemen</th>
-                <th>Sumber Komplain</th>
-                <th>Status</th>
+                <th>Department</th>
+                <th>Verifikator Chief</th> 
+                <th>Verifikator Foreman</th>
+                <th>Verifikator Coordinator</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($cars as $car)
+              @foreach($verifikator as $verif)
               <tr>
-                <td>{{$car->cpar_no}}</td>
-                <td>{{$car->kategori}}</td>
-                <!-- <td>{{$car->name}}</td> -->
-                <td style="width: 10%">{{$car->lokasi}}</td>
-                <td>{{$car->tgl_permintaan}}</td>
-                <td>{{$car->tgl_balas}}</td>
-                <td>{{$car->department_name}}</td>
-                <td>{{$car->sumber_komplain}}</td>
-                <td>{{$car->status_name}}</td>
+                <td>{{$verif->department_name}}</td>
+                <td>{{$verif->chiefname}}</td>
+                <td>{{$verif->foremanname}}</td>
+                <td>{{$verif->coordinatorname}}</td>
                 <td style="width: 15%">
                   <center>
-                    <a href="{{url('index/qc_car/detail', $car['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a>
-                    <!-- <a href="{{url('index/qc_car/print_car', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a> -->
+                    <!-- <a href="{{url('index/qc_car/detail', $verif['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a> -->
+                    <!-- <a href="{{url('index/qc_report/update', $verif['id'])}}" class="btn btn-warning btn-xs">Edit</a> -->
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal"   data-target="#myModal" onclick="deleteConfirmation('{{ url("index/qc_car/deleteverifikator") }}', '{{ $verif['department_name'] }}', '{{ $verif['id'] }}');">
+                      Delete
+                    </a>
                   </center>
                 </td>
               </tr>
@@ -107,11 +95,6 @@ table.table-bordered > tfoot > tr > th{
             </tbody>
             <tfoot>
               <tr>
-                <th></th>
-                <th></th>
-                <!-- <th></th> -->
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -134,7 +117,7 @@ table.table-bordered > tfoot > tr > th{
         <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
       </div>
       <div class="modal-body">
-        Are you sure want to delete this CPAR?
+        Are you sure want to delete this?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -257,6 +240,11 @@ table.table-bordered > tfoot > tr > th{
   function clearConfirmation(){
     location.reload(true);
   }
+
+   function deleteConfirmation(url, name,id) {
+      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+    }
 
 </script>
 

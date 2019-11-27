@@ -68,23 +68,11 @@
 				<td colspan="10">Kategori Komplain : {{ $car->kategori }}</td>
 			</tr>
 			<tr>
-				<td rowspan="6" colspan="7">Deskripsi : <br><?= $car->deskripsi ?></td>
-				<td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
+				<td rowspan="6" colspan="7">Deskripsi : <?= $car->deskripsi ?></td>
+				<td rowspan="6" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
 			</tr>
-			<tr>
-			</tr>
-			<tr>
-				<td colspan="3" class="centera">Man</td>
-			</tr>
-			<tr>
-				<td colspan="3" class="centera">Machine</td>
-			</tr>
-			<tr>
-				<td colspan="3" class="centera">Material</td>
-			</tr>
-			<tr>
-				<td colspan="3" class="centera">Method</td>
-			</tr>
+			<tr></tr>
+			<tr></tr><tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td colspan="10">A. Immediately Action </td>
 			</tr>

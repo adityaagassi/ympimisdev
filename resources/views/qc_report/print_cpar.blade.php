@@ -26,14 +26,14 @@
 		<thead>
 			<tr>
 				<td colspan="2" class="centera">
-					<img width="80px" src="{{ public_path() . '/waves.jpg' }}" alt="">
+					<img width="100px" src="{{ public_path() . '/waves.jpg' }}" alt="">
 
 				</td>
 				<td colspan="5" style="text-align: center; vertical-align: middle;font-size: 14px;font-weight: bold">CORRECTIVE & PREVENTIVE ACTION REQUEST</td>
 				<td colspan="2" style="font-size: 9px;">
 					No Dokumen : YMPI/QA/FM/988 <br>
 					Revisi : 01<br>
-					Tanggal : <?= date('d-m-Y') ?><br>
+					Tanggal : 08 Oktober 2019<br>
 				</td>
 			</tr>
 		</thead>
@@ -69,9 +69,8 @@
 				<td>Part Item</td>
 				<td>Part Description</td>
 				<td>Invoice No</td>
-				<td>ETA Qty</td>
 				<td>Sample Qty</td>
-				<td>Detail Problem</td>
+				<td colspan="2">Detail Problem</td>
 				<td>Defect Qty</td>
 				<td>% Defect</td>
 			</tr>
@@ -86,9 +85,8 @@
 				<td rowspan="2">{{$part->part_item}}</td>
 				<td rowspan="2">{{$part->material_description}}</td>
 				<td rowspan="2">{{$part->no_invoice}}</td>
-				<td rowspan="2">{{$part->lot_qty}}</td>
 				<td rowspan="2">{{$part->sample_qty}}</td>
-				<td rowspan="2" width="80">
+				<td rowspan="2" colspan="2">
 					<?= $part->detail_problem ?>
 					<!-- <img src="http://172.17.128.87/miraidev/public/kcfinderimages/files/foto.png"> -->
 					<!-- <img src="{{ base_path() }}/public/kcfinderimages/files/yamaha3.png" /> -->
@@ -129,8 +127,10 @@
 			</tr>
 			<tr>
 				<td rowspan="2" style="vertical-align: middle;">
-					@if($cpar->posisi != "staff")
+					@if($cpar->staff != null)
 						{{$cpar->staffname}}
+					@elseif($cpar->leader != null)
+						{{$cpar->leadername}}
 					@else
 						&nbsp;
 					@endif
@@ -138,6 +138,8 @@
 				<td rowspan="2" style="vertical-align: middle;">
 					@if($cpar->checked_chief == "Checked")
 						{{$cpar->chiefname}}
+					@elseif($cpar->checked_foreman == "Checked")
+						{{$cpar->foremanname}}
 					@else
 						&nbsp;
 					@endif
@@ -176,8 +178,13 @@
 			</tr>
 			<tr></tr>
 			<tr>
+				@if($cpar->kategori == "Internal")
+				<td>Leader</td>
+				<td>Foreman</td>
+				@else
 				<td>Staff</td>
-				<td>Chief</td>
+				<td>Chief</td>				
+				@endif
 				<td>Manager</td>
 				<td>DGM</td>
 				<td>GM</td>

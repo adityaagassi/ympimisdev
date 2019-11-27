@@ -95,7 +95,16 @@ table.table-bordered > tfoot > tr > th{
 
          <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-md" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
 
-          <a class="btn btn-md btn-default" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email</a>
+         <!-- <a href="{{url('index/qc_car/sendemail/'.$cars['id'].'/'.$cars['posisi'])}}" class="btn btn-sm ">Email </a> -->
+
+         @if(($cars->email_status == "SentStaff" && $cars->posisi == "staff") || ($cars->email_status == "SentForeman" && $cars->posisi == "foreman"))
+          
+            <a class="btn btn-md btn-default" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email</a>
+         @else
+             <label class="label label-success" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+         @endif
+
+         
 
          <br/><br/>
 
@@ -227,7 +236,13 @@ table.table-bordered > tfoot > tr > th{
             Lokasi : {{$cpars->lokasi}} -->
             <div class="form-group row" align="left">
               <div class="col-sm-1"></div>
-              <label class="col-sm-2">Foreman <span class="text-red">*</span></label>
+              <label class="col-sm-2">
+                @if($cpars->kategori == "Internal")
+                  Foreman 
+                @elseif($cpars->kategori == "Eksternal" || $cpars->kategori == "Supplier")
+                  Staff
+                @endif
+                  <span class="text-red">*</span></label>
               <div class="col-sm-8">
                 <select class="form-control select3" id="pic" name="pic" style="width: 100%;" data-placeholder="Pilih PIC" required>
                   <option value=""></option>
@@ -266,8 +281,44 @@ table.table-bordered > tfoot > tr > th{
                     <td colspan="2" style="width: 33%"><b>Email</b></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><b>Staff</b></td>
-                    <td colspan="2"><b><span class="label label-warning">On Progress</span></b></td>
+                    <td colspan="2"><b>
+                      @if($cars->car_cpar->kategori == "Internal") 
+                            Leader
+                        @elseif($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") 
+                            Staff
+                        @endif
+                    </b></td>
+                    @if(($cars->email_status == "SentStaff" && $cars->posisi == "staff") || ($cars->email_status == "SentForeman" && $cars->posisi == "foreman")) 
+                    <td colspan="2"><b><span class="label label-success">On Progress</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @else
+                    <td colspan="2"><b><span class="label label-warning">Verification</span></b></td>
+                    <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>
+                    @if($cars->car_cpar->kategori == "Internal") 
+                            Foreman
+                        @elseif($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") 
+                            Chief
+                        @endif</b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Manager</b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>DGM</b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>GM</b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
                     <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
                 </tr>
             </tbody>
@@ -400,6 +451,21 @@ table.table-bordered > tfoot > tr > th{
         sticky: false,
         time: '3000'
       });
+    }
+
+    function sendemail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim CAR ini?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/qc_car/sendemail/$cars->id/$cars->posisi") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        window.location.reload();
+      })
     }
 
   </script>
