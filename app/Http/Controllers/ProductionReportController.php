@@ -224,7 +224,7 @@ class ProductionReportController extends Controller
         as jumlah_daily_check,
         (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
         (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_week,
-        (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_day,
+        (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND concat(left(CURDATE(),7),substr(CURDATE(),8,3))) as cur_day,
         (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
         from activity_lists
         where deleted_at is null 
