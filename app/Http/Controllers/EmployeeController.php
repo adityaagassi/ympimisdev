@@ -151,8 +151,6 @@ class EmployeeController extends Controller
   {
     return view('employees.service.indexKaizenApplied', array(
       'title' => 'E - Kaizen',
-      'position' => $emp,
-      'section' => $sc,
       'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
   }
 
@@ -956,12 +954,18 @@ public function indexEmployeeService()
 ) ovr on ovr.period = abs.period";
 
 $absences = db::connection('mysql3')->select($absence);
-$yr = date("Y");
 
 $ct = db::connection('mysql3')->select("
-  select leave_quota, leave_quota - (select COUNT(shift) + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= DATE_FORMAT(hire_date,'".$yr."-%m-01')) as cuti from ympimis.employees left join
+  select leave_quota, leave_quota - (select COUNT(shift) + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= 
+  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
   presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
-  and DATE_FORMAT(tanggal,'%m-%d') >= DATE_FORMAT(hire_date,'%m-%d') group by hire_date) as sisa_cuti from 
+  and DATE_FORMAT(tanggal,'%Y-%m-%d') >= 
+  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))
+  group by hire_date) as sisa_cuti from 
   (select YEAR(now()) - YEAR(hire_date)
   - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
   join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed

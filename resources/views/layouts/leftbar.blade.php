@@ -204,6 +204,12 @@
     </li>
     @endif
 
+    @if(in_array('M22', $navs))
+    @if(isset($page) && $page == "Master Beacon")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/master_beacon") }}"><i class="fa fa-cubes"></i> <span>Master Beacon</span></a>
+    </li>
+    @endif
+
     @if(in_array('M20', $navs))
     @if(isset($page) && $page == "User Document")<li class="active">@else<li>@endif
       <a href="{{ url("/index/user_document") }}"><i class="fa fa-book"></i> <span>User Document</span></a>
@@ -423,8 +429,23 @@
 @endif
 
 @if(in_array('S21', $navs))
-@if(isset($page) && $page == "Kaizen")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/kaizen") }}"><i class="fa fa-list-alt"></i> <span>E - kaizen</span></a>
+@if(isset($head) && $head == "Kaizen")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-credit-card"></i> <span>E - kaizen</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "Assess")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/kaizen") }}"><i class="fa fa-edit"></i> <span>Assessment List</span></a>
+</li>
+
+@if(isset($page) && $page == "Applied")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/kaizen/applied") }}"><i class="fa fa-rocket"></i> <span>Applied List</span></a>
+</li>
+
+</ul>
 </li>
 @endif
 

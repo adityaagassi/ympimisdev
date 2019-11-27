@@ -94,7 +94,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 					<p class="text-muted text-center" style="text-transform: lowercase;">{{ $emp_id }}</p>
 
-					<ul class="list-group list-group-unbordered">
+					<ul class="list-group list-group-unbordered" style="margin:0">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
 								<span style="color: black">{{ $sisa_cuti[0]->sisa_cuti }} hari</span>
@@ -126,25 +126,25 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->sub_section}} - {{$profil[0]->group}}
 						</p>
 
-						<hr>
+						<hr style="margin:2px;">
 
 						<strong><i class="fa fa-cc margin-r-5"></i> Cost Center</strong>
 
-						<p class="text-muted">{{$profil[0]->cost_center}}</p>
+						<p class="text-muted" style="margin:2px;">{{$profil[0]->cost_center}}</p>
 
-						<hr>
+						<hr style="margin:2px;">
 
 						<strong><i class="fa fa-calendar margin-r-5"></i> Tanggal Masuk</strong>
 
-						<p class="text-muted">{{$profil[0]->hire_date}}</p>
+						<p class="text-muted" style="margin:2px;">{{$profil[0]->hire_date}}</p>
 
-						<hr>
+						<hr style="margin:2px;">
 
 						<strong><i class="fa fa-star margin-r-5"></i> Grade</strong>
 
-						<p class="text-muted">{{$profil[0]->grade_code}} - {{$profil[0]->grade_name}}</p>
+						<p class="text-muted" style="margin:2px;">{{$profil[0]->grade_code}} - {{$profil[0]->grade_name}}</p>
 
-						<hr>
+						<hr style="margin:2px;">
 
 						<strong><i class="fa fa-phone margin-r-5"></i> Nomor Telepon</strong>
 						<div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div>
