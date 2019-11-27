@@ -328,7 +328,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.employee_id = employees.employee_id join users on employees.".$to." = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
@@ -354,14 +354,14 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.employee_id = employees.employee_id join users on employees.".$to." = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
 
 
             } else if ($verif[0]->kategori == "Supplier") {
-              
+
               if ($qc_cars->checked_foreman == NULL) {
                 $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorcoordinator = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                 $mails = DB::select($mailto);
@@ -379,7 +379,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.employee_id = employees.employee_id join users on employees.".$to." = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
               }

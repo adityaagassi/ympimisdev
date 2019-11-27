@@ -84,7 +84,9 @@
         
         <?php foreach ($cars as $cars): ?>
 
-        <br> To : {{ $cars->posisi }}
+        <!-- <br> To : {{ $cars->posisi }} -->
+
+        <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-sm pull-right">Cek Status Verifikasi</a>
         
         <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank">Preview CAR Report</a>
 
@@ -408,6 +410,120 @@
       </div>
     </form>
   </div>
+
+  <div class="modal fade" id="statusmodal{{$cars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <table class="table table-hover">
+            <tbody>
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />  
+                <tr style="background-color: #4caf50;color: white">
+                    <td colspan="2" style="width: 33%"><b>Position</b></td>
+                    <td colspan="2" style="width: 33%"><b>Action</b></td>
+                    <td colspan="2" style="width: 33%"><b>Email</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>
+                      @if($cars->car_cpar->kategori == "Internal") 
+                            Leader
+                        @elseif($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") 
+                            Staff
+                        @endif
+                    </b></td>
+                    @if(($cars->email_status == "SentStaff" && $cars->posisi == "staff") || ($cars->email_status == "SentForeman" && $cars->posisi == "foreman")) 
+                    <td colspan="2"><b><span class="label label-success">On Progress</span></b></td>
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @else
+                    <td colspan="2"><b><span class="label label-warning">Verification</span></b></td>
+                    <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2">
+                      <b>
+                        @if($cars->car_cpar->kategori == "Internal") 
+                            Foreman
+                        @elseif($cars->car_cpar->kategori == "Eksternal") 
+                            Chief
+                        @elseif($cars->car_cpar->kategori == "Supplier")
+                            Coordinator
+                        @endif
+                      </b>
+                    </td>
+                    <td colspan="2"><b>
+                      @if($cars->checked_chief == "Checked" || $cars->checked_foreman == "Checked" || $cars->checked_coordinator == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cars->email_status == "SentManager" || $cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "manager" || $cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Manager</b></td>
+                    <td colspan="2"><b>
+                      @if($cars->checked_manager == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                    <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>DGM</b></td>
+                    <td colspan="2"><b>
+                      @if($cars->approved_dgm == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if(($cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "gm" || $cars->posisi == "QA"))
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+                <tr>
+                    <td colspan="2"><b>GM</b></td>
+                    <td colspan="2"><b>
+                      @if($cars->approved_gm == "Checked")
+                      <span class="label label-success">Checked</span>
+                      @else
+                      <span class="label label-danger">Not Checked</span>
+                      @endif</b>
+                    </td>
+                    @if($cars->email_status == "SentQA" && $cars->posisi == "QA")
+                      <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
+                    @else
+                      <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
+                    @endif
+                </tr>
+            </tbody>
+        </table>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 @endsection
 
