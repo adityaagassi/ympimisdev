@@ -167,7 +167,6 @@
 			tickColor: '#707073',
 			tickWidth: 1,
 			title: {
-				text: 'Count Item',
 				style: {
 					color: '#A0A0A3'
 				}
@@ -362,7 +361,7 @@
 					},
 					yAxis: {
 						title: {
-							enabled: false
+							text: 'COUNT ITEM'
 						}
 					},
 					xAxis: {
