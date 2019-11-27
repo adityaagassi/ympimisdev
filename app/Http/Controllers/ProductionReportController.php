@@ -125,7 +125,13 @@ class ProductionReportController extends Controller
         COALESCE(((weekly.jumlah_sampling)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
         daily.jumlah_activity_daily * daily.jumlah_day as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
-        COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily * daily.jumlah_day))*100,0) as persen_daily
+        COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily * daily.jumlah_day))*100,0) as persen_daily,
+        daily.jumlah_day,
+        daily.cur_day,
+        (daily.cur_day / daily.jumlah_day)*100 as persen_cur_day,
+        daily.jumlah_week,
+        daily.cur_week,
+        (daily.cur_week / daily.jumlah_week)*100 as persen_cur_week
         from 
         (select count(activity_type) as jumlah_activity_monthly,
         leader_dept as leader_name,
@@ -217,7 +223,9 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'),0)
         as jumlah_daily_check,
         (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
-        (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_week
+        (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_week,
+        (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_day,
+        (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'

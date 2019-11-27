@@ -295,6 +295,8 @@
               var result_monthly;
               var result_weekly;
               var result_daily;
+              var cur_day = parseInt(result.datas[i][j].persen_cur_day);
+              var cur_week = parseInt(result.datas[i][j].persen_cur_week);
 
               if(parseInt(result.datas[i][j].persen_monthly) == 0){
                 result_monthly = null;
@@ -303,8 +305,8 @@
               }
               else{
                 result_monthly = parseInt(result.datas[i][j].persen_monthly);
-                outerRadiusMonthly= '80%';
-                innerRadiusMonthly= '60%';
+                outerRadiusMonthly= '84%';
+                innerRadiusMonthly= '68%';
               }
 
               if(parseInt(result.datas[i][j].persen_weekly) == 0){
@@ -314,8 +316,8 @@
               }
               else{
                 result_weekly = parseInt(result.datas[i][j].persen_weekly);
-                outerRadiusWeekly= '60%';
-                innerRadiusWeekly= '40%';
+                outerRadiusWeekly= '68%';
+                innerRadiusWeekly= '52%';
               }
 
               if(parseInt(result.datas[i][j].persen_daily) == 0){
@@ -325,8 +327,8 @@
               }
               else{
                 result_daily = parseInt(result.datas[i][j].persen_daily);
-                outerRadiusDaily= '40%';
-                innerRadiusDaily= '20%';
+                outerRadiusDaily= '52%';
+                innerRadiusDaily= '36%';
               }
 
               // if(parseInt(result.datas[i][j].persen_monthly) == 0){
@@ -356,9 +358,9 @@
                 chart: {
                   type: 'solidgauge',
                   height: '105%',
-                  events: {
-                    render: renderLabels
-                  }
+                  // events: {
+                  //   render: renderLabels
+                  // }
                 },
                 title: {
                   text: leader_name,
@@ -390,13 +392,6 @@
                   center: ['50%', '50%'],
                   size: '100%',
                       background: [{ // Track for Move
-                        outerRadius: '100%',
-                        innerRadius: '80%',
-                        backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0])
-                        .setOpacity(0.3)
-                        .get(),
-                        borderWidth: 0
-                      },{ // Track for Move
                         outerRadius: outerRadiusMonthly,
                         innerRadius: innerRadiusMonthly,
                         backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[1])
@@ -461,9 +456,8 @@
                         color: "white",
                         fontSize: "12px",
                         fontWeight: "bold",
-
                       },
-                      itemHoverStyle: {
+                      itemHover: {
                         enabled : false
                       },
                       itemHiddenStyle: {
@@ -486,6 +480,7 @@
                         rounded: true
                       },
                       series:{
+                        cursor: 'pointer',
                         point: {
                             events: {
                               click: function(e) {
@@ -510,7 +505,7 @@
                       data: [{
                         color: Highcharts.getOptions().colors[0],
                         outerRadius: '100%',
-                        innerRadius: '80%',
+                        innerRadius: '84%',
                         y: 50,
                         key: result.datas[i][j].leader_name
                       }],
@@ -520,8 +515,8 @@
                       color: Highcharts.getOptions().colors[1],
                       data: [{
                         color: Highcharts.getOptions().colors[1],
-                        radius: '80%',
-                        innerRadius: '60%',
+                        radius: '84%',
+                        innerRadius: '68%',
                         y: result_monthly,
                         key: result.datas[i][j].leader_name
                       }],
@@ -531,22 +526,36 @@
                       color: Highcharts.getOptions().colors[2],
                       data: [{
                         color: Highcharts.getOptions().colors[2],
-                        radius: '60%',
-                        innerRadius: '40%',
+                        radius: '68%',
+                        innerRadius: '52%',
                         y: result_weekly,
                         key: result.datas[i][j].leader_name
                       }],
                       showInLegend: true
-                    }, {
+                    }, 
+                    {
                       name: 'Daily',
                       color: Highcharts.getOptions().colors[3],
                       data: [{
                         color: Highcharts.getOptions().colors[3],
-                        radius: '40%',
-                        innerRadius: '20%',
+                        radius: '52%',
+                        innerRadius: '36%',
                         y: result_daily,
                         key: result.datas[i][j].leader_name
                       }],
+                      showInLegend: true
+                    },
+                    {
+                      name: 'Current Day',
+                      color: '#ff70f8',
+                      data: [{
+                        color: '#ff70f8',
+                        radius: '36%',
+                        innerRadius: '20%',
+                        y: cur_day,
+                        key: result.datas[i][j].leader_name
+                      }],
+                      stacking: 'normal',
                       showInLegend: true
                     }]
                   });
