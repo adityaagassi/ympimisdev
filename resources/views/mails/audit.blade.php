@@ -18,7 +18,7 @@
 					@foreach($data as $col2)
 						<?php $activity_name = $col2->activity_name ?>
 						<?php $department_name = $col2->department_name ?>
-						<?php $date_audit = $col2->date ?>
+						<?php $month = $col2->month ?>
 						<?php $activity_list_id = $col2->activity_list_id ?>
 						<?php $product = $col2->product ?>
 						<?php $proses = $col2->proses ?>
@@ -26,7 +26,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Production Report ({{ $department_name }}) {{ $activity_name }} <br>on {{ $date_audit }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Production Report ({{ $department_name }}) {{ $activity_name }} <br>on {{ $month }} <br> (Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -60,7 +60,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/production_audit/print_audit_email/{{ $activity_list_id }}/{{ $date_audit }}/{{ $product }}/{{ $proses }}">See Audit Data / Approval Data</a><br>
+			<a href="http://172.17.128.4/mirai/public/index/production_audit/print_audit_email/{{ $activity_list_id }}/{{ $month }}/{{ $product }}/{{ $proses }}">See Audit Data / Approval Data</a><br>
 			<a href="http://172.17.128.4/mirai/public/index/production_audit/report_audit/8">Audit Monitoring</a>
 		</center>
 	</div>

@@ -452,6 +452,7 @@
                     legend: {
                       // borderColor: 'white',
                       // borderWidth: 1,
+
                       itemStyle:{
                         color: "white",
                         fontSize: "12px",
@@ -509,7 +510,7 @@
                         y: 50,
                         key: result.datas[i][j].leader_name
                       }],
-                      showInLegend: true
+                      showInLegend: true,
                     }, {
                       name: 'Monthly',
                       color: Highcharts.getOptions().colors[1],

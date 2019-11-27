@@ -113,7 +113,9 @@ class ProductionAuditController extends Controller
         $activityList = ActivityList::find($id);
 
         if(strlen($request->get('date')) != null){
-            $date = date('Y-m-d', strtotime($request->get('date')));
+            // $date = date('Y-m-d', strtotime($request->get('date')));
+            $year = substr($request->get('date'),0,4);
+            $month = substr($request->get('date'),-2);
             $productionAudit = ProductionAudit::where('activity_list_id',$id)
                 ->whereHas('point_check_audit', function ($query) use($product) {
                         $query->where('product','=', $product);
@@ -121,7 +123,8 @@ class ProductionAuditController extends Controller
                 ->whereHas('point_check_audit', function ($query2) use($proses) {
                         $query2->where('proses','=', $proses);
                     })
-                ->where('date',$date)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
                 ->orderBy('production_audits.id','desc')
                 ->get();
         }
@@ -395,7 +398,7 @@ class ProductionAuditController extends Controller
         if($request->get('product') != null && strlen($request->get('date')) != null && $request->get('proses') != null){
             $origin_group = $request->get('product');
             $proses = $request->get('proses');
-            $date = date('Y-m-d', strtotime($request->get('date')));
+            $date = $request->get('date');
             $queryProductionAudit = "select *, employees1.name as pic_name,
                     employees2.name as auditor_name
                     from production_audits 
@@ -404,7 +407,7 @@ class ProductionAuditController extends Controller
                     join departments on departments.id =  activity_lists.department_id
                     join employees as employees1 on employees1.employee_id = production_audits.pic
                     join employees as employees2 on employees2.employee_id = production_audits.auditor
-                    where production_audits.date='".$date."' 
+                    where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
             $productionAudit = DB::select($queryProductionAudit);
@@ -425,6 +428,7 @@ class ProductionAuditController extends Controller
             }
             $approved_date = $productAudit->approved_date;
         }
+        $monthTitle = date("F Y", strtotime($date));
         if($productionAudit == null){
             // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
             echo "<script>
@@ -435,6 +439,7 @@ class ProductionAuditController extends Controller
                           'proses' => $proses,
                           'product' => $product,
                           'foreman' => $foreman,
+                          'monthTitle' => $monthTitle,
                           'approved_date' => $approved_date,
                           'jml_null' => $jml_null,
                           'date_audit' => $date_audit,
@@ -465,7 +470,7 @@ class ProductionAuditController extends Controller
                     join departments on departments.id =  activity_lists.department_id
                     join employees as employees1 on employees1.employee_id = production_audits.pic
                     join employees as employees2 on employees2.employee_id = production_audits.auditor
-                    where production_audits.date='".$date."' 
+                    where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
             $productionAudit = DB::select($queryProductionAudit);
@@ -474,6 +479,8 @@ class ProductionAuditController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+
+        $monthTitle = date("F Y", strtotime($date));
 
         $jml_null = 0;
         foreach($productionAudit as $productAudit){
@@ -497,6 +504,7 @@ class ProductionAuditController extends Controller
                           'product' => $product,
                           'approved_date' => $approved_date,
                           'foreman' => $foreman,
+                          'monthTitle' => $monthTitle,
                           'jml_null' => $jml_null,
                           'date_audit' => $date_audit,
                           'production_audit' => $productionAudit,
@@ -526,7 +534,7 @@ class ProductionAuditController extends Controller
                     join departments on departments.id =  activity_lists.department_id
                     join employees as employees1 on employees1.employee_id = production_audits.pic
                     join employees as employees2 on employees2.employee_id = production_audits.auditor
-                    where production_audits.date='".$date."' 
+                    where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."'
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
             $productionAudit = DB::select($queryProductionAudit);
@@ -668,8 +676,8 @@ class ProductionAuditController extends Controller
       {
           $origin_group = $request->get('product');
           $proses = $request->get('proses');
-          $date = date('Y-m-d', strtotime($request->get('date')));
-          $queryProductionAudit = "select *,production_audits.id as id_production_audit, employees1.name as pic_name,
+          $date = $request->get('date');
+          $queryProductionAudit = "select *,production_audits.id as id_production_audit, employees1.name as pic_name,DATE_FORMAT(production_audits.date,'%Y-%m') as month,
                     employees2.name as auditor_name
                     from production_audits 
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
@@ -677,7 +685,7 @@ class ProductionAuditController extends Controller
                     join departments on departments.id =  activity_lists.department_id
                     join employees as employees1 on employees1.employee_id = production_audits.pic
                     join employees as employees2 on employees2.employee_id = production_audits.auditor
-                    where production_audits.date='".$date."' 
+                    where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."'
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
           $productionAudit = DB::select($queryProductionAudit);
@@ -726,10 +734,11 @@ class ProductionAuditController extends Controller
             $origin_group = $production_audit->point_check_audit->product;
             $proses = $production_audit->point_check_audit->proses;
             $date = $production_audit->date;
+            $month = substr($date,0,7);
             $production_audit->approval = "Approved";
             $production_audit->approved_date = date('Y-m-d');
             $production_audit->save();
           }
-          return redirect('/index/production_audit/print_audit_email/'.$id.'/'.$date.'/'.$origin_group.'/'.$proses)->with('status', 'Approved.')->with('page', 'Production Audit');
+          return redirect('/index/production_audit/print_audit_email/'.$id.'/'.$month.'/'.$origin_group.'/'.$proses)->with('status', 'Approved.')->with('page', 'Production Audit');
       }
 }

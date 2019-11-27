@@ -89,7 +89,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off">
+										<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Select Month">
 									</div>
 								</div>
 							</div>
@@ -119,7 +119,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date-print" name="date" required autocomplete="off">
+										<input type="text" class="form-control pull-right" id="date-print" name="date" required autocomplete="off" placeholder="Select Month">
 									</div>
 								</div>
 							</div>
@@ -164,7 +164,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date-email" name="date" required autocomplete="off">
+										<input type="text" class="form-control pull-right" id="date-email" name="date" required autocomplete="off" placeholder="Select Month">
 									</div>
 								</div>
 							</div>
@@ -340,20 +340,31 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		// $('#date').datepicker({
+		// 	autoclose: true,
+		// 	format: 'yyyy-mm',
+		// 	todayHighlight: true
+		// });
 		$('#date').datepicker({
 			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
 		});
 		$('#date-print').datepicker({
 			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
 		});
 		$('#date-email').datepicker({
 			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
 		});
 		$('.select2').select2({
 			language : {
