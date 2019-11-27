@@ -425,7 +425,6 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/barrel_adjustment', 'MiddleProcessController@indexBarrelAdjustment');
 	Route::get('index/middle/buffing_adjustment', 'MiddleProcessController@indexBuffingAdjustment');
 	Route::get('fetch/middle/buffing_adjustment', 'MiddleProcessController@fetchBuffingAdjustment');
-	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
 	Route::post('post/middle/buffing_delete_queue', 'MiddleProcessController@deleteBuffingQueue');
 	Route::post('post/middle/buffing_add_queue', 'MiddleProcessController@addBuffingQueue');
 	Route::get('index/middle/wip_adjustment', 'MiddleProcessController@indexWIPAdjustment');
@@ -441,6 +440,8 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
 	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
+	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
+	
 });
 
 Route::get('setting/user', 'UserController@index_setting');
@@ -885,6 +886,7 @@ Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
+	Route::get('fetch/kaizen/applied', 'EmployeeController@fetchAppliedKaizen');
 	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
@@ -1028,6 +1030,11 @@ Route::get('index/GetNgBensukiAll', 'Pianica@GetNgBensukiAll');
 Route::get('index/display_pn_ng_rate', 'Pianica@indexNgRate');
 Route::get('fetch/pianica/ng_spot_welding', 'Pianica@fetchNgWelding');
 Route::get('fetch/pianica/ng_bentsuki_benage', 'Pianica@fetchNgBentsukiBenage');
+Route::get('fetch/pianica/ng_kensa_awal', 'Pianica@fetchNgKensaAwal');
+Route::get('index/display_pn_ng_trends', 'Pianica@indexTrendsNgRate');
+Route::get('fetch/pianica/trend_ng_spot_welding', 'Pianica@fetchTrendNgWelding');
+Route::get('fetch/pianica/trend_ng_bentsuki_benage', 'Pianica@fetchTrendNgBentsukiBenage');
+Route::get('fetch/pianica/trend_ng_kensa_awal', 'Pianica@fetchTrendNgKensaAwal');
 
 
 	//---------- report bensuki
@@ -1560,6 +1567,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 	//Verifikasi CAR
 	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
+	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
 
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasicar');
@@ -1596,6 +1604,7 @@ Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beac
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 //suhu
 Route::get('index/suhu','TemperatureController@index');
+Route::get('index/tes','TemperatureController@data_suhu');
 
 
 // BUFFING TOILET
