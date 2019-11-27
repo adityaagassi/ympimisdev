@@ -121,8 +121,8 @@ class ProductionReportController extends Controller
         monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
         COALESCE(((monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly * daily.jumlah_week as jumlah_activity_weekly,
-        weekly.jumlah_sampling as jumlah_weekly,
-        COALESCE(((weekly.jumlah_sampling)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
+        weekly.jumlah_sampling + weekly.jumlah_audit as jumlah_weekly,
+        COALESCE(((weekly.jumlah_sampling+weekly.jumlah_audit)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
         daily.jumlah_activity_daily * daily.jumlah_day as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily * daily.jumlah_day))*100,0) as persen_daily,
@@ -204,7 +204,18 @@ class ProductionReportController extends Controller
                                 and sampling_checks.deleted_at is null 
                                 and actlist.department_id = '".$id."'
                                 GROUP BY sampling_checks.leader),0)
-        as jumlah_sampling
+        as jumlah_sampling,
+        COALESCE((select count(DISTINCT(production_audits.activity_list_id)) as jumlah_audit
+                from production_audits
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                                join point_check_audits as point_check on point_check.id = point_check_audit_id
+                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
+                    and actlist.frequency = 'Weekly'
+                                and point_check.leader = '".$dataleader."'
+                                and production_audits.deleted_at is null 
+                              and actlist.department_id = '".$id."'
+                                GROUP BY point_check.leader),0)
+        as jumlah_audit
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
@@ -223,7 +234,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'),0)
         as jumlah_daily_check,
         (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
-        (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_week,
+        4 as jumlah_week,
         (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND concat(left(CURDATE(),7),substr(CURDATE(),8,3))) as cur_day,
         (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
         from activity_lists
@@ -272,9 +283,8 @@ class ProductionReportController extends Controller
         from 
         (select activity_lists.id as id_activity,activity_name, activity_type,leader_dept,
             IF(frequency = 'Daily',
-                    (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'),
-            IF(frequency = 'Weekly',(select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'),
-            IF(frequency = 'Monthly',(select count(DISTINCT(fiscal_year)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'),0))) 
+            (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') =            '".$week_date."'),
+            IF(frequency = 'Monthly',(select count(DISTINCT(fiscal_year)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'),4)) 
                  as plan,
             IF(activity_type = 'Audit',CONCAT('index/production_audit/details/',activity_lists.id),
             IF(activity_type = 'Training',CONCAT('index/training_report/index/',activity_lists.id),
