@@ -621,9 +621,9 @@
 								}
 							},
 							series: {
-								pointPadding: 0.95,
-								groupPadding: 0.95,
-								borderWidth: 0.95,
+								// pointPadding: 0.7,
+								groupPadding: -0.2,
+								// pointWidth: 200,
 								shadow: false,
 								borderColor: '#303030',
 								cursor: 'pointer',
@@ -1039,9 +1039,9 @@
 								animation:{
 									duration:0
 								},
-								pointPadding: 0.95,
-								groupPadding: 0.95,
-								borderWidth: 0.95,
+								// pointPadding: 0.95,
+								groupPadding: -0.2,
+								// borderWidth: 0.95,
 								shadow: false,
 								borderColor: '#303030',
 								cursor: 'pointer',
@@ -1148,9 +1148,9 @@
 								animation:{
 									duration:0
 								},
-								pointPadding: 0.95,
-								groupPadding: 0.95,
-								borderWidth: 0.95,
+								// pointPadding: 0.95,
+								groupPadding: -0.2,
+								// borderWidth: 0.95,
 								shadow: false,
 								borderColor: '#303030',
 								cursor: 'pointer',
