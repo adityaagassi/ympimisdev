@@ -290,7 +290,7 @@ class ProductionReportController extends Controller
             IF(activity_type = 'Training',CONCAT('index/training_report/index/',activity_lists.id),
             IF(activity_type = 'Laporan Aktivitas',CONCAT('index/audit_report_activity/index/',activity_lists.id),
             IF(activity_type = 'Sampling Check',CONCAT('index/sampling_check/index/',activity_lists.id),
-            IF(activity_type = 'Pengecekan Foto',CONCAT('index/daily_check_fg/product/',activity_lists.id),
+            IF(activity_type = 'Pengecekan Foto',CONCAT('index/daily_check_fg/index/',activity_lists.id,'/',(select DISTINCT(product) from daily_checks where activity_list_id = activity_lists.id)),
             IF(activity_type = 'Labelisasi',CONCAT('index/labeling/index/',activity_lists.id),0))))))
             as link,
             IF(activity_type = 'Audit',

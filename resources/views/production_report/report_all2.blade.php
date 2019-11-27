@@ -358,9 +358,9 @@
                 chart: {
                   type: 'solidgauge',
                   height: '105%',
-                  // events: {
-                  //   render: renderLabels
-                  // }
+                  events: {
+                    render: renderLabels
+                  }
                 },
                 title: {
                   text: leader_name,
