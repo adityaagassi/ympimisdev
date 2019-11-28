@@ -215,7 +215,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_processes.leader),0)
         as jumlah_audit_process,
-        COALESCE((select count(DISTINCT(production_audits.activity_list_id)) as jumlah_audit
+        COALESCE((select count(DISTINCT(production_audits.date)) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                                 join point_check_audits as point_check on point_check.id = point_check_audit_id
@@ -305,7 +305,7 @@ class ProductionReportController extends Controller
             IF(activity_type = 'Pemahaman Proses',CONCAT('index/audit_process/index/',activity_lists.id),0)))))))
             as link,
             IF(activity_type = 'Audit',
-            (select count(DISTINCT(production_audits.activity_list_id)) as jumlah_audit
+            (select count(DISTINCT(production_audits.date)) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'

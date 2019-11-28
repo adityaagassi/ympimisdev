@@ -52,7 +52,7 @@
 				<tr>
 					<td colspan="2" class="head">Department</td>
 					<td colspan="2" class="head">{{ $departments }}</td>
-					<td class="head" rowspan="4" colspan="3" style="padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="4" colspan="2" style="padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
 					<td class="head" rowspan="4"><center>Checked<br><br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
@@ -81,7 +81,7 @@
 					<td colspan="2" class="head">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<td class="head" colspan='9'></td>
+					<td class="head" colspan='8'></td>
 				</tr>
 				<tr>
 					<td class="head" rowspan="2"><center>No.</center></td>
@@ -89,27 +89,31 @@
 					<td class="head" rowspan="2"><center>Nama Dokumen</center></td>
 					<td class="head" rowspan="2"><center>No. Dokumen</center></td>
 					<td class="head" colspan='3'><center>Hasil Audit IK</center></td>
-					<td class="head" colspan="2"><center>Sosialisasi</center></td>
+					<td class="head"><center>Sosialisasi</center></td>
 				</tr>
 				<tr>
 					<td class="head"><center>Kesesuaian dengan Aktual Proses</center></td>
 					<td class="head"><center>Kelengkapan Point Safety</center></td>
 					<td class="head"><center>Kesesuaian QC Kouteihyo</center></td>
 					<td class="head"><center>Nama Operator</center></td>
-					<td class="head"><center>Operator Sign</center></td>
 				</tr>
 				<?php $no = 1 ?>
 				@foreach($laporanAktivitas as $laporanAktivitas)
 				<tr>
-					<td class="head"><center>{{ $no }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->date }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $no }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->date }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
 					<td class="head"><center><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></center></td>
-					<td class="head"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->operator }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->operator_sign }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
+					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->operator }}</center></td>
+				</tr>
+				<tr>
+					<td>Tindakan Perbaikan : {{ $laporanAktivitas->tindakan_perbaikan }}</td>
+				</tr>
+				<tr>
+					<td>Target : {{ $laporanAktivitas->target }}</td>
 				</tr>
 				<?php $no++ ?>
 				@endforeach
