@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('header')
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
     Edit {{ $page }}
@@ -125,6 +126,12 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+            <label class="col-sm-4">Time<span class="text-red">*</span></label>
+            <div class="col-sm-4" align="left">
+              <input type="text" id="plan_time" name="plan_time" class="form-control timepicker" value="{{ $activity_list->plan_time }}">
+            </div>
+          </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
             @if($id_department != 0)
@@ -144,7 +151,13 @@
 @endsection
 
 @section('scripts')
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 <script>
+  $('.timepicker').timepicker({
+      showInputs: false,
+      showMeridian: false,
+      defaultTime: '0:00',
+    });
   $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()

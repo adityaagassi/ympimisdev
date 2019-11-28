@@ -25,6 +25,11 @@ class ActivityListController extends Controller
                         'Pengecekan',
                         'Pemahaman Proses',
                         'Labelisasi'];
+
+      $this->frequency = ['Daily',
+                        'Weekly',
+                        'Monthly',
+                        'Conditional'];
     }
 
     function index()
@@ -69,7 +74,7 @@ class ActivityListController extends Controller
       elseif ($no == 9) {
         $activity_type = 'Labelisasi';
       }
-      $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->get();
+      $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
       $data = array('activity_list' => $activityList,
                     'department' => $department,
                     'dept_name' => $dept_name,
@@ -77,6 +82,82 @@ class ActivityListController extends Controller
                     'no' => $no,);
       return view('activity_list.filter', $data
         )->with('page', 'Activity List');
+    }
+
+    function resume($id)
+    {
+      $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->get();
+
+      $queryDepartments2 = "SELECT * FROM departments where id='".$id."'";
+      $department_by_id = DB::select($queryDepartments2);
+      foreach ($department_by_id as $department_by_id) {
+          $dept_name = $department_by_id->department_name;
+      }
+
+      $leader_dept = 'All Leader';
+      $frequency = 'Daily, Weekly, Monthly, and Conditional';
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $leader = DB::select($queryLeader);
+
+      $data = array('activity_list' => $activityList,
+                    'dept_name' => $dept_name,
+                    'leader' => $leader,
+                    'leader_dept' => $leader_dept,
+                    'frequency_dept' => $frequency,
+                    'id' => $id,
+                    'frequency' => $this->frequency);
+      return view('activity_list.resume', $data
+        )->with('page', 'Leader Task');
+    }
+
+    function resume_filter(Request $request,$id)
+    {
+      $queryDepartments2 = "SELECT * FROM departments where id='".$id."'";
+      $department_by_id = DB::select($queryDepartments2);
+      foreach ($department_by_id as $department_by_id) {
+          $dept_name = $department_by_id->department_name;
+      }
+
+      if($request->get('frequency') != null && $request->get('leader') != null){
+        $leader_dept = $request->get('leader');
+        $frequency = $request->get('frequency');
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->where('frequency',$frequency)->where('leader_dept',$leader_dept)->get();
+      }
+      elseif($request->get('frequency') == null && $request->get('leader') != null){
+        $frequency = 'Daily, Weekly, Monthly, and Conditional';
+        $leader_dept = $request->get('leader');
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->where('leader_dept',$leader_dept)->get();
+      }
+      elseif($request->get('frequency') != null && $request->get('leader') == null){
+        $leader_dept = 'All Leader';
+        $frequency = $request->get('frequency');
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
+      }
+      else{
+        $leader_dept = 'All Leader';
+        $frequency = 'Daily, Weekly, Monthly, and Conditional';
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->get();
+      }
+
+      $queryLeader = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+      $leader = DB::select($queryLeader);
+
+      $data = array('activity_list' => $activityList,
+                    'dept_name' => $dept_name,
+                    'leader' => $leader,
+                    'leader_dept' => $leader_dept,
+                    'frequency_dept' => $frequency,
+                    'id' => $id,
+                    'frequency' => $this->frequency);
+      return view('activity_list.resume', $data
+        )->with('page', 'Leader Task');
     }
 
     function create()
@@ -150,6 +231,7 @@ class ActivityListController extends Controller
             'activity_type' => $request->get('activity_type'),
             'leader_dept' => $request->get('leader'),
             'foreman_dept' => $request->get('foreman'),
+            'plan_time' => $request->get('plan_time'),
             'created_by' => $id
           ]);
 
@@ -179,6 +261,7 @@ class ActivityListController extends Controller
             'activity_type' => $request->get('activity_type'),
             'leader_dept' => $request->get('leader'),
             'foreman_dept' => $request->get('foreman'),
+            'plan_time' => $request->get('plan_time'),
             'created_by' => $id_user
           ]);
 
@@ -274,6 +357,7 @@ class ActivityListController extends Controller
             $activity_list->activity_type = $request->get('activity_type');
             $activity_list->leader_dept = $request->get('leader');
             $activity_list->foreman_dept = $request->get('foreman');
+            $activity_list->plan_time = $request->get('plan_time');
             $activity_list->save();
             return redirect('/index/activity_list')->with('status', 'Activity data has been updated.')->with('page', 'Activity List');
           }
@@ -299,6 +383,7 @@ class ActivityListController extends Controller
             $activity_list->activity_type = $request->get('activity_type');
             $activity_list->leader_dept = $request->get('leader');
             $activity_list->foreman_dept = $request->get('foreman');
+            $activity_list->plan_time = $request->get('plan_time');
             $activity_list->save();
             return redirect('/index/activity_list/filter/'.$id_department.'/'.$no)->with('status', 'Activity data has been updated.')->with('page', 'Activity List');
           }

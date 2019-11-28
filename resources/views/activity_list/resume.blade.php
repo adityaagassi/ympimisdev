@@ -1,49 +1,48 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
 <section class="content-header">
   <h1>
-    {{ $page }}s of {{ $dept_name }}
+    Resume of {{ $page }}s {{ strtoupper($dept_name) }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li></li> --}}
-    <li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a>&nbsp<a href="{{ url("index/activity_list/create_by_department/".$id.'/'.$no)}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
+    {{-- <li><a href="{{ url("index/activity_list/create")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> --}}
   </ol>
 </section>
 @endsection
@@ -60,6 +59,53 @@ table.table-bordered > tfoot > tr > th{
     <div class="col-xs-12">
       <div class="box">
         <div class="box-body">
+          <div class="col-xs-12">
+            <div class="box-header">
+              <h3 class="box-title">Tasks of {{ $leader_dept }} on {{ $frequency_dept }}<span class="text-purple"></span></h3>
+            </div>
+            <form role="form" method="post" action="{{url('index/activity_list/resume_filter/'.$id)}}">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <div class="col-md-12 col-md-offset-3">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Frequency</label>
+                  <select class="form-control select2" name="frequency" style="width: 100%;" data-placeholder="Choose a Frequency...">
+                    <option value=""></option>
+                    @foreach($frequency as $frequency)
+                      <option value="{{ $frequency }}">{{ $frequency }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Leader</label>
+                  <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader...">
+                    <option value=""></option>
+                    @foreach($leader as $leader)
+                      <option value="{{ $leader->name }}">{{ $leader->employee_id }} - {{ $leader->name }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-md-offset-4">
+              <div class="col-md-3">
+                <div class="form-group pull-right">
+                  <a href="{{ url('index/production_report/index/'.$id) }}" class="btn btn-warning">Back</a>
+                  <a href="{{ url('index/activity_list/resume/'.$id) }}" class="btn btn-danger">Clear</a>
+                  <button type="submit" class="btn btn-primary col-sm-14">Search</button>
+                </div>
+              </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-body">
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
@@ -71,8 +117,6 @@ table.table-bordered > tfoot > tr > th{
                 <th>Leader</th>
                 <th>Foreman</th>
                 <th>Standard Time</th>
-                <th>Details</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -91,27 +135,11 @@ table.table-bordered > tfoot > tr > th{
                     $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
                   {{$min.' Min'}}
                 </td>
-                <td><a class="btn btn-primary btn-sm" href="{{url("index/production_report/activity/".$activity_list->id)}}">Details</a>
-                  @if($activity_list->activity_type == "Audit")
-                  <a class="btn btn-info btn-sm" href="{{url("index/point_check_audit/index/".$activity_list->id)}}">Point Check Master</a>
-                  @endif
-                </td>
-                <td>
-                  <center>
-                    <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
-                    <a href="{{url('index/activity_list/edit_by_department/'.$activity_list->id.'/'.$activity_list->department_id.'/'.$no)}}" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/activity_list/destroy_by_department") }}', '{{ $activity_list->activity_name }}', '{{ $activity_list->id }}','{{ $activity_list->department_id }}','{{ $no }}');">
-                      Delete
-                    </a>
-                  </center>
-                </td>
               </tr>
               @endforeach
             </tbody>
             <tfoot>
               <tr>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -126,6 +154,7 @@ table.table-bordered > tfoot > tr > th{
         </div>
       </div>
     </div>
+  </div>
   </section>
 
   <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -156,6 +185,9 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.html5.min.js")}}"></script>
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
+    jQuery(document).ready(function() {
+      $('.select2').select2();
+    });
     jQuery(document).ready(function() {
       $('#example1 tfoot th').each( function () {
         var title = $(this).text();
@@ -229,9 +261,9 @@ table.table-bordered > tfoot > tr > th{
         'autoWidth'   : false
       })
     })
-    function deleteConfirmation(url, name, id,department_id,no) {
+    function deleteConfirmation(url, name, id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+id +'/'+department_id+'/'+no);
+      jQuery('#modalDeleteButton').attr("href", url+'/'+id);
     }
   </script>
 

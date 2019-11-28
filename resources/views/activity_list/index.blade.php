@@ -69,6 +69,7 @@
                 <th>Activity Type</th>
                 <th>Leader</th>
                 <th>Foreman</th>
+                <th>Standard Time</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -82,6 +83,12 @@
                 <td>{{$activity_list->activity_type}}</td>
                 <td>{{$activity_list->leader_dept}}</td>
                 <td>{{$activity_list->foreman_dept}}</td>
+                <td>
+                  <?php 
+                    $timesplit=explode(':',$activity_list->plan_time);
+                    $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
+                  {{$min.' Min'}}
+                </td>
                 <td>
                   <center>
                     <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
@@ -97,6 +104,7 @@
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

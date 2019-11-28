@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('header')
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
     Create {{ $page }} - @if($dept_name != null)
@@ -120,6 +121,12 @@
             </select>
           </div>
         </div>
+        <div class="form-group row" align="right">
+            <label class="col-sm-4">Time<span class="text-red">*</span></label>
+            <div class="col-sm-4" align="left">
+              <input type="text" id="plan_time" name="plan_time" class="form-control timepicker" value="01:00">
+            </div>
+          </div>
         <div class="col-sm-4 col-sm-offset-6">
           <div class="btn-group">
                 @if($id != 0)
@@ -139,6 +146,7 @@
   @endsection
 
   @section('scripts')
+  <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
   <script>
     $(function () {
       $('.select2').select2()
@@ -148,7 +156,11 @@
       $('#email').val('');
       $('#password').val('');
     });
-
+    $('.timepicker').timepicker({
+      showInputs: false,
+      showMeridian: false,
+      defaultTime: '0:00',
+    });
   </script>
   @stop
 

@@ -19,6 +19,7 @@
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Report <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
+			<a href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Resume Leader Task</a>
 			@foreach($activity_list as $activity_list)
 				@if($activity_list->activity_type == "Pengecekan Foto")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Daily Check FG</a>
@@ -36,11 +37,11 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Leader Task Monitoring</a>
 			{{-- <a href="{{ url("index/middle/display/Flute") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Display Buffing</a> --}}
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Leader Task Monitoring</a>
 			{{-- <a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
 			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
 			<a href="{{ url("index/sampling_check/report_sampling_check/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Sampling Check</a>

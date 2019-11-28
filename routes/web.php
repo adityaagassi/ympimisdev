@@ -892,6 +892,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
+Route::get('fetch/cost', 'EmployeeController@fetchCost');
 
 //INITIAL
 Route::get('index/initial/{id}', 'InitialProcessController@index');
@@ -1351,6 +1352,8 @@ Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportCo
 
 //Activity List
 Route::get('index/activity_list', 'ActivityListController@index');
+Route::get('index/activity_list/resume/{id}', 'ActivityListController@resume');
+Route::post('index/activity_list/resume_filter/{id}', 'ActivityListController@resume_filter');
 Route::get('index/activity_list/create', 'ActivityListController@create');
 Route::get('index/activity_list/create_by_department/{id}/{no}', 'ActivityListController@create_by_department');
 Route::post('index/activity_list/store', 'ActivityListController@store');
@@ -1603,8 +1606,9 @@ Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 //suhu
-Route::get('index/suhu','TemperatureController@index');
-Route::get('index/tes','TemperatureController@data_suhu');
+Route::get('index/suhu_office','TemperatureController@index_suhu_office');
+Route::get('index/Log_suhu1','TemperatureController@data_suhu_office');
+Route::get('index/map_suhu','TemperatureController@index_maps');
 
 
 // BUFFING TOILET

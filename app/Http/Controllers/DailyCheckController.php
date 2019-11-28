@@ -23,10 +23,7 @@ class DailyCheckController extends Controller
       $this->middleware('auth');
       $this->product = ['Saxophone',
                         'Flute',
-                        'Clarinet',
-                        'Venova',
-                        'Recorder',
-                        'Pianica',];
+                        'Clarinet'];
     }
 
     function index($id,$product)
