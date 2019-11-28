@@ -25,7 +25,7 @@
 				@elseif($activity_list->activity_type == "Laporan Aktivitas")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Laporan Aktivitas Audit IK</a>
 				@elseif($activity_list->activity_type == "Pengecekan")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Implementasi Pengecekan</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Pengecekan Product Pertama</a>
 				@elseif($activity_list->activity_type == "Labelisasi")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Labeling Safety Sign</a>
 				@else
