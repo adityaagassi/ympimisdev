@@ -980,16 +980,15 @@ $absences = db::connection('mysql3')->select($absence);
 
 $ct = db::connection('mysql3')->select("
   select leave_quota, leave_quota - (select shift + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= 
-  IF(DATE_FORMAT('hire_date','%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-  DATE_FORMAT('hire_date', CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-  DATE_FORMAT('hire_date', CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
-  (select count(shift) as shift, '".$emp_id."' as nik from presensi 
-  join ympimis.employees on employees.employee_id = presensi.nik
+  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
+  (select count(shift) as shift, '".$emp_id."' as nik from presensi join ympimis.employees on employees.employee_id = presensi.nik
   where shift in ('S','I','A','CT') and nik = '".$emp_id."'
   and DATE_FORMAT(tanggal,'%Y-%m-%d') >= 
-  IF(DATE_FORMAT('hire_date','%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-  DATE_FORMAT('hire_date', CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-  DATE_FORMAT('hire_date', CONCAT(YEAR(now()),'-%m-01')))
+  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))
   ) presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."') as sisa_cuti from 
   (select YEAR(now()) - YEAR(hire_date)
   - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
