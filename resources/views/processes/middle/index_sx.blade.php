@@ -31,6 +31,9 @@
 			@if(in_array('A9', $navs))
 			<a href="{{ url("/index/middle/buffing_canceled") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Cancel</a>
 			@endif
+			@if(in_array('A9', $navs))
+			<a href="{{ url("/index/middle/buffing_target", "bff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Buffing Target</a>
+			@endif
 
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_middle_barrel", "barrel-sx-lcq") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Lacquering</a>

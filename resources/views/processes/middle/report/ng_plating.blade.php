@@ -334,7 +334,7 @@
 		$('.select2').select2();
 
 		drawChart();
-		// setInterval(drawChart, 60000);
+		setInterval(drawChart, 60000);
 	});
 
 	function change() {

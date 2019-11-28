@@ -237,6 +237,8 @@
 
 	function mesin1(){
 		$.get("{{ 'http://172.17.129.10/zed/dashboard/getDataSystem/' }}", function(result, status, xhr){
+			console.log(result);
+
 			var mesin = result.split('(ime)');
 			
 			//Zpro

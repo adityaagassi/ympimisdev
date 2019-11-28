@@ -338,12 +338,6 @@
 			grup:grup,
 		}
 
-		$.get('{{ url("fetch/middle/buffing_adjustment") }}', data, function(result, status, xhr) {
-			if(result.status){
-
-			}
-		});
-
 		$('#tableAdjust tfoot th').each(function(){
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
