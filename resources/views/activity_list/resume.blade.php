@@ -109,45 +109,58 @@
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th>Activity Name</th>
-                <th>Activity Alias</th>
-                <th>Frequency</th>
-                <th>Department</th>
-                <th>Activity Type</th>
-                <th>Leader</th>
-                <th>Foreman</th>
-                <th>Standard Time</th>
+                <th >Activity Name</th>
+                <th>D</th>
+                <th>W</th>
+                <th>M</th>
+                <th>C</th>
+                <?php $jumlah_td = 5 ?>
+                @foreach($leader2 as $leader)
+                  <th >{{ $leader->name }}</th>
+                  <?php $jumlah_td = $jumlah_td + 1 ?>
+                @endforeach
               </tr>
             </thead>
             <tbody>
               @foreach($activity_list as $activity_list)
-              <tr>
-                <td>{{$activity_list->activity_name}}</td>
-                <td>{{$activity_list->activity_alias}}</td>
-                <td>{{$activity_list->frequency}}</td>
-                <td>{{$activity_list->departments->department_name}}</td>
-                <td>{{$activity_list->activity_type}}</td>
-                <td>{{$activity_list->leader_dept}}</td>
-                <td>{{$activity_list->foreman_dept}}</td>
-                <td>
-                  <?php 
-                    $timesplit=explode(':',$activity_list->plan_time);
-                    $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
-                  {{$min.' Min'}}
-                </td>
-              </tr>
+                <tr>
+                  <td>{{ $activity_list->activity_name }}</td>
+                  @if($activity_list->frequency == "Daily")
+                    <td style="background-color: #75b3ff"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  @elseif($activity_list->frequency == "Weekly")
+                    <td></td>
+                    <td style="background-color: #75b3ff"></td>
+                    <td></td>
+                    <td></td>
+                  @elseif($activity_list->frequency == "Monthly")
+                    <td></td>
+                    <td></td>
+                    <td style="background-color: #75b3ff"></td>
+                    <td></td>
+                  @else
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="background-color: #75b3ff"></td>
+                  @endif
+                  @foreach($leader3 as $leader)
+                    @if($leader->name == $activity_list->leader_dept)
+                      <td style="background-color: #4aff77"></td>
+                    @else
+                      <td></td>
+                    @endif
+                  @endforeach
+                </tr>
               @endforeach
             </tbody>
             <tfoot>
               <tr>
+                <?php for($i = 0;$i<$jumlah_td;$i++){ ?>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <?php } ?>
               </tr>
             </tfoot>
           </table>

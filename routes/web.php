@@ -1537,6 +1537,18 @@ Route::post('index/audit_process/sendemail/{id}', 'AuditProcessController@sendem
 Route::get('index/audit_process/print_audit_process_email/{id}/{month}', 'AuditProcessController@print_audit_process_email');
 Route::post('index/audit_process/approval/{id}/{month}', 'AuditProcessController@approval');
 
+//POINT CHECK FIRST PRODUCT
+Route::get('index/point_check_first_product/index/{id}', 'PointCheckFirstProductController@index');
+Route::get('index/point_check_first_product/show/{id}/{point_check_id}', 'PointCheckFirstProductController@show');
+Route::get('index/point_check_first_product/destroy/{id}/{point_check_id}', 'PointCheckFirstProductController@destroy');
+Route::get('index/point_check_first_product/create/{id}', 'PointCheckFirstProductController@create');
+Route::post('index/point_check_first_product/store/{id}', 'PointCheckFirstProductController@store');
+Route::get('index/point_check_first_product/edit/{id}/{point_check_id}', 'PointCheckFirstProductController@edit');
+Route::post('index/point_check_first_product/update/{id}/{point_check_id}', 'PointCheckFirstProductController@update');
+
+//FIRST PRODUCT AUDIT
+Route::get('index/first_product_audit/index/{id}', 'FirstProductAuditController@index');
+
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
 Route::post('index/webcam/create', 'WebcamController@create');

@@ -102,9 +102,13 @@ class ActivityListController extends Controller
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
             where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
       $leader = DB::select($queryLeader);
+      $leader2 = DB::select($queryLeader);
+      $leader3 = DB::select($queryLeader);
 
       $data = array('activity_list' => $activityList,
                     'dept_name' => $dept_name,
+                    'leader2' => $leader2,
+                    'leader3' => $leader3,
                     'leader' => $leader,
                     'leader_dept' => $leader_dept,
                     'frequency_dept' => $frequency,
@@ -148,10 +152,15 @@ class ActivityListController extends Controller
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
             where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
       $leader = DB::select($queryLeader);
+      $leader2 = DB::select($queryLeader);
+      $leader3 = DB::select($queryLeader);
+
 
       $data = array('activity_list' => $activityList,
                     'dept_name' => $dept_name,
                     'leader' => $leader,
+                    'leader2' => $leader2,
+                    'leader3' => $leader3,
                     'leader_dept' => $leader_dept,
                     'frequency_dept' => $frequency,
                     'id' => $id,

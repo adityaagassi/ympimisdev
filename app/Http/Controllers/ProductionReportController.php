@@ -78,7 +78,7 @@ class ProductionReportController extends Controller
             return redirect('/index/labeling/index/'.$id)->with('page', 'Labeling')->with('no', '9');
         }
         elseif($activity_type == "Pengecekan"){
-
+            return redirect('/index/first_product_audit/index/'.$id)->with('page', 'First Product Audit')->with('no', '6');
         }
         elseif($activity_type == "Pemahaman Proses"){
             return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', '8');

@@ -95,6 +95,9 @@ table.table-bordered > tfoot > tr > th{
                   @if($activity_list->activity_type == "Audit")
                   <a class="btn btn-info btn-sm" href="{{url("index/point_check_audit/index/".$activity_list->id)}}">Point Check Master</a>
                   @endif
+                  @if($activity_list->activity_type == "Pengecekan")
+                  <a class="btn btn-info btn-sm" href="{{url("index/point_check_first_product/index/".$activity_list->id)}}">Point Check First Product</a>
+                  @endif
                 </td>
                 <td>
                   <center>
