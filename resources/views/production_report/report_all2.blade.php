@@ -147,6 +147,22 @@
       // endDate: '<?php echo $tgl_max ?>'
 
     });
+
+    var interval;
+    var statusx = "idle";
+
+    $(document).on('mousemove keyup keypress',function(){
+      clearTimeout(interval);
+      settimeout();
+      statusx = "active";
+    })
+
+    function settimeout(){
+      interval=setTimeout(function(){
+        statusx = "idle";
+        drawChart()
+      },30000)
+    }
   });
 
   jQuery(document).ready(function() {

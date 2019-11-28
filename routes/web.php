@@ -1036,6 +1036,9 @@ Route::get('index/display_pn_ng_trends', 'Pianica@indexTrendsNgRate');
 Route::get('fetch/pianica/trend_ng_spot_welding', 'Pianica@fetchTrendNgWelding');
 Route::get('fetch/pianica/trend_ng_bentsuki_benage', 'Pianica@fetchTrendNgBentsukiBenage');
 Route::get('fetch/pianica/trend_ng_kensa_awal', 'Pianica@fetchTrendNgKensaAwal');
+Route::get('index/display_daily_pn_ng', 'Pianica@indexDailyNg');
+
+
 
 
 	//---------- report bensuki
@@ -1527,6 +1530,17 @@ Route::get('index/audit_process/show/{id}/{audit_process_id}', 'AuditProcessCont
 Route::get('index/audit_process/destroy/{id}/{audit_process_id}', 'AuditProcessController@destroy');
 Route::get('index/audit_process/create/{id}', 'AuditProcessController@create');
 Route::post('index/audit_process/store/{id}', 'AuditProcessController@store');
+Route::get('index/audit_process/edit/{id}/{audit_process_id}', 'AuditProcessController@edit');
+Route::post('index/audit_process/update/{id}/{audit_process_id}', 'AuditProcessController@update');
+Route::post('index/audit_process/print_audit_process/{id}', 'AuditProcessController@print_audit_process');
+Route::post('index/audit_process/sendemail/{id}', 'AuditProcessController@sendemail');
+Route::get('index/audit_process/print_audit_process_email/{id}/{month}', 'AuditProcessController@print_audit_process_email');
+Route::post('index/audit_process/approval/{id}/{month}', 'AuditProcessController@approval');
+
+//WEBCAM
+Route::get('index/webcam', 'WebcamController@index');
+Route::post('index/webcam/create', 'WebcamController@create');
+
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR
@@ -1606,8 +1620,9 @@ Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 //suhu
-Route::get('index/suhu_office','TemperatureController@index_suhu_office');
-Route::get('index/Log_suhu1','TemperatureController@data_suhu_office');
+Route::get('index/suhu_office','TemperatureController@suhu_office');
+Route::get('index/suhu_office2','TemperatureController@suhu_office2');
+Route::get('index/log_suhu_office','TemperatureController@data_suhu_office');
 Route::get('index/map_suhu','TemperatureController@index_maps');
 
 

@@ -121,8 +121,8 @@ class ProductionReportController extends Controller
         monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
         COALESCE(((monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly * daily.jumlah_week as jumlah_activity_weekly,
-        weekly.jumlah_sampling + weekly.jumlah_audit as jumlah_weekly,
-        COALESCE(((weekly.jumlah_sampling+weekly.jumlah_audit)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
+        weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process as jumlah_weekly,
+        COALESCE(((weekly.jumlah_sampling + weekly.jumlah_audit_process + weekly.jumlah_audit)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
         daily.jumlah_activity_daily * daily.jumlah_day as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily * daily.jumlah_day))*100,0) as persen_daily,
@@ -205,6 +205,16 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY sampling_checks.leader),0)
         as jumlah_sampling,
+        COALESCE((select count(DISTINCT(audit_processes.date)) as jumlah_sampling
+                from audit_processes
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$bulan."'
+                    and  actlist.frequency = 'Weekly'
+                                and audit_processes.leader = '".$dataleader."'
+                                and audit_processes.deleted_at is null 
+                                and actlist.department_id = '".$id."'
+                                GROUP BY audit_processes.leader),0)
+        as jumlah_audit_process,
         COALESCE((select count(DISTINCT(production_audits.activity_list_id)) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
@@ -291,7 +301,8 @@ class ProductionReportController extends Controller
             IF(activity_type = 'Laporan Aktivitas',CONCAT('index/audit_report_activity/index/',activity_lists.id),
             IF(activity_type = 'Sampling Check',CONCAT('index/sampling_check/index/',activity_lists.id),
             IF(activity_type = 'Pengecekan Foto',CONCAT('index/daily_check_fg/index/',activity_lists.id,'/',(select DISTINCT(product) from daily_checks where activity_list_id = activity_lists.id)),
-            IF(activity_type = 'Labelisasi',CONCAT('index/labeling/index/',activity_lists.id),0))))))
+            IF(activity_type = 'Labelisasi',CONCAT('index/labeling/index/',activity_lists.id),
+            IF(activity_type = 'Pemahaman Proses',CONCAT('index/audit_process/index/',activity_lists.id),0)))))))
             as link,
             IF(activity_type = 'Audit',
             (select count(DISTINCT(production_audits.activity_list_id)) as jumlah_audit
@@ -342,11 +353,20 @@ class ProductionReportController extends Controller
             (select count(DISTINCT(labelings.leader)) as jumlah_labeling
                 from labelings
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(labelings.date,'%Y-%m') = '2019-11'
-                                and labelings.leader = 'Akhmad Nasik'
-                                and actlist.id = 32
-                                and actlist.department_id = '8'
-                    and actlist.frequency = 'Monthly'),0))))))
+                    where DATE_FORMAT(labelings.date,'%Y-%m') = '".$week_date."'
+                                and labelings.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Pemahaman Proses',
+            (select count(DISTINCT(audit_processes.date)) as jumlah_audit_process
+                from audit_processes
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$week_date."'
+                                and audit_processes.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0))))))) 
             as jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'

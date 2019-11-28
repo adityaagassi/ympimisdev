@@ -84,5 +84,8 @@ class SendEmail extends Mailable
         if($this->remark == 'labeling'){
             return $this->from('ympimis@gmail.com')->subject('Labeling Safety Sign (??)')->view('mails.labeling');
         }
+        if($this->remark == 'audit_process'){
+            return $this->from('ympimis@gmail.com')->subject('Audit Process (??)')->view('mails.audit_process');
+        }
     }
 }

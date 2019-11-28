@@ -109,7 +109,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -136,7 +136,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -174,10 +174,7 @@
 												<th>Proses</th>
 												<th>Operator</th>
 												<th>Cara Proses</th>
-												<th>Kondisi</th>
 												<th>Pemahaman</th>
-												<th>Kondisi</th>
-												<th>Keterangan</th>
 												<th>Send Status</th>
 												<th>Approval Status</th>
 												<th>Action</th>
@@ -191,10 +188,7 @@
 												<td>{{$audit_process->proses}}</td>
 												<td>{{$audit_process->operator}}</td>
 												<td><?php echo $audit_process->cara_proses ?></td>
-												<td>{{$audit_process->kondisi_cara_proses}}</td>
 												<td><?php echo $audit_process->pemahaman ?></td>
-												<td>{{$audit_process->kondisi_pemahaman}}</td>
-												<td>{{$audit_process->keterangan}}</td>
 												<td>
 													@if($audit_process->send_status == "")
 								                		<label class="label label-danger">Not Yet Sent</label>
@@ -224,9 +218,6 @@
 										</tbody>
 										<tfoot>
 											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
