@@ -57,6 +57,34 @@
 	#kz_detail_1, #kz_detail_2, #kz_detail_3, #kz_detail_4{
 		margin-bottom: 10px
 	}
+	#tabelDetail > tbody > tr > td {
+		text-align: left;
+	}
+	#tabel_Kz > tbody > tr > td {
+		text-align: left;
+		vertical-align: top;
+		padding: 2px;
+	}
+	#tabel_Kz > tbody > tr > th {
+		padding: 2px;
+		background-color: #7e5686;
+		color: white;
+	}
+	#tabel_nilai > tbody > tr > td {
+		text-align: left;
+	}
+	#tabel_assess > tbody > tr > td, #tabel_assess > tbody > tr > th {
+		text-align: center;
+	}
+	#tabel_assess > tbody > tr > th {
+		background-color: #7e5686;
+		color: white;
+	}
+	#tabel_nilai_all tbody > tr > th {
+		text-align: center;
+		background-color: #7e5686;
+		color: white;
+	}
 	#kz_sekarang > p > img, #kz_perbaikan > p > img {
 	/*	max-width: 25%;
 	max-height: 25%;*/
@@ -305,13 +333,17 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						</div>
 						<div class="box-body">
 							<div class="row">
-								<div class="col-xs-4 col-xs-offset-2">
-									<label>Tanggal Dari :</label>
+								<div class="col-xs-1">
+									<label>Filter :</label>
+								</div>
+								<div class="col-xs-4">
 									<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
 								</div>
 								<div class="col-xs-4">
-									<label>Tanggal Sampai :</label>
 									<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
+								</div>
+								<div class="col-xs-2">
+									<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
 								</div>
 							</div>
 							<hr>
@@ -366,63 +398,155 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 			<!-- DETAIL -->
 
-			<div class="modal fade" id="modalKaizenDetail" role="dialog" aria-hidden="true">
-				<div class="modal-dialog modal-lg" role="document">
+			<div class="modal fade" id="modalDetail">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
-						<div class="modal-header">
-							<center><b><h5 class="modal-title" style="font-weight: bold;">Kaizen Teian</h5>(Usulan Perbaikan)</b></center>
-						</div>
 						<div class="modal-body">
 							<div class="row">
 								<div class="col-xs-12">
-									<table border="1" class="table table-bordered" width="100%" id="kz_detail_1">
+									<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
+									<table id="tabelDetail" width="100%">
 										<tr>
-											<td>Nama :</td>
-											<td id="kz_nama"> Muhammad Nasiqul Ibat</td>
-											<td>Tgl. :</td>
-											<td id="kz_tanggal"> 12-11-2019</td>
-											<td>Nama Sub Leader</td>
+											<th>NIK/Name </th>
+											<td> : </td>
+											<td id="kz_nik"></td>
+											<th>Date</th>
+											<td> : </td>
+											<td id="kz_tanggal"></td>
 										</tr>
 										<tr>
-											<td>NIK :</td>
-											<td id="kz_nik"> 19014987</td>
-											<td>Bagian :</td>
-											<td id="kz_bagian"> Management Information System</td>
-											<td id="kz_leader">Agus Y</td>
+											<th>Section</th>
+											<td> : </td>
+											<td id="kz_section"></td>
+											<th>Area Kaizen</th>
+											<td> : </td>
+											<td id="kz_area"></td>
 										</tr>
-									</table>
-
-									<table class="table table-bordered" width="100%" id="kz_detail_2">
 										<tr>
-											<td>
-												<label>Judul Usulan</label>
-												<div id="kz_judul"></div>
-											</td>
+											<th>Leader</th>
+											<td> : </td>
+											<td id="kz_leader"></td>
 										</tr>
-									</table>
-
-									<table class="table table-bordered" width="100%" id="kz_detail_3">
 										<tr>
-											<td>
-												<label>Kondisi Sekarang</label>
-												<div id="kz_sekarang"></div>
-											</td>
+											<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
 										</tr>
 									</table>
-
-									<table class="table table-bordered" width="100%" id="kz_detail_4">
+									<table width="100%" border="1" id="tabel_Kz">
 										<tr>
-											<td>
-												<label>Usulan Perbaikan</label>
-												<div id="kz_perbaikan"></div>
-											</td>
+											<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
+											<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
+										</tr>
+										<tr>
+											<td id="kz_before"></td>
+											<td id="kz_after"></td>
+										</tr>
+									</table>
+									<table width="100%" id="tabel_nilai" style="border:1px solid black;">
+										<tr>
+											<th>Manpower</th>
+											<td>0 menit X Rp 500,00</td>
+											<td>Rp 0,00 / bulan</td>
+										</tr>
+										<tr>
+											<th>Space</th>
+											<td>0 m<sup>2</sup> X Rp 0,00</td>
+											<td>Rp 0,00</td>
+										</tr>
+										<tr>
+											<th>Other (Material,listrik, kertas, dll)</th>
+											<td>Rp 0</td>
+											<td>Rp 0,00</td>
+										</tr>
+									</table>
+									<br>
+									<table width="100%" border="1" id="tabel_assess">
+										<tr>
+											<th colspan="4">TABEL NILAI KAIZEN</th>
+										</tr>
+										<tr>
+											<th width="5%">No</th>
+											<th>Kategori</th>
+											<th>Foreman / Chief</th>
+											<th>Manager</th>
+										</tr>
+										<tr>
+											<th>1</th>
+											<th>Estimasi Hasil</th>
+											<td id="foreman_point1"></td>
+											<td id="manager_point1"></td>
+										</tr>
+										<tr>
+											<th>2</th>
+											<th>Ide</th>
+											<td id="foreman_point2"></td>
+											<td id="manager_point2"></td>
+										</tr>
+										<tr>
+											<th>3</th>
+											<th>Implementasi</th>
+											<td id="foreman_point3"></td>
+											<td id="manager_point3"></td>
+										</tr>
+										<tr>
+											<th colspan="2"> TOTAL</th>
+											<td id="foreman_total" style="font-weight: bold;"></td>
+											<td id="manager_total" style="font-weight: bold;"></td>
+										</tr>
+									</table>
+									<br>
+									<table width="100%" id="tabel_nilai_all" border="1">
+										<tr>
+											<th>No</th>
+											<th>Total Nilai</th>
+											<th>Point</th>
+											<th>Keterangan</th>
+											<th>Reward Aplikasi</th>
+										</tr>
+										<tr>
+											<td>1</td>
+											<td><300</td>
+											<td>2</td>
+											<td>Kurang</td>
+											<td>Rp 2.000,-</td>
+										</tr>
+
+										<tr>
+											<td>2</td>
+											<td>300 - 350</td>
+											<td>4</td>
+											<td>Cukup</td>
+											<td>Rp 5.000,-</td>
+										</tr>
+
+										<tr>
+											<td>3</td>
+											<td>350 - 400</td>
+											<td>6</td>
+											<td>Baik</td>
+											<td>Rp 10.000,-</td>
+										</tr>
+
+										<tr>
+											<td>4</td>
+											<td>400 - 450</td>
+											<td>8</td>
+											<td>Sangat Baik</td>
+											<td>Rp 25,000,-</td>
+										</tr>
+
+										<tr>
+											<td>5</td>
+											<td>> 450</td>
+											<td>10</td>
+											<td>Potensi Excellent</td>
+											<td>Rp 50,000,-</td>
 										</tr>
 									</table>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 						</div>
 					</div>
 				</div>
@@ -472,6 +596,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			});
 
 			$(window).on('pageshow', function(){
+				$("#bulanAwal").val("");
+				$("#bulanAkhir").val("");
 				fill_kaizen();
 			});
 
@@ -624,8 +750,18 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 
 			function fill_kaizen() {
+				if ($("#bulanAwal").val() != "" && $("#bulanAkhir").val() == "") {
+					alert("Bulan Sampai harap diisi");
+					return false;
+				} else if ($("#bulanAwal").val() == "" && $("#bulanAkhir").val() != "") {
+					alert("Bulan Dari harap diisi");
+					return false;
+				}
+
 				var data = {
-					employee_id : "{{ $emp_id }}"
+					employee_id : "{{ $emp_id }}",
+					bulanAwal : $("#bulanAwal").val(),
+					bulanAkhir : $("#bulanAkhir").val(),
 				}
 				$('#tableKaizen').DataTable().destroy();
 				var table2 = $('#tableKaizen').DataTable({
@@ -654,72 +790,44 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					{ "data": "id" },
 					{ "data": "propose_date" },
 					{ "data": "title" },
-					{ "data": "section" },
+					{ "data": "stat" },
 					{ "data": "posisi" },
 					{ "data": "application" },
 					{ "data": "action" }
 					],
-					"columnDefs": [
-					{ "width": "2%", "targets": 0 },
-					{ "width": "99%", "targets": 1 },
-					{ "width": "5%", "targets": [3,4,5,6] }
-					]
+					// "columnDefs": [
+					// { "width": "2%", "targets": 0 },
+					// { "width": "3%", "targets": 1 },
+					// { "width": "5%", "targets": [3,4,5,6] }
+					// ]
 				});
 
-				$('#tableKaizen tfoot th').each( function () {
-					var title = $(this).text();
-					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="3"/>' );
-				});
-
-				table2.columns().every( function () {
-					var that = this;
-					$( 'input', this.footer() ).on( 'keyup change', function () {
-						if ( that.search() !== this.value ) {
-							that
-							.search( this.value )
-							.draw();
-						}
-					});
-				});
 				$('#tableKaizen tfoot tr').appendTo('#tableKaizen thead');
 			}
 
+			function cekDetail(id) {
+				data = {
+					id:id
+				}
 
-			$("#kz_buat").click( function() {
-				var data = {
-					employee_id: $("#kz_nik").val(),
-					employee_name: $("#kz_nama").val(),
-					propose_date: $("#kz_tanggal").val(),
-					section: 'dd',
-					sub_leader: $("#kz_sub_leader").val(),
-					title: $("#kz_judul").val(),
-					condition: CKEDITOR.instances.kz_sekarang.getData(),
-					improvement: CKEDITOR.instances.kz_perbaikan.getData()
-				};
-
-				// if ($("kz_sub_leader").val() != '' && $("kz_judul").val() != '') {
-					$.post('{{ url("post/ekaizen") }}', data, function(result, status, xhr){
-						console.log(result.datas);
-					})
-				// }
-
-			});
-
-			function detail(id) {
-				var data = {
-					id : id
-				};
-
-				$.get('{{ url("get/ekaizen") }}', data, function(result, status, xhr){
-					$("#modalKaizenDetail").modal('show');
-					$("#kz_nama").text(result.employee_name);
-					$("#kz_tanggal").text(result.propose_date);
-					$("#kz_nik").text(result.employee_id);
-					$("#kz_bagian").text(result.section);
-					$("#kz_leader").text(result.leader);
-					$("#kz_judul").text(result.title);
-					$("#kz_sekarang").html(result.condition);
-					$("#kz_perbaikan").html(result.improvement);
+				$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
+					$("#kz_title").text(result.title);
+					$("#kz_nik").text(result.employee_id + " / "+ result.employee_name);
+					$("#kz_section").text(result.section);
+					$("#kz_leader").text(result.leader_name);
+					$("#kz_tanggal").text(result.date);
+					$("#kz_area").text(result.area);
+					$("#kz_before").html(result.condition);
+					$("#kz_after").html(result.improvement);
+					$("#foreman_point1").text(result.foreman_point_1 * 40);
+					$("#foreman_point2").text(result.foreman_point_2 * 20);
+					$("#foreman_point3").text(result.foreman_point_3 * 20);
+					$("#foreman_total").text((result.foreman_point_1 * 40) + (result.foreman_point_2 * 20) + (result.foreman_point_3 * 20));
+					$("#manager_point1").text(result.manager_point_1 * 40);
+					$("#manager_point2").text(result.manager_point_2 * 20);
+					$("#manager_point3").text(result.manager_point_3 * 20);
+					$("#manager_total").text((result.manager_point_1 * 40) + (result.manager_point_2 * 20) + (result.manager_point_3 * 20));
+					$("#modalDetail").modal('show');
 				})
 			}
 

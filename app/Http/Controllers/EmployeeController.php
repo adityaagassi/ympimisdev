@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use File;
+use DataTables;
+use Response;
+use DateTime;
 use App\User;
 use App\PresenceLog;
 use App\Division;
@@ -19,19 +23,16 @@ use App\HrQuestionLog;
 use App\HrQuestionDetail;
 use App\KaizenForm;
 use App\KaizenScore;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
 use App\Employee;
 use App\EmploymentLog;
 use App\OrganizationStructure;
-use File;
-use DataTables;
-use Illuminate\Support\Facades\DB;
-use Response;
-use DateTime;
-use Illuminate\Support\Arr;
+use App\StandartCost;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 
 class EmployeeController extends Controller
@@ -138,7 +139,7 @@ class EmployeeController extends Controller
 
     if ($emp) {
       return view('employees.service.indexKaizen', array(
-        'title' => 'E - Kaizen',
+        'title' => 'E - Kaizen (Assessment List)',
         'position' => $emp,
         'section' => $sc,
         'title_jp' => '??'))->with('page', 'Assess')->with('head','Kaizen');
@@ -149,8 +150,30 @@ class EmployeeController extends Controller
 
   public function indexKaizenApplied()
   {
+    $username = Auth::user()->username;
+    $usr = "'19014987','19014986'";
+
+    $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
+    ->where('promotion_logs.employee_id','=', $username)
+    ->whereNull('valid_to')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$usr.'))')
+    ->select('position')
+    ->first();
+
+    $sections = "select section from
+    (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
+    left join employees on d.employee_id = employees.employee_id
+    left join
+    (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
+    group by section
+    order by section";
+
+    $sc = db::select($sections);
+
     return view('employees.service.indexKaizenApplied', array(
-      'title' => 'E - Kaizen',
+      'title' => 'E - Kaizen (Applied list)',
+      'position' => $emp,
+      'section' => $sc,
       'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
   }
 
@@ -956,20 +979,21 @@ public function indexEmployeeService()
 $absences = db::connection('mysql3')->select($absence);
 
 $ct = db::connection('mysql3')->select("
-  select leave_quota, leave_quota - (select COUNT(shift) + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= 
-  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
-  presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."' and shift in ('S','I','A','CT') 
+  select leave_quota, leave_quota - (select shift + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= 
+  IF(DATE_FORMAT('hire_date','%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT('hire_date', CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT('hire_date', CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
+  (select count(shift) as shift, '".$emp_id."' as nik from presensi 
+  join ympimis.employees on employees.employee_id = presensi.nik
+  where shift in ('S','I','A','CT') and nik = '".$emp_id."'
   and DATE_FORMAT(tanggal,'%Y-%m-%d') >= 
-  IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-  DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-  DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))
-  group by hire_date) as sisa_cuti from 
+  IF(DATE_FORMAT('hire_date','%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
+  DATE_FORMAT('hire_date', CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
+  DATE_FORMAT('hire_date', CONCAT(YEAR(now()),'-%m-01')))
+  ) presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."') as sisa_cuti from 
   (select YEAR(now()) - YEAR(hire_date)
   - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
-  join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed
-  ");
+  join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed");
 
 $datas = db::select($query);
 
@@ -1538,30 +1562,43 @@ public function editNumber(Request $request)
 
 public function fetchKaizen(Request $request)
 {
-  $kz = KaizenForm::where('employee_id',$request->get('employee_id'))->get();
+  $start = $request->get('bulanAwal');
+  $end = $request->get('bulanAkhir');
+
+  $kz = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
+  ->where('employee_id',$request->get('employee_id'))
+  ->select('kaizen_forms.id','employee_id','propose_date','title','application','status','foreman_point_1', 'manager_point_1');
+  if ($start != "" && $end != "") {
+    $kz = $kz->where('propose_date','>=', $start)->where('propose_date','<=', $end)->get();
+  }
 
   return DataTables::of($kz)
   ->addColumn('action', function($kz){
-
-    if ($kz->status == 0) {
+    if ($kz->status == '-1') {
       return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
       <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->id . '"><i class="fa fa-pencil"></i> Ubah</a>';
     } else {
-      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>';
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>';
     }
     
+  })->addColumn('posisi', function($kz){
+    if ($kz->foreman_point_1 != null && $kz->manager_point_1 == null) {
+      return 'Foreman';
+    } else if ($kz->foreman_point_1 != null && $kz->manager_point_1 != null) {
+      return 'Manager';
+    } else if ($kz->foreman_point_1 == null) {
+      return 'Belum Verifikasi';
+    }
+  })->addColumn('stat', function($kz){
+    if ($kz->status == '1') 
+      return 'Kaizen';
+    else if ($kz->status == '0') 
+      return 'Bukan Kaizen';
+    else if ($kz->status == '-1') 
+      return 'Belum Verifikasi';
   })
 
-  ->rawColumns(['action' => 'action'])
-  ->addColumn('posisi', function($kz){
-
-
-    return 'Foreman';
-
-    
-  })
-
-  ->rawColumns(['posisi' => 'posisi'])
+  ->rawColumns(['posisi' , 'action', 'stat'])
   ->make(true);
 }
 
@@ -1644,9 +1681,9 @@ public function fetchDataKaizen()
   ->addColumn('fr_stat', function($kzn){
     if ($kzn->status == -1) {
       if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief') {
-        return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">NOT Verified</a>';
+        return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Yet Verified</a>';
       } else {
-        return '<span class="label bg-yellow">NOT Verified</span>';
+        return '<span class="label bg-yellow">Yet Verified</span>';
       }
     }
     else if ($kzn->status == 1){
@@ -1667,16 +1704,16 @@ public function fetchDataKaizen()
         return '<span class="label bg-green">Verified</span>';
       } else {
         if ($_GET['position'] == 'Manager') {
-          return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">NOT Verified</a>';     
+          return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Yet Verified</a>';     
         } else {
-          return '<span class="label bg-yellow">NOT Verified</span>'; 
+          return '<span class="label bg-yellow">Yet Verified</span>'; 
         }
       }
     } else {
       if ($kzn->status == 0) {
         return '<span class="label bg-red">NOT Kaizen</span>';
       } else {
-        return '<span class="label bg-yellow">NOT Verified</span>';
+        return '<span class="label bg-yellow">Yet Verified</span>';
       }
     }
   })
@@ -1754,11 +1791,65 @@ public function assessKaizen(Request $request)
         $data->status = 0;
         $data->save();
 
-        return Response::json($request);
+        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
       } catch (QueryException $e) {
-        return Response::json($e->getMessage());
+        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     }
   }
+}
+
+public function fetchAppliedKaizen()
+{
+  $kzn = KaizenForm::Join('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
+  ->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
+  if ($_GET['area'] != "") {
+    $kzn = $kzn->where('area','=', $_GET['area']);
+  }
+
+  if ($_GET['status'] != "") {
+    if ($_GET['status'] == '1') {
+      $kzn = $kzn->where('status','=', '-1');
+    } else if ($_GET['status'] == '2') {
+      $kzn = $kzn->where('manager_point_1','=', '0');
+    } else if ($_GET['status'] == '3') {
+      $kzn = $kzn->where('status','=', '1');
+    } else if ($_GET['status'] == '4') {
+      $kzn = $kzn->where('manager_point_1','<>', '0');
+    } else if ($_GET['status'] == '5') {
+      $kzn = $kzn->where('status','=', '0');
+    }
+  }
+
+  $kzn->get();
+
+  return DataTables::of($kzn)
+  ->addColumn('app_stat', function($kzn){
+    if ($kzn->application == '') {
+      return '<button class="label bg-yellow btn">Yet Applied</a>';
+    } else if($kzn->application == 'Ya') {
+      return '<span class="label bg-green">Applied</span>';
+    } else if($kzn->application == 'Tidak') {
+      return '<span class="label bg-red">NOT Applied</span>';
+    }
+  })
+  ->addColumn('action', function($kzn){
+    return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
+  })
+  ->addColumn('fr_point', function($kzn){
+    return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 20) + ($kzn->foreman_point_3 * 20);
+  })
+  ->addColumn('mg_point', function($kzn){
+    return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 20) + ($kzn->manager_point_3 * 20);
+  })
+  ->rawColumns(['app_stat', 'fr_point', 'mg_point', 'action'])
+  ->make(true);
+}
+
+public function fetchCost()
+{
+  $costL = StandartCost::get();
+
+  return Response::json($costL);
 }
 }

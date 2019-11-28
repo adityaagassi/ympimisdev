@@ -128,8 +128,7 @@
 									<th>Section</th>
 									<th>Title</th>
 									<th>Area</th>
-									<th>Foreman Status</th>
-									<th>Manager Status</th>
+									<th>Applied Status</th>
 									<th>Foreman Point</th>
 									<th>Manager Point</th>
 									<th>Action</th>
@@ -345,7 +344,7 @@
 			"ajax": {
 				"type" : "get",
 				"data": { position: pos, area: area, status: stat},
-				"url" : "{{ url('fetch/kaizen/') }}"
+				"url" : "{{ url('fetch/kaizen/applied') }}"
 			},
 			"columns": [
 			{ "data": "id" },
@@ -354,8 +353,7 @@
 			{ "data": "section" },
 			{ "data": "title" },
 			{ "data": "area" },
-			{ "data": "fr_stat" },
-			{ "data": "mg_stat" },
+			{ "data": "app_stat" },
 			{ "data": "fr_point" },
 			{ "data": "mg_point" },
 			{ "data": "action" }
@@ -365,7 +363,7 @@
 			{ "width": "5%", "targets": 1 },
 			{ "width": "13%", "targets": 2 },
 			{ "width": "10%", "targets": 3 },
-			{ "width": "5%", "targets": [5,6,7,8,9,10] },
+			{ "width": "5%", "targets": [5,6,7,8,9] },
 			]
 		});
 	}
