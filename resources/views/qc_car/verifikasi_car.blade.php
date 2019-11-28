@@ -88,7 +88,7 @@
 
         <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-sm pull-right">Cek Status Verifikasi</a>
         
-        <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" title="Lihat Report"  target="_blank">Preview CAR Report</a>
+        <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report"  target="_blank">Preview CAR Report</a>
 
         <!-- Email Chief -->
 

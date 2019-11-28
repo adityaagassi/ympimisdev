@@ -240,10 +240,10 @@
               <select class="form-control select2" name="customer" style="width: 100%;" data-placeholder="Pilih Customer">
                 @foreach($destinations as $destination)
                 @if($destination->destination_code == $cpars->destination_code)
-                <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_name }}</option>
+                <option value="{{ $destination->destination_code }}" selected>{{ $destination->destination_shortname }} - {{ $destination->destination_name }}</option>
                 @else
                 <option value=""></option>
-                <option value="{{ $destination->destination_code }}">{{ $destination->destination_name }}</option>
+                <option value="{{ $destination->destination_code }}">{{ $destination->destination_shortname }} - {{ $destination->destination_name }}</option>
                 @endif
                 @endforeach
               </select>

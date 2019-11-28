@@ -155,7 +155,7 @@
               <select class="form-control select2" name="customer" style="width: 100%;" data-placeholder="Pilih Customer">
                 <option value=""></option>
                 @foreach($destinations as $destination)
-                <option value="{{ $destination->destination_code }}">{{ $destination->destination_name }}</option>
+                <option value="{{ $destination->destination_code }}">{{ $destination->destination_shortname }} - {{ $destination->destination_name }}</option>
                 @endforeach
               </select>
             </div>

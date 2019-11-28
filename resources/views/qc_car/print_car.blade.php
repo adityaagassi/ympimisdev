@@ -43,9 +43,27 @@
 			<tr>
 				<td>Section</td>
 				<td>{{ $car->section }}</td>
-				<td rowspan="3">&nbsp;</td>
-				<td rowspan="3">&nbsp;</td>
-				<td rowspan="3">&nbsp;</td>
+				<td rowspan="3" class="centera">
+					@if($car->approved_gm == "Checked")
+						{{$car->gmname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="3" class="centera">
+					@if($car->approved_dgm == "Checked")
+						{{$car->dgmname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="3" class="centera">
+					@if($car->checked_manager == "Checked")
+						{{$car->managername}}
+					@else
+						&nbsp;
+					@endif
+				</td>
 			</tr>
 			<tr>
 				<td>Location</td>
@@ -64,15 +82,36 @@
 			</tr>
 		</thead>
 		<tbody>
+			 <?php 
+	          $tinjauan = $car->tinjauan; 
+	          
+	          if($tinjauan != NULL){
+	            $split = explode(",", $tinjauan);
+	            $hitungsplit = count($split);
+	          }else{
+	            $split = 0;
+	          }
+	        ?>
 			<tr>
 				<td colspan="10">Kategori Komplain : {{ $car->kategori }}</td>
 			</tr>
 			<tr>
 				<td rowspan="6" colspan="7">Deskripsi : <?= $car->deskripsi ?></td>
-				<td rowspan="6" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
+				<td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
 			</tr>
 			<tr></tr>
-			<tr></tr><tr></tr><tr></tr><tr></tr>
+			<tr><td colspan="3" class="centera" style="font-size: 10px">Man <input type="checkbox" class="pull-right" class="pull-right" style="font-size: 10px;" 
+				@if($split[0]=='1')
+					checked @endif></td></tr>
+			<tr><td colspan="3" class="centera" style="font-size: 10px">Material <input type="checkbox" class="pull-right" style="font-size: 10px;" 
+				@if($split[1]=='1')
+					checked @endif</td></tr>
+			<tr><td colspan="3" class="centera" style="font-size: 10px">Machine <input type="checkbox" class="pull-right" style="font-size: 10px;" 
+				@if($split[2]=='1')
+					checked @endif</td></tr>
+			<tr><td colspan="3" class="centera" style="font-size: 10px">Method <input type="checkbox" class="pull-right" style="font-size: 10px;" 
+				@if($split[3]=='1')
+					checked @endif</td></tr>
 			<tr>
 				<td colspan="10">A. Immediately Action </td>
 			</tr>
@@ -96,25 +135,40 @@
 			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td class="centera">Prepared</td>
-				<td class="centera">Prepared</td>
 				<td class="centera">Checked</td>
-				<td class="centera">Checked</td>
-				<td colspan="6"></td>
+				<td colspan="8"></td>
 			</tr>
 			<tr>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2" colspan="6"></td>
+				<td rowspan="2" class="centera">
+					@if($car->pic != null)
+						{{$car->picname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" class="centera">
+					@if($car->checked_chief == "Checked")
+						{{$car->chiefname}}
+					@elseif($car->checked_foreman == "Checked")
+						{{$car->foremanname}}
+					@elseif($car->checked_coordinator == "Checked")
+						{{$car->coordinatorname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+				<td rowspan="2" colspan="8"></td>
 			</tr>
 			<tr></tr>
 			<tr>
-				<td>Staff</td>
-				<td>Leader</td>
-				<td>Foreman</td>
-				<td>Chief</td>
-				<td colspan="6"></td>
+				@if($car->kategori == "Internal")
+					<td class="centera">Leader</td>
+					<td class="centera">Foreman</td>
+				@else
+					<td class="centera">Staff</td>
+					<td class="centera">Chief</td>				
+				@endif
+				<td colspan="8"></td>
 			</tr>
 			<tr>
 				<td colspan="10"></td>

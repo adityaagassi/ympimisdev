@@ -74,7 +74,6 @@ table.table-bordered > tfoot > tr > th{
             <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari">
           </div>
         </div>
-
         <div class="col-md-2">
           <div class="input-group date">
             <div class="input-group-addon bg-green">
@@ -83,7 +82,6 @@ table.table-bordered > tfoot > tr > th{
             <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke">
           </div>
         </div>
-
         <div class="col-md-3" style="width:230px">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
@@ -95,7 +93,6 @@ table.table-bordered > tfoot > tr > th{
                 <option value="Supplier">Supplier</option>
               </select>
           </div>
-
             <!-- <div class="form-group">
               <select class="form-control select2" multiple="multiple" id="kategori" data-placeholder="Select Kategori">
                 <option value="Eksternal">Eksternal</option>
@@ -174,8 +171,7 @@ table.table-bordered > tfoot > tr > th{
       </div>
       <div class="col-md-12" style="margin-top: 20px">
           <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
-
-                <div id="chart" style="width: 99%"></div>
+          <div id="chart" style="width: 99%"></div>
       </div>
 
       <!-- <div class="col-md-12" style="margin-top: 20px">
@@ -655,7 +651,7 @@ table.table-bordered > tfoot > tr > th{
           { "data": "sumber_komplain" },
           { "data": "verif", "className": "table-posisi" },
           { "data": "status_name", "className": "table-status"},
-          { "data": "action", "width": "10%"}
+          { "data": "action", "width": "15%"}
         ]    });
 
     $('#judul_table').append().empty();

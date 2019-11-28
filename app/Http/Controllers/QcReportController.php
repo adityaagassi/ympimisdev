@@ -264,6 +264,7 @@ class QcReportController extends Controller
             'dgm' => $this->dgm,
             'gm' => $this->gm,
             'posisi' => $posisi,
+            'status_code' => '5',
             'progress' => '20',
             'created_by' => $id_user
           ]);
@@ -757,94 +758,263 @@ class QcReportController extends Controller
       $kategori = $request->get("kategori");
       $departemen = $request->get("departemen");
 
-      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
 
       $detail = db::select($query);
 
       return DataTables::of($detail)
 
         ->addColumn('verif', function($detail){
-
-          if ($detail->kategori == "Eksternal" || $detail->kategori == "Supplier") {
-            if($detail->posisi == "staff") {
-              return '<label class="label label-warning">'.$detail->chiefname.'</label>';
+          if($detail->status_name != "Closed") {
+            if ($detail->kategori == "Eksternal") {
+              if ($detail->status_code == "5") { // CPAR
+                if($detail->posisi == "staff") {
+                  return '<label class="label label-warning">'.$detail->chiefname.'</label>';
+                }
+                else if($detail->posisi == "chief") {
+                  if ($detail->checked_chief == null) {
+                    return '<label class="label label-warning">'.$detail->chiefname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                }            
+                else if($detail->posisi == "manager") {
+                  if ($detail->checked_manager == null) {
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "dgm") {
+                  if ($detail->approved_dgm == null) {
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi == "gm") {
+                  if ($detail->approved_gm == null) {
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "bagian") {
+                    return '<label class="label label-success">'.$detail->name.'</label>';     
+                }  
+              } 
+              else if ($detail->status_code == "6") { // CAR
+                if($detail->posisi_car == "staff") {
+                  return '<label class="label label-primary">'.$detail->chiefcarname.'</label>';
+                }
+                else if($detail->posisi_car == "chief") {
+                  if ($detail->checked_chief_car == null) {
+                    return '<label class="label label-primary">'.$detail->chiefcarname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->name.'</label>';                
+                  }
+                }            
+                else if($detail->posisi_car == "manager") {
+                  if ($detail->checked_manager_car == null) {
+                    return '<label class="label label-primary">'.$detail->name.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "dgm") {
+                  if ($detail->approved_dgm_car == null) {
+                    return '<label class="label label-primary">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi_car == "gm") {
+                  if ($detail->approved_gm_car == null) {
+                    return '<label class="label label-primary">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">QA</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "QA") {
+                    return '<label class="label label-success">QA</label>';     
+                }
+              }
+              
             }
-            else if($detail->posisi == "chief") {
-              if ($detail->checked_chief == null) {
-                return '<label class="label label-warning">'.$detail->chiefname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->chiefname.'</label>';                
-              }
-            }            
-            else if($detail->posisi == "manager") {
-              if ($detail->checked_manager == null) {
-                return '<label class="label label-warning">'.$detail->managername.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+            else if ($detail->kategori == "Supplier") {
+              if ($detail->status_code == "5") { // CPAR
+                if($detail->posisi == "staff") {
+                  return '<label class="label label-warning">'.$detail->chiefname.'</label>';
+                }
+                else if($detail->posisi == "chief") {
+                  if ($detail->checked_chief == null) {
+                    return '<label class="label label-warning">'.$detail->chiefname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                }            
+                else if($detail->posisi == "manager") {
+                  if ($detail->checked_manager == null) {
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "dgm") {
+                  if ($detail->approved_dgm == null) {
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi == "gm") {
+                  if ($detail->approved_gm == null) {
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "bagian") {
+                    return '<label class="label label-success">'.$detail->name.'</label>';     
+                }  
+              } 
+              else if ($detail->status_code == "6") { // CAR
+                if($detail->posisi_car == "staff") {
+                  return '<label class="label label-primary">'.$detail->coordinatorcarname.'</label>';
+                }
+                else if($detail->posisi_car == "chief") {
+                  if ($detail->checked_chief_car == null) {
+                    return '<label class="label label-primary">'.$detail->coordinatorcarname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->name.'</label>';                
+                  }
+                }            
+                else if($detail->posisi_car == "manager") {
+                  if ($detail->checked_manager_car == null) {
+                    return '<label class="label label-primary">'.$detail->name.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "dgm") {
+                  if ($detail->approved_dgm_car == null) {
+                    return '<label class="label label-primary">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi_car == "gm") {
+                  if ($detail->approved_gm_car == null) {
+                    return '<label class="label label-primary">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-primary">QA</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "QA") {
+                    return '<label class="label label-success">QA</label>';     
+                }
               }
             }
-            else if($detail->posisi == "dgm") {
-              if ($detail->approved_dgm == null) {
-                return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->gmname.'</label>';                
-              }
-            }  
-            else if($detail->posisi == "gm") {
-              if ($detail->approved_gm == null) {
-                return '<label class="label label-warning">'.$detail->gmname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->name.'</label>';                
-              }
+            else if ($detail->kategori == "Internal") {
+              if ($detail->status_code == "5") { // CPAR
+                if($detail->posisi == "leader") {
+                  return '<label class="label label-warning">'.$detail->foremanname.'</label>';
+                }
+                else if($detail->posisi == "foreman") {
+                  if ($detail->checked_foreman == null) {
+                    return '<label class="label label-warning">'.$detail->foremanname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                }            
+                else if($detail->posisi == "manager") {
+                  if ($detail->checked_manager == null) {
+                    return '<label class="label label-warning">'.$detail->managername.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "dgm") {
+                  if ($detail->approved_dgm == null) {
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi == "gm") {
+                  if ($detail->approved_gm == null) {
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                }
+                else if($detail->posisi == "bagian") {
+                    return '<label class="label label-success">'.$detail->name.'</label>';     
+                }     
+              } 
+              else if ($detail->status_code == "6"){ // CAR
+                if($detail->posisi_car == "leader") {
+                  return '<label class="label label-warning">'.$detail->foremancarname.'</label>';
+                }
+                else if($detail->posisi_car == "foreman") {
+                  if ($detail->checked_foreman_car == null) {
+                    return '<label class="label label-warning">'.$detail->foremancarname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                }            
+                else if($detail->posisi_car == "manager") {
+                  if ($detail->checked_manager_car == null) {
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "dgm") {
+                  if ($detail->approved_dgm_car == null) {
+                    return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                }  
+                else if($detail->posisi_car == "gm") {
+                  if ($detail->approved_gm_car == null) {
+                    return '<label class="label label-warning">'.$detail->gmname.'</label>';                
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->name.'</label>';                
+                  }
+                }
+                else if($detail->posisi_car == "QA") {
+                    return '<label class="label label-success">QA</label>';     
+                } 
+              }  
             }
-            else if($detail->posisi == "bagian") {
-                return '<label class="label label-success">Diterima Oleh '.$detail->name.'</label>';     
-            }  
-          }
-
-          else if ($detail->kategori == "Internal") {
-            if($detail->posisi == "leader") {
-              return '<label class="label label-warning">'.$detail->foremanname.'</label>';
-            }
-            else if($detail->posisi == "foreman") {
-              if ($detail->checked_foreman == null) {
-                return '<label class="label label-warning">'.$detail->foremanname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->managername.'</label>';                
-              }
-            }            
-            else if($detail->posisi == "manager") {
-              if ($detail->checked_manager == null) {
-                return '<label class="label label-warning">'.$detail->managername.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
-              }
-            }
-            else if($detail->posisi == "dgm") {
-              if ($detail->approved_dgm == null) {
-                return '<label class="label label-warning">'.$detail->dgmname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->gmname.'</label>';                
-              }
-            }  
-            else if($detail->posisi == "gm") {
-              if ($detail->approved_gm == null) {
-                return '<label class="label label-warning">'.$detail->gmname.'</label>';                
-              }
-              else{
-                return '<label class="label label-warning">'.$detail->name.'</label>';                
-              }
-            }
-            else if($detail->posisi == "bagian") {
-                return '<label class="label label-success">Diterima Oleh '.$detail->name.'</label>';     
-            }           
+          } else {
+            return '<label class="label label-success">None</label>';
           }
         })
 
@@ -852,20 +1022,30 @@ class QcReportController extends Controller
           if($detail->status_name == "Unverified CPAR") {
             return '<label class="label label-danger">'.$detail->status_name. '</label>';
           }
-          else if($detail->status_name == "Closed"){
-            return '<label class="label label-danger">'.$detail->status_name. '</label>';
-          }
           else if($detail->status_name == "Unverified CAR"){
             return '<label class="label label-warning">'.$detail->status_name. '</label>';
+          }
+          else if($detail->status_name == "Closed"){
+            return '<label class="label label-success">'.$detail->status_name. '</label>';
           }
           })
 
         ->addColumn('action', function($detail){
           $idcpar = $detail->id;
-          return '
-                  <a href="update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
-                  <a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report</a>
-          ';
+          $idcar = $detail->id_car;
+
+          if($detail->status_name == "Unverified CPAR") {
+            return '<a href="update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail CPAR</a>
+                    <a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>';
+          } else if ($detail->status_name == "Unverified CAR"){
+            return '<a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
+                    <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
+          } else if($detail->status_name == "Closed"){
+            return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>
+                    ';
+          }
+
         })
 
         ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif'])
@@ -1095,10 +1275,12 @@ group by monthname(mon) order by mon asc");
           $posisi2 = "foreman";
       }
 
-      $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
+      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
         ->join('departments','qc_cpars.department_id','=','departments.id')
         ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
         ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+        ->leftjoin('destinations','qc_cpars.destination_code','=','destinations.destination_code')
+        ->leftjoin('vendors','qc_cpars.vendor','=','vendors.vendor')
         ->join('employees as '.$posisi,'qc_cpars.'.$posisi,'=',$posisi.'.employee_id')
         ->join('employees as '.$posisi2,'qc_cpars.'.$posisi2,'=',$posisi2.'.employee_id')
         ->join('employees as manager','qc_cpars.manager','=','manager.employee_id')
@@ -1212,9 +1394,7 @@ group by monthname(mon) order by mon asc");
           $qc_cpars = QcCpar::find($id);
 
           if($cpars != null){
-
           // var_dump($cpars);die();
-
               if ($qc_cpars->email_status == NULL && $qc_cpars->posisi == "staff") {
                 $qc_cpars->email_status = "SentChief";
                 $qc_cpars->email_send_date = date('Y-m-d');
@@ -1381,7 +1561,7 @@ group by monthname(mon) order by mon asc");
       {
           $checked = $request->get('checked');
           // var_dump(count($checked));die();
-          if(count($checked) == 13){
+          if(count($checked) == 13 || count($checked) == 7){
             $cpars = QcCpar::find($id);
             if ($cpars->posisi == "chief") {
               $cpars->checked_chief = "Checked";              

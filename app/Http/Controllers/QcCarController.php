@@ -120,12 +120,19 @@ class QcCarController extends Controller
 
     public function print_car($id)
     {
-      $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','employees.name','statuses.status_name')
+      $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','pic.name as picname','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','chief.name as chiefname','foreman.name as foremanname','coordinator.name as coordinatorname')
       ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
-      ->join('departments','qc_cpars.department_id','=','departments.id')
-      ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
       ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+      ->join('qc_verifikators','qc_cpars.department_id','=','qc_verifikators.department_id')
+      ->join('departments','qc_verifikators.department_id','=','departments.id')
       ->join('mutation_logs','qc_cpars.employee_id','=','mutation_logs.employee_id')
+      ->leftjoin('employees as chief','qc_verifikators.verifikatorchief','=','chief.employee_id')
+      ->leftjoin('employees as foreman','qc_verifikators.verifikatorforeman','=','foreman.employee_id')
+      ->leftjoin('employees as coordinator','qc_verifikators.verifikatorcoordinator','=','coordinator.employee_id')
+      ->join('employees as manager','qc_cpars.employee_id','=','manager.employee_id')
+      ->join('employees as pic','qc_cars.pic','=','pic.employee_id')
+      ->join('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
+      ->join('employees as gm','qc_cpars.gm','=','gm.employee_id')
       ->whereNull('mutation_logs.valid_to')
       ->where('qc_cars.id','=',$id)
       ->get();

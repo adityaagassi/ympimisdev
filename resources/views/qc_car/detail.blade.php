@@ -96,14 +96,13 @@ table.table-bordered > tfoot > tr > th{
          <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-md" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
 
          <!-- <a href="{{url('index/qc_car/sendemail/'.$cars['id'].'/'.$cars['posisi'])}}" class="btn btn-sm ">Email </a> -->
-
-         @if(($cars->email_status == "SentStaff" && $cars->posisi == "staff") || ($cars->email_status == "SentForeman" && $cars->posisi == "foreman"))
-          
-            <a class="btn btn-md btn-default" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email</a>
-         @else
-             <label class="label label-success" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
-         @endif
-
+         @if($cars->deskripsi != null && $cars->tindakan != null && $cars->penyebab != null && $cars->perbaikan != null )
+           @if(($cars->email_status == "SentStaff" && $cars->posisi == "staff") || ($cars->email_status == "SentForeman" && $cars->posisi == "foreman"))
+              <a class="btn btn-md btn-default" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email</a>
+           @else
+               <label class="label label-success" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+           @endif
+          @endif
          
 
          <br/><br/>

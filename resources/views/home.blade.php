@@ -162,8 +162,8 @@
                                 <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                             </a>
                             <br>
-                            <a href="{{ url("index/report/overtime_outsource_data") }}">
-                                <i class="fa fa-caret-right"></i> Outsource OT Data (派遣社員の残業データ)
+                            <a href="http://172.17.128.114/clinic-new/chart.php">
+                                <i class="fa fa-caret-right"></i> Clinic Visit ()
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}">
@@ -205,13 +205,13 @@
                             <a href="{{ url("index/qc_car") }}">
                                 <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
                             </a>
-                            <br>
+                            <!-- <br>
                             <a href="{{ url("index/qc_report/komplain_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
-                            </a>
+                            </a> -->
                             <br>                            
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                <i class="fa fa-caret-right"></i> QA Report
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
                             </a>
                         </td>
                     </tr>

@@ -50,20 +50,26 @@
 			@foreach($cpars as $cpar)
 			<tr>
 				<td rowspan="{{ 12 + $jumlah }}">{{ $i++ }}</td>
-				<td colspan="5" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
-				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">CPAR No : <b>{{$cpar->cpar_no}}</b></td>
+				<td colspan="4" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">CPAR No : <b>{{$cpar->cpar_no}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="5" style="border: none !important">Location : <b>{{$cpar->lokasi}}</b></td>
-				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">Information of Complaint Via : <b>{{$cpar->via_komplain}}</b></td>
+				<td colspan="4" style="border: none !important">Location : <b>{{$cpar->lokasi}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="5" style="border: none !important">Request Date : <b>{{$cpar->tgl_permintaan}}</b></td>
-				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}}</b></td>
+				<td colspan="4" style="border: none !important">Request Date : <b>{{$cpar->tgl_permintaan}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Department : <b>{{$cpar->department_name}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="5" style="border: none !important">Request Due Date: <b>{{$cpar->tgl_balas}}</b></td>
-				<td colspan="3" style="border: none !important; border-right: 1px solid black !important;">Department : <b>{{$cpar->department_name}}</b></td>
+				<td colspan="4" style="border: none !important">Request Due Date: <b>{{$cpar->tgl_balas}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">
+					@if($cpar->destination_code != null)
+						Customer : <b>{{$cpar->destination_name}}</b>
+					@elseif($cpar->vendor != null)
+						Vendor : <b>{{$cpar->vendorname}}</b>
+					@endif
+				</td>
 			</tr>
 			<tr>
 				<td>Part Item</td>
@@ -105,8 +111,7 @@
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
-				<td rowspan="2"></td>
-				<td rowspan="2"></td>
+				<td rowspan="2" colspan="2"></td>
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 			</tr>
