@@ -12,7 +12,7 @@ class ProductionAudit extends Model
     protected $table = 'production_audits';
 
 	protected $fillable = [
-		'activity_list_id','point_check_audit_id', 'date', 'foto_kondisi_aktual', 'kondisi', 'pic','auditor','created_by'
+		'activity_list_id','point_check_audit_id', 'date', 'week_name', 'foto_kondisi_aktual', 'kondisi', 'pic','auditor','created_by'
 	];
 
 	public function point_check_audit()

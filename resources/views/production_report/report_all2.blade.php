@@ -817,7 +817,7 @@
                 body += '<td>'+result.detail[i].activity_name+'</td>';
                 body += '<td>'+result.detail[i].activity_type+'</td>';
                 body += '<td>'+result.detail[i].plan+'</td>';
-                body += '<td>'+result.detail[i].jumlah_aktual+'</td>';
+                body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
                 body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
                 body += '<td><a target="_blank" class="btn btn-primary btn-sm" href="'+url+'/'+result.detail[i].link+'">Details</a></td>';
                 // body += '<td>'+result.good[i].quantity+'</td>';

@@ -27,6 +27,7 @@ use App\PromotionLog;
 use App\Mutationlog;
 use App\HrQuestionLog;
 use App\HrQuestionDetail;
+use App\WeeklyCalendar;
 use App\Employee;
 use App\EmploymentLog;
 use App\OrganizationStructure;
@@ -270,6 +271,10 @@ class ProductionAuditController extends Controller
             $id_user = Auth::id();
             $tujuan_upload = 'data_file';
             $date = date('Y-m-d');
+            $week = WeeklyCalendar::where('week_date',$date)->get();
+            foreach($week as $week){
+                $week_name = $week->week_name;
+            }
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
@@ -279,6 +284,7 @@ class ProductionAuditController extends Controller
                 'activity_list_id' => $id,
                 'point_check_audit_id' => $request->input('point_check'),
                 'date' => $date,
+                'week_name' => $week_name,
                 'foto_kondisi_aktual' => $nama_file,
                 'kondisi' => $request->input('kondisi'),
                 'pic' => $request->input('pic'),
@@ -333,6 +339,10 @@ class ProductionAuditController extends Controller
         try{
             $tujuan_upload = 'data_file';
             $date = date('Y-m-d');
+            $week = WeeklyCalendar::where('week_date',$request->get('date'))->get();
+            foreach($week as $week){
+                $week_name = $week->week_name;
+            }
 
             if($request->file('file') != null){
                 $file = $request->file('file');
@@ -344,6 +354,7 @@ class ProductionAuditController extends Controller
                 $production_audit->activity_list_id = $id;
                 $production_audit->point_check_audit_id = $request->get('point_check');
                 $production_audit->date = $request->get('date');
+                $production_audit->week_name = $week_name;
                 $production_audit->foto_kondisi_aktual = $nama_file;
                 $production_audit->kondisi = $request->get('kondisi');
                 $production_audit->pic = $request->get('pic');
@@ -354,6 +365,7 @@ class ProductionAuditController extends Controller
                 $production_audit->activity_list_id = $id;
                 $production_audit->point_check_audit_id = $request->get('point_check');
                 $production_audit->date = $request->get('date');
+                $production_audit->week_name = $week_name;
                 $production_audit->foto_kondisi_aktual = $request->get('foto_kondisi_aktual');
                 $production_audit->kondisi = $request->get('kondisi');
                 $production_audit->pic = $request->get('pic');
