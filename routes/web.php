@@ -18,6 +18,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/index/emergency_response', 'TrialController@tes2');
+Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
 Route::get('happybirthday', 'TrialController@ultah');
 
@@ -471,8 +472,7 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 
 	Route::get('index/middle/buffing_target/{loc}', 'MiddleProcessController@indexBuffingTarget');
 	Route::get('fetch/middle/buffing_target/{loc}', 'MiddleProcessController@fetchBuffingTarget');
-
-
+	Route::post('update/middle/buffing_target', 'MiddleProcessController@updateBuffingTarget');
 	
 });
 
