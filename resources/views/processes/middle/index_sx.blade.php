@@ -62,8 +62,8 @@
 			<a href="{{ url("index/middle/buffing_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/middle/buffing_op_ranking?bulan=&target=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Resume NG Rate & Productivity</a>
 			<a href="{{ url("index/middle/buffing_trend_op_eff") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily Operator Trends</a>
-			<a href="{{ url("index/middle/buffing_op_ng?tanggal=&group=&target=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
-			<a href="{{ url("index/middle/buffing_op_eff?tanggal=&group=&target=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
+			<a href="{{ url("index/middle/buffing_op_ng?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate by Operator</a>
+			<a href="{{ url("index/middle/buffing_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/middle/buffing_group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Achievement</a>
 			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Work Balance</a>
 			{{-- <a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a> --}}

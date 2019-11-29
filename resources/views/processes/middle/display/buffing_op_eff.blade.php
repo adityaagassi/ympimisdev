@@ -105,26 +105,12 @@
 							<input type="text" name="group" id="group" hidden>			
 						</div>
 					</div>
-					<div class="col-xs-2" style="color: black;">
-						<div class="form-group">
-							<select class="form-control select2" id='targetSelect' onchange="changeTarget()" data-placeholder="Select Target" style="width: 100%;">
-								<option value="">Select Target</option>
-								<option value="80">80%</option>
-								<option value="85">85%</option>
-								<option value="90">90%</option>
-								<option value="95">95%</option>
-								<option value="100">100%</option>
-							</select>
-							<input type="text" name="target" id="target" hidden>			
-						</div>
-					</div>
 					<div class="col-xs-1">
 						<button class="btn btn-success" type="submit">Update Chart</button>
 					</div>
 				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
-			</div>
-			
+			</div>	
 
 			{{-- OP Overall Eff --}}
 			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
@@ -139,33 +125,6 @@
 				</div>
 			</div>
 
-			
-			{{-- OP Result --}}
-			<div class="col-xs-12" style="margin-top: 1%; padding: 0px; display: none;">
-				<div id="shifta2">
-					<div id="container2_shifta" style="width: 100%;"></div>
-				</div>
-				<div id="shiftb2">
-					<div id="container2_shiftb" style="width: 100%;"></div>
-				</div>
-				<div id="shiftc2">
-					<div id="container2_shiftc" style="width: 100%;"></div>
-				</div>
-			</div>			
-
-
-			{{-- OP eff --}}
-			<div class="col-xs-12" style="margin-top: 1%; padding: 0px; display: none;">
-				<div id="shifta3">
-					<div id="container3_shifta" style="width: 100%;"></div>
-				</div>
-				<div id="shiftb3">
-					<div id="container3_shiftb" style="width: 100%;"></div>
-				</div>
-				<div id="shiftc3">
-					<div id="container3_shiftc" style="width: 100%;"></div>
-				</div>
-			</div>
 
 			{{-- Last NG --}}
 			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
@@ -177,18 +136,6 @@
 				</div>
 				<div id="shiftc4">
 					<div id="container4_shiftc" style="width: 100%;"></div>
-				</div>
-			</div>
-
-			{{-- Table Last NG --}}
-			<div style="display: none;">
-				<div class="col-xs-12" id="target" style="margin-top: 1%; margin-left: 1%; width:98%; padding: 0px; background-color: #2a2a2b">
-					<table id="eff_target" class="table table-bordered" style="width:97%; margin-left: 2.5%; margin-top: 1%; margin-bottom: 1%;"> 
-						<thead id="eff_target_head">
-						</thead>
-						<tbody id="eff_target_body">
-						</tbody>
-					</table>
 				</div>
 			</div>
 
@@ -714,14 +661,8 @@
 function fillChart() {
 	var group = "{{$_GET['group']}}";
 	var tanggal = "{{$_GET['tanggal']}}";
-	var target = "{{$_GET['target']}}";
-
-	if(target == ''){
-		target = 85;
-	}
-
+	
 	var position = $(document).scrollTop();
-
 
 	$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
@@ -730,561 +671,496 @@ function fillChart() {
 		group:group,
 	}
 
-		//Show Group				
-		group = group.split(',');
+	group = group.split(',');
 
-		if(group != ''){
-			$('#shifta').hide();
-			$('#shiftb').hide();
-			$('#shiftc').hide();
+	if(group != ''){
+		$('#shifta').hide();
+		$('#shiftb').hide();
+		$('#shiftc').hide();
 
-			$('#shifta4').hide();
-			$('#shiftb4').hide();
-			$('#shiftc4').hide();
+		$('#shifta4').hide();
+		$('#shiftb4').hide();
+		$('#shiftc4').hide();
 
 
-			if(group.length == 1){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
-					$('#shift'+group[i].toLowerCase()).show();
+		if(group.length == 1){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
+				$('#shift'+group[i].toLowerCase()).show();
 
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
-			}else if(group.length == 2){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
-					$('#shift'+group[i].toLowerCase()).show();
-
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
-			}else if(group.length == 3){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()).show();
-
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
+				$('#shift'+group[i].toLowerCase()+'4').show();
 			}
+		}else if(group.length == 2){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
+				$('#shift'+group[i].toLowerCase()).show();
 
-		}else{
-			$('#shifta').addClass("col-xs-4");
-			$('#shiftb').addClass("col-xs-4");
-			$('#shiftc').addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
+				$('#shift'+group[i].toLowerCase()+'4').show();
+			}
+		}else if(group.length == 3){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()).show();
 
-			$('#shifta4').addClass("col-xs-4");
-			$('#shiftb4').addClass("col-xs-4");
-			$('#shiftc4').addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()+'4').show();
+			}
 		}
 
+	}else{
+		$('#shifta').addClass("col-xs-4");
+		$('#shiftb').addClass("col-xs-4");
+		$('#shiftc').addClass("col-xs-4");
+
+		$('#shifta4').addClass("col-xs-4");
+		$('#shiftb4').addClass("col-xs-4");
+		$('#shiftc4').addClass("col-xs-4");
+	}
 
 
+	$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
+		if(result.status){
+			var target = result.eff_target;
 
-		$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
-			if(result.status){
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
 
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
+			for(var i = 0; i < result.time_eff.length; i++){
+				if(result.time_eff[i].group == 'A'){
+					loop += 1;
+					for(var j = 0; j < result.emp_name.length; j++){
+						if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
+							var name_temp = result.emp_name[j].name.split(" ");
+							var xAxis = '';
+							xAxis += result.time_eff[i].employee_id + ' - ';
 
-				for(var i = 0; i < result.time_eff.length; i++){
-					if(result.time_eff[i].group == 'A'){
-						loop += 1;
-						for(var j = 0; j < result.emp_name.length; j++){
-							if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
-								var name_temp = result.emp_name[j].name.split(" ");
-								var xAxis = '';
-								xAxis += result.time_eff[i].employee_id + ' - ';
-
-								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-								}
-								op_name.push(xAxis);
+							if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+							}else{
+								xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 							}
-						}
-
-						var isEmpty = true;
-						for(var j = 0; j < result.rate.length; j++){
-							if(result.time_eff[i].employee_id == result.rate[j].operator_id){
-								eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
-								isEmpty = false;
-							}
-						}
-						if(isEmpty){
-							eff_value.push(0);
-						}
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+							op_name.push(xAxis);
 						}
 					}
 
-				}
-
-				var chart = Highcharts.chart('container1_shifta', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group A on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
-
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
-
-				});
-
-
-				// Shift B
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
-
-				for(var i = 0; i < result.time_eff.length; i++){
-					if(result.time_eff[i].group == 'B'){
-						loop += 1;
-						for(var j = 0; j < result.emp_name.length; j++){
-							if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
-								var name_temp = result.emp_name[j].name.split(" ");
-								var xAxis = '';
-								xAxis += result.time_eff[i].employee_id + ' - ';
-
-								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-								}
-								op_name.push(xAxis);
-							}
-						}
-
-						var isEmpty = true;
-						for(var j = 0; j < result.rate.length; j++){
-							if(result.time_eff[i].employee_id == result.rate[j].operator_id){
-								eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
-								isEmpty = false;
-							}
-						}
-						if(isEmpty){
-							eff_value.push(0);
-						}
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					var isEmpty = true;
+					for(var j = 0; j < result.rate.length; j++){
+						if(result.time_eff[i].employee_id == result.rate[j].operator_id){
+							eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
+							isEmpty = false;
 						}
 					}
-
-				}
-
-				var chart = Highcharts.chart('container1_shiftb', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group B on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
-
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
-
-				});
-
-
-				// Shift C
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
-
-				for(var i = 0; i < result.time_eff.length; i++){
-					if(result.time_eff[i].group == 'C'){
-						loop += 1;
-						for(var j = 0; j < result.emp_name.length; j++){
-							if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
-								var name_temp = result.emp_name[j].name.split(" ");
-								var xAxis = '';
-								xAxis += result.time_eff[i].employee_id + ' - ';
-
-								if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
-									xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-								}else{
-									xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-								}
-								op_name.push(xAxis);
-							}
-						}
-
-						var isEmpty = true;
-						for(var j = 0; j < result.rate.length; j++){
-							if(result.time_eff[i].employee_id == result.rate[j].operator_id){
-								eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
-								isEmpty = false;
-							}
-						}
-						if(isEmpty){
-							eff_value.push(0);
-						}
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
-						}
+					if(isEmpty){
+						eff_value.push(0);
 					}
 
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
 				}
-
-				var chart = Highcharts.chart('container1_shiftc', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group C on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
-
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
-
-				});
-
-				$(document).scrollTop(position);
 
 			}
 
+			var chart = Highcharts.chart('container1_shifta', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group A on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
 
-		});
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
+
+			for(var i = 0; i < result.time_eff.length; i++){
+				if(result.time_eff[i].group == 'B'){
+					loop += 1;
+					for(var j = 0; j < result.emp_name.length; j++){
+						if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
+							var name_temp = result.emp_name[j].name.split(" ");
+							var xAxis = '';
+							xAxis += result.time_eff[i].employee_id + ' - ';
+
+							if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+							}else{
+								xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+							}
+							op_name.push(xAxis);
+						}
+					}
+
+					var isEmpty = true;
+					for(var j = 0; j < result.rate.length; j++){
+						if(result.time_eff[i].employee_id == result.rate[j].operator_id){
+							eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
+							isEmpty = false;
+						}
+					}
+					if(isEmpty){
+						eff_value.push(0);
+					}
+
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
+				}
+
+			}
+
+			var chart = Highcharts.chart('container1_shiftb', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group B on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
+
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
+
+			for(var i = 0; i < result.time_eff.length; i++){
+				if(result.time_eff[i].group == 'C'){
+					loop += 1;
+					for(var j = 0; j < result.emp_name.length; j++){
+						if(result.emp_name[j].employee_id == result.time_eff[i].employee_id){
+							var name_temp = result.emp_name[j].name.split(" ");
+							var xAxis = '';
+							xAxis += result.time_eff[i].employee_id + ' - ';
+
+							if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+								xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+							}else{
+								xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+							}
+							op_name.push(xAxis);
+						}
+					}
+
+					var isEmpty = true;
+					for(var j = 0; j < result.rate.length; j++){
+						if(result.time_eff[i].employee_id == result.rate[j].operator_id){
+							eff_value.push(result.rate[j].rate * result.time_eff[i].eff * 100);
+							isEmpty = false;
+						}
+					}
+					if(isEmpty){
+						eff_value.push(0);
+					}
+
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
+				}
+
+			}
+
+			var chart = Highcharts.chart('container1_shiftc', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group C on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
+
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+			$(document).scrollTop(position);
+
+		}
+	});
 
 
 $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, status, xhr) {
 	if(result.status){
-
-		$('#eff_target_head').html("");		
-		$('#eff_target_body').html("");		
-
-		var head = "<tr>";
-		var body1 = "<tr>";
-		var body2 = "<tr>";
-		var body3 = "<tr>";
-		var foot = "<tr>";
-
-		$('#eff_target').css('font-size', '10px');
-		// $('#eff_target').css('border-color', '#2a2a2b');
-		$('#eff_target_head').css('background-color', '#2a2a2b');
-		$('#eff_target_head').css('text-transform', 'uppercase');
-		$('#eff_target_head').css('font-size', '25px');
-		$('#eff_target_head').css('font-weight', 'bold');
-		$('#eff_target_head').css('font-family', 'sans-serif');
-		$('#eff_target_body').css('color', '#2a2a2b');
-
-
-		for(var i = 0; i < result.target.length; i++){
-			if(result.target[i].group == group){
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.emp_name[j].employee_id == result.target[i].employee_id){
-
-						if((result.target[i].eff * 100) > 85){
-							body1 += "<td style='background-color: rgb(144,238,126); height: 30px; width:4%;'>"+result.target[i].finish+"</td>";
-							body2 += "<td style='background-color: rgb(144,238,126); height: 60px; width:4%; font-size: 18px; font-weight:bold;'>"+(result.target[i].eff * 100).toFixed(0)+"%</td>";
-							body3 += "<td style='background-color: rgb(144,238,126); height: 30px; width:4%;'>"+result.target[i].key+"</td>";
-							foot += "<td style='background-color: rgba(85,139,47,.85); height: 100px;'><div style='transform: rotate(-90deg);'>"+result.target[i].employee_id+"<br>";
-							foot += result.emp_name[j].name+"</div></td>";	
-						}else{
-							body1 += "<td style='background-color: rgb(255,116,116); height: 30px; width:4%;'>"+result.target[i].finish+"</td>";
-							body2 += "<td style='background-color: rgb(255,116,116); height: 60px; width:4%; font-size: 18px; font-weight:bold;'>"+(result.target[i].eff * 100).toFixed(0)+"%</td>";
-							body3 += "<td style='background-color: rgb(255,116,116); height: 30px; width:4%;'>"+result.target[i].key+"</td>";
-							foot += "<td style='background-color: rgba(220,105,0,.75); height: 100px;'><div style='transform: rotate(-90deg);'>"+result.target[i].employee_id+"<br>";
-							foot += result.emp_name[j].name+"</div></td>";
-						}
-
-					}
-				}
-
-			}			
-		}
-		head += "<th colspan='25'>Last Operators Efficiency</th>";
-		head += "</tr>";
-		body1 += "</tr>";
-		body2 += "</tr>";
-		body3 += "</tr>";
-		foot += "</tr>";
-
-		$('#eff_target_head').append(head);
-		$('#eff_target_body').append(body1 + body2 + body3);
-
-		if(group == ''){
-			$('#eff_target').css('display', 'none');
-		}
-
-
-
+		var target = result.eff_target;
 
 		var op = [];
 		var key = [];
@@ -1292,7 +1168,6 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 		var data = [];
 		var loop = 0;
 		var plotBands = [];
-
 		for(var i = 0; i < result.target.length; i++){
 			if(result.target[i].group == 'A'){
 				loop += 1;
@@ -1315,7 +1190,6 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}	
 			}			
 		}
-
 		var chart = Highcharts.chart('container4_shifta', {
 			chart: {
 				animation: false
@@ -1392,15 +1266,13 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 		});
 
 
+
 		var op = [];
 		var key = [];
 		var eff = [];
 		var data = [];
 		var loop = 0;
 		var plotBands = [];
-
-
-
 		for(var i = 0; i < result.target.length; i++){
 			if(result.target[i].group == 'B'){
 				loop += 1;
@@ -1502,16 +1374,12 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 
 
 
-
 		var op = [];
 		var key = [];
 		var eff = [];
 		var data = [];
 		var loop = 0;
 		var plotBands = [];
-
-
-
 		for(var i = 0; i < result.target.length; i++){
 			if(result.target[i].group == 'C'){
 				loop += 1;
@@ -1535,7 +1403,6 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}	
 			}			
 		}
-
 		var chart = Highcharts.chart('container4_shiftc', {
 			chart: {
 				animation: false
@@ -1617,707 +1484,6 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 
 	}
 });
-
-
-
-$.get('{{ url("fetch/middle/buffing_op_result") }}', data, function(result, status, xhr) {
-	if(result.status){
-
-
-		//Group A
-		var op = [];
-		var qty = [];
-
-		for(var i = 0; i < result.op_result.length; i++){
-			if(result.op_result[i].group == 'A'){
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-				qty.push(Math.ceil(result.op_result[i].qty));
-			}
-		}
-
-		var chart = Highcharts.chart('container2_shifta', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Result',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group A on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "PC(s)"
-				},
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y}',
-						style:{
-							textOutline: false,
-							fontSize: '1vw'
-						}
-					},
-					animation: false,
-					cursor: 'pointer'
-				},
-			},
-			series: [
-			{
-				name:'Result',
-				type: 'column',
-				color: 'rgb(93,194,193)',
-				data: qty,
-			}
-			]
-
-		});
-
-		//Group B
-		var op = [];
-		var qty = [];
-
-		for(var i = 0; i < result.op_result.length; i++){
-			if(result.op_result[i].group == 'B'){
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-				qty.push(Math.ceil(result.op_result[i].qty));
-			}
-		}
-
-
-		var chart = Highcharts.chart('container2_shiftb', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Result',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group B on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "PC(s)"
-				},
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y}',
-						style:{
-							textOutline: false,
-							fontSize: '1vw'
-						}
-					},
-					animation: false,
-					cursor: 'pointer'
-				},
-			},
-			series: [
-			{
-				name:'Result',
-				type: 'column',
-				color: 'rgb(93,194,193)',
-				data: qty,
-			}
-			]
-
-		});
-
-		//Group C
-		var op = [];
-		var qty = [];
-
-		for(var i = 0; i < result.op_result.length; i++){
-			if(result.op_result[i].group == 'C'){
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.op_result[i].operator_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-				qty.push(Math.ceil(result.op_result[i].qty));
-			}
-		}
-
-
-		var chart = Highcharts.chart('container2_shiftc', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Result',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group C on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "PC(s)"
-				},
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y}',
-						style:{
-							textOutline: false,
-							fontSize: '1vw'
-						}
-					},
-					animation: false,
-					cursor: 'pointer'
-				},
-			},
-			series: [
-			{
-				name:'Result',
-				type: 'column',
-				color: 'rgb(93,194,193)',
-				data: qty,
-			}
-			]
-
-		});
-
-		$(document).scrollTop(position);
-
-	}
-
-});
-
-$.get('{{ url("fetch/middle/buffing_op_working") }}', data, function(result, status, xhr) {
-	if(result.status){
-
-
-		//Group A
-		var op = [];
-		var eff = [];
-		var data = [];
-
-		var loop = 0;
-		for(var i = 0; i < result.working_time.length; i++){
-			if(result.working_time[i].group == 'A'){
-				loop += 1;
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-
-				eff.push(result.working_time[i].std / result.working_time[i].act * 100);
-
-				if(eff[loop-1] > 85){
-					data.push({y: eff[loop-1], color: 'rgb(144,238,126)'});
-				}else{
-					data.push({y: eff[loop-1], color: 'rgb(255,116,116)'})
-				}
-			}			
-		}
-
-		var chart = Highcharts.chart('container3_shifta', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Efficiency',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group A on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "Minutes"
-				},
-				plotLines: [{
-					color: '#FF0000',
-					width: 2,
-					zIndex: 5,
-					dashStyle: 'shortdash',
-					value: 85,
-					label: {
-						align:'right',
-						text: 'Target 85%',
-						x:-7,
-						style: {
-							fontSize: '1vw',
-							color: '#FF0000',
-							fontWeight: 'bold'
-						}
-					}
-				}],
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:.2f}%',
-						rotation: -90,
-						style:{
-							fontSize: '15px'
-						}
-					},
-					animation: false,
-					pointPadding: 0.93,
-					groupPadding: 0.93,
-					borderWidth: 0.93,
-					cursor: 'pointer',
-				},
-			},
-			series: [
-			{
-				name:'Operator Efficiency',
-				type: 'column',
-				data: data,
-			}
-			]
-
-		});
-
-
-		//Group B
-		var op = [];
-		var eff = [];
-		var data = [];
-
-		var loop = 0;
-		for(var i = 0; i < result.working_time.length; i++){
-			if(result.working_time[i].group == 'B'){
-				loop += 1;
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-
-				eff.push(result.working_time[i].std / result.working_time[i].act * 100);
-
-				if(eff[loop-1] > 85){
-					data.push({y: eff[loop-1], color: 'rgb(144,238,126)'});
-				}else{
-					data.push({y: eff[loop-1], color: 'rgb(255,116,116)'})
-				}
-			}			
-		}
-
-		var chart = Highcharts.chart('container3_shiftb', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Efficiency',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group B on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "Minutes"
-				},
-				plotLines: [{
-					color: '#FF0000',
-					width: 2,
-					zIndex: 5,
-					dashStyle: 'shortdash',
-					value: 85,
-					label: {
-						align:'right',
-						text: 'Target 85%',
-						x:-7,
-						style: {
-							fontSize: '1vw',
-							color: '#FF0000',
-							fontWeight: 'bold'
-						}
-					}
-				}],
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:.2f}%',
-						rotation: -90,
-						style:{
-							fontSize: '15px'
-						}
-					},
-					animation: false,
-					pointPadding: 0.93,
-					groupPadding: 0.93,
-					borderWidth: 0.93,
-					cursor: 'pointer',
-				},
-			},
-			series: [
-			{
-				name:'Operator Efficiency',
-				type: 'column',
-				data: data,
-			}
-			]
-
-		});
-
-
-		//Group C
-		var op = [];
-		var eff = [];
-		var data = [];
-
-		var loop = 0;
-		for(var i = 0; i < result.working_time.length; i++){
-			if(result.working_time[i].group == 'C'){
-				loop += 1;
-				for(var j = 0; j < result.emp_name.length; j++){
-					if(result.working_time[i].employee_id == result.emp_name[j].employee_id){
-						var name_temp = result.emp_name[j].name.split(" ");
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Mochamad'){
-							op.push(name_temp[0].charAt(0)+'. '+name_temp[1]);
-						}else{
-							if(name_temp[1].length > 7){
-								op.push(name_temp[0]+'. '+name_temp[1].charAt(0));
-							}else{
-								op.push(result.emp_name[j].name);
-							}
-						}
-					}
-				}
-
-				eff.push(result.working_time[i].std / result.working_time[i].act * 100);
-
-				if(eff[loop-1] > 85){
-					data.push({y: eff[loop-1], color: 'rgb(144,238,126)'});
-				}else{
-					data.push({y: eff[loop-1], color: 'rgb(255,116,116)'})
-				}
-			}			
-		}
-
-		var chart = Highcharts.chart('container3_shiftc', {
-			chart: {
-				animation: false
-			},
-			title: {
-				text: 'Operators Efficiency',
-				style: {
-					fontSize: '25px',
-					fontWeight: 'bold'
-				}
-			},
-			subtitle: {
-				text: 'Group C on '+ result.date,
-				style: {
-					fontSize: '1vw',
-					fontWeight: 'bold'
-				}
-			},
-			yAxis: {
-				title: {
-					enabled: true,
-					text: "Minutes"
-				},
-				plotLines: [{
-					color: '#FF0000',
-					width: 2,
-					zIndex: 5,
-					dashStyle: 'shortdash',
-					value: 85,
-					label: {
-						align:'right',
-						text: 'Target 85%',
-						x:-7,
-						style: {
-							fontSize: '1vw',
-							color: '#FF0000',
-							fontWeight: 'bold'
-						}
-					}
-				}],
-				labels: {
-					enabled: false
-				}
-			},
-			xAxis: {
-				categories: op,
-				type: 'category',
-				gridLineWidth: 1,
-				gridLineColor: 'RGB(204,255,255)',
-				labels: {
-					rotation: -45,
-					style: {
-						fontSize: '13px'
-					}
-				},
-			},
-			tooltip: {
-				headerFormat: '<span>{point.category}</span><br/>',
-				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-			},
-			credits: {
-				enabled:false
-			},
-			legend : {
-				enabled:false
-			},
-			plotOptions: {
-				series:{
-					dataLabels: {
-						enabled: true,
-						format: '{point.y:.2f}%',
-						rotation: -90,
-						style:{
-							fontSize: '15px'
-						}
-					},
-					animation: false,
-					pointPadding: 0.93,
-					groupPadding: 0.93,
-					borderWidth: 0.93,
-					cursor: 'pointer',
-				},
-			},
-			series: [
-			{
-				name:'Operator Efficiency',
-				type: 'column',
-				data: data,
-			}
-			]
-
-		});
-
-		$(document).scrollTop(position);
-	}
-
-});
-
 
 }
 

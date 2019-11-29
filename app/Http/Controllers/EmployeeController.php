@@ -1097,6 +1097,7 @@ public function fetchChat(Request $request)
   $response = array(
     'status' => true,
     'chats' => $data,
+    'tes' => $obj,
     'base_avatar' => url('images/avatar/')
   );
 
@@ -1234,7 +1235,7 @@ else if ($request->get("ctg") == 'Report Employee by Department') {
     WHERE id IN (SELECT MAX(id) FROM promotion_logs where DATE_FORMAT(valid_from,'%Y-%m') <= '".$tgl."' and position <> '-' GROUP BY employee_id)) log
     on emp.employee_id = log.employee_id
     join positions on positions.position = log.position
-    GROUP BY log.position
+    GROUP BY log.position, positions.position
     order by positions.id");
 }
 
@@ -1770,7 +1771,7 @@ public function getKaizen(Request $request)
 public function fetchDataKaizen()
 {
   $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
-  ->select('kaizen_forms.id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
+  ->select('kaizen_forms.id','employee_id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
   if ($_GET['area'] != "") {
     $kzn = $kzn->where('area','=', $_GET['area']);
   }
@@ -2008,11 +2009,11 @@ public function fetchKaizenReport(Request $request)
   $kz_rank2 = db::select($q_rank2);
 
   $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as  score from kaizen_forms 
-join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
-where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
-and valid_to is null
-order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
+  join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+  left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
+  where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
+  and valid_to is null
+  order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
 
   $kz_excellent = db::select($q_excellent);
 
@@ -2043,6 +2044,44 @@ public function applyKaizen(Request $request)
   $response = array(
     'status' => true,
     'message' => 'e-Kaizen Updated Successfully'
+  );
+  return Response::json($response);
+}
+
+public function fetchKaizenResume(Request $request)
+{
+  try {
+    $q = "select leader, `name`, SUM(tot) as total_operator, SUM(kz_tot) as total_sudah, SUM(belum) as total_belum, SUM(kaizen_count) as total_kaizen from 
+    (select leader.leader, count(leader.employee_id) as tot, count(kz.employee_id) as kz_tot, SUM(IF(kz.employee_id is null, 1, 0)) as belum, 0 as kaizen_count from
+    (select employees.employee_id, emp.employee_id as leader from employees join employees emp on employees.direct_superior = emp.employee_id
+    where employees.direct_superior is not null) leader left join
+    (select employee_id, leader from kaizen_forms join 
+    (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
+    group by employee_id, leader) kz on leader.employee_id = kz.employee_id 
+    and leader.leader = kz.leader
+    group by leader.leader
+
+    union all
+
+    select leader, 0 as tot, 0 as kz_tot, 0 as belum, count(employee_id) as kaizen_count from kaizen_forms join 
+    (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
+    group by leader) as alls
+    join employees on alls.leader = employees.employee_id
+    group by leader, `name`";
+
+    $datas = db::select($q);
+  } catch (QueryException $e) {
+    $response = array(
+      'status' => false,
+      'message' => $e->getMessage()
+    );
+    return Response::json($response);
+  }
+
+  $response = array(
+    'status' => true,
+    'datas' => $datas,
+    'message' => 'Success'
   );
   return Response::json($response);
 }

@@ -148,8 +148,8 @@ class ProductionReportController extends Controller
         $dataleader = $leader->leader_dept; 
         $data[] = db::select("select monthly.leader_name,
         monthly.jumlah_activity_monthly,
-        monthly.jumlah_training +  monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
-        COALESCE(((monthly.jumlah_training +  monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
+        monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit as jumlah_monthly,
+        COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
         IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
                 IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
@@ -200,7 +200,27 @@ class ProductionReportController extends Controller
                                 and labelings.deleted_at is null 
                                 and actlist.department_id = '".$id."'
                                 GROUP BY labelings.leader),0)
-        as jumlah_labeling
+        as jumlah_labeling,
+        COALESCE((select count(DISTINCT(leader)) as jumlah_interview
+                from interviews
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(interviews.date,'%Y-%m') = '".$bulan."'
+                    and  actlist.frequency = 'Monthly'
+                                and interviews.leader = '".$dataleader."'
+                                and interviews.deleted_at is null 
+                                and actlist.department_id = '".$id."'
+                                GROUP BY interviews.leader),0)
+        as jumlah_interview,
+                COALESCE((select count(DISTINCT(leader)) as jumlah_first_product_audit
+                from first_product_audit_details
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$bulan."'
+                    and  actlist.frequency = 'Monthly'
+                                and first_product_audit_details.leader = '".$dataleader."'
+                                and first_product_audit_details.deleted_at is null 
+                                and actlist.department_id = '".$id."'
+                                GROUP BY first_product_audit_details.leader),0)
+        as jumlah_first_product_audit
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
@@ -528,7 +548,25 @@ class ProductionReportController extends Controller
                                 and audit_processes.leader = '".$leader_name."'
                                 and actlist.id = id_activity
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0))))))) 
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Interview',
+            (select count(DISTINCT(interviews.leader)) as jumlah_interview
+                from interviews
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(interviews.date,'%Y-%m') = '".$week_date."'
+                                and interviews.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),
+                        IF(activity_type = 'Pengecekan',
+            (select count(DISTINCT(first_product_audit_details.leader)) as jumlah_first_product_audit
+                from first_product_audit_details
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$week_date."'
+                                and first_product_audit_details.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0)))))))))
             as jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
