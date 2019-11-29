@@ -42,7 +42,7 @@
 		<div class="col-xs-12" style="padding: 0 0 15px 45px;">
 			<?php $male = 1; $female = 1;  for ($i=0; $i < 11; $i++) { 
 				if ($i == 8) { ?>
-					<div class="gambar" style="background-color: transparent; border: 0px"></div>	
+				<div class="gambar" style="background-color: transparent; border: 0px"></div>	
 				<?php } ?>
 
 				<div class="gambar" id="gambar_<?php echo $i?>">
@@ -50,18 +50,20 @@
 					if ($i > 7) {
 						echo '<img src="'.url("images/Gents.png").'" id="male_'.$male.'">';
 						echo "<p class='text_stat' id='text_".$i."'></p>";
+						echo "<p class='text_stat'><label id='minutes".$i."'>--</label>:<label id='seconds".$i."'>--</label></p>";
 						$male += 1;
 					} else {
 						echo '<img src="'.url("images/Ladies.png").'" id="female_'.$female.'">';
 						echo "<p class='text_stat' id='text_".$i."'></p>";
+						echo "<p class='text_stat'><label id='minutes".$i."'>--</label>:<label id='seconds".$i."'>--</label></p>";
 						$female += 1;
 					}
 					?>
 				</div>
-			<?php } ?>
+				<?php } ?>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
 </div>
 
@@ -84,22 +86,59 @@
 
 	jQuery(document).ready(function() {
 		getToiletStatus();
+		setTime();
+
 		setInterval(getToiletStatus, 10000);
+		setInterval(setTime, 1000);
 	});
+
+
+	var toilet = [];
+	var totalSeconds = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+
+	function setTime() {
+		for (var i = 0; i < toilet.length; i++) {	
+			if(toilet[i]){
+				totalSeconds[i]++;
+				document.getElementById("seconds"+i).innerHTML = pad(totalSeconds[i] % 60);
+				document.getElementById("minutes"+i).innerHTML = pad(parseInt(totalSeconds[i] / 60));
+			}
+		}
+	}
+
+
+	function pad(val) {
+		var valString = val + "";
+		if (valString.length < 2) {
+			return "0" + valString;
+		} else {
+			return valString;
+		}
+	}
+
 
 	function getToiletStatus() {
 		$location = 'buffing';
 		$data = {
 			location : $location
 		}
+
+
 		$.get('{{ url("fetch/room/toilet") }}', $data,  function(result, status, xhr){
+			toilet = [];
 			$.each(result.datas, function(index, value){
 				if (value == 1) {
 					$("#gambar_"+index).css('background','rgb(240, 41, 61)');
 					$("#text_"+index).text("OCCUPIED");
+					toilet.push(true);					
+
 				} else if (value == 0) {
 					$("#gambar_"+index).css('background','rgb(50,205,50)');
 					$("#text_"+index).text("VACANT");
+					toilet.push(false);
+					totalSeconds[index] = 0;
+
 				}
 			})
 		})
