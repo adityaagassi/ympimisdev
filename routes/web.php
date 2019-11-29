@@ -893,6 +893,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
+Route::get('index/kaizen/report', 'EmployeeController@indexKaizenReport');
 
 //INITIAL
 Route::get('index/initial/{id}', 'InitialProcessController@index');
@@ -1612,6 +1613,7 @@ Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_m
 Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
 Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_monitoring3');
 Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_monitoring4');
+Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_monitoring5');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
@@ -1619,6 +1621,7 @@ Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_d
 Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
 Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
+Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
 Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
 
@@ -1632,10 +1635,11 @@ Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 //suhu
-Route::get('index/suhu_office','TemperatureController@suhu_office');
-Route::get('index/suhu_office2','TemperatureController@suhu_office2');
-Route::get('index/log_suhu_office','TemperatureController@data_suhu_office');
+Route::get('index/suhu_1','TemperatureController@suhu_1');
+Route::get('index/log_map_suhu1','TemperatureController@log_map_suhu1');
+Route::get('index/log_suhu_1','TemperatureController@data_suhu_1');
 Route::get('index/map_suhu','TemperatureController@index_maps');
+
 
 
 // BUFFING TOILET

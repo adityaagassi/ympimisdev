@@ -288,8 +288,8 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
-	              <label for="">Serial Number</label>
-				  <input type="text" name="serial_number" id="inputSerialNumber" class="form-control" placeholder="Enter Serial Number" required="required" title="">
+	              <label for="">Serial Number / Photo Number</label>
+				  <input type="text" name="serial_number" id="inputSerialNumber" class="form-control" placeholder="Enter Serial Number / Photo Number" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Condition</label>
@@ -353,8 +353,8 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
-	              <label for="">Serial Number</label>
-				  <input type="text" name="serial_number" id="editSerialNumber" class="form-control" placeholder="Enter Serial Number" required="required" title="">
+	              <label for="">Serial Number / Photo Number</label>
+				  <input type="text" name="serial_number" id="editSerialNumber" class="form-control" placeholder="Enter Serial Number / Photo Number" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Condition</label>
