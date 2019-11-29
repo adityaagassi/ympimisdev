@@ -103,6 +103,9 @@
 				totalSeconds[i]++;
 				document.getElementById("seconds"+i).innerHTML = pad(totalSeconds[i] % 60);
 				document.getElementById("minutes"+i).innerHTML = pad(parseInt(totalSeconds[i] / 60));
+			}else{
+				document.getElementById("seconds"+i).innerHTML = '--';
+				document.getElementById("minutes"+i).innerHTML = '--';
 			}
 		}
 	}
