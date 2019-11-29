@@ -279,7 +279,8 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Production Date</label>
-				  <input type="text" name="production_date" id="inputProductionDate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
+				  {{-- <input type="text" name="production_date" id="inputProductionDate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title=""> --}}
+				  <input type="text" class="form-control pull-right" id="date" name="production_date"  placeholder="Select Date">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Check Date</label>
@@ -344,7 +345,8 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Production Date</label>
-				  <input type="text" name="production_date" id="editProductionDate" class="form-control" value="" readonly required="required" title="">
+				  {{-- <input type="text" name="production_date" id="editProductionDate" class="form-control" value="" readonly required="required" title=""> --}}
+				  <input type="text" class="form-control pull-right" id="editProductionDate" name="production_date"  placeholder="Select Date">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Check Date</label>
@@ -421,9 +423,19 @@
 		startView: "months", 
 		minViewMode: "months",
 		autoclose: true,
-		
-
 	});
+
+	$('#date').datepicker({
+      autoclose: true,
+      format: 'yyyy-mm-dd',
+      todayHighlight: true
+    });
+    
+    $('#editProductionDate').datepicker({
+      autoclose: true,
+      format: 'yyyy-mm-dd',
+      todayHighlight: true
+    });
 
 	
 </script>

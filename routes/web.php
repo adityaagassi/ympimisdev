@@ -894,6 +894,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 });
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen/report', 'EmployeeController@indexKaizenReport');
+Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 
 //INITIAL
 Route::get('index/initial/{id}', 'InitialProcessController@index');
@@ -1290,6 +1291,7 @@ Route::post('index/flo', 'FloController@index_flo');
 Route::get('index/flo_container', 'FloController@index_flo_container');
 Route::post('scan/material_number', 'FloController@scan_material_number');
 Route::post('scan/serial_number', 'FloController@scan_serial_number');
+Route::post('scan/educational_instrument', 'FloController@scan_educational_instrument');
 Route::post('destroy/serial_number', 'FloController@destroy_serial_number');
 Route::post('destroy/flo_attachment', 'FloController@destroy_flo_attachment');
 Route::post('scan/flo_settlement', 'FloController@flo_settlement');
@@ -1549,6 +1551,7 @@ Route::post('index/point_check_first_product/update/{id}/{point_check_id}', 'Poi
 
 //FIRST PRODUCT AUDIT
 Route::get('index/first_product_audit/index/{id}', 'FirstProductAuditController@index');
+Route::post('index/first_product_audit/filter_first_product/{id}', 'FirstProductAuditController@filter_first_product');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -1639,8 +1642,9 @@ Route::get('index/suhu_1','TemperatureController@suhu_1');
 Route::get('index/log_map_suhu1','TemperatureController@log_map_suhu1');
 Route::get('index/log_suhu_1','TemperatureController@data_suhu_1');
 Route::get('index/map_suhu','TemperatureController@index_maps');
-
-
+Route::get('index/suhu_2','TemperatureController@suhu_2');
+Route::get('index/log_suhu_2','TemperatureController@data_suhu_2');
+Route::get('index/log_map_suhu2','TemperatureController@log_map_suhu2');
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');

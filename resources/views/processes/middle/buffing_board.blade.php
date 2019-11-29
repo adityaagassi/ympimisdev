@@ -129,8 +129,54 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		setInterval(fetchTable, 2000);
+		setInterval(fetchTable, 1000);
 	});
+
+	var akan_bff = [];
+	var sedang = [];
+	var selesai = [];
+
+	var totalAkan = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var totalSedang = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var totalSelesai = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+
+	function setTimeSelesai(index) {
+		if(selesai[index]){
+			totalSelesai[index]++;
+			return pad(parseInt(totalSelesai[index] / 3600)) + ':' + pad(parseInt((totalSelesai[index] % 3600) / 60)) + ':' + pad((totalSelesai[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
+	function setTimeSedang(index) {
+		if(sedang[index]){
+			totalSedang[index]++;
+			return pad(parseInt(totalSedang[index] / 3600)) + ':' + pad(parseInt((totalSedang[index] % 3600) / 60)) + ':' + pad((totalSedang[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
+	function setTimeAkan(index) {
+		if(!akan_bff[index]){
+			totalAkan[index]++;
+			return pad(parseInt(totalAkan[index] / 3600)) + ':' + pad(parseInt((totalAkan[index] % 3600) / 60)) + ':' + pad((totalAkan[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
+
+	function pad(val) {
+		var valString = val + "";
+		if (valString.length < 2) {
+			return "0" + valString;
+		} else {
+			return valString;
+		}
+	}
 
 	function fetchTable(){
 		var hpl = $('#hpl').val().split(',');
@@ -143,6 +189,10 @@
 		$.get('{{ url("fetch/middle/buffing_board") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
+					akan_bff = [];
+					sedang = [];
+					selesai = [];
+
 					$('#buffingTableBody').html("");
 					var buffingTableBody = "";
 					var i = 0;
@@ -154,7 +204,7 @@
 							if (value.employee_id) {
 								color = '';
 
-								if (!value.akan)
+								if (value.dev_akan_detected == 0)
 									color2 = 'class="akan"';
 								else
 									color2 = 'style="color:#ffd03a"';
@@ -174,7 +224,7 @@
 							if (value.employee_id) {
 								color = 'style="background-color: #575c57"';
 
-								if (!value.akan)
+								if (value.dev_akan_detected == 0)
 									color2 = 'class="akan"';
 								else
 									color2 = 'style="color:#ffd03a"';
@@ -196,23 +246,34 @@
 						if (value.dev_akan_detected == 0) {
 							akan_time = value.akan_time;
 							akan = "";
+							akan_bff.push(false);
 						} else {
 							akan = value.akan;
 							akan_time = "";
+							akan_bff.push(true);
+							totalAkan[index] = 0;
 						}
 
 						//JIKA Sedang buffing
 						if (value.dev_sedang_detected == 1) {
 							sedang_time = value.sedang_time;
+							var sedang2 = value.sedang;
+							sedang.push(true);
 						} else {
+							var sedang2 = "";
 							sedang_time = "";
+							sedang.push(false);
+							totalSedang[index] = 0;
 						}
 
 						//JIKA Selesai
 						if (value.dev_selesai_detected == 1) {
 							selesai_time = value.selesai_time;
+							selesai.push(true);											
 						} else {
 							selesai_time = "";
+							selesai.push(false);
+							totalSelesai[index] = 0;
 						}
 
 						// var key = [['C','D','E'],['F','G','H','J','82']];
@@ -226,8 +287,8 @@
 								buffingTableBody += '<tr '+color+'>';
 								buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
 								buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-								buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
-								buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
+								buffingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
+								buffingTableBody += '<td '+color2+'>'+akan+'<p>'+setTimeAkan(index)+'</p></td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
@@ -238,15 +299,15 @@
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-								buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
+								buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 								buffingTableBody += '</tr>';
 							}
 						}else{
 							buffingTableBody += '<tr '+color+'>';
 							buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
 							buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-							buffingTableBody += '<td style="color:#a4fa98">'+value.sedang+'<p>'+sedang_time+'</p></td>';
-							buffingTableBody += '<td '+color2+'>'+akan+'<p>'+akan_time+'</p></td>';
+							buffingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
+							buffingTableBody += '<td '+color2+'>'+akan+'<p>'+setTimeAkan(index)+'</p></td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
@@ -257,7 +318,7 @@
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-							buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+selesai_time+'</p></td>';
+							buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 							buffingTableBody += '</tr>';
 						}						
 

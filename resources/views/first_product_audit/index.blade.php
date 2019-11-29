@@ -174,6 +174,9 @@
 												<th>Standar Kualitas</th>
 												<th>Tool Check</th>
 												<th>Jumlah Cek</th>
+												<th>Month</th>
+												<th>Leader</th>
+												<th>Foreman</th>
 												<th>Send Status</th>
 												<th>Approval Status</th>
 												<th>Action</th>
@@ -184,10 +187,12 @@
 											<tr>
 												<td>{{$first_product_audit->proses}}</td>
 												<td>{{$first_product_audit->jenis}}</td>
-												<td>{{$first_product_audit->nama_mesin}}</td>
-												<td><img width="100px" src="{{ url('/data_file/labeling/'.$first_product_audit->foto_arah_putaran) }}"></td>
-												<td><img width="100px" src="{{ url('/data_file/labeling/'.$first_product_audit->foto_sisa_putaran) }}"></td>
-												<td>{{$first_product_audit->keterangan}}</td>
+												<td>{{$first_product_audit->standar_kualitas}}</td>
+												<td>{{$first_product_audit->tool_check}}</td>
+												<td>{{$first_product_audit->jumlah_cek}}</td>
+												<td>{{$first_product_audit->month}}</td>
+												<td>{{$first_product_audit->leader}}</td>
+												<td>{{$first_product_audit->foreman}}</td>
 												<td>
 													@if($first_product_audit->send_status == "")
 								                		<label class="label label-danger">Not Yet Sent</label>
@@ -217,6 +222,8 @@
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>

@@ -88,7 +88,7 @@
 		getToiletStatus();
 		setTime();
 
-		setInterval(getToiletStatus, 10000);
+		setInterval(getToiletStatus, 1000);
 		setInterval(setTime, 1000);
 	});
 

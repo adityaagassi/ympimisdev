@@ -33,7 +33,7 @@
 @stop
 @section('header')
 <section class="content-header" style="text-align: center;">
-	<span style="font-size: 3vw; color: red;"><i class="fa fa-angle-double-down"></i> Buffing Canceled <i class="fa fa-angle-double-down"></i></span>
+	<span style="font-size: 3vw; color: red;"><i class="fa fa-angle-double-down"></i> Buffing Cancel <i class="fa fa-angle-double-down"></i></span>
 </section>
 @stop
 @section('content')

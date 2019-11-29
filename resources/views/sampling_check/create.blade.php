@@ -90,7 +90,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="date" name="date">
+                <input type="text" class="form-control pull-right" id="date" name="date" placeholder="Select Date">
               </div>
             </div>
           </div>
