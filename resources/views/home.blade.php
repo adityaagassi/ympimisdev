@@ -274,7 +274,7 @@
                                 <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress 
                             </a>
                             <br>
-                            <a href="#">
+                            <a href="{{ url("/index/kaizen") }}">
                                 <i class="fa fa-caret-right"></i> List Unverified e-Kaizen 
                             </a>
                             <br>

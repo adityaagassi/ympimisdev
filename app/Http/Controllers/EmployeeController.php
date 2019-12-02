@@ -1729,9 +1729,9 @@ public function fetchDataKaizen()
   ->addColumn('fr_stat', function($kzn){
     if ($kzn->status == -1) {
       if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager') {
-        return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Yet Verified</a>';
+        return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
       } else {
-        return '<span class="label bg-yellow">Yet Verified</span>';
+        return '<span class="label bg-yellow">Unverified</span>';
       }
     }
     else if ($kzn->status == 1){
@@ -1752,16 +1752,16 @@ public function fetchDataKaizen()
         return '<span class="label bg-green">Verified</span>';
       } else {
         if ($_GET['position'] == 'Manager') {
-          return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Yet Verified</a>';     
+          return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
         } else {
-          return '<span class="label bg-yellow">Yet Verified</span>'; 
+          return '<span class="label bg-yellow">Unverified</span>'; 
         }
       }
     } else {
       if ($kzn->status == 0) {
         return '<span class="label bg-red">NOT Kaizen</span>';
       } else {
-        return '<span class="label bg-yellow">Yet Verified</span>';
+        return '<span class="label bg-yellow">Unverified</span>';
       }
     }
   })
