@@ -202,7 +202,7 @@
 					type: 'column'
 				},
 				title: {
-					text: 'Data Kaizen Teian November period'
+					text: 'Data Kaizen Teian'
 				},
 				subtitle: {
 					text: 'Click the columns to view detail per Section'
