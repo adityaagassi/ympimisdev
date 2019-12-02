@@ -98,9 +98,16 @@ table.table-bordered > tfoot > tr > th{
         </div>
 
         <div class="form-group row" align="right">
-          <label class="col-sm-4">Name<span class="text-red">*</span></label>
+          <label class="col-sm-4">Lokasi<span class="text-red">*</span></label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="Name" placeholder="Enter Name Reader" required>
+            <input type="text" class="form-control" name="lokasi" placeholder="Enter Lokasi" required>
+          </div>
+        </div>
+
+        <div class="form-group row" align="right">
+          <label class="col-sm-4">Distance<span class="text-red">*</span></label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="distance" placeholder="Enter Distance" required>
           </div>
         </div>
         
@@ -130,18 +137,20 @@ table.table-bordered > tfoot > tr > th{
              <table id="example1" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
-                  <th>ID</th>
+                  <!-- <th>ID</th> -->
                   <th>UUID</th>
-                   <th>Name</th>        
+                  <th>Lokasi</th> 
+                  <th>Distance</th>        
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($cr as $beacon)
                 <tr>
-                    <td>{{ $beacon->id }}</td>
+                    <!-- <td>{{ $beacon->id }}</td> -->
                     <td>{{ $beacon->uuid }}</td>
-                    <td>{{ $beacon->name }}</td>
+                    <td>{{ $beacon->lokasi }}</td>
+                    <td>{{ $beacon->distance }}</td>
                     <td style="width: 10%">
                     <center>
                       <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit({{ $beacon->id }})">Edit</button>
@@ -155,11 +164,11 @@ table.table-bordered > tfoot > tr > th{
               </tbody>
               <tfoot>
                 <tr>
+                  
                   <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
-                 
                 </tr>
               </tfoot>
             </table>
@@ -179,7 +188,7 @@ table.table-bordered > tfoot > tr > th{
           </div>
           <div class="modal-body">
 
-            <form role="form" method="post" action="{{url('index/master_beacon/daftar')}}">
+            <form role="form" method="post" action="{{url('index/master_beacon/edit')}}">
               <div class="box-body">
                 <input type="hidden" value="{{csrf_token()}}" name="_token" />
                 <div class="form-group row" align="right">
@@ -190,9 +199,16 @@ table.table-bordered > tfoot > tr > th{
                 </div>
 
                 <div class="form-group row" align="right">
-                  <label class="col-sm-4">Name</label>
+                  <label class="col-sm-4">Lokasi</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" name="Name"  id="name_edit">
+                    <input type="text" class="form-control" name="lokasi"  id="lokasi_edit">
+                  </div>
+                </div>
+
+                <div class="form-group row" align="right">
+                  <label class="col-sm-4">Distance</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" name="distance"  id="distance_edit">
                   </div>
                 </div>
 
@@ -361,24 +377,15 @@ table.table-bordered > tfoot > tr > th{
                 method: 'GET',
                 success: function(data) {
                   var json = data;
-                  // obj = JSON.parse(json);
+              
                   console.log(data.uuid);
-                  // $('#material_description').val(obj.material_description);
-                  // $('#hpl').val(obj.hpl);
+             
                   $("#uuid_edit").val(data.uuid);
-                  $("#name_edit").val(data.name);
+                  $("#lokasi_edit").val(data.lokasi);
+                  $("#distance_edit").val(data.distance);
+                  
                 }
             });
-      // $.get('{{ url("index/master_beacon/edit") }}', data, function(result, status, xhr)
-      // {
-      //   // var json = result,
-      //   var obj = jQuery.parseJSON(result);
-      //   console.log(obj);
-      //   $("#id_edit").val(id);
-      //   $("#uuid_edit").val(result.uuid);
-      //   $("#name_edit").val(result.name);
-        
-      // })
     }
 
     function deleteConfirmation(url, name, id) {

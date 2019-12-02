@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\User;
-use App\CubeaconReader;
+use App\MasterBeacons;
 use Response;
 use DataTables;
 
@@ -39,7 +39,7 @@ class BeaconController extends Controller
 	
 	public function master_beacon()
 	{
-		$cr = CubeaconReader::select('cubeacon_readers.*')->get();
+		$cr = MasterBeacons::select('master_beacons.*')->get();
 
 		return view('beacons.master_beacon.create', array(
 			'cr' => $cr
@@ -48,16 +48,17 @@ class BeaconController extends Controller
 
 	public function daftar(Request $request)
 	{
-		// insert data ke table pegawai
+		// insert data ke table master_cubeacons
 		$id_user = Auth::id();
 
-		$CubeaconReader = new CubeaconReader([
+		$MasterBeacons = new MasterBeacons([
 			'uuid' => $request->get('UUID'),
-			'name' => $request->get('Name'),
-			'created_by' => $id_user
+			'lokasi' => $request->get('lokasi'),
+			'distance' => $request->get('distance')
+			
 		]);
 
-		$CubeaconReader->save();
+		$MasterBeacons->save();
 
 		return redirect('/index/master_beacon')
 		->with('status', 'New Master Beacon has been created.')
@@ -68,9 +69,10 @@ class BeaconController extends Controller
 	public function edit(Request $request)
 	{
 		try{
-			$beacon = CubeaconReader::find($request->get("id"));
+			$beacon = MasterBeacons::find($request->get("id"));
 			$uuid = $beacon->uuid;
-			$name = $beacon->name;
+			$lokasi = $beacon->lokasi;
+			$distance = $beacon->distance;
             // $beacon->uuid = $request->get('uuid');
             // $beacon->name = $request->get('name');
 			
@@ -78,7 +80,8 @@ class BeaconController extends Controller
 			$response = array(
 				'status' => true,
 				'uuid' => $uuid,
-				'name' => $name
+				'lokasi' => $lokasi,
+				'distance' => $distance
 			);
 			return Response::json($response);
 
@@ -102,9 +105,47 @@ class BeaconController extends Controller
 		}
 	}
 
+
+	// public function jquerry_maker(elem1, elem2)
+	// {
+	// 	var e1Rect = elem1.getBoundingClientRect();
+	// 	var e2Rect = elem2.getBoundingClientRect();
+	// 	var dx = (e1Rect.left+(e1Rect.right-e1Rect.left)/2) - (e2Rect.left+(e2Rect.right-e2Rect.left)/2);
+	// 	var dy = (e1Rect.top+(e1Rect.bottom-e1Rect.top)/2) - (e2Rect.top+(e2Rect.bottom-e2Rect.top)/2);
+	// 	var dist = Math.sqrt(dx * dx + dy * dy);
+	// 	return dist;
+	// }
+
+// function distance(lat1, lon1, lat2, lon2, unit) {
+// 	if ((lat1 == lat2) && (lon1 == lon2)) {
+// 		return 0;
+// 	}
+// 	else {
+// 		var radlat1 = Math.PI * lat1/180;
+// 		var radlat2 = Math.PI * lat2/180;
+// 		var theta = lon1-lon2;
+// 		var radtheta = Math.PI * theta/180;
+// 		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+// 		if (dist > 1) {
+// 			dist = 1;
+// 		}
+// 		dist = Math.acos(dist);
+// 		dist = dist * 180/Math.PI;
+// 		dist = dist * 60 * 1.1515;
+// 		if (unit=="K") { dist = dist * 1.609344 }
+// 		if (unit=="N") { dist = dist * 0.8684 }
+// 		return dist;
+// 	}
+
+// }
+	// public function FunctionName()
+	// {
+	// 	$distance = 
+	// }
+
 	public function delete($id)
 	{
-		$beacon = CubeaconReader::find($id);
+		$beacon = MasterBeacons::find($id);
 		$beacon->delete();
 
 		return redirect('/index/master_beacon')

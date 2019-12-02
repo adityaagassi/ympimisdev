@@ -3,152 +3,152 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-  .morecontent span {
-   display: none;
- }
- .morelink {
-   display: block;
- }
+.morecontent span {
+ display: none;
+}
+.morelink {
+ display: block;
+}
 
- thead>tr>th{
-   text-align:center;
-   overflow:hidden;
-   padding: 3px;
- }
- tbody>tr>td{
-   text-align:center;
- }
- tfoot>tr>th{
-   text-align:center;
- }
- th:hover {
-   overflow: visible;
- }
- td:hover {
-   overflow: visible;
- }
- table.table-bordered{
-   border:1px solid black;
- }
- table.table-bordered > thead > tr > th{
-   border:1px solid black;
- }
- table.table-bordered > tbody > tr > td{
-   border:1px solid black;
-   vertical-align: middle;
-   padding:0;
- }
- table.table-bordered > tfoot > tr > th{
-   border:1px solid black;
-   padding:0;
- }
- td{
-   overflow:hidden;
-   text-overflow: ellipsis;
- }
- .dataTable > thead > tr > th[class*="sort"]:after{
-   content: "" !important;
- }
- #queueTable.dataTable {
-   margin-top: 0px!important;
- }
- #loading, #error { display: none; }
+thead>tr>th{
+ text-align:center;
+ overflow:hidden;
+ padding: 3px;
+}
+tbody>tr>td{
+ text-align:center;
+}
+tfoot>tr>th{
+ text-align:center;
+}
+th:hover {
+ overflow: visible;
+}
+td:hover {
+ overflow: visible;
+}
+table.table-bordered{
+ border:1px solid black;
+}
+table.table-bordered > thead > tr > th{
+ border:1px solid black;
+}
+table.table-bordered > tbody > tr > td{
+ border:1px solid black;
+ vertical-align: middle;
+ padding:0;
+}
+table.table-bordered > tfoot > tr > th{
+ border:1px solid black;
+ padding:0;
+}
+td{
+ overflow:hidden;
+ text-overflow: ellipsis;
+}
+.dataTable > thead > tr > th[class*="sort"]:after{
+ content: "" !important;
+}
+#queueTable.dataTable {
+ margin-top: 0px!important;
+}
+#loading, #error { display: none; }
 
- #parent { 
-   position: relative; 
-   width: 1210px; 
-   height:800px; 
-   border: solid 3px white; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#parent { 
+ position: relative; 
+ width: 1210px; 
+ height:800px; 
+ border: solid 3px white; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
- #fstk { 
-   position: absolute; 
-   right: 73px; 
-   top: 132px; 
-   width: 500px;
-   height: 300px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#fstk { 
+ position: absolute; 
+ right: 73px; 
+ top: 132px; 
+ width: 500px;
+ height: 300px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
- #dm { 
-   position: absolute; 
-   right: 73px; 
-   top: 490px; 
-   width: 500px;
-   height: 240px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#dm { 
+ position: absolute; 
+ right: 73px; 
+ top: 490px; 
+ width: 500px;
+ height: 240px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
- #who { 
-   position: absolute; 
-   right: 640px; 
-   top: 313px; 
-   width: 100px;
-   height: 100px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#who { 
+ position: absolute; 
+ right: 640px; 
+ top: 313px; 
+ width: 100px;
+ height: 100px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
 
- #inc { 
-   position: absolute; 
-   right: 640px; 
-   top: 500px; 
-   width: 100px;
-   height: 100px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#inc { 
+ position: absolute; 
+ right: 640px; 
+ top: 500px; 
+ width: 100px;
+ height: 100px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
- #ind { 
-   position: absolute; 
-   right: 640px; 
-   top: 610px; 
-   width: 400px;
-   height: 118px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+#ind { 
+ position: absolute; 
+ right: 640px; 
+ top: 610px; 
+ width: 400px;
+ height: 118px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
 #la { 
-   position: absolute; 
-   right: 745px; 
-   top: 107px; 
-   width: 180px;
-   height: 500px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+ position: absolute; 
+ right: 745px; 
+ top: 107px; 
+ width: 180px;
+ height: 500px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
 #sc { 
-   position: absolute; 
-   right: 1038px; 
-   top: 610px; 
-   width: 165px;
-   height: 240px; 
-   border: solid 0px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
+ position: absolute; 
+ right: 1038px; 
+ top: 610px; 
+ width: 165px;
+ height: 240px; 
+ border: solid 0px red; 
+ font-size: 24px; 
+ text-align: center; 
+}
 
 
- #fstk > div, 
- #dm > div,
- #who > div,
- #inc > div,
- #ind > div;
- #la > div; 
- #sc > div {
+#fstk > div, 
+#dm > div,
+#who > div,
+#inc > div,
+#ind > div;
+#la > div; 
+#sc > div {
   border-radius: 50%;
 }
 
@@ -184,13 +184,13 @@
 								<div id="ind" class="square"></div>
 								<div id="la" class="square"></div>
                 <div id="sc" class="square"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 @endsection
 @section('scripts')
@@ -243,21 +243,33 @@
               color = 'green';
               // name = 'ABS';
             }
+            else if (value.major == '111' && value.minor == '1901') {
+              color = 'red';
+              // name = 'AAA';
+            }
 
-            address = value.major+"_"+value.minor;
 
+//Reader//------------
+            address = value.major+"_"+value.minor; 
             if (value.reader == '4c66d0') {
               $( "."+address ).remove();
-              $("#who").append('<div style="background-color: '+color+';width: 25px; height: 25px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
-            } else if(value.reader == '4c67db') {
+              $("#who").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
+            } else if(value.reader == '4c67db') 
+            {
               $( "."+address ).remove();
-              $("#inc").append('<div style="background-color: '+color+';width: 25px; height: 25px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
+              $("#inc").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
             }
+
+            // else if(value.reader == '4c66d0') 
+            // {
+            //   $( "."+address ).remove();
+            //   $("#ind").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
+            // }
             name = ' ';
           })
-        
-      }
-    });
+
+        }
+      });
     }
   }
 
