@@ -192,7 +192,7 @@ Highcharts.chart('chart', {
         }
     },
     title: {
-        text: 'Monitoring Sensor Suhu Office',
+        text: 'Monitoring Sensor Suhu Office (事務所温度センサーの監視)',
         align: 'center'
     },
     subtitle: {

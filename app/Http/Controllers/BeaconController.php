@@ -14,16 +14,20 @@ use DataTables;
 
 class BeaconController extends Controller
 {
+
+
 	public function __construct()
 	{
 		$this->middleware('auth');
 	}
 
 	public function index()
-	{	
-		return view('beacons.warehouse.map')->with('page', 'cubeacon');
+	{
+		return view('beacons.warehouse.map', array(
+			'title' => 'Smart Tracking Operator Warehouse',
+			'title_jp' => '倉庫作業者のスマートトラッキング'))->with('page', 'cubeacon');
 	}
-
+	
 	public function getUser()
 	{
 		$users = User::select('major','minor',db::raw('acronym(name) as kode'))
@@ -105,6 +109,36 @@ class BeaconController extends Controller
 		}
 	}
 
+
+public function fetchTimelog(Request $request)
+	{
+		// $datas = array();
+
+		// $location = $request->get('location');
+
+		// if($location == 'buffing'){
+		// 	$plc = new ActMLEasyIf(1);
+		// 	for ($i=1; $i < 9 ; $i++) {
+		// 		array_push($datas, $plc->read_data('D'.$i, 1));
+		// 	}
+
+		// 	// $datas = [1,1,1,0,1,1,1,1,0,1,0];
+		// }
+		// if($location == 'office'){
+		// 	$plc = new ActMLEasyIf(2);
+		// 	for ($i=0; $i < 7 ; $i++) {
+		// 		array_push($datas, $plc->read_data('D0', $i));
+		// 	}
+
+		// 	// $datas = [1,1,0,0,1,1,1];
+		// }
+
+		// $response = array(
+		// 	'status' => true,
+		// 	'datas' => $datas
+		// );
+		// return Response::json($response);
+	}
 
 	// public function jquerry_maker(elem1, elem2)
 	// {

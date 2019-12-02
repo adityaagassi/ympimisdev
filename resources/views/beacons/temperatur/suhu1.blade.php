@@ -192,7 +192,7 @@ Highcharts.chart('chart', {
         }
     },
     title: {
-        text: 'Monitoring Sensor Suhu Ruangan SERVER',
+        text: 'Monitoring Sensor Suhu R. SERVER (サーバールーム温度センサーの監視)',
         align: 'center'
     },
     subtitle: {

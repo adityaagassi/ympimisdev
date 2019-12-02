@@ -131,6 +131,10 @@ td{
  font-size: 24px; 
  text-align: center; 
 }
+
+a{
+  color: white;
+}
 /*
 #la { 
  position: absolute; 
@@ -186,24 +190,25 @@ td{
 				<div class="box box-solid">
 					<div class="box-body">
 						<div class="col-md-12" style="height: 900px">
-							<h2 style="text-align: center;">Temperature Map</h2>
-							<!-- <h3>Lantai I</h3> -->
+							<h2 style="text-align: center;">Temperature Map (温度分布)</h2>
+							<!-- <h3>温度分布</h3> -->
 							<div id="parent">
                 <center><img src="{{ url("images/maps_office.png") }}" width="900"></center>
                 <div id="server" class="square">
                   
                   <tr>
-                      <!-- <div>Suhu Office</div> -->
+                      <!-- <div>Suhu Server</div> -->
                       <a href="{{ url("index/suhu_1") }}">
-                        <div id="suhu1" style="background-color: #72f0b5; width:47px;height:30px"></div>
+                        <div id="suhu1" style=" width:47px;height:30px"></div> 
                       </a>       
                   </tr> 
 
                 </div>
 								<div id="office" class="square">
                   <tr>
+                    <!-- <div>Suhu office</div> -->
                     <a href="{{ url("index/suhu_2") }}">
-                      <div id="suhu2" style="background-color: #72f0b5; width:47px;height:30px"></div>
+                      <div id="suhu2" style=" width:47px;height:30px"></div>
                     </a>
                   </tr>
                 </div>
@@ -246,7 +251,7 @@ td{
     $('body').toggleClass("sidebar-collapse");
 
     maps(); //function
-    setInterval(maps, 10000);
+    setInterval(maps, 6000);
   });
 
   function maps() {
@@ -258,6 +263,10 @@ td{
               $.each(result.datas, function(key, value) {
                 $('#suhu1').html(parseFloat(value.temperature)+'°C');
                 // console.log(value.temperature);
+                if (parseFloat(value.temperature)>= 24 ) {
+                  $('#suhu1').css('background-color','red');
+                }
+                else {$('#suhu1').css('background-color','olive');}
               })
             }
           }
@@ -272,6 +281,11 @@ td{
               $.each(result.datas, function(key, value) {
                 $('#suhu2').html(parseFloat(value.temperature)+'°C');
                 // console.log(value.temperature);
+                if (parseFloat(value.temperature)>= 30 ) {
+                  $('#suhu2').css('background-color','red');
+                }
+                else {$('#suhu2').css('background-color','olive');}
+
               })
             }
           }

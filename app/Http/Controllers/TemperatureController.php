@@ -12,22 +12,45 @@ use DataTables;
 
 class TemperatureController extends Controller
 {
-    public function suhu_1()
-	{	
-		//lokasi letak view
-		return view('beacons.temperatur.suhu1');
+
+
+	public function suhu_1()
+	{
+		return view('beacons.temperatur.suhu1', array(
+			'title' => 'Monitoring Sensor Suhu R.SERVER',
+			'title_jp' => 'サーバールーム温度センサーの監視'))->with('page', 'suhu');
 	}
+ //    public function suhu_1()
+	// {	
+	// 	//lokasi letak view
+	// 	return view('beacons.temperatur.suhu1');
+	// }
+
+
 	public function index_maps()
-	{	
-		//lokasi letak view
-		return view('beacons.temperatur.map');
+	{
+		return view('beacons.temperatur.map', array(
+			'title' => 'Temperature Map',
+			'title_jp' => '温度分布'))->with('page', 'Map');
+	}
+	// public function index_maps()
+	// {	
+	// 	//lokasi letak view
+	// 	return view('beacons.temperatur.map');
+	// }
+
+public function suhu_2()
+	{
+		return view('beacons.temperatur.suhu2', array(
+			'title' => 'Monitoring Sensor Suhu Office',
+			'title_jp' => '事務所温度センサーの監視'))->with('page', 'suhu1');
 	}
 
-	public function suhu_2()
-	{	
-		//lokasi letak view
-		return view('beacons.temperatur.suhu2');
-	}
+	// public function suhu_2()
+	// {	
+	// 	//lokasi letak view
+	// 	return view('beacons.temperatur.suhu2');
+	// }
 
     public function data_suhu_1(Request $request)
     {

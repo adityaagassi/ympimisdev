@@ -57,7 +57,9 @@ td{
 #parent { 
  position: relative; 
  width: 1210px; 
- height:800px; 
+ height:800px;
+ margin-right: auto;
+ margin-left: auto; 
  border: solid 3px white; 
  font-size: 24px; 
  text-align: center; 
@@ -173,10 +175,10 @@ td{
 				<div class="box box-solid">
 					<div class="box-body">
 						<div class="col-md-12" style="height: 1000px;">
-							<h3>MAPPING VIEWER CUBEACON</h3>
-							<h3>Lantai I</h3>
-							<div id="parent">
-								<center><img src="{{ url("images/maps_WH.jpg") }}" width="1200"></center>
+							<h3><center> Smart Tracking Operator Warehouse</center></h3>
+							<h3><center>倉庫作業者のスマートトラッキング</center></h3>
+							<div id="parent" style="">
+								<img src="{{ url("images/maps_WH.jpg") }}" width="1200">
 								<div id="fstk" class="square"></div>
 								<div id="dm" class="square"></div>
 								<div id="who" class="square"></div>
@@ -238,14 +240,41 @@ td{
             })
             if (value.major == '111' && value.minor == '1903') {
               color = 'yellow';
-              // name = 'YAA';
+              
             } else if (value.major == '111' && value.minor == '1905') {
               color = 'green';
-              // name = 'ABS';
+              
             }
             else if (value.major == '111' && value.minor == '1901') {
               color = 'red';
-              // name = 'AAA';
+            }
+
+            else if (value.major == '111' && value.minor == '1900') {
+              color = 'aqua';
+            }
+
+            else if (value.major == '111' && value.minor == '1902') {
+              color = 'maroon';
+            }
+            
+            else if (value.major == '111' && value.minor == '1906') {
+              color = 'fuchsia';
+            }
+
+            else if (value.major == '111' && value.minor == '1907') {
+              color = 'olive';
+            }
+
+            else if (value.major == '111' && value.minor == '1908') {
+              color = 'teal';
+            }
+
+            else if (value.major == '111' && value.minor == '1909') {
+              color = 'purple';
+            }
+
+            else if (value.major == '111' && value.minor == '1904') {
+              color = 'silver';
             }
 
 
