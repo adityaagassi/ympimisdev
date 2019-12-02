@@ -126,26 +126,7 @@
 							<div class="col-xs-12" style="padding: 0px 5px 0px 5px">
 								<br>
 								<b>Estimasi Hasil :</b>
-								<table width="100%" id="tableEstimasi" class="table table-bordered">
-									<tr>
-										<th>Manpower</th>
-										<td id="mp_point"></td>
-										<td id="total_mp_point"></td>
-									</tr>
-									<tr>
-										<th>Space</th>
-										<td id="space_point"></td>
-										<td id="total_space_point"></td>
-									</tr>
-									<tr>
-										<th>Other (Material,listrik, kertas, dll)</th>
-										<td id="other_point"></td>
-										<td id="total_other_point"></td>
-									</tr>
-									<tr style=" font-size: 18px">
-										<th colspan="2" style="text-align: right;">Total</th>
-										<td id="total_point"></td>
-									</tr>
+								<table width="100%" id="tableEstimasi" class="table table-bordered" style="font-size: 15px;">
 								</table>
 							</div>
 						</div>
@@ -214,7 +195,7 @@
 								<tr>
 									<td rowspan="5">2</td>
 									<td rowspan="5">Ide</td>
-									<td rowspan="5">20</td>
+									<td rowspan="5">30</td>
 									<td><div class="radio"><label><input type="radio" value="5" name="r_nilai2"> 5</label></div></td>
 									<td class="kiri">Ide Original dan perlu waktu untuk design alat > 1 bulan</td>
 									<td rowspan="5" id="r_foreman2" class="nilai"></td>
@@ -240,7 +221,7 @@
 								<tr>
 									<td rowspan="5">3</td>
 									<td rowspan="5">Implementasi</td>
-									<td rowspan="5">20</td>
+									<td rowspan="5">30</td>
 									<td><div class="radio"><label><input type="radio" value="5" name="r_nilai3"> 5</label></div></td>
 									<td class="kiri">Mudah diterapkan (dalam waktu < 1 minggu)</td>
 									<td rowspan="5" id="r_foreman3" class="nilai"></td>
@@ -365,14 +346,14 @@
 										</tr>
 										<tr>
 											<th>Ide</th>
-											<td>20</td>
+											<td>30</td>
 											<td>X</td>
 											<td id="sub_asses_2"></td>
 											<td id="asses_2" style="font-size: 20px"></td>
 										</tr>
 										<tr>
 											<th>Implementasi</th>
-											<td>20</td>
+											<td>30</td>
 											<td>X</td>
 											<td id="sub_asses_3"></td>
 											<td id="asses_3" style="font-size: 20px"></td>
@@ -492,11 +473,11 @@
 
 		$("input[name='r_nilai2']").change(function(){
 			var nilai2 = $("input[name='r_nilai2']:checked").val();
-			$("#r_"+kode+"2").html(parseInt(nilai2) * 20);
+			$("#r_"+kode+"2").html(parseInt(nilai2) * 30);
 			$("#sub_asses_2").html(parseInt(nilai2));
-			$("#asses_2").html(parseInt(nilai2) * 20);
+			$("#asses_2").html(parseInt(nilai2) * 30);
 			$("input[name='nilai2']").val(nilai2);
-			total2 = parseInt(nilai2) * 20;
+			total2 = parseInt(nilai2) * 30;
 
 			$("#total_"+kode).html(total1 + total2 + total3);
 			$("#assess_tot").html(total1 + total2 + total3);
@@ -504,11 +485,11 @@
 
 		$("input[name='r_nilai3']").change(function(){
 			var nilai3 = $("input[name='r_nilai3']:checked").val();
-			$("#r_"+kode+"3").html(parseInt(nilai3) * 20);
+			$("#r_"+kode+"3").html(parseInt(nilai3) * 30);
 			$("#sub_asses_3").html(parseInt(nilai3));
-			$("#asses_3").html(parseInt(nilai3) * 20);
+			$("#asses_3").html(parseInt(nilai3) * 30);
 			$("input[name='nilai3']").val(nilai3);
-			total3 = parseInt(nilai3) * 20;
+			total3 = parseInt(nilai3) * 30;
 
 			$("#total_"+kode).html(total1 + total2 + total3);
 			$("#assess_tot").html(total1 + total2 + total3);
@@ -522,24 +503,53 @@
 			var max = [];
 
 			$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-				$("#judul").html(result.title);
-				$("#lokasi").html(result.area);
-				$("#propose").html(result.purpose);				
-				$("#tgl").html(result.date);
-				$("#nama").html(result.employee_id+" "+result.employee_name);
-				$("#bagian").html(result.section);
-				$("#leader").html(result.leader_name);
-				$("#before").html(result.condition);
-				$("#after").html(result.improvement);
+				$("#judul").html(result[0].title);
+				$("#lokasi").html(result[0].area);
+				$("#propose").html(result[0].purpose);				
+				$("#tgl").html(result[0].date);
+				$("#nama").html(result[0].employee_id+" "+result[0].employee_name);
+				$("#bagian").html(result[0].section);
+				$("#leader").html(result[0].leader_name);
+				$("#before").html(result[0].condition);
+				$("#after").html(result[0].improvement);
 
-				$("#mp_point").html("<b>"+result.mp_point+"</b> menit X <b>Rp "+ 500+",00</b>");
-				$("#total_mp_point").html("<b>Rp "+result.mp_point * 500 + ",00</b> / bulan");
-				$("#space_point").html("<b>"+result.space_point+"</b> m<sup>2</sup> X <b>Rp "+0+",00");
-				$("#total_space_point").html("<b>Rp "+result.space_point+",00</b>");
-				$("#other_point").html("<b>Rp "+result.other_point+"</b>");
-				$("#total_other_point").html("<b>Rp "+result.other_point+",00</b>");
-				var tot = (result.mp_point * 500) + (result.space_point * 0) + result.other_point;
-				$("#total_point").html("<b>Rp "+tot+",00");
+				bd = "";
+				tot = 0;
+				$.each(result, function(index, value){
+					bd += "<tr>";
+					var unit = "";
+
+					if (value.cost_name == "Manpower") {
+						unit = "menit";
+						sub_tot = (value.sub_total_cost * 20);
+						tot += sub_tot;
+					} else {
+						unit = value.frequency;
+						sub_tot = value.sub_total_cost;
+						tot += sub_tot;
+					}
+
+					bd += "<th>"+value.cost_name+"</th>";
+					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
+					bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+					bd += "</tr>";
+				});
+
+				bd += "<tr style='font-size: 18px;'>";
+				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
+				bd += "<td><b>Rp "+tot+",00</b></td>";
+				bd += "</tr>";
+
+				$("#tableEstimasi").append(bd);
+
+				// $("#mp_point").html("<b>"+result.mp_point+"</b> menit X <b>Rp "+ 500+",00</b>");
+				// $("#total_mp_point").html("<b>Rp "+result.mp_point * 500 + ",00</b> / bulan");
+				// $("#space_point").html("<b>"+result.space_point+"</b> m<sup>2</sup> X <b>Rp "+0+",00");
+				// $("#total_space_point").html("<b>Rp "+result.space_point+",00</b>");
+				// $("#other_point").html("<b>Rp "+result.other_point+"</b>");
+				// $("#total_other_point").html("<b>Rp "+result.other_point+",00</b>");
+				// var tot = (result.mp_point * 500) + (result.space_point * 0) + result.other_point;
+				// $("#total_point").html("<b>Rp "+tot+",00");
 				max.push($("#before").height());
 				max.push($("#after").height());
 
@@ -550,10 +560,10 @@
 
 				if ("{{ Request::segment(5) }}" == "manager") {
 					$("#r_foreman1").html(result.foreman_point_1 * 40);
-					$("#r_foreman2").html(result.foreman_point_2 * 20);
-					$("#r_foreman3").html(result.foreman_point_3 * 20);
+					$("#r_foreman2").html(result.foreman_point_2 * 30);
+					$("#r_foreman3").html(result.foreman_point_3 * 30);
 
-					$("#total_foreman").html((result.foreman_point_1 * 40) + (result.foreman_point_2 * 20) + (result.foreman_point_3 * 20));
+					$("#total_foreman").html((result.foreman_point_1 * 40) + (result.foreman_point_2 * 30) + (result.foreman_point_3 * 30));
 				}
 			})
 		}

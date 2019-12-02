@@ -27,6 +27,10 @@ Route::get('trialmail', 'TrialController@trialmail');
 Route::get('/trial', function () {
 	return view('trial');
 });
+Route::get('/trial2', function () {
+	return view('trial2');
+});
+Route::post('upload/trial', 'TrialController@uploadtrial');
 
 Route::get('/machinery_monitoring', function () {
 	return view('plant_maintenance.machinery_monitoring', array(
@@ -1565,6 +1569,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/create_action', 'QcReportController@create_action');
 	Route::get('index/qc_report/update/{id}', 'QcReportController@update');
 	Route::post('index/qc_report/update_action/{id}', 'QcReportController@update_action');
+	Route::post('index/qc_report/update_deskripsi/{id}', 'QcReportController@update_deskripsi');
 	Route::get('index/qc_report/delete/{id}', 'QcReportController@delete');
 	Route::post('index/qc_report/create_item', 'QcReportController@create_item');
 	Route::get('index/qc_report/fetch_item/{id}', 'QcReportController@fetch_item');
@@ -1603,8 +1608,10 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
 
 	//Verifikasi QA
-	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasicar');
-
+	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasiqa');
+	Route::post('index/qc_report/close1/{id}', 'QcReportController@close1');
+	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
+	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
 
 
 });

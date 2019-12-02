@@ -177,7 +177,10 @@
                             <a href="{{ url("index/toilet") }}">
                                 <i class="fa fa-caret-right"></i> Toilet Availability ()
                             </a>
-
+                            <br>
+                            <a href="{{ url("index/kaizen/report") }}">
+                                <i class="fa fa-caret-right"></i> Kaizen Teian Rank ()
+                            </a>
                             <br>
                         </td>
                     </tr>
@@ -205,9 +208,9 @@
                             <a href="{{ url("index/qc_car") }}">
                                 <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
                             </a>
-                            <!-- <br>
-                            <a href="{{ url("index/qc_report/komplain_monitoring") }}">
-                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
+<!--                             <br>
+                            <a href="{{ url("index/qc_report/komplain_monitoring5") }}">
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Position
                             </a> -->
                             <br>                            
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
@@ -221,7 +224,19 @@
                             <br>
                             <a href="{{ url("index/beacon") }}">
                                 <i class="fa fa-caret-right"></i> Cubeacon IoT
-                            </a>                           
+                            </a>
+                            <br>
+                            <a href="{{ url("index/map_suhu") }}">
+                                <i class="fa fa-caret-right"></i> Temperature Map
+                            </a>
+                            <br>
+                            <a href="{{ url("index/suhu_1") }}">
+                                <i class="fa fa-caret-right"></i> Suhu Server Room
+                            </a> 
+                            <br>
+                            <a href="{{ url("index/suhu_2") }}">
+                                <i class="fa fa-caret-right"></i> Suhu Office
+                            </a>                             
                         </td>
                     </tr>
 

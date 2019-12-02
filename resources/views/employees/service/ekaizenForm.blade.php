@@ -29,19 +29,19 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	<div class="row">
 		<div class="col-xs-4">
 			<label for="kz_tanggal">Tanggal</label>
-			<input type="text" id="kz_tanggal" class="form-control" value="<?php echo date('Y-m-d') ?>" readonly>
+			<input type="text" id="kz_tanggal" class="form-control" value="">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nik">NIK</label>
-			<input type="text" id="kz_nik" class="form-control" value="{{$emp_id}}" readonly>
+			<input type="text" id="kz_nik" class="form-control" value="">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nama">Nama</label>
-			<input type="text" id="kz_nama" class="form-control" value="{{$name}}" readonly>
+			<input type="text" id="kz_nama" class="form-control" value="">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
-			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} - {{$group}}" readonly>
+			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_leader">Nama Leader</label><br>
@@ -102,28 +102,30 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				</thead>
 				<tbody>
 					<tr>
-						<th>Manpower</th>
+						<th>Manpower<span class="text-red">*</span></th>
 						<td>:&nbsp;<input type="text" class="form-control" placeholder="Dalam satu hari" id="kz_mp" style="width: 70%; display: inline-block;">&nbsp; Menit</td>
 						<td>X &nbsp;  Rp <d id="std_mp"></d></td>
 						<td>= &nbsp;Rp. &nbsp;<input type="text" class="form-control" id="kz_mp_bulan" style="width: 75%; display: inline-block;" readonly value="0">&nbsp; / bulan</td>
 					</tr>
 					<tr>
-						<th>Tempat</th>
+						<th>Tempat<span class="text-red">*</span></th>
 						<td>:&nbsp;<input type="text" class="form-control" placeholder="Total" id="kz_space" style="width: 70%; display: inline-block;">&nbsp; m<sup>2</sup></td>
 						<td>X &nbsp; Rp <d id="std_space"></d></td>
 						<td>= &nbsp;Rp &nbsp;<input type="text" class="form-control" id="kz_space_bulan" style="width: 75%; display: inline-block;" readonly value="0"></td>
 					</tr>
 					<tr>
-						<th>Lainnya
-						</th>
+						<th>Lainnya<span class="text-red">*</span></th>
 						<td>:&nbsp; &nbsp;  
-							<button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalLainnya">Pilih</button>
+							<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalLainnya">Pilih <i class="fa fa-hand-pointer-o"></i></button>
 						</td>
 						<td></td>
 						<td>= &nbsp;Rp &nbsp;<input type="text" class="form-control" id="kz_material_bulan" style="width: 75%; display: inline-block;" readonly value="0">&nbsp; / bulan</td>
 					</tr>
 					<tr>
-						<td colspan="3" style="text-align: right; vertical-align: middle; font-size: 30px; padding-right: 0px">Total = Rp &nbsp; </td>
+						<td colspan="2">
+							<span class="text-red">* Diisi minimal salah satu</span>
+						</td>
+						<td style="text-align: right; vertical-align: middle; font-size: 30px; padding-right: 0px">Total = Rp &nbsp; </td>
 						<td><input type="text" class="form-control" style="width: 100%; display: inline-block; font-size: 22px; font-weight: bold" readonly id="total"></td>
 					</tr>
 				</tbody>
@@ -183,6 +185,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	var other = [];
 	var tmp = [];
 	var oth = 0;
+	var cal = [];
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
@@ -209,7 +212,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					std_space = value.cost;
 					$("#std_space").text(std_space);
 				} else if (value.category == "other") {
-					other.push([value.cost_name, value.cost, value.unit, value.frequency]);
+					other.push([value.cost_name, value.cost, value.unit, value.frequency, value.id]);
 				}
 			})
 
@@ -241,7 +244,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	})
 
 	$("#kz_mp").on('change keyup paste', function() {
-		$("#kz_mp_bulan").val(($(this).val() * std_mp).toFixed(2));
+		$("#kz_mp_bulan").val(($(this).val() * std_mp).toFixed(2) * 20);
 		total();
 	})
 
@@ -257,18 +260,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		total();
 	})
 
-	// $("#kz_material").on('keypress keyup blur', function() {
-	// 	$(this).val($(this).val().replace(/[^\d].+/, ""));
-	// 	if ((event.which < 48 || event.which > 57)) {
-	// 		event.preventDefault();
-	// 	}
-	// })
-
-	// $("#kz_material").on('change keyup paste', function() {
-	// 	$("#kz_material_bulan").val($(this).val() * $("#kz_other").val());
-	// 	total();
-	// })
-
 	function total() {
 		var total = parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + oth;
 
@@ -277,7 +268,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		}
 
 		$("#total").val(total);
-		console.log(total);
 	}
 
 	function otherFill(elem, std) {
@@ -293,23 +283,79 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 		$("#other_total").val(total);
 		$("#kz_material_bulan").val(total);
+
 		oth = total;
-		total();
+
+		var total2 = parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + total;
+
+		if (isNaN(total2)) {
+			total2 = 0;
+		}
+
+		$("#total").val(total2);
 	}
 
 	$("#kz_buat").click( function() {
-		var data = {
-			employee_id: $("#kz_nik").val(),
-			employee_name: $("#kz_nama").val(),
-			propose_date: $("#kz_tanggal").val(),
-			section: $("#kz_bagian").val(),
-			leader: $("#kz_leader").val(),
-			title: $("#kz_judul").val(),
-			area_kz: $("#kz_tujuan").val(),
-			purpose: $("#kz_purpose").val(),
-			condition: CKEDITOR.instances.kz_sekarang.getData(),
-			improvement: CKEDITOR.instances.kz_perbaikan.getData()
-		};
+		if ($("#kz_leader").val() == "") {
+			alert("Kolom Leader Harap diisi");
+			$("html").scrollTop(0);
+			return false;
+		}
+
+		if ($("#kz_tujuan").val() == "") {
+			alert("Kolom Area Kaizen Harap diisi");
+			$("html").scrollTop(0);
+			return false;
+		}
+
+		if ($("#kz_purpose").val() == "") {
+			alert("Kolom Purpose Harap diisi");
+			$("html").scrollTop(0);
+			return false;
+		}
+
+		if ($("#kz_judul").val() == "") {
+			alert("Kolom Judul Usulan Harap diisi");
+			$("html").scrollTop(0);
+			return false;
+		}
+
+	// 	if (($("#kz_mp_bulan").val() == "" || $("#kz_mp_bulan").val() == "0") &&
+	// 		($("#kz_space_bulan").val() == "" || $("#kz_space_bulan").val() == "0") &&
+	// 		($("#kz_material_bulan").val() == "" || $("#kz_material_bulan").val() == "0")) {
+	// 		alert("Harap mengisi estimasi hasil (minimal 1 kolom)");
+	// 	return false;
+	// }
+
+	cal = [];
+
+	if ($("#kz_mp").val() != "" && $("#kz_mp").val() != "0") {
+		cal.push([1,parseFloat($("#kz_mp").val())]);
+	}
+
+	if ($("#kz_space").val() != "" && $("#kz_space").val() != "0") {
+		cal.push([2,parseFloat($("#kz_space").val())]);
+	}
+
+	for (var i = 0; i < other.length; i++) {
+		if ($("#other_input_"+i).val() != "" && $("#other_input_"+i).val() != "0") {
+			cal.push([other[i][4], parseFloat($("#other_input_"+i).val())]);
+		}
+	}
+
+	var data = {
+		employee_id: $("#kz_nik").val(),
+		employee_name: $("#kz_nama").val(),
+		propose_date: $("#kz_tanggal").val(),
+		section: $("#kz_bagian").val(),
+		leader: $("#kz_leader").val(),
+		title: $("#kz_judul").val(),
+		area_kz: $("#kz_tujuan").val(),
+		purpose: $("#kz_purpose").val(),
+		estimasi: cal,
+		condition: CKEDITOR.instances.kz_sekarang.getData(),
+		improvement: CKEDITOR.instances.kz_perbaikan.getData()
+	};
 
 		// console.log(data);
 
