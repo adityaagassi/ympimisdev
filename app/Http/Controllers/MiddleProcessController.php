@@ -120,7 +120,7 @@ class MiddleProcessController extends Controller
 
 
 	public function indexTrendBuffingOpEff(){
-		$title = 'Daily Buffing Efficiency';
+		$title = 'Daily Buffing Efficiency & NG Rate';
 		$title_jp = '??';
 
 		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
@@ -131,7 +131,7 @@ class MiddleProcessController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'emps' => $emps,
-		))->with('page', 'Daily Buffing Efficiency')->with('head', 'Middle Process');
+		))->with('page', 'Daily Buffing Efficiency & NG Rate')->with('head', 'Middle Process');
 	}
 
 	public function indexBuffingIcAtokotei(){
@@ -1264,20 +1264,74 @@ class MiddleProcessController extends Controller
 
 		$where_op = "";
 		$where_op2 = "";
-		if($request->get('operator') != null) {
-			$operators = $request->get('operator');
-			$operator = "";
 
-			for($x = 0; $x < count($operators); $x++) {
-				$operator = $operator."'".$operators[$x]."'";
-				if($x != count($operators)-1){
-					$operator = $operator.",";
+		$where_op = "";
+		if($request->get('condition') != null){
+			if($request->get('condition') == 'ng'){
+				$operators = db::select("select g.operator_id, g.jml as g, ng.jml as ng, (ng.jml/g.jml) as rate from
+					(select m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+					left join materials mt on mt.material_number = m.material_number
+					where location = 'bff-kensa'
+					and mt.origin_group_code = '043'
+					and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY m.operator_id) g
+					left join
+					(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+					left join materials mt on mt.material_number = m.material_number
+					where location = 'bff-kensa'
+					and mt.origin_group_code = '043'
+					and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY m.operator_id) ng
+					on ng.operator_id = g.operator_id
+					order by rate desc
+					limit 5");
+				$operator = "";
+
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]->operator_id."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
 				}
+				$where_op = " m.operator_id in (".$operator.") ";
+				$where_op2 = " and operator_id in (".$operator.") ";
+
+			}else if($request->get('condition') == 'eff'){
+				$operators = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
+					from data_log l left join standart_times t on l.material_number = t.material_number
+					where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY l.operator_id
+					ORDER BY eff asc
+					limit 5");
+				$operator = "";
+
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]->operator_id."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
+				}
+				$where_op = " m.operator_id in (".$operator.") ";
+				$where_op2 = " and operator_id in (".$operator.") ";
+
 			}
-			$where_op = " m.operator_id in (".$operator.") ";
-			$where_op2 = " and operator_id in (".$operator.") ";
+
 		}else{
-			$where_op = " m.operator_id is not null ";
+			if($request->get('operator') != null) {
+				$operators = $request->get('operator');
+				$operator = "";
+
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
+				}
+				$where_op = " m.operator_id in (".$operator.") ";
+				$where_op2 = " and operator_id in (".$operator.") ";
+			}else{
+				$where_op = " m.operator_id is not null ";
+			}
 		}
 
 		$rate = db::select("select date.week_date, date.operator_id, e.`name`, COALESCE(pr.rate,0) as rate  from
@@ -1311,11 +1365,10 @@ class MiddleProcessController extends Controller
 
 		$time_eff = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
 			from data_log l left join standart_times t on l.material_number = t.material_number
-			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
-			".$where_op2."
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."' ".$where_op2."
 			GROUP BY tgl, l.operator_id");
 
-		$op = db::select("select DISTINCT m.operator_id, e.`name` from middle_logs m left join employees e on m.operator_id = e.employee_id where DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'");
+		$op = db::select("select DISTINCT m.operator_id, e.`name` from middle_check_logs m left join employees e on m.operator_id = e.employee_id where DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'");
 
 		$response = array(
 			'status' => true,
@@ -1641,19 +1694,68 @@ class MiddleProcessController extends Controller
 		$dateto = date("Y-m-d");
 
 		$where_op = "";
-		if($request->get('operator') != null) {
-			$operators = $request->get('operator');
-			$operator = "";
+		if($request->get('condition') != null){
+			if($request->get('condition') == 'ng'){
+				$operators = db::select("select g.operator_id, g.jml as g, ng.jml as ng, (ng.jml/g.jml) as rate from
+					(select m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+					left join materials mt on mt.material_number = m.material_number
+					where location = 'bff-kensa'
+					and mt.origin_group_code = '043'
+					and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY m.operator_id) g
+					left join
+					(select m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+					left join materials mt on mt.material_number = m.material_number
+					where location = 'bff-kensa'
+					and mt.origin_group_code = '043'
+					and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY m.operator_id) ng
+					on ng.operator_id = g.operator_id
+					order by rate desc
+					limit 5");
+				$operator = "";
 
-			for($x = 0; $x < count($operators); $x++) {
-				$operator = $operator."'".$operators[$x]."'";
-				if($x != count($operators)-1){
-					$operator = $operator.",";
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]->operator_id."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
 				}
+				$where_op = " and m.operator_id in (".$operator.") ";
+
+			}else if($request->get('condition') == 'eff'){
+				$operators = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
+					from data_log l left join standart_times t on l.material_number = t.material_number
+					where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".date("Y-m-d")."'
+					GROUP BY l.operator_id
+					ORDER BY eff asc
+					limit 5");
+				$operator = "";
+
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]->operator_id."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
+				}
+				$where_op = " and m.operator_id in (".$operator.") ";
 			}
-			$where_op = " and m.operator_id in (".$operator.") ";
+
 		}else{
-			$where_op = " and m.operator_id is not null ";
+			if($request->get('operator') != null) {
+				$operators = $request->get('operator');
+				$operator = "";
+
+				for($x = 0; $x < count($operators); $x++) {
+					$operator = $operator."'".$operators[$x]."'";
+					if($x != count($operators)-1){
+						$operator = $operator.",";
+					}
+				}
+				$where_op = " and m.operator_id in (".$operator.") ";
+			}else{
+				$where_op = " and m.operator_id is not null ";
+			}
 		}
 
 		$ng_rate = db::select("select date.week_date, date.operator_id, date.`name`, (COALESCE(rate.rate,0)*100) as ng_rate  from
@@ -1665,7 +1767,7 @@ class MiddleProcessController extends Controller
 			left join employees e on e.employee_id = m.operator_id
 			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."') op
 			order by week_date, operator_id asc) date
 			left join
 			(select g.tgl, g.operator_id, g.jml as g, ng.jml as ng, (ng.jml/g.jml) as rate from
@@ -1673,20 +1775,20 @@ class MiddleProcessController extends Controller
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl, m.operator_id) g
 			left join
 			(select DATE_FORMAT(m.created_at,'%Y-%m-%d') as tgl, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
 			left join materials mt on mt.material_number = m.material_number
 			where location = 'bff-kensa' ".$where_op."
 			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl, m.operator_id) ng
 			on ng.tgl = g.tgl and ng.operator_id = g.operator_id) rate
 			on date.week_date = rate.tgl and date.operator_id = rate.operator_id
 			ORDER BY week_date, operator_id");
 
-		$op = db::select("select distinct m.operator_id, e.`name` from middle_logs m
+		$op = db::select("select distinct m.operator_id, e.`name` from middle_check_logs m
 			left join materials mt on mt.material_number = m.material_number
 			left join employees e on e.employee_id = m.operator_id
 			where location = 'bff-kensa'
@@ -1697,7 +1799,7 @@ class MiddleProcessController extends Controller
 
 		$response = array(
 			'status' => true,
-			'ng_rate' => $ng_rate,
+			'ng_rate' => $ng_rate,	
 			'op' => $op,
 		);
 		return Response::json($response);

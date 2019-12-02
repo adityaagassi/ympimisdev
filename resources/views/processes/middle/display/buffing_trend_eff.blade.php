@@ -37,9 +37,22 @@
 						@endforeach
 					</select>
 				</div>
-				<div class="col-xs-2">
-					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+				<div class="col-xs-2" style="padding-right: 0; color:#212121;">
+					<select class="form-control select2" id='condition' data-placeholder="Select Condition" style="width: 100%;">
+						<option value="">Select Condition</option>
+						<option value="ng">Last 5 Highest NG Rate</option>
+						<option value="eff">Last 5 Lowest Efficiency</option>
+					</select>
 				</div>
+				<div class="col-xs-2">
+					<div class="col-xs-4" style="padding: 0px;">
+						<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
+					</div>
+					<div class="col-xs-8" style="padding: 0px;">
+						<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+					</div>			
+				</div>
+
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 
@@ -79,6 +92,10 @@
 		setInterval(fillChart, 60000);
 
 	});
+
+	function clearConfirmation(){
+		location.reload(true);		
+	}
 
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
@@ -308,10 +325,12 @@
 		var position = $(document).scrollTop();
 
 
-		var operator = $('#operator').val();;
+		var operator = $('#operator').val();
+		var condition = $('#condition').val();
 
 		var data = {
 			operator:operator,
+			condition:condition,
 		}
 
 		$.get('{{ url("fetch/middle/buffing_daily_op_eff") }}',data, function(result, status, xhr) {
@@ -319,11 +338,6 @@
 
 				var seriesData = [];
 				var data = [];
-
-				console.log(result.op);
-				console.log(result.rate);
-				console.log(result.time_eff);
-
 
 				for (var i = 0; i < result.op.length; i++) {
 					data = [];
@@ -414,7 +428,7 @@
 						series: {
 							animation: false,
 							connectNulls: true,
-							lineWidth: 1,
+							lineWidth: 0.5,
 							shadow: {
 								width: 1,
 								opacity: 0.4
@@ -454,6 +468,8 @@
 
 				var seriesData = [];
 				var data = [];
+
+
 
 
 				for (var i = 0; i < result.op.length; i++) {
@@ -530,10 +546,10 @@
 						series: {
 							animation: false,
 							connectNulls: true,
-							lineWidth: 1,
+							lineWidth: 0.75,
 							shadow: {
 								width: 1,
-								opacity: 0.4
+								opacity: 0.8
 							},
 							label: {
 								connectorAllowed: false
