@@ -49,7 +49,7 @@
 	.judul {
 		font-family: 'JTM';
 		color: white;
-		font-size: 40pt;
+		font-size: 35pt;
 	}
 	#kz_top_sum, #kz_top_count {
 		font-size: 15pt;
