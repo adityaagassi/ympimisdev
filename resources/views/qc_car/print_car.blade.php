@@ -96,11 +96,29 @@
 				<td colspan="10">Kategori Komplain : {{ $car->kategori }}</td>
 			</tr>
 			<tr>
-				<td rowspan="6" colspan="7">Deskripsi : <?= $car->deskripsi ?></td>
-				<td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td>
+				<td colspan="2" width="20%">Tinjauan 4M : </td>
+				<td colspan="2" width="20%" class="" style="font-size: 10px">Man <input type="checkbox" class="centera" style="font-size: 10px;" 
+				@if($split[0]=='1')
+					checked @endif>
+				</td>
+				<td colspan="2" width="20%" class="" style="font-size: 10px">Material <input type="checkbox" class="centera" style="font-size: 10px;" 
+				@if($split[1]=='1')
+					checked @endif>
+				</td>
+				<td colspan="2" width="20%" class="" style="font-size: 10px">Machine <input type="checkbox" class="centera" style="font-size: 10px;" 
+				@if($split[2]=='1')
+					checked @endif</td>
+				<td colspan="2" width="20%" class="" style="font-size: 10px">Method <input type="checkbox" class="centera" style="font-size: 10px;" 
+				@if($split[3]=='1')
+					checked @endif</td>	
 			</tr>
-			<tr></tr>
-			<tr><td colspan="3" class="centera" style="font-size: 10px">Man <input type="checkbox" class="pull-right" class="pull-right" style="font-size: 10px;" 
+			<tr>
+				<td colspan="10">Deskripsi : <?= $car->deskripsi ?></td>
+				<!-- <td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td> -->
+			</tr>
+
+			<!-- <tr>
+				<td colspan="3" class="centera" style="font-size: 10px">Man <input type="checkbox" class="pull-right"  style="font-size: 10px;" 
 				@if($split[0]=='1')
 					checked @endif></td></tr>
 			<tr><td colspan="3" class="centera" style="font-size: 10px">Material <input type="checkbox" class="pull-right" style="font-size: 10px;" 
@@ -111,28 +129,26 @@
 					checked @endif</td></tr>
 			<tr><td colspan="3" class="centera" style="font-size: 10px">Method <input type="checkbox" class="pull-right" style="font-size: 10px;" 
 				@if($split[3]=='1')
-					checked @endif</td></tr>
+					checked @endif</td>
+			</tr> -->
 			<tr>
 				<td colspan="10">A. Immediately Action </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"><?= $car->tindakan ?></td>
+				<td colspan="10"><?= $car->tindakan ?></td>
 			</tr>
-			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td colspan="10">B. Possibility Cause </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"><?= $car->penyebab ?></td>
+				<td colspan="10"><?= $car->penyebab ?></td>
 			</tr>
-			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td colspan="10">C. Corrective Action </td>
 			</tr>
 			<tr>
-				<td rowspan="4" colspan="10"><?= $car->perbaikan ?></td>
+				<td colspan="10"><?= $car->perbaikan ?></td>
 			</tr>
-			<tr></tr><tr></tr><tr></tr>
 			<tr>
 				<td class="centera">Prepared</td>
 				<td class="centera">Checked</td>
@@ -170,7 +186,7 @@
 				@endif
 				<td colspan="8"></td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td colspan="10"></td>
 			</tr>
 			<tr>
@@ -203,7 +219,7 @@
 				<td class="centera">QA Staff</td>
 				<td class="centera">QA Chief</td>
 				<td class="centera">QA Manager</td>
-			</tr>
+			</tr> -->
 		</tbody>
 		@endforeach
 	</table>

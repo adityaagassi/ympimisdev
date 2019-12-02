@@ -31,6 +31,7 @@ class QcCarController extends Controller
        ->join('departments','qc_cpars.department_id','=','departments.id')
        ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
        ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+       ->orderBy('qc_cars.id','desc')
        ->get();
 
        $id = Auth::id();
@@ -149,7 +150,6 @@ class QcCarController extends Controller
 
     public function coba_print($id)
     {
-
       $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','qc_cpars.lokasi','mutation_logs.section','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','employees.name','statuses.status_name')
       ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
       ->join('departments','qc_cpars.department_id','=','departments.id')
@@ -304,7 +304,7 @@ class QcCarController extends Controller
 
           $id_user = Auth::id();
 
-          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
           $cars = db::select($query);
 
@@ -471,18 +471,47 @@ class QcCarController extends Controller
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CAR');
               }
               else if($qc_cars->email_status == "SentGM" && $qc_cars->posisi == "gm"){
-                $qc_cars->email_status = "SentBagian";
+                $qc_cars->email_status = "SentQA";
                 $qc_cars->email_send_date = date('Y-m-d');
-                $qc_cars->posisi = "bagian";
-                $qc_cars->received_manager = "Received";
-                
+                $qc_cars->posisi = "qa";
+
+
                 $qc_cars->save();
 
-                Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                $cpar = QcCpar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.status_code','qc_cpars.posisi')
+                 ->join('qc_cars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+                 ->where('qc_cpars.cpar_no','=',$qc_cars->cpar_no)
+                 ->get();
+
+                foreach ($cpar as $cpar) {
+                    $cpar->status_code = "7";
+                    $cpar->posisi = "QA";
+                    $cpar->save();
+                }
+                
+                if ($verif[0]->kategori == "Eksternal" || $verif[0]->kategori == "Supplier") {
+                    $to = "staff";
+                }
+                else if ($verif[0]->kategori == "Internal") {
+                    $to = "leader";
+                }
+
+                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                $mails = DB::select($mailto);
+
+                foreach($mails as $mail){
+                  $mailtoo2 = $mail->email;
+                }
+
+                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+
+                  $cars2 = db::select($query2);
+
+                Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
               }
 
-              else if($qc_cars->email_status == "SentChief" || $qc_cars->email_status == "SentManager" || $qc_cars->email_status == "SentDGM" || $qc_cars->email_status == "SentGM" || $qc_cars->email_status == "SentBagian"){
+              else if($qc_cars->email_status == "SentChief" || $qc_cars->email_status == "SentManager" || $qc_cars->email_status == "SentDGM" || $qc_cars->email_status == "SentGM" || $qc_cars->email_status == "SentQA"){
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('error', 'Email pernah dikirim')->with('page', 'CAR');
               }
 
@@ -508,18 +537,39 @@ class QcCarController extends Controller
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CAR');
                 }
                 else if($qc_cars->email_status == "SentGM" && $qc_cars->posisi == "gm"){
-                  $qc_cars->email_status = "SentBagian";
+                  $qc_cars->email_status = "SentQA";
                   $qc_cars->email_send_date = date('Y-m-d');
-                  $qc_cars->posisi = "bagian";
-                  $qc_cars->received_manager = "Received";
+                  $qc_cars->posisi = "qa";
                   
                   $qc_cars->save();
 
-                  Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                  $cpar = QcCpar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.status_code','qc_cpars.posisi')
+                 ->join('qc_cars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+                 ->where('qc_cpars.cpar_no','=',$qc_cars->cpar_no)
+                 ->get();
+
+                  foreach ($cpar as $cpar) {
+                      $cpar->status_code = "7";
+                      $cpar->posisi = "QA";
+                      $cpar->save();
+                  }
+
+                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                  $mails = DB::select($mailto);
+
+                  foreach($mails as $mail){
+                    $mailtoo2 = $mail->email;
+                  }
+
+                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+
+                  $cars2 = db::select($query2);
+
+                  Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
                 }
 
-                else if($qc_cpars->email_status == "SentChief" || $qc_cpars->email_status == "SentManager" || $qc_cpars->email_status == "SentDGM" || $qc_cpars->email_status == "SentGM" || $qc_cpars->email_status == "SentBagian"){
+                else if($qc_cpars->email_status == "SentChief" || $qc_cpars->email_status == "SentManager" || $qc_cpars->email_status == "SentDGM" || $qc_cpars->email_status == "SentGM" || $qc_cpars->email_status == "SentQA"){
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('error', 'Email pernah dikirim')->with('page', 'CAR');
                 }
             }
@@ -532,21 +582,21 @@ class QcCarController extends Controller
      public function verifikasicar($id){
           $car = QcCar::find($id);
 
-          if ($car->posisi == "chief") {
-              $from = "staff";
-          }
-          else if ($car->posisi == "manager") {
-              $from = "chief";
-          }
-          else if ($car->posisi == "dgm") {
-              $from = "manager";
-          }
-          else if ($car->posisi == "gm") {
-              $from = "dgm";
-          }
-          else {
-              $from = "staff";
-          }
+          // if ($car->posisi == "chief") {
+          //     $from = "staff";
+          // }
+          // else if ($car->posisi == "manager") {
+          //     $from = "chief";
+          // }
+          // else if ($car->posisi == "dgm") {
+          //     $from = "manager";
+          // }
+          // else if ($car->posisi == "gm") {
+          //     $from = "dgm";
+          // }
+          // else {
+          //     $from = "staff";
+          // }
 
           $cars = QcCar::select('qc_cars.*','qc_cpars.employee_id','qc_cpars.dgm','qc_cpars.gm','qc_cpars.kategori','qc_verifikators.verifikatorchief','qc_verifikators.verifikatorforeman','qc_verifikators.verifikatorcoordinator')
           ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')

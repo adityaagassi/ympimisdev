@@ -197,72 +197,65 @@
 				<!-- <td colspan="2"></td> -->
 			</tr>
 			<tr>
-				<td rowspan="4">2</td>
+				<td rowspan="2">2</td>
 				<td colspan="8">Immediate Action (Filled By QA)</td>
 			</tr>
 			<tr>
-				<td colspan="8" rowspan="3">&nbsp;</td>
-			</tr>
-			<tr></tr>
-			<tr></tr>
-			<tr>
-				<td rowspan="4">3</td>
-				<td colspan="8">Possibility Cause & Corrective Action</td>
+				<td colspan="8"><?= $cpar->tindakan ?></td>
 			</tr>
 			<tr>
-				<td colspan="8" rowspan="3">&nbsp;</td>
-			</tr>
-			<tr></tr>
-			<tr></tr>
-			<tr>
-				<td rowspan="2">4</td>
-				<td colspan="8">Verifikasi Status</td>
+				<td rowspan="2">3</td>
+				<td colspan="8">Verification Status</td>
 			</tr>
 			<tr>
-				<td colspan="8">Open / Closed</td>
+				<td colspan="8">{{$cpar->status_name}}</td>
 			</tr>
 			<tr>
-				<td rowspan="10">5</td>
-				<td colspan="8">Cost Estimation : PT YMPI / Customer</td>
+				<td rowspan="7">4</td>
+				<td colspan="8">Cost Estimation</td>
 			</tr>
 			<tr>
-				<td colspan="8">Inspection Cost : </td>
-			</tr>
-			<tr>
-				<td colspan="8">Repair Cost : </td>
-			</tr>
-			<tr>
-				<td colspan="8">Analysis Cost : </td>
-			</tr>
-			<tr>
-				<td colspan="8">Other : </td>
+				<td colspan="8"><?= $cpar->cost ?> </td>
 			</tr>
 			<tr><td colspan="8">&nbsp;</td></tr>
 			<tr>
 				<td>Prepared By</td>
 				<td>Checked By</td>
-				<td>Approved By</td>
-				<td>Approved By</td>
-				<td>Approved By</td>
-				<td colspan="3"></td>
-				
+				<td>Known By</td>
+				<td colspan="5"></td>
 			</tr>
 			<tr>
+				<td rowspan="2">
+					@if($cpar->posisi == "QA" || $cpar->posisi == "QA2")
+						@if($cpar->staff != null)
+							{{$cpar->staffname}}
+						@elseif($cpar->leader != null)
+							{{$cpar->leadername}}
+						@else
+							&nbsp;
+						@endif
+					@endif
+				</td>
+				<td rowspan="2">
+					@if($cpar->posisi == "QA2")
+						@if($cpar->staff != null)
+							{{$cpar->chiefname}}
+						@elseif($cpar->leader != null)
+							{{$cpar->foremanname}}
+						@else
+							&nbsp;
+						@endif
+					@endif
+				</td>
 				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2">&nbsp;</td>
-				<td colspan="3" rowspan="2"></td>
+				<td colspan="5" rowspan="2"></td>
 			</tr>
 			<tr></tr>
 			<tr>
 				<td>Staff</td>
 				<td>Chief</td>
 				<td>Manager</td>
-				<td>DGM</td>
-				<td>GM</td>
-				<td colspan="3"></td>
+				<td colspan="5"></td>
 			</tr>
 			@endforeach
 		</tbody>

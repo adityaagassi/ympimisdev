@@ -227,7 +227,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -299,7 +299,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -370,7 +370,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -441,7 +441,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -512,7 +512,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -583,7 +583,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -654,7 +654,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -727,7 +727,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -798,7 +798,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -869,7 +869,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -940,7 +940,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1011,7 +1011,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1082,7 +1082,7 @@
                           <span class="label label-danger">Sudah Dikirm Ke GM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cpars->gm) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
                         @if ($cpars->posisi == "gm")
                           @if($cpars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox">

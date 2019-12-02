@@ -49,8 +49,10 @@ class QcReportController extends Controller
         $departments = Department::select('departments.id', 'departments.department_name')->get();
 
         // $materials = Material::select('materials.material_number', 'materials.material_description')->get();
-        $statuses = DB::table('statuses')->select('statuses.status_code', 'statuses.status_name')->offset(0)->limit(2)->get();
-
+        $statuses = QcCpar::select('statuses.status_code','statuses.status_name')
+        ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+        ->distinct()
+        ->get();
         return view('qc_report.index', array(
             'cpars' => $cpars,
             'departments' => $departments,
@@ -103,6 +105,9 @@ class QcReportController extends Controller
         ->editColumn('status_name',function($cpar_details){
             if($cpar_details->status_name == "Unverified CPAR") {
               return '<label class="label label-warning">'.$cpar_details->status_name. '</label>';
+            }
+            else if($cpar_details->status_name == "QA Verification"){
+              return '<label class="label label-primary">'.$cpar_details->status_name. '</label>';
             }
             else if($cpar_details->status_name == "Closed"){
               return '<label class="label label-danger">'.$cpar_details->status_name. '</label>';
@@ -226,14 +231,20 @@ class QcReportController extends Controller
               $posisi = "leader";
               $chief = null;
 
-              $getforeman = "select employees.employee_id,name,departments.id from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and promotion_logs.valid_to is null and departments.id='".$request->get('department_id')."'";
+              $getforeman = "select employees.employee_id,name,departments.id from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and departments.id='".$request->get('department_id')."'";
               $fore = DB::select($getforeman);
               
-              foreach ($fore as $for) {
-                $hasilforeman = $for->employee_id;
+              if ($fore != null) {
+                foreach ($fore as $for) {
+                  $hasilforeman = $for->employee_id;
+                }
+
+                $foreman = $hasilforeman;                
+              }
+              else{
+                $foreman = null;
               }
 
-              $foreman = $hasilforeman;
           
           } else {
               $staff = Auth::user()->username;
@@ -291,11 +302,14 @@ class QcReportController extends Controller
 
     public function update($id)
     {
-        $managers = Employee::select('employees.*','promotion_logs.position','mutation_logs.department')
+        $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
         ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
         ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
+        ->join('departments','departments.department_name','=','mutation_logs.department')
         ->whereNull('promotion_logs.valid_to')
+        ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
+        ->whereNotIn('departments.id',['1','2','3','4','6','10','11','13','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -303,7 +317,7 @@ class QcReportController extends Controller
         $productions = Department::select('departments.*')
         ->join('divisions','departments.id_division','=','divisions.id')
         ->where('id_division','=','5')
-        ->where('departments.id','<>','11')
+        ->whereNotIn('departments.id',['10','11','13','14'])
         ->get();
 
         $procurements = Department::select('departments.*')
@@ -394,6 +408,25 @@ class QcReportController extends Controller
 
             $cpars->save();
             return redirect('/index/qc_report/update/'.$cpars->id)->with('status', 'CPAR data has been updated.')->with('page', 'CPAR');
+          }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'CPAR already exist.')->with('page', 'CPAR');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'CPAR');
+            }
+          }
+    }
+
+    public function update_deskripsi(Request $request, $id)
+    {
+          try{
+            $cpars = QcCpar::find($id);
+            $cpars->tindakan = $request->get('action');
+            $cpars->save();
+            return redirect('/index/qc_report/update/'.$cpars->id)->with('status', 'Action data has been updated.')->with('page', 'CPAR');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -603,7 +636,7 @@ class QcReportController extends Controller
       
        return view('qc_report.grafik',  
         array('title' => 'CPAR CAR Monitoring', 
-              'title_jp' => 'CPAR CAR Monitoring',
+              'title_jp' => '是正防止処置対策管理',
               'fys' => $fys,
               'bulans' => $bulan,
               'years' => $tahun, 
@@ -670,7 +703,7 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as verifikasi, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan order by month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan order by month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -843,9 +876,18 @@ class QcReportController extends Controller
                     return '<label class="label label-primary">QA</label>';                
                   }
                 }
-                else if($detail->posisi_car == "QA") {
-                    return '<label class="label label-success">QA</label>';     
+                else if($detail->posisi_car == "qa") {
+                    return '<label class="label label-success">None</label>';     
                 }
+              }
+
+              else if ($detail->status_code == "7") { // QA Verification
+                if($detail->posisi == "QA") {
+                  return '<label class="label label-primary">'.$detail->chiefname.'</label>';
+                }
+                else if($detail->posisi == "QA2") {
+                  return '<label class="label label-success">None</label>';  
+                }            
               }
               
             }
@@ -926,9 +968,18 @@ class QcReportController extends Controller
                     return '<label class="label label-primary">QA</label>';                
                   }
                 }
-                else if($detail->posisi_car == "QA") {
-                    return '<label class="label label-success">QA</label>';     
+                else if($detail->posisi_car == "qa") {
+                    return '<label class="label label-success">None</label>';     
                 }
+              }
+
+              else if ($detail->status_code == "7") { // QA Verification
+                if($detail->posisi == "QA") {
+                  return '<label class="label label-primary">'.$detail->chiefname.'</label>';
+                }
+                else if($detail->posisi == "QA2") {
+                  return '<label class="label label-success">None</label>';  
+                }            
               }
             }
             else if ($detail->kategori == "Internal") {
@@ -1008,9 +1059,17 @@ class QcReportController extends Controller
                     return '<label class="label label-warning">'.$detail->name.'</label>';                
                   }
                 }
-                else if($detail->posisi_car == "QA") {
-                    return '<label class="label label-success">QA</label>';     
+                else if($detail->posisi_car == "qa") {
+                    return '<label class="label label-success">None</label>';     
                 } 
+              }
+              else if ($detail->status_code == "7") { // QA Verification
+                if($detail->posisi == "QA") {
+                  return '<label class="label label-primary">'.$detail->foremanname.'</label>';
+                }
+                else if($detail->posisi == "QA2") {
+                  return '<label class="label label-success">None</label>';  
+                }            
               }  
             }
           } else {
@@ -1025,9 +1084,13 @@ class QcReportController extends Controller
           else if($detail->status_name == "Unverified CAR"){
             return '<label class="label label-warning">'.$detail->status_name. '</label>';
           }
+          else if($detail->status_name == "QA Verification"){
+            return '<label class="label label-success">'.$detail->status_name. '</label>';
+          }
           else if($detail->status_name == "Closed"){
             return '<label class="label label-success">'.$detail->status_name. '</label>';
           }
+
           })
 
         ->addColumn('action', function($detail){
@@ -1037,10 +1100,19 @@ class QcReportController extends Controller
           if($detail->status_name == "Unverified CPAR") {
             return '<a href="update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail CPAR</a>
                     <a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>';
-          } else if ($detail->status_name == "Unverified CAR"){
+          } 
+
+          else if ($detail->status_name == "Unverified CAR"){
             return '<a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
                     <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
-          } else if($detail->status_name == "Closed"){
+          } 
+
+          else if ($detail->status_name == "QA Verification"){
+            return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
+          } 
+
+          else if($detail->status_name == "Closed"){
             return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
                     <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>
                     ';
@@ -1142,6 +1214,22 @@ group by monthname(mon) order by mon asc");
 
       // $supplier = db::select("select DISTINCT qc_cpars.id, qc_cpars.cpar_no, qc_cpars.progress as progresscpar, qc_cpar_items.detail_problem, qc_cars.progress as progresscar from qc_cpars join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no where kategori='Supplier'");
       // $internal = db::select("select DISTINCT qc_cpars.id, qc_cpars.cpar_no, qc_cpars.progress as progresscpar, qc_cpar_items.detail_problem, qc_cars.progress as progresscar from qc_cpars join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no where kategori='Internal'");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+      return Response::json($response); 
+    }
+
+    public function fetchtable(Request $request)
+    {
+      $data = db::select("select qc_cpars.cpar_no,qc_cpars.status_code,departments.department_name,qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
+        (CASE WHEN qc_verifikators.verifikatorchief is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
+              WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
+              WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
+              ELSE 'Tidak Ada'
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.status_code != '1'");
 
       $response = array(
         'status' => true,
@@ -1260,6 +1348,32 @@ group by monthname(mon) order by mon asc");
         )->with('page', 'CPAR Graph');
     }
 
+    public function komplain_monitoring5()
+    {
+      $tglnow = date('Y-m-d');
+      $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+      foreach ($fy as $fys) {
+          $fiscal = $fys->fiscal_year;
+      }
+
+      $dept = db::select("select distinct departments.department_name, count(distinct qc_cpars.department_id)*2 as colspan  from qc_cpars join departments on qc_cpars.department_id = departments.id GROUP BY department_name;");
+
+      $week = db::select("select DISTINCT week_name,monthname(week_date) as bulanweek from weekly_calendars where fiscal_year='".$fiscal."' ORDER BY week_date asc");
+
+      $eksternal = db::select("select DISTINCT qc_cpars.cpar_no,qc_cpars.tgl_permintaan, qc_cpars.progress as progresscpar, qc_cpar_items.detail_problem, qc_cars.progress as progresscar from qc_cpars join qc_cpar_items on qc_cpars.cpar_no = qc_cpar_items.cpar_no left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no where kategori='Eksternal'");
+
+      return view('qc_report.monitoring5',  
+        array('title' => 'CPAR CAR Monitoring', 
+              'title_jp' => 'Monitor',
+              'dept' => $dept,
+              'week' => $week,
+              'eksternal' => $eksternal,
+              'fy' => $fy
+            )
+        )->with('page', 'CPAR Graph');
+    }
+
     //cetak PDF
 
     public function print_cpar($id)
@@ -1275,7 +1389,7 @@ group by monthname(mon) order by mon asc");
           $posisi2 = "foreman";
       }
 
-      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
+      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','statuses.status_name')
         ->join('departments','qc_cpars.department_id','=','departments.id')
         ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
         ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
@@ -1287,6 +1401,7 @@ group by monthname(mon) order by mon asc");
         ->join('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
         ->join('employees as gm','qc_cpars.gm','=','gm.employee_id')
         // ->join('qc_cpars_items','qc_cpars.cpar_no','=')
+
         ->where('qc_cpars.id','=',$id)
         ->get();
 
@@ -1456,8 +1571,8 @@ group by monthname(mon) order by mon asc");
 
                 $cars = new QcCar([
                   'cpar_no' => $qc_cpars->cpar_no,
-                  'posisi' => 'manager',
-                  'email_status' => 'SentManager',
+                  'posisi' => 'bagian',
+                  'email_status' => 'SentBagian',
                   'email_send_date' => date('Y-m-d'),
                   'tinjauan' => '0,0,0,0',
                   'progress' => '15',
@@ -1589,18 +1704,104 @@ group by monthname(mon) order by mon asc");
 
 
       //Verifikasi CAR Oleh QA
-      public function verifikasicar($id)
+      public function verifikasiqa($id)
       {
-         $cars = QcCar::find($id);
+         $cpars = QcCpar::find($id);
 
-         $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')
+         $cars = QcCar::select('qc_cars.*')
          ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
-         ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
+         ->where('qc_cars.cpar_no','=',$cpars->cpar_no)
          ->get();
        
-          return view('qc_report.verifikasi_car', array(
+          return view('qc_report.verifikasi_qa', array(
             'cars' => $cars,
-            'cpar' => $cpar,
-          ))->with('page', 'CAR');
+            'cpars' => $cpars,
+          ))->with('page', 'Verifikasi QA');
+      }
+
+      public function close1(Request $request,$id)
+      {
+        try{
+            $cpars = QcCpar::find($id);
+            $cpars->cost = $request->get('cost');
+            $cpars->save();
+            return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'Data Has Been Updated')->with('page', 'QA verification');
+          }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'CPAR already exist.')->with('page', 'QA verification');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'QA verification');
+            }
+          }
+      }
+
+      public function emailverification(Request $request,$id){
+
+
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
+
+          $cars = db::select($query);
+
+          $cpars = QcCpar::find($id);
+
+          if ($cpars->staff != null) {
+            $to = "chief";
+          }
+          else if ($cpars->leader != null) {
+            $to = "foreman";
+          }
+
+          $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mails = DB::select($mailto);
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          $cpars->posisi = "QA2";
+          $cpars->email_status = "SentQA2";
+          $cpars->save();
+
+          Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+          return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'E-mail has Been Sent')->with('page', 'QA verification');
+      }
+
+      public function close2(Request $request,$id)
+      {
+
+        try{
+
+            $cpars = QcCpar::find($id);
+            $cpars->status_code = "1";
+            $cpars->posisi = "QAManager";
+            $cpars->save();
+
+            $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
+
+            $cars = db::select($query);
+
+            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.manager = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+            $mails = DB::select($mailto);
+
+            foreach($mails as $mail){
+              $mailtoo = $mail->email;
+            }
+
+            Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+          
+            return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'CPAR has been closed.')->with('page', 'QA verification');
+          }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'CPAR already exist.')->with('page', 'QA verification');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'QA verification');
+            }
+          }
       }
 }

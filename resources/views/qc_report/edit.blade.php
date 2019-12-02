@@ -132,14 +132,12 @@
               <option value='Body Process'>Body Process</option>
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
-              <option value='Lacquering'>Lacquering</option>
-              <option value='Meeting Room'>Meeting Room</option>
+              <option value='Lacquering'>Lacquering</option>s
               <option value='Part Process'>Part Process</option>
               <option value='Pianica'>Pianica</option>
               <option value='Plating'>Plating</option>
               <option value='Recorder'>Recorder</option>
               <option value='Sub Assy'>Sub Assy</option>
-              <option value='TR Room'>TR Room</option>
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
@@ -357,6 +355,27 @@
         </div>
       </div>
     </div>
+
+    <div class="row" style="margin-top: 10px">
+      <div class="col-xs-12">
+        <div class="box">
+          <form role="form" method="post" action="{{url('index/qc_report/update_deskripsi', $cpars->id)}}" enctype="multipart/form-data">
+          <div class="box-body">
+            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+            <div class="form-group row" align="left">
+              <label class="col-sm-2" style="font-size: 20px">Immediate Action<span class="text-red">*</span></label>
+              <div class="col-sm-12">
+                <textarea type="text" class="form-control" name="action" placeholder="Masukkan Deskripsi">{{ $cpars->tindakan }}</textarea>
+                <br><div class="btn-group">
+                  <button type="submit" class="btn btn-primary col-sm-14">Update</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="modal fade" id="createModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -562,7 +581,7 @@
                       </b>
                     </td>
                     <td colspan="2"><b><span class="label label-success">Already Created</span></b></td>
-                    @if($cpars->email_status == NULL && $cpars->posisi == "staff")
+                    @if($cpars->email_status == NULL && $cpars->posisi == "staff" || $cpars->posisi == "leader")
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
                     @else
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
@@ -973,9 +992,9 @@
       var def = document.getElementById("defect_qty").value;
       var samp = document.getElementById("sample_qty").value;
       var hasil = parseInt(def) / parseInt(samp) * 100;
-
+      var hasil2 = parseFloat(Math.round(hasil * 100) / 100).toFixed(2);
       if (!isNaN(hasil)) {
-         document.getElementById('defect_presentase').value = hasil;
+         document.getElementById('defect_presentase').value = hasil2;
       }
 
     }
@@ -984,9 +1003,9 @@
       var def = document.getElementById("defect_qty_edit").value;
       var samp = document.getElementById("sample_qty_edit").value;
       var hasiledit = parseInt(def) / parseInt(samp) * 100;
-
+      var hasiledit2 = parseFloat(Math.round(hasiledit * 100) / 100).toFixed(2);
       if (!isNaN(hasiledit)) {
-         document.getElementById('defect_presentase_edit').value = hasiledit;
+         document.getElementById('defect_presentase_edit').value = hasiledit2;
       }
 
     }
@@ -1227,6 +1246,10 @@
         window.location.reload();
       })
     }
+
+    CKEDITOR.replace('action' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
 
     function deleteConfirmation(url, name, id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");

@@ -42,7 +42,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    Verifikasi {{ $page }}
+    {{ $page }}
     <small>Verifikasi Corrective Action Report</small>
   </h1>
   <ol class="breadcrumb">
@@ -81,18 +81,51 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>
-    <form role="form" method="post" action="{{url('index/qc_car/detail_action', $cars->id)}}" enctype="multipart/form-data">
+    @if(Auth::user()->username == "clark" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+    
+    @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+    <form role="form" method="post" action="{{url('index/qc_report/close1', $cpars->id)}}">
+    @elseif(Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+    <form role="form" method="post" action="{{url('index/qc_report/close2', $cpars->id)}}">
+    @endif 
+
       <div class="box-body">
 
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
           <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cars->cpar_no }}" readonly="">
+            <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
+          <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
+
+         <a href="{{url('index/qc_car/print_car', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
+         @if($cpars->posisi == "QA")
+         <a class="btn btn-md btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
+         @endif
         </div>
-        
-        <table class="table table-striped table-bordered " style="border: 1px solid #f4f4f4">
+
+        @foreach($cars as $cars)
+
+        @if($cpars->status_code != 1)
+
+          <div class="form-group row" align="left">
+            <label class="col-sm-2">Cost Estimation (optional)</span></label>
+            <div class="col-sm-12">
+              <textarea type="text" class="form-control" name="cost">{{$cpars->cost}}</textarea>
+            </div>
+          </div>
+          @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+              <button type="submit" class="btn btn-success col-sm-14">Edit</button>
+          @elseif(Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Close CPAR {{$cpars->cpar_no}}</button>
+            </div>
+          @endif
+
+        @endif
+
+        <!-- <table class="table table-striped table-bordered " style="border: 1px solid #f4f4f4">
           <thead>
             <tr style="background-color: #ff9800;border: none">
               <td width="75" style="text-align: center;border: none">Nomor</td>
@@ -136,9 +169,14 @@ table.table-bordered > tfoot > tr > th{
             </tr>
 
           </tbody>
-        </table>
+        </table> -->
+        
+        @endforeach
+
+
       </div>
     </form>
+    @endif
   </div>
   
   @endsection
@@ -154,6 +192,10 @@ table.table-bordered > tfoot > tr > th{
     $(function () {
       $('.select2').select2()
     })
+
+    CKEDITOR.replace('cost' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
 
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -192,5 +234,28 @@ table.table-bordered > tfoot > tr > th{
       });
     }
 
+    function sendemail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim ini?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/qc_report/emailverification/$cpars->id") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        window.location.reload();
+      })
+    }
+
   </script>
 @stop
+
+
+
+
+
+
+
+

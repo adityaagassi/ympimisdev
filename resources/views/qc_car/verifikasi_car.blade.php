@@ -140,12 +140,12 @@
         <!-- Email GM --> 
 
         @if($cars->email_status == "SentGM" && $cars->approved_gm == "Checked") <!-- GM -->
-          <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Bagian" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke Bagian</a>
+          <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke QA" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke QA</a>
 
           <!-- <a href="{{url('index/qc_car/sendemail/'.$cars['id'].'/'.$cars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
-        @elseif(Auth::user()->username == $cars->gm && $cars->email_status == "SentBagian") <!-- Jika yang login GM dan status-->
-          <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim Ke Bagian</label>
+        @elseif(Auth::user()->username == $cars->gm && $cars->email_status == "SentQA") <!-- Jika yang login GM dan status-->
+          <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim Ke QA</label>
 
         @endif
 
@@ -218,7 +218,7 @@
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
                       @endif
                   </td>
@@ -276,7 +276,7 @@
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
                       @endif
                   </td>
@@ -334,7 +334,7 @@
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
                       @endif
                   </td>
@@ -392,7 +392,7 @@
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
                       @endif
                   </td>
@@ -556,7 +556,7 @@
         id: id,
       };
 
-      if (!confirm("Apakah anda yakin ingin mengirim CPAR ini?")) {
+      if (!confirm("Apakah anda yakin ingin mengirim CAR ini?")) {
         return false;
       }
 

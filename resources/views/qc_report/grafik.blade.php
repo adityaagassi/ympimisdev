@@ -3,6 +3,49 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
+
+table.table-bordered{
+  border:1px solid rgb(150,150,150);
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid rgb(54, 59, 56) !important;
+  text-align: center;
+  background-color: #212121;  
+  color:white;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(54, 59, 56);
+  background-color: #212121;
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  padding:3px;
+
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(150,150,150);
+  padding:0;
+}
+table.table-bordered > tbody > tr > td > p{
+  color: #abfbff;
+}
+
+table.table-striped > thead > tr > th{
+  border:1px solid black !important;
+  text-align: center;
+  background-color: rgba(126,86,134,.7) !important;  
+}
+
+table.table-striped > tbody > tr > td{
+  border: 1px solid #eeeeee !important;
+  border-collapse: collapse;
+  color: black;
+  padding: 3px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: white;
+}
+
 thead input {
   width: 100%;
   padding: 3px;
@@ -17,34 +60,44 @@ tfoot>tr>th{
 td:hover {
   overflow: visible;
 }
-table.table-bordered{
-  /*border:1px solid black;*/
+table > thead > tr > th{
+  border:2px solid #f4f4f4;
+  color: white;
 }
-table.table-bordered > thead > tr > th{
-  border:1px solid black !important;
-  /*border:1px solid transparent !important;*/
-  vertical-align: middle;
-  text-align: center;
-  font-size: 18px;
 
+.zoom{
+   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-animation: zoomin 5s ease-in infinite;
+  animation: zoomin 5s ease-in infinite;
+  transition: all .5s ease-in-out;
+  overflow: hidden;
 }
-table.table-bordered > tbody > tr > td{
-  border:1px solid #eeeeee !important;
-  border-collapse: collapse;
-  padding:3px;
-  vertical-align: middle;
-  text-align: center;
+@-webkit-keyframes zoomin {
+  0% {transform: scale(0.7);}
+  50% {transform: scale(1);}
+  100% {transform: scale(0.7);}
 }
-td.table-status{
-    /*background-color: #e53935;*/
-    font-size: 18px;
+@keyframes zoomin {
+  0% {transform: scale(0.7);}
+  50% {transform: scale(1);}
+  100% {transform: scale(0.7);}
+} /*End of Zoom in Keyframes */
+
+/* Zoom out Keyframes */
+@-webkit-keyframes zoomout {
+  0% {transform: scale(0);}
+  50% {transform: scale(0.5);}
+  100% {transform: scale(0);}
 }
-td.table-posisi{
-    font-size: 18px;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
+@keyframes zoomout {
+    0% {transform: scale(0);}
+  50% {transform: scale(0.5);}
+  100% {transform: scale(0);}
+}/*End of Zoom out Keyframes */
+
+
 #loading, #error { display: none; }
 
 </style>
@@ -62,10 +115,9 @@ table.table-bordered > tfoot > tr > th{
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content">
+<section class="content" style="padding-top: 0; padding-bottom: 0">
   <div class="row">
-    <div class="col-md-12" style="padding: 2px !important">
-      <div class="col-md-12">
+    <div class="col-md-12" style="padding: 1px !important">
         <div class="col-md-2">
           <div class="input-group date">
             <div class="input-group-addon bg-green">
@@ -82,7 +134,7 @@ table.table-bordered > tfoot > tr > th{
             <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke">
           </div>
         </div>
-        <div class="col-md-3" style="width:230px">
+        <div class="col-md-2">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
@@ -102,7 +154,7 @@ table.table-bordered > tfoot > tr > th{
             -->
           </div>
 
-         <div class="col-md-3">
+         <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
@@ -117,10 +169,8 @@ table.table-bordered > tfoot > tr > th{
           </div>
 
         <div class="col-xs-2">
-          <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
+          <button class="btn btn-success btn-sm" onclick="drawChart()">Update Chart</button>
         </div>
-        <br>
-        <br>
 
         <!-- <div class="col-md-2 pull-right">
           <select class="form-control" id="fq" data-placeholder="Pilih Fiscal year" onchange="drawChart()" style="border-color: #605ca8" >
@@ -168,10 +218,101 @@ table.table-bordered > tfoot > tr > th{
                 @endforeach
             </select>
         </div>-->
-      </div>
-      <div class="col-md-12" style="margin-top: 20px">
+      <div class="col-md-12" style="margin-top: 10px; padding-right: 0;padding-left: 10px">
           <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
           <div id="chart" style="width: 99%"></div>
+
+          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
+            <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
+              <tr>
+                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">Nomor CPAR</th>
+                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Departemen</th>
+                <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
+                <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
+                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="3">QA Verification</th>
+
+              </tr>
+              <tr>
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Leader</th>
+                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
+                <th style="width: 6%; padding: 0;">Manager</th>
+                <th style="width: 6%; padding: 0;">DGM</th>
+                <th style="width: 6%; padding: 0;">GM</th>
+                <th style="width: 6%; padding: 0;">Received By Manager</th>
+
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Foreman</th>
+                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
+                <th style="width: 6%; padding: 0;">Manager</th>
+                <th style="width: 6%; padding: 0;">DGM</th>
+                <th style="width: 6%; padding: 0;">GM</th>
+
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Leader</th>
+                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
+
+              </tr>
+            </thead>
+            <tbody id="tabelisi">
+              <!-- <tr>
+                <td>05/196.S/XI/2019</td>
+                <td>procurement</td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td></td>
+                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"> </td>
+                <td></td>         
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>06/196.S/XI/2019</td>
+                <td>procurement</td>
+                <td></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>02/196.I/XI/2019</td>
+                <td>welding-surface treatment (wi-wst)</td>
+                <td></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
+                <td></td>
+                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr> -->
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
       </div>
 
       <!-- <div class="col-md-12" style="margin-top: 20px">
@@ -230,8 +371,6 @@ table.table-bordered > tfoot > tr > th{
   </div>
 
 </section>
-
-
 @endsection
 
 @section('scripts')
@@ -262,6 +401,8 @@ table.table-bordered > tfoot > tr > th{
     $('.select2').select2();
 
     drawChart();
+    fetchTable();
+    setInterval(fetchTable, 300000);
     // drawChartDepartemen();
   });
 
@@ -345,8 +486,8 @@ table.table-bordered > tfoot > tr > th{
             jml.push(value.jumlah);
             statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
             statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
+            statusverifikasi.push(parseInt(value.qaverification));
             statusclose.push(parseInt(value.close));
-            statusverifikasi.push(parseInt(value.verifikasi));
           })
 
           $('#chart').highcharts({
@@ -383,7 +524,7 @@ table.table-bordered > tfoot > tr > th{
               align: 'right',
               x: -30,
               verticalAlign: 'top',
-              // y: 10,
+              y: 46,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
@@ -437,6 +578,11 @@ table.table-bordered > tfoot > tr > th{
                 color : '#f0ad4e' //f5f500
             },
             {
+                name: 'QA Verification',
+                data: statusverifikasi,
+                color : '#448aff' //f5f500
+            },
+            {
                 name: 'Closed',
                 data: statusclose,
                 color : '#5cb85c' //00f57f
@@ -445,6 +591,460 @@ table.table-bordered > tfoot > tr > th{
           })
         } else{
           alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function fetchTable(){
+    var data = {
+      // tgl : $('#tgl').val()
+    }
+    $.get('{{ url("index/qc_report/fetchtable") }}', data, function(result, status, xhr){
+      if(xhr.status == 200){
+        if(result.status){
+
+          $("#tabelisi").find("td").remove();  
+          $('#tabelisi').html("");
+          var table = "";
+          var statusawal = "";
+          var statuscf = "";
+          var statusm = "";
+          var statusdgm = "";
+          var statusgm = "";
+
+
+          $.each(result.datas, function(key, value) {
+          var namasl = value.namasl;
+          var namasl2 = namasl.split(' ').slice(0,2).join(' ');
+
+          var namacf = value.namacf;
+          var namacf2 = namacf.split(' ').slice(0,2).join(' ');
+
+          var namam = value.namam;
+          var namam2 = namam.split(' ').slice(0,2).join(' ');
+
+          var namadgm = value.namadgm;
+          var namadgm2 = namadgm.split(' ').slice(0,2).join(' ');
+
+          var namagm = value.namagm;
+          var namagm2 = namagm.split(' ').slice(0,2).join(' ');
+
+          var namabagian = value.namabagian;
+          var namabagian2 = namabagian.split(' ').slice(0,2).join(' ');
+
+          if (value.namapiccar != null) {
+            var namapiccar = value.namapiccar;
+            var namapiccar2 = namapiccar.split(' ').slice(0,2).join(' ');            
+          }
+
+          if (value.namacfcar != null) {
+            var namacfcar = value.namacfcar;
+            var namacfcar2 = namacfcar.split(' ').slice(0,2).join(' ');
+          }
+
+          var color = "";
+          var color2 = "";
+          var d = 0;
+          var e = 0;
+
+            //CPAR
+
+            if (value.posisi_cpar != "staff" && value.posisi_cpar != "leader") {
+              // statusawal = '<img src="{{ url("ok.png")}}" width="40" height="40"';
+              statusawal = '<span class="label label-success">'+namasl2+'</span>';
+              color = 'style="background-color:green"';
+            }
+            else {
+              if (d == 0) {  
+                  // statusawal = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  statusawal = '<span class="label label-danger zoom">'+namasl2+'</span>';
+                  color = 'style="background-color:red"';                    
+                  d = 1;
+                } else {
+                  statusawal = '';
+                }
+             
+            }
+
+              //chief / foreman
+              if (value.checked_chief == "Checked" || value.checked_foreman == "Checked") {
+                  if (value.posisi_cpar == "chief" || value.posisi_cpar == "foreman") {
+                      if (d == 0) {  
+                          // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                          statuscf = '<span class="label label-danger">'+namacf2+'</span>';   
+                          color = 'style="background-color:red"';                  
+                          d = 1;
+                        } else {
+                          statuscf = '';
+                        }
+                  }
+                  else{
+                      statuscf = '<span class="label label-success">'+namacf2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statuscf = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  statuscf = '<span class="label label-danger">'+namacf2+'</span>'; 
+                  color = 'style="background-color:red"';                  
+                  d = 1;
+                } else {
+                  statuscf = '';
+                }
+              }
+
+              //manager
+              if (value.checked_manager == "Checked") {
+                  if (value.posisi_cpar == "manager") {
+                    if (d == 0) {  
+                        statusm = '<span class="label label-danger">'+namam2+'</span>';
+                        color = 'style="background-color:red"'; 
+                        // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusm = '';
+                      }
+                  }
+                  else {
+                    statusm = '<span class="label label-success">'+namam2+'</span>';
+                    color = 'style="background-color:green"'; 
+                    // statusm = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  } 
+              }
+              else {
+                if (d == 0) {  
+                  statusm = '<span class="label label-danger">'+namam2+'</span>';
+                  color = 'style="background-color:red"'; 
+                  // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusm = '';
+                }
+              }
+
+              //dgm
+              if (value.approved_dgm == "Checked") {
+                  if (value.posisi_cpar == "dgm") {
+                      if (d == 0) {  
+                        statusdgm = '<span class="label label-danger">'+namadgm2+'</span>';
+                        color = 'style="background-color:red"'; 
+                        // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        d = 1;
+                      } else {
+                        statusdgm = '';
+                      }
+                  } else {
+                    statusdgm = '<span class="label label-success">'+namadgm2+'</span>'; 
+                    color = 'style="background-color:green"'; 
+                      // statusdgm = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              } 
+
+              else {
+                if (d == 0) {  
+                  statusdgm = '<span class="label label-danger">'+namadgm2+'</span>';
+                  color = 'style="background-color:red"'; 
+                  // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  d = 1;
+                } else {
+                  statusdgm = '';
+                }
+              }
+
+              //gm
+              if (value.approved_gm == "Checked") {
+                  if (value.posisi_cpar == "gm") {
+                      if (d == 0) {  
+                        statusgm = '<span class="label label-danger">'+namagm2+'</span>'; 
+                        color = 'style="background-color:red"';
+                        // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        d = 1;
+                      } else {
+                        statusgm = '';
+                      }
+                  } else {
+                      statusgm = '<span class="label label-success">'+namagm2+'</span>'; 
+                      color = 'style="background-color:green"'; 
+                      // statusgm = '<img src="{{ url("ok.png")}}" width="40" height="40">';                    
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusgm = '<span class="label label-danger">'+namagm2+'</span>'; 
+                  color = 'style="background-color:red"';
+                  // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  d = 1;
+                } else {
+                  statusgm = '';
+                }
+              }
+
+              if (value.received_manager == "Received") {
+                  if (value.posisi_car == "bagian") {
+                      if (d == 0) {  
+                        statusbagian = '<span class="label label-danger">'+namabagian2+'</span>';
+                        color = 'style="background-color:red"';
+                        // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        d = 1;
+                      } else {
+                        statusbagian = '';
+                      }
+                  } else {
+                      statusbagian = '<span class="label label-success">'+namabagian2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusbagian = '<img src="{{ url("ok.png")}}" width="40" height="40">';                    
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusbagian = '<span class="label label-danger">'+namabagian2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  d = 1;
+                } else {
+                  statusbagian = '';
+                }
+              }
+
+              //CAR
+
+              //staff leader
+              if (value.posisi_car != null) {
+                if (value.posisi_car != "staff" && value.posisi_car != "foreman") {
+                    statusawalcar = '<span class="label label-success">'+namapiccar2+'</span>'; 
+                    color = 'style="background-color:green"'; 
+                    // statusawalcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                }
+                else{
+                    if (d == 0) {
+                      statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
+                      color = 'style="background-color:red"'; 
+                      // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                      d = 1 ;
+                    }
+                    else {
+                      statusawalcar = '';
+                    }
+                }                
+              }
+              else{
+                if (d == 0) {
+                      statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
+                      color = 'style="background-color:red"'; 
+                      // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                      d = 1 ;
+                    }
+                    else {
+                      statusawalcar = '';
+                    }
+              }
+
+
+              //chiefforemancoordinator
+
+              if (value.checked_chief_car == "Checked" || value.checked_foreman_car == "Checked" || value.checked_coordinator_car == "Checked") {
+                  if (value.posisi_car == "chief" || value.posisi_car == "foreman2" || value.posisi_car == "coordinator") {
+                      if (d == 0) {  
+                          statuscfcar = '<span class="label label-danger>'+namacfcar2+'</span>';
+                          color = 'style="background-color:red"';
+                          // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                          d = 1;
+                        } else {
+                          statuscfcar = '';
+                        }
+                  }
+                  else{
+                      statuscfcar = '<span class="label label-success">'+namacfcar2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statuscfcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {   
+                  statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statuscfcar = '';
+                }
+              }
+
+              //manager
+
+              if (value.checked_manager_car == "Checked") {
+                  if (value.posisi_car == "manager") {
+                      if (d == 0) {  
+                        statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                        color = 'style="background-color:red"';
+                        // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusmcar = '';
+                      }
+                  }
+                  else{
+                      statusmcar = '<span class="label label-success">'+namabagian2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusmcar = '';
+                }
+              }
+
+              //dgm
+
+              if (value.approved_dgm_car == "Checked") {
+                  if (value.posisi_car == "dgm") {
+                      if (d == 0) {  
+                        statusdgmcar = '<span class="label label-danger">'+namadgm2+'</span>';
+                        color = 'style="background-color:red"';
+                        // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusdgmcar = '';
+                      }
+                  }
+                  else{
+                      statusdgmcar = '<span class="label label-success">'+namadgm2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusdgmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusdgmcar = '<span class="label label-danger">'+namadgm2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" cl  ass="zoom">';                    
+                  d = 1;
+                } else {
+                  statusdgmcar = '';
+                }
+              }
+
+              //gm
+
+              if (value.approved_gm_car == "Checked") {
+                  if (value.posisi_car == "gm") {
+                      if (d == 0) {  
+                        statusgmcar = '<span class="label label-danger">'+namagm+'</span>';
+                        color = 'style="background-color:red"';
+                        // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusgmcar = '';
+                      }
+                  }
+                  else{
+                      statusgmcar = '<span class="label label-success">'+namagm+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusgmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusgmcar = '<span class="label label-danger">'+namagm+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusgmcar = '';
+                }
+              }
+
+              //QA
+
+              if (value.email_status_car == "SentQA") {
+                  if (value.posisi_cpar == "QA") {
+                      if (d == 0) {  
+                        statusqa = '<span class="label label-danger">'+namasl2+'</span>';
+                        color = 'style="background-color:red"';
+                        // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusqa = '';
+                      }
+                  }
+                  else{
+                      statusqa = '<span class="label label-success">'+namasl2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusqa = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else{
+                if (d == 0) {  
+                  statusqa = '<span class="label label-danger">'+namasl2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusqa = '';
+                }
+              }
+
+              if (value.email_status == "SentQA2") {
+                  if (value.posisi_cpar == "QA2") {
+                      if (d == 0) {  
+                          statusqa2 = '<span class="label label-danger">'+namacf2+'</span>';
+                          color = 'style="background-color:red"';
+                        // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusqa2 = '';
+                      }
+                  }
+                  else{
+                      statusqa2 = '<span class="label label-success">'+namacf2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusqa2 = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else {
+                if (d == 0) {  
+                  statusqa2 = '<span class="label label-danger">'+namacf2+'</span>';
+                  color = 'style="background-color:red"';
+                  // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusqa2 = '';
+                }
+              }
+
+
+            table += '<tr>';
+            table += '<td>'+value.cpar_no+'</td>'; 
+            table += '<td style="border-left:3px solid #f44336">'+value.department_name+'</td>';
+            table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
+            table += '<td>'+statuscf+'</td>';
+            table += '<td>'+statusm+'</td>';
+            table += '<td>'+statusdgm+'</td>';
+            table += '<td>'+statusgm+'</td>';
+            table += '<td>'+statusbagian+'</td>';
+            table += '<td style="border-left:3px solid #f44336">'+statusawalcar+'</td>';
+            table += '<td>'+statuscfcar+'</td>';
+            table += '<td>'+statusmcar+'</td>';
+            table += '<td>'+statusdgmcar+'</td>';
+            table += '<td>'+statusgmcar+'</td>';
+            table += '<td style="border-left:3px solid #f44336">'+statusqa+'</td>';
+            table += '<td>'+statusqa2+'</td>';
+            table += '</tr>';
+
+              
+          })
+
+          $('#tabelisi').append(table);
+
         }
       }
     })

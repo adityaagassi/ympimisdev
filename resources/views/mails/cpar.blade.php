@@ -28,8 +28,8 @@
 				<?php $tgl_balas = $datas->tgl_balas ?>
 				<?php $sumber_komplain = $datas->sumber_komplain ?>
 				<?php $posisi = $datas->posisi ?>
-				<?php if ($posisi == "bagian"){ 
-					$id_car = $datas->id_car;
+				<?php if ($posisi == "qa"){ 
+						$id_car = $datas->id_car;
 					}
 				?>
 			@endforeach

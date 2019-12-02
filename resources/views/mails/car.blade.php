@@ -25,9 +25,18 @@
 				<?php $kategori = $datas->kategori ?>
 				<?php $sumber_komplain = $datas->sumber_komplain ?>
 				<?php $pic_name = $datas->pic_name ?>
+				<?php $posisi = $datas->posisi ?>
+				<?php 
+					if($posisi == "qa"){ 
+						$id_cpar = $datas->id_cpar;
+					}
+				?>
 			@endforeach
 
 			<!-- <img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br> -->
+			@if($posisi == "qa")
+				<p style="font-size: 18px;">Verifikasi CAR Oleh QA<br>
+			@endif
 			<p style="font-size: 18px;">Pembuatan CAR dari Penerbitan CPAR {{ $cpar_no }}<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.<br><br>
 
@@ -59,7 +68,16 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/qc_car/verifikasicar/{{ $id }}">CAR Verification</a><br>
+
+			@if($posisi == "qa")
+				<a href="http://172.17.128.4/mirai/public/index/qc_report/verifikasiqa/{{$id_cpar}}">QA Verification</a><br>
+			@else
+				<a href="http://172.17.128.4/mirai/public/index/qc_car/verifikasicar/{{ $id }}">CAR Verification</a><br>
+
+			@endif
+
+
+			
 			<!-- <a href="http://172.17.128.87/miraidev/public/index/qc_car/verifikasicar/{{ $id }}">See CAR Detail and Verification</a><br> -->
 		</center>
 	</div>
