@@ -27,6 +27,7 @@ use App\Employee;
 use App\EmploymentLog;
 use App\OrganizationStructure;
 use App\StandartCost;
+use App\KaizenCalculation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -175,6 +176,13 @@ class EmployeeController extends Controller
       'position' => $emp,
       'section' => $sc,
       'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
+  }
+
+  public function indexKaizenReport()
+  {
+    return view('employees.report.kaizen_rank', array(
+      'title' => '',
+      'title_jp' => ''))->with('page', 'Kaizen Report');
   }
 
   public function makeKaizen($id, $name, $section, $group){
@@ -1618,21 +1626,55 @@ public function postKaizen(Request $request)
       'status' => '-1'
     ]);
 
-    $kz->save();
+    $kz = KaizenForm::create([
+      'employee_id' => $request->get('employee_id'),
+      'employee_name' => $request->get('employee_name'),
+      'propose_date' => $request->get('propose_date'),
+      'section' => $request->get('section'),
+      'leader' => $request->get('leader'),
+      'title' => $request->get('title'),
+      'condition' => $request->get('condition'),
+      'improvement' => $request->get('improvement'),
+      'area' => $request->get('area_kz'),
+      'purpose' => $request->get('purpose'),
+      'status' => '-1'
+    ]);
+    if(isset($kz->id))    
+    {
+      if ($request->get('estimasi')) {
+        foreach ($request->get('estimasi') as $est) {
+         $kc = new KaizenCalculation([
+          'id_kaizen' => $kz->id,
+          'id_cost' => $est[0],
+          'cost' => $est[1],
+          'created_by' => Auth::id(),
+          'created_at' => date('Y-m-d H:i:s'),
+        ]);
 
-    $response = array(
+         $kc->save();
+       }
+     }
+     
+     $response = array(
       'status' => true,
       'datas' => 'Kaizen Berhasil ditambahkan'
     );
-    return Response::json($response);
+     return Response::json($response);
+   }
+   else
+   {
+   //not inserted
+   }
 
-  } catch (QueryException $e){
-    $response = array(
-      'status' => false,
-      'datas' => $e->getMessage()
-    );
-    return Response::json($response);
-  }
+    // $kz->save();
+
+ } catch (QueryException $e){
+  $response = array(
+    'status' => false,
+    'datas' => $e->getMessage()
+  );
+  return Response::json($response);
+}
 }
 
 public function fetchSubLeader()
@@ -1728,11 +1770,13 @@ public function fetchDataKaizen()
 
 public function fetchDetailKaizen(Request $request)
 {
-  $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"), 'mp_point', 'space_point','other_point','foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3')
+  $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'))
   ->leftJoin('employees','employees.employee_id','=','kaizen_forms.leader')
+  ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
+  ->leftJoin('standart_costs','standart_costs.id','=','kaizen_calculations.id_cost')
   ->leftJoin('kaizen_scores','kaizen_scores.id_kaizen','=','kaizen_forms.id')
   ->where('kaizen_forms.id','=',$request->get('id'))
-  ->first();
+  ->get();
 
   return Response::json($data);
 }
@@ -1850,5 +1894,47 @@ public function fetchCost()
   $costL = StandartCost::get();
 
   return Response::json($costL);
+}
+
+public function fetchKaizenReport(Request $request)
+{
+  $chart1 = "select department, section, SUM(kaizen) as kaizen from
+  (select department, section, count(employee_id) as kaizen from
+  (select kaizen_forms.employee_id, mutation_logs.department, mutation_logs.section from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1) d group by section, department 
+  union all
+  select distinct department, section, 0 as kaizen from mutation_logs where valid_to is null
+  ) as kz
+  where department <> 'Japan Staf'
+  group by department, section";
+
+  $kz_total = db::select($chart1);
+
+  $q_rank1 = "select kz.employee_id, employee_name, CONCAT(department,' - ', section,' - ', `group`) as bagian, fp1+fp2+fp3+mp1+mp2+mp3 as nilai from 
+  (select employee_id, employee_name, SUM(foreman_point_1 * 40) fp1, SUM(foreman_point_2 * 30) fp2, SUM(foreman_point_3 * 30) fp3, SUM(manager_point_1 * 40) mp1, SUM(manager_point_2 * 30) mp2, SUM(manager_point_3 * 30) mp3 from kaizen_forms LEFT JOIN kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+  where DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1
+  group by employee_id, employee_name
+  ) as kz
+  left join mutation_logs on kz.employee_id = mutation_logs.employee_id
+  where valid_to is null
+  order by (fp1+fp2+fp3+mp1+mp2+mp3) / 2 desc
+  limit 3";
+
+  $kz_rank1 = db::select($q_rank1);
+
+  $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', kaizen_forms.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
+  where `status` = 1 and valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10'
+  group by kaizen_forms.employee_id, employee_name, department, kaizen_forms.section, `group`
+  order by count desc
+  limit 10";
+
+  $kz_rank2 = db::select($q_rank2);
+
+  $response = array(
+    'status' => true,
+    'charts' => $kz_total,
+    'rank1' => $kz_rank1,
+    'rank2' => $kz_rank2,
+  );
+  return Response::json($response);
 }
 }
