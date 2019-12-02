@@ -3026,7 +3026,7 @@ public function fetchNgBentsukiBenage(Request $request){
     $ng = db::select("select log.operator, ng_lists.ng_name, sum(ng.qty) as jml from
         (select ng, tag, qty from pn_log_ngs
         where location = 'PN_Kensa_Awal'
-        and date(created_at) = '2019-10-15') ng
+        and date(created_at) = '".$date."') ng
         left join
         (SELECT operator, tag, created_at from pn_log_proces
         where id in (select MAX(id) id from pn_log_proces WHERE location = 'PN_Pureto'
@@ -3040,7 +3040,7 @@ public function fetchNgBentsukiBenage(Request $request){
     $op = db::select("SELECT distinct operator, op.nama from pn_log_proces log
         left join pn_operators op on op.nik = operator
         WHERE location = 'PN_Pureto'
-        and date(log.created_at) = '2019-10-15'");
+        and date(log.created_at) = '".$date."'");
 
     $response = array(
         'status' => true,            
@@ -3066,7 +3066,7 @@ public function fetchNgKensaAwal(Request $request){
     $ng = db::select("select log.operator, ng_lists.ng_name, sum(ng.qty) as jml from
         (select ng, tag, qty from pn_log_ngs
         where location = 'PN_Kensa_Akhir'
-        and date(created_at) = '2019-10-15') ng
+        and date(created_at) = '".$date."') ng
         left join
         (SELECT operator, tag, created_at from pn_log_proces
         where id in (select MAX(id) id from pn_log_proces WHERE location = 'PN_Kensa_Awal'
@@ -3080,7 +3080,7 @@ public function fetchNgKensaAwal(Request $request){
     $op = db::select("SELECT distinct operator, op.nama from pn_log_proces log
         left join pn_operators op on op.nik = operator
         WHERE location = 'PN_Kensa_Awal'
-        and date(log.created_at) = '2019-10-15'");
+        and date(log.created_at) = '".$date."'");
 
     $response = array(
         'status' => true,            

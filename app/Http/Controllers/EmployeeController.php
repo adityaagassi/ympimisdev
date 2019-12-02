@@ -119,7 +119,7 @@ class EmployeeController extends Controller
   public function indexKaizen()
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986'";
+    $usr = "'19014987','19014986','E01090823'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
@@ -183,6 +183,13 @@ class EmployeeController extends Controller
     return view('employees.report.kaizen_rank', array(
       'title' => '',
       'title_jp' => ''))->with('page', 'Kaizen Report');
+  }
+
+  public function indexKaizenResume()
+  {
+    return view('employees.report.kaizen_resume', array(
+      'title' => '',
+      'title_jp' => ''))->with('page', 'Kaizen Resume');
   }
 
   public function makeKaizen($id, $name, $section, $group){
@@ -951,7 +958,7 @@ public function indexEmployment()
 
 
 // -------------------------  Start Employee Service ------------------
-public function indexEmployeeService()
+public function indexEmployeeService(Request $request)
 {
   $title = 'Employee Self Services';
   $title_jp = '従業員の情報サービス';
@@ -1012,7 +1019,7 @@ if($datas) {
     'emp_id' => $emp_id,
     'profil' => $datas,
     'absences' => $absences,
-    'sisa_cuti' => $ct
+    'sisa_cuti' => $ct,
   ))->with('page', 'Employment Services');
 } else {
   return view('home')->with('page', 'Dashboard');
@@ -1899,12 +1906,13 @@ public function fetchCost()
 public function fetchKaizenReport(Request $request)
 {
   $chart1 = "select department, section, SUM(kaizen) as kaizen from
-  (select department, section, count(employee_id) as kaizen from
-  (select kaizen_forms.employee_id, mutation_logs.department, mutation_logs.section from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1) d group by section, department 
+  (select department, section, `group`, count(employee_id) as kaizen from
+  (select kaizen_forms.employee_id, mutation_logs.department, mutation_logs.section, mutation_logs.`group` from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1) d group by section, department 
   union all
-  select distinct department, section, 0 as kaizen from mutation_logs where valid_to is null
+  select distinct department, section, `group`, 0 as kaizen from mutation_logs where valid_to is null
   ) as kz
-  where department <> 'Japan Staf'
+  left join total_meeting_codes on kz.`group` = total_meeting_codes.group_name
+  where department <> 'Japan Staf' and `code` is  not null and `code` not in ('OFC', 'SEC', 'GA', 'CTN')
   group by department, section";
 
   $kz_total = db::select($chart1);
@@ -1921,9 +1929,9 @@ public function fetchKaizenReport(Request $request)
 
   $kz_rank1 = db::select($q_rank1);
 
-  $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', kaizen_forms.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
+  $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', mutation_logs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
   where `status` = 1 and valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10'
-  group by kaizen_forms.employee_id, employee_name, department, kaizen_forms.section, `group`
+  group by kaizen_forms.employee_id, employee_name, department, mutation_logs.section, `group`
   order by count desc
   limit 10";
 
