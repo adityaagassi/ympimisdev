@@ -339,78 +339,35 @@
 	function scanMaterialNumber(){
 		$('#material_number').prop('disabled', true);
 		var material_number = $("#material_number").val();
-		var ymj = $("#ymj").is(":checked");
 		var data = {
 			material_number : material_number,
-			ymj : ymj,
-			type : 'pd'
 		}
-		$.post('{{ url("scan/material_number") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+		$.post('{{ url("scan/educational_instrument") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
-					// if(result.status_code == 1000){
-						$("#flo_number").val(result.flo_number);
-						$('#flo_detail_table').DataTable().destroy();
-						fillFloTable(result.flo_number);
-
-						var flo_number = $("#flo_number").val();
-						var data = {
-							material_number : material_number,
-							ymj : ymj,
-							type : 'pd',
-							flo_number : flo_number
-						}
-						$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
-							console.log(status);
-							console.log(result);
-							console.log(xhr);
-							if(xhr.status == 200){
-								if(result.status){
-									openSuccessGritter('Success!', result.message);
-									$("#material_number").val("");
-									if(result.status_code == 'new'){
-										$("#flo_number").val(result.flo_number);
-										$('#flo_detail_table').DataTable().destroy();
-										fillFloTable(result.flo_number);
-									}
-									else{
-										$('#flo_detail_table').DataTable().ajax.reload();
-									}
-									$('#material_number').prop('disabled', false);
-									$("#material_number").focus();
-								}
-								else{
-									openErrorGritter('Error!', result.message);
-									audio_error.play();
-									$('#material_number').prop('disabled', false);
-									$("#material_number").val("");
-								}
-							}
-							else{
-								openErrorGritter('Error!', 'Disconnected from server');
-								audio_error.play();
-								$('#material_number').prop('disabled', false);
-								$("#material_number").val("");
-							}
-						});
-					}
-					else{
-						openErrorGritter('Error!', result.message);
-						audio_error.play();
-						$('#material_number').prop('disabled', false);
-						$("#material_number").val("");
-					}
+					openSuccessGritter('Success!', result.message);
+					$("#material_number").val("");
+					$("#flo_number").val(result.flo_number);
+					$('#flo_detail_table').DataTable().destroy();
+					fillFloTable(result.flo_number);
+					$('#material_number').prop('disabled', false);
+					$("#material_number").focus();
+					
 				}
 				else{
-					openErrorGritter('Error!', 'Disconnected from server');
+					openErrorGritter('Error!', result.message);
 					audio_error.play();
 					$('#material_number').prop('disabled', false);
 					$("#material_number").val("");
 				}
-			});
+			}
+			else{
+				openErrorGritter('Error!', 'Disconnected from server');
+				audio_error.play();
+				$('#material_number').prop('disabled', false);
+				$("#material_number").val("");
+			}
+		});
 	}
 
 	function scanFloNumber(){
@@ -421,9 +378,6 @@
 			status : '1',
 		}
 		$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					openSuccessGritter('Success!', result.message);

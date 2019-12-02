@@ -258,7 +258,7 @@
 
   @if(in_array('S1', $navs))
   @if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+    <a href="{{ secure_url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
   </li>
   @endif
 
@@ -444,6 +444,28 @@
 @if(isset($page) && $page == "Applied")<li class="active">@else<li>@endif
   <a href="{{ url("/index/kaizen/applied") }}"><i class="fa fa-rocket"></i> <span>Applied List</span></a>
 </li>
+
+</ul>
+</li>
+@endif
+
+@if(in_array('S23', $navs))
+@if(isset($head) && $head == "Kaizen")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-hospital-o"></i> <span>Clinic</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "Diagnose")<li class="active">@else<li>@endif
+  <a href="{{ url("index/diagnose") }}"><i class="fa fa-stethoscope"></i> <span>Diagnose</span></a>
+</li>
+
+@if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
+  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+</li>
+
 
 </ul>
 </li>

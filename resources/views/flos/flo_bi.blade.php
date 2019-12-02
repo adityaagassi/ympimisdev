@@ -2,50 +2,51 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style>
-thead input {
-	width: 100%;
-	padding: 3px;
-	box-sizing: border-box;
-}
-table {
-	table-layout:fixed;
-}
-td{
-	overflow:hidden;
-	text-overflow: ellipsis;
-}
-td:hover {
-	overflow: visible;
-}
-thead>tr>th{
-	text-align:center;
-}
-tbody>tr>td{
-	text-align:center;
-}
-tfoot>tr>th{
-	text-align:center;
-}
-td:hover {
-	overflow: visible;
-}
-table.table-bordered{
-	border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-	border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-	border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-	border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+	thead input {
+		width: 100%;
+		padding: 3px;
+		box-sizing: border-box;
+	}
+	table {
+		table-layout:fixed;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	thead>tr>th{
+		text-align:center;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid rgb(211,211,211);
+	}
+	#loading, #error, #my_camera { display: none; }
 </style>
 @stop
 @section('header')
 <section class="content-header">
+	<div id="my_camera"></div>
 	<h1>
 		Final Line Outputs <span class="text-purple">ファイナルライン出力</span>
 		<small>Band Instrument <span class="text-purple">管楽器</span></small>
@@ -83,53 +84,56 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-header">
 					<h3 class="box-title">Fulfillment <span class="text-purple">FLO充足</span></h3>
 				</div>
-				<!-- /.box-header -->
 				<form class="form-horizontal" role="form" method="post" action="{{url('print/flo')}}">
-					{{-- <div class="box-body"> --}}
-						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="box-body">
-							<div class="row">
-								<div class="col-md-3">
-									<div class="input-group col-md-12">
-										<label>
-											<input type="checkbox" class="minimal-red" id="ymj">&nbsp;<i class="fa fa-arrow-left text-red"></i>
-											<br>
-											<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ &nbsp;<i class="fa fa-exclamation"></i></span>
-										</label>
-									</div>
-									<br>
-									<i style="font-weight: bold">Inner Box</i>
-									<div class="input-group col-md-12">
-										<div class="input-group-addon" id="icon-material">
-											<i class="glyphicon glyphicon-barcode"></i>
-										</div>
-										<input type="text" style="text-align: center" class="form-control" id="material_number" name="material_number" placeholder="Material Number" required>
-									</div>
-									&nbsp;
-									<div class="input-group col-md-12">
-										<div class="input-group-addon" id="icon-serial">
-											<i class="glyphicon glyphicon-barcode"></i>
-										</div>
-										<input type="text" style="text-align: center" class="form-control" id="serial_number" name="serial_number" placeholder="Serial Number" required>
-									</div>
-									<br>
-									<i style="font-weight: bold" id='icon-box2'>Outer Box</i>
-									<div class="input-group col-md-12">
-										<div class="input-group-addon" id="icon-material2">
-											<i class="glyphicon glyphicon-barcode"></i>
-										</div>
-										<input type="text" style="text-align: center" class="form-control" id="material_number2" name="material_number2" placeholder="Material Number" required>
-									</div>
-									&nbsp;
-									<div class="input-group col-md-12">
-										<div class="input-group-addon" id="icon-serial2">
-											<i class="glyphicon glyphicon-barcode"></i>
-										</div>
-										<input type="text" style="text-align: center" class="form-control" id="serial_number2" name="serial_number2" placeholder="Serial Number" required>
-									</div>
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="input-group col-md-12">
+									<label>
+										<input type="checkbox" class="minimal-red" id="ymj">&nbsp;<i class="fa fa-arrow-left text-red"></i>
+										<br>
+										<span class="text-red">&nbsp;<i class="fa fa-arrow-up"></i>&nbsp; Check if product for YMJ &nbsp;<i class="fa fa-exclamation"></i></span>
+									</label>
 								</div>
-								<div class="col-md-9">
-									<div class="input-group col-md-8 col-md-offset-2">
+								<br>
+								<i style="font-weight: bold">Inner Box</i>
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-material">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+									<input type="text" style="text-align: center" class="form-control" id="material_number" name="material_number" placeholder="Material Number" required>
+								</div>
+								&nbsp;
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-serial">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+									<input type="text" style="text-align: center" class="form-control" id="serial_number" name="serial_number" placeholder="Serial Number" required>
+								</div>
+								<br>
+								<i style="font-weight: bold" id='icon-box2'>Outer Box</i>
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-material2">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+									<input type="text" style="text-align: center" class="form-control" id="material_number2" name="material_number2" placeholder="Material Number" required>
+								</div>
+								<br>
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-serial2">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+									<input type="text" style="text-align: center" class="form-control" id="serial_number2" name="serial_number2" placeholder="Serial Number" required>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-md-12" id="results"></div>									
+								</div>
+							</div>
+							<div class="col-md-9">
+								<div class="col-md-12" style="padding-bottom: 10px;">
+									<div class="input-group col-md-8">
 										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">FLO
 										</div>
 										<input type="text" style="text-align: center; font-size: 22" class="form-control" id="flo_number" name="flo_number" placeholder="Not Available" required>
@@ -137,7 +141,8 @@ table.table-bordered > tfoot > tr > th{
 											<i class="glyphicon glyphicon-lock"></i>
 										</div>
 									</div>
-									&nbsp;
+								</div>
+								<div class="col-md-12">
 									<table id="flo_detail_table" class="table table-bordered table-striped">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
@@ -154,12 +159,9 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<!-- /.box-body -->
-					{{-- </div> --}}
+					</div>
 				</form>
-				<!-- /.box -->
 			</div>
-			<!-- /.col -->
 		</div>
 
 		<div class="col-xs-12">
@@ -167,7 +169,6 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-header">
 					<h3 class="box-title">Closure <span class="text-purple">FLO完了</span></h3>
 				</div>
-				<!-- /.box-header -->
 				<div class="box-body">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<input type="hidden" value="{{ Auth::user()->role_code }}" id="role_code" />
@@ -214,13 +215,10 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 					</div>
 				</div>
-				<!-- /.box-body -->
 			</div>
-			<!-- /.box -->
 		</div>
-		<!-- /.col -->
 	</div>
-	<!-- /.row -->
+
 	<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -255,10 +253,10 @@ table.table-bordered > tfoot > tr > th{
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/pdfmake.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/webcam.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -266,6 +264,7 @@ table.table-bordered > tfoot > tr > th{
 		}
 	});
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$(function () {
 			$('.select2').select2()
 		});
@@ -276,10 +275,13 @@ table.table-bordered > tfoot > tr > th{
 			radioClass   : 'iradio_minimal-red'
 		});
 
-		// if($('#flo_number').val() != ""){
-		// 	$('#flo_detail_table').DataTable().destroy();
-		// 	fillFloTable($("#flo_number").val());
-		// }
+		Webcam.set({
+			width: 4096,
+			height: 2160,
+			image_format: 'jpeg',
+			jpeg_quality: 100
+		});
+		Webcam.attach('#my_camera');
 
 		$('#flo_table').DataTable().destroy();
 		fillFloTableSettlement();
@@ -421,6 +423,23 @@ table.table-bordered > tfoot > tr > th{
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+$(function() {
+	$(document).keydown(function(e) {
+		switch(e.which) {
+			case 119:
+			take_snapshot();
+			break;
+		}
+	});
+});
+
+function take_snapshot() {
+	Webcam.snap( function(data_uri) {
+		document.getElementById('results').innerHTML = 
+		'<img id="imageprev" width="100%" src="'+data_uri+'"/>';
+	});
+}
+
 function scanMaterialNumber(){
 	$("#material_number").prop('disabled',true);
 	var material_number = $("#material_number").val();
@@ -430,9 +449,6 @@ function scanMaterialNumber(){
 		ymj : ymj
 	}
 	$.post('{{ url("scan/material_number") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
 				openInfoGritter('Info Success!', result.message);
@@ -477,16 +493,20 @@ function scanSerialNumber(){
 	var serial_number = $("#serial_number").val();
 	var flo_number = $("#flo_number").val();
 	var ymj = $("#ymj").is(":checked");
+	if(document.getElementById("imageprev")){
+		var base64image = document.getElementById("imageprev").src;
+	}
+	else{
+		var base64image = "";
+	}
 	var data = {
 		material_number : material_number,
 		serial_number : serial_number,
 		flo_number : flo_number,
+		base64image : base64image,
 		ymj : ymj
 	}
 	$.post('{{ url("scan/serial_number") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
 				openSuccessGritter('Success!', result.message);
@@ -494,9 +514,11 @@ function scanSerialNumber(){
 					$("#flo_number").val(result.flo_number);
 					$('#flo_detail_table').DataTable().destroy();
 					fillFloTable(result.flo_number);
+					document.getElementById('results').innerHTML = '';
 				}
 				else{
 					$('#flo_detail_table').DataTable().ajax.reload();
+					document.getElementById('results').innerHTML = '';
 				}
 				doublecheck();
 			}

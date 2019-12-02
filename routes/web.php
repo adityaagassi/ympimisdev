@@ -897,10 +897,12 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
+Route::get('index/kaizen/{section}', 'EmployeeController@indexKaizen2');
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 Route::get('index/kaizen/resume', 'EmployeeController@indexKaizenResume');
+Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
 
 
 //Clinic
@@ -1369,6 +1371,7 @@ Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionRepo
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
 Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
+Route::get('index/production_report/fetchDetailReportByActType/{id}', 'ProductionReportController@fetchDetailReportByActType');
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 
 
