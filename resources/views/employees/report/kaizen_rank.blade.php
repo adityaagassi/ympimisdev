@@ -98,7 +98,7 @@
 			</div>
 			<div class="col-xs-12">
 				<div id="kz_total" style="width: 100%; height: 500px;"></div>
-				<h1 style="color: white">TOTAL KAIZEN : 50</h1>
+				<!-- <h1 style="color: white">TOTAL KAIZEN : 50</h1> -->
 				<h3 style="color: white;">TOP KAIZEN Score :</h3>
 				<table class="table" style="color: white">
 					<thead>
