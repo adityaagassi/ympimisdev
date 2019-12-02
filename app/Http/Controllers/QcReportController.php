@@ -802,7 +802,12 @@ class QcReportController extends Controller
             if ($detail->kategori == "Eksternal") {
               if ($detail->status_code == "5") { // CPAR
                 if($detail->posisi == "staff") {
-                  return '<label class="label label-warning">'.$detail->chiefname.'</label>';
+                  if ($detail->chiefname != null) {
+                    return '<label class="label label-warning">'.$detail->chiefname.'</label>';                 
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->managername.'</label>'; 
+                  }
                 }
                 else if($detail->posisi == "chief") {
                   if ($detail->checked_chief == null) {
@@ -985,7 +990,12 @@ class QcReportController extends Controller
             else if ($detail->kategori == "Internal") {
               if ($detail->status_code == "5") { // CPAR
                 if($detail->posisi == "leader") {
-                  return '<label class="label label-warning">'.$detail->foremanname.'</label>';
+                  if ($detail->foremanname != null) {
+                    return '<label class="label label-warning">'.$detail->foremanname.'</label>';                    
+                  }
+                  else{
+                    return '<label class="label label-warning">'.$detail->managername.'</label>'; 
+                  }
                 }
                 else if($detail->posisi == "foreman") {
                   if ($detail->checked_foreman == null) {
@@ -1482,10 +1492,23 @@ group by monthname(mon) order by mon asc");
           $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
           $cpars = db::select($query);
 
+          $qc_cpars = QcCpar::find($id);
+
           if ($posisi == "staff") {
-              $to = "chief";
+            if ($qc_cpars->chief != NULL || $qc_cpars->foreman != NULL) {
+              $to = "chief";              
+            }
+            else{
+             $to = "manager"; 
+            }
+
           } elseif ($posisi == "leader") {
+            if ($qc_cpars->chief != NULL || $qc_cpars->foreman != NULL) {
               $to = "foreman";
+            }
+            else{
+              $to = "manager"; 
+            }
           } elseif ($posisi == "chief") {
               $to = "manager";
           } elseif ($posisi == "foreman") {
@@ -1506,30 +1529,52 @@ group by monthname(mon) order by mon asc");
               // var_dump($mailtoo);die();
             }
 
-          $qc_cpars = QcCpar::find($id);
+          
 
           if($cpars != null){
           // var_dump($cpars);die();
               if ($qc_cpars->email_status == NULL && $qc_cpars->posisi == "staff") {
-                $qc_cpars->email_status = "SentChief";
-                $qc_cpars->email_send_date = date('Y-m-d');
-                $qc_cpars->posisi = "chief";
-                $qc_cpars->progress = "25";
-                $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'),function ($message) {
-                    $message->attach('D:\xampp\htdocs\miraidev\public\files\JADWAL.pdf');
-                });
-                return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
+                if ($qc_cpars->chief != NULL) {
+                  $qc_cpars->email_status = "SentChief";
+                  $qc_cpars->email_send_date = date('Y-m-d');
+                  $qc_cpars->posisi = "chief";
+                  $qc_cpars->progress = "25";
+                  $qc_cpars->save();
+                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'),function ($message) {
+                      $message->attach('D:\xampp\htdocs\miraidev\public\files\JADWAL.pdf');
+                  });
+                  return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
+                }
+                else{
+                  $qc_cpars->email_status = "SentManager";
+                  $qc_cpars->email_send_date = date('Y-m-d');
+                  $qc_cpars->posisi = "manager";
+                  $qc_cpars->progress = "30";
+                  $qc_cpars->save();
+                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                  return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
+                }
               }
 
               else if ($qc_cpars->email_status == NULL && $qc_cpars->posisi == "leader") {
-                $qc_cpars->email_status = "SentForeman";
-                $qc_cpars->email_send_date = date('Y-m-d');
-                $qc_cpars->posisi = "foreman";
-                $qc_cpars->progress = "25";
-                $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
-                return redirect('/index/qc_report')->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CPAR');
+                if ($qc_cpars->foreman != NULL) {
+                  $qc_cpars->email_status = "SentForeman";
+                  $qc_cpars->email_send_date = date('Y-m-d');
+                  $qc_cpars->posisi = "foreman";
+                  $qc_cpars->progress = "25";
+                  $qc_cpars->save();
+                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                  return redirect('/index/qc_report')->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CPAR');
+                }
+                else{
+                  $qc_cpars->email_status = "SentManager";
+                  $qc_cpars->email_send_date = date('Y-m-d');
+                  $qc_cpars->posisi = "manager";
+                  $qc_cpars->progress = "30";
+                  $qc_cpars->save();
+                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                  return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
+                }
               }
 
               else if(($qc_cpars->email_status == "SentChief" && $qc_cpars->posisi == "chief") || ($qc_cpars->email_status == "SentForeman" && $qc_cpars->posisi == "foreman")){
@@ -1538,7 +1583,7 @@ group by monthname(mon) order by mon asc");
                 $qc_cpars->posisi = "manager";
                 $qc_cpars->progress = "30";
                 $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                Mail::to('rioirvansyah6@gmail.com')->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
               }
 
@@ -1548,7 +1593,7 @@ group by monthname(mon) order by mon asc");
                 $qc_cpars->posisi = "dgm";
                 $qc_cpars->progress = "40";
                 $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                Mail::to('anton.budi.santoso@music.yamaha.com')->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CPAR');
               }
 
@@ -1558,7 +1603,7 @@ group by monthname(mon) order by mon asc");
                 $qc_cpars->posisi = "gm";
                 $qc_cpars->progress = "50";
                 $qc_cpars->save();
-                Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cpars, 'cpar'));
+                Mail::to('aditya.agassi@music.yamaha.com')->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CPAR');
               }
               else if($qc_cpars->email_status == "SentGM" && $qc_cpars->posisi == "gm"){

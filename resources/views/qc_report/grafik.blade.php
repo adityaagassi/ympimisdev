@@ -229,7 +229,7 @@ table > thead > tr > th{
                 <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Departemen</th>
                 <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
                 <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="3">QA Verification</th>
+                <th style="background-color:#448aff;width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="3">QA Verification</th>
 
               </tr>
               <tr>
@@ -618,9 +618,10 @@ table > thead > tr > th{
           var namasl = value.namasl;
           var namasl2 = namasl.split(' ').slice(0,2).join(' ');
 
-          var namacf = value.namacf;
-          var namacf2 = namacf.split(' ').slice(0,2).join(' ');
-
+          if (value.namacf != null) {
+            var namacf = value.namacf;
+            var namacf2 = namacf.split(' ').slice(0,2).join(' ');
+          }
           var namam = value.namam;
           var namam2 = namam.split(' ').slice(0,2).join(' ');
 
@@ -667,34 +668,41 @@ table > thead > tr > th{
              
             }
 
-              //chief / foreman
-              if (value.checked_chief == "Checked" || value.checked_foreman == "Checked") {
-                  if (value.posisi_cpar == "chief" || value.posisi_cpar == "foreman") {
-                      if (d == 0) {  
-                          // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                          statuscf = '<span class="label label-danger">'+namacf2+'</span>';   
-                          color = 'style="background-color:red"';                  
-                          d = 1;
-                        } else {
-                          statuscf = '';
-                        }
+              //jika tidak ada chief/foreman
+              if (value.namacf != null) {
+                //chief / foreman
+                if (value.checked_chief == "Checked" || value.checked_foreman == "Checked") {
+                    if (value.posisi_cpar == "chief" || value.posisi_cpar == "foreman") {
+                        if (d == 0) {  
+                            // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                            statuscf = '<span class="label label-danger">'+namacf2+'</span>';   
+                            color = 'style="background-color:red"';                  
+                            d = 1;
+                          } else {
+                            statuscf = '';
+                          }
+                    }
+                    else{
+                        statuscf = '<span class="label label-success">'+namacf2+'</span>';
+                        color = 'style="background-color:green"'; 
+                        // statuscf = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                    }
+                }
+                else{
+                  if (d == 0) {  
+                    // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                    statuscf = '<span class="label label-danger">'+namacf2+'</span>'; 
+                    color = 'style="background-color:red"';                  
+                    d = 1;
+                  } else {
+                    statuscf = '';
                   }
-                  else{
-                      statuscf = '<span class="label label-success">'+namacf2+'</span>';
-                      color = 'style="background-color:green"'; 
-                      // statuscf = '<img src="{{ url("ok.png")}}" width="40" height="40">';
-                  }
-              }
-              else{
-                if (d == 0) {  
-                  // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                  statuscf = '<span class="label label-danger">'+namacf2+'</span>'; 
-                  color = 'style="background-color:red"';                  
-                  d = 1;
-                } else {
-                  statuscf = '';
                 }
               }
+              else{
+                statuscf = 'None';
+              }
+
 
               //manager
               if (value.checked_manager == "Checked") {

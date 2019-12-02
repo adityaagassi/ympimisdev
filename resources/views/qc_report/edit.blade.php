@@ -89,7 +89,7 @@
           
           <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
-       @elseif($cpars->email_status == NULL && $cpars->posisi == "leader" && Auth::user()->username == $cpars->staff)
+       @elseif($cpars->email_status == NULL && $cpars->posisi == "leader" && Auth::user()->username == $cpars->leader)
            <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Foreman</a>
 
        @else
@@ -363,7 +363,7 @@
           <div class="box-body">
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
             <div class="form-group row" align="left">
-              <label class="col-sm-2" style="font-size: 20px">Immediate Action<span class="text-red">*</span></label>
+              <label class="col-sm-2" style="font-size: 18px">Immediate Action<span class="text-red">*</span></label>
               <div class="col-sm-12">
                 <textarea type="text" class="form-control" name="action" placeholder="Masukkan Deskripsi">{{ $cpars->tindakan }}</textarea>
                 <br><div class="btn-group">
@@ -587,6 +587,7 @@
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @endif
                 </tr>
+                @if($cpars->chief != NULL || $cpars->foreman != NULL)
                 <tr>
                     <td colspan="2"><b>
                         @if($cpars->staff != NULL) 
@@ -607,6 +608,7 @@
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
                     @endif
                 </tr>
+                @endif
                 <tr>
                     <td colspan="2"><b>Manager</b></td>
                     <td colspan="2"><b>
