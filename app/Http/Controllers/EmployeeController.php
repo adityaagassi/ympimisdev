@@ -1728,7 +1728,7 @@ public function fetchDataKaizen()
   return DataTables::of($kzn)
   ->addColumn('fr_stat', function($kzn){
     if ($kzn->status == -1) {
-      if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief') {
+      if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager') {
         return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Yet Verified</a>';
       } else {
         return '<span class="label bg-yellow">Yet Verified</span>';
@@ -1912,7 +1912,7 @@ public function fetchKaizenReport(Request $request)
   select distinct department, section, `group`, 0 as kaizen from mutation_logs where valid_to is null
   ) as kz
   left join total_meeting_codes on kz.`group` = total_meeting_codes.group_name
-  where department <> 'Japan Staf' and `code` is  not null and `code` not in ('OFC', 'SEC', 'GA', 'CTN')
+  where department <> 'Japan Staf' and `code` is  not null and `code` not in ('OFC', 'SEC', 'GA', 'CTN', 'DRV')
   group by department, section";
 
   $kz_total = db::select($chart1);

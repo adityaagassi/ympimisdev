@@ -166,10 +166,6 @@
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
                             </a>
                             <br>
-                            <a href="{{ url("index/employee/service") }}">
-                                <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
-                            </a>
-                            <br>
                             <a href="{{ url("index/emergency_response") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Condition ()
                             </a>
@@ -180,6 +176,10 @@
                             <br>
                             <a href="{{ url("index/kaizen/report") }}">
                                 <i class="fa fa-caret-right"></i> Kaizen Teian Rank ()
+                            </a>
+                            <br>
+                            <a href="{{ url("index/kaizen/resume") }}">
+                                <i class="fa fa-caret-right"></i> Kaizen Teian Resume ()
                             </a>
                             <br>
                         </td>
@@ -228,15 +228,7 @@
                             <br>
                             <a href="{{ url("index/map_suhu") }}">
                                 <i class="fa fa-caret-right"></i> Temperature Map
-                            </a>
-                            <br>
-                            <a href="{{ url("index/suhu_1") }}">
-                                <i class="fa fa-caret-right"></i> Suhu Server Room
-                            </a> 
-                            <br>
-                            <a href="{{ url("index/suhu_2") }}">
-                                <i class="fa fa-caret-right"></i> Suhu Office
-                            </a>                             
+                            </a>                           
                         </td>
                     </tr>
 
@@ -256,6 +248,48 @@
                             <a href="#">
                                 <i class="fa fa-caret-right"></i> Raw Material Monitoring (?)
                             </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>HRqu & e-Kaizen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="{{ url("index/employee/service") }}">
+                                <i class="fa fa-caret-right"></i> HRqu (従業員の情報サービス)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/employee/service") }}">
+                                <i class="fa fa-caret-right"></i> e-Kaizen
+                            </a>
+                            <br>
+                            <a href="#">
+                                <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress 
+                            </a>
+                            <br>
+                            <a href="#">
+                                <i class="fa fa-caret-right"></i> List Unverified e-Kaizen 
+                            </a>
+                            <br>
+                            <a href="#">
+                                <i class="fa fa-caret-right"></i> List Verified e-Kaizen
+                            </a>
+                            <br>
+                            <a href="#">
+                                <i class="fa fa-caret-right"></i> Report All Kaizen
+                            </a>
+                            <br>
+                            <a href="{{ url("index/kaizen/report") }}">
+                                <i class="fa fa-caret-right"></i> Report Kaizen Excellent
+                            </a>
+                            <br>
                         </td>
                     </tr>
                 </tbody>
