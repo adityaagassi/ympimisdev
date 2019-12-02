@@ -45,6 +45,7 @@ Route::get('/', function () {
 	if (Auth::check()) {
 		if (Auth::user()->role_code == 'emp-srv') {
 			return redirect()->action('EmployeeController@indexEmployeeService');
+			// return redirect()->route('index/employee/service/{ctg}', ['ctg' => 'home']);
 		} else {
 			return view('home');
 		}
@@ -899,6 +900,16 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
+Route::get('index/kaizen/resume', 'EmployeeController@indexKaizenResume');
+
+
+//Clinic
+Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
+	Route::get('index/diagnose', 'ClinicController@indexDiagnose');
+	
+});
+
+
 
 //INITIAL
 Route::get('index/initial/{id}', 'InitialProcessController@index');
@@ -1358,6 +1369,7 @@ Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionRepo
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
 Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
+Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 
 
 //Activity List

@@ -19,15 +19,13 @@
 <section class="content" style="padding:0">
   <div class="row" style="padding:0">
     <h1 style="color:white">
-      <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-        
-      </div>
-      <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-        
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        {{-- <button onclick="showModalResume()" class="btn btn-outline pull-right">Leader Task Resume</button> --}}
+        <a target="_blank" href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-outline pull-right">Leader Task Resume</a>
       </div>
       <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <center>
-          <b>Task Leader Monitoring Assembly (WI-A) (職長業務管理)</b>
+          <b>Leader Task  Monitoring Assembly (WI-A) (職長業務管理)</b>
         </center>
       </div>
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -74,6 +72,53 @@
                   </tr>
                 </thead>
                 <tbody id="data-activity">
+                  {{-- <tr>
+                    <td>Audit IK - QC Koteihyo</td>
+                    <td>10</td>
+                    <td>7</td>
+                    <td>70%</td>
+                    <td>7</td>
+                    <td>0</td>
+                  </tr> --}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal2" style="color: black;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Leader Task Monitoring</b></h4>
+          <h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
+                <thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th colspan="8" style="text-align: center;" id="leader_name"></th>
+                  </tr>
+                  <tr>
+                    <th>Activity Name</th>
+                    <th>Activity Type</th>
+                    <th style="width: 13%">Plan</th>
+                    <th style="width: 13%">Actual</th>
+                    <th style="width: 13%">Presentase</th>
+                    <th style="width: 13%">Details</th>
+                    {{-- <th style="width: 13%">OK</th>
+                    <th style="width: 13%">NG</th> --}}
+                  </tr>
+                </thead>
+                <tbody id="data-activity2">
                   {{-- <tr>
                     <td>Audit IK - QC Koteihyo</td>
                     <td>10</td>
@@ -294,6 +339,35 @@
     this.plotHeight / 2 - this.series[3].points[0].shapeArgs.innerR -
     (this.series[3].points[0].shapeArgs.r - this.series[3].points[0].shapeArgs.innerR) / 2 + offsetTop
   );
+
+  if (!this.series[4].label) {
+    if(this.series[4].points[0].y != null){
+      this.series[4].label = this.renderer
+      .label(this.series[4].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+      .css({
+        'color': '#FFFFFF',
+        'fontWeight':'bold',
+        'textAlign': 'center'
+      })
+      .add(this.series[4].group);
+    }
+    else{
+      this.series[4].label = this.renderer
+      .label(' ', 0, 0, 'rect', 0, 0, true, true)
+      .css({
+        'color': '#FFFFFF',
+        'fontWeight':'bold',
+        'textAlign': 'center'
+      })
+      .add(this.series[4].group);
+    }
+  }
+
+  this.series[4].label.translate(
+    this.chartWidth / 2 - this.series[4].label.width + offsetLeft,
+    this.plotHeight / 2 - this.series[4].points[0].shapeArgs.innerR -
+    (this.series[4].points[0].shapeArgs.r - this.series[4].points[0].shapeArgs.innerR) / 2 + offsetTop
+  );
 }
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -311,8 +385,10 @@
               var result_monthly;
               var result_weekly;
               var result_daily;
+              var result_prev;
               var cur_day = parseInt(result.datas[i][j].persen_cur_day);
               var cur_week = parseInt(result.datas[i][j].persen_cur_week);
+              var result_prev = parseInt(result.datas[i][j].persen_prev);
 
               if(parseInt(result.datas[i][j].persen_monthly) == 0){
                 result_monthly = null;
@@ -501,7 +577,12 @@
                         point: {
                             events: {
                               click: function(e) {
+                                  if(e.point.series.name == 'Prev Month'){
+                                    ShowModalChartPrev(this.options.key,e.point.series.name);
+                                  }
+                                  else if(e.point.series.name != 'Current Day'){
                                     ShowModalChart(this.options.key,e.point.series.name);
+                                  }
                               }
                             },
                         },
@@ -523,7 +604,7 @@
                         color: Highcharts.getOptions().colors[0],
                         outerRadius: '100%',
                         innerRadius: '84%',
-                        y: 50,
+                        y: result_prev,
                         key: result.datas[i][j].leader_name
                       }],
                       showInLegend: true,
@@ -841,4 +922,55 @@
           });
         }
 
+        function ShowModalChartPrev(leader_name,frequency) {
+          $('#myModal').modal('show');
+          var week_date = $('#week_date').val();
+          var data = {
+            leader_name:leader_name,
+            week_date:week_date
+          }
+          $('#data-activity').append().empty();
+          $('#judul').append().empty();
+          $('#leader_name').append().empty();
+          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
+            if(result.status){
+              console.log(result.detail);
+
+              $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
+              $('#leader_name').append('<b>'+leader_name+'</b>');
+
+              //Middle log
+              var total_plan = 0;
+              var total_aktual = 0;
+              var presentase = 0;
+              var body = '';
+              var url = '{{ url("") }}';
+              for (var i = 0; i < result.detail.length; i++) {
+                body += '<tr>';
+                body += '<td>'+result.detail[i].activity_name+'</td>';
+                body += '<td>'+result.detail[i].activity_type+'</td>';
+                body += '<td>'+result.detail[i].plan+'</td>';
+                body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
+                body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
+                body += '<td><a target="_blank" class="btn btn-primary btn-sm" href="'+url+'/'+result.detail[i].link+'">Details</a></td>';
+                // body += '<td>'+result.good[i].quantity+'</td>';
+                body += '</tr>';
+
+                total_plan += parseInt(result.detail[i].plan);
+                total_aktual += parseInt(result.detail[i].jumlah_aktual);
+              }
+              presentase = (total_aktual / total_plan)*100;
+              body += '<tr>';
+              body += '<td colspan="2"><b>Total</b></td>';
+              body += '<td><b>'+total_plan+'</b></td>';
+              body += '<td><b>'+total_aktual+'</b></td>';
+              body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+              body += '<td></td>';
+              body += '</tr>';
+              $('#data-activity').append(body);
+
+            }
+
+          });
+        }
 </script>

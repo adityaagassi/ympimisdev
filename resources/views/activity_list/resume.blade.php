@@ -92,7 +92,7 @@
             <div class="col-md-12 col-md-offset-4">
               <div class="col-md-3">
                 <div class="form-group pull-right">
-                  <a href="{{ url('index/production_report/index/'.$id) }}" class="btn btn-warning">Back</a>
+                  <button onclick="window.close();" class="btn btn-warning">Back</button>
                   <a href="{{ url('index/activity_list/resume/'.$id) }}" class="btn btn-danger">Clear</a>
                   <button type="submit" class="btn btn-primary col-sm-14">Search</button>
                 </div>
@@ -148,7 +148,12 @@
                   @endif
                   @foreach($leader3 as $leader)
                     @if($leader->name == $activity_list->leader_dept)
-                      <td style="background-color: #4aff77"></td>
+                      <td style="background-color: #4aff77">
+                        Plan Time : <?php 
+                          $timesplit=explode(':',$activity_list->plan_time);
+                          $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
+                        {{$min.' Min'}} <br>
+                        Plan Item : {{ $activity_list->plan_item }}</td>
                     @else
                       <td></td>
                     @endif

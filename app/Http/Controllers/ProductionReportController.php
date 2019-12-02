@@ -92,11 +92,26 @@ class ProductionReportController extends Controller
         foreach($department as $department){
             $departments = $department->department_name;
         }
+
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->get();
+        $queryLeader2 = "select DISTINCT(employees.name), employees.employee_id
+            from employees
+            join mutation_logs on employees.employee_id= mutation_logs.employee_id
+            join promotion_logs on employees.employee_id= promotion_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
+        $leader = DB::select($queryLeader2);
+        $leader2 = DB::select($queryLeader2);
+        $leader3 = DB::select($queryLeader2);
+
         $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
         return view('production_report.report_all2',  array('title' => 'Leader Task Monitoring',
             'title_jp' => '職長業務管理',
             'id' => $id,
             'data' => $data,
+            'activity_list' => $activityList,
+            'leader2' => $leader2,
+            'leader3' => $leader3,
+            'leader' => $leader,
             'departments' => $departments,
         ))->with('page', 'Leader Task Monitoring');
     }
@@ -110,43 +125,41 @@ class ProductionReportController extends Controller
         $bulan = date('Y-m');
       }
 
+      $queryPMonth = "select DATE_FORMAT(date_sub(concat('".$bulan."','-01'), INTERVAL 1 MONTH),'%Y-%m') as last_month";
+      $pMonth = DB::select($queryPMonth);
+
+      foreach($pMonth as $pMonth){
+        $prevMonth = $pMonth->last_month;
+      }
+
       $queryLeader = "select DISTINCT(leader_dept) from activity_lists where department_id = '".$id."'";
       $leaderrr = DB::select($queryLeader);
+
       $data[] = null;
       $dataleader[] = null;
+
       foreach($leaderrr as $leader){
         $dataleader = $leader->leader_dept; 
         $data[] = db::select("select monthly.leader_name,
         monthly.jumlah_activity_monthly,
-        monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
-        COALESCE(((monthly.jumlah_audit + monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
-        weekly.jumlah_activity_weekly * daily.jumlah_week as jumlah_activity_weekly,
+        monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
+        COALESCE(((monthly.jumlah_training + monthly.jumlah_sampling + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
+        weekly.jumlah_activity_weekly as jumlah_activity_weekly,
         weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process as jumlah_weekly,
-        COALESCE(((weekly.jumlah_sampling + weekly.jumlah_audit_process + weekly.jumlah_audit)/(weekly.jumlah_activity_weekly * daily.jumlah_week))*100,0) as persen_weekly,
-        daily.jumlah_activity_daily * daily.jumlah_day as jumlah_activity_daily,
+        COALESCE(((weekly.jumlah_sampling + weekly.jumlah_audit_process + weekly.jumlah_audit)/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
+        daily.jumlah_activity_daily as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
-        COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily * daily.jumlah_day))*100,0) as persen_daily,
+        COALESCE(((daily.jumlah_daily_check)/(daily.jumlah_activity_daily))*100,0) as persen_daily,
         daily.jumlah_day,
         daily.cur_day,
         (daily.cur_day / daily.jumlah_day)*100 as persen_cur_day,
-        daily.jumlah_week,
-        daily.cur_week,
-        (daily.cur_week / daily.jumlah_week)*100 as persen_cur_week
+        prev.plan_prev as plan_prev,
+        prev.aktual_prev as aktual_prev,
+        prev.persen_prev as persen_prev
         from 
-        (select count(activity_type) as jumlah_activity_monthly,
+        (select sum(plan_item) as jumlah_activity_monthly,
         leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(point_check.leader)) as jumlah_audit
-                from production_audits
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                                join point_check_audits as point_check on point_check.id = point_check_audit_id
-                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
-                    and actlist.frequency = 'Monthly'
-                                and point_check.leader = '".$dataleader."'
-                                and production_audits.deleted_at is null 
-                              and actlist.department_id = '".$id."'
-                                GROUP BY point_check.leader),0)
-        as jumlah_audit,
-        COALESCE((select count(DISTINCT(training_reports.leader)) as jumlah_training
+        COALESCE((select count(*) as jumlah_training
                 from training_reports
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$bulan."'
@@ -156,7 +169,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY training_reports.leader),0)
         as jumlah_training,
-        COALESCE((select count(DISTINCT(sampling_checks.leader)) as jumlah_sampling
+        COALESCE((select count(*) as jumlah_sampling
                 from sampling_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
@@ -166,7 +179,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY sampling_checks.leader),0)
         as jumlah_sampling,
-        COALESCE((select count(DISTINCT(audit_report_activities.leader)) as jumlah_laporan
+        COALESCE((select count(*) as jumlah_laporan
                 from audit_report_activities
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$bulan."'
@@ -176,7 +189,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_report_activities.leader),0)
         as jumlah_laporan_aktivitas,
-        COALESCE((select count(DISTINCT(labelings.leader)) as jumlah_labeling
+        COALESCE((select count(DISTINCT(labelings.id)) as jumlah_labeling
                 from labelings
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(labelings.date,'%Y-%m') = '".$bulan."'
@@ -193,9 +206,9 @@ class ProductionReportController extends Controller
         and activity_lists.frequency = 'Monthly'
         GROUP BY leader_dept) monthly,
 
-        (select count(activity_type) as jumlah_activity_weekly,
+        (select sum(plan_item) as jumlah_activity_weekly,
         leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
+        COALESCE((select count(*) as jumlah_sampling
                 from sampling_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
@@ -205,7 +218,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY sampling_checks.leader),0)
         as jumlah_sampling,
-        COALESCE((select count(DISTINCT(audit_processes.date)) as jumlah_sampling
+        COALESCE((select count(*) as jumlah_sampling
                 from audit_processes
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$bulan."'
@@ -215,7 +228,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_processes.leader),0)
         as jumlah_audit_process,
-        COALESCE((select count(DISTINCT(production_audits.week_name)) as jumlah_audit
+        COALESCE((select count(*) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                                 join point_check_audits as point_check on point_check.id = point_check_audit_id
@@ -233,8 +246,8 @@ class ProductionReportController extends Controller
         and activity_lists.frequency = 'Weekly'
         GROUP BY leader_dept) weekly,
 
-        (select COALESCE(count(activity_type),0) as jumlah_activity_daily,
-        COALESCE((select count(DISTINCT(daily_checks.check_date)) as jumlah_laporan
+        (select COALESCE(sum(plan_item),0) as jumlah_activity_daily,
+        COALESCE((select count(*) as jumlah_laporan
                 from daily_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$bulan."'
@@ -245,14 +258,93 @@ class ProductionReportController extends Controller
         as jumlah_daily_check,
         (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
         4 as jumlah_week,
-        (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND concat(left(CURDATE(),7),substr(CURDATE(),8,3))) as cur_day,
+        (SELECT IF(DATE_FORMAT(CURDATE(),'%Y-%m') != '".$bulan."',
+            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND LAST_DAY(concat('".$bulan."','-01'))),
+            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(DATE_FORMAT(CURDATE(),'%Y-%m'),'-01') AND CURDATE())) as jumlah_day)
+        as cur_day,
         (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
         and leader_dept = '".$dataleader."'
         and activity_lists.frequency = 'Daily'
-        GROUP BY leader_dept) daily");
+        GROUP BY leader_dept) daily,
+        (SELECT 
+            SUM(detail.plan) as plan_prev,
+            SUM(detail.jumlah_aktual) as aktual_prev,
+            (SUM(detail.jumlah_aktual)/SUM(detail.plan))*100 as persen_prev
+        from 
+        (select activity_lists.id as id_activity,
+            sum(plan_item) as plan,
+            IF(activity_type = 'Audit',
+            (select count(*) as jumlah_audit
+                from production_audits
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$dataleader."'
+                                and actlist.department_id = '".$id."'
+                                and actlist.id = id_activity
+                    ),
+            IF(activity_type = 'Training',
+            (select count(*) as jumlah_training
+                from training_reports
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Laporan Aktivitas',
+            (select count(*) as jumlah_laporan
+                from audit_report_activities
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Sampling Check',
+            (select count(*) as jumlah_sampling
+                from sampling_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Pengecekan Foto',
+            (select count(*) as jumlah_daily_check
+                from daily_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Labelisasi',
+            (select count(*) as jumlah_labeling
+                from labelings
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(labelings.date,'%Y-%m') = '".$prevMonth."'
+                                and labelings.leader = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Pemahaman Proses',
+            (select count(*) as jumlah_audit_process
+                from audit_processes
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$prevMonth."'
+                                and audit_processes.leader = '".$dataleader."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),0))))))) 
+            as jumlah_aktual
+                from activity_lists
+                        where leader_dept = '".$dataleader."'
+                        and department_id = '".$id."'
+                    and activity_name != 'Null'
+                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail) prev");
       }
       $monthTitle = date("F Y", strtotime($bulan));
 
@@ -264,7 +356,6 @@ class ProductionReportController extends Controller
         'id' => $id,
         'dataleader' => $dataleader,
         'monthTitle' => $monthTitle
-
       );
 
       return Response::json($response);
@@ -292,10 +383,7 @@ class ProductionReportController extends Controller
                      (detail.jumlah_aktual/detail.plan)*100 as persen
         from 
         (select activity_lists.id as id_activity,activity_name, activity_type,leader_dept,
-            IF(frequency = 'Daily',
-            (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') =            '".$week_date."'),
-            IF(frequency = 'Monthly',(select count(DISTINCT(fiscal_year)) as jumlah_week from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'),4)) 
-                 as plan,
+            sum(plan_item) as plan,
             IF(activity_type = 'Audit',CONCAT('index/production_audit/details/',activity_lists.id),
             IF(activity_type = 'Training',CONCAT('index/training_report/index/',activity_lists.id),
             IF(activity_type = 'Laporan Aktivitas',CONCAT('index/audit_report_activity/index/',activity_lists.id),
@@ -305,7 +393,7 @@ class ProductionReportController extends Controller
             IF(activity_type = 'Pemahaman Proses',CONCAT('index/audit_process/index/',activity_lists.id),0)))))))
             as link,
             IF(activity_type = 'Audit',
-            (select count(DISTINCT(production_audits.week_name)) as jumlah_audit
+            (select count(*) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
@@ -323,7 +411,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                     and  actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Laporan Aktivitas',
-            (select count(DISTINCT(audit_report_activities.leader)) as jumlah_laporan
+            (select count(*) as jumlah_laporan
                 from audit_report_activities
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$week_date."'
@@ -332,7 +420,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                     and  actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Sampling Check',
-            (select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
+            (select count(*) as jumlah_sampling
                 from sampling_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$week_date."'
@@ -341,7 +429,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                     and  actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Pengecekan Foto',
-            (select count(DISTINCT(daily_checks.check_date)) as jumlah_daily_check
+            (select count(*) as jumlah_daily_check
                 from daily_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$week_date."'
@@ -350,7 +438,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                     and actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Labelisasi',
-            (select count(DISTINCT(labelings.leader)) as jumlah_labeling
+            (select count(*) as jumlah_labeling
                 from labelings
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(labelings.date,'%Y-%m') = '".$week_date."'
@@ -359,7 +447,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                     and actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Pemahaman Proses',
-            (select count(DISTINCT(audit_processes.date)) as jumlah_audit_process
+            (select count(*) as jumlah_audit_process
                 from audit_processes
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$week_date."'
@@ -372,7 +460,8 @@ class ProductionReportController extends Controller
                         where leader_dept = '".$leader_name."'
                         and frequency = '".$frequency."'
                         and department_id = '".$id."'
-                    and activity_name != 'Null') detail");
+                    and activity_name != 'Null'
+                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
@@ -380,6 +469,124 @@ class ProductionReportController extends Controller
             'detail' => $detail,
             'leader_name' => $leader_name,
             'frequency' => $frequency,
+            'week_date' => $week_date,
+            'monthTitle' => $monthTitle
+        );
+        return Response::json($response);
+
+    }
+
+    public function fetchDetailReportPrev(Request $request,$id){
+        if($request->get('week_date') != Null){
+            $leader_name = $request->get('leader_name');
+            $week_date = $request->get('week_date');
+        }
+        else{
+            $leader_name = $request->get('leader_name');
+            $week_date = date('Y-m');
+        }
+
+        $queryPMonth = "select DATE_FORMAT(date_sub(concat('".$week_date."','-01'), INTERVAL 1 MONTH),'%Y-%m') as last_month";
+        $pMonth = DB::select($queryPMonth);
+
+        foreach($pMonth as $pMonth){
+            $prevMonth = $pMonth->last_month;
+        }
+
+        $detail = db::select("SELECT detail.id_activity,
+                     detail.link,
+                     detail.activity_name,
+                     detail.activity_type,
+                     detail.leader_dept,
+                     detail.plan,
+                     detail.jumlah_aktual,
+                     (detail.jumlah_aktual/detail.plan)*100 as persen
+        from 
+        (select activity_lists.id as id_activity,activity_name, activity_type,leader_dept,
+            sum(plan_item) as plan,
+            IF(activity_type = 'Audit',CONCAT('index/production_audit/details/',activity_lists.id),
+            IF(activity_type = 'Training',CONCAT('index/training_report/index/',activity_lists.id),
+            IF(activity_type = 'Laporan Aktivitas',CONCAT('index/audit_report_activity/index/',activity_lists.id),
+            IF(activity_type = 'Sampling Check',CONCAT('index/sampling_check/index/',activity_lists.id),
+            IF(activity_type = 'Pengecekan Foto',CONCAT('index/daily_check_fg/index/',activity_lists.id,'/',(select DISTINCT(product) from daily_checks where activity_list_id = activity_lists.id)),
+            IF(activity_type = 'Labelisasi',CONCAT('index/labeling/index/',activity_lists.id),
+            IF(activity_type = 'Pemahaman Proses',CONCAT('index/audit_process/index/',activity_lists.id),0)))))))
+            as link,
+            IF(activity_type = 'Audit',
+            (select count(*) as jumlah_audit
+                from production_audits
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$leader_name."'
+                                and actlist.department_id = '".$id."'
+                                and actlist.id = id_activity
+                    ),
+            IF(activity_type = 'Training',
+            (select count(*) as jumlah_training
+                from training_reports
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Laporan Aktivitas',
+            (select count(*) as jumlah_laporan
+                from audit_report_activities
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Sampling Check',
+            (select count(*) as jumlah_sampling
+                from sampling_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Pengecekan Foto',
+            (select count(*) as jumlah_daily_check
+                from daily_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$prevMonth."'
+                                and leader_dept = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),
+            IF(activity_type = 'Labelisasi',
+            (select count(*) as jumlah_labeling
+                from labelings
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(labelings.date,'%Y-%m') = '".$prevMonth."'
+                                and labelings.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id ='".$id."'
+                    ),
+            IF(activity_type = 'Pemahaman Proses',
+            (select count(*) as jumlah_audit_process
+                from audit_processes
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(audit_processes.date,'%Y-%m') ='".$prevMonth."'
+                                and audit_processes.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    ),0))))))) 
+            as jumlah_aktual
+                from activity_lists
+                        where leader_dept = '".$leader_name."'
+                        and department_id = '".$id."'
+                    and activity_name != 'Null'
+                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail");
+        $monthTitle = date("F Y", strtotime($prevMonth));
+
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
+            'leader_name' => $leader_name,
             'week_date' => $week_date,
             'monthTitle' => $monthTitle
         );
