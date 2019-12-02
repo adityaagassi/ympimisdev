@@ -122,7 +122,7 @@
         @if($cpars->email_status == "SentManager" && $cpars->checked_manager == "Checked") <!-- Manager -->
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke DGM" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke DGM</a>
 
-        @elseif(Auth::user()->username == $cpars->manager && $cpars->email_status == "SentDGM") <!-- Jika yang login Manager dan status-->
+        @elseif(Auth::user()->username == "pi1910003" && $cpars->email_status == "SentDGM") <!-- Jika yang login Manager dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
 
         @endif
@@ -132,7 +132,7 @@
         @if($cpars->email_status == "SentDGM" && $cpars->approved_dgm == "Checked") <!-- DGM -->
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke GM" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke GM</a>
 
-        @elseif(Auth::user()->username == $cpars->dgm && $cpars->email_status == "SentGM") <!-- Jika yang login DGM dan status-->
+        @elseif(Auth::user()->username == "m09061339" && $cpars->email_status == "SentGM") <!-- Jika yang login DGM dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
 
         @endif
@@ -144,7 +144,7 @@
 
           <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
-        @elseif(Auth::user()->username == $cpars->gm && $cpars->email_status == "SentBagian") <!-- Jika yang login GM dan status-->
+        @elseif(Auth::user()->username == "r14122906" && $cpars->email_status == "SentBagian") <!-- Jika yang login GM dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim Ke Bagian</label>
 
         @endif
