@@ -77,13 +77,13 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBuffingOpRanking(){
-		$title = 'Operators Ranking';
+		$title = 'Resume NG Rate & Productivity';
 		$title_jp = '??';
 
 		return view('processes.middle.display.buffing_op_ranking', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-		))->with('page', 'Operators Ranking');
+		))->with('page', 'Resume NG Rate & Productivity');
 	}
 
 	public function indexBuffingCanceled(){

@@ -60,7 +60,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 30000);
 		
 	});
 
@@ -71,6 +71,8 @@
 			bulan: bulan
 		}
 
+		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+		
 
 		$.get('{{ url("fetch/middle/bff_op_ng_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){

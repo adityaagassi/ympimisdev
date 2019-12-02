@@ -82,7 +82,7 @@
         </li>
 
         @if(isset($page) && $page == "queue")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/middle/buffing_canceled") }}"><i class="fa fa-exchange"></i> <span>Buffing Canceled</span></a>
+          <a href="{{ url("/index/middle/buffing_canceled") }}"><i class="fa fa-exchange"></i> <span>Buffing Cancel</span></a>
         </li>
 
         @if(isset($page) && $page == "wip")<li class="active">@else<li>@endif
@@ -431,7 +431,7 @@
 @if(in_array('S21', $navs))
 @if(isset($head) && $head == "Kaizen")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
-   <i class="fa fa-credit-card"></i> <span>E - kaizen</span>
+   <i class="fa fa-credit-card"></i> <span>E - Kaizen Teian</span>
    <span class="pull-right-container">
     <i class="fa fa-angle-left pull-right"></i>
   </span>
