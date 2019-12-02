@@ -17,11 +17,11 @@ class RoomController extends Controller
 
 		if($location == 'buffing'){
 			$plc = new ActMLEasyIf(1);
-			for ($i=1; $i < 12 ; $i++) {
+			for ($i=1; $i < 9 ; $i++) {
 				array_push($datas, $plc->read_data('D'.$i, 1));
 			}
 
-			// $datas = [1,1,0,0,1,1,1,1,0,1,0];
+			// $datas = [1,1,1,0,1,1,1,1,0,1,0];
 		}
 		if($location == 'office'){
 			$plc = new ActMLEasyIf(2);
