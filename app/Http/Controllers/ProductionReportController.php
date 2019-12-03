@@ -474,7 +474,10 @@ class ProductionReportController extends Controller
                     GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail
             left join production_audits on production_audits.activity_list_id =  detail.id_activity
             left join audit_processes on audit_processes.activity_list_id =  detail.id_activity
-            left join sampling_checks on sampling_checks.activity_list_id =  detail.id_activity");
+            left join sampling_checks on sampling_checks.activity_list_id =  detail.id_activity
+            where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
+            OR DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$week_date."'
+            OR DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$week_date."'");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
