@@ -700,6 +700,8 @@
           $('#data-activity-head').append().empty();
           $('#judul').append().empty();
           $('#leader_name').append().empty();
+          var dd = [];
+          // var dd = new Object();
           $.get('{{ url("index/production_report/fetchDetailReport/".$id) }}', data, function(result, status, xhr) {
             if(result.status){
 
@@ -712,7 +714,6 @@
               var body = '';
               var head = '';
               var jj = [];
-              var dd = [];
               var no = 1;
               var aa = 1;
               var bb = 0;
@@ -732,30 +733,30 @@
                   body += '<tr>';
                     body += '<td>'+no+'</td>';
                     body += '<td>'+result.detail[i].activity_name+'</td>';
-                    body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
+                    // body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
                     var data2 = {
                       leader_name:leader_name,
                       id_activity:result.detail[i].id_activity,
                       id_point_check:result.detail[i].point_check_audit_id,
                     };
-                    // if(result.detail[i].activity_type == 'Audit'){
-                    //   $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
-                    //     dd.push(result2.point_check[0].point_check);
-                    //   });
-                    //   // body += dd;
-                    // }
-                    // else{
-                    //   body += '<td></td>';
-                    // }
-
-                    // console.log(dd);
-                    for(var ttt = 0; ttt < dd.length; ttt++){
-                        body += dd[ttt];
+                    if(result.detail[i].activity_type == 'Audit'){
+                      $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
+                        dd.push({data : result2.title});
+                        // $.each(result2.point_check, function(key, value){
+                        //   // console.log(value.title);
+                        // });
+                      });                      
                     }
-
+                    else{
+                      body += '<td></td>';
+                    }                    
+                    // console.log(dd);
                     for(var jjj = 0; jjj< jj.length; jjj++){
-                      if(jj[jjj] == result.detail[i].audit_week || jj[jjj] == result.detail[i].sampling_week){
-                        body += '<td style="background-color: #4aff77"></td>';
+                      if(jj[jjj] == result.detail[i].audit_week){
+                        body += '<td style="background-color: #4aff77">'+result.detail[i].audit_date+'</td>';
+                      }
+                      else if(jj[jjj] == result.detail[i].sampling_week){
+                        body += '<td style="background-color: #4aff77">'+result.detail[i].sampling_date+'</td>';
                       }
                       else{
                         body += '<td></td>';

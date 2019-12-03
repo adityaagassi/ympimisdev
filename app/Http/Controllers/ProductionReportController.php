@@ -378,12 +378,19 @@ class ProductionReportController extends Controller
             $week_date = date('Y-m');
         }
 
-        $date = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+        if($frequency == 'Daily'){
+            $date = db::select("select SUBSTR(week_date,-2) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+        }
+        else{
+            $date = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+        }
 
         $detail = db::select("SELECT detail.id_activity,
                      COALESCE(point_check_audit_id,0) as point_check_audit_id,
                      production_audits.week_name as audit_week,
                      sampling_checks.week_name as sampling_week,
+                     sampling_checks.date as sampling_date,
+                     production_audits.date as audit_date,
                      detail.link,
                      detail.activity_name,
                      detail.activity_type,
@@ -472,12 +479,9 @@ class ProductionReportController extends Controller
                         and department_id = '".$id."'
                     and activity_name != 'Null'
                     GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail
-            left join production_audits on production_audits.activity_list_id =  detail.id_activity
-            left join audit_processes on audit_processes.activity_list_id =  detail.id_activity
-            left join sampling_checks on sampling_checks.activity_list_id =  detail.id_activity
-            where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
-            OR DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$week_date."'
-            OR DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$week_date."'");
+            left join production_audits on production_audits.activity_list_id = detail.id_activity and DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
+            left join audit_processes on audit_processes.activity_list_id =  detail.id_activity and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$week_date."'
+            left join sampling_checks on sampling_checks.activity_list_id =  detail.id_activity and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$week_date."'");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
@@ -544,13 +548,16 @@ class ProductionReportController extends Controller
             $leader_name = $request->get('leader_name');
         }
 
-        $point_check = db::select("select *
+        $point_check = db::select("select title
                 from point_check_audits
                 where point_check_audits.id = '".$id_point_check."' LIMIT 1");
+        foreach($point_check as $point_check){
+            $title = $point_check->title;
+        }
 
         $response = array(
             'status' => true,
-            'point_check' => $point_check,
+            'title' => $title,
             'id_activity' => $id_activity,
             'leader_name' => $leader_name,
         );
