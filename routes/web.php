@@ -1372,10 +1372,11 @@ Route::get('fetch/production_report/detail_training/{id}', 'ProductionReportCont
 Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionReportController@detailSamplingCheck');
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
-Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
+Route::get('index/production_report/fetchDetailReportWeekly/{id}', 'ProductionReportController@fetchDetailReportWeekly');
 Route::get('index/production_report/fetchPointCheck/{id}', 'ProductionReportController@fetchPointCheck');
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 Route::get('index/production_report/fetchDetailReportMonthly/{id}', 'ProductionReportController@fetchDetailReportMonthly');
+Route::get('index/production_report/fetchDetailReportDaily/{id}', 'ProductionReportController@fetchDetailReportDaily');
 
 
 //Activity List
