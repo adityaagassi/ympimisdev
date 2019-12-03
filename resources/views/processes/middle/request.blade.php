@@ -132,6 +132,8 @@
 			else{
 				audio_error.play();
 				openErrorGritter('Error', result.error);
+				$("#tag").val("");
+				$('#tag').focus();
 			}
 		});
 	}

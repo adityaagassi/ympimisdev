@@ -5342,6 +5342,7 @@ class MiddleProcessController extends Controller
 
 				$response = array(
 					'status' => true,
+					'message' => 'Material berhasil di request ke maekotei.',
 					'datas' => $mat,
 					'datas_log' => $req
 				);
