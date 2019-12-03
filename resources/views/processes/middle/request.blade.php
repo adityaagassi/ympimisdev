@@ -29,12 +29,26 @@
 			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
-	<div class="input-group">
-		<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
-		<input type="text" class="form-control input-lg" placeholder="Scan Kanban Solder . . ." style="text-align: center" id="tag">
-		<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+	<div class="col-md-12" style="padding-bottom:10px;">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+			<input type="text" class="form-control input-lg" placeholder="Scan Kanban Solder . . ." style="text-align: center" id="tag">
+			<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+		</div>
 	</div>
-	<div id="chart"></div>
+	<div class="col-md-12">
+		<table class="table table-bordered">
+			<thead>
+				<th>Material Number</th>
+				<th>Model</th>
+				<th>Key</th>
+				<th>Kanban</th>
+				<th>Quantity</th>
+			</thead>
+			<tbody id="tableBody">
+			</tbody>
+		</table>
+	</div>
 </section>
 
 @endsection
@@ -105,90 +119,90 @@
 
 				var tableData = "";
 
-				$('#logs').DataTable().destroy();
-				$("#bodys").empty();
+				$('#tableBody').html("");
 				$.each(result.datas, function(index, value) {
 					tableData += "<tr>";
-					tableData += "<td>"+value.model+" "+value.key+"</td>";
-					tableData += "<td>"+value.material_description+"</td>";
-					tableData += "<td>"+value.item+"</td>";
+					tableData += "<td>"+value.material_number+"</td>";
+					tableData += "<td>"+value.model+"</td>";
+					tableData += "<td>"+value.key+"</td>";
+					tableData += "<td>"+value.kanban+"</td>";
 					tableData += "<td>"+value.quantity+"</td>";
 					tableData += "</tr>";
-
-					if (value.quantity >= value.lot_transfer * 2) {
-						cat.push(value.model+" "+value.key);
-						material_req.push((value.quantity / value.lot_transfer));
-						limit.push(2);	
-					}
-				})
-
-				Highcharts.chart('chart', {
-					chart: {
-						backgroundColor: null,
-						type: 'column',
-					},
-					exporting: { enabled: false },
-					title: {
-						text: null
-					},
-					tooltip: {
-						pointFormat: 'Quantity: <b>{point.y} Kanban</b>'
-					},
-					xAxis: {
-						labels: {
-							style: {
-								color: '#9dff69',
-								fontSize: '12px',
-								fontWeight: 'bold'
-							}
-						},
-						categories: cat
-					},
-					yAxis: {
-						tickInterval: 1,
-						title: {
-							text: 'Quantity (Kanban)'
-						},
-						plotLines: [{
-							color: 'red',
-							width: 2,
-							value: 2,
-							zIndex: 5,
-							dashStyle: 'Dash'
-						}]
-					},
-					plotOptions: {
-						column: {
-							allowPointSelect: true,
-							borderColor: 'black',
-							dataLabels: {
-								enabled: true,
-								format: '<b>{point.name}<br/>{point.y}</b>',
-								distance: -50,
-								style:{
-									fontSize:'14px',
-									textOutline:0,
-								},
-							},
-							zones: [{
-								value: 2, 
-								color: '#46e83a' 
-							},{
-								color: '#f55656' 
-							}]
-						}, 
-						series: {
-							animation: false
-						}
-					},
-					credits: {
-						enabled: false
-					},
-					series: [{
-						name: 'Material',
-						data: material_req
-					}]
 				});
+
+				$('#tableBody').append(tableData);
+
+
+
+
+
+				// Highcharts.chart('chart', {
+				// 	chart: {
+				// 		backgroundColor: null,
+				// 		type: 'column',
+				// 	},
+				// 	exporting: { enabled: false },
+				// 	title: {
+				// 		text: null
+				// 	},
+				// 	tooltip: {
+				// 		pointFormat: 'Quantity: <b>{point.y} Kanban</b>'
+				// 	},
+				// 	xAxis: {
+				// 		labels: {
+				// 			style: {
+				// 				color: '#9dff69',
+				// 				fontSize: '12px',
+				// 				fontWeight: 'bold'
+				// 			}
+				// 		},
+				// 		categories: cat
+				// 	},
+				// 	yAxis: {
+				// 		tickInterval: 1,
+				// 		title: {
+				// 			text: 'Quantity (Kanban)'
+				// 		},
+				// 		plotLines: [{
+				// 			color: 'red',
+				// 			width: 2,
+				// 			value: 2,
+				// 			zIndex: 5,
+				// 			dashStyle: 'Dash'
+				// 		}]
+				// 	},
+				// 	plotOptions: {
+				// 		column: {
+				// 			allowPointSelect: true,
+				// 			borderColor: 'black',
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				format: '<b>{point.name}<br/>{point.y}</b>',
+				// 				distance: -50,
+				// 				style:{
+				// 					fontSize:'14px',
+				// 					textOutline:0,
+				// 				},
+				// 			},
+				// 			zones: [{
+				// 				value: 2, 
+				// 				color: '#46e83a' 
+				// 			},{
+				// 				color: '#f55656' 
+				// 			}]
+				// 		}, 
+				// 		series: {
+				// 			animation: false
+				// 		}
+				// 	},
+				// 	credits: {
+				// 		enabled: false
+				// 	},
+				// 	series: [{
+				// 		name: 'Material',
+				// 		data: material_req
+				// 	}]
+				// });
 			}
 		});
 	}
