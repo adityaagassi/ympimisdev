@@ -76,7 +76,7 @@
 @section('header')
 @endsection
 @section('content')
-<section class="content" style="padding-top: 0;">
+<section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 5px;">
 			<div id="chart"></div>
