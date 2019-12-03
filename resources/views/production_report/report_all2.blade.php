@@ -733,7 +733,7 @@
                   body += '<tr>';
                     body += '<td>'+no+'</td>';
                     body += '<td>'+result.detail[i].activity_name+'</td>';
-                    // body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
+                    body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
                     var data2 = {
                       leader_name:leader_name,
                       id_activity:result.detail[i].id_activity,
