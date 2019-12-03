@@ -169,7 +169,7 @@
                   <td colspan="1">Deskripsi</td>
                   <td colspan="4"><?= $cars->deskripsi ?></td>
                   <td colspan="1">
-                      @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                      @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator ||  Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == "clark")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -227,7 +227,7 @@
                   <td colspan="1">Tindakan</td>
                   <td colspan="4"><?= $cars->tindakan ?></td>
                   <td colspan="1">
-                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator|| Auth::user()->username == "clark")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -416,7 +416,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+        <h4 class="modal-title" id="myModalLabel">Status CAR Sekarang</h4>
       </div>
       <div class="modal-body">
         <div class="box-body">

@@ -892,11 +892,13 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/applied', 'EmployeeController@fetchAppliedKaizen');
-	Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 });
+
+Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
+
 Route::get('index/kaizen/{section}', 'EmployeeController@indexKaizen2');
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen2/report', 'EmployeeController@indexKaizenReport');
@@ -1371,9 +1373,9 @@ Route::get('fetch/production_report/detail_sampling_check/{id}', 'ProductionRepo
 Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'ProductionReportController@report_by_act_type');
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
 Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
-Route::get('index/production_report/fetchDetailReportByActType/{id}', 'ProductionReportController@fetchDetailReportByActType');
 Route::get('index/production_report/fetchPointCheck/{id}', 'ProductionReportController@fetchPointCheck');
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
+Route::get('index/production_report/fetchDetailReportMonthly/{id}', 'ProductionReportController@fetchDetailReportMonthly');
 
 
 //Activity List
@@ -1670,7 +1672,9 @@ Route::get('index/suhu_2','TemperatureController@suhu_2');
 Route::get('index/log_suhu_2','TemperatureController@data_suhu_2');
 Route::get('index/log_map_suhu2','TemperatureController@log_map_suhu2');
 Route::get('index/standart_temperature', 'TemperatureController@standart');
-Route::post('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
+Route::get('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
+Route::post('index/temperature/aksi_edit', 'TemperatureController@aksi_edit');
+Route::get('index/temperature/delete/{id}','TemperatureController@delete');
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');

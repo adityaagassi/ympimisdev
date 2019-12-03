@@ -91,7 +91,7 @@ table.table-bordered > tfoot > tr > th{
 
          <a href="{{url('index/qc_report/print_cpar', $cpar[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain"  target="_blank">Preview CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Print CAR</a>
+         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Preview CAR</a>
 
          <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-md" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
 
@@ -266,7 +266,7 @@ table.table-bordered > tfoot > tr > th{
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Status CPAR Sekarang</h4>
+        <h4 class="modal-title" id="myModalLabel">Status CAR</h4>
       </div>
       <div class="modal-body">
         <div class="box-body">

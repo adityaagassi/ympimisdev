@@ -238,7 +238,7 @@ table > thead > tr > th{
                 <th style="width: 6%; padding: 0;">Manager</th>
                 <th style="width: 6%; padding: 0;">DGM</th>
                 <th style="width: 6%; padding: 0;">GM</th>
-                <th style="width: 6%; padding: 0;">Received By Manager</th>
+                <th style="width: 6%; padding: 0;">Reviewed By Manager</th>
 
                 <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Foreman</th>
                 <th style="width: 6%; padding: 0;">Chief / Foreman</th>

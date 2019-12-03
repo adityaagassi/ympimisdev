@@ -424,14 +424,14 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
+            <label class="col-sm-2">No Invoice / No Lot</span></label>
             <div class="col-sm-8">
               <input type="text" class="form-control" id="no_invoice" placeholder="No Invoice" required>
             </div>
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
+            <label class="col-sm-2">Lot Qty</span></label>
             <div class="col-sm-8">
               <div class="input-group">
                 <input type="number" class="form-control" id="lot_qty" placeholder="Lot Quantity" required>
@@ -441,7 +441,7 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
+            <label class="col-sm-2">Sample Qty</span></label>
             <div class="col-sm-8">
               <div class="input-group">
                 <input type="number" class="form-control" id="sample_qty" placeholder="Sample Quantity" onkeyup="getPersen()" required>
@@ -458,7 +458,7 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
+            <label class="col-sm-2">Defect Qty</span></label>
             <div class="col-sm-8" align="left">
               <div class="input-group">
                 <input type="number" class="form-control" id="defect_qty" placeholder="Defect Quantity" onkeyup="getPersen()" required>
@@ -468,7 +468,7 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Defect Presentase (Persen)<span class="text-red">*</span></label>
+            <label class="col-sm-2">Defect Presentase (Persen)</label>
             <div class="col-sm-8" align="left">
               <input type="text" class="form-control" id="defect_presentase" placeholder="Defect Presentase" disabled required>
             </div>

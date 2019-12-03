@@ -231,7 +231,7 @@ class QcReportController extends Controller
               $posisi = "leader";
               $chief = null;
 
-              $getforeman = "select employees.employee_id,name,departments.id from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and departments.id='".$request->get('department_id')."'";
+              $getforeman = "select employees.employee_id,name,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance'";
               $fore = DB::select($getforeman);
               
               if ($fore != null) {
@@ -888,10 +888,10 @@ class QcReportController extends Controller
 
               else if ($detail->status_code == "7") { // QA Verification
                 if($detail->posisi == "QA") {
-                  return '<label class="label label-primary">'.$detail->chiefname.'</label>';
+                  return '<label class="label label-primary">'.$detail->staffname.'</label>';
                 }
                 else if($detail->posisi == "QA2") {
-                  return '<label class="label label-success">None</label>';  
+                  return '<label class="label label-success">'.$detail->chiefname.'</label>';  
                 }            
               }
               
@@ -980,10 +980,10 @@ class QcReportController extends Controller
 
               else if ($detail->status_code == "7") { // QA Verification
                 if($detail->posisi == "QA") {
-                  return '<label class="label label-primary">'.$detail->chiefname.'</label>';
+                  return '<label class="label label-primary">'.$detail->staffname.'</label>';
                 }
                 else if($detail->posisi == "QA2") {
-                  return '<label class="label label-success">None</label>';  
+                  return '<label class="label label-success">'.$detail->chiefname.'</label>';  
                 }            
               }
             }
@@ -1075,10 +1075,10 @@ class QcReportController extends Controller
               }
               else if ($detail->status_code == "7") { // QA Verification
                 if($detail->posisi == "QA") {
-                  return '<label class="label label-primary">'.$detail->foremanname.'</label>';
+                  return '<label class="label label-primary">'.$detail->leadername.'</label>';
                 }
                 else if($detail->posisi == "QA2") {
-                  return '<label class="label label-success">None</label>';  
+                  return '<label class="label label-success">'.$detail->foremanname.'</label>';  
                 }            
               }  
             }
@@ -1239,7 +1239,7 @@ group by monthname(mon) order by mon asc");
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
               ELSE 'Tidak Ada'
-        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.status_code != '1'");
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.status_code != '1' ");
 
       $response = array(
         'status' => true,
@@ -1397,7 +1397,7 @@ group by monthname(mon) order by mon asc");
       } else if ($qc_cpars->leader != null) {
           $posisi = "leader";
           $posisi2 = "foreman";
-      }
+      } 
 
       $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','statuses.status_name')
         ->join('departments','qc_cpars.department_id','=','departments.id')
@@ -1405,11 +1405,11 @@ group by monthname(mon) order by mon asc");
         ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
         ->leftjoin('destinations','qc_cpars.destination_code','=','destinations.destination_code')
         ->leftjoin('vendors','qc_cpars.vendor','=','vendors.vendor')
-        ->join('employees as '.$posisi,'qc_cpars.'.$posisi,'=',$posisi.'.employee_id')
-        ->join('employees as '.$posisi2,'qc_cpars.'.$posisi2,'=',$posisi2.'.employee_id')
-        ->join('employees as manager','qc_cpars.manager','=','manager.employee_id')
-        ->join('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
-        ->join('employees as gm','qc_cpars.gm','=','gm.employee_id')
+        ->leftjoin('employees as '.$posisi,'qc_cpars.'.$posisi,'=',$posisi.'.employee_id')
+        ->leftjoin('employees as '.$posisi2,'qc_cpars.'.$posisi2,'=',$posisi2.'.employee_id')
+        ->leftjoin('employees as manager','qc_cpars.manager','=','manager.employee_id')
+        ->leftjoin('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
+        ->leftjoin('employees as gm','qc_cpars.gm','=','gm.employee_id')
         // ->join('qc_cpars_items','qc_cpars.cpar_no','=')
 
         ->where('qc_cpars.id','=',$id)
@@ -1430,7 +1430,7 @@ group by monthname(mon) order by mon asc");
         'parts'=>$parts
       ));
       
-      $cpar = str_replace("/"," ",$cpars[0]->cpar_no);
+      $cpar = str_replace("/"," ",$qc_cpars->cpar_no);
       // $pdf = PDF::loadview('qc_report.print_cpar',['cpars'=>$cpars,'parts'=>$parts]);
       return $pdf->stream("CPAR ".$cpar. ".pdf");
     }
@@ -1674,33 +1674,35 @@ group by monthname(mon) order by mon asc");
       public function verifikasicpar($id){
           $cpar = QcCpar::find($id);
 
-          if ($cpar->posisi == "chief") {
-              $from = "staff";
-          }
-          else if ($cpar->posisi == "foreman") {
-              $from = "leader";
-          }
-          else if ($cpar->posisi == "manager" && $cpar->staff != null) {
-              $from = "chief";
-          }
-          else if ($cpar->posisi == "manager" && $cpar->leader != null) {
-              $from = "foreman";
-          }
-          else if ($cpar->posisi == "dgm") {
-              $from = "manager";
-          }
-          else if ($cpar->posisi == "gm") {
-              $from = "dgm";
-          }
-          else {
-              $from = "staff";
-          }
+          // if ($cpar->posisi == "chief") {
+          //     $from = "staff";
+          // }
+          // else if ($cpar->posisi == "foreman") {
+          //     $from = "leader";
+          // }
+          // else if ($cpar->posisi == "manager" && $cpar->staff != null) {
+          //     $from = "chief";
+          // }
+          // else if ($cpar->posisi == "manager" && $cpar->leader != null) {
+          //     $from = "foreman";
+          // }
+          // else if ($cpar->posisi == "manager" && $cpar->chief == null && $cpar->foreman == null) {
+          //     $from = "leader";
+          // }
+          // else if ($cpar->posisi == "dgm") {
+          //     $from = "manager";
+          // }
+          // else if ($cpar->posisi == "gm") {
+          //     $from = "dgm";
+          // }
+          // else {
+          //     $from = "staff";
+          // }
 
-          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name','users.name as emplo')
+          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name')
           ->join('departments','qc_cpars.department_id','=','departments.id')
           ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
           ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
-          ->join('users','qc_cpars.'.$from,'=','users.username')
           ->where('qc_cpars.id','=',$id)
           ->get();
 
