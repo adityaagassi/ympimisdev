@@ -9,7 +9,7 @@
 	thead>tr>th {
 		background-color: white;
 		text-align: center;
-		font-size: 1vw;
+		font-size: 2vw;
 	}
 
 	tbody>tr>td {
