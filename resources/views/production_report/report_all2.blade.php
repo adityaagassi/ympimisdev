@@ -21,7 +21,7 @@
     <h1 style="color:white">
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
         {{-- <button onclick="showModalResume()" class="btn btn-outline pull-right">Leader Task Resume</button> --}}
-        <a target="_blank" href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-outline pull-right">Leader Task Resume</a>
+        {{-- <a target="_blank" href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-outline pull-right">Leader Task Resume</a> --}}
       </div>
       <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <center>
@@ -939,9 +939,9 @@ else if(frequency == 'Daily'){
       for(var a = 0; a < result.act_name.length; a++){
         head += '<th>'+result.act_name[a].activity_name+'</th>';
       }
+      console.log(result.act_name);
       head += '</tr>';
       $('#data-activity-head-daily').append(head);
-      console.table(result.date);
       for (var i = 0; i < result.detail.length; i++) {
 
         body += '<tr>';
@@ -949,8 +949,10 @@ else if(frequency == 'Daily'){
         body += '<td>'+result.date[i].week_date+'</td>';
         if(parseInt(result.detail[i].jumlah_aktual) != 0){
           body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_aktual+'</td>';
+          body += '<td style="background-color: #f7ff59"></td>';
         }
         else{
+          body += '<td style="background-color: #f7ff59"></td>';
           body += '<td style="background-color: #f7ff59"></td>';
         }
         body += '</tr>';
