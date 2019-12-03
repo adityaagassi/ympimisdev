@@ -5287,14 +5287,12 @@ class MiddleProcessController extends Controller
 		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
 
 		if ($mat) {
-			if($mat->origin_group_code == '041'){
+			if($mat->origin_group_code == '043'){
 				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
 					$qty = 15;
 				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
 					$qty = 8;
 				} else if(preg_match("/82/", $mat->model) == TRUE) {
-					$qty = 0;
-				} else {
 					$qty = 0;
 				}
 			}
