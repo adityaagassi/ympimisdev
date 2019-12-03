@@ -748,15 +748,17 @@
                       });                      
                     }
                     else{
-                      body += '<td></td>';
+                      // body += '<td></td>';
                     }                    
                     // console.log(dd);
                     for(var jjj = 0; jjj< jj.length; jjj++){
-                      if(jj[jjj] == result.detail[i].audit_week){
-                        body += '<td style="background-color: #4aff77">'+result.detail[i].audit_date+'</td>';
-                      }
-                      else if(jj[jjj] == result.detail[i].sampling_week){
-                        body += '<td style="background-color: #4aff77">'+result.detail[i].sampling_date+'</td>';
+                      if(jj[jjj] == result.detail[i].audit_week || jj[jjj] == result.detail[i].sampling_week){
+                        if(result.detail[i].audit_date == null){
+                          body += '<td style="background-color: #4aff77">'+result.detail[i].sampling_date+'</td>';
+                        }
+                        else{
+                          body += '<td style="background-color: #4aff77">'+result.detail[i].audit_date+'</td>';
+                        }
                       }
                       else{
                         body += '<td></td>';
