@@ -731,23 +731,24 @@
                 // for(var j = 0; j < result.detail[i].plan; j++){
                   body += '<tr>';
                     body += '<td>'+no+'</td>';
-                    body += '<td>'+result.detail[i].activity_name+'</td>'; 
+                    body += '<td>'+result.detail[i].activity_name+'</td>';
+                    body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
                     var data2 = {
                       leader_name:leader_name,
                       id_activity:result.detail[i].id_activity,
                       id_point_check:result.detail[i].point_check_audit_id,
                     };
-                    if(result.detail[i].activity_type == 'Audit'){
-                      $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
-                        dd.push(result2.point_check[0].point_check);
-                      });
-                      // body += dd;
-                    }
-                    else{
-                      body += '<td></td>';
-                    }
+                    // if(result.detail[i].activity_type == 'Audit'){
+                    //   $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
+                    //     dd.push(result2.point_check[0].point_check);
+                    //   });
+                    //   // body += dd;
+                    // }
+                    // else{
+                    //   body += '<td></td>';
+                    // }
 
-                    console.log(dd);
+                    // console.log(dd);
                     for(var ttt = 0; ttt < dd.length; ttt++){
                         body += dd[ttt];
                     }
