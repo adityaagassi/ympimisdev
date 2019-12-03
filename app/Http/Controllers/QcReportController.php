@@ -791,7 +791,7 @@ class QcReportController extends Controller
       $kategori = $request->get("kategori");
       $departemen = $request->get("departemen");
 
-      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, pic.name as picname, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id left join employees as pic on qc_cars.pic = pic.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
 
       $detail = db::select($query);
 
@@ -976,6 +976,7 @@ class QcReportController extends Controller
                 else if($detail->posisi_car == "qa") {
                     return '<label class="label label-success">None</label>';     
                 }
+                
               }
 
               else if ($detail->status_code == "7") { // QA Verification
@@ -1071,6 +1072,9 @@ class QcReportController extends Controller
                 }
                 else if($detail->posisi_car == "qa") {
                     return '<label class="label label-success">None</label>';     
+                }
+                else{
+                    return '<label class="label label-primary">'.$detail->picname.'</label>';
                 } 
               }
               else if ($detail->status_code == "7") { // QA Verification
