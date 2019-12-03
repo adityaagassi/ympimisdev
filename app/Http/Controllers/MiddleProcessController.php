@@ -5287,9 +5287,7 @@ class MiddleProcessController extends Controller
 		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
 
 		if ($mat) {
-			if ($mat->origin_group_code == '042' OR $mat->origin_group_code == '041') {
-				$qty = 20;
-			} else if ($mat->origin_group_code == '043') {
+			if($mat->origin_group_code == '041'){
 				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
 					$qty = 15;
 				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
@@ -5299,8 +5297,6 @@ class MiddleProcessController extends Controller
 				} else {
 					$qty = 0;
 				}
-			} else {
-				$qty = 0;
 			}
 
 			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
@@ -5360,8 +5356,13 @@ class MiddleProcessController extends Controller
 	{
 		$log_request = MiddleMaterialRequest::leftJoin("materials","materials.material_number","=","middle_material_requests.material_number")
 		->leftJoin("material_volumes","middle_material_requests.material_number","=","material_volumes.material_number")
-		->where("item","=", $request->get("option"))
-		->orderBy('quantity','desc')
+		->where("item","=", $request->get("option"));
+		
+		if ($request->get('filter') != '') {
+			$log_request = $log_request->where('materials.hpl','=',$request->get('filter'));
+		}
+
+		$log_request = $log_request->orderBy('quantity','desc')
 		->select('middle_material_requests.material_number','materials.model','materials.key','item','quantity','material_description','lot_transfer')
 		->get();
 
