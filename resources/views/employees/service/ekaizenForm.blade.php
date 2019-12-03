@@ -363,7 +363,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 				// if ($("kz_sub_leader").val() != '' && $("kz_judul").val() != '') {
 					$.post('{{ url("post/ekaizen") }}', data, function(result, status, xhr){
-						console.log(result.datas);
+						window.history.go(-1);
 					})
 				// }
 
