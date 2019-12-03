@@ -5325,8 +5325,7 @@ class MiddleProcessController extends Controller
 				);
 
 				$request = MiddleMaterialRequest::firstOrNew([
-					'material_number' => $material_number, 
-					'quantity' => $quantity,
+					'material_number' => $material_number
 				]);
 				$request->quantity = ($request->quantity+$quantity);
 				$request->save();
