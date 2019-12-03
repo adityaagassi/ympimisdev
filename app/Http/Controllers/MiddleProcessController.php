@@ -5329,6 +5329,7 @@ class MiddleProcessController extends Controller
 					'quantity' => $quantity,
 				]);
 				$request->quantity = ($request->quantity+$quantity);
+				$request->save();
 
 				$response = array(
 					'status' => true,
