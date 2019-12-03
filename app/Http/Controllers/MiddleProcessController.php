@@ -5322,37 +5322,37 @@ class MiddleProcessController extends Controller
 				->update(['updated_at' => new DateTime()]);
 
 			} else {
-				$req_log = new MiddleRequestHelper;
+				try {
+					$req_log = new MiddleRequestHelper;
 
-				$req_log->material_tag = $request->get('material_number');
-				$req_log->material_number = $matnum;
-				$req_log->created_by = Auth::id();
-				$req_log->created_at = new DateTime();
+					$req_log->material_tag = $request->get('material_number');
+					$req_log->material_number = $matnum;
+					$req_log->created_by = Auth::id();
+					$req_log->created_at = new DateTime();
 
-				$req_log->save();
-			}
+					$req_log->save();
 
-			try {
-				$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
-				$req->quantity += $qty;
-				$req->item = $request->get("item");
-				$req->created_by = Auth::id();
-				$req->updated_at = new DateTime();
-				$req->save();
+					$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
+					$req->quantity += $qty;
+					$req->item = $request->get("item");
+					$req->created_by = Auth::id();
+					$req->updated_at = new DateTime();
+					$req->save();
 
-				$response = array(
-					'status' => true,
-					'message' => 'Material berhasil di request ke maekotei.',
-					'datas' => $mat,
-					'datas_log' => $req
-				);
-				return Response::json($response);
-			} catch (QueryException $e){
-				$response = array(
-					'status' => false,
-					'error' => $e,
-				);
-				return Response::json($response);
+					$response = array(
+						'status' => true,
+						'message' => 'Material berhasil di request ke maekotei.',
+						'datas' => $mat,
+						'datas_log' => $req
+					);
+					return Response::json($response);
+				} catch (QueryException $e){
+					$response = array(
+						'status' => false,
+						'error' => $e,
+					);
+					return Response::json($response);
+				}
 			}
 		} else {			
 			$response = array(
