@@ -876,13 +876,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 
 					$("#foreman_point1").text(result[0].foreman_point_1 * 40);
-					$("#foreman_point2").text(result[0].foreman_point_2 * 20);
-					$("#foreman_point3").text(result[0].foreman_point_3 * 20);
-					$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 20) + (result[0].foreman_point_3 * 20));
+					$("#foreman_point2").text(result[0].foreman_point_2 * 30);
+					$("#foreman_point3").text(result[0].foreman_point_3 * 30);
+					$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
 					$("#manager_point1").text(result[0].manager_point_1 * 40);
-					$("#manager_point2").text(result[0].manager_point_2 * 20);
-					$("#manager_point3").text(result[0].manager_point_3 * 20);
-					$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 20) + (result[0].manager_point_3 * 20));
+					$("#manager_point2").text(result[0].manager_point_2 * 30);
+					$("#manager_point3").text(result[0].manager_point_3 * 30);
+					$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
 					$("#modalDetail").modal('show');
 				})
 			}

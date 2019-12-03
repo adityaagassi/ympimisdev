@@ -128,12 +128,24 @@ class EmployeeController extends Controller
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
     ->select('position')
     ->first();
 
-    $dd = str_replace("'","", $this->usr);
-    $dd = explode(',', $dd);
+    $dd = [];
+
+    $emp_usr = User::where('role_code','=','MIS')->select('username')->get();
+
+    for($x = 0; $x < count($emp_usr); $x++) {
+      array_push($dd, $emp_usr[$x]->username);
+    }
+
+    array_push($dd, 'O11101710');
+
+    // $dd = implode("','", $emp_usr);
+
+    // $dd = str_replace("'","", $this->usr);
+    // $dd = "'".$dd."'";
 
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
@@ -164,7 +176,7 @@ class EmployeeController extends Controller
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
     ->select('position')
     ->first();
 
@@ -2283,7 +2295,7 @@ public function updateKaizen(Request $request)
 }
 }
 
-public function deleteKaizen(Request $request)
+public function deleteKaizen()
 {
   KaizenForm::where('id',$request->get('id'))->delete();
 
@@ -2309,5 +2321,20 @@ public function deleteKaizen(Request $request)
 //   );
 //   return Response::json($response);
 // }
+
+public function UploadKaizenImage(Request $request)
+{
+ $files = $request->file('fileupload');
+ foreach ($files as $file) {
+  $filename = $file->getClientOriginalName();
+
+  if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
+    mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
+    mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
+  }
+  
+  $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
+}
+}
 
 }
