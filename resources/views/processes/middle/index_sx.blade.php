@@ -25,7 +25,7 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Buffing <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/middle/request/Saxophone") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
+			<a href="{{ url("index/middle/request/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Request Saxophone</a>
 			<a href="{{ url("index/middle/buffing_work_order", "bff-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Saxophone Work Order</a>
 			<a href="{{ url("index/process_buffing_kensa", "bff-kensa") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa</a>
 			@if(in_array('A9', $navs))
@@ -52,7 +52,7 @@
 			<a href="{{ url("index/middle/display_monitoring?location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Kanban WIP Monitoring</a>
 			<a href="{{ url("index/middle/display_kensa_time?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Kensa ΣTime</a>
 			<a href="{{ url("index/middle/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Production Result</a>
-			<a href="{{ url("index/middle/request/display/saxophone") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Material Request Soldering</a>
+			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Material Request Soldering</a>
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Buffing <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/buffing_board/buffing-sx?page=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Buffing Board</a>
 			<a href="{{ url("index/middle/buffing_daily_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate</a>

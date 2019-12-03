@@ -5283,74 +5283,72 @@ class MiddleProcessController extends Controller
 
 	public function scanRequestTag(Request $request)
 	{
-		$matnum = substr($request->get('material_number'),2,7);
-		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
 
-		if ($mat) {
-			if ($mat->origin_group_code == '042' OR $mat->origin_group_code == '041') {
-				$qty = 20;
-			} else if ($mat->origin_group_code == '043') {
-				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 15;
-				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 8;
-				} else if(preg_match("/82/", $mat->model) == TRUE) {
-					$qty = 0;
-				} else {
-					$qty = 0;
-				}
-			} else {
-				$qty = 0;
+		$material_number = substr($request->get('tag'),2,7);
+		$material = Material::where('materials.material_number', '=', $material_number)->first();
+
+		if($material){
+			if($material->hpl == 'ASKEY' && preg_match("/82/", $material->model) != TRUE){
+				$quantity = 15;
+			}
+			else if($material->hpl == 'TSKEY' && preg_match("/82/", $material->model) != TRUE){
+				$quantity = 8;
+			}
+			else{
+				$response = array(
+					'status' => false,
+					'message' => "Material Belum Didukung ",
+				);
+				return Response::json($response);
 			}
 
-			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
+			try {
+				$helper = MiddleRequestHelper::where("material_tag","=",$request->get('tag'))->first();
 
-			if ($req_log_q) {
-				$dt_db = new DateTime($req_log_q->updated_at);
-				$dt_now = new DateTime();
-				$interval = $dt_db->diff($dt_now);
+				if($helper){
+					$last = new DateTime($helper->updated_at);
+					$now = new DateTime();
+					$interval = $last->diff($now);
 
-				if ($interval->format('%I') < 5) {
-					$response = array(
-						'status' => false,
-						'error' => "Too Fast on same Material Tag",
-					);
-					return Response::json($response);
+					if ($interval->format('%I') < 5) {
+						$response = array(
+							'status' => false,
+							'message' => "Interval scan terlalu cepat",
+						);
+						return Response::json($response);
+					}
 				}
-			} else {
-				try {
-					$req_log = MiddleRequestHelper::updateOrCreate(
-						['material_tag' => $request->get('material_number')],
-						['material_number' => $matnum, 'created_by' => Auth::id(), 'updated_at' => Carbon::now(), 'created_at' => Carbon::now()]
-					);
 
-					$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
-					$req->quantity += $qty;
-					$req->item = $request->get("item");
-					$req->created_by = Auth::id();
-					$req->updated_at = new DateTime();
-					$req->save();
+				$helper_log = MiddleRequestHelper::updateOrCreate(
+					['material_tag' => $request->get('tag')],
+					['material_tag' => $request->get('tag'), 'material_number' => $material_number, 'created_by' => Auth::id(), 'updated_at' => Carbon::now()]
+				);
 
-					$response = array(
-						'status' => true,
-						'message' => 'Material berhasil di request ke maekotei.',
-						'datas' => $mat,
-						'datas_log' => $req
-					);
-					return Response::json($response);
+				$request = MiddleMaterialRequest::firstOrNew([
+					'material_number' => $material_number, 
+					'quantity' => $quantity,
+				]);
+				$request->quantity = ($request->quantity+$quantity);
 
-				} catch (QueryException $e){
-					$response = array(
-						'status' => false,
-						'error' => $e,
-					);
-					return Response::json($response);
-				}
+				$response = array(
+					'status' => true,
+					'message' => 'Material berhasil di request ke maekotei.'
+				);
+				return Response::json($response);
+
 			}
-		} else {			
+			catch (QueryException $e){
+				$response = array(
+					'status' => false,
+					'message' => $e,
+				);
+				return Response::json($response);
+			}
+		}
+		else{		
 			$response = array(
 				'status' => false,
-				'error' => "Material Doesn't Exist ",
+				'message' => "Material Tidak Ditemukan ",
 			);
 			return Response::json($response);
 		}
@@ -5358,17 +5356,15 @@ class MiddleProcessController extends Controller
 
 	public function fetchRequest(Request $request)
 	{
-		$log_request = MiddleMaterialRequest::leftJoin("materials","materials.material_number","=","middle_material_requests.material_number")
-		->leftJoin("material_volumes","middle_material_requests.material_number","=","material_volumes.material_number")
-		->where("item","=", $request->get("option"));
-		
+		$filter = "";
+
 		if ($request->get('filter') != '') {
-			$log_request = $log_request->where('materials.hpl','=',$request->get('filter'));
+			$filter = " and materials.hpl = '".$request->get('filter')."'";
 		}
 
-		$log_request = $log_request->orderBy('quantity','desc')
-		->select('middle_material_requests.material_number','materials.model','materials.key','item','quantity','material_description','lot_transfer')
-		->get();
+		$query = "select middle_material_requests.material_number, materials.model, materials.key, middle_material_requests.quantity/material_volumes.lot_transfer as kanban, middle_material_requests.quantity, coalesce(kitto.kanban,0) as inventory_kanban, coalesce(kitto.quantity, 0) as inventory_quantity from ympimis.middle_material_requests left join (select kitto.inventories.material_number, count(kitto.inventories.material_number) as kanban, sum(kitto.inventories.lot) as quantity from kitto.inventories where kitto.inventories.lot > 0 group by kitto.inventories.material_number) as kitto on kitto.material_number = ympimis.middle_material_requests.material_number left join material_volumes on material_volumes.material_number = middle_material_requests.material_number left join materials on materials.material_number = middle_material_requests.material_number where middle_material_requests.quantity > 0 and materials.origin_group_code = '".$request->get('origin_group_code')."'".$filter." ORDER BY middle_material_requests.quantity/material_volumes.lot_transfer DESC";
+
+		$log_request = db::select($query);
 
 		$response = array(
 			'status' => true,
