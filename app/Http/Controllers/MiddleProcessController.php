@@ -5295,7 +5295,7 @@ class MiddleProcessController extends Controller
 				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
 					$qty = 8;
 				} else if(preg_match("/82/", $mat->model) == TRUE) {
-					$qty = 10;
+					$qty = 0;
 				} else {
 					$qty = 0;
 				}
@@ -5317,20 +5317,12 @@ class MiddleProcessController extends Controller
 					);
 					return Response::json($response);
 				}
-
-				$req_log = MiddleRequestHelper::where('material_tag',"=", $request->get('material_number'))
-				->update(['updated_at' => new DateTime()]);
-
 			} else {
 				try {
-					$req_log = new MiddleRequestHelper;
-
-					$req_log->material_tag = $request->get('material_number');
-					$req_log->material_number = $matnum;
-					$req_log->created_by = Auth::id();
-					$req_log->created_at = new DateTime();
-
-					$req_log->save();
+					$req_log = MiddleRequestHelper::updateOrCreate(
+						['material_tag' => $request->get('material_number')],
+						['material_number' => $matnum, 'created_by' => $id, 'updated_at' => Carbon::now(), 'created_at' => Carbon::now()]
+					);
 
 					$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
 					$req->quantity += $qty;
@@ -5346,6 +5338,7 @@ class MiddleProcessController extends Controller
 						'datas_log' => $req
 					);
 					return Response::json($response);
+					
 				} catch (QueryException $e){
 					$response = array(
 						'status' => false,
