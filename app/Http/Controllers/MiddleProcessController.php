@@ -5321,7 +5321,7 @@ class MiddleProcessController extends Controller
 				try {
 					$req_log = MiddleRequestHelper::updateOrCreate(
 						['material_tag' => $request->get('material_number')],
-						['material_number' => $matnum, 'created_by' => $id, 'updated_at' => Carbon::now(), 'created_at' => Carbon::now()]
+						['material_number' => $matnum, 'created_by' => Auth::id(), 'updated_at' => Carbon::now(), 'created_at' => Carbon::now()]
 					);
 
 					$req = MiddleMaterialRequest::updateOrCreate(['material_number' => $matnum]);
@@ -5338,7 +5338,7 @@ class MiddleProcessController extends Controller
 						'datas_log' => $req
 					);
 					return Response::json($response);
-					
+
 				} catch (QueryException $e){
 					$response = array(
 						'status' => false,
