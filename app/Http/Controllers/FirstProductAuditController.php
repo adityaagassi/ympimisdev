@@ -85,4 +85,31 @@ class FirstProductAuditController extends Controller
         return view('first_product_audit.index', $data
             )->with('page', 'First Product Audit');
     }
+
+    function show($id,$first_product_audit_id)
+    {
+        $activityList = ActivityList::find($id);
+        $interview = Interview::find($interview_id);
+        
+            $activity_name = $activityList->activity_name;
+            $departments = $activityList->departments->department_name;
+            $activity_alias = $activityList->activity_alias;
+
+        $data = array('interview' => $interview,
+                      'departments' => $departments,
+                      'activity_name' => $activity_name,
+                      'id' => $id);
+        return view('interview.view', $data
+            )->with('page', 'Interview');
+    }
+
+    public function destroy($id,$interview_id)
+    {
+      $interview = Interview::find($interview_id);
+      $interview->delete();
+
+      return redirect('/index/interview/index/'.$id)
+        ->with('status', 'Interview has been deleted.')
+        ->with('page', 'Interview');        
+    }
 }

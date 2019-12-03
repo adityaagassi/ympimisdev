@@ -37,8 +37,8 @@
         </div>
       </div>
     </h1>
-    <div id="container1" class="gambar" ></div>
-    <div id="container2" class="gambar" ></div>
+    <div id="container1" class="gambar"></div>
+    <div id="container2" class="gambar"></div>
     <div id="container3" class="gambar"></div>
     <div id="container4" class="gambar"></div>
     <div id="container5" class="gambar"></div>
@@ -49,37 +49,47 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Leader Task Monitoring</b></h4>
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;" id="leader_name"><b></b></h4>
           <h5 class="modal-title" style="text-align: center;" id="judul"></h5>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12">
               <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
-                <thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                    <th colspan="8" style="text-align: center;" id="leader_name"></th>
+                <thead id="data-activity-head" style="background-color: rgba(126,86,134,.7);">
+                  {{-- <tr>
+                    <th rowspan="2" style="vertical-align: middle;">No.</th>
+                    <th rowspan="2" style="vertical-align: middle;"><center>Activity Name</center></th>
+                    <th rowspan="2" style="vertical-align: middle;"><center>Point Check</center></th>
+                    <th style="width: 13%" colspan="5">W1</th>
+                    <th style="width: 13%" colspan="5">W2</th>
+                    <th style="width: 13%" colspan="5">W3</th>
+                    <th style="width: 13%" colspan="5">W4</th>
                   </tr>
-                  <tr>
-                    <th>Activity Name</th>
-                    <th>Activity Type</th>
-                    <th style="width: 13%">Plan</th>
-                    <th style="width: 13%">Actual</th>
-                    <th style="width: 13%">Presentase</th>
-                    <th style="width: 13%">Details</th>
-                    {{-- <th style="width: 13%">OK</th>
-                    <th style="width: 13%">NG</th> --}}
-                  </tr>
+                  <tr id="data-activity-head">
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                  </tr> --}}
                 </thead>
                 <tbody id="data-activity">
-                  {{-- <tr>
-                    <td>Audit IK - QC Koteihyo</td>
-                    <td>10</td>
-                    <td>7</td>
-                    <td>70%</td>
-                    <td>7</td>
-                    <td>0</td>
-                  </tr> --}}
                 </tbody>
               </table>
             </div>
@@ -109,26 +119,37 @@
                   </tr>
                   <tr>
                     <th>Activity Name</th>
-                    <th>Activity Type</th>
-                    <th style="width: 13%">Plan</th>
-                    <th style="width: 13%">Actual</th>
-                    <th style="width: 13%">Presentase</th>
-                    <th style="width: 13%">Details</th>
-                    {{-- <th style="width: 13%">OK</th>
-                    <th style="width: 13%">NG</th> --}}
+                    <th style="width: 13%" colspan="5">W1</th>
+                    <th style="width: 13%" colspan="5">W2</th>
+                    <th style="width: 13%" colspan="5">W3</th>
+                    <th style="width: 13%" colspan="5">W4</th>
+                  </tr>
+                  <tr>
+                    <th>aa</th>
                   </tr>
                 </thead>
-                <tbody id="data-activity2">
-                  {{-- <tr>
-                    <td>Audit IK - QC Koteihyo</td>
-                    <td>10</td>
-                    <td>7</td>
-                    <td>70%</td>
-                    <td>7</td>
-                    <td>0</td>
-                  </tr> --}}
-                </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal3" style="color: black;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Leader Task Monitoring</b></h4>
+          <h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div id="containerdetail"></div>
             </div>
           </div>
         </div>
@@ -390,38 +411,38 @@
               var cur_week = parseInt(result.datas[i][j].persen_cur_week);
               var result_prev = parseInt(result.datas[i][j].persen_prev);
 
-              if(parseInt(result.datas[i][j].persen_monthly) == 0){
-                result_monthly = null;
-                outerRadiusMonthly= '0%';
-                innerRadiusMonthly= '0%';
-              }
-              else{
+              // if(parseInt(result.datas[i][j].persen_monthly) == 0){
+              //   result_monthly = null;
+              //   outerRadiusMonthly= '0%';
+              //   innerRadiusMonthly= '0%';
+              // }
+              // else{
                 result_monthly = parseInt(result.datas[i][j].persen_monthly);
                 outerRadiusMonthly= '84%';
                 innerRadiusMonthly= '68%';
-              }
+              // }
 
-              if(parseInt(result.datas[i][j].persen_weekly) == 0){
-                result_weekly = null;
-                outerRadiusWeekly= '0%';
-                innerRadiusWeekly= '0%';
-              }
-              else{
+              // if(parseInt(result.datas[i][j].persen_weekly) == 0){
+              //   result_weekly = null;
+              //   outerRadiusWeekly= '0%';
+              //   innerRadiusWeekly= '0%';
+              // }
+              // else{
                 result_weekly = parseInt(result.datas[i][j].persen_weekly);
                 outerRadiusWeekly= '68%';
                 innerRadiusWeekly= '52%';
-              }
+              // }
 
-              if(parseInt(result.datas[i][j].persen_daily) == 0){
-                result_daily = null;
-                outerRadiusDaily= '0%';
-                innerRadiusDaily= '0%';
-              }
-              else{
+              // if(parseInt(result.datas[i][j].persen_daily) == 0){
+              //   result_daily = null;
+              //   outerRadiusDaily= '0%';
+              //   innerRadiusDaily= '0%';
+              // }
+              // else{
                 result_daily = parseInt(result.datas[i][j].persen_daily);
                 outerRadiusDaily= '52%';
                 innerRadiusDaily= '36%';
-              }
+              // }
 
               // if(parseInt(result.datas[i][j].persen_monthly) == 0){
               //   result_monthly = null;
@@ -446,13 +467,14 @@
               var leader_name = result.datas[i][j].leader_name;
               // console.log(result_monthly);
 
-              Highcharts.chart('container'+i, {
+              chart = new Highcharts.Chart({
                 chart: {
                   type: 'solidgauge',
                   height: '105%',
                   events: {
                     render: renderLabels
-                  }
+                  },
+                  renderTo: 'container'+i
                 },
                 title: {
                   text: leader_name,
@@ -582,6 +604,7 @@
                                   }
                                   else if(e.point.series.name != 'Current Day'){
                                     ShowModalChart(this.options.key,e.point.series.name);
+                                    // ShowModalDetails(this.options.key,e.point.series.name);
                                   }
                               }
                             },
@@ -664,6 +687,181 @@
       }
     }
   });
+
+        function ShowModalChart(leader_name,frequency) {
+          $('#myModal').modal('show');
+          var week_date = $('#week_date').val();
+          var data = {
+            leader_name:leader_name,
+            frequency:frequency,
+            week_date:week_date
+          }
+          $('#data-activity').append().empty();
+          $('#data-activity-head').append().empty();
+          $('#judul').append().empty();
+          $('#leader_name').append().empty();
+          $.get('{{ url("index/production_report/fetchDetailReport/".$id) }}', data, function(result, status, xhr) {
+            if(result.status){
+
+              $('#judul').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
+              $('#leader_name').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
+
+              var total_plan = 0;
+              var total_aktual = 0;
+              var presentase = 0;
+              var body = '';
+              var head = '';
+              var jj = [];
+              var dd = [];
+              var no = 1;
+              var aa = 1;
+              var bb = 0;
+              var url = '{{ url("") }}';
+              head += '<tr>';
+                    head += '<th rowspan="2" style="vertical-align: middle;">No.</th>';
+                    head += '<th rowspan="2" style="vertical-align: middle;"><center>Activity Name</center></th>';
+                    head += '<th rowspan="2" style="vertical-align: middle;"><center>Point Check</center></th>';
+              for(var a = 0; a < result.date.length; a++){
+                    head += '<th>'+result.date[a].week_name+'</th>';
+                    jj.push(result.date[a].week_name);
+              }
+              head += '</tr>';
+              $('#data-activity-head').append(head);
+              for (var i = 0; i < result.detail.length; i++) {
+                // for(var j = 0; j < result.detail[i].plan; j++){
+                  body += '<tr>';
+                    body += '<td>'+no+'</td>';
+                    body += '<td>'+result.detail[i].activity_name+'</td>'; 
+                    var data2 = {
+                      leader_name:leader_name,
+                      id_activity:result.detail[i].id_activity,
+                      id_point_check:result.detail[i].point_check_audit_id,
+                    };
+                    if(result.detail[i].activity_type == 'Audit'){
+                      $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
+                        dd.push(result2.point_check[0].point_check);
+                      });
+                      // body += dd;
+                    }
+                    else{
+                      body += '<td></td>';
+                    }
+
+                    console.log(dd);
+                    for(var ttt = 0; ttt < dd.length; ttt++){
+                        body += dd[ttt];
+                    }
+
+                    for(var jjj = 0; jjj< jj.length; jjj++){
+                      if(jj[jjj] == result.detail[i].audit_week || jj[jjj] == result.detail[i].sampling_week){
+                        body += '<td style="background-color: #4aff77"></td>';
+                      }
+                      else{
+                        body += '<td></td>';
+                      }
+                    }
+                  body += '</tr>';
+                // }
+                // body += '<tr>';
+                // body += '<td>'+no+'</td>';
+                // body += '<td>'+result.detail[i].activity_name+'</td>';
+                // body += '<td>'+result.detail[i].activity_type+'</td>';
+                // body += '<td>'+result.detail[i].plan+'</td>';
+                // body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
+                // body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
+                // // body += '<td>'+result.good[i].quantity+'</td>';
+                // body += '</tr>';
+
+                total_plan += parseInt(result.detail[i].plan);
+                total_aktual += parseInt(result.detail[i].jumlah_aktual);
+                no++;
+              }
+              // console.log(dd);
+              presentase = (total_aktual / total_plan)*100;
+              // body += '<tr>';
+              // body += '<td colspan="2"><b>Total</b></td>';
+              // body += '<td><b>'+total_plan+'</b></td>';
+              // body += '<td><b>'+total_aktual+'</b></td>';
+              // body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+              // body += '<td></td>';
+              // body += '</tr>';
+              $('#data-activity').append(body);
+
+            }
+
+          });
+        }
+
+        function ShowModalChartPrev(leader_name,frequency) {
+          $('#myModal').modal('show');
+          var week_date = $('#week_date').val();
+          var data = {
+            leader_name:leader_name,
+            week_date:week_date
+          }
+          $('#data-activity').append().empty();
+          $('#judul').append().empty();
+          $('#leader_name').append().empty();
+          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
+            if(result.status){
+              // console.log(result.detail);
+
+              $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
+              $('#leader_name').append('<b>'+leader_name+'</b>');
+
+              //Middle log
+              var total_plan = 0;
+              var total_aktual = 0;
+              var presentase = 0;
+              var body = '';
+              var url = '{{ url("") }}';
+              for (var i = 0; i < result.detail.length; i++) {
+                body += '<tr>';
+                body += '<td>'+result.detail[i].activity_name+'</td>';
+                body += '<td>'+result.detail[i].activity_type+'</td>';
+                body += '<td>'+result.detail[i].plan+'</td>';
+                body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
+                body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
+                body += '<td><a target="_blank" class="btn btn-primary btn-sm" href="'+url+'/'+result.detail[i].link+'">Details</a></td>';
+                // body += '<td>'+result.good[i].quantity+'</td>';
+                body += '</tr>';
+
+                total_plan += parseInt(result.detail[i].plan);
+                total_aktual += parseInt(result.detail[i].jumlah_aktual);
+              }
+              presentase = (total_aktual / total_plan)*100;
+              body += '<tr>';
+              body += '<td colspan="2"><b>Total</b></td>';
+              body += '<td><b>'+total_plan+'</b></td>';
+              body += '<td><b>'+total_aktual+'</b></td>';
+              body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+              body += '<td></td>';
+              body += '</tr>';
+              $('#data-activity').append(body);
+
+            }
+
+          });
+        }
+
+        function ShowModalDetails(leader_name,frequency) {
+          $('#myModal3').modal('show');
+          var week_date = $('#week_date').val();
+          var data = {
+            leader_name:leader_name,
+            frequency:frequency,
+            week_date:week_date
+          }
+          $('#judul').append().empty();
+          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
+            if(result.status){
+
+              $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
+
+            }
+
+          });
+        }
 
         Highcharts.createElement('link', {
           href: '{{ url("fonts/UnicaOne.css")}}',
@@ -867,110 +1065,5 @@
           maskColor: 'rgba(255,255,255,0.3)'
         };
         Highcharts.setOptions(Highcharts.theme);
-        }
-
-        function ShowModalChart(leader_name,frequency) {
-          $('#myModal').modal('show');
-          var week_date = $('#week_date').val();
-          var data = {
-            leader_name:leader_name,
-            frequency:frequency,
-            week_date:week_date
-          }
-          $('#data-activity').append().empty();
-          $('#judul').append().empty();
-          $('#leader_name').append().empty();
-          $.get('{{ url("index/production_report/fetchDetailReport/".$id) }}', data, function(result, status, xhr) {
-            if(result.status){
-              console.log(result.detail);
-
-              $('#judul').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
-              $('#leader_name').append('<b>'+leader_name+'</b>');
-
-              //Middle log
-              var total_plan = 0;
-              var total_aktual = 0;
-              var presentase = 0;
-              var body = '';
-              var url = '{{ url("") }}';
-              for (var i = 0; i < result.detail.length; i++) {
-                body += '<tr>';
-                body += '<td>'+result.detail[i].activity_name+'</td>';
-                body += '<td>'+result.detail[i].activity_type+'</td>';
-                body += '<td>'+result.detail[i].plan+'</td>';
-                body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
-                body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
-                body += '<td><a target="_blank" class="btn btn-primary btn-sm" href="'+url+'/'+result.detail[i].link+'">Details</a></td>';
-                // body += '<td>'+result.good[i].quantity+'</td>';
-                body += '</tr>';
-
-                total_plan += parseInt(result.detail[i].plan);
-                total_aktual += parseInt(result.detail[i].jumlah_aktual);
-              }
-              presentase = (total_aktual / total_plan)*100;
-              body += '<tr>';
-              body += '<td colspan="2"><b>Total</b></td>';
-              body += '<td><b>'+total_plan+'</b></td>';
-              body += '<td><b>'+total_aktual+'</b></td>';
-              body += '<td><b>'+parseInt(presentase)+'%</b></td>';
-              body += '<td></td>';
-              body += '</tr>';
-              $('#data-activity').append(body);
-
-            }
-
-          });
-        }
-
-        function ShowModalChartPrev(leader_name,frequency) {
-          $('#myModal').modal('show');
-          var week_date = $('#week_date').val();
-          var data = {
-            leader_name:leader_name,
-            week_date:week_date
-          }
-          $('#data-activity').append().empty();
-          $('#judul').append().empty();
-          $('#leader_name').append().empty();
-          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
-            if(result.status){
-              console.log(result.detail);
-
-              $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
-              $('#leader_name').append('<b>'+leader_name+'</b>');
-
-              //Middle log
-              var total_plan = 0;
-              var total_aktual = 0;
-              var presentase = 0;
-              var body = '';
-              var url = '{{ url("") }}';
-              for (var i = 0; i < result.detail.length; i++) {
-                body += '<tr>';
-                body += '<td>'+result.detail[i].activity_name+'</td>';
-                body += '<td>'+result.detail[i].activity_type+'</td>';
-                body += '<td>'+result.detail[i].plan+'</td>';
-                body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
-                body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
-                body += '<td><a target="_blank" class="btn btn-primary btn-sm" href="'+url+'/'+result.detail[i].link+'">Details</a></td>';
-                // body += '<td>'+result.good[i].quantity+'</td>';
-                body += '</tr>';
-
-                total_plan += parseInt(result.detail[i].plan);
-                total_aktual += parseInt(result.detail[i].jumlah_aktual);
-              }
-              presentase = (total_aktual / total_plan)*100;
-              body += '<tr>';
-              body += '<td colspan="2"><b>Total</b></td>';
-              body += '<td><b>'+total_plan+'</b></td>';
-              body += '<td><b>'+total_aktual+'</b></td>';
-              body += '<td><b>'+parseInt(presentase)+'%</b></td>';
-              body += '<td></td>';
-              body += '</tr>';
-              $('#data-activity').append(body);
-
-            }
-
-          });
         }
 </script>

@@ -125,6 +125,8 @@ class ProductionReportController extends Controller
         $bulan = date('Y-m');
       }
 
+      $date = db::select("select week_name,week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."'");
+
       $queryPMonth = "select DATE_FORMAT(date_sub(concat('".$bulan."','-01'), INTERVAL 1 MONTH),'%Y-%m') as last_month";
       $pMonth = DB::select($queryPMonth);
 
@@ -137,6 +139,8 @@ class ProductionReportController extends Controller
 
       $data[] = null;
       $dataleader[] = null;
+
+      $date = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."'");
 
       foreach($leaderrr as $leader){
         $dataleader = $leader->leader_dept; 
@@ -189,7 +193,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_report_activities.leader),0)
         as jumlah_laporan_aktivitas,
-        COALESCE((select count(DISTINCT(labelings.id)) as jumlah_labeling
+        COALESCE((select count(*) as jumlah_labeling
                 from labelings
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(labelings.date,'%Y-%m') = '".$bulan."'
@@ -353,6 +357,7 @@ class ProductionReportController extends Controller
         'status' => true,
         'leaderrr' => $leaderrr,
         'datas' => $data,
+        'date' => $date,
         'id' => $id,
         'dataleader' => $dataleader,
         'monthTitle' => $monthTitle
@@ -373,7 +378,12 @@ class ProductionReportController extends Controller
             $week_date = date('Y-m');
         }
 
+        $date = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+
         $detail = db::select("SELECT detail.id_activity,
+                     COALESCE(point_check_audit_id,0) as point_check_audit_id,
+                     production_audits.week_name as audit_week,
+                     sampling_checks.week_name as sampling_week,
                      detail.link,
                      detail.activity_name,
                      detail.activity_type,
@@ -461,16 +471,85 @@ class ProductionReportController extends Controller
                         and frequency = '".$frequency."'
                         and department_id = '".$id."'
                     and activity_name != 'Null'
-                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail");
+                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail
+            left join production_audits on production_audits.activity_list_id =  detail.id_activity
+            left join audit_processes on audit_processes.activity_list_id =  detail.id_activity
+            left join sampling_checks on sampling_checks.activity_list_id =  detail.id_activity");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
             'status' => true,
             'detail' => $detail,
+            'date' => $date,
             'leader_name' => $leader_name,
             'frequency' => $frequency,
             'week_date' => $week_date,
             'monthTitle' => $monthTitle
+        );
+        return Response::json($response);
+
+    }
+
+    public function fetchDetailReportByActType(Request $request,$id){
+        if($request->get('week_date') != Null){
+            $leader_name = $request->get('leader_name');
+            $frequency = $request->get('frequency');
+            $week_date = $request->get('week_date');
+            $id_activity = $request->get('id_activity');
+            $id_point_check = $request->get('id_point_check');
+            $week_name = $request->get('week_name');
+        }
+        else{
+            $leader_name = $request->get('leader_name');
+            $frequency = $request->get('frequency');
+            $week_date = date('Y-m');
+        }
+
+        $date = db::select("select week_name,week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+        $detail = db::select("select count(*) as jumlah_audit
+                from production_audits
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '2019-10'
+                                and leader_dept = 'Arie Gunawan'
+                                and actlist.department_id = '".$id."'
+                                and actlist.id = '".$id_activity."'
+                                and point_check_audit_id = '".$id_point_check."'
+                                and week_name = '".$week_name."'
+                    and actlist.frequency = '".$frequency."'");
+        $monthTitle = date("F Y", strtotime($week_date));
+
+        $response = array(
+            'status' => true,
+            'date' => $date,
+            'detail' => $detail,
+            'id_activity' => $id_activity,
+            'leader_name' => $leader_name,
+            'frequency' => $frequency,
+            'week_date' => $week_date,
+            'monthTitle' => $monthTitle
+        );
+        return Response::json($response);
+    }
+
+    public function fetchPointCheck(Request $request,$id){
+        if($request->get('id_point_check') != Null){
+            $leader_name = $request->get('leader_name');
+            $id_activity = $request->get('id_activity');
+            $id_point_check = $request->get('id_point_check');
+        }
+        else{
+            $leader_name = $request->get('leader_name');
+        }
+
+        $point_check = db::select("select *
+                from point_check_audits
+                where point_check_audits.id = '".$id_point_check."' LIMIT 1");
+
+        $response = array(
+            'status' => true,
+            'point_check' => $point_check,
+            'id_activity' => $id_activity,
+            'leader_name' => $leader_name,
         );
         return Response::json($response);
 

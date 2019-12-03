@@ -1372,6 +1372,7 @@ Route::get('index/production_report/report_by_act_type/{id}/{activity_type}', 'P
 Route::get('index/production_report/fetchReportByLeader/{id}', 'ProductionReportController@fetchReportByLeader');
 Route::get('index/production_report/fetchDetailReport/{id}', 'ProductionReportController@fetchDetailReport');
 Route::get('index/production_report/fetchDetailReportByActType/{id}', 'ProductionReportController@fetchDetailReportByActType');
+Route::get('index/production_report/fetchPointCheck/{id}', 'ProductionReportController@fetchPointCheck');
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 
 
@@ -1659,7 +1660,8 @@ Route::get('index/master_beacon','BeaconController@master_beacon');
 Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
-//suhu
+
+//suhu(temperature)
 Route::get('index/suhu_1','TemperatureController@suhu_1');
 Route::get('index/log_map_suhu1','TemperatureController@log_map_suhu1');
 Route::get('index/log_suhu_1','TemperatureController@data_suhu_1');
@@ -1667,6 +1669,8 @@ Route::get('index/map_suhu','TemperatureController@index_maps');
 Route::get('index/suhu_2','TemperatureController@suhu_2');
 Route::get('index/log_suhu_2','TemperatureController@data_suhu_2');
 Route::get('index/log_map_suhu2','TemperatureController@log_map_suhu2');
+Route::get('index/temperatur_user', 'TemperatureController@index_user');
+Route::get('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');
