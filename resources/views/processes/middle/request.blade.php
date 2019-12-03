@@ -121,13 +121,27 @@
 
 				$('#tableBody').html("");
 				$.each(result.datas, function(index, value) {
-					tableData += "<tr>";
-					tableData += "<td>"+value.material_number+"</td>";
-					tableData += "<td>"+value.model+"</td>";
-					tableData += "<td>"+value.key+"</td>";
-					tableData += "<td>"+value.kanban+"</td>";
-					tableData += "<td>"+value.quantity+"</td>";
-					tableData += "</tr>";
+
+					if(value.model[0] == 'A'){
+						tableData += "<tr>";
+						tableData += "<td style='color: #ffff66;'>"+value.material_number+"</td>";
+						tableData += "<td style='color: #ffff66;'>"+value.model+"</td>";
+						tableData += "<td style='color: #ffff66;'>"+value.key+"</td>";
+						tableData += "<td style='color: #ffff66;'>"+value.kanban+"</td>";
+						tableData += "<td style='color: #ffff66;'>"+value.quantity+"</td>";
+						tableData += "</tr>";
+					}else if(value.model[0] == 'T'){
+						tableData += "<tr>";
+						tableData += "<td style='color: rgb(157,255,105);'>"+value.material_number+"</td>";
+						tableData += "<td style='color: rgb(157,255,105);'>"+value.model+"</td>";
+						tableData += "<td style='color: rgb(157,255,105);'>"+value.key+"</td>";
+						tableData += "<td style='color: rgb(157,255,105);'>"+value.kanban+"</td>";
+						tableData += "<td style='color: rgb(157,255,105);'>"+value.quantity+"</td>";
+						tableData += "</tr>";
+					}
+
+
+					
 				});
 
 				$('#tableBody').append(tableData);
