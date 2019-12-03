@@ -160,7 +160,14 @@
 
 				$.each(result.datas, function(index, value){
 					// if (value.quantity >= value.lot_transfer * 2) {
-						model += "<th>"+value.model+" "+value.key+"</th>";
+
+
+						if(value.model[0] == 'A'){
+							model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
+						}else if(value.model[0] == 'T'){
+							model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
+						}
+
 						quantity += "<td>"+value.quantity+"</td>";
 						quantity_kanban += "<td>"+value.kanban+"</td>";
 						limit.push(value.kanban);
@@ -279,7 +286,7 @@
 				// });
 			}
 		})
-	}
+}
 
 
 	// function drawTable() {
