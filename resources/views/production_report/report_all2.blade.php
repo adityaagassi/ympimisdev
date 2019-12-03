@@ -44,52 +44,78 @@
     <div id="container5" class="gambar"></div>
     <div id="container6" class="gambar"></div>
     <div id="container7" class="gambar"></div>
+    <div id="container8" class="gambar"></div>
   </div>
   <div class="modal fade" id="myModal" style="color: black;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;" id="leader_name"><b></b></h4>
-          <h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;" id="judul_weekly"><b></b></h4>
+          <h5 class="modal-title" style="text-align: center;" id="sub_judul_weekly"></h5>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12">
               <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
-                <thead id="data-activity-head" style="background-color: rgba(126,86,134,.7);">
-                  {{-- <tr>
-                    <th rowspan="2" style="vertical-align: middle;">No.</th>
-                    <th rowspan="2" style="vertical-align: middle;"><center>Activity Name</center></th>
-                    <th rowspan="2" style="vertical-align: middle;"><center>Point Check</center></th>
-                    <th style="width: 13%" colspan="5">W1</th>
-                    <th style="width: 13%" colspan="5">W2</th>
-                    <th style="width: 13%" colspan="5">W3</th>
-                    <th style="width: 13%" colspan="5">W4</th>
-                  </tr>
-                  <tr id="data-activity-head">
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                  </tr> --}}
+                <thead id="data-activity-head-weekly" style="background-color: rgba(126,86,134,.7);">
                 </thead>
-                <tbody id="data-activity">
+                <tbody id="data-activity-weekly">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalMonthly" style="color: black;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;" id="judul_monthly"><b></b></h4>
+          <h5 class="modal-title" style="text-align: center;" id="sub_judul_monthly"></h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
+                <thead id="data-activity-head-monthly" style="background-color: rgba(126,86,134,.7);">
+                  <th>No.</th>
+                  <th>Activity Name</th>
+                  <th>Plan</th>
+                  <th>Actual</th>
+                </thead>
+                <tbody id="data-activity-monthly">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalDaily" style="color: black;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-transform: uppercase; text-align: center;" id="judul_daily"><b></b></h4>
+          <h5 class="modal-title" style="text-align: center;" id="sub_judul_daily"></h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
+                <thead id="data-activity-head-daily" style="background-color: rgba(126,86,134,.7);">
+                </thead>
+                <tbody id="data-activity-daily">
                 </tbody>
               </table>
             </div>
@@ -252,11 +278,11 @@
 
   function renderLabels() {
 
-  var offsetTop = 5,
+    var offsetTop = 5,
     offsetLeft = 5;
 
-  if (!this.series[0].label) {
-    this.series[0].label = this.renderer
+    if (!this.series[0].label) {
+      this.series[0].label = this.renderer
       .label(this.series[0].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
       .css({
         'color': '#FFFFFF',
@@ -265,131 +291,131 @@
         'borderColor': '#EBBA95'
       })
       .add(this.series[0].group);
+    }
+
+    this.series[0].label.translate(
+      this.chartWidth / 2 - this.series[0].label.width + offsetLeft,
+      this.plotHeight / 2 - this.series[0].points[0].shapeArgs.innerR -
+      (this.series[0].points[0].shapeArgs.r - this.series[0].points[0].shapeArgs.innerR) / 2 + offsetTop
+      );
+
+
+    if (!this.series[1].label) {
+      if(this.series[1].points[0].y != null){
+        this.series[1].label = this.renderer
+        .label(this.series[1].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[1].group);
+      }
+      else{
+        this.series[1].label = this.renderer
+        .label(' ', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[1].group);
+      }
+    }
+
+    this.series[1].label.translate(
+      this.chartWidth / 2 - this.series[1].label.width + offsetLeft,
+      this.plotHeight / 2 - this.series[1].points[0].shapeArgs.innerR -
+      (this.series[1].points[0].shapeArgs.r - this.series[1].points[0].shapeArgs.innerR) / 2 + offsetTop
+      );
+
+    if (!this.series[2].label) {
+      if(this.series[2].points[0].y != null){
+        this.series[2].label = this.renderer
+        .label(this.series[2].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[2].group);
+      }
+      else{
+        this.series[2].label = this.renderer
+        .label(' ', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[2].group);
+      }
+    }
+
+    this.series[2].label.translate(
+      this.chartWidth / 2 - this.series[2].label.width + offsetLeft,
+      this.plotHeight / 2 - this.series[2].points[0].shapeArgs.innerR -
+      (this.series[2].points[0].shapeArgs.r - this.series[2].points[0].shapeArgs.innerR) / 2 + offsetTop
+      );
+
+    if (!this.series[3].label) {
+      if(this.series[3].points[0].y != null){
+        this.series[3].label = this.renderer
+        .label(this.series[3].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[3].group);
+      }
+      else{
+        this.series[3].label = this.renderer
+        .label(' ', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[3].group);
+      }
+    }
+
+    this.series[3].label.translate(
+      this.chartWidth / 2 - this.series[3].label.width + offsetLeft,
+      this.plotHeight / 2 - this.series[3].points[0].shapeArgs.innerR -
+      (this.series[3].points[0].shapeArgs.r - this.series[3].points[0].shapeArgs.innerR) / 2 + offsetTop
+      );
+
+    if (!this.series[4].label) {
+      if(this.series[4].points[0].y != null){
+        this.series[4].label = this.renderer
+        .label(this.series[4].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[4].group);
+      }
+      else{
+        this.series[4].label = this.renderer
+        .label(' ', 0, 0, 'rect', 0, 0, true, true)
+        .css({
+          'color': '#FFFFFF',
+          'fontWeight':'bold',
+          'textAlign': 'center'
+        })
+        .add(this.series[4].group);
+      }
+    }
+
+    this.series[4].label.translate(
+      this.chartWidth / 2 - this.series[4].label.width + offsetLeft,
+      this.plotHeight / 2 - this.series[4].points[0].shapeArgs.innerR -
+      (this.series[4].points[0].shapeArgs.r - this.series[4].points[0].shapeArgs.innerR) / 2 + offsetTop
+      );
   }
-
-  this.series[0].label.translate(
-    this.chartWidth / 2 - this.series[0].label.width + offsetLeft,
-    this.plotHeight / 2 - this.series[0].points[0].shapeArgs.innerR -
-    (this.series[0].points[0].shapeArgs.r - this.series[0].points[0].shapeArgs.innerR) / 2 + offsetTop
-  );
-
-
-  if (!this.series[1].label) {
-    if(this.series[1].points[0].y != null){
-      this.series[1].label = this.renderer
-      .label(this.series[1].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[1].group);
-    }
-    else{
-      this.series[1].label = this.renderer
-      .label(' ', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[1].group);
-    }
-  }
-
-  this.series[1].label.translate(
-    this.chartWidth / 2 - this.series[1].label.width + offsetLeft,
-    this.plotHeight / 2 - this.series[1].points[0].shapeArgs.innerR -
-    (this.series[1].points[0].shapeArgs.r - this.series[1].points[0].shapeArgs.innerR) / 2 + offsetTop
-  );
-
-  if (!this.series[2].label) {
-    if(this.series[2].points[0].y != null){
-      this.series[2].label = this.renderer
-      .label(this.series[2].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[2].group);
-    }
-    else{
-      this.series[2].label = this.renderer
-      .label(' ', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[2].group);
-    }
-  }
-
-  this.series[2].label.translate(
-    this.chartWidth / 2 - this.series[2].label.width + offsetLeft,
-    this.plotHeight / 2 - this.series[2].points[0].shapeArgs.innerR -
-    (this.series[2].points[0].shapeArgs.r - this.series[2].points[0].shapeArgs.innerR) / 2 + offsetTop
-  );
-
-  if (!this.series[3].label) {
-    if(this.series[3].points[0].y != null){
-      this.series[3].label = this.renderer
-      .label(this.series[3].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[3].group);
-    }
-    else{
-      this.series[3].label = this.renderer
-      .label(' ', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[3].group);
-    }
-  }
-
-  this.series[3].label.translate(
-    this.chartWidth / 2 - this.series[3].label.width + offsetLeft,
-    this.plotHeight / 2 - this.series[3].points[0].shapeArgs.innerR -
-    (this.series[3].points[0].shapeArgs.r - this.series[3].points[0].shapeArgs.innerR) / 2 + offsetTop
-  );
-
-  if (!this.series[4].label) {
-    if(this.series[4].points[0].y != null){
-      this.series[4].label = this.renderer
-      .label(this.series[4].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[4].group);
-    }
-    else{
-      this.series[4].label = this.renderer
-      .label(' ', 0, 0, 'rect', 0, 0, true, true)
-      .css({
-        'color': '#FFFFFF',
-        'fontWeight':'bold',
-        'textAlign': 'center'
-      })
-      .add(this.series[4].group);
-    }
-  }
-
-  this.series[4].label.translate(
-    this.chartWidth / 2 - this.series[4].label.width + offsetLeft,
-    this.plotHeight / 2 - this.series[4].points[0].shapeArgs.innerR -
-    (this.series[4].points[0].shapeArgs.r - this.series[4].points[0].shapeArgs.innerR) / 2 + offsetTop
-  );
-}
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
   function drawChart(){
@@ -597,18 +623,18 @@
                       series:{
                         cursor: 'pointer',
                         point: {
-                            events: {
-                              click: function(e) {
-                                  if(e.point.series.name == 'Prev Month'){
-                                    ShowModalChartPrev(this.options.key,e.point.series.name);
-                                  }
-                                  else if(e.point.series.name != 'Current Day'){
-                                    ShowModalChart(this.options.key,e.point.series.name);
+                          events: {
+                            click: function(e) {
+                              if(e.point.series.name == 'Prev Month'){
+                                ShowModalChartPrev(this.options.key,e.point.series.name);
+                              }
+                              else if(e.point.series.name != 'Current Day'){
+                                ShowModalChart(this.options.key,e.point.series.name);
                                     // ShowModalDetails(this.options.key,e.point.series.name);
                                   }
-                              }
+                                }
+                              },
                             },
-                        },
                         // dataLabels:{
                         //   // color: 'white',
                         //   enabled: true,
@@ -680,134 +706,295 @@
                       showInLegend: true
                     }]
                   });
-              }
-          }
-      } else{
-        alert('Attempt to retrieve data failed');
-      }
-    }
-  });
+}
+}
+} else{
+  alert('Attempt to retrieve data failed');
+}
+}
+});
 
-        function ShowModalChart(leader_name,frequency) {
-          $('#myModal').modal('show');
-          var week_date = $('#week_date').val();
-          var data = {
-            leader_name:leader_name,
-            frequency:frequency,
-            week_date:week_date
-          }
-          $('#data-activity').append().empty();
-          $('#data-activity-head').append().empty();
-          $('#judul').append().empty();
-          $('#leader_name').append().empty();
-          var dd = [];
+function ShowModalChart(leader_name,frequency) {
+  var week_date = $('#week_date').val();
+  var data = {
+    leader_name:leader_name,
+    frequency:frequency,
+    week_date:week_date
+  }
+  $('#data-activity-weekly').append().empty();
+  $('#data-activity-head-weekly').append().empty();
+  $('#data-activity-daily').append().empty();
+  $('#data-activity-head-daily').append().empty();
+  $('#data-activity-monthly').append().empty();
+  $('#sub_judul_weekly').append().empty();
+  $('#judul_weekly').append().empty();
+  $('#sub_judul_monthly').append().empty();
+  $('#judul_monthly').append().empty();
+  $('#sub_judul_daily').append().empty();
+  $('#judul_daily').append().empty();
+  var dd = [];
           // var dd = new Object();
-          $.get('{{ url("index/production_report/fetchDetailReport/".$id) }}', data, function(result, status, xhr) {
-            if(result.status){
+          if(frequency == 'Weekly'){
+            $('#myModal').modal('show');
+            $.get('{{ url("index/production_report/fetchDetailReportWeekly/".$id) }}', data, function(result, status, xhr) {
+              if(result.status){
 
-              $('#judul').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
-              $('#leader_name').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
+                $('#sub_judul_weekly').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
+                $('#judul_weekly').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
 
-              var total_plan = 0;
-              var total_aktual = 0;
-              var presentase = 0;
-              var body = '';
-              var head = '';
-              var jj = [];
-              var no = 1;
-              var aa = 1;
-              var bb = 0;
-              var url = '{{ url("") }}';
-              head += '<tr>';
-                    head += '<th rowspan="2" style="vertical-align: middle;">No.</th>';
-                    head += '<th rowspan="2" style="vertical-align: middle;"><center>Activity Name</center></th>';
-                    head += '<th rowspan="2" style="vertical-align: middle;"><center>Point Check</center></th>';
-              for(var a = 0; a < result.date.length; a++){
-                    head += '<th>'+result.date[a].week_name+'</th>';
-                    jj.push(result.date[a].week_name);
-              }
-              head += '</tr>';
-              $('#data-activity-head').append(head);
-              for (var i = 0; i < result.detail.length; i++) {
-                // for(var j = 0; j < result.detail[i].plan; j++){
+                var total_plan = 0;
+                var total_aktual = 0;
+                var presentase = 0;
+                var body = '';
+                var head = '';
+                var jj = [];
+                var no = 1;
+                var aa = 1;
+                var bb = 0;
+                var url = '{{ url("") }}';
+                head += '<tr>';
+                head += '<th rowspan="2" style="vertical-align: middle;">No.</th>';
+                head += '<th rowspan="2" style="vertical-align: middle;"><center>Activity Name</center></th>';
+                // console.table(result.detail);
+                for(var a = 0; a < result.date.length; a++){
+                  head += '<th>'+result.date[a].week_name+'</th>';
+                  jj.push(result.date[a].week_name);
+                }
+                head += '</tr>';
+                console.table(result.detail);
+                $('#data-activity-head-weekly').append(head);
+                for (var i = 1; i < result.detail.length; i++) {
                   body += '<tr>';
-                    body += '<td>'+no+'</td>';
-                    body += '<td>'+result.detail[i].activity_name+'</td>';
-                    body += '<td>'+result.detail[i].point_check_audit_id+'</td>';
-                    var data2 = {
-                      leader_name:leader_name,
-                      id_activity:result.detail[i].id_activity,
-                      id_point_check:result.detail[i].point_check_audit_id,
-                    };
-                    if(result.detail[i].activity_type == 'Audit'){
-                      $.get('{{ url("index/production_report/fetchPointCheck/".$id) }}', data2, function(result2, status, xhr) {
-                        dd.push({data : result2.title});
-                        // $.each(result2.point_check, function(key, value){
-                        //   // console.log(value.title);
-                        // });
-                      });                      
+                  body += '<td>'+no+'</td>';
+                  body += '<td>'+result.detail[i][0].activity_name+'</td>';
+                  for(var jjj = 0; jjj< jj.length; jjj++){
+                    if(jj[jjj] == result.detail[i][0].week_name){
+                      body += '<td style="background-color: #4aff77"></td>';
                     }
                     else{
-                      // body += '<td></td>';
-                    }                    
-                    // console.log(dd);
-                    for(var jjj = 0; jjj< jj.length; jjj++){
-                      if(jj[jjj] == result.detail[i].audit_week || jj[jjj] == result.detail[i].sampling_week){
-                        if(result.detail[i].audit_date == null){
-                          body += '<td style="background-color: #4aff77">'+result.detail[i].sampling_date+'</td>';
-                        }
-                        else{
-                          body += '<td style="background-color: #4aff77">'+result.detail[i].audit_date+'</td>';
-                        }
-                      }
-                      else{
-                        body += '<td></td>';
+                      body += '<td></td>';
+                    }
+                  }
+                  body += '</tr>';
+                  total_plan += parseInt(result.detail[i].plan);
+                  total_aktual += parseInt(result.detail[i].jumlah_aktual);
+                  no++;
+                }
+
+                var dds = [];
+                var dd = "";
+                var activity = [];
+                var activity_length = 0;
+                $.each(result.detail[1], function(index, value){
+
+                  for (var i = 0; i < result.detail[1].length; i++) {
+                    if(i == 0){
+                      activity.push(result.detail[1][index].activity_name);
+                      activity_length++;
+                    }else if(i > 0){
+                      if(!activity.includes(result.detail[1][index].activity_name)){
+                        activity.push(result.detail[1][index].activity_name);
+                        activity_length++;
                       }
                     }
-                  body += '</tr>';
-                // }
+
+                      // dd += "<td id='"+index+"_"+i+"'></td>";
+                    }
+                    // dd += "</tr>";
+                    // dds.push(value.activity_name);
+                  // }
+                })
+
+                var nomer = 0;
+                for (var i = 0; i < activity.length; i++) {
+                  dd += "<tr>";
+                  dd += "<td>"+ (++nomer) +"</td>";
+                  dd += "<td>"+activity[i]+"</td>";
+                  
+                  for (var j = 0; j < result.detail[1].length; j++) {
+                    if(activity[i] == result.detail[1][j].activity_name){
+                      for (var k = 1; k < result.detail.length; k++) {
+                        for (var l = 0; l < result.detail[k].length; l++) {
+                          if(result.detail[k][l].activity_name == activity[i]){
+                            if(result.detail[k][l].jumlah_aktual > 0){
+                              dd += "<td style='background-color: #4aff77'>"+result.detail[k][l].jumlah_aktual+"</td>";
+                            }else{
+                              dd += "<td style='background-color: #f7ff59'>"+result.detail[k][l].jumlah_aktual+"</td>";
+
+                            }
+
+
+                          }
+                        }                      
+
+                      }
+                      
+
+                    }
+                  }
+
+
+                  dd += "<tr>";
+                }
+
+                // console.log(dd);
+                // console.log(activity);
+
+
+                //    SAYA
+                sd = [];
+                // $.each(result.detail, function(index2, value2){
+                //   for (var i = 0; i < result.detail[1]; i++) {
+                //     if (result.detail[1][i] == 1) {
+                //       sd.push([value2.activity_name]);
+                //     }
+                //   }
+                // })
+
+                console.log(sd);
+
+                presentase = (total_aktual / total_plan)*100;
                 // body += '<tr>';
-                // body += '<td>'+no+'</td>';
-                // body += '<td>'+result.detail[i].activity_name+'</td>';
-                // body += '<td>'+result.detail[i].activity_type+'</td>';
-                // body += '<td>'+result.detail[i].plan+'</td>';
-                // body += '<td>'+parseInt(result.detail[i].jumlah_aktual)+'</td>';
-                // body += '<td>'+parseInt(result.detail[i].persen)+' %</td>';
-                // // body += '<td>'+result.good[i].quantity+'</td>';
+                // body += '<td colspan="2"><b>Total</b></td>';
+                // body += '<td><b>'+total_plan+'</b></td>';
+                // body += '<td><b>'+total_aktual+'</b></td>';
+                // body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+                // body += '<td></td>';
                 // body += '</tr>';
+                $('#data-activity-weekly').append(dd);
 
-                total_plan += parseInt(result.detail[i].plan);
-                total_aktual += parseInt(result.detail[i].jumlah_aktual);
-                no++;
               }
-              // console.log(dd);
-              presentase = (total_aktual / total_plan)*100;
-              // body += '<tr>';
-              // body += '<td colspan="2"><b>Total</b></td>';
-              // body += '<td><b>'+total_plan+'</b></td>';
-              // body += '<td><b>'+total_aktual+'</b></td>';
-              // body += '<td><b>'+parseInt(presentase)+'%</b></td>';
-              // body += '<td></td>';
-              // body += '</tr>';
-              $('#data-activity').append(body);
 
-            }
+            });
+}
+else if(frequency == 'Monthly'){
+  $('#myModalMonthly').modal('show');
+  $.get('{{ url("index/production_report/fetchDetailReportMonthly/".$id) }}', data, function(result, status, xhr) {
+    if(result.status){
 
-          });
+      $('#sub_judul_monthly').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
+      $('#judul_monthly').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
+
+      var total_plan = 0;
+      var total_aktual = 0;
+      var presentase = 0;
+      var body = '';
+      var url = '{{ url("") }}';
+      var no = 1;
+
+      for (var i = 0; i < result.detail.length; i++) {
+        body += '<tr>';
+        body += '<td>'+no+'</td>';
+        body += '<td>'+result.detail[i].activity_name+'</td>';
+        body += '<td>'+result.detail[i].plan+'</td>';
+        if(parseInt(result.detail[i].jumlah_aktual) > 0){
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_aktual+'</td>';
         }
+        else{
+          body += '<td style="background-color: #f7ff59"></td>';
+        }
+        body += '</tr>';
+        total_plan += parseInt(result.detail[i].plan);
+        total_aktual += parseInt(result.detail[i].jumlah_aktual);
+        no++;
+      }
+      presentase = (total_aktual / total_plan)*100;
+      body += '<tr>';
+      body += '<td colspan="2"><b>Total</b></td>';
+      body += '<td><b>'+total_plan+'</b></td>';
+      body += '<td><b>'+total_aktual+'</b></td>';
+      body += '</tr>';
+      body += '<tr>';
+      body += '<td colspan="2"><b>Presentase</b></td>';
+      body += '<td><b>100%</b></td>';
+      body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+      body += '</tr>';
+      $('#data-activity-monthly').append(body);
 
-        function ShowModalChartPrev(leader_name,frequency) {
-          $('#myModal').modal('show');
-          var week_date = $('#week_date').val();
-          var data = {
-            leader_name:leader_name,
-            week_date:week_date
-          }
-          $('#data-activity').append().empty();
-          $('#judul').append().empty();
-          $('#leader_name').append().empty();
-          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
-            if(result.status){
+    }
+
+  });
+}
+else if(frequency == 'Daily'){
+  $('#myModalDaily').modal('show');
+  $.get('{{ url("index/production_report/fetchDetailReportDaily/".$id) }}', data, function(result, status, xhr) {
+    if(result.status){
+
+      $('#sub_judul_daily').append('<b>'+frequency+' Report of '+leader_name+' on '+result.monthTitle+'</b>');
+      $('#judul_daily').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
+
+      var total_plan = 0;
+      var total_aktual = 0;
+      var presentase = 0;
+      var body = '';
+      var head = '';
+      var jj = [];
+      var no = 1;
+      var aa = 1;
+      var bb = 0;
+      var url = '{{ url("") }}';
+      head += '<tr>';
+      head += '<th rowspan="2" style="vertical-align: middle;">No.</th>';
+      head += '<th rowspan="2" style="vertical-align: middle;">Date</th>';
+      for(var a = 0; a < result.act_name.length; a++){
+        head += '<th>'+result.act_name[a].activity_name+'</th>';
+      }
+      head += '</tr>';
+      $('#data-activity-head-daily').append(head);
+      console.table(result.date);
+      for (var i = 0; i < result.detail.length; i++) {
+
+        body += '<tr>';
+        body += '<td>'+no+'</td>';
+        body += '<td>'+result.date[i].week_date+'</td>';
+        if(parseInt(result.detail[i].jumlah_aktual) != 0){
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_aktual+'</td>';
+        }
+        else{
+          body += '<td style="background-color: #f7ff59"></td>';
+        }
+        body += '</tr>';
+        total_plan += parseInt(result.detail[i].plan);
+        total_aktual += parseInt(result.detail[i].jumlah_aktual);
+        plan = result.detail[i].plan;
+        no++;
+      }
+      presentase = (total_aktual / plan)*100;
+      body += '<tr>';
+      body += '<td colspan="2"><b>Total Aktual</b></td>';
+      body += '<td><b>'+total_aktual+'</b></td>';
+      body += '<td></td>';
+      body += '</tr>';
+      body += '<tr>';
+      body += '<td colspan="2"><b>Total Plan</b></td>';
+      body += '<td><b>'+plan+'</b></td>';
+      body += '<td></td>';
+      body += '</tr>';
+      body += '<tr>';
+      body += '<td colspan="2"><b>Presentase</b></td>';
+      body += '<td><b>'+parseInt(presentase)+'%</b></td>';
+      body += '<td></td>';
+      body += '</tr>';
+      $('#data-activity-daily').append(body);
+
+    }
+
+  });
+}
+}
+
+function ShowModalChartPrev(leader_name,frequency) {
+  $('#myModal').modal('show');
+  var week_date = $('#week_date').val();
+  var data = {
+    leader_name:leader_name,
+    week_date:week_date
+  }
+  $('#data-activity').append().empty();
+  $('#judul').append().empty();
+  $('#leader_name').append().empty();
+  $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
+    if(result.status){
               // console.log(result.detail);
 
               $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
@@ -846,121 +1033,121 @@
             }
 
           });
-        }
+}
 
-        function ShowModalDetails(leader_name,frequency) {
-          $('#myModal3').modal('show');
-          var week_date = $('#week_date').val();
-          var data = {
-            leader_name:leader_name,
-            frequency:frequency,
-            week_date:week_date
-          }
-          $('#judul').append().empty();
-          $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
-            if(result.status){
+function ShowModalDetails(leader_name,frequency) {
+  $('#myModal3').modal('show');
+  var week_date = $('#week_date').val();
+  var data = {
+    leader_name:leader_name,
+    frequency:frequency,
+    week_date:week_date
+  }
+  $('#judul').append().empty();
+  $.get('{{ url("index/production_report/fetchDetailReportPrev/".$id) }}', data, function(result, status, xhr) {
+    if(result.status){
 
-              $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
+      $('#judul').append('<b>Previous Month Report of '+leader_name+' on '+result.monthTitle+'</b>');
 
-            }
+    }
 
-          });
-        }
+  });
+}
 
-        Highcharts.createElement('link', {
-          href: '{{ url("fonts/UnicaOne.css")}}',
-          rel: 'stylesheet',
-          type: 'text/css'
-        }, null, document.getElementsByTagName('head')[0]);
+Highcharts.createElement('link', {
+  href: '{{ url("fonts/UnicaOne.css")}}',
+  rel: 'stylesheet',
+  type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
 
-        Highcharts.theme = {
-          colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-          chart: {
-            backgroundColor: {
-              linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-              stops: [
-              [0, '#2a2a2b']
-              ]
-            },
-            style: {
-              fontFamily: 'sans-serif'
-            },
-            plotBorderColor: '#606063'
-          },
-          title: {
-            style: {
-              color: '#E0E0E3',
-              textTransform: 'uppercase',
-              fontSize: '20px'
-            }
-          },
-          subtitle: {
-            style: {
-              color: '#E0E0E3',
-              textTransform: 'uppercase'
-            }
-          },
-          xAxis: {
-            gridLineColor: '#707073',
-            labels: {
-              style: {
-                color: '#E0E0E3'
-              }
-            },
-            lineColor: '#707073',
-            minorGridLineColor: '#505053',
-            tickColor: '#707073',
-            title: {
-              style: {
-                color: '#A0A0A3'
+Highcharts.theme = {
+  colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+  '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+  chart: {
+    backgroundColor: {
+      linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+      stops: [
+      [0, '#2a2a2b']
+      ]
+    },
+    style: {
+      fontFamily: 'sans-serif'
+    },
+    plotBorderColor: '#606063'
+  },
+  title: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase',
+      fontSize: '20px'
+    }
+  },
+  subtitle: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase'
+    }
+  },
+  xAxis: {
+    gridLineColor: '#707073',
+    labels: {
+      style: {
+        color: '#E0E0E3'
+      }
+    },
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
+    title: {
+      style: {
+        color: '#A0A0A3'
 
-              }
-            }
-          },
-          yAxis: {
-            gridLineColor: '#707073',
-            labels: {
-              style: {
-                color: '#E0E0E3'
-              }
-            },
-            lineColor: '#707073',
-            minorGridLineColor: '#505053',
-            tickColor: '#707073',
-            tickWidth: 1,
-            title: {
-              style: {
-                color: '#A0A0A3'
-              }
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            style: {
-              color: '#F0F0F0'
-            }
-          },
-          plotOptions: {
-            series: {
-              dataLabels: {
-                color: 'white'
-              },
-              marker: {
-                lineColor: '#333'
-              }
-            },
-            boxplot: {
-              fillColor: '#505053'
-            },
-            candlestick: {
-              lineColor: 'white'
-            },
-            errorbar: {
-              color: 'white'
-            }
-          },
-          legend: {
+      }
+    }
+  },
+  yAxis: {
+    gridLineColor: '#707073',
+    labels: {
+      style: {
+        color: '#E0E0E3'
+      }
+    },
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
+    tickWidth: 1,
+    title: {
+      style: {
+        color: '#A0A0A3'
+      }
+    }
+  },
+  tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    style: {
+      color: '#F0F0F0'
+    }
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
+        color: 'white'
+      },
+      marker: {
+        lineColor: '#333'
+      }
+    },
+    boxplot: {
+      fillColor: '#505053'
+    },
+    candlestick: {
+      lineColor: 'white'
+    },
+    errorbar: {
+      color: 'white'
+    }
+  },
+  legend: {
             // itemStyle: {
             //   color: '#E0E0E3'
             // },
@@ -1069,5 +1256,5 @@
           maskColor: 'rgba(255,255,255,0.3)'
         };
         Highcharts.setOptions(Highcharts.theme);
-        }
-</script>
+      }
+    </script>
