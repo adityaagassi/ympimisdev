@@ -6,14 +6,23 @@
 		text-align:center;
 	}
 
+	table {
+		border:2px solid #333;
+	}
+
 	thead>tr>th {
+		border:2px solid #333;
 		background-color: white;
 		text-align: center;
 		font-size: 2vw;
 	}
 
 	tbody>tr>td {
-		color: white;
+		border:2px solid #333;
+		font-size: 1.5vw;
+		color: #333;
+		font-weight: bold;
+		text-align:center;
 	}
 	#loading { display: none; }
 
@@ -29,25 +38,27 @@
 			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
-	<div class="col-md-12" style="padding-bottom:10px;">
-		<div class="input-group">
-			<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
-			<input type="text" class="form-control input-lg" placeholder="Scan Kanban Solder . . ." style="text-align: center" id="tag">
-			<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+	<div class="row">
+		<div class="col-md-12" style="padding-bottom:10px;">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+				<input type="text" class="form-control input-lg" placeholder="Scan Kanban Solder . . ." style="text-align: center" id="tag">
+				<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
+			</div>
 		</div>
-	</div>
-	<div class="col-md-12">
-		<table class="table table-bordered">
-			<thead>
-				<th>Material Number</th>
-				<th>Model</th>
-				<th>Key</th>
-				<th>Kanban</th>
-				<th>Quantity</th>
-			</thead>
-			<tbody id="tableBody">
-			</tbody>
-		</table>
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<th>Material Number</th>
+					<th>Model</th>
+					<th>Key</th>
+					<th>Kanban</th>
+					<th>Quantity</th>
+				</thead>
+				<tbody id="tableBody">
+				</tbody>
+			</table>
+		</div>
 	</div>
 </section>
 
@@ -124,19 +135,19 @@
 
 					if(value.model[0] == 'A'){
 						tableData += "<tr>";
-						tableData += "<td style='color: #ffff66;'>"+value.material_number+"</td>";
-						tableData += "<td style='color: #ffff66;'>"+value.model+"</td>";
-						tableData += "<td style='color: #ffff66;'>"+value.key+"</td>";
-						tableData += "<td style='color: #ffff66;'>"+value.kanban+"</td>";
-						tableData += "<td style='color: #ffff66;'>"+value.quantity+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: #ffff66;'>"+value.material_number+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: #ffff66;'>"+value.model+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: #ffff66;'>"+value.key+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: #ffff66;'>"+value.kanban+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: #ffff66; text-align:right;'>"+value.quantity+"</td>";
 						tableData += "</tr>";
 					}else if(value.model[0] == 'T'){
 						tableData += "<tr>";
-						tableData += "<td style='color: rgb(157,255,105);'>"+value.material_number+"</td>";
-						tableData += "<td style='color: rgb(157,255,105);'>"+value.model+"</td>";
-						tableData += "<td style='color: rgb(157,255,105);'>"+value.key+"</td>";
-						tableData += "<td style='color: rgb(157,255,105);'>"+value.kanban+"</td>";
-						tableData += "<td style='color: rgb(157,255,105);'>"+value.quantity+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: rgb(157,255,105);'>"+value.material_number+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: rgb(157,255,105);'>"+value.model+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: rgb(157,255,105);'>"+value.key+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: rgb(157,255,105);'>"+value.kanban+"</td>";
+						tableData += "<td style='padding-top: 0px; padding-bottom: 0px; background-color: rgb(157,255,105); text-align:right;'>"+value.quantity+"</td>";
 						tableData += "</tr>";
 					}
 
