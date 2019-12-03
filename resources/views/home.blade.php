@@ -270,7 +270,7 @@
                                 <i class="fa fa-caret-right"></i> e-Kaizen
                             </a>
                             <br>
-                            <a href="#">
+                            <a href="{{ url("/index/kaizen/aproval/resume") }}">
                                 <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress 
                             </a>
                             <br>
@@ -286,7 +286,7 @@
                                 <i class="fa fa-caret-right"></i> Report All Kaizen
                             </a>
                             <br>
-                            <a href="{{ url("index/kaizen/report") }}">
+                            <a href="{{ url("index/kaizen2/report") }}">
                                 <i class="fa fa-caret-right"></i> Report Kaizen Excellent
                             </a>
                             <br>

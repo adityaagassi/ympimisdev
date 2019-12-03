@@ -58,6 +58,12 @@
 		background-color: #7e5686;
 		color: white;
 	}
+	#kz_before > p > img {
+		max-width:420px;
+	}
+	#kz_after > p > img {
+		max-width:420px;
+	}
 </style>
 @endsection
 
@@ -187,22 +193,7 @@
 									<td id="kz_after"></td>
 								</tr>
 							</table>
-							<table width="100%" id="tabel_nilai" style="border:1px solid black;">
-								<tr>
-									<th>Manpower</th>
-									<td>0 menit X Rp 500,00</td>
-									<td>Rp 0,00 / bulan</td>
-								</tr>
-								<tr>
-									<th>Space</th>
-									<td>0 m<sup>2</sup> X Rp 0,00</td>
-									<td>Rp 0,00</td>
-								</tr>
-								<tr>
-									<th>Other (Material,listrik, kertas, dll)</th>
-									<td>Rp 0</td>
-									<td>Rp 0,00</td>
-								</tr>
+							<table width="100%" id="tabel_nilai" style="border: 1px solid black">
 							</table>
 							<br>
 							<table width="100%" border="1" id="tabel_assess">
@@ -324,7 +315,7 @@
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	});
 
-	function fill_table(pos, area, stat) {
+	function fill_table(pos, area, stat, filter) {
 		$('#tableKaizen').DataTable().destroy();
 		var table2 = $('#tableKaizen').DataTable({
 			'dom': 'Bfrtip',
@@ -344,7 +335,7 @@
 			"processing": true,
 			"ajax": {
 				"type" : "get",
-				"data": { position: pos, area: area, status: stat},
+				"data": { position: pos, area: area, status: stat, filter: filter},
 				"url" : "{{ url('fetch/kaizen/') }}"
 			},
 			"columns": [
@@ -371,7 +362,8 @@
 	}
 
 	$(window).on('pageshow', function(){
-		fill_table('{{ $position->position }}', area, stat);
+		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
+		fill_table('{{ $position->position }}', area, stat, '{{ $fil }}');
 	});
 
 	function cekDetail(id) {
@@ -380,22 +372,64 @@
 		}
 
 		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-			$("#kz_title").text(result.title);
-			$("#kz_nik").text(result.employee_id + " / "+ result.employee_name);
-			$("#kz_section").text(result.section);
-			$("#kz_leader").text(result.leader_name);
-			$("#kz_tanggal").text(result.date);
-			$("#kz_area").text(result.area);
-			$("#kz_before").html(result.condition);
-			$("#kz_after").html(result.improvement);
-			$("#foreman_point1").text(result.foreman_point_1 * 40);
-			$("#foreman_point2").text(result.foreman_point_2 * 30);
-			$("#foreman_point3").text(result.foreman_point_3 * 30);
-			$("#foreman_total").text((result.foreman_point_1 * 40) + (result.foreman_point_2 * 30) + (result.foreman_point_3 * 30));
-			$("#manager_point1").text(result.manager_point_1 * 40);
-			$("#manager_point2").text(result.manager_point_2 * 30);
-			$("#manager_point3").text(result.manager_point_3 * 30);
-			$("#manager_total").text((result.manager_point_1 * 40) + (result.manager_point_2 * 30) + (result.manager_point_3 * 30));
+			$("#kz_title").text(result[0].title);
+			$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
+			$("#kz_section").text(result[0].section);
+			$("#kz_leader").text(result[0].leader_name);
+			$("#kz_tanggal").text(result[0].date);
+			$("#kz_area").text(result[0].area);
+			$("#kz_before").html(result[0].condition);
+			$("#kz_after").html(result[0].improvement);
+			$("#foreman_point1").text(result[0].foreman_point_1 * 40);
+			$("#foreman_point2").text(result[0].foreman_point_2 * 30);
+			$("#foreman_point3").text(result[0].foreman_point_3 * 30);
+			$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
+			$("#manager_point1").text(result[0].manager_point_1 * 40);
+			$("#manager_point2").text(result[0].manager_point_2 * 30);
+			$("#manager_point3").text(result[0].manager_point_3 * 30);
+			$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
+
+			$("#tabel_nilai").empty();
+			if (result[0].cost_name) {
+				bd = "";
+				tot = 0;
+				bd += "<tr style='font-size: 13px;'><th>Estimasi Hasil : </th></tr>";
+				$.each(result, function(index, value){
+					bd += "<tr>";
+					var unit = "";
+
+					if (value.cost_name == "Manpower") {
+						unit = "menit";
+						sub_tot = (value.sub_total_cost * 20);
+						tot += sub_tot;
+					}  else if (value.cost_name == "Tempat") {
+						unit = value.unit+"<sup>2</sup>";
+						sub_tot = parseFloat(value.sub_total_cost);
+						tot += sub_tot;
+					}
+					else {
+						unit = value.frequency;
+						sub_tot = value.sub_total_cost;
+						tot += sub_tot;
+					}
+
+					sub_tot = sub_tot.toLocaleString('es-ES');
+
+					bd += "<th>"+value.cost_name+"</th>";
+					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
+					bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+					bd += "</tr>";
+				});
+
+				tot = tot.toLocaleString('es-ES');
+
+				bd += "<tr style='font-size: 18px;'>";
+				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total : </th>";
+				bd += "<td><b>Rp "+tot+",00</b></td>";
+				bd += "</tr>";
+
+				$("#tabel_nilai").append(bd);
+			}
 			$("#modalDetail").modal('show');
 		})
 	}
@@ -403,7 +437,8 @@
 	function cari() {
 		area = $("#section").val();
 		stat = $("#stat").val();
-		fill_table('{{ $position->position }}',area,stat);
+		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
+		fill_table('{{ $position->position }}',area,stat, '{{ $fil }}');
 	}
 
 	function openErrorGritter(title, message) {

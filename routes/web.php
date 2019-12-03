@@ -899,7 +899,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 });
 Route::get('index/kaizen/{section}', 'EmployeeController@indexKaizen2');
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
-Route::get('index/kaizen/report', 'EmployeeController@indexKaizenReport');
+Route::get('index/kaizen2/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 Route::get('index/kaizen/resume', 'EmployeeController@indexKaizenResume');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
@@ -1663,14 +1663,14 @@ Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
 //suhu(temperature)
 Route::get('index/suhu_1','TemperatureController@suhu_1');
-Route::get('index/log_map_suhu1','TemperatureController@log_map_suhu1');
+Route::get('index/log_map_suhu','TemperatureController@log_map_suhu');
 Route::get('index/log_suhu_1','TemperatureController@data_suhu_1');
 Route::get('index/map_suhu','TemperatureController@index_maps');
 Route::get('index/suhu_2','TemperatureController@suhu_2');
 Route::get('index/log_suhu_2','TemperatureController@data_suhu_2');
 Route::get('index/log_map_suhu2','TemperatureController@log_map_suhu2');
-Route::get('index/temperatur_user', 'TemperatureController@index_user');
-Route::get('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
+Route::get('index/standart_temperature', 'TemperatureController@standart');
+Route::post('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');

@@ -83,7 +83,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-12">
-				<div class="col-xs-2 pull-left">
+				<div class="col-xs-2 pull-left">asdasdasdasfe2qty3ug7fi875t6r
 					<p class="judul"><i style="color: #c290d1">e </i> - Kaizen</p>
 				</div>
 				<div class="col-xs-2 pull-right">

@@ -513,34 +513,42 @@
 				$("#before").html(result[0].condition);
 				$("#after").html(result[0].improvement);
 
+				$("#tableEstimasi").empty();
 				bd = "";
 				tot = 0;
-				$.each(result, function(index, value){
-					bd += "<tr>";
-					var unit = "";
+				if (result[0].cost_name) {
+					$.each(result, function(index, value){
+						bd += "<tr>";
+						var unit = "";
 
-					if (value.cost_name == "Manpower") {
-						unit = "menit";
-						sub_tot = (value.sub_total_cost * 20);
-						tot += sub_tot;
-					} else {
-						unit = value.frequency;
-						sub_tot = value.sub_total_cost;
-						tot += sub_tot;
-					}
+						if (value.cost_name == "Manpower") {
+							unit = "menit";
+							sub_tot = (value.sub_total_cost * 20);
+							tot += sub_tot;
+						} else if (value.cost_name == "Tempat") {
+							unit = value.unit+"<sup>2</sup>";
+							sub_tot = parseFloat(value.sub_total_cost);
+							tot += sub_tot;
+						}
+						else {
+							unit = value.frequency;
+							sub_tot = value.sub_total_cost;
+							tot += sub_tot;
+						}
 
-					bd += "<th>"+value.cost_name+"</th>";
-					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
-					bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+						bd += "<th>"+value.cost_name+"</th>";
+						bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
+						bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+						bd += "</tr>";
+					});
+
+					bd += "<tr style='font-size: 18px;'>";
+					bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
+					bd += "<td><b>Rp "+tot+",00</b></td>";
 					bd += "</tr>";
-				});
 
-				bd += "<tr style='font-size: 18px;'>";
-				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
-				bd += "<td><b>Rp "+tot+",00</b></td>";
-				bd += "</tr>";
-
-				$("#tableEstimasi").append(bd);
+					$("#tableEstimasi").append(bd);
+				}
 
 				// $("#mp_point").html("<b>"+result.mp_point+"</b> menit X <b>Rp "+ 500+",00</b>");
 				// $("#total_mp_point").html("<b>Rp "+result.mp_point * 500 + ",00</b> / bulan");
@@ -559,11 +567,11 @@
 				$("#after").height(mx);
 
 				if ("{{ Request::segment(5) }}" == "manager") {
-					$("#r_foreman1").html(result.foreman_point_1 * 40);
-					$("#r_foreman2").html(result.foreman_point_2 * 30);
-					$("#r_foreman3").html(result.foreman_point_3 * 30);
+					$("#r_foreman1").html(result[0].foreman_point_1 * 40);
+					$("#r_foreman2").html(result[0].foreman_point_2 * 30);
+					$("#r_foreman3").html(result[0].foreman_point_3 * 30);
 
-					$("#total_foreman").html((result.foreman_point_1 * 40) + (result.foreman_point_2 * 30) + (result.foreman_point_3 * 30));
+					$("#total_foreman").html((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
 				}
 			})
 		}

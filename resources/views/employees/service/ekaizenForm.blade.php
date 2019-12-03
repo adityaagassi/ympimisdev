@@ -29,19 +29,19 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	<div class="row">
 		<div class="col-xs-4">
 			<label for="kz_tanggal">Tanggal</label>
-			<input type="text" id="kz_tanggal" class="form-control" value="">
+			<input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d') }}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nik">NIK</label>
-			<input type="text" id="kz_nik" class="form-control" value="">
+			<input type="text" id="kz_nik" class="form-control" value="{{ $emp_id }}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nama">Nama</label>
-			<input type="text" id="kz_nama" class="form-control" value="">
+			<input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4) }}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
-			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}">
+			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_leader">Nama Leader</label><br>
@@ -244,7 +244,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	})
 
 	$("#kz_mp").on('change keyup paste', function() {
-		$("#kz_mp_bulan").val(($(this).val() * std_mp).toFixed(2) * 20);
+		$("#kz_mp_bulan").val((($(this).val() * std_mp).toFixed(2) * 20).toLocaleString('es-ES'));
 		total();
 	})
 
@@ -256,18 +256,20 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	})
 
 	$("#kz_space").on('change keyup paste', function() {
-		$("#kz_space_bulan").val(($(this).val() * std_space).toFixed(2));
+		var temp = ($(this).val() * std_space).toFixed(2);
+		$("#kz_space_bulan").val(temp.toLocaleString('es-ES'));
+		console.log(temp.toLocaleString('es-ES'));
 		total();
 	})
 
 	function total() {
-		var total = parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + oth;
+		var total = (parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + oth).toFixed(2);
 
 		if (isNaN(total)) {
 			total = 0;
 		}
 
-		$("#total").val(total);
+		$("#total").val(total.toLocaleString('es-ES'));
 	}
 
 	function otherFill(elem, std) {
@@ -282,17 +284,17 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		}
 
 		$("#other_total").val(total);
-		$("#kz_material_bulan").val(total);
+		$("#kz_material_bulan").val(total.toLocaleString('es-ES'));
 
 		oth = total;
 
-		var total2 = parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + total;
+		var total2 = (parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + total).toFixed(2);
 
 		if (isNaN(total2)) {
 			total2 = 0;
 		}
 
-		$("#total").val(total2);
+		$("#total").val(total2.toLocaleString('es-ES'));
 	}
 
 	$("#kz_buat").click( function() {
