@@ -15,6 +15,7 @@
 	tbody>tr>td {
 		color: white;
 	}
+	#loading { display: none; }
 
 </style>
 @stop
@@ -23,6 +24,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="input-group">
 		<span class="input-group-addon"><i class="fa fa-barcode"></i></span>
 		<input type="text" class="form-control input-lg" placeholder="Scan Kanban Solder . . ." style="text-align: center" id="tag">
@@ -109,6 +115,7 @@
 	});
 
 	function scanTag(tag) {
+		$("#loading").show();
 		var data = {
 			material_number:$("#tag").val(),
 			quantity:$("#qty").text(),
@@ -120,6 +127,7 @@
 
 		$.get('{{ url("scan/middle/request") }}', data, function(result, status, xhr){
 			if(result.status){
+				$("#loading").hide();
 				openSuccessGritter('Success!', result.message);
 				drawTable();
 				$("#material_number").text(result.datas.material_number);
@@ -130,6 +138,7 @@
 				$('#tag').focus();
 			}
 			else{
+				$("#loading").hide();
 				audio_error.play();
 				openErrorGritter('Error', result.error);
 				$("#tag").val("");
