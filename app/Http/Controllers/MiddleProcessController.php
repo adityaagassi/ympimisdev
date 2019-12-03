@@ -5283,36 +5283,36 @@ class MiddleProcessController extends Controller
 
 	public function scanRequestTag(Request $request)
 	{
-		$matnum = substr($request->get('material_number'),2,7);
-		$mat = Material::leftjoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")->where("material_number","=",$matnum)->first();
+		try {
+			$matnum = substr($request->get('material_number'),2,7);
+			$mat = Material::where("material_number","=",$matnum)->first();
 
-		if ($mat) {
-			if($mat->origin_group_code == '043'){
-				if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 15;
-				} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
-					$qty = 8;
-				} else if(preg_match("/82/", $mat->model) == TRUE) {
-					$qty = 0;
+			if ($mat) {
+				if($mat->origin_group_code == '043'){
+					if ($mat->hpl == "ASKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+						$qty = 15;
+					} else if ($mat->hpl == "TSKEY" AND preg_match("/82/", $mat->model) != TRUE) {
+						$qty = 8;
+					} else if(preg_match("/82/", $mat->model) == TRUE) {
+						$qty = 0;
+					}
 				}
-			}
 
-			$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
+				$req_log_q = MiddleRequestHelper::where("material_tag","=",$request->get('material_number'))->first();
 
-			if ($req_log_q) {
-				$dt_db = new DateTime($req_log_q->updated_at);
-				$dt_now = new DateTime();
-				$interval = $dt_db->diff($dt_now);
+				if ($req_log_q) {
+					$dt_db = new DateTime($req_log_q->updated_at);
+					$dt_now = new DateTime();
+					$interval = $dt_db->diff($dt_now);
 
-				if ($interval->format('%I') < 5) {
-					$response = array(
-						'status' => false,
-						'error' => "Too Fast on same Material Tag",
-					);
-					return Response::json($response);
-				}
-			} else {
-				try {
+					if ($interval->format('%I') < 5) {
+						$response = array(
+							'status' => false,
+							'error' => "Too Fast on same Material Tag",
+						);
+						return Response::json($response);
+					}
+				} else {
 					$req_log = MiddleRequestHelper::updateOrCreate(
 						['material_tag' => $request->get('material_number')],
 						['material_number' => $matnum, 'created_by' => Auth::id(), 'updated_at' => Carbon::now(), 'created_at' => Carbon::now()]
@@ -5333,18 +5333,19 @@ class MiddleProcessController extends Controller
 					);
 					return Response::json($response);
 
-				} catch (QueryException $e){
-					$response = array(
-						'status' => false,
-						'error' => $e,
-					);
-					return Response::json($response);
+					
 				}
+			} else {			
+				$response = array(
+					'status' => false,
+					'error' => "Material Doesn't Exist ",
+				);
+				return Response::json($response);
 			}
-		} else {			
+		} catch (QueryException $e){
 			$response = array(
 				'status' => false,
-				'error' => "Material Doesn't Exist ",
+				'error' => $e,
 			);
 			return Response::json($response);
 		}
