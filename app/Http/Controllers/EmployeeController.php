@@ -272,14 +272,14 @@ class EmployeeController extends Controller
     $sc = db::select($sections);
 
     return view('employees.service.ekaizenForm', array(
-      'title' => 'E - Kaizen',
+      'title' => 'e - Kaizen',
       'emp_id' => $id,
       'name' => $name,
       'section' => $section,
       'group' => $group,
       'subleaders' => $subleader,
       'sc' => $sc,
-      'title_jp' => '??'));
+      'title_jp' => ''));
   }
 
   public function updateEmp($id){
