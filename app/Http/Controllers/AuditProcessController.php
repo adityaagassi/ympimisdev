@@ -10,6 +10,7 @@ use App\ActivityList;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\AuditProcess;
+use App\WeeklyCalendar;
 use Response;
 use DataTables;
 use Excel;
@@ -162,6 +163,10 @@ class AuditProcessController extends Controller
     function store(Request $request,$id)
     {
             $id_user = Auth::id();
+            $week = WeeklyCalendar::where('week_date',$request->get('date'))->get();
+            foreach($week as $week){
+                $week_name = $week->week_name;
+            }
 
             AuditProcess::create([
                 'activity_list_id' => $id,
@@ -170,6 +175,7 @@ class AuditProcessController extends Controller
                 'product' => $request->input('product'),
                 'periode' => $request->input('periode'),
                 'date' => $request->input('date'),
+                'week_name' => $week_name,
                 'proses' => $request->input('proses'),
                 'operator' => $request->input('operator'),
                 'auditor' => $request->input('auditor'),

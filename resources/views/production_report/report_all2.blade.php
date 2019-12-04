@@ -743,7 +743,6 @@ function ShowModalChart(leader_name,frequency) {
                 $('#judul_weekly').append('<b>Leader Task Monitoring of '+leader_name+'</b>');
 
                 var total_plan = 0;
-                var total_aktual = 0;
                 var presentase = 0;
                 var body = '';
                 var head = '';
@@ -761,25 +760,7 @@ function ShowModalChart(leader_name,frequency) {
                   jj.push(result.date[a].week_name);
                 }
                 head += '</tr>';
-                console.table(result.detail);
                 $('#data-activity-head-weekly').append(head);
-                for (var i = 1; i < result.detail.length; i++) {
-                  body += '<tr>';
-                  body += '<td>'+no+'</td>';
-                  body += '<td>'+result.detail[i][0].activity_name+'</td>';
-                  for(var jjj = 0; jjj< jj.length; jjj++){
-                    if(jj[jjj] == result.detail[i][0].week_name){
-                      body += '<td style="background-color: #4aff77"></td>';
-                    }
-                    else{
-                      body += '<td></td>';
-                    }
-                  }
-                  body += '</tr>';
-                  total_plan += parseInt(result.detail[i].plan);
-                  total_aktual += parseInt(result.detail[i].jumlah_aktual);
-                  no++;
-                }
 
                 var dds = [];
                 var dd = "";
@@ -797,15 +778,14 @@ function ShowModalChart(leader_name,frequency) {
                         activity_length++;
                       }
                     }
-
-                      // dd += "<td id='"+index+"_"+i+"'></td>";
                     }
-                    // dd += "</tr>";
-                    // dds.push(value.activity_name);
-                  // }
                 })
 
                 var nomer = 0;
+                var aktual = 0;
+                var total_aktual = 0;
+                var plan = 1;
+                var total_plan =  plan * activity.length;
                 for (var i = 0; i < activity.length; i++) {
                   dd += "<tr>";
                   dd += "<td>"+ (++nomer) +"</td>";
@@ -813,32 +793,58 @@ function ShowModalChart(leader_name,frequency) {
                   
                   for (var j = 0; j < result.detail[1].length; j++) {
                     if(activity[i] == result.detail[1][j].activity_name){
+
                       for (var k = 1; k < result.detail.length; k++) {
                         for (var l = 0; l < result.detail[k].length; l++) {
                           if(result.detail[k][l].activity_name == activity[i]){
                             if(result.detail[k][l].jumlah_aktual > 0){
-                              dd += "<td style='background-color: #4aff77'>"+result.detail[k][l].jumlah_aktual+"</td>";
+                              aktual = aktual + 1;
+                              dd += "<td style='background-color: #4aff77'>1</td>";
                             }else{
-                              dd += "<td style='background-color: #f7ff59'>"+result.detail[k][l].jumlah_aktual+"</td>";
-
+                              dd += "<td style='background-color: #f7ff59'>0</td>";
                             }
-
-
                           }
                         }                      
-
                       }
-                      
-
                     }
                   }
-
-
                   dd += "<tr>";
                 }
+                // console.log(aktual);
+                console.log(parseInt(aktual));
+                if(parseInt(aktual) < 4 ){
+                  total_aktual = 0;
+                }
+                else if(parseInt(aktual) >= 4 && parseInt(aktual) < 8 ){
+                  total_aktual = 1;
+                }
+                else if(parseInt(aktual) >= 8 && parseInt(aktual) < 12 ){
+                  total_aktual = 2;
+                }
+                else if(parseInt(aktual) >= 12 && parseInt(aktual) < 16 ){
+                  total_aktual = 3;
+                }
+                else if(parseInt(aktual) >= 16 && parseInt(aktual) < 20 ){
+                  total_aktual = 4;
+                }
+                
+                presentase = (total_aktual/total_plan)*100;
+                // console.log(presentase);
 
                 // console.log(dd);
                 // console.log(activity);
+                dd += '<tr>';
+                dd += '<td colspan="2"><b>Total Plan</b></td>';
+                dd += '<td colspan="5"><center><b>'+total_plan+'</b></center></td>';
+                dd += '</tr>';
+                dd += '<tr>';
+                dd += '<td colspan="2"><b>Total Aktual</b></td>';
+                dd += '<td colspan="5"><center><b>'+total_aktual+'</b></center></td>';
+                dd += '</tr>';
+                dd += '<tr>';
+                dd += '<td colspan="2"><b>Presentase</b></td>';
+                dd += '<td colspan="5"><center><b>'+parseInt(presentase)+'%</b></center></td>';
+                dd += '</tr>';
 
 
                 //    SAYA
@@ -851,9 +857,9 @@ function ShowModalChart(leader_name,frequency) {
                 //   }
                 // })
 
-                console.log(sd);
+                // console.log(sd);
 
-                presentase = (total_aktual / total_plan)*100;
+                // presentase = (total_aktual / total_plan)*100;
                 // body += '<tr>';
                 // body += '<td colspan="2"><b>Total</b></td>';
                 // body += '<td><b>'+total_plan+'</b></td>';

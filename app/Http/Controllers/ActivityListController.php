@@ -24,7 +24,8 @@ class ActivityListController extends Controller
                         'Interview',
                         'Pengecekan',
                         'Pemahaman Proses',
-                        'Labelisasi'];
+                        'Labelisasi',
+                        'Cek Area'];
 
       $this->frequency = ['Daily',
                         'Weekly',
@@ -73,6 +74,9 @@ class ActivityListController extends Controller
       }
       elseif ($no == 9) {
         $activity_type = 'Labelisasi';
+      }
+      elseif ($no == 10) {
+        $activity_type = 'Cek Area';
       }
       $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
       $data = array('activity_list' => $activityList,
@@ -234,6 +238,14 @@ class ActivityListController extends Controller
     public function store(request $request)
     {
       try{
+          $date = date('Y-m-d');
+
+          $fyQuery = "SELECT DISTINCT(fiscal_year) FROM weekly_calendars where week_date = '".$date."'";
+          $fyHasil = DB::select($fyQuery);
+
+          foreach($fyHasil as $fyHasil){
+            $fy = $fyHasil->fiscal_year;
+          }
           $id = Auth::id();
           $activity_list = new ActivityList([
             'activity_name' => $request->get('activity_name'),

@@ -149,8 +149,14 @@ class ProductionReportController extends Controller
         monthly.jumlah_training +  monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling as jumlah_monthly,
         COALESCE(((monthly.jumlah_training +  monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
-        weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process as jumlah_weekly,
-        COALESCE(((weekly.jumlah_sampling + weekly.jumlah_audit_process + weekly.jumlah_audit)/(weekly.jumlah_activity_weekly)/weekly.jumlah_activity_weekly)*100,0) as persen_weekly,
+        IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
+                IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
+                IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
+                IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0)))) as jumlah_weekly,
+        COALESCE((IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
+                IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
+                IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
+                IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         21 as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check)/21)*100,0) as persen_daily,
@@ -161,7 +167,7 @@ class ProductionReportController extends Controller
         prev.aktual_prev as aktual_prev,
         prev.persen_prev as persen_prev
         from 
-        (select count(DISTINCT(activity_type)) as jumlah_activity_monthly,
+        (select count(activity_type) as jumlah_activity_monthly,
         leader_dept as leader_name,
         COALESCE((select count(DISTINCT(leader)) as jumlah_training
                 from training_reports
@@ -200,9 +206,9 @@ class ProductionReportController extends Controller
         and activity_lists.frequency = 'Monthly'
         GROUP BY leader_dept) monthly,
 
-        (select count(DISTINCT(activity_type)) as jumlah_activity_weekly,
+        (select count(activity_type) as jumlah_activity_weekly,
         leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(sampling_checks.date)) as jumlah_sampling
+        COALESCE((select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
                 from sampling_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
@@ -212,7 +218,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY sampling_checks.leader),0)
         as jumlah_sampling,
-        COALESCE((select count(DISTINCT(audit_processes.date)) as jumlah_sampling
+        COALESCE((select count(DISTINCT(audit_processes.week_name)) as jumlah_sampling
                 from audit_processes
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$bulan."'
@@ -222,7 +228,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_processes.leader),0)
         as jumlah_audit_process,
-        COALESCE((select count(DISTINCT(production_audits.date)) as jumlah_audit
+        COALESCE((select count(DISTINCT(production_audits.week_name)) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                                 join point_check_audits as point_check on point_check.id = point_check_audit_id
@@ -240,7 +246,7 @@ class ProductionReportController extends Controller
         and activity_lists.frequency = 'Weekly'
         GROUP BY leader_dept) weekly,
 
-        (select COALESCE(count(DISTINCT(activity_type)),0) as jumlah_activity_daily,
+        (select COALESCE(count(activity_type),0) as jumlah_activity_daily,
         COALESCE((select count(DISTINCT(daily_checks.check_date)) as jumlah_laporan
                 from daily_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
