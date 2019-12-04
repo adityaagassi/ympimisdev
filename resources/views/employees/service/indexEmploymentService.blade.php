@@ -162,9 +162,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 						<hr style="margin:2px;">
 
-						<strong><i class="fa fa-cc margin-r-5"></i> Cost Center</strong>
+						<strong><i class="fa fa-cc margin-r-5"></i> Alamat</strong>
 
-						<p class="text-muted" style="margin:2px;">{{$profil[0]->cost_center}}</p>
+						<p class="text-muted" style="margin:2px;">{{$profil[0]->address}}</p>
 
 						<hr style="margin:2px;">
 
@@ -359,8 +359,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										<th style="width: 900px">Id</th>
 										<th>Tanggal</th>
 										<th>Usulan</th>
+										<th>Kategori</th>
 										<th>Status</th>
-										<th>Posisi</th>
 										<th>Aplikasi</th>
 										<th>Action</th>
 									</tr>

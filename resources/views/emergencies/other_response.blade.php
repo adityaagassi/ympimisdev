@@ -467,7 +467,7 @@
 
 				body2 += "</tr>";
 			})
-			body2 += "<tr>";
+			body2 += "<tr style='background-color: rgb(112, 112, 112); color: rgb(255,255,2555); font-size: 20px;'>";
 			body2 += "<td>TOTAL</td><td>"+tots+"</td><td>"+tot_ya+"</td><td>"+tot_tidak+"</td><td>"+tot_no_respon+"</td>";
 			body2 += "</tr>";
 
