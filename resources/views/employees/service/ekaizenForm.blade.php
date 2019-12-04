@@ -275,7 +275,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	function otherFill(elem, std) {
 		ids = elem.id.split("_")[2];
 		var dd = $("#"+elem.id).val();
-		$("#other_"+ids).val(dd * std);
+		$("#other_"+ids).val((dd * std).toLocaleString('es-ES'));
 		tmp[ids] = dd * std;
 
 		var total = 0;
@@ -283,7 +283,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			total += tmp[i] << 0;
 		}
 
-		$("#other_total").val(total);
+		$("#other_total").val(total.toLocaleString('es-ES'));
 		$("#kz_material_bulan").val(total.toLocaleString('es-ES'));
 
 		oth = total;
