@@ -1117,7 +1117,9 @@ class QcReportController extends Controller
           } 
 
           else if ($detail->status_name == "Unverified CAR"){
-            return '<a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
+            return '
+                    <a href="print_cpar/'.$idcpar.'" class="btn btn-success btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
                     <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
           } 
 
