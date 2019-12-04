@@ -1574,7 +1574,12 @@ Route::post('index/point_check_first_product/update/{id}/{point_check_id}', 'Poi
 
 //FIRST PRODUCT AUDIT
 Route::get('index/first_product_audit/index/{id}', 'FirstProductAuditController@index');
+Route::get('index/first_product_audit/list_proses/{id}', 'FirstProductAuditController@list_proses');
 Route::post('index/first_product_audit/filter_first_product/{id}', 'FirstProductAuditController@filter_first_product');
+Route::get('index/first_product_audit/show/{id}/{first_product_audit_id}', 'FirstProductAuditController@show');
+Route::get('index/first_product_audit/destroy/{id}/{first_product_audit_id}', 'FirstProductAuditController@destroy');
+Route::get('index/first_product_audit/create/{id}', 'FirstProductAuditController@create');
+Route::post('index/first_product_audit/store/{id}', 'FirstProductAuditController@store');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -1665,13 +1670,13 @@ Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beac
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
 //suhu(temperature)
-Route::get('index/suhu_1','TemperatureController@suhu_1');
-Route::get('index/log_map_suhu','TemperatureController@log_map_suhu');
-Route::get('index/log_suhu_1','TemperatureController@data_suhu_1');
-Route::get('index/map_suhu','TemperatureController@index_maps');
-Route::get('index/suhu_2','TemperatureController@suhu_2');
-Route::get('index/log_suhu_2','TemperatureController@data_suhu_2');
-Route::get('index/log_map_suhu2','TemperatureController@log_map_suhu2');
+Route::get('index/grafikServer','TemperatureController@grafikServer');
+Route::get('index/log_map_server','TemperatureController@log_map_server');
+Route::get('index/data_suhu_server','TemperatureController@data_suhu_server');
+Route::get('index/index_map','TemperatureController@index_map');
+Route::get('index/grafikOffice','TemperatureController@grafikOffice');
+Route::get('index/data_suhu_office','TemperatureController@data_suhu_office');
+Route::get('index/log_map_office','TemperatureController@log_map_office');
 Route::get('index/standart_temperature', 'TemperatureController@standart');
 Route::get('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
 Route::post('index/temperature/aksi_edit', 'TemperatureController@aksi_edit');
