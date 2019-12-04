@@ -626,7 +626,7 @@
                           events: {
                             click: function(e) {
                               if(e.point.series.name == 'Prev Month'){
-                                ShowModalChartPrev(this.options.key,e.point.series.name);
+                                // ShowModalChartPrev(this.options.key,e.point.series.name);
                               }
                               else if(e.point.series.name != 'Current Day'){
                                 ShowModalChart(this.options.key,e.point.series.name);
