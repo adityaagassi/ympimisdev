@@ -137,6 +137,116 @@ table.table-bordered > tfoot > tr > th{
               if(xhr.status == 200){
                 if(result.status){
 
+                  // var nglist = [];
+                  // var total1 = [];
+                  // var total2 = [];
+                  // var total3 = [];
+                  // var total4 = [];
+                  // var total5 = [];
+
+                  // var total1las = [];
+                  // var total2las = [];
+                  // var total3las = [];
+                  // var total4las = [];
+                  // var total5las = [];
+                  
+                  // var totalJenisNGA1 = 0;
+                  // var totalJenisNGA2 = 0;
+                  // var totalJenisNGA3 = 0;
+                  // var totalJenisNGA4 = 0;
+                  // var totalJenisNGA5 = 0;
+
+                  // var totalJenisNGA1las = 0;
+                  // var totalJenisNGA2las = 0;
+                  // var totalJenisNGA3las = 0;
+                  // var totalJenisNGA4las = 0;
+                  // var totalJenisNGA5las = 0;
+                  
+                  // var totalCek1 = result.total[0].total_1;
+                  // var totalCek2 = result.total[1].total_1;
+                  // var totalCek3 = result.total[2].total_1;
+                  // var totalCek4 = result.total[3].total_1;
+                  // var totalCek5 = result.total[4].total_1;
+
+                  // var totalCek1las = result.totallas[0].total_1;
+                  // var totalCek2las = result.totallas[1].total_1;
+                  // var totalCek3las = result.totallas[2].total_1;
+                  // var totalCek4las = result.totallas[3].total_1;
+                  // var totalCek5las = result.totallas[4].total_1;
+
+                  // var totalOK1 = result.total[0].total_1 - result.total[0].ng_1;
+                  // var totalOK2 = result.total[1].total_1 - result.total[1].ng_1;
+                  // var totalOK3 = result.total[2].total_1 - result.total[2].ng_1;
+                  // var totalOK4 = result.total[3].total_1 - result.total[3].ng_1;
+                  // var totalOK5 = result.total[4].total_1 - result.total[4].ng_1;
+
+                  // var totalOK1las = result.totallas[0].total_1 - result.totallas[0].ng_1;
+                  // var totalOK2las = result.totallas[1].total_1 - result.totallas[1].ng_1;
+                  // var totalOK3las = result.totallas[2].total_1 - result.totallas[2].ng_1;
+                  // var totalOK4las = result.totallas[3].total_1 - result.totallas[3].ng_1;
+                  // var totalOK5las = result.totallas[4].total_1 - result.totallas[4].ng_1;
+
+                  // for (var i = 0; i < result.ng.length; i++) {    
+                  //    totalJenisNGA1 += parseInt(result.ng[i].total_1);
+                  //    totalJenisNGA2 += parseInt(result.ng[i].total_2);
+                  //    totalJenisNGA3 += parseInt(result.ng[i].total_3);
+                  //    totalJenisNGA4 += parseInt(result.ng[i].total_4);
+                  //    totalJenisNGA5 += parseInt(result.ng[i].total_5);
+
+                  //    totalJenisNGA1las += parseInt(result.nglas[i].total_1);
+                  //    totalJenisNGA2las += parseInt(result.nglas[i].total_2);
+                  //    totalJenisNGA3las += parseInt(result.nglas[i].total_3);
+                  //    totalJenisNGA4las += parseInt(result.nglas[i].total_4);
+                  //    totalJenisNGA5las += parseInt(result.nglas[i].total_5);
+
+                  //   } 
+                  //    var totalJenisNGC1 = totalJenisNGA1 - (totalCek1 - totalOK1);
+                  //    var totalJenisNGC2 = totalJenisNGA2 - (totalCek2 - totalOK2);
+                  //    var totalJenisNGC3 = totalJenisNGA3 - (totalCek3 - totalOK3);
+                  //    var totalJenisNGC4 = totalJenisNGA4 - (totalCek4 - totalOK4);
+                  //    var totalJenisNGC5 = totalJenisNGA5 - (totalCek5 - totalOK5);
+
+                  //    var totalJenisNGC1las = totalJenisNGA1las - (totalCek1las - totalOK1las);
+                  //    var totalJenisNGC2las = totalJenisNGA2las - (totalCek2las - totalOK2las);
+                  //    var totalJenisNGC3las = totalJenisNGA3las - (totalCek3las - totalOK3las);
+                  //    var totalJenisNGC4las = totalJenisNGA4las - (totalCek4las - totalOK4las);
+                  //    var totalJenisNGC5las = totalJenisNGA5las - (totalCek5las - totalOK5las);
+
+                  //    var PengurangC1 = Math.round( totalJenisNGC1 / 4);
+                  //    var PengurangC2 = Math.round( totalJenisNGC2 / 4);
+                  //    var PengurangC3 = Math.round( totalJenisNGC3 / 4);
+                  //    var PengurangC4 = Math.round( totalJenisNGC4 / 4);
+                  //    var PengurangC5 = Math.round( totalJenisNGC5 / 4);
+
+                  //    var PengurangC1las = Math.round( totalJenisNGC1las / 4);
+                  //    var PengurangC2las = Math.round( totalJenisNGC2las / 4);
+                  //    var PengurangC3las = Math.round( totalJenisNGC3las / 4);
+                  //    var PengurangC4las = Math.round( totalJenisNGC4las / 4);
+                  //    var PengurangC5las = Math.round( totalJenisNGC5las / 4);
+
+                  //   for (var i = 0; i < result.ng.length; i++) {                    
+                  //    nglist.push(result.ng[i].ng_name);
+                  //    total1.push(parseInt(result.ng[i].total_1 - PengurangC1)); 
+                  //    total2.push(parseInt(result.ng[i].total_2 - PengurangC2));
+                  //    total3.push(parseInt(result.ng[i].total_3 - PengurangC3));
+                  //    total4.push(parseInt(result.ng[i].total_4 - PengurangC4));                   
+                  //    total5.push(parseInt(result.ng[i].total_5 - PengurangC5));
+
+                  //    total1las.push(parseInt(result.nglas[i].total_1 - PengurangC1las)); 
+                  //    total2las.push(parseInt(result.nglas[i].total_2 - PengurangC2las));
+                  //    total3las.push(parseInt(result.nglas[i].total_3 - PengurangC3las));
+                  //    total4las.push(parseInt(result.nglas[i].total_4 - PengurangC4las));                   
+                  //    total5las.push(parseInt(result.nglas[i].total_5 - PengurangC5las));
+                     
+                  //   } 
+
+                  //    var tgl ="";
+                    
+                  //   if (result.tgl == "") {
+                  //     tgl = " No Data";
+                  //   }else{
+                  //     tgl =result.tgl[0].tgl;
+                  //   }
                   var nglist = [];
                   var total1 = [];
                   var total2 = [];
@@ -150,104 +260,31 @@ table.table-bordered > tfoot > tr > th{
                   var total4las = [];
                   var total5las = [];
                   
-                  var totalJenisNGA1 = 0;
-                  var totalJenisNGA2 = 0;
-                  var totalJenisNGA3 = 0;
-                  var totalJenisNGA4 = 0;
-                  var totalJenisNGA5 = 0;
-
-                  var totalJenisNGA1las = 0;
-                  var totalJenisNGA2las = 0;
-                  var totalJenisNGA3las = 0;
-                  var totalJenisNGA4las = 0;
-                  var totalJenisNGA5las = 0;
-                  
-                  var totalCek1 = result.total[0].total_1;
-                  var totalCek2 = result.total[1].total_1;
-                  var totalCek3 = result.total[2].total_1;
-                  var totalCek4 = result.total[3].total_1;
-                  var totalCek5 = result.total[4].total_1;
-
-                  var totalCek1las = result.totallas[0].total_1;
-                  var totalCek2las = result.totallas[1].total_1;
-                  var totalCek3las = result.totallas[2].total_1;
-                  var totalCek4las = result.totallas[3].total_1;
-                  var totalCek5las = result.totallas[4].total_1;
-
-                  var totalOK1 = result.total[0].total_1 - result.total[0].ng_1;
-                  var totalOK2 = result.total[1].total_1 - result.total[1].ng_1;
-                  var totalOK3 = result.total[2].total_1 - result.total[2].ng_1;
-                  var totalOK4 = result.total[3].total_1 - result.total[3].ng_1;
-                  var totalOK5 = result.total[4].total_1 - result.total[4].ng_1;
-
-                  var totalOK1las = result.totallas[0].total_1 - result.totallas[0].ng_1;
-                  var totalOK2las = result.totallas[1].total_1 - result.totallas[1].ng_1;
-                  var totalOK3las = result.totallas[2].total_1 - result.totallas[2].ng_1;
-                  var totalOK4las = result.totallas[3].total_1 - result.totallas[3].ng_1;
-                  var totalOK5las = result.totallas[4].total_1 - result.totallas[4].ng_1;
-
-                  for (var i = 0; i < result.ng.length; i++) {    
-                     totalJenisNGA1 += parseInt(result.ng[i].total_1);
-                     totalJenisNGA2 += parseInt(result.ng[i].total_2);
-                     totalJenisNGA3 += parseInt(result.ng[i].total_3);
-                     totalJenisNGA4 += parseInt(result.ng[i].total_4);
-                     totalJenisNGA5 += parseInt(result.ng[i].total_5);
-
-                     totalJenisNGA1las += parseInt(result.nglas[i].total_1);
-                     totalJenisNGA2las += parseInt(result.nglas[i].total_2);
-                     totalJenisNGA3las += parseInt(result.nglas[i].total_3);
-                     totalJenisNGA4las += parseInt(result.nglas[i].total_4);
-                     totalJenisNGA5las += parseInt(result.nglas[i].total_5);
-
-                    } 
-                     var totalJenisNGC1 = totalJenisNGA1 - (totalCek1 - totalOK1);
-                     var totalJenisNGC2 = totalJenisNGA2 - (totalCek2 - totalOK2);
-                     var totalJenisNGC3 = totalJenisNGA3 - (totalCek3 - totalOK3);
-                     var totalJenisNGC4 = totalJenisNGA4 - (totalCek4 - totalOK4);
-                     var totalJenisNGC5 = totalJenisNGA5 - (totalCek5 - totalOK5);
-
-                     var totalJenisNGC1las = totalJenisNGA1las - (totalCek1las - totalOK1las);
-                     var totalJenisNGC2las = totalJenisNGA2las - (totalCek2las - totalOK2las);
-                     var totalJenisNGC3las = totalJenisNGA3las - (totalCek3las - totalOK3las);
-                     var totalJenisNGC4las = totalJenisNGA4las - (totalCek4las - totalOK4las);
-                     var totalJenisNGC5las = totalJenisNGA5las - (totalCek5las - totalOK5las);
-
-                     var PengurangC1 = Math.round( totalJenisNGC1 / 4);
-                     var PengurangC2 = Math.round( totalJenisNGC2 / 4);
-                     var PengurangC3 = Math.round( totalJenisNGC3 / 4);
-                     var PengurangC4 = Math.round( totalJenisNGC4 / 4);
-                     var PengurangC5 = Math.round( totalJenisNGC5 / 4);
-
-                     var PengurangC1las = Math.round( totalJenisNGC1las / 4);
-                     var PengurangC2las = Math.round( totalJenisNGC2las / 4);
-                     var PengurangC3las = Math.round( totalJenisNGC3las / 4);
-                     var PengurangC4las = Math.round( totalJenisNGC4las / 4);
-                     var PengurangC5las = Math.round( totalJenisNGC5las / 4);
+                 
 
                     for (var i = 0; i < result.ng.length; i++) {                    
                      nglist.push(result.ng[i].ng_name);
-                     total1.push(parseInt(result.ng[i].total_1 - PengurangC1)); 
-                     total2.push(parseInt(result.ng[i].total_2 - PengurangC2));
-                     total3.push(parseInt(result.ng[i].total_3 - PengurangC3));
-                     total4.push(parseInt(result.ng[i].total_4 - PengurangC4));                   
-                     total5.push(parseInt(result.ng[i].total_5 - PengurangC5));
+                     total1.push(parseInt(result.ng[i].total_1)); 
+                     total2.push(parseInt(result.ng[i].total_2));
+                     total3.push(parseInt(result.ng[i].total_3));
+                     total4.push(parseInt(result.ng[i].total_4));                   
+                     total5.push(parseInt(result.ng[i].total_5));
 
-                     total1las.push(parseInt(result.nglas[i].total_1 - PengurangC1las)); 
-                     total2las.push(parseInt(result.nglas[i].total_2 - PengurangC2las));
-                     total3las.push(parseInt(result.nglas[i].total_3 - PengurangC3las));
-                     total4las.push(parseInt(result.nglas[i].total_4 - PengurangC4las));                   
-                     total5las.push(parseInt(result.nglas[i].total_5 - PengurangC5las));
+                     total1las.push(parseInt(result.nglas[i].total_1)); 
+                     total2las.push(parseInt(result.nglas[i].total_2));
+                     total3las.push(parseInt(result.nglas[i].total_3));
+                     total4las.push(parseInt(result.nglas[i].total_4));                   
+                     total5las.push(parseInt(result.nglas[i].total_5));
                      
                     } 
 
-                     var tgl ="";
+                    var tgl ="";
                     
                     if (result.tgl == "") {
                       tgl = " No Data";
                     }else{
                       tgl =result.tgl[0].tgl;
                     }
-
                     
     Highcharts.chart('container', {
     chart: {
