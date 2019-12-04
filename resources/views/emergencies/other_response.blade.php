@@ -436,6 +436,11 @@
 				})
 			})
 
+			var tot_ya = 0;
+			var tot_tidak = 0;
+			var tot_no_respon = 0;
+			var tots = 0;
+
 			$.each(result.emp_datas, function(index, value) {
 				body2 += "<tr>";
 				body2 += "<td style='text-align: left;'>"+value.department+"</td>";
@@ -451,12 +456,22 @@
 					}
 				})
 
+				tot_ya += num_ya;
+				tot_tidak += num_tidak;
+				tot_no_respon += (value.total - (num_tidak+num_ya));
+				tots += value.total;
+
 				body2 += "<td style='background-color:RGB(255,204,255); color: black; text-align: right;'>"+num_ya+"</td>";
 				body2 += "<td style='background-color:RGB(204,255,255); color: black; text-align: right;'>"+num_tidak+"</td>";
 				body2 += "<td style='text-align: right;'>"+(value.total - (num_tidak+num_ya))+"</td>";
 
 				body2 += "</tr>";
 			})
+			body2 += "<tr>";
+			body2 += "<td>TOTAL</td><td>"+tots+"</td><td>"+tot_ya+"</td><td>"+tot_tidak+"</td><td>"+tot_no_respon+"</td>";
+			body2 += "</tr>";
+
+			console.log(tot_ya+" "+tot_tidak+" "+tot_no_respon+" "+tots);
 
 			$("#tabelbody").append(body2);
 		})
