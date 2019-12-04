@@ -484,35 +484,189 @@ class PressController extends Controller
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
-		$data = array(
-                	'process' => $process,
-                	'machine' => $machine);
-		return view('press.report_press_trouble',$data)->with('page', 'Press Machine Trouble Report')->with('title_jp', "??");
-	}
 
-	public function fetchReasonList(Request $request){
-		$date = '';
-		if(strlen($request->get("date_from")) > 0 || strlen($request->get("date_to")) > 0){
-			$date_from = date('Y-m-d', strtotime($request->get("date_from")));
-			$date_to = date('Y-m-d', strtotime($request->get("date_to")));
-		}else{
-			$date_from = date('Y-m-d');
-			$date_to = date('Y-m-d');
-		}
-
-		$data = db::select("select mp_trouble_logs.id,mp_materials.material_number,employees.employee_id,employees.name,date,mp_trouble_logs.product,mp_trouble_logs.process,machine,start_time,end_time,reason,mp_materials.material_name
+		$report_trouble = db::select("select mp_trouble_logs.id,mp_materials.material_number,employees.employee_id,employees.name,date,mp_trouble_logs.product,mp_trouble_logs.process,machine,start_time,end_time,reason,mp_materials.material_name
 			from mp_trouble_logs
 			join employee_groups on employee_groups.employee_id = mp_trouble_logs.pic
 			join employees on employee_groups.employee_id = employees.employee_id
 			join mp_materials on mp_trouble_logs.material_number= mp_materials.material_number
-			where  mp_trouble_logs.date BETWEEN '".$date_from."' and '".$date_to."'
-			ORDER BY mp_trouble_logs.id");
+			ORDER BY mp_trouble_logs.id desc");
 
-		$response = array(
-			'status' => true,
-			'datas' => $data,
-			'date' => $date
-		);
-		return Response::json($response);
+		$data = array(
+                	'process' => $process,
+                	'report_trouble' => $report_trouble,
+                	'machine' => $machine);
+		return view('press.report_press_trouble',$data)->with('page', 'Press Machine Trouble Report')->with('title_jp', "??");
+	}
+
+	public function filter_report_trouble(Request $request){
+
+		  $date_from = $request->get('date_from');
+	      $date_to = $request->get('date_to');
+	      $datenow = date('Y-m-d');
+
+	      if($request->get('date_to') == null){
+	        if($request->get('date_from') == null){
+	          $date = "";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$datenow."'";
+	        }
+	      }
+	      elseif($request->get('date_to') != null){
+	        if($request->get('date_from') == null){
+	          $date = "where date <= '".$date_to."'";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$date_to."'";
+	        }
+	      }
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+
+		$report_trouble = db::select("select mp_trouble_logs.id,mp_materials.material_number,employees.employee_id,employees.name,date,mp_trouble_logs.product,mp_trouble_logs.process,machine,start_time,end_time,reason,mp_materials.material_name
+			from mp_trouble_logs
+			join employee_groups on employee_groups.employee_id = mp_trouble_logs.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			join mp_materials on mp_trouble_logs.material_number= mp_materials.material_number
+			".$date."
+			ORDER BY mp_trouble_logs.id desc");
+
+		$data = array(
+                	'process' => $process,
+                	'report_trouble' => $report_trouble,
+                	'machine' => $machine);
+		return view('press.report_press_trouble',$data)->with('page', 'Press Machine Trouble Report')->with('title_jp', "??");
+	}
+
+	public function report_prod_result(){
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+
+		$prod_result = db::select("select *
+			from mp_record_prods
+			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			join mp_materials on mp_record_prods.material_number= mp_materials.material_number
+			ORDER BY mp_record_prods.id desc");
+
+		$data = array(
+                	'process' => $process,
+                	'prod_result' => $prod_result,
+                	'machine' => $machine);
+		return view('press.report_prod_result',$data)->with('page', 'Press Machine Production Result')->with('title_jp', "??");
+	}
+
+	public function filter_report_prod_result(Request $request){
+
+		  $date_from = $request->get('date_from');
+	      $date_to = $request->get('date_to');
+	      $datenow = date('Y-m-d');
+
+	      if($request->get('date_to') == null){
+	        if($request->get('date_from') == null){
+	          $date = "";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$datenow."'";
+	        }
+	      }
+	      elseif($request->get('date_to') != null){
+	        if($request->get('date_from') == null){
+	          $date = "where date <= '".$date_to."'";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$date_to."'";
+	        }
+	      }
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+
+		$prod_result = db::select("select *
+			from mp_record_prods
+			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			join mp_materials on mp_record_prods.material_number= mp_materials.material_number
+			".$date."
+			ORDER BY mp_record_prods.id desc");
+
+		$data = array(
+                	'process' => $process,
+                	'prod_result' => $prod_result,
+                	'machine' => $machine);
+		return view('press.report_prod_result',$data)->with('page', 'Press Machine Production Result')->with('title_jp', "??");
+	}
+
+	public function report_kanagata_lifetime(){
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+
+		$kanagata_lifetime = db::select("select *
+			from mp_kanagata_logs
+			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
+			ORDER BY mp_kanagata_logs.id desc");
+
+		$data = array(
+                	'process' => $process,
+                	'kanagata_lifetime' => $kanagata_lifetime,
+                	'machine' => $machine);
+		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
+	}
+
+	public function filter_report_kanagata_lifetime(Request $request){
+
+		  $date_from = $request->get('date_from');
+	      $date_to = $request->get('date_to');
+	      $datenow = date('Y-m-d');
+
+	      if($request->get('date_to') == null){
+	        if($request->get('date_from') == null){
+	          $date = "";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$datenow."'";
+	        }
+	      }
+	      elseif($request->get('date_to') != null){
+	        if($request->get('date_from') == null){
+	          $date = "where date <= '".$date_to."'";
+	        }
+	        elseif($request->get('date_from') != null){
+	          $date = "where date BETWEEN '".$date_from."' and '".$date_to."'";
+	        }
+	      }
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+
+		$kanagata_lifetime = db::select("select *
+			from mp_kanagata_logs
+			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
+			".$date."
+			ORDER BY mp_kanagata_logs.id desc");
+
+		$data = array(
+                	'process' => $process,
+                	'kanagata_lifetime' => $kanagata_lifetime,
+                	'machine' => $machine);
+		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
 	}
 }

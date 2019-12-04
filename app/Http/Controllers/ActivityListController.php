@@ -37,6 +37,9 @@ class ActivityListController extends Controller
 
     function index()
     {
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
     	$activityList = ActivityList::get();
     	$data = array('activity_list' => $activityList);
     	return view('activity_list.index', $data
@@ -45,6 +48,9 @@ class ActivityListController extends Controller
 
     function filter($id,$no)
     {
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
       $name = Auth::user()->name;
       $role_code = Auth::user()->role_code;
       $queryDepartments = "SELECT * FROM departments where id='".$id."'";

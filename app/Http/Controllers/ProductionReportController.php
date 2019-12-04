@@ -42,6 +42,9 @@ class ProductionReportController extends Controller
 
     function index($id)
     {
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
         $role_code = Auth::user()->role_code;
         $queryActivity = "SELECT DISTINCT(activity_type) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
     	$activityList = DB::select($queryActivity);
@@ -54,6 +57,9 @@ class ProductionReportController extends Controller
 
     function activity($id)
     {
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+        
     	$activityList = ActivityList::find($id);
     	// foreach ($activityList as $activity) {
     		$activity_type = $activityList->activity_type;

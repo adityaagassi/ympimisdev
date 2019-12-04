@@ -984,7 +984,8 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');
-	Route::post('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
+	Route::get('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
+	Route::get('fetch/upload_kaizen/image', 'EmployeeController@fetchEmployee');
 });
 
 Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
@@ -1897,6 +1898,8 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 });
 
+Route::get('index/request_qa', 'QcReportController@request_cpar');
+
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
@@ -1976,7 +1979,11 @@ Route::get('index/press/detail_pic', 'PressController@detail_pic');
 Route::get('index/press/monitoring2', 'PressController@monitoring2');
 //Report Press
 Route::get('index/press/report_trouble', 'PressController@report_trouble');
-Route::get('fetch/press/fetchReasonList', 'PressController@fetchReasonList');
+Route::post('index/press/filter_report_trouble', 'PressController@filter_report_trouble');
+Route::get('index/press/report_prod_result', 'PressController@report_prod_result');
+Route::post('index/press/filter_report_prod_result', 'PressController@filter_report_prod_result');
+Route::get('index/press/report_kanagata_lifetime', 'PressController@report_kanagata_lifetime');
+Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filter_report_kanagata_lifetime');
 
 
 //ROOMS
