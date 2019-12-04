@@ -294,11 +294,11 @@ table.table-bordered > tfoot > tr > th{
                 plotBorderWidth: null,
                 plotShadow: false,
                 type: 'pie',
-                options3d: {
-                  enabled: true,
-                  alpha: 45,
-                  beta: 0
-                }
+                // options3d: {
+                //   enabled: true,
+                //   alpha: 45,
+                //   beta: 0
+                // }
               },
               title: {
                 text: 'TOTAL NG RATE KAKUNIN VISUAL YESTERDAY'
@@ -384,11 +384,11 @@ table.table-bordered > tfoot > tr > th{
                 plotBorderWidth: null,
                 plotShadow: false,
                 type: 'pie',
-                options3d: {
-                  enabled: true,
-                  alpha: 45,
-                  beta: 0
-                }
+                // options3d: {
+                //   enabled: true,
+                //   alpha: 45,
+                //   beta: 0
+                // }
               },
               title: {
                 text: 'TOTAL NG RATE KAKUNIN VISUAL TODAY'

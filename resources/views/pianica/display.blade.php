@@ -599,12 +599,12 @@
                 plotBorderWidth: null,
                 plotShadow: false,
                 type: 'pie',
-                options3d: {
-                  enabled: true,
-                  alpha: 45,
-                  beta: 0,
-                  maintainAspectRatio: false
-                }
+                // options3d: {
+                //   enabled: true,
+                //   alpha: 45,
+                //   beta: 0,
+                //   maintainAspectRatio: false
+                // }
               },
               title: {
                 text: ''
@@ -843,12 +843,12 @@
                     plotBorderWidth: null,
                     plotShadow: false,
                     type: 'pie',
-                    options3d: {
-                      enabled: true,
-                      alpha: 45,
-                      beta: 0,
-                      maintainAspectRatio: false
-                    }
+                    // options3d: {
+                    //   enabled: true,
+                    //   alpha: 45,
+                    //   beta: 0,
+                    //   maintainAspectRatio: false
+                    // }
                   },
                   title: {
                     text: ''
@@ -934,12 +934,12 @@
                     plotBorderWidth: null,
                     plotShadow: false,
                     type: 'pie',
-                    options3d: {
-                      enabled: true,
-                      alpha: 45,
-                      beta: 0,
-                      maintainAspectRatio: false
-                    }
+                    // options3d: {
+                    //   enabled: true,
+                    //   alpha: 45,
+                    //   beta: 0,
+                    //   maintainAspectRatio: false
+                    // }
                   },
                   title: {
                     text: ''
@@ -1024,12 +1024,12 @@
                     plotBorderWidth: null,
                     plotShadow: false,
                     type: 'pie',
-                    options3d: {
-                      enabled: true,
-                      alpha: 45,
-                      beta: 0,
-                      maintainAspectRatio: false
-                    }
+                    // options3d: {
+                    //   enabled: true,
+                    //   alpha: 45,
+                    //   beta: 0,
+                    //   maintainAspectRatio: false
+                    // }
                   },
                   title: {
                     text: ''
