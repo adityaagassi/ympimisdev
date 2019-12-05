@@ -65,7 +65,7 @@ public function handle(){
 	group by shipment_schedules.st_date, shipment_schedules.material_number, shipment_schedules.destination_code
 	) as b 
 	on a.st_date = b.st_date and a.material_number = b.material_number and a.destination_code = b.destination_code
-	having diff > 0 order by hpl asc, diff asc";
+	having diff < 0 order by hpl asc, diff asc";
 
 	$data = db::select($query);
 
