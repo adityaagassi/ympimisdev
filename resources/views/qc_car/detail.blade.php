@@ -236,11 +236,7 @@ table.table-bordered > tfoot > tr > th{
             <div class="form-group row" align="left">
               <div class="col-sm-1"></div>
               <label class="col-sm-2">
-                @if($cpars->kategori == "Internal")
-                  Foreman 
-                @elseif($cpars->kategori == "Eksternal" || $cpars->kategori == "Supplier")
-                  Staff
-                @endif
+                  Staff / Foreman
                   <span class="text-red">*</span></label>
               <div class="col-sm-8">
                 <select class="form-control select3" id="pic" name="pic" style="width: 100%;" data-placeholder="Pilih PIC" required>

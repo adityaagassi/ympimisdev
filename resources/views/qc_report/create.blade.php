@@ -226,12 +226,14 @@
     
     $('#tgl_permintaan').datepicker({
       format: "dd/mm/yyyy",
-      autoclose: true
+      autoclose: true,
+      todayHighlight: true
     });
 
     $('#tgl_balas').datepicker({
       format: "dd/mm/yyyy",
-      autoclose: true
+      autoclose: true,
+      todayHighlight: true
     });
 
     //menjadikan angka ke romawi

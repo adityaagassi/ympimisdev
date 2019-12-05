@@ -9,7 +9,7 @@
 	<style type="text/css">
 		table tr td,
 		table tr th{
-			font-size: 6pt;
+			font-size: 7pt;
 			border: 1px solid black !important;
 			border-collapse: collapse;
 		}
@@ -73,12 +73,12 @@
 			</tr>
 			<tr>
 				<td>Part Item</td>
-				<td>Part Description</td>
+				<td colspan="2">Part Description</td>
 				<td>Invoice No</td>
 				<td>Sample Qty</td>
-				<td colspan="2">Detail Problem</td>
 				<td>Defect Qty</td>
 				<td>% Defect</td>
+				<td></td>
 			</tr>
 
 			<?php 
@@ -89,17 +89,12 @@
 			@foreach($parts as $part)
 			<tr>
 				<td rowspan="2">{{$part->part_item}}</td>
-				<td rowspan="2">{{$part->material_description}}</td>
+				<td rowspan="2" colspan="2">{{$part->material_description}}</td>
 				<td rowspan="2">{{$part->no_invoice}}</td>
 				<td rowspan="2">{{$part->sample_qty}}</td>
-				<td rowspan="2" colspan="2">
-					<?= $part->detail_problem ?>
-					<!-- <img src="http://172.17.128.87/miraidev/public/kcfinderimages/files/foto.png"> -->
-					<!-- <img src="{{ base_path() }}/public/kcfinderimages/files/yamaha3.png" /> -->
-					<!-- <img src="{{ public_path('/kcfinderimages/files/yamaha3.png') }}"> -->
-				</td>
 				<td rowspan="2">{{$part->defect_qty}}</td>
 				<td rowspan="2">{{$part->defect_presentase}}</td>
+				<td rowspan="2"></td>
 			</tr>
 			<tr></tr>
 			@endforeach
@@ -108,18 +103,24 @@
 			?>
 			<tr>
 				<td rowspan="2">&nbsp;</td>
-				<td rowspan="2"></td>
-				<td rowspan="2"></td>
-				<td rowspan="2"></td>
 				<td rowspan="2" colspan="2"></td>
+				<td rowspan="2"></td>
+				<td rowspan="2"></td>
+				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 			</tr>
 			<tr></tr>
 			<?php } ?>
+			<?php if($jumlahparts != 0) { ?> 
+			<tr>
+				<td colspan="8"><p style="font-size: 14px">Detail Problem : </p><?= $part->detail_problem ?></td>
+			</tr>
+			<?php } else { ?>
 			<tr>
 				<td colspan="8">&nbsp;</td>
-			</tr>
+			</tr>	
+			<?php } ?>
 			<!-- <tr><td colspan="8"></td></tr> -->
 			<tr>
 				<td>Prepared By</td>
@@ -211,13 +212,12 @@
 				<td colspan="8">{{$cpar->status_name}}</td>
 			</tr>
 			<tr>
-				<td rowspan="7">4</td>
+				<td rowspan="6">4</td>
 				<td colspan="8">Cost Estimation</td>
 			</tr>
 			<tr>
 				<td colspan="8"><?= $cpar->cost ?> </td>
 			</tr>
-			<tr><td colspan="8">&nbsp;</td></tr>
 			<tr>
 				<td>Prepared By</td>
 				<td>Checked By</td>
@@ -226,7 +226,7 @@
 			</tr>
 			<tr>
 				<td rowspan="2">
-					@if($cpar->posisi == "QA" || $cpar->posisi == "QA2")
+					@if($cpar->posisi == "QA" || $cpar->posisi == "QA2" || $cpar->posisi == "QAmanager")
 						@if($cpar->staff != null)
 							{{$cpar->staffname}}
 						@elseif($cpar->leader != null)
@@ -237,7 +237,7 @@
 					@endif
 				</td>
 				<td rowspan="2">
-					@if($cpar->posisi == "QA2")
+					@if($cpar->posisi == "QA2" || $cpar->posisi == "QAmanager")
 						@if($cpar->staff != null)
 							{{$cpar->chiefname}}
 						@elseif($cpar->leader != null)
@@ -247,7 +247,11 @@
 						@endif
 					@endif
 				</td>
-				<td rowspan="2">&nbsp;</td>
+				<td rowspan="2">
+					@if($cpar->posisi == "QAmanager")
+						{{$cpar->managername}}
+					@endif
+				</td>
 				<td colspan="5" rowspan="2"></td>
 			</tr>
 			<tr></tr>

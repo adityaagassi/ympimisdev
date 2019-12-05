@@ -135,43 +135,45 @@ td{
 a{
   color: white;
 }
-/*
-#la { 
- position: absolute; 
- right: 745px; 
- top: 107px; 
- width: 180px;
- height: 500px; 
- border: solid 0px red; 
- font-size: 24px; 
- text-align: center; 
-}
-
-#sc { 
- position: absolute; 
- right: 1038px; 
- top: 610px; 
- width: 165px;
- height: 240px; 
- border: solid 0px red; 
- font-size: 24px; 
- text-align: center; 
-}
 
 
-#office > div 
-/*#dm > div,
-#who > div,
-#inc > div,
-#ind > div;
-#la > div; 
-#sc > div {
-  border-radius: 50%;
-}
+  .merah {
+    /*width: 50px;
+    height: 50px;*/
+    -webkit-animation: merah 1s infinite;  /* Safari 4+ */
+    -moz-animation: merah 1s infinite;  /* Fx 5+ */
+    -o-animation: merah 1s infinite;  /* Opera 12+ */
+    animation: merah 1s infinite;  /* IE 10+, Fx 29+ */
+  }
 
-.square {
-  opacity: 0.8;
-}
+  @-webkit-keyframes merah {
+    0%, 49% {
+      background: rgba(0, 0, 0, 0);
+    }
+    50%, 100% {
+      background-color: rgb(189, 30, 19);
+    }
+  }
+
+
+
+  .biru {
+    /*width: 50px;
+    height: 50px;*/
+    -webkit-animation: biru 1s infinite;  /* Safari 4+ */
+    -moz-animation: biru 1s infinite;  /* Fx 5+ */
+    -o-animation: biru 1s infinite;  /* Opera 12+ */
+    animation: biru 1s infinite;  /* IE 10+, Fx 29+ */
+  }
+
+  @-webkit-keyframes biru {
+    0%, 49% {
+      background: rgba(0, 0, 0, 0);
+    }
+    50%, 100% {
+      background-color: rgb(14, 198, 240);
+    }
+  }
 
 
 </style>
@@ -195,41 +197,24 @@ a{
 							<div id="parent">
                 <center><img src="{{ url("images/maps_office.png") }}" width="900"></center>
                 <div id="server" class="square">
-                  
                   <tr>
                       <!-- <div>Suhu Server</div> -->
-                      <a href="{{ url("index/suhu_1") }}">
-                        <div id="suhu1" style=" width:47px;height:30px"></div> 
+                      <a href="{{ url("index/grafikServer") }}">
+                        <div id="suhuServer" style=" width:47px;height:30px"></div> 
                       </a>       
                   </tr> 
 
                 </div>
+
+
 								<div id="office" class="square">
                   <tr>
                     <!-- <div>Suhu office</div> -->
-                    <a href="{{ url("index/suhu_2") }}">
-                      <div id="suhu2" style=" width:47px;height:30px"></div>
+                    <a href="{{ url("index/grafikOffice") }}">
+                      <div id="suhuOffice" style=" width:47px;height:30px"></div>
                     </a>
                   </tr>
                 </div>
-                <!-- <div id="filling" class="square">
-                <tr>
-                  <div id="suhu" style="background-color: #72f0b5; width:50px;height:50px">1</div>
-                </tr>
-                </div>
-								<div id="utility" class="square">
-                <tr>
-                  <div id="suhu" style="background-color: #72f0b5; width:50px;height:50px">2</div>
-                </tr>
-                </div>
-								<div id="toilet" class="square">
-                  <tr>
-                    <div id="suhu" style="background-color: #72f0b5; width:50px;height:50px">3</div>
-                  </tr>
-                </div> -->
-							<!-- 	<div id="ind" class="square"></div>
-								<div id="la" class="square"></div>
-                <div id="sc" class="square"></div> -->
               </div>
             </div>
           </div>
@@ -255,41 +240,76 @@ a{
   });
 
   function maps() {
-    $.get('{{ url("index/log_map_suhu1") }}', function(result, status, xhr) { 
+    $.get('{{ url("index/log_map_office") }}', function(result, status, xhr) { 
           if(xhr.status == 200){
             if(result.status){
               console.log(result.datas);
               
               $.each(result.datas, function(key, value) {
-                $('#suhu1').html(parseFloat(value.temperature)+'°C');
-                // console.log(value.temperature);
-                if (parseFloat(value.temperature)>= 24 ) {
-                  $('#suhu1').css('background-color','red');
+
+                if (value.lokasi == "Office") {
+                  $('#suhuOffice').html(parseFloat(value.temperature)+'°C');
+                  // console.log(value.temperature);
+                  if (parseFloat(value.temperature) > value.upper_limit ) {
+                    $('#suhuOffice').css('background-color','red');
+                  }
+                  else if (parseFloat(value.temperature) < value.lower_limit){
+                   $('#suhuOffice').css('background-color','blue'); 
+                  }
+                  else {
+                    
+                    $('#suhuOffice').css('background-color','green'); 
+                  }
                 }
-                else {$('#suhu1').css('background-color','olive');}
+
+                // else if (value.lokasi == "Server") {
+                //   $('#suhuServer').html(parseFloat(value.temperature)+'°C');
+                //   // console.log(value.temperature);
+                //   if (parseFloat(value.temperature) > value.upper_limit ) {
+                //     $('#suhuServer').css('background-color','red');
+                //   }
+                //   else if (parseFloat(value.temperature) < value.lower_limit){
+                //     $('#suhuServer').css('background-color','blue'); 
+                //  }
+                //  else {
+                //   $('#suhuServer').css('background-color','olive');
+                // }
+
+
+                // }
+
               })
             }
           }
         });
 
-
-        $.get('{{ url("index/log_map_suhu2") }}', function(result, status, xhr) { 
+    $.get('{{ url("index/log_map_server") }}', function(result, status, xhr) { 
           if(xhr.status == 200){
             if(result.status){
               console.log(result.datas);
               
               $.each(result.datas, function(key, value) {
-                $('#suhu2').html(parseFloat(value.temperature)+'°C');
-                // console.log(value.temperature);
-                if (parseFloat(value.temperature)>= 30 ) {
-                  $('#suhu2').css('background-color','red');
+
+                if (value.lokasi == "Server") {
+                  $('#suhuServer').html(parseFloat(value.temperature)+'°C');
+                  
+                  if (parseFloat(value.temperature) > value.upper_limit ) {
+                    $('#suhuServer').css('background-color','red');
+                  }
+                  else if (parseFloat(value.temperature) < value.lower_limit){
+                   $('#suhuServer').css('background-color','blue'); 
+                  }
+                  else {
+                    
+                    $('#suhuServer').css('background-color','green'); 
+                  }
                 }
-                else {$('#suhu2').css('background-color','olive');}
 
               })
             }
           }
         });
+
   }
 </script>
 

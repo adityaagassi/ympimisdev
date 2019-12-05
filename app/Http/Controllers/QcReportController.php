@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Response;
 use DataTables;
 use PDF;
+use DateTime;
 use App\QcCpar;
 use App\QcCar;
 use App\QcCparItem;
@@ -69,24 +70,30 @@ class QcReportController extends Controller
         ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at')
         ->whereNull('qc_cpars.deleted_at');
 
-        if(strlen($request->get('tgl_permintaan')) > 0){
-          $tgl_permintaan = $request->get('tgl_permintaan');
-          $date_permintaan = str_replace('/', '-', $tgl_permintaan);
+        if(strlen($request->get('bulandari')) > 0){
 
-          // $date_request = date('Y-m-d', strtotime($request->get('tgl_permintaan')));
-          $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.tgl_permintaan', '=', date("Y-m-d", strtotime($date_permintaan)));
+          if(strlen($request->get('bulanke')) > 0){
+            $bulandari = $request->get('bulandari');
+            $bulanke = $request->get('bulanke');
+
+            $cpar_detailsTable = $cpar_detailsTable->whereBetween('qc_cpars.tgl_permintaan',[$bulandari.'-01',$bulanke.'-31']);
+          
+          }
+          
+          else{
+            $bulandari = $request->get('bulandari');
+            $tgl = date('qc_cpars.tgl_permintaan');
+            //DateTime::createFromFormat('Y-m', 'qc_cpars.tgl_permintaan')
+            // $date_request = date('Y-m-d', strtotime($request->get('bulandari')));
+            $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.tgl_permintaan', 'like','%'.$bulandari.'%');
+          }
+
+          
         }
 
+        
         if(strlen($request->get('kategori')) > 0){
           $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.kategori', '=', $request->get('kategori'));
-        }
-
-
-        if(strlen($request->get('tgl_balas')) > 0){
-          $tgl_balas = $request->get('tgl_balas');
-          $date_balas = str_replace('/', '-', $tgl_balas);
-          // $date_reply = date('Y-m-d', strtotime($request->get('tgl_balas')));
-          $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.tgl_balas', '=', date("Y-m-d", strtotime($date_balas)));
         }
 
         if(strlen($request->get('department_id')) > 0){
@@ -96,7 +103,8 @@ class QcReportController extends Controller
         if(strlen($request->get('status_code')) > 0){
           $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.status_code', '=', $request->get('status_code'));
         }
-         $cpar_detailsTable = $cpar_detailsTable->orderBy('qc_cpars.id', 'DESC');
+        
+        $cpar_detailsTable = $cpar_detailsTable->orderBy('qc_cpars.id', 'DESC');
         $cpar_details = $cpar_detailsTable->get();
 
         return DataTables::of($cpar_details)
@@ -226,6 +234,21 @@ class QcReportController extends Controller
           $date_balas = str_replace('/', '-', $tgl_balas);
 
           if ($request->get('kategori') == "Internal") {
+
+            $ceklogin = "select grade_name,department from users join mutation_logs on users.username = mutation_logs.employee_id join promotion_logs on users.username = promotion_logs.employee_id where users.username='".Auth::user()->username."' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL and department = 'Quality Assurance'";
+            $loginstaff = DB::select($ceklogin);
+
+            if ($loginstaff != null) {
+              if ($loginstaff[0]->grade_name == "Staff" || $loginstaff[0]->grade_name == "Senior Staff") {
+                $staff = null;
+                $leader = Auth::user()->username;
+                $posisi = "leader";
+                $chief = null;
+                $foreman = $this->chief;
+              }              
+            }
+            else
+            {
               $staff = null;
               $leader = Auth::user()->username;
               $posisi = "leader";
@@ -243,9 +266,8 @@ class QcReportController extends Controller
               }
               else{
                 $foreman = null;
-              }
-
-          
+              }                
+            }
           } else {
               $staff = Auth::user()->username;
               $leader = null;
@@ -552,7 +574,8 @@ class QcReportController extends Controller
             $qc_cpar_items->save();
 
             $response = array(
-              'status' => true
+              'status' => true,
+              'datas' => "Berhasil",
             );
             return Response::json($response);
 
@@ -1200,9 +1223,7 @@ class QcReportController extends Controller
           $fiscal = $fys->fiscal_year;
       }
 
-      $bulan = db::select("select count(week_name) as colspan, monthname(mon) as bulan from
-(select DISTINCT week_name, DATE_FORMAT(week_date,'%Y-%m-01') as mon from weekly_calendars where fiscal_year='".$fiscal."') as d
-group by monthname(mon) order by mon asc");
+      $bulan = db::select("select count(week_name) as colspan, monthname(mon) as bulan from (select DISTINCT week_name, DATE_FORMAT(week_date,'%Y-%m-01') as mon from weekly_calendars where fiscal_year='".$fiscal."') as d group by monthname(mon) order by mon asc");
 
       $week = db::select("select DISTINCT week_name,monthname(week_date) as bulanweek from weekly_calendars where fiscal_year='".$fiscal."' ORDER BY week_date asc");
 
@@ -1829,7 +1850,7 @@ group by monthname(mon) order by mon asc");
 
             $cpars = QcCpar::find($id);
             $cpars->status_code = "1";
-            $cpars->posisi = "QAManager";
+            $cpars->posisi = "QAmanager";
             $cpars->save();
 
             $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";

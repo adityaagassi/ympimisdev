@@ -79,29 +79,27 @@ table.table-bordered > tfoot > tr > th{
           <div class="col-md-12 col-md-offset-3">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Tanggal Permintaan</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Tanggal Permintaan">
+                  <input type="text" class="form-control pull-right" id="bulandari" name="bulandari" placeholder="Bulan Dari">
                 </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Tanggal Balas</label>
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="tgl_balas" name="tgl_balas" placeholder="Tanggal Balas">
+                  <input type="text" class="form-control pull-right" id="bulanke" name="bulanke" placeholder="Bulan Ke">
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-12 col-md-offset-3">
-            <div class="col-md-6">
+          <div class="col-md-12">
+            <div class="col-md-4">
               <div class="form-group">
                 <select class="form-control select2" data-placeholder="Select Kategori" name="kategori" id="kategori" style="width: 100%;">
                   <option></option>
@@ -110,6 +108,8 @@ table.table-bordered > tfoot > tr > th{
                   <option value="Supplier">Supplier</option>
                 </select>
               </div>
+            </div>
+            <div class="col-md-4">
               <div class="form-group">
                 <select class="form-control select2" data-placeholder="Select Departemen" name="department_id" id="department_id" style="width: 100%;">
                   <option></option>
@@ -118,6 +118,8 @@ table.table-bordered > tfoot > tr > th{
                   @endforeach
                 </select>
               </div>
+            </div>
+            <div class="col-md-4">
               <div class="form-group">
                 <select class="form-control select2" data-placeholder="Select CPAR Status" name="status_code" id="status_code" style="width: 100%;">
                   <option></option>
@@ -126,10 +128,12 @@ table.table-bordered > tfoot > tr > th{
                   @endforeach
                 </select>
               </div>
-              <div class="form-group pull-right">
-                <a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
-                <button id="search" onClick="fillCPARDetail()" class="btn btn-primary">Search</button>
-              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-md-offset-5">
+            <div class="form-group">
+              <a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
+              <button id="search" onClick="fillCPARDetail()" class="btn btn-primary">Search</button>
             </div>
           </div>
           <table id="example1" class="table table-bordered table-striped table-hover">
@@ -230,15 +234,17 @@ table.table-bordered > tfoot > tr > th{
   });
 
   jQuery(document).ready(function() {
-    $('#tgl_permintaan').datepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayHighlight: true
+    $('#bulandari').datepicker({
+        format: "yyyy-mm",
+        startView: "months", 
+        minViewMode: "months",
+        autoclose: true
       });
-      $('#tgl_balas').datepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayHighlight: true
+      $('#bulanke').datepicker({
+        format: "yyyy-mm",
+        startView: "months", 
+        minViewMode: "months",
+        autoclose: true
       });
       $('.select2').select2({
         language : {
@@ -257,20 +263,22 @@ table.table-bordered > tfoot > tr > th{
 
   function fillCPARDetail(){
     $('#example1').DataTable().destroy();
-    var tgl_permintaan = $('#tgl_permintaan').val();
-    var tgl_balas = $('#tgl_balas').val();
+    var bulandari = $('#bulandari').val();
+    var bulanke = $('#bulanke').val();
     var kategori = $('#kategori').val();
     var department_id = $('#department_id').val();
     var status_code = $('#status_code').val();
     var data = {
-      tgl_permintaan:tgl_permintaan,
-      tgl_balas:tgl_balas,
+      bulandari:bulandari,
+      bulanke:bulanke,
       department_id:department_id,
       status_code:status_code,
       kategori:kategori
     }
-
-    
+    $('#example1 tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+    } );
     var table = $('#example1').DataTable({
       'dom': 'Bfrtip',
       'responsive': true,
@@ -342,6 +350,8 @@ table.table-bordered > tfoot > tr > th{
         ]
       });
 
+    
+
     table.columns().every( function () {
         var that = this;
 
@@ -354,10 +364,6 @@ table.table-bordered > tfoot > tr > th{
         } );
       } );
 
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       $('#example1 tfoot tr').appendTo('#example1 thead');
   }
 

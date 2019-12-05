@@ -238,7 +238,7 @@ table > thead > tr > th{
                 <th style="width: 6%; padding: 0;">Manager</th>
                 <th style="width: 6%; padding: 0;">DGM</th>
                 <th style="width: 6%; padding: 0;">GM</th>
-                <th style="width: 6%; padding: 0;">Reviewed By Manager</th>
+                <th style="width: 6%; padding: 0;">Received By Manager</th>
 
                 <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Foreman</th>
                 <th style="width: 6%; padding: 0;">Chief / Foreman</th>
@@ -821,22 +821,22 @@ table > thead > tr > th{
 
               //staff leader
               if (value.posisi_car != null) {
-                if (value.posisi_car != "staff" && value.posisi_car != "foreman") {
-                    statusawalcar = '<span class="label label-success">'+namapiccar2+'</span>'; 
-                    color = 'style="background-color:green"'; 
-                    // statusawalcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
-                }
-                else{
-                    if (d == 0) {
-                      statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
-                      color = 'style="background-color:red"'; 
-                      // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                      d = 1 ;
-                    }
-                    else {
-                      statusawalcar = '';
-                    }
-                }                
+                if (value.posisi_car != "staff" && value.posisi_car != "foreman" && value.posisi_car != "bagian") {
+                      statusawalcar = '<span class="label label-success">'+namapiccar2+'</span>'; 
+                      color = 'style="background-color:green"'; 
+                      // statusawalcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+                  else{
+                      if (d == 0) {
+                        statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
+                        color = 'style="background-color:red"'; 
+                        // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        d = 1 ;
+                      }
+                      else {
+                        statusawalcar = '';
+                      }
+                  }                
               }
               else{
                 if (d == 0) {
@@ -872,10 +872,19 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {   
-                  statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';
-                  color = 'style="background-color:red"';
-                  // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
-                  d = 1;
+                  if (namacfcar2 == "Tidak Ada") {
+                    statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';                    
+                    statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                    color = 'style="background-color:red"';
+                    // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  }
+                  else{
+                    statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';
+                    color = 'style="background-color:red"';
+                    d=1;
+                  }
+
+
                 } else {
                   statuscfcar = '';
                 }

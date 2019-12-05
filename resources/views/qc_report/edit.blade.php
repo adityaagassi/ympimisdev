@@ -90,7 +90,7 @@
           <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
        @elseif($cpars->email_status == NULL && $cpars->posisi == "leader" && Auth::user()->username == $cpars->leader)
-           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Foreman</a>
+           <a class="btn btn-sm btn-info pull-right" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Chief / Foreman</a>
 
        @else
            <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
@@ -505,7 +505,7 @@
           </div>          
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">No Invoice</label>
+            <label class="col-sm-2">No Invoice / No Lot</label>
             <div class="col-sm-6" align="left" id="no_invoice_view"></div>
           </div>
           <div class="form-group row" align="left">
@@ -576,7 +576,7 @@
                         @if($cpars->staff != NULL) 
                             Staff
                         @elseif($cpars->leader != NULL) 
-                            Leader
+                            Staff / Leader
                         @endif
                       </b>
                     </td>
@@ -593,7 +593,7 @@
                         @if($cpars->staff != NULL) 
                             Chief
                         @elseif($cpars->leader != NULL) 
-                            Foreman
+                            Chief / Foreman
                         @endif</b></td>
                     <td colspan="2"><b>
                       @if($cpars->checked_chief == "Checked" || $cpars->checked_foreman == "Checked")
@@ -720,14 +720,14 @@
           </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">No Invoice<span class="text-red">*</span></label>
+          <label class="col-sm-2">No Invoice / No Lot</span></label>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="no_invoice_edit" placeholder="No Invoice" required>
           </div>
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Lot Qty<span class="text-red">*</span></label>
+          <label class="col-sm-2">Lot Qty</span></label>
           
           <div class="col-sm-8">
             <div class="input-group">
@@ -738,7 +738,7 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Sample Qty<span class="text-red">*</span></label>
+          <label class="col-sm-2">Sample Qty</span></label>
           
           <div class="col-sm-8">
             <div class="input-group">
@@ -749,14 +749,14 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
+          <label class="col-sm-2">Detail Masalah</span></label>
           <div class="col-sm-8" align="left">
             <textarea class="form-control" id="detail_problem_edit" placeholder="Detail Masalah" required></textarea>
           </div>
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Defect Qty<span class="text-red">*</span></label>
+          <label class="col-sm-2">Defect Qty</span></label>
           <div class="col-sm-8" align="left">
             <div class="input-group">
               <input type="number" class="form-control" id="defect_qty_edit" placeholder="Defect Quantity" onkeyup="getPersenEdit()" required>
@@ -767,7 +767,7 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Defect Presentase<span class="text-red">*</span></label>
+          <label class="col-sm-2">Defect Presentase</span></label>
           <div class="col-sm-8" align="left">
             <input type="number" class="form-control" id="defect_presentase_edit" placeholder="Defect Presentase" disabled required>
           </div>
@@ -974,12 +974,14 @@
 
     $('#tgl_permintaan').datepicker({
       format: "dd/mm/yyyy",
-      autoclose: true
+      autoclose: true,
+      todayHighlight: true,
     });
 
     $('#tgl_balas').datepicker({
       format: "dd/mm/yyyy",
-      autoclose: true
+      autoclose: true,
+      todayHighlight: true,
     });
 
     CKEDITOR.replace('detail_problem' ,{
@@ -1210,6 +1212,8 @@
       };
 
       $.post('{{ url("index/qc_report/edit_item") }}', data, function(result, status, xhr){
+
+        // console.log(result.datas);
         if (result.status == true) {
           $('#example1').DataTable().ajax.reload(null, false);
           openSuccessGritter("Success","Material has been edited.");

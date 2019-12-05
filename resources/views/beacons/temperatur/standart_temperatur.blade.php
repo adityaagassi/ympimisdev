@@ -40,7 +40,7 @@ table.table-bordered > tfoot > tr > th{
   <h1>
     <!-- Create --> 
     {{ $page }}
-    <small>aaaaaa</small>
+    <small></small>
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -358,7 +358,7 @@ table.table-bordered > tfoot > tr > th{
     }
 
     function deleteConfirmation(url, name, id) {
-      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'");
+      jQuery('.modal-body').text("Are you sure want to delete " + name + "'");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id);
     }
 
