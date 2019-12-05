@@ -185,8 +185,7 @@ table.table-bordered > tfoot > tr > th{
 				                    <a type="button" class="btn btn-warning btn-xs" href="{{ url('index/sampling_check/editdetails/'.$sampling_id.'/'.$sampling_check_details->id) }}">
 						                  <i class="fa fa-edit"></i>
 						                </a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '<?php $array = json_decode(json_encode((array) simplexml_load_string('<data>'.$sampling_check_details->point_check.'</data>')),1);
-										print_r($array['p']); ?>','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '<?php echo $sampling_check_details->point_check ?>','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>

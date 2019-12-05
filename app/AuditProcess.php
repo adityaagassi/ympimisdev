@@ -12,7 +12,7 @@ class AuditProcess extends Model
     protected $table = 'audit_processes';
 
 	protected $fillable = [
-		'activity_list_id','department','section', 'product', 'periode', 'date', 'proses','operator','auditor','cara_proses','kondisi_cara_proses','pemahaman','kondisi_pemahaman','keterangan','leader','foreman','created_by'
+		'activity_list_id','department','section', 'product', 'periode', 'date','week_name', 'proses','operator','auditor','cara_proses','kondisi_cara_proses','pemahaman','kondisi_pemahaman','keterangan','leader','foreman','created_by'
 	];
 
     public function activity_lists()

@@ -226,7 +226,7 @@
                                 <i class="fa fa-caret-right"></i> Cubeacon IoT
                             </a>
                             <br>
-                            <a href="{{ url("index/map_suhu") }}">
+                            <a href="{{ url("index/index_map") }}">
                                 <i class="fa fa-caret-right"></i> Temperature Map
                             </a>                           
                         </td>
@@ -290,6 +290,23 @@
                                 <i class="fa fa-caret-right"></i> Report Kaizen Excellent
                             </a>
                             <br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>SunFish</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="http://172.17.144.11/sf6/" target="_blank">
+                                <i class="fa fa-caret-right"></i> Sunfish
+                            </a>
                         </td>
                     </tr>
                 </tbody>

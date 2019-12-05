@@ -910,6 +910,7 @@ Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprova
 //Clinic
 Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('index/diagnose', 'ClinicController@indexDiagnose');
+	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
 	
 });
 
@@ -1575,11 +1576,15 @@ Route::post('index/point_check_first_product/update/{id}/{point_check_id}', 'Poi
 //FIRST PRODUCT AUDIT
 Route::get('index/first_product_audit/index/{id}', 'FirstProductAuditController@index');
 Route::get('index/first_product_audit/list_proses/{id}', 'FirstProductAuditController@list_proses');
-Route::post('index/first_product_audit/filter_first_product/{id}', 'FirstProductAuditController@filter_first_product');
 Route::get('index/first_product_audit/show/{id}/{first_product_audit_id}', 'FirstProductAuditController@show');
 Route::get('index/first_product_audit/destroy/{id}/{first_product_audit_id}', 'FirstProductAuditController@destroy');
 Route::get('index/first_product_audit/create/{id}', 'FirstProductAuditController@create');
 Route::post('index/first_product_audit/store/{id}', 'FirstProductAuditController@store');
+Route::get('index/first_product_audit/edit/{id}/{first_product_audit_id}', 'FirstProductAuditController@edit');
+Route::post('index/first_product_audit/update/{id}/{first_product_audit_id}', 'FirstProductAuditController@update');
+Route::get('index/first_product_audit/details/{id}/{first_product_audit_id}', 'FirstProductAuditController@details');
+Route::post('index/first_product_audit/filter_first_product_detail/{id}/{first_product_audit_id}', 'FirstProductAuditController@filter_first_product_detail');
+Route::get('index/first_product_audit/create_details/{id}', 'FirstProductAuditController@create_details');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

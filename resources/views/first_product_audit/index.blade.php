@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead input {
@@ -69,9 +70,9 @@
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/first_product_audit/filter_first_product/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/first_product_audit/filter_first_product_detail/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -88,8 +89,8 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/6') }}" class="btn btn-warning">Back</a>
-										<a href="{{ url('index/first_product_audit/index/'.$id) }}" class="btn btn-danger">Clear</a>
+										<a href="{{ url('index/first_product_audit/list_proses/'.$id) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/first_product_audit/details/'.$id.'/'.$first_product_audit_id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
 								</div>
@@ -98,9 +99,9 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit/print_first_product/'.$id)}}">
+						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit_details/print_first_product_details/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -125,9 +126,9 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Send Email <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/first_product_audit/sendemail/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/first_product_audit_details/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -154,10 +155,10 @@
 						<div class="col-md-12">
 							<div class="col-md-12">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
-									{{-- <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+									{{-- <a href="{{ url('index/first_product_audit/create_details/'.$first_product_audit_id) }}" class="btn btn-primary">Create {{ $proses }}</a> --}}
+									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 								        Create
-								    </button> --}}
+								    </button>
 								</div>
 							</div>
 						</div>
@@ -171,10 +172,10 @@
 											<tr>
 												<th>Proses</th>
 												<th>Jenis</th>
-												<th>Standar Kualitas</th>
-												<th>Tool Check</th>
-												<th>Jumlah Cek</th>
-												<th>Month</th>
+												<th>Date</th>
+												<th>No. Seri</th>
+												<th>Judgement</th>
+												<th>PIC</th>
 												<th>Leader</th>
 												<th>Foreman</th>
 												<th>Send Status</th>
@@ -183,36 +184,36 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($first_product_audit as $first_product_audit)
+											@foreach($first_product_audit_details as $first_product_audit_details)
 											<tr>
-												<td>{{$first_product_audit->proses}}</td>
-												<td>{{$first_product_audit->jenis}}</td>
-												<td>{{$first_product_audit->standar_kualitas}}</td>
-												<td>{{$first_product_audit->tool_check}}</td>
-												<td>{{$first_product_audit->jumlah_cek}}</td>
-												<td>{{$first_product_audit->month}}</td>
-												<td>{{$first_product_audit->leader}}</td>
-												<td>{{$first_product_audit->foreman}}</td>
+												<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
+												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
+												<td>{{$first_product_audit_details->date}}</td>
+												<td>{{$first_product_audit_details->no_seri}}</td>
+												<td>{{$first_product_audit_details->judgement}}</td>
+												<td>{{$first_product_audit_details->pic}}</td>
+												<td>{{$first_product_audit_details->leader}}</td>
+												<td>{{$first_product_audit_details->foreman}}</td>
 												<td>
-													@if($first_product_audit->send_status == "")
+													@if($first_product_audit_details->send_status == "")
 								                		<label class="label label-danger">Not Yet Sent</label>
 								                	@else
 								                		<label class="label label-success">Sent</label>
 								                	@endif
 												</td>
-												<td>@if($first_product_audit->approval == "")
+												<td>@if($first_product_audit_details->approval == "")
 								                		<label class="label label-danger">Not Approved</label>
 								                	@else
 								                		<label class="label label-success">Approved</label>
 								                	@endif</td>
 												<td>
 													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/first_product_audit/show/'.$id.'/'.$first_product_audit->id)}}">View</a>
-														<a href="{{url('index/first_product_audit/edit/'.$id.'/'.$first_product_audit->id)}}" class="btn btn-warning btn-sm">Edit</a>
+														<a class="btn btn-info btn-sm" href="{{url('index/first_product_audit_details/show/'.$id.'/'.$first_product_audit_details->id)}}">View</a>
+														<a href="{{url('index/first_product_audit_details/edit/'.$id.'/'.$first_product_audit_details->id)}}" class="btn btn-warning btn-sm">Edit</a>
 														{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
 											               Edit
 											            </button> --}}
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy") }}', '{{ $first_product_audit->date }} - {{ $first_product_audit->nama_mesin }}','{{ $id }}', '{{ $first_product_audit->id }}');">
+														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit_details/destroy") }}', '{{ $first_product_audit_details->date }} - {{ $first_product_audit_details->nama_mesin }}','{{ $id }}', '{{ $first_product_audit_details->id }}');">
 															Delete
 														</a>
 													</center>
@@ -263,7 +264,85 @@
 		</div>
 	</div>
 </div>
-{{--  --}}
+<div class="modal fade" id="create-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Create Interview</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="box-body">
+        <div>
+        	{{-- <form role="form" method="post" action="{{url('index/interview/create_participant/'.$interview_id)}}" enctype="multipart/form-data"> --}}
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<input type="hidden" class="form-control" name="first_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
+            	<input type="hidden" class="form-control" name="activity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+	            <div class="form-group">
+	              <label for="">Proses</label>
+				  <input type="text" class="form-control" name="proses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Jenis</label>
+				  <input type="text" class="form-control" name="jenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Date</label>
+				  <input type="text" class="form-control" name="date" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Nomor Seri</label>
+				  <input type="text" class="form-control" name="No Seri" placeholder="Enter No Seri" required>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Judgement</label>
+				  <div class="radio">
+				    <label><input type="radio" name="judgement" id="judgement" value="Good">OK</label>
+				  </div>
+				  <div class="radio">
+				    <label><input type="radio" name="judgement" id="judgement" value="Not Good">Not OK</label>
+				  </div>
+	            </div>
+	            <div class="form-group">
+	              <label for="">PIC</label>
+		              <select class="form-control select2" name="pic" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+		                <option value=""></option>
+		                @foreach($operator as $operator)
+		                <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
+		                @endforeach
+		              </select>
+	            </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            <div class="form-group">
+	              <label for="">Keterangan</label>
+				  <textarea name="keterangan" id="keterangan" class="form-control" rows="2" required="required"></textarea>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Leader</label>
+				  <input type="text" class="form-control" name="leader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Foreman</label>
+				  <input type="text" class="form-control" name="foreman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+	            </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          	<div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+          </div>
+          </div>
+        {{-- </form> --}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 
@@ -279,11 +358,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no date";
-				}
-			}
+			dropdownParent: $("#create-modal")
 		});
 	});
 	$('.datepicker').datepicker({
@@ -305,6 +380,10 @@
 		
 
 	});
+
+	CKEDITOR.replace('keterangan' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
 
 	
 </script>
