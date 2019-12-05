@@ -3037,8 +3037,8 @@ public function fetchNgBentsukiBenage(Request $request){
         left join ng_lists on ng_lists.id = ng.ng
         group by log.operator, ng_lists.ng_name");
 
-    $op = db::select("SELECT distinct operator, op.nama from pn_log_proces log
-        left join pn_operators op on op.nik = operator
+    $op = db::select("SELECT distinct operator, op.name as nama from pn_log_proces log
+        left join employees op on op.employee_id = operator
         WHERE location = 'PN_Pureto'
         and date(log.created_at) = '".$date."'");
 
@@ -3077,8 +3077,8 @@ public function fetchNgKensaAwal(Request $request){
         left join ng_lists on ng_lists.id = ng.ng
         group by log.operator, ng_lists.ng_name");
 
-    $op = db::select("SELECT distinct operator, op.nama from pn_log_proces log
-        left join pn_operators op on op.nik = operator
+    $op = db::select("SELECT distinct operator, op.name as nama from pn_log_proces log
+        left join employees op on op.employee_id = operator
         WHERE location = 'PN_Kensa_Awal'
         and date(log.created_at) = '".$date."'");
 
