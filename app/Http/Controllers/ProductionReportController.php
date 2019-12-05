@@ -158,6 +158,7 @@ class ProductionReportController extends Controller
                 IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
                 IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         21 as jumlah_activity_daily,
+        daily.jumlah_daily_check,
         daily.jumlah_daily_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check)/21)*100,0) as persen_daily,
         daily.jumlah_day,
@@ -247,7 +248,7 @@ class ProductionReportController extends Controller
         GROUP BY leader_dept) weekly,
 
         (select COALESCE(count(activity_type),0) as jumlah_activity_daily,
-        COALESCE((select count(DISTINCT(daily_checks.check_date)) as jumlah_laporan
+        COALESCE((select count(DISTINCT(daily_checks.production_date)) as jumlah_laporan
                 from daily_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$bulan."'
@@ -567,7 +568,7 @@ class ProductionReportController extends Controller
             and activity_lists.department_id = '".$id."'
             and activity_lists.frequency = '".$frequency."'");
 
-        $detail = db::select("select weekly_calendars.week_date,21 as plan, (select count(check_date) from daily_checks join activity_lists as actlist on actlist.id = activity_list_id where DATE_FORMAT(check_date,'%Y-%m') = '".$week_date."' and leader = '".$leader_name."' and check_date = weekly_calendars.week_date and actlist.department_id = '".$id."' and actlist.frequency = '".$frequency."') as jumlah_aktual from weekly_calendars  where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+        $detail = db::select("select weekly_calendars.week_date,21 as plan, (select count(DISTINCT(production_date)) from daily_checks join activity_lists as actlist on actlist.id = activity_list_id where DATE_FORMAT(production_date,'%Y-%m') = '".$week_date."' and leader = '".$leader_name."' and check_date = weekly_calendars.week_date and actlist.department_id = '".$id."' and actlist.frequency = '".$frequency."') as jumlah_aktual from weekly_calendars  where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
