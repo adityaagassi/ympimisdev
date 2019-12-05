@@ -130,11 +130,19 @@
                     <span class="description-text" style="font-size: 32px;">Average<br><span >平均</span></span>
                   </div>
                 </td>
-              </tr>
-            </table>
-            <div class="col-md-3">
+               <!--  <td width="1%">
+                  <div class="description-block border-right text-yellow">
+                   <h5 class="description-header" style="font-size: 42px;">
+                    <span class="description-percentage" id="total_budget"></span>
+                  </h5>      
+                  <span class="description-text" style="font-size: 28px;">Total Forecast<br><span>??</span></span>
+                </div>
+              </td> -->
+            </tr>
+          </table>
+          <div class="col-md-3">
 
-            </div>
+          </div>
 
 						<!-- 	<div class="col-md-3">
 								<div class="description-block border-right" style="color: #02ff17">
@@ -294,10 +302,10 @@
     	$("#tot_diff").html(tot_diff2);
     }
 
-    avg = tot_act / result.emp_total[0].jml;
+    avg = tot_act / result.emp_total.jml;
     avg = Math.round(avg * 100) / 100;
 
-    avg_fc = tot_day_budget / result.emp_fc[0].jml_fc;
+    avg_fc = tot_day_budget / result.emp_fc.jml_fc;
     avg_fc = Math.round(avg_fc * 100) / 100;
     $("#avg").html(avg);
     $("#avg_fc").html(avg_fc);
@@ -378,7 +386,7 @@
     			borderWidth: 0,
     			groupPadding: 0.1,
     			animation: false,
-    			opacity: 0.2
+    			opacity: 1
     		},
     		scatter : {
     			dataLabels: {

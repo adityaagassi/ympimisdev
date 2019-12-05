@@ -93,7 +93,7 @@
                       <h5 class="description-header" style="font-size: 42px;">
                         <span class="description-percentage" id="tot_budget"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 28px;">Acc Budget<br><span>??</span></span>   
+                      <span class="description-text" style="font-size: 28px;">Total Budget<br><span>予算月間累計</span></span>   
                     </div>
                   </td>
                   <td width="1%">
@@ -119,7 +119,7 @@
                       <h5 class="description-header" style="font-size: 42px;">
                         <span class="description-percentage" id="avg_bdg"></span>
                       </h5>      
-                      <span class="description-text" style="font-size: 28px;">Budget Average<br><span >?? </span></span>   
+                      <span class="description-text" style="font-size: 28px;">Budget Average<br><span>予算月間平均</span></span>   
                     </div>
                   </td>
                   <td width="1%">
@@ -130,14 +130,14 @@
                     <span class="description-text" style="font-size: 28px;">Average<br><span >平均</span></span>
                   </div>
                 </td>
-                <td width="1%">
+                <!-- <td width="1%">
                   <div class="description-block border-right text-yellow">
                    <h5 class="description-header" style="font-size: 42px;">
                     <span class="description-percentage" id="total_budget"></span>
                   </h5>      
                   <span class="description-text" style="font-size: 28px;">Total Budget<br><span>??</span></span>
                 </div>
-              </td>
+              </td> -->
             </tr>
           </table>
           <div class="col-md-3">
@@ -302,10 +302,10 @@
     	$("#tot_diff").html(tot_diff2);
     }
 
-    avg = tot_act / result.emp_total[0].jml;
+    avg = tot_act / result.emp_total.jml;
     avg = Math.round(avg * 100) / 100;
 
-    avg_bdg = tot_budget / result.emp_bdg[0].jml_bdg;
+    avg_bdg = tot_budget / result.emp_bdg.jml_bdg;
     avg_bdg = Math.round(avg_bdg * 100) / 100;
     $("#avg").html(avg);
     $("#avg_bdg").html(avg_bdg);
@@ -386,7 +386,7 @@
     			borderWidth: 0,
     			groupPadding: 0.1,
     			animation: false,
-    			opacity: 0.2
+    			opacity: 1
     		},
     		scatter : {
     			dataLabels: {

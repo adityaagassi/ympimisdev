@@ -90,7 +90,7 @@ class EmployeeController extends Controller
   public function indexKaizenAssessment($id)
   {
     return view('employees.service.kaizenDetail', array(
-      'title' => 'Detail E-Kaizen',
+      'title' => 'e-Kaizen Verification',
       'title_jp' => '??'))->with('page', 'Kaizen');
   }
 
@@ -119,7 +119,7 @@ class EmployeeController extends Controller
   public function indexKaizen()
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986','E01090823','R14122906'";
+    $usr = "'19014987','19014986','E01090823','R14122906','M09041335'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
@@ -140,7 +140,7 @@ class EmployeeController extends Controller
 
     if ($emp) {
       return view('employees.service.indexKaizen', array(
-        'title' => 'E - Kaizen (Assessment List)',
+        'title' => 'e-Kaizen (Assessment List)',
         'position' => $emp,
         'section' => $sc,
         'title_jp' => '??'))->with('page', 'Assess')->with('head','Kaizen');
@@ -1669,6 +1669,13 @@ public function fetchKaizen(Request $request)
       return 'Bukan Kaizen';
     else if ($kz->status == '-1') 
       return 'Belum Verifikasi';
+  })->addColumn('aplikasi', function($kz){
+    if ($kz->application == '1') 
+      return 'Telah di Aplikasikan';
+    else if ($kz->application == '0') 
+      return 'Tidak di Aplikasikan';
+    else if ($kz->application == '') 
+      return '';
   })
 
   ->rawColumns(['posisi' , 'action', 'stat'])
@@ -1800,10 +1807,10 @@ public function fetchDataKaizen()
     }
     else if ($kzn->status == 1){
       if ($kzn->foreman_point_1 != '' && $kzn->foreman_point_2 != '' && $kzn->foreman_point_3 != '') {
-        return '<span class="label bg-green">Verified</span>';
+        return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
       }
     } else {
-      return '<span class="label bg-red">NOT Kaizen</span>';
+      return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
     }
     
   })
@@ -1813,19 +1820,19 @@ public function fetchDataKaizen()
   ->addColumn('mg_stat', function($kzn){
     if ($kzn->foreman_point_1 != '' && $kzn->foreman_point_2 != '' && $kzn->foreman_point_3 != '') {
       if ($kzn->manager_point_1 != '' && $kzn->manager_point_2 != '' && $kzn->manager_point_3 != '') {
-        return '<span class="label bg-green">Verified</span>';
+        return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
       } else {
         if ($_GET['position'] == 'Manager') {
           return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
         } else {
-          return '<span class="label bg-yellow">Unverified</span>'; 
+          return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>'; 
         }
       }
     } else {
       if ($kzn->status == 0) {
-        return '<span class="label bg-red">NOT Kaizen</span>';
+        return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
       } else {
-        return '<span class="label bg-yellow">Unverified</span>';
+        return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
       }
     }
   })
@@ -1923,15 +1930,11 @@ public function fetchAppliedKaizen()
 
   if ($_GET['status'] != "") {
     if ($_GET['status'] == '1') {
-      $kzn = $kzn->where('status','=', '-1');
+      $kzn = $kzn->whereNull('application');
     } else if ($_GET['status'] == '2') {
-      $kzn = $kzn->where('manager_point_1','=', '0');
+      $kzn = $kzn->where('application','=', '1');
     } else if ($_GET['status'] == '3') {
-      $kzn = $kzn->where('status','=', '1');
-    } else if ($_GET['status'] == '4') {
-      $kzn = $kzn->where('manager_point_1','<>', '0');
-    } else if ($_GET['status'] == '5') {
-      $kzn = $kzn->where('status','=', '0');
+      $kzn = $kzn->where('application','=', '0');
     }
   }
 
@@ -1940,11 +1943,11 @@ public function fetchAppliedKaizen()
   return DataTables::of($kzn)
   ->addColumn('app_stat', function($kzn){
     if ($kzn->application == '') {
-      return '<button class="label bg-yellow btn">Yet Applied</a>';
-    } else if($kzn->application == 'Ya') {
-      return '<span class="label bg-green">Applied</span>';
-    } else if($kzn->application == 'Tidak') {
-      return '<span class="label bg-red">NOT Applied</span>';
+      return '<button class="label bg-yellow btn" onclick="modal_apply('.$kzn->id.')">UnApplied</a>';
+    } else if($kzn->application == '1') {
+      return '<span class="label bg-green"><i class="fa fa-check"></i> Applied</span>';
+    } else if($kzn->application == '0') {
+      return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Applied</span>';
     }
   })
   ->addColumn('action', function($kzn){
@@ -1969,32 +1972,35 @@ public function fetchCost()
 
 public function fetchKaizenReport(Request $request)
 {
-  $chart1 = "select department, section, SUM(kaizen) as kaizen from
-  (select department, section, `group`, count(employee_id) as kaizen from
-  (select kaizen_forms.employee_id, mutation_logs.department, mutation_logs.section, mutation_logs.`group` from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1) d group by section, department 
-  union all
-  select distinct department, section, `group`, 0 as kaizen from mutation_logs where valid_to is null
-  ) as kz
-  left join total_meeting_codes on kz.`group` = total_meeting_codes.group_name
-  where department <> 'Japan Staf' and `code` is  not null and `code` not in ('OFC', 'SEC', 'GA', 'CTN', 'DRV')
-  group by department, section";
+  $date = date('Y-m');
+  $dt2 = date('F');
+
+  if ($request->get('tanggal') != "") {
+    $date = $request->get('tanggal');
+    $dt2 = date('F',strtotime($request->get('tanggal')));
+  }
+
+  $chart1 = "select count(kaizen_forms.employee_id) as kaizen , mutation_logs.department, mutation_logs.section from kaizen_forms 
+  left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id 
+  where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '".$date."'
+  group by mutation_logs.department, mutation_logs.section";
 
   $kz_total = db::select($chart1);
 
-  $q_rank1 = "select kz.employee_id, employee_name, CONCAT(department,' - ', section,' - ', `group`) as bagian, fp1+fp2+fp3+mp1+mp2+mp3 as nilai from 
-  (select employee_id, employee_name, SUM(foreman_point_1 * 40) fp1, SUM(foreman_point_2 * 30) fp2, SUM(foreman_point_3 * 30) fp3, SUM(manager_point_1 * 40) mp1, SUM(manager_point_2 * 30) mp2, SUM(manager_point_3 * 30) mp3 from kaizen_forms LEFT JOIN kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-  where DATE_FORMAT(propose_date,'%Y-%m') = '2019-10' and status = 1
+  $q_rank1 = "select kz.employee_id, employee_name, CONCAT(department,' - ', section,' - ', `group`) as bagian, mp1+mp2+mp3 as nilai from 
+  (select employee_id, employee_name, SUM(manager_point_1 * 40) mp1, SUM(manager_point_2 * 30) mp2, SUM(manager_point_3 * 30) mp3 from kaizen_forms LEFT JOIN kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+  where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and status = 1
   group by employee_id, employee_name
   ) as kz
   left join mutation_logs on kz.employee_id = mutation_logs.employee_id
   where valid_to is null
-  order by (fp1+fp2+fp3+mp1+mp2+mp3) / 2 desc
+  order by (mp1+mp2+mp3) desc
   limit 3";
 
   $kz_rank1 = db::select($q_rank1);
 
   $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', mutation_logs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
-  where `status` = 1 and valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '2019-10'
+  where `status` = 1 and valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '".$date."'
   group by kaizen_forms.employee_id, employee_name, department, mutation_logs.section, `group`
   order by count desc
   limit 10";
@@ -2006,6 +2012,7 @@ public function fetchKaizenReport(Request $request)
     'charts' => $kz_total,
     'rank1' => $kz_rank1,
     'rank2' => $kz_rank2,
+    'date' => $dt2
   );
   return Response::json($response);
 }
