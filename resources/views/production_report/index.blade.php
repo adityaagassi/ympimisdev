@@ -44,9 +44,9 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<?php if($name == "Imbang Prasetyo"){ ?>
+			<?php if($name == "Imbang Prasetyo" || $name == "M Khamdan K" || $name == "Clark Kent"){ ?>
+				<a href="{{ url("index/production_report/approval/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Approval</a>
 			<?php } ?>
-			<a href="{{ url("index/production_report/approval/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Approval</a>
 		</div>
 	</div>
 </section>
