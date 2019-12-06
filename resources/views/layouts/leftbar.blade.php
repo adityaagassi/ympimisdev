@@ -204,12 +204,7 @@
     </li>
     @endif
 
-    @if(in_array('M22', $navs))
-    @if(isset($page) && $page == "Master Beacon")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/master_beacon") }}"><i class="fa fa-cubes"></i> <span>Master Beacon</span></a>
-    </li>
-    @endif
-
+    
     @if(in_array('M20', $navs))
     @if(isset($page) && $page == "User Document")<li class="active">@else<li>@endif
       <a href="{{ url("/index/user_document") }}"><i class="fa fa-book"></i> <span>User Document</span></a>
@@ -244,6 +239,29 @@
     </ul>
   </li>
   @endif
+
+@if(in_array('M22', $navs))
+    @if(isset($head) && $head == "IoT")<li class="treeview active">@else<li class="treeview">@endif
+      <a href="#">
+        <i class="fa fa-users"></i> <span>Internet of Things (IoT)</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+       @if(isset($page) && $page == "Master Beacon")<li class="active">@else<li>@endif
+        <a href="{{ url("index/master_beacon") }}"><i class="fa fa-list-ol"></i>Master Beacon</a>
+      </li>
+
+      @if(isset($page) && $page == "Standartisasi Suhu")<li class="active">@else<li>@endif
+        <a href="{{ url("index/standart_temperature") }}"><i class="fa fa-clock-o"></i><span>Standarisasi Suhu</span></a>
+      </li>  
+
+
+    </ul>
+  </li>
+  @endif
+
 
   @if(in_array('S0', $navs))
   <li class="header">Service Menu</li>
@@ -431,7 +449,7 @@
 @if(in_array('S21', $navs))
 @if(isset($head) && $head == "Kaizen")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
-   <i class="fa fa-credit-card"></i> <span>E - Kaizen Teian</span>
+   <i class="fa fa-credit-card"></i> <span>e-Kaizen Teian</span>
    <span class="pull-right-container">
     <i class="fa fa-angle-left pull-right"></i>
   </span>
@@ -450,7 +468,7 @@
 @endif
 
 @if(in_array('S23', $navs))
-@if(isset($head) && $head == "Kaizen")<li class="treeview active">@else<li class="treeview">@endif
+@if(isset($head) && $head == "Clinic")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-hospital-o"></i> <span>Clinic</span>
    <span class="pull-right-container">

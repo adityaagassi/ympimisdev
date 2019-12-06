@@ -51,22 +51,22 @@
 		color: white;
 		font-size: 35pt;
 	}
-	#kz_top_sum, #kz_top_count {
+	#kz_top_sum, #kz_top_count, #kz_top_each_score {
 		font-size: 15pt;
 	}
 
-	#kz_top_count > tr {
+	#kz_top_count > tr, #kz_top_each_score > tr {
 		color: white;
 	}
-	#kz_top_sum > tr:first-child, #kz_top_count > tr:first-child {
+	#kz_top_sum > tr:first-child, #kz_top_count > tr:first-child, #kz_top_each_score > tr:first-child {
 		color: #363836 !important;
 		background-color: #ffbf00 !important;
 	}
-	#kz_top_sum > tr:nth-child(2), #kz_top_count > tr:nth-child(2) {
+	#kz_top_sum > tr:nth-child(2), #kz_top_count > tr:nth-child(2), #kz_top_each_score > tr:nth-child(2) {
 		color: #363836 !important;
 		background-color: #a9aba9 !important;
 	}
-	#kz_top_sum > tr:nth-child(3), #kz_top_count > tr:nth-child(3) {
+	#kz_top_sum > tr:nth-child(3), #kz_top_count > tr:nth-child(3), #kz_top_each_score > tr:nth-child(3) {
 		color: #363836 !important;
 		background-color: #cc952f !important;
 	}
@@ -83,7 +83,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-xs-12">
-				<div class="col-xs-2 pull-left">asdasdasdasfe2qty3ug7fi875t6r
+				<div class="col-xs-2 pull-left">
 					<p class="judul"><i style="color: #c290d1">e </i> - Kaizen</p>
 				</div>
 				<div class="col-xs-2 pull-right">
@@ -125,6 +125,19 @@
 					</thead>
 					<tbody id="kz_top_count"></tbody>
 				</table>
+				<h3 style="color: white;">TOP 10 each Kaizen Teian Score (EXCELLENT) :</h3>
+				<table class="table" style="color: white">
+					<thead>
+						<tr>
+							<th><i class="fa fa-trophy fa-2x"></i></th>
+							<th>EMPLOYEE ID</th>
+							<th>EMPLOYEE NAME</th>
+							<th>DEPARTMENT - SECTION - GROUP</th>
+							<th>SCORE</th>
+						</tr>
+					</thead>
+					<tbody id="kz_top_each_score"></tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -163,6 +176,9 @@
 		}
 
 		$.get('{{ url("fetch/kaizen/report") }}', data, function(result) {
+
+			// $("#kz_top_sum").empty();
+			// $("#kz_top_count").empty();
 			var data1 = [];
 			var data_total = [];
 			var total_tmp = 0;
@@ -202,7 +218,7 @@
 					type: 'column'
 				},
 				title: {
-					text: 'Data Kaizen Teian'
+					text: 'Data Kaizen Teian '+result.date
 				},
 				subtitle: {
 					text: 'Click the columns to view detail per Section'
@@ -286,6 +302,22 @@
 			})
 
 			$("#kz_top_count").append(body_count);
+
+			body_each = "";
+			no = 1;
+
+			$.each(result.rank2, function(index, value){
+				body_each += "<tr>";
+				body_each += "<td>"+no+"</td>";
+				body_each += "<td>"+value.employee_id+"</td>";
+				body_each += "<td>"+value.employee_name+"</td>";
+				body_each += "<td>"+value.bagian+"</td>";
+				body_each += "<td>"+value.count+"</td>";
+				body_each += "</tr>";
+				no++;
+			})
+
+			$("#kz_top_each_score").append(body_count);
 		});
 	}
 

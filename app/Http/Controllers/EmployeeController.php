@@ -143,7 +143,7 @@ class EmployeeController extends Controller
         'title' => 'e-Kaizen (Assessment List)',
         'position' => $emp,
         'section' => $sc,
-        'title_jp' => '??'))->with('page', 'Assess')->with('head','Kaizen');
+        'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
     } else {
       return redirect()->back();
     }
@@ -173,7 +173,7 @@ class EmployeeController extends Controller
 
     if ($emp) {
       return view('employees.service.indexKaizen', array(
-        'title' => 'E - Kaizen (Assessment List)',
+        'title' => 'e-Kaizen (Assessment List)',
         'position' => $emp,
         'section' => $sc,
         'filter' => $section,
@@ -206,7 +206,7 @@ class EmployeeController extends Controller
     $sc = db::select($sections);
 
     return view('employees.service.indexKaizenApplied', array(
-      'title' => 'E - Kaizen (Applied list)',
+      'title' => 'e-Kaizen (Applied list)',
       'position' => $emp,
       'section' => $sc,
       'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
@@ -222,8 +222,8 @@ class EmployeeController extends Controller
   public function indexKaizenResume()
   {
     return view('employees.report.kaizen_resume', array(
-      'title' => '',
-      'title_jp' => ''))->with('page', 'Kaizen Resume');
+      'title' => 'Report Kaizen Teian',
+      'title_jp' => '改善提案の報告'))->with('page', 'Kaizen Resume');
   }
 
   public function indexKaizenApprovalResume()
@@ -272,7 +272,7 @@ class EmployeeController extends Controller
     $sc = db::select($sections);
 
     return view('employees.service.ekaizenForm', array(
-      'title' => 'e - Kaizen',
+      'title' => 'e-Kaizen',
       'emp_id' => $id,
       'name' => $name,
       'section' => $section,
@@ -1943,7 +1943,7 @@ public function fetchAppliedKaizen()
   return DataTables::of($kzn)
   ->addColumn('app_stat', function($kzn){
     if ($kzn->application == '') {
-      return '<button class="label bg-yellow btn" onclick="modal_apply('.$kzn->id.')">UnApplied</a>';
+      return '<button class="label bg-yellow btn" onclick="modal_apply('.$kzn->id.',\''.$kzn->title.'\')">UnApplied</a>';
     } else if($kzn->application == '1') {
       return '<span class="label bg-green"><i class="fa fa-check"></i> Applied</span>';
     } else if($kzn->application == '0') {
@@ -2013,6 +2013,26 @@ public function fetchKaizenReport(Request $request)
     'rank1' => $kz_rank1,
     'rank2' => $kz_rank2,
     'date' => $dt2
+  );
+  return Response::json($response);
+}
+
+public function applyKaizen(Request $request)
+{
+  try {
+    KaizenForm::where('id', $request->get('id'))
+    ->update(['application' => $request->get('status')]);
+  } catch (QueryException $e) {
+    $response = array(
+      'status' => false,
+      'message' => $e->getMessage()
+    );
+    return Response::json($response);
+  }
+
+  $response = array(
+    'status' => true,
+    'message' => 'e-Kaizen Updated Successfully'
   );
   return Response::json($response);
 }

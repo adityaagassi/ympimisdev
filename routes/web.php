@@ -895,6 +895,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
+	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');
 });
 
 Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
@@ -903,14 +904,15 @@ Route::get('index/kaizen/{section}', 'EmployeeController@indexKaizen2');
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen2/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
-Route::get('index/kaizen/resume', 'EmployeeController@indexKaizenResume');
+Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
-
 
 //Clinic
 Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('index/diagnose', 'ClinicController@indexDiagnose');
 	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
+	Route::post('delete/diagnose', 'ClinicController@deleteVisitor');
+	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
 	
 });
 
@@ -1564,15 +1566,6 @@ Route::post('index/audit_process/sendemail/{id}', 'AuditProcessController@sendem
 Route::get('index/audit_process/print_audit_process_email/{id}/{month}', 'AuditProcessController@print_audit_process_email');
 Route::post('index/audit_process/approval/{id}/{month}', 'AuditProcessController@approval');
 
-//POINT CHECK FIRST PRODUCT
-Route::get('index/point_check_first_product/index/{id}', 'PointCheckFirstProductController@index');
-Route::get('index/point_check_first_product/show/{id}/{point_check_id}', 'PointCheckFirstProductController@show');
-Route::get('index/point_check_first_product/destroy/{id}/{point_check_id}', 'PointCheckFirstProductController@destroy');
-Route::get('index/point_check_first_product/create/{id}', 'PointCheckFirstProductController@create');
-Route::post('index/point_check_first_product/store/{id}', 'PointCheckFirstProductController@store');
-Route::get('index/point_check_first_product/edit/{id}/{point_check_id}', 'PointCheckFirstProductController@edit');
-Route::post('index/point_check_first_product/update/{id}/{point_check_id}', 'PointCheckFirstProductController@update');
-
 //FIRST PRODUCT AUDIT
 Route::get('index/first_product_audit/index/{id}', 'FirstProductAuditController@index');
 Route::get('index/first_product_audit/list_proses/{id}', 'FirstProductAuditController@list_proses');
@@ -1584,7 +1577,16 @@ Route::get('index/first_product_audit/edit/{id}/{first_product_audit_id}', 'Firs
 Route::post('index/first_product_audit/update/{id}/{first_product_audit_id}', 'FirstProductAuditController@update');
 Route::get('index/first_product_audit/details/{id}/{first_product_audit_id}', 'FirstProductAuditController@details');
 Route::post('index/first_product_audit/filter_first_product_detail/{id}/{first_product_audit_id}', 'FirstProductAuditController@filter_first_product_detail');
-Route::get('index/first_product_audit/create_details/{id}', 'FirstProductAuditController@create_details');
+Route::post('index/first_product_audit/store_details/{id}/{first_product_audit_id}', 'FirstProductAuditController@store_details');
+Route::get('index/first_product_audit/getdetail','FirstProductAuditController@getdetail')->name('first_product_audit.getdetail');
+Route::post('index/first_product_audit/update_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@update_details');
+Route::get('index/first_product_audit/destroy_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@destroy_details');
+
+//GUIDANCE AUDIT IK
+Route::get('index/audit_guidance/index/{id}', 'AuditGuidanceController@index');
+Route::post('index/audit_guidance/filter_guidance/{id}', 'AuditGuidanceController@filter_guidance');
+Route::get('index/audit_guidance/show/{id}/{audit_guidance_id}', 'AuditGuidanceController@show');
+Route::get('index/audit_guidance/destroy/{id}/{audit_guidance_id}', 'AuditGuidanceController@destroy');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -1683,7 +1685,7 @@ Route::get('index/grafikOffice','TemperatureController@grafikOffice');
 Route::get('index/data_suhu_office','TemperatureController@data_suhu_office');
 Route::get('index/log_map_office','TemperatureController@log_map_office');
 Route::get('index/standart_temperature', 'TemperatureController@standart');
-Route::get('index/temperatur/edit','TemperatureController@edit')->name('admin.temperaturedit');
+Route::get('index/temperature/edit','TemperatureController@edit')->name('admin.temperaturedit');
 Route::post('index/temperature/aksi_edit', 'TemperatureController@aksi_edit');
 Route::get('index/temperature/delete/{id}','TemperatureController@delete');
 

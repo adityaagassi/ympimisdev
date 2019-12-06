@@ -153,7 +153,6 @@ class OvertimeController extends Controller
 		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
 		$nik = db::select("SELECT employee_id from employees where end_date is null");
 
-
 		return view('overtimes.reports.overtime_by_employee', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -161,8 +160,6 @@ class OvertimeController extends Controller
 			'sections' => $section,
 			'niks' => $nik
 		));
-
-		
 	}
 
 	public function createOvertimeForm(){
@@ -1128,17 +1125,17 @@ public function overtimeControl(Request $request)
 	$employee = db::table('employees')
 	->whereNull('end_date')
 	->select(db::raw("count(employee_id) as jml"))
-	->get();
+	->first();
 
 	$employee_fc = db::table('manpower_forecasts')
 	->where('period','=',date('Y-m-01', strtotime($tanggal1)))
 	->select(db::raw("sum(forecast_mp) as jml_fc"))
-	->get();
+	->first();
 
 	$employee_bdg = db::table('manpower_budgets')
 	->where('period','=',date('Y-m-01', strtotime($tanggal1)))
 	->select(db::raw("sum(budget_mp) as jml_bdg"))
-	->get();
+	->first();
 
 	$response = array(
 		'status' => true,
