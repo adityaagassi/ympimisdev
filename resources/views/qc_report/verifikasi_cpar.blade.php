@@ -40,6 +40,11 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
   }
+  .isi{
+    background-color: #f5f5f5;
+    color: black;
+    padding: 10px;
+  }
   #loading, #error { display: none; }
 </style>
 @endsection
@@ -1108,6 +1113,36 @@
                 </span>
             </div>
         </label> -->
+        <?php if ($cpars->file != null){ ?>
+
+        <div class="box box-warning box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title">File Terlampir</h3>
+
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <?php $data = json_decode($cpars->file);
+              for ($i = 0; $i < count($data); $i++) { ?>
+              <div class="col-md-4">
+                <div class="isi">
+                  <?= $data[$i] ?>
+                </div>
+              </div>
+              <div  class="col-md-2">
+                  <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+              </div>
+            <?php } ?>                       
+          </div>
+        </div> 
+          
+        <?php } ?>
+   
         <div class="col-sm-12">
           <!-- <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/qc_report/update',$cpars->id) }}">Cancel</a>

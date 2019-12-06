@@ -213,7 +213,6 @@ class QcReportController extends Controller
             $file->filename=NULL;
           }
 
-
           // $file = $request->file('file');
           // if ($file != NULL) {
           //   $tujuan_upload = 'files';
@@ -1062,7 +1061,10 @@ class QcReportController extends Controller
                   return '<label class="label label-warning">'.$detail->foremancarname.'</label>';
                 }
                 else if($detail->posisi_car == "foreman") {
-                  if ($detail->checked_foreman_car == null) {
+                  if ($detail->foremancarname == null) {
+                     return '<label class="label label-primary">'.$detail->picname.'</label>';
+                  }
+                  else if ($detail->checked_foreman_car == null) {
                     return '<label class="label label-warning">'.$detail->foremancarname.'</label>';                
                   }
                   else{

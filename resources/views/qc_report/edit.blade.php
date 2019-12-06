@@ -34,6 +34,11 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
   }
+  .isi{
+    background-color: #f5f5f5;
+    color: black;
+    padding: 10px;
+  }
   #loading, #error { display: none; }
 </style>
 @endsection
@@ -97,7 +102,7 @@
        @endif
 
        <!-- <a href="{{url('index/qc_report/statuscpar', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-primary btn-sm pull-right" title="Status Verifikasi" style="margin-right: 5px">Cek Status Verifikasi</a> -->
-    
+      
     </div>  
 
     <form role="form" method="post" action="{{url('index/qc_report/update_action', $cpars->id)}}" enctype="multipart/form-data">
@@ -229,7 +234,6 @@
         <label class="col-sm-1">File</label>
         <div class="col-sm-5">
           <input type="file" name="files[]">
-          {{ $cpars->file }}
           <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
         </div>
         <span id="customer">
@@ -292,7 +296,36 @@
             <button type="submit" class="btn btn-primary col-sm-14">Update</button>
           </div>
         </div>
+        <?php if ($cpars->file != null){ ?>
+            <br><br>
+              <div class="box box-warning box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">File Yang Telah Diupload</h3>
+
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                  <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <?php $data = json_decode($cpars->file);
+                    for ($i = 0; $i < count($data); $i++) { ?>
+                    <div class="col-md-4">
+                      <div class="isi">
+                        <?= $data[$i] ?>
+                      </div>
+                    </div>
+                    <div  class="col-md-2">
+                        <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                    </div>
+                  <?php } ?>                       
+                </div>
+              </div>    
+          <?php } ?>
       </div>
+
     </form>
     <div class="row">
       <div class="col-xs-12">
@@ -1011,7 +1044,6 @@
       if (!isNaN(hasiledit)) {
          document.getElementById('defect_presentase_edit').value = hasiledit2;
       }
-
     }
 
     //menjadikan angka ke romawi

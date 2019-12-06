@@ -38,6 +38,11 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
   }
+  .isi{
+    background-color: #f5f5f5;
+    color: black;
+    padding: 10px;
+  }
   #loading, #error { display: none; }
 </style>
 @endsection
@@ -169,7 +174,7 @@
                   <td colspan="1">Deskripsi</td>
                   <td colspan="4"><?= $cars->deskripsi ?></td>
                   <td colspan="1">
-                      @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator ||  Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == "clark")
+                      @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -227,7 +232,7 @@
                   <td colspan="1">Tindakan</td>
                   <td colspan="4"><?= $cars->tindakan ?></td>
                   <td colspan="1">
-                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator|| Auth::user()->username == "clark")
+                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -399,9 +404,39 @@
                 </tr>
             </tbody>
         </table>
-        
-        <br>
 
+        <br>        
+
+        <?php if ($cars->file != null){ ?>
+
+        <div class="box box-warning box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title">File Terlampir</h3>
+
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <?php $data = json_decode($cars->file);
+              for ($i = 0; $i < count($data); $i++) { ?>
+              <div class="col-md-4">
+                <div class="isi">
+                  <?= $data[$i] ?>
+                </div>
+              </div>
+              <div  class="col-md-2">
+                  <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+              </div>
+            <?php } ?>                       
+          </div>
+        </div> 
+          
+        <?php } ?>
+        
         <div class="col-sm-12">
           <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
         </div>

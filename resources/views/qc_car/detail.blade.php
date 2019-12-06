@@ -34,6 +34,11 @@ table.table-bordered > tbody > tr > td{
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
+.isi{
+  background-color: #f5f5f5;
+  color: black;
+  padding: 10px;
+}
 #loading, #error { display: none; }
 
 
@@ -195,12 +200,52 @@ table.table-bordered > tfoot > tr > th{
         <div class="form-group row increment" align="left">
           <label class="col-sm-1">File</label>
           <div class="col-sm-5">
-            <input type="file" name="file">
-            {{ $cars->file }}
+            <input type="file" name="files[]" multiple>
+            <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
+            <!-- {{ $cars->file }} -->
             <!-- <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button> -->
           </div>
         </div>
+        <div class="clone hide">
+          <div class="form-group row control-group" style="margin-top:10px">
+            <label class="col-sm-1">File</label>
+            <div class="col-sm-6">
+              <input type="file" name="files[]">
+              <div class="input-group-btn"> 
+                <button class="btn btn-danger" type="button"><i class="glyphicon glyphicon-remove"></i> Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <?php if ($cars->file != null){ ?>
+            <br><br>
+              <div class="box box-success box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">File Yang Telah Diupload</h3>
+
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                  <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <?php $data = json_decode($cars->file);
+                    for ($i = 0; $i < count($data); $i++) { ?>
+                    <div class="col-md-4">
+                      <div class="isi">
+                        <?= $data[$i] ?>
+                      </div>
+                    </div>
+                    <div  class="col-md-2">
+                        <a href="{{ url('/files/car/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                    </div>
+                  <?php } ?>                       
+                </div>
+              </div>    
+          <?php } ?>
         <!-- /.box-body -->
         <div class="col-sm-4 col-sm-offset-5">
           <div class="btn-group">
@@ -377,6 +422,15 @@ table.table-bordered > tfoot > tr > th{
   @section('scripts')
   <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
   <script type="text/javascript">
+
+    $(".plusdata").click(function(){ 
+        var html = $(".clone").html();
+        $(".increment").after(html);
+    });
+
+     $("body").on("click",".btn-danger",function(){ 
+          $(this).parents(".control-group").remove();
+      });
 
     var checkpic = $("#checkpic").val()
 

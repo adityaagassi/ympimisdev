@@ -106,29 +106,43 @@ class QcCarController extends Controller
           $tinjauanall= $request->tinjauan;
           foreach ($tinjauanall as $carstinjauan) {
              $carstinjauan = implode(',', $request->tinjauan);			    
-         }
-         $id_user = Auth::id();
+          }
+           $id_user = Auth::id();
 
-         $cars->cpar_no = $request->get('cpar_no');
-         $cars->tinjauan = $carstinjauan;
-         $cars->deskripsi = $request->get('deskripsi');
-         $cars->tindakan = $request->get('tindakan');
-         $cars->penyebab = $request->get('penyebab');
-         $cars->perbaikan = $request->get('perbaikan');
-         $cars->created_by = $id_user;
-         
-         $cars->save();
-         return redirect('/index/qc_car/detail/'.$cars->id)->with('status', 'CAR data has been Inserted.')->with('page', 'CAR');
-       }
-       catch (QueryException $e){
-          $error_code = $e->errorInfo[1];
-          if($error_code == 1062){
-            return back()->with('error', 'CAR error.')->with('page', 'CAR');
+           $files=array();
+              
+            // $file = new QcCpar();
+            if ($request->file('files') != NULL) {
+              if($files=$request->file('files')) {
+                foreach($files as $file){
+                  $nama=$file->getClientOriginalName();
+                  $file->move('files/car',$nama);
+                  $data[]=$nama;              
+                }
+              }
+              $cars->file=json_encode($data);           
+            }
+
+           $cars->cpar_no = $request->get('cpar_no');
+           $cars->tinjauan = $carstinjauan;
+           $cars->deskripsi = $request->get('deskripsi');
+           $cars->tindakan = $request->get('tindakan');
+           $cars->penyebab = $request->get('penyebab');
+           $cars->perbaikan = $request->get('perbaikan');
+           $cars->created_by = $id_user;
+           
+           $cars->save();
+           return redirect('/index/qc_car/detail/'.$cars->id)->with('status', 'CAR data has been Inserted.')->with('page', 'CAR');
+         }
+         catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'CAR error.')->with('page', 'CAR');
+          }
+          else{
+              return back()->with('error', $e->getMessage())->with('page', 'CAR');
+          }
         }
-        else{
-            return back()->with('error', $e->getMessage())->with('page', 'CAR');
-        }
-      }
     }
 
     public function print_car($id)
