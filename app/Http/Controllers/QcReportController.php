@@ -253,12 +253,12 @@ class QcReportController extends Controller
               $posisi = "leader";
               $chief = null;
 
-              $getforeman = "select employees.employee_id,name,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance'";
+              $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance' ";
               $fore = DB::select($getforeman);
               
               if ($fore != null) {
                 foreach ($fore as $for) {
-                  $hasilforeman = $for->employee_id;
+                  $hasilforeman = $for->username;
                 }
 
                 $foreman = $hasilforeman;                
