@@ -1569,9 +1569,7 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "chief";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
-                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'),function ($message) {
-                      $message->attach('D:\xampp\htdocs\miraidev\public\files\JADWAL.pdf');
-                  });
+                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
                 }
                 else{
@@ -1612,7 +1610,7 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "manager";
                 $qc_cpars->progress = "30";
                 $qc_cpars->save();
-                Mail::to('rioirvansyah6@gmail.com')->send(new SendEmail($cpars, 'cpar'));
+                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
               }
 
@@ -1622,7 +1620,7 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "dgm";
                 $qc_cpars->progress = "40";
                 $qc_cpars->save();
-                Mail::to('anton.budi.santoso@music.yamaha.com')->send(new SendEmail($cpars, 'cpar'));
+                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CPAR');
               }
 
@@ -1632,7 +1630,7 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "gm";
                 $qc_cpars->progress = "50";
                 $qc_cpars->save();
-                Mail::to('aditya.agassi@music.yamaha.com')->send(new SendEmail($cpars, 'cpar'));
+                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CPAR');
               }
               else if($qc_cpars->email_status == "SentGM" && $qc_cpars->posisi == "gm"){

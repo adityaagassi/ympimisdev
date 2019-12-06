@@ -191,7 +191,7 @@
 												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
 												<td>{{$first_product_audit_details->date}}</td>
 												<td>{{$first_product_audit_details->auditor}}</td>
-												<td><img width="100px" src="{{ url('/data_file/cek_produk_pertama/'.$first_product_audit_details->foto_aktual) }}"></td>
+												<td><?php echo $first_product_audit_details->foto_aktual ?></td>
 												<td><?php echo $first_product_audit_details->note ?></td>
 												<td>{{$first_product_audit_details->pic}}</td>
 												<td>{{$first_product_audit_details->leader}}</td>
@@ -303,9 +303,10 @@
 		              </select>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Image</label>
+	              <label for="">Image (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
 				  <br>
-	              <input type="file" class="form-control" name="foto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readInput(this)">
+	              {{-- <input type="file" class="form-control" name="foto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readInput(this)"> --}}
+	              <textarea name="foto_aktual" id="inputfoto_aktual" class="form-control" rows="2" required="required"></textarea>
 	              <br>
 				  <img width="100px" id="blah" src="" style="display: none" alt="your image" />
 	            </div>
@@ -378,13 +379,8 @@
 		              </select>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Image</label>
-				  <br>
-	              <img width="100px" id="picture" src="" />
-	              <input type="hidden" class="form-control" name="foto_aktual_edit" id="foto_aktual_edit" placeholder="Enter Leader" readonly>
-	              <input type="file" class="form-control" name="editfoto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readEdit(this)">
-	              <br>
-				  <img width="100px" id="blah2" src="" style="display: none" alt="your image" />
+	              <label for="">Image (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
+				  <textarea name="editfoto_aktual" id="editfoto_aktual" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -408,7 +404,7 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           	<div class="modal-footer">
             <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-            <input type="submit" value="Submit" class="btn btn-primary">
+            <input type="submit" value="Update" class="btn btn-primary">
           </div>
           </div>
         </form>
@@ -463,6 +459,13 @@
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
     CKEDITOR.replace('editnote' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    CKEDITOR.replace('foto_aktual' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+    CKEDITOR.replace('editfoto_aktual' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
 
@@ -602,6 +605,17 @@
 		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+first_product_audit_details_id);
 	}
 
+	$.fn.modal.Constructor.prototype.enforceFocus = function() {
+      modal_this = this
+      $(document).on('focusin.modal', function (e) {
+        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length 
+        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') 
+        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+          modal_this.$element.focus()
+        }
+      })
+    };
+
 	function create(){
 		var first_product_audit_id = $('#inputfirst_product_audit_id').val();
 		var activity_list_id = $('#inputactivity_list_id').val();
@@ -653,10 +667,9 @@
                   var data = data.data;
                   console.log(data);
                   $("#editpic").val(data.pic).trigger('change.select2');
-                  $("#picture").attr("src",urlimage+'/'+data.foto_aktual);
                   $("#editnote").html(CKEDITOR.instances.editnote.setData(data.note));
                   $("#editdate").val(data.date);
-                  $("#foto_aktual_edit").val(data.foto_aktual);
+                  $("#editfoto_aktual").html(CKEDITOR.instances.editfoto_aktual.setData(data.foto_aktual));
                 }
             });
     	console.log(first_product_audit_detail_id);

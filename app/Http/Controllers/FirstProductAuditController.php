@@ -305,14 +305,6 @@ class FirstProductAuditController extends Controller
     {
             try{
 
-              $tujuan_upload = 'data_file/cek_produk_pertama';
-              $date = date('Y-m-d');
-
-              $file = $request->file('foto_aktual');
-              $nama_file = $file->getClientOriginalName();
-              $file->getClientOriginalName();
-              $file->move($tujuan_upload,$file->getClientOriginalName());
-
               $id_user = Auth::id();
               $first_product_audit_id = $request->get('first_product_audit_id');
               $activity_list_id = $request->get('activity_list_id');
@@ -321,7 +313,7 @@ class FirstProductAuditController extends Controller
                     'first_product_audit_id' => $request->get('first_product_audit_id'),
                     'date' => $request->get('date'),
                     'auditor' => $request->get('auditor'),
-                    'foto_aktual' => $nama_file,
+                    'foto_aktual' => $request->get('foto_aktual'),
                     'note' => $request->get('note'),
                     'pic' => $request->get('pic'),
                     'leader' => $request->get('leader'),
@@ -393,30 +385,13 @@ class FirstProductAuditController extends Controller
                 $first_product_audit_id = $request->get('editfirst_product_audit_id');
                 $activity_list_id = $request->get('editactivity_list_id');
 
-                if($request->file('editfoto_aktual') != null){
-                  $tujuan_upload = 'data_file/cek_produk_pertama/';
-                  $date = date('Y-m-d');
-
-                  $file = $request->file('editfoto_aktual');
-                  $nama_file = $file->getClientOriginalName();
-                  $file->getClientOriginalName();
-                  $file->move($tujuan_upload,$file->getClientOriginalName());
-
                   $first_product_audit_detail = FirstProductAuditDetail::find($first_product_audit_detail_id);
                   $first_product_audit_detail->date = $request->get('editdate');
                   $first_product_audit_detail->pic = $request->get('editpic');
-                  $first_product_audit_detail->foto_aktual = $nama_file;
+                  $first_product_audit_detail->foto_aktual = $request->get('editfoto_aktual');
                   $first_product_audit_detail->note = $request->get('editnote');
                   $first_product_audit_detail->save();
-                }
-                else{
-                  $first_product_audit_detail = FirstProductAuditDetail::find($first_product_audit_detail_id);
-                  $first_product_audit_detail->date = $request->get('editdate');
-                  $first_product_audit_detail->pic = $request->get('editpic');
-                  $first_product_audit_detail->foto_aktual = $request->get('foto_aktual_edit');
-                  $first_product_audit_detail->note = $request->get('editnote');
-                  $first_product_audit_detail->save();
-                }
+                
 
             return redirect('index/first_product_audit/details/'.$activity_list_id.'/'.$first_product_audit_id)
               ->with('page', 'First Product Audit Details')->with('status', 'First Product Audit Details has been updated.');
