@@ -322,12 +322,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			return false;
 		}
 
-	// 	if (($("#kz_mp_bulan").val() == "" || $("#kz_mp_bulan").val() == "0") &&
-	// 		($("#kz_space_bulan").val() == "" || $("#kz_space_bulan").val() == "0") &&
-	// 		($("#kz_material_bulan").val() == "" || $("#kz_material_bulan").val() == "0")) {
-	// 		alert("Harap mengisi estimasi hasil (minimal 1 kolom)");
-	// 	return false;
-	// }
+		if (($("#kz_mp_bulan").val() == "" || $("#kz_mp_bulan").val() == "0") &&
+			($("#kz_space_bulan").val() == "" || $("#kz_space_bulan").val() == "0") &&
+			($("#kz_material_bulan").val() == "" || $("#kz_material_bulan").val() == "0")) {
+			alert("Harap mengisi estimasi hasil (minimal 1 kolom)");
+		return false;
+	}
 
 	cal = [];
 

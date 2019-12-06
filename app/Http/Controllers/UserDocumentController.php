@@ -212,13 +212,7 @@ class UserDocumentController extends Controller
 				'status' => false,
 			);
 			return Response::json($response);
-
 		}
-
-
-
-		
-
 	}
 
 

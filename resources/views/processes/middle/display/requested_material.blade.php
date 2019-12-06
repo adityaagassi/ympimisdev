@@ -33,7 +33,7 @@
 </style>
 @stop
 @section('header')
-<section class="content-header" style="padding-top: 0; padding-bottom: 0;">
+<section class="content-header" style="padding-top: 0; padding-bottom: 0; ">
 
 </section>
 @endsection

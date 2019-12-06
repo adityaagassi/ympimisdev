@@ -358,7 +358,6 @@
 
 				var names = [];
 				var dataCount = [];
-				// var dataPercentage = [];
 				var cat;
 
 				$.each(result.stocks, function(key, value) {
@@ -370,11 +369,9 @@
 
 				$.each(names, function(key, name){
 					var series = [];
-					// var series2 = [];
 					$.each(result.stocks, function(i, value) {
 						if(value.category == name){
 							series.push([Date.parse(value.date_stock), parseFloat(value.material)]);
-							// series2.push([Date.parse(value.date_stock), parseFloat(value.percentage)]);
 						}
 					});
 
@@ -383,14 +380,13 @@
 						data:series
 					};
 
-					// dataPercentage[key] = {
-					// 	name:name,
-					// 	data:series2
-					// };
 				});
 
 				window.chart = Highcharts.stockChart('container1', {
 					// colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
+					chart: {
+						type: 'spline'
+					},
 					rangeSelector: {
 						selected: 0
 					},
@@ -415,6 +411,9 @@
 					},
 					plotOptions: {
 						series: {
+							dataLabels: {
+								enabled: true
+							},
 							lineWidth: 2,
 							label: {
 								connectorAllowed: false
@@ -427,12 +426,7 @@
 									}
 								}
 							}
-						},
-						line: {
-							dataLabels: {
-								enabled: true
-							}
-						}
+						}	
 					},
 					legend: {
 						enabled: true,
@@ -449,60 +443,6 @@
 					},
 					series: dataCount
 				});
-
-				// window.chart = Highcharts.stockChart('container2', {
-				// 	// colors: ['rgb(255,0,0)','rgb(255,128,0)','rgb(255,255,0)','rgb(127,0,255)','rgb(0,255,255)','rgb(0,255,0)'],
-				// 	rangeSelector: {
-				// 		selected: 0
-				// 	},
-				// 	navigator:{
-				// 		enabled:false
-				// 	},
-				// 	yAxis: {
-				// 		title: {
-				// 			text: 'Percentage (%)'
-				// 		}
-				// 	},
-				// 	title: {
-				// 		text: 'M-PRO Daily Stock By Percentage',
-				// 		style: {
-				// 			fontSize: '20px',
-				// 			fontWeight: 'bold'
-				// 		}
-				// 	},
-				// 	xAxis:{
-				// 		type: 'datetime',
-				// 		tickInterval: 24 * 3600 * 1000
-				// 	},
-				// 	plotOptions: {
-				// 		series: {
-				// 			lineWidth: 2,
-				// 			label: {
-				// 				connectorAllowed: false
-				// 			}
-				// 		},
-				// 		line: {
-				// 			dataLabels: {
-				// 				enabled: true
-				// 			}
-				// 		}
-				// 	},
-				// 	legend: {
-				// 		enabled: true,
-				// 		itemStyle: {
-				// 			fontSize:'20px'
-				// 		}
-				// 	},
-				// 	credits:{
-				// 		enabled:false
-				// 	},
-				// 	tooltip: {
-				// 		pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b> <br/>',
-				// 		valueDecimals: 2,
-				// 		split: true
-				// 	},
-				// 	series: dataPercentage
-				// });
 			}
 			else{
 				alert('Attempt to retrieve data failed.');
