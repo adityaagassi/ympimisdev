@@ -355,7 +355,7 @@
 						{
 							name: 'Biri',
 							data: biri,
-							color: '#2b908f'
+							color: '#e88113'
 						},
 						{
 							name: 'Oktaf',
