@@ -818,16 +818,10 @@ class FloController extends Controller
 					['flo_number' => $flo_number, 'created_by' => $id, 'status_code' => '0', 'updated_at' => Carbon::now()]
 				);
 
-				$status = 'new';
-
 				self::printFLO($flo_number, $shipment_schedule[0]->destination_shortname, $shipment_schedule[0]->st_date, $shipment_schedule[0]->shipment_condition_name, $request->get('material_number'), $material->material_description, $max_flo, 0, []);
 
-				$response = array(
-					'status' => true,
-					'message' => 'Scan FLO berhasil dilakukan.',
-					'status_code' => $status,
-				); 
-				return Response::json($response);
+				$status = 'new';
+
 			}
 			catch (QueryException $e){
 				$response = array(
@@ -838,7 +832,6 @@ class FloController extends Controller
 			}
 		}
 
-		//wip inventory
 		try{
 			if($material->origin_group_code == '041'){
 				$log_process = LogProcess::updateOrCreate(
