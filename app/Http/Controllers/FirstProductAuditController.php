@@ -335,7 +335,7 @@ class FirstProductAuditController extends Controller
               // return redirect('index/interview/details/'.$interview_id)
               // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
               // return Response::json($response);
-              return redirect('/index/first_product_audit/details/'.$activity_list_id.'/'.$first_product_audit_id)->with('status', 'First Product Audit data has been updated.')->with('page', 'First Product Audit');
+              return redirect('/index/first_product_audit/details/'.$activity_list_id.'/'.$first_product_audit_id)->with('status', 'First Product Audit data has been created.')->with('page', 'First Product Audit');
             }catch(\Exception $e){
               $response = array(
                 'status' => false,

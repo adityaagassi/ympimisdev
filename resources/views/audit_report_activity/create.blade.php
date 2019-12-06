@@ -72,6 +72,17 @@
             </div>
           </div>
           <div class="form-group row" align="right">
+            <label class="col-sm-4">Audit Schedule<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Choose a Schedule This Month..." required>
+                <option value=""></option>
+                @foreach($guidance as $guidance)
+                  <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Nama Dokumen<span class="text-red">*</span></label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="nama_dokumen" placeholder="Enter Nama Dokumen" required>
@@ -104,7 +115,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="date" name="target">
+                <input type="text" class="form-control pull-right" id="date" name="target" placeholder="Select Date">
               </div>
             </div>
           </div>

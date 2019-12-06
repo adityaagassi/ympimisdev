@@ -1587,6 +1587,9 @@ Route::get('index/audit_guidance/index/{id}', 'AuditGuidanceController@index');
 Route::post('index/audit_guidance/filter_guidance/{id}', 'AuditGuidanceController@filter_guidance');
 Route::get('index/audit_guidance/show/{id}/{audit_guidance_id}', 'AuditGuidanceController@show');
 Route::get('index/audit_guidance/destroy/{id}/{audit_guidance_id}', 'AuditGuidanceController@destroy');
+Route::post('index/audit_guidance/store/{id}', 'AuditGuidanceController@store');
+Route::get('index/audit_guidance/getdetail','AuditGuidanceController@getdetail')->name('audit_guidance.getdetail');
+Route::post('index/audit_guidance/update/{id}/{audit_guidance_id}', 'AuditGuidanceController@update');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

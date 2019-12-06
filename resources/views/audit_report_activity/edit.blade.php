@@ -80,6 +80,21 @@
             </div>
           </div>
           <div class="form-group row" align="right">
+            <label class="col-sm-4">Audit Schedule<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Choose a Schedule This Month..." required>
+                <option value=""></option>
+                @foreach($guidance as $guidance)
+                  @if($audit_report_activity->audit_guidance_id == $guidance->id)
+                    <option value="{{ $guidance->id }}" selected>{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }} - {{ $guidance->status }}</option>
+                  @else
+                    <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }} - {{ $guidance->status }}</option>
+                  @endif
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Nama Dokumen<span class="text-red">*</span></label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="nama_dokumen" placeholder="Enter Nama Dokumen" required value="{{ $audit_report_activity->nama_dokumen }}">

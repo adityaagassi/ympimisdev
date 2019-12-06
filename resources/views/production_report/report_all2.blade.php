@@ -943,9 +943,14 @@ else if(frequency == 'Daily'){
       head += '<th rowspan="2" style="vertical-align: middle;">No.</th>';
       head += '<th rowspan="2" style="vertical-align: middle;">Date</th>';
       for(var a = 0; a < result.act_name.length; a++){
-        head += '<th>'+result.act_name[a].activity_name+'</th>';
+        if(result.act_name[a].activity_name != null){
+          head += '<th>'+result.act_name[a].activity_name+'</th>';
+        }
+        else{
+          head += '<th></th>';
+        }
       }
-      console.log(result.act_name);
+      // console.log(result.act_name);
       head += '</tr>';
       $('#data-activity-head-daily').append(head);
       for (var i = 0; i < result.detail.length; i++) {
@@ -958,8 +963,10 @@ else if(frequency == 'Daily'){
           body += '<td style="background-color: #f7ff59"></td>';
         }
         else{
-          body += '<td style="background-color: #f7ff59"></td>';
-          body += '<td style="background-color: #f7ff59"></td>';
+          // body += '<td style="background-color: #f7ff59"></td>';
+          // body += '<td style="background-color: #f7ff59"></td>';
+          body += '<td></td>';
+          body += '<td></td>';
         }
         body += '</tr>';
         total_plan += parseInt(result.detail[i].plan);
@@ -970,18 +977,18 @@ else if(frequency == 'Daily'){
       presentase = (total_aktual / plan)*100;
       body += '<tr>';
       body += '<td colspan="2"><b>Total Aktual</b></td>';
-      body += '<td><b>'+total_aktual+'</b></td>';
-      body += '<td></td>';
+      body += '<td colspan="'+result.act_name.length+'"><b>'+total_aktual+'</b></td>';
+      // body += '<td></td>';
       body += '</tr>';
       body += '<tr>';
       body += '<td colspan="2"><b>Total Plan</b></td>';
-      body += '<td><b>'+plan+'</b></td>';
-      body += '<td></td>';
+      body += '<td colspan="'+result.act_name.length+'"><b>'+plan+'</b></td>';
+      // body += '<td></td>';
       body += '</tr>';
       body += '<tr>';
       body += '<td colspan="2"><b>Presentase</b></td>';
-      body += '<td><b>'+parseInt(presentase)+'%</b></td>';
-      body += '<td></td>';
+      body += '<td colspan="'+result.act_name.length+'"><b>'+parseInt(presentase)+'%</b></td>';
+      // body += '<td></td>';
       body += '</tr>';
       $('#data-activity-daily').append(body);
 

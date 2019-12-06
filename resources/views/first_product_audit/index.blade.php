@@ -173,8 +173,9 @@
 												<th>Proses</th>
 												<th>Jenis</th>
 												<th>Date</th>
-												<th>No. Seri</th>
-												<th>Judgement</th>
+												<th>Auditor</th>
+												<th>Foto Aktual</th>
+												<th>Note</th>
 												<th>PIC</th>
 												<th>Leader</th>
 												<th>Foreman</th>
@@ -189,8 +190,9 @@
 												<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
 												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
 												<td>{{$first_product_audit_details->date}}</td>
-												<td>{{$first_product_audit_details->no_seri}}</td>
-												<td>{{$first_product_audit_details->judgement}}</td>
+												<td>{{$first_product_audit_details->auditor}}</td>
+												<td><img width="100px" src="{{ url('/data_file/cek_produk_pertama/'.$first_product_audit_details->foto_aktual) }}"></td>
+												<td><?php echo $first_product_audit_details->note ?></td>
 												<td>{{$first_product_audit_details->pic}}</td>
 												<td>{{$first_product_audit_details->leader}}</td>
 												<td>{{$first_product_audit_details->foreman}}</td>
@@ -208,14 +210,12 @@
 								                	@endif</td>
 												<td>
 													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/first_product_audit_details/show/'.$id.'/'.$first_product_audit_details->id)}}">View</a>
-														<a href="{{url('index/first_product_audit_details/edit/'.$id.'/'.$first_product_audit_details->id)}}" class="btn btn-warning btn-sm">Edit</a>
-														{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
-											               Edit
-											            </button> --}}
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit_details/destroy") }}', '{{ $first_product_audit_details->date }} - {{ $first_product_audit_details->nama_mesin }}','{{ $id }}', '{{ $first_product_audit_details->id }}');">
-															Delete
-														</a>
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editdetails('{{ url("index/first_product_audit/update_details") }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+											               <i class="fa fa-edit"></i>
+											            </button>
+									                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy_details") }}','{{ $first_product_audit_details->first_product_audit->proses }} - {{ $first_product_audit_details->date }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+									                      <i class="fa fa-trash"></i>
+									                    </a>
 													</center>
 												</td>
 											</tr>
@@ -223,6 +223,7 @@
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -271,73 +272,146 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Interview</b></h4>
+        <h4 class="modal-title" align="center"><b>Create First Product Audit</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
-        <div>
-        	{{-- <form role="form" method="post" action="{{url('index/interview/create_participant/'.$interview_id)}}" enctype="multipart/form-data"> --}}
+        <form role="form" method="post" action="{{url('index/first_product_audit/store_details/'.$id.'/'.$first_product_audit_id)}}" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<input type="hidden" class="form-control" name="first_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
-            	<input type="hidden" class="form-control" name="activity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+            	<input type="hidden" class="form-control" name="first_product_audit_id" id="inputfirst_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
+            	<input type="hidden" class="form-control" name="activity_list_id" id="inputactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
 	            <div class="form-group">
 	              <label for="">Proses</label>
-				  <input type="text" class="form-control" name="proses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
+				  <input type="text" class="form-control" name="proses" id="inputproses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Jenis</label>
-				  <input type="text" class="form-control" name="jenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
+				  <input type="text" class="form-control" name="jenis" id="inputjenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" class="form-control" name="date" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Nomor Seri</label>
-				  <input type="text" class="form-control" name="No Seri" placeholder="Enter No Seri" required>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Judgement</label>
-				  <div class="radio">
-				    <label><input type="radio" name="judgement" id="judgement" value="Good">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="judgement" id="judgement" value="Not Good">Not OK</label>
-				  </div>
+				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
-		              <select class="form-control select2" name="pic" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+		              <select class="form-control select2" name="pic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
 		                <option value=""></option>
 		                @foreach($operator as $operator)
 		                <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
 		                @endforeach
 		              </select>
 	            </div>
+	            <div class="form-group">
+	              <label for="">Image</label>
+				  <br>
+	              <input type="file" class="form-control" name="foto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readInput(this)">
+	              <br>
+				  <img width="100px" id="blah" src="" style="display: none" alt="your image" />
+	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
-	              <label for="">Keterangan</label>
-				  <textarea name="keterangan" id="keterangan" class="form-control" rows="2" required="required"></textarea>
+	              <label for="">Note</label>
+				  <textarea name="note" id="inputnote" class="form-control" rows="2" required="required"></textarea>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Auditor</label>
+				  <input type="text" class="form-control" name="auditor" id="inputauditor" placeholder="Enter Leader" value="{{ $leader2 }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="leader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="leader" id="inputleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="foreman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="foreman" id="inputforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
-          </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           	<div class="modal-footer">
             <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-            <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+            <input type="submit" value="Submit" class="btn btn-primary">
           </div>
           </div>
-        {{-- </form> --}}
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="edit-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Edit First Product Audit</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="box-body">
+        <form role="form" id="formedit" method="post" action="" enctype="multipart/form-data">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<input type="hidden" class="form-control" name="editfirst_product_audit_id" id="editfirst_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
+            	<input type="hidden" class="form-control" name="editactivity_list_id" id="editactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+	            <div class="form-group">
+	              <label for="">Proses</label>
+				  <input type="text" class="form-control" name="editproses" id="editproses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Jenis</label>
+				  <input type="text" class="form-control" name="editjenis" id="editjenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Date</label>
+				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Enter Leader" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">PIC</label>
+		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+		                <option value=""></option>
+		                @foreach($operator2 as $operator2)
+		                <option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
+		                @endforeach
+		              </select>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Image</label>
+				  <br>
+	              <img width="100px" id="picture" src="" />
+	              <input type="hidden" class="form-control" name="foto_aktual_edit" id="foto_aktual_edit" placeholder="Enter Leader" readonly>
+	              <input type="file" class="form-control" name="editfoto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readEdit(this)">
+	              <br>
+				  <img width="100px" id="blah2" src="" style="display: none" alt="your image" />
+	            </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            <div class="form-group">
+	              <label for="">Note</label>
+				  <textarea name="editnote" id="editnote" class="form-control" rows="2" required="required"></textarea>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Auditor</label>
+				  <input type="text" class="form-control" name="editauditor" id="editauditor" placeholder="Enter Leader" value="{{ $leader2 }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Leader</label>
+				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Foreman</label>
+				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+	            </div>
+            </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          	<div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            <input type="submit" value="Submit" class="btn btn-primary">
+          </div>
+          </div>
+        </form>
         </div>
       </div>
     </div>
@@ -360,6 +434,10 @@
 		$('.select2').select2({
 			dropdownParent: $("#create-modal")
 		});
+
+		$('.select3').select2({
+			dropdownParent: $("#edit-modal")
+		});
 	});
 	$('.datepicker').datepicker({
 		autoclose: true,
@@ -381,9 +459,39 @@
 
 	});
 
-	CKEDITOR.replace('keterangan' ,{
+	CKEDITOR.replace('note' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
+    CKEDITOR.replace('editnote' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    function readInput(input) {
+	  if (input.files && input.files[0]) {
+	      var reader = new FileReader();
+
+	      reader.onload = function (e) {
+	        $('#blah').show();
+	          $('#blah')
+	              .attr('src', e.target.result);
+	      };
+
+	      reader.readAsDataURL(input.files[0]);
+	  }
+	}
+    function readEdit(input) {
+	  if (input.files && input.files[0]) {
+	      var reader = new FileReader();
+
+	      reader.onload = function (e) {
+	        $('#blah2').show();
+	          $('#blah2')
+	              .attr('src', e.target.result);
+	      };
+
+	      reader.readAsDataURL(input.files[0]);
+	  }
+	}
 
 	
 </script>
@@ -489,9 +597,71 @@
 			'autoWidth'   : false
 		})
 	})
-	function deleteConfirmation(url, name, labeling_id,id) {
+	function deleteConfirmation(url, name, id,first_product_audit_details_id) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+labeling_id+'/'+id);
+		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+first_product_audit_details_id);
 	}
+
+	function create(){
+		var first_product_audit_id = $('#inputfirst_product_audit_id').val();
+		var activity_list_id = $('#inputactivity_list_id').val();
+		var proses = $('#inputproses').val();
+		var jenis = $('#inputjenis').val();
+		var date = $('#inputdate').val();
+		var no_seri = $('#inputno_seri').val();
+		var judgement = $('input[id="inputjudgement"]:checked').val();
+		var pic = $('#inputpic').val();
+		var keterangan = CKEDITOR.instances.inputketerangan.getData();
+		var leader = $('#inputleader').val();
+		var foreman = $('#inputforeman').val();
+
+		var data = {
+			first_product_audit_id:first_product_audit_id,
+			activity_list_id:activity_list_id,
+			proses:proses,
+			jenis:jenis,
+			date:date,
+			no_seri:no_seri,
+			judgement:judgement,
+			pic:pic,
+			keterangan:keterangan,
+			leader:leader,
+			foreman:foreman
+		}
+		console.table(data);
+		$.post('{{ url("index/first_product_audit/create_participant") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#create-modal").modal('hide');
+				// $('#example1').DataTable().ajax.reload();
+				// $('#example2').DataTable().ajax.reload();
+				openSuccessGritter('Success','New Participant has been created');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Create Participant Failed');
+			}
+		});
+	}
+	function editdetails(url, id,first_product_audit_detail_id) {
+    	$.ajax({
+                url: "{{ route('first_product_audit.getdetail') }}?id=" + first_product_audit_detail_id,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  // obj = JSON.parse(json);
+                  var urlimage = '{{ url('/data_file/cek_produk_pertama/') }}';
+                  var data = data.data;
+                  console.log(data);
+                  $("#editpic").val(data.pic).trigger('change.select2');
+                  $("#picture").attr("src",urlimage+'/'+data.foto_aktual);
+                  $("#editnote").html(CKEDITOR.instances.editnote.setData(data.note));
+                  $("#editdate").val(data.date);
+                  $("#foto_aktual_edit").val(data.foto_aktual);
+                }
+            });
+    	console.log(first_product_audit_detail_id);
+      jQuery('#formedit').attr("action", url+'/'+id+'/'+first_product_audit_detail_id);
+      console.log($('#formedit').attr("action"));
+    }
 </script>
 @endsection

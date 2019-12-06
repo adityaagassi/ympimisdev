@@ -10,6 +10,7 @@ use App\ActivityList;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\AuditReportActivity;
+use App\AuditGuidance;
 use Response;
 use DataTables;
 use Excel;
@@ -157,6 +158,10 @@ class AuditReportActivityController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
+        $bulan = date('Y-m');
+
+        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and `month` = '".$bulan."' and status = 'Belum Dikerjakan'");
+
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);
 
@@ -171,6 +176,7 @@ class AuditReportActivityController extends Controller
                       'foreman' => $foreman,
                       'departments' => $departments,
                       'section' => $section,
+                      'guidance' => $guidance,
                       'operator' => $operator,
                       'subsection' => $subsection,
                       'activity_name' => $activity_name,
@@ -184,6 +190,7 @@ class AuditReportActivityController extends Controller
             $id_user = Auth::id();
             AuditReportActivity::create([
                 'activity_list_id' => $id,
+                'audit_guidance_id' => $request->input('audit_guidance_id'),
                 'department' => $request->input('department'),
                 'section' => $request->input('section'),
                 'subsection' => $request->input('subsection'),
@@ -200,7 +207,11 @@ class AuditReportActivityController extends Controller
                 'foreman' => $request->input('foreman'),
                 'created_by' => $id_user
             ]);
-        
+
+            $audit_guidance_id = $request->input('audit_guidance_id');
+            $audit_guidance = AuditGuidance::find($audit_guidance_id);
+            $audit_guidance->status = 'Sudah Dikerjakan';
+            $audit_guidance->save();
 
         return redirect('index/audit_report_activity/index/'.$id)
             ->with('page', 'Audit Report Activity')->with('status', 'New Audit Report Activity has been created.');
@@ -220,6 +231,10 @@ class AuditReportActivityController extends Controller
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);
 
+        $bulan = date('Y-m');
+
+        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and `month` = '".$bulan."'");
+
         $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
         $subsection = DB::select($querySubSection);
 
@@ -232,6 +247,7 @@ class AuditReportActivityController extends Controller
                       'foreman' => $foreman,
                       'departments' => $departments,
                       'section' => $section,
+                      'guidance' => $guidance,
                       'operator' => $operator,
                       'subsection' => $subsection,
                       'activity_name' => $activity_name,
@@ -246,6 +262,7 @@ class AuditReportActivityController extends Controller
         try{
                 $audit_report_activity = AuditReportActivity::find($audit_report_id);
                 $audit_report_activity->activity_list_id = $id;
+                $audit_report_activity->audit_guidance_id = $request->get('audit_guidance_id');
                 $audit_report_activity->department = $request->get('department');
                 $audit_report_activity->section = $request->get('section');
                 $audit_report_activity->subsection = $request->get('subsection');

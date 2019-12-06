@@ -52,13 +52,13 @@ class InterviewController extends Controller
                       'subsection2' => $subsection2,
                       'subsection3' => $subsection3,
                       'subsection4' => $subsection4,
-    				  'departments' => $departments,
-    				  'leader' => $leader,
+            				  'departments' => $departments,
+            				  'leader' => $leader,
                       'foreman' => $foreman,
                       'section' => $section,
-    				  'activity_name' => $activity_name,
+            				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
-    				  'id' => $id,
+            				  'id' => $id,
                       'id_departments' => $id_departments);
     	return view('interview.index', $data
     		)->with('page', 'Interview');
