@@ -114,7 +114,7 @@
 					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->leader }}</center></td>
 				</tr>
 				<tr>
-					<td colspan="11" class="head" style="vertical-align: middle"><center>Picture<br><img width="100%" src="{{ url('/data_file/cek_produk_pertama/'.$first_product_audit->foto_aktual) }}"></center></td>
+					<td colspan="11" class="head" style="vertical-align: middle"><center>Picture<br><?php echo $first_product_audit->foto_aktual ?></center></td>
 				</tr>
 				@endforeach
 			</tbody>

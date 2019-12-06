@@ -126,7 +126,7 @@
 					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->leader }}</center></td>
 				</tr>
 				<tr>
-					<td colspan="11" class="head" style="vertical-align: middle"><center>Picture<br><img width="100%" src="{{ url('/data_file/cek_produk_pertama/'.$first_product_audit->foto_aktual) }}"></center></td>
+					<td colspan="11" class="head" style="vertical-align: middle"><center>Picture<br><?php echo $first_product_audit->foto_aktual ?></center></td>
 					@if($jml_null > 0)
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
