@@ -141,7 +141,7 @@
                       <tr>
                         @foreach($high  as $nomor => $high)
                         @if($high->warna =="H" )
-                        <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $high->nama}}" name="{{ $highs->nik}}"onclick="opben('HIGH',this.id,this.name,this)">{{$a = explode('-', trim($high->kode))[0]}}</button></td>
+                        <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $high->nama}}" name="{{ $high->nik}}"onclick="opben('HIGH',this.id,this.name,this)">{{$a = explode('-', trim($high->kode))[0]}}</button></td>
                         @endif                
                         @endforeach                
                       </tr>
@@ -185,7 +185,7 @@
                   <tr>
                     @foreach($low  as $nomor => $low)
                     @if($low->warna =="H" )
-                    <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $low->nama}}" name="{{ $lows->nik}}" onclick="opben('LOW',this.id,this.name,this)">{{$a = explode('-', trim($low->kode))[0]}}</button></td>
+                    <td style="padding: 10px"><button class="btn btn-lg " style="background-color: black; color: white" id="{{ $low->nama}}" name="{{ $low->nik}}" onclick="opben('LOW',this.id,this.name,this)">{{$a = explode('-', trim($low->kode))[0]}}</button></td>
                     @endif                
                     @endforeach                
                   </tr>
