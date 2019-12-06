@@ -79,7 +79,7 @@ class ActivityListController extends Controller
       elseif ($no == 10) {
         $activity_type = 'Cek Area';
       }
-      if($name = "M Khamdan K" || $name = "Clark Kent"){
+      if($name == "M Khamdan K" || $name == "Clark Kent"){
         $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
       }
       else{
