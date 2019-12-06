@@ -42,10 +42,12 @@ class ProductionReportController extends Controller
 
     function index($id)
     {
+        $name = Auth::user()->name;
         $queryActivity = "SELECT DISTINCT(activity_type) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
-                    'id' => $id);
+                      'name' => $name,
+                      'id' => $id);
         return view('production_report.index', $data
           )->with('page', 'Leader Task Monitoring');
     }
@@ -1751,5 +1753,24 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Pengecekan"){
 
         }
+    }
+
+    function approval($id)
+    {
+        $leader = DB::SELECT("SELECT DISTINCT(leader_dept) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null");
+        $data = array('leader' => $leader,
+                      'id' => $id);
+        return view('production_report.approval', $data
+          )->with('page', 'Approval Leader Task Monitoring');
+    }
+
+    function approval_list($id,$leader_name)
+    {
+        $activity_list = ActivityList::where('department_id',$id)->where('leader_dept',$leader_name)->where('activity_name','!=','Null')->get();
+        $data = array('activity_list' => $activity_list,
+                      'leader_name' => $leader_name,
+                      'id' => $id);
+        return view('production_report.approval_list', $data
+          )->with('page', 'Approval Leader Task Monitoring');
     }
 }

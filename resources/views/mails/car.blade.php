@@ -33,7 +33,7 @@
 				?>
 			@endforeach
 
-			<!-- <img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br> -->
+			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			@if($posisi == "qa")
 				<p style="font-size: 18px;">Verifikasi CAR Oleh QA<br>
 			@endif

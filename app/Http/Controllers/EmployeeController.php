@@ -2007,11 +2007,21 @@ public function fetchKaizenReport(Request $request)
 
   $kz_rank2 = db::select($q_rank2);
 
+  $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as  score from kaizen_forms 
+join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
+where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
+and valid_to is null
+order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
+
+  $kz_excellent = db::select($q_excellent);
+
   $response = array(
     'status' => true,
     'charts' => $kz_total,
     'rank1' => $kz_rank1,
     'rank2' => $kz_rank2,
+    'excellent' => $kz_excellent,
     'date' => $dt2
   );
   return Response::json($response);

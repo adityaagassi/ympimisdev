@@ -101,7 +101,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit_details/print_first_product_details/'.$id)}}">
+						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit/print_first_product_audit/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -128,7 +128,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Send Email <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/first_product_audit_details/sendemail/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/first_product_audit/sendemail/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -166,7 +166,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="box">
-								<div class="box-body">
+								<div class="box-body" style="overflow-x: scroll">
 									<table id="example1" class="table table-bordered table-striped table-hover">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>

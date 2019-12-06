@@ -442,4 +442,259 @@ class FirstProductAuditController extends Controller
       return redirect('index/first_product_audit/details/'.$activity_list_id.'/'.$first_product_audit_id)
               ->with('page', 'First Product Audit Details')->with('status', 'First Product Audit Details has been deleted.');     
     }
+
+    function print_first_product_audit(Request $request,$id,$first_product_audit_id)
+    {
+        $activityList = ActivityList::find($id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+
+        if($request->get('month') != null){
+            $month = $request->get('month');
+            $queryfirst_product_audit = "select *, first_product_audits.id as id_first_product_audit
+                from first_product_audit_details
+                join activity_lists on activity_lists.id = first_product_audit_details.activity_list_id
+                join departments on departments.id =  activity_lists.department_id
+                join first_product_audits on first_product_audits.id = first_product_audit_details.first_product_audit_id
+                where activity_lists.id = '".$id."'
+                and first_product_audits.id = '".$first_product_audit_id."'
+                and activity_lists.department_id = '".$id_departments."'
+                and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                and first_product_audit_details.deleted_at is null";
+            $first_product_audit = DB::select($queryfirst_product_audit);
+            $first_product_audit2 = DB::select($queryfirst_product_audit);
+        }
+
+        $monthTitle = date("F Y", strtotime($month));
+
+        // var_dump($subsection);
+        $jml_null = 0;
+        $jml_null_leader = 0;
+        foreach($first_product_audit2 as $first_product_audit2){
+            // $product = $samplingCheck->product;
+            // $proses = $samplingCheck->proses;
+            $date = $first_product_audit2->date;
+            $foreman = $first_product_audit2->foreman;
+            $approval_leader = $first_product_audit2->approval_leader;
+            $approved_date_leader = $first_product_audit2->approved_date_leader;
+            $subsection = $first_product_audit2->subsection;
+            $leader = $first_product_audit2->leader;
+            if ($first_product_audit2->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            if ($first_product_audit2->approval_leader == Null) {
+              $jml_null_leader = $jml_null_leader + 1;
+            }
+            $approved_date = $first_product_audit2->approved_date;
+            $approved_date_leader = $first_product_audit2->approved_date_leader;
+            $proses = $first_product_audit2->proses;
+            $jenis = $first_product_audit2->jenis;
+            $standar_kualitas = $first_product_audit2->standar_kualitas;
+            $tool_check = $first_product_audit2->tool_check;
+            $jumlah_cek = $first_product_audit2->jumlah_cek;
+        }
+        if($first_product_audit == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'subsection' => $subsection,
+                          'leader' => $leader,
+                          'foreman' => $foreman,
+                          'monthTitle' => $monthTitle,
+                          'subsection' => $subsection,
+                          'date' => $date,
+                          'proses' => $proses,
+                          'jenis' => $jenis,
+                          'standar_kualitas' => $standar_kualitas,
+                          'jml_null' => $jml_null,
+                          'tool_check' => $tool_check,
+                          'jumlah_cek' => $jumlah_cek,
+                          'jml_null_leader' => $jml_null_leader,
+                          'approved_date' => $approved_date,
+                          'approval_leader' => $approval_leader,
+                          'approved_date_leader' => $approved_date_leader,
+                          'first_product_audit' => $first_product_audit,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('first_product_audit.print', $data
+                )->with('page', 'First Product Audit');
+        }
+    }
+
+    function print_first_product_audit_email($id,$first_product_audit_id,$month)
+    {
+        $activityList = ActivityList::find($id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+
+        // if($request->get('month') != null){
+            // $month = $request->get('month');
+            $queryfirst_product_audit = "select *, first_product_audits.id as id_first_product_audit,first_product_audit_details.id as id_first_product_audit_details
+                from first_product_audit_details
+                join activity_lists on activity_lists.id = first_product_audit_details.activity_list_id
+                join departments on departments.id =  activity_lists.department_id
+                join first_product_audits on first_product_audits.id = first_product_audit_details.first_product_audit_id
+                where activity_lists.id = '".$id."'
+                and first_product_audits.id = '".$first_product_audit_id."'
+                and activity_lists.department_id = '".$id_departments."'
+                and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                and first_product_audit_details.deleted_at is null";
+            $first_product_audit = DB::select($queryfirst_product_audit);
+            $first_product_audit2 = DB::select($queryfirst_product_audit);
+        // }
+
+        $monthTitle = date("F Y", strtotime($month));
+
+        // var_dump($subsection);
+        $jml_null = 0;
+        $jml_null_leader = 0;
+        foreach($first_product_audit2 as $first_product_audit2){
+            // $product = $samplingCheck->product;
+            // $proses = $samplingCheck->proses;
+            $date = $first_product_audit2->date;
+            $foreman = $first_product_audit2->foreman;
+            $approval_leader = $first_product_audit2->approval_leader;
+            $approved_date_leader = $first_product_audit2->approved_date_leader;
+            $subsection = $first_product_audit2->subsection;
+            $leader = $first_product_audit2->leader;
+            if ($first_product_audit2->approval == Null) {
+              $jml_null = $jml_null + 1;
+            }
+            if ($first_product_audit2->approval_leader == Null) {
+              $jml_null_leader = $jml_null_leader + 1;
+            }
+            $approved_date = $first_product_audit2->approved_date;
+            $approved_date_leader = $first_product_audit2->approved_date_leader;
+            $proses = $first_product_audit2->proses;
+            $jenis = $first_product_audit2->jenis;
+            $standar_kualitas = $first_product_audit2->standar_kualitas;
+            $tool_check = $first_product_audit2->tool_check;
+            $jumlah_cek = $first_product_audit2->jumlah_cek;
+            $id_first_product_audit = $first_product_audit2->id_first_product_audit;
+        }
+        if($first_product_audit == null){
+            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
+            echo "<script>
+                alert('Data Tidak Tersedia');
+                window.close();</script>";
+        }else{
+            $data = array(
+                          'subsection' => $subsection,
+                          'leader' => $leader,
+                          'foreman' => $foreman,
+                          'monthTitle' => $monthTitle,
+                          'subsection' => $subsection,
+                          'date' => $date,
+                          'month' => $month,
+                          'proses' => $proses,
+                          'jenis' => $jenis,
+                          'standar_kualitas' => $standar_kualitas,
+                          'jml_null' => $jml_null,
+                          'tool_check' => $tool_check,
+                          'jumlah_cek' => $jumlah_cek,
+                          'jml_null_leader' => $jml_null_leader,
+                          'approved_date' => $approved_date,
+                          'approval_leader' => $approval_leader,
+                          'approved_date_leader' => $approved_date_leader,
+                          'first_product_audit' => $first_product_audit,
+                          'id_first_product_audit' => $id_first_product_audit,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('first_product_audit.print_email', $data
+                )->with('page', 'First Product Audit');
+        }
+    }
+
+    public function sendemail(Request $request,$id,$first_product_audit_id)
+      {
+          $activityList = ActivityList::find($id);
+          $activity_name = $activityList->activity_name;
+          $departments = $activityList->departments->department_name;
+          $activity_alias = $activityList->activity_alias;
+          $id_departments = $activityList->departments->id;
+
+          $month = $request->get('month');
+          // $date = date('Y-m-d', strtotime($request->get('date')));
+          $query_first_product_audit = "select *, first_product_audit_details.id as id_first_product_audit_details,first_product_audits.id as id_first_product_audit
+                from first_product_audit_details
+                join activity_lists on activity_lists.id = first_product_audit_details.activity_list_id
+                join departments on departments.id =  activity_lists.department_id
+                join first_product_audits on first_product_audits.id = first_product_audit_details.first_product_audit_id
+                where activity_lists.id = '".$id."'
+                and first_product_audits.id = '".$first_product_audit_id."'
+                and activity_lists.department_id = '".$id_departments."'
+                and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                and first_product_audit_details.deleted_at is null";
+          $first_product_audit = DB::select($query_first_product_audit);
+          $first_product_audit2 = DB::select($query_first_product_audit);
+          $first_product_audit3 = DB::select($query_first_product_audit);
+
+          // var_dump($first_product_audit3);
+
+          if($first_product_audit2 != null){
+            foreach($first_product_audit2 as $first_product_audit2){
+                $foreman = $first_product_audit2->foreman;
+                $id_first_product_audit_details = $first_product_audit2->id_first_product_audit_details;
+                $send_status = $first_product_audit2->send_status;
+              }
+
+              foreach ($first_product_audit3 as $first_product_audit3) {
+                    $laktivitas = FirstProductAuditDetail::find($first_product_audit3->id_first_product_audit_details);
+                    $laktivitas->send_status = "Sent";
+                    $laktivitas->send_date = date('Y-m-d');
+                    $laktivitas->approval_leader = "Approved";
+                    $laktivitas->approved_date_leader = date('Y-m-d');
+                    $laktivitas->save();
+              }
+
+              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $email = DB::select($queryEmail);
+              foreach($email as $email){
+                $mail_to = $email->email;            
+              }
+          }else{
+            return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('error', 'Data tidak tersedia.')->with('page', 'First Product Audit');
+          }
+
+          if($send_status == "Sent"){
+            return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('error', 'Data pernah dikirim.')->with('page', 'First Product Audit');
+          }
+          elseif($first_product_audit != null){
+              Mail::to($mail_to)->send(new SendEmail($first_product_audit, 'first_product_audit'));
+              return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('status', 'Your E-mail has been sent.')->with('page', 'First Product Audit');
+          }
+          else{
+            return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('error', 'Data tidak tersedia.')->with('page', 'First Product Audit');
+          }
+      }
+
+      public function approval(Request $request,$id,$first_product_audit_id,$month)
+      {
+          $approve = $request->get('approve');
+          foreach($approve as $approve){
+            $first_product_audit = FirstProductAuditDetail::find($approve);
+            $subsection = $first_product_audit->subsection;
+            $month = substr($first_product_audit->date,0,7);
+            $date = $first_product_audit->date;
+            $first_product_audit->approval = "Approved";
+            $first_product_audit->approved_date = date('Y-m-d');
+            $first_product_audit->save();
+          }
+          return redirect('/index/first_product_audit/print_first_product_audit_email/'.$id.'/'.$first_product_audit_id.'/'.$month)->with('status', 'Approved.')->with('page', 'First Product Audit');
+      }
 }

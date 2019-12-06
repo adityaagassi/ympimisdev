@@ -250,6 +250,8 @@
 				<td rowspan="2">
 					@if($cpar->posisi == "QAmanager")
 						{{$cpar->managername}}
+					@else
+						&nbsp;
 					@endif
 				</td>
 				<td colspan="5" rowspan="2"></td>

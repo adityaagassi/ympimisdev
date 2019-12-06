@@ -832,7 +832,9 @@ Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchRepor
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
 Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuffingNgRateMonthly');
 Route::get('fetch/middle/bff_op_ng_monthly', 'MiddleProcessController@fetchBuffingOpNgMonthly');
+Route::get('fetch/middle/bff_op_ng_monthly_detail', 'MiddleProcessController@fetchBuffingOpNgMonthlyDetail');
 Route::get('fetch/middle/bff_op_work_monthly', 'MiddleProcessController@fetchBuffingOpWorkMonthly');
+Route::get('fetch/middle/bff_op_work_monthly_detail', 'MiddleProcessController@fetchBuffingOpWorkMonthlyDetail');
 Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
 Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
 Route::get('index/middle/report_buffing_operator_time', 'MiddleProcessController@indexReportOpTime');
@@ -1380,6 +1382,8 @@ Route::get('index/production_report/fetchPointCheck/{id}', 'ProductionReportCont
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 Route::get('index/production_report/fetchDetailReportMonthly/{id}', 'ProductionReportController@fetchDetailReportMonthly');
 Route::get('index/production_report/fetchDetailReportDaily/{id}', 'ProductionReportController@fetchDetailReportDaily');
+Route::get('index/production_report/approval/{id}', 'ProductionReportController@approval');
+Route::get('index/production_report/approval_list/{id}/{leader_name}', 'ProductionReportController@approval_list');
 
 
 //Activity List
@@ -1581,8 +1585,12 @@ Route::post('index/first_product_audit/store_details/{id}/{first_product_audit_i
 Route::get('index/first_product_audit/getdetail','FirstProductAuditController@getdetail')->name('first_product_audit.getdetail');
 Route::post('index/first_product_audit/update_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@update_details');
 Route::get('index/first_product_audit/destroy_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@destroy_details');
+Route::post('index/first_product_audit/print_first_product_audit/{id}/{first_product_audit_id}','FirstProductAuditController@print_first_product_audit');
+Route::get('index/first_product_audit/print_first_product_audit_email/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit_email');
+Route::post('index/first_product_audit/sendemail/{id}/{first_product_audit_id}','FirstProductAuditController@sendemail');
+Route::post('index/first_product_audit/approval/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@approval');
 
-//GUIDANCE AUDIT IK
+//SCHEDULE AUDIT IK
 Route::get('index/audit_guidance/index/{id}', 'AuditGuidanceController@index');
 Route::post('index/audit_guidance/filter_guidance/{id}', 'AuditGuidanceController@filter_guidance');
 Route::get('index/audit_guidance/show/{id}/{audit_guidance_id}', 'AuditGuidanceController@show');
@@ -1669,7 +1677,7 @@ Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
 Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
 
-//CUBEACON
+//CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
 Route::get('index/beacon','BeaconController@index');
@@ -1679,7 +1687,12 @@ Route::post('index/master_beacon/daftar', 'BeaconController@daftar');
 Route::get('index/master_beacon/edit','BeaconController@edit')->name('admin.beaconedit');
 Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
-//suhu(temperature)
+//CUBEACON REEDPLATE
+Route::get('index/reedplate/map','ReedplateController@index');
+Route::get('fetch/reedplate/user','ReedplateController@getUser');
+
+
+//TEMPERATURE / SUHU
 Route::get('index/grafikServer','TemperatureController@grafikServer');
 Route::get('index/log_map_server','TemperatureController@log_map_server');
 Route::get('index/data_suhu_server','TemperatureController@data_suhu_server');

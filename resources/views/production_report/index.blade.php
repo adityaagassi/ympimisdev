@@ -44,10 +44,9 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			{{-- <a href="{{ url("index/production_audit/report_audit/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Audit</a>
-			<a href="{{ url("index/training_report/report_training/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Training</a>
-			<a href="{{ url("index/sampling_check/report_sampling_check/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Sampling Check</a>
-			<a href="{{ url("index/audit_report_activity/report_audit_activity/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Report Laporan Aktivitas</a> --}}
+			<?php if($name == "Imbang Prasetyo"){ ?>
+			<?php } ?>
+			<a href="{{ url("index/production_report/approval/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Approval</a>
 		</div>
 	</div>
 </section>

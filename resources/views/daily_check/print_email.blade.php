@@ -28,13 +28,20 @@
 @endsection
 @section('content')
 <section class="content">
-  @if ($errors->has('password'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
-    {{ $errors->first() }}
-  </div>   
-  @endif
+  @if (session('status'))
+		<div class="alert alert-success alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+			{{ session('status') }}
+		</div>   
+	@endif
+	@if (session('error'))
+		<div class="alert alert-warning alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4> Warning!</h4>
+			{{ session('error') }}
+		</div>   
+	@endif
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     {{-- <div class="box-header with-border">

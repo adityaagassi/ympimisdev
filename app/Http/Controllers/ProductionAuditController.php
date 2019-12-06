@@ -64,7 +64,7 @@ class ProductionAuditController extends Controller
         // $product2 = DB::select($queryProduct);
         // var_dump($pointCheckAudit);
         $date = date("Y-m-d");
-    	   $activity_name = $activityList->activity_name;
+    	  $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;

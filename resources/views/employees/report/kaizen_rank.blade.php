@@ -306,18 +306,18 @@
 			body_each = "";
 			no = 1;
 
-			$.each(result.rank2, function(index, value){
+			$.each(result.excellent, function(index, value){
 				body_each += "<tr>";
 				body_each += "<td>"+no+"</td>";
 				body_each += "<td>"+value.employee_id+"</td>";
 				body_each += "<td>"+value.employee_name+"</td>";
 				body_each += "<td>"+value.bagian+"</td>";
-				body_each += "<td>"+value.count+"</td>";
+				body_each += "<td>"+value.score+"</td>";
 				body_each += "</tr>";
 				no++;
 			})
 
-			$("#kz_top_each_score").append(body_count);
+			$("#kz_top_each_score").append(body_each);
 		});
 	}
 
