@@ -10,6 +10,6 @@ class PlanMesinInjection extends Model
    use SoftDeletes;
 
 	protected $fillable = [
-		'mesin', 'part', 'qty', 'color', 'due_date', 'created_by'
+		'mesin', 'part', 'qty', 'color', 'due_date','working_date', 'created_by'
 	];
 }

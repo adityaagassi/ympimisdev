@@ -69,6 +69,7 @@
 <section class="content" style="overflow-y:hidden; overflow-x:scroll; padding-top: 0px">
 	<div class="row">
 		<div class="col-xs-12" style="padding: 0 5px 0 5px">
+			
 			<table id="example1" class="table table-bordered">
 				<thead style="background-color: #b89cff;">
 					<tr id="mc_head">
@@ -107,16 +108,26 @@
 		// setInterval(drawTable, 1000);
 	});
 
+	
+
 	function drawTable() {
 		$.get('{{ url("fetch/schedule") }}',  function(result, status, xhr){
 			$("#mc_head").empty();
 			$("#mc_body").empty();
 
-			var	head = "<th rowspan=2>#</th>";
+			var tgl= [];
+
+			var	head = "<th rowspan=2 style='padding-left: 2px; padding-right: 2px; vertical-align: middle;'>Machine</th>";
 			var head2 = "";
 
+			
+			for (var i = 0; i < result.tgl.length; i++) {
+				tgl.push(result.tgl[i].week_date)
+			}
+
+
 			for (var z = 1; z <= 31; z++) {
-				head += "<th colspan=24>"+z+"</th>";
+				head += "<th colspan=24>"+tgl[z-1]+"</th>";
 				for (var x = 1; x <= 24; x++) {
 					if (x % 4 == 0) {
 						head2 += "<th>"+x+"</th>";
@@ -133,7 +144,7 @@
 			for (var i = 1; i <= 11; i++) {
 				if (i != 10) {
 					body += "<tr id='machine_"+i+"'>";
-					body += "<td>Machine "+i+"</td>";
+					body += "<td style='font-size: 20px; vertical-align: middle;'>#"+i+"</td>";
 					body += "</tr>";
 				}
 			}
@@ -155,36 +166,59 @@
 		console.table(result.schedule);
 
 		$.each(result.schedule, function(index, value){
-			var machine = value.mesin.split(" ")[1];
-			var due_date = value.due_date.split("-")[2];
-			var time = value.qty / value.shoot * value.cycle / 60 / 60;
+			// var machine = value.mesin.split(" ")[1];
+			var machine = value.mesin.split("MESIN")[1];
+			var due_date = parseInt(value.due_date.split("-")[2]);
+			var time = ((((value.qty / value.shoot) * value.cycle) / 60) / 60);
 			var text = "";
+			var textqty = "";
 			var fontColor = "black";
 			var color = "";
 
 			if(isNaN(time)) {
 				time = 24;
 				text = "OFF";
+				textqty = "";
 			} else {
 				text = value.color.split(" - ")[0];
+				textqty = value.qty;
 			}
 
 			var part_color = value.part.split(" ")[0].charAt(value.part.split(" ")[0].length-1);
 
-			if (part_color == "B") {
-				color = "#4a74ff";
-			} else if (part_color == "G") {
-				color = "#76f562";
-			} else if (part_color == "P") {
-				color = "#f76fa8";
-			}  else if (part_color == "F") {
-				color = "white";
-			} else {
-				if (value.color.split(" - ")[1] == "ivory") {
+
+			// if (part_color == "B") {
+			// 	color = "#4a74ff";
+			// } else if (part_color == "G") {
+			// 	color = "#76f562";
+			// } else if (part_color == "P") {
+			// 	color = "#f76fa8";
+			// }  else if (part_color == "F") {
+			// 	color = "white";
+			// } else {
+			// 	if (value.color.split(" - ")[1] == "ivory") {
+			// 		color = "#faedbb";
+			// 	} else if (value.color.split(" - ")[1] == "BEIGE") {
+			// 		color = "#595c59";
+			// 		fontColor = "white";
+			// 	}
+			// }
+
+			if (value.color.split(" - ")[1] == "ivory") {
 					color = "#faedbb";
 				} else if (value.color.split(" - ")[1] == "BEIGE") {
 					color = "#595c59";
 					fontColor = "white";
+				} else if (value.color.split(" - ")[1] == "skelton") {
+					if (part_color == "B") {
+					color = "#4a74ff";
+				} else if (part_color == "G") {
+					color = "#76f562";
+				} else if (part_color == "P") {
+					color = "#f76fa8";
+				}  else if (part_color == "F") {
+					color = "white";
+
 				}
 			}
 
@@ -197,8 +231,8 @@
 			// 	color = "#de391f";
 			// }
 
-			$("#"+machine+"_"+due_date).append("<div class='bar' style='width:"+time.toFixed(1) * 10+"px; background-color:"+color+"; color:"+fontColor+"'><div class='text-rotasi'>"+text+"</div></div>");
-				// console.log(machine+"_"+due_date);
+			$("#"+machine+"_"+due_date).append("<div class='bar' style='width:"+time.toFixed(1) * 10+"px; background-color:"+color+"; color:"+fontColor+"'><div class='text-rotasi'>"+text+' '+textqty+"</div></div>");
+				console.log(machine+"_"+due_date);
 			})
 	})
 	}

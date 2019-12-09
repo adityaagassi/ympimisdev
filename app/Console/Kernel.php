@@ -23,7 +23,9 @@ class Kernel extends ConsoleKernel
         Commands\RecordDailyStocks::class,
         Commands\EmailMiddleKanban::class,
         Commands\EmailConfirmationOvertimes::class,
-        Commands\EmailUserDocument::class,
+        Commands\EmailUserDocument::class,        
+        Commands\InjectionSchedule::class,
+        Commands\InjectionScheduleTrial::class,
     ];
 
     /**
@@ -60,6 +62,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
         $schedule->command('email:middle_kanban')->weekdays()->dailyAt('07:00');
         $schedule->command('email:confirmation_overtime')->weekdays()->dailyAt('06:55');
+
+        $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');
 

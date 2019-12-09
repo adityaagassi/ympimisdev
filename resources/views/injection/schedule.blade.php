@@ -202,6 +202,52 @@
 
 		<div class="col-xs-12">
 
+			<div class="col-xs-6" id="injeksiVsAssyBlue">
+				
+			</div>
+
+			<div class="col-xs-6" id="injeksiVsAssyGreen">
+				
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+
+			<div class="col-xs-6" id="injeksiVsAssyPink">
+				
+			</div>
+
+			<div class="col-xs-6" id="injeksiVsAssyRed">
+				
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+
+			<div class="col-xs-6" id="injeksiVsAssyBrown">
+				
+			</div>
+
+			<div class="col-xs-6" id="injeksiVsAssyIvory">
+				
+			</div>
+
+		</div>
+
+		<div class="col-xs-12">
+
+			<div  id="injeksiVsAssyYrf">
+				
+			</div>
+
+			
+
+		</div>
+
+		<div class="col-xs-12">
+
 			<div class="col-xs-3" id="headblue">
 				
 			</div>
@@ -835,7 +881,7 @@
 					}
 				}
 
-				console.table(MESIN1);
+				console.table(TargetAllMesin);
 
 				
 				// BodyMesin1 += '<td style="padding: 0px">';
@@ -885,7 +931,7 @@
 				// 	if (typeof MESIN1[i+1] === 'undefined') {
 				// 		mesin1_r[x].push([MESIN1[i][2], MESIN1[i][3]]);
 				// 	} else {
-				// 		if (((MESIN1[i][7] + MESIN1[i+1][7]) / 60) > 22.9) {
+				// 		if (((MESIN1[i][7] + MESIN1[i+1][7]) / 60) > 23.5) {
 				// 			mesin1_r[x].push([MESIN1[i][2], MESIN1[i][3]]);
 
 				// 			x+=1;
@@ -894,8 +940,8 @@
 				// 			z += MESIN1[i][7];
 
 
-				// 			if (((z + MESIN1[i+2][7]) / 60) > 22.9) {
-				// 				var d = Math.floor((((22.9 - ((MESIN1[i][7] + MESIN1[i+1][7]) / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
+				// 			if (((z + MESIN1[i+2][7]) / 60) > 23.5) {
+				// 				var d = Math.floor((((23.5 - ((MESIN1[i][7] + MESIN1[i+1][7]) / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
 				// 				console.log(d);
 				// 				MESIN1[i+2][3] -= d;
 				// 				mesin1_r[x].push([MESIN1[i][2], MESIN1[i][3]]);
@@ -922,10 +968,10 @@
 				// 		if (c == 0) {
 				// 			j = MESIN1[i][7];
 				// 		}
-				// 		if (((j + MESIN1[i+1][7]) / 60) > 22.9) {
+				// 		if (((j + MESIN1[i+1][7]) / 60) > 23.5) {
 				// 			mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i][2], MESIN1[i][3]]);
 				// 			if (c == 1) {
-				// 				d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
+				// 				d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
 				// 				mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i][2], d]);
 				// 				MESIN1[i+1][3] -= d;
 				// 				MESIN1[i+1][7] = Math.floor((Math.floor(MESIN1[i+1][3] / MESIN1[i+1][6]) * MESIN1[i+1][5]) / 60);
@@ -935,21 +981,21 @@
 				// 					// ------minus
 
 
-				// 					if ((Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]) < 0) {
+				// 					if ((Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]) < 0) {
 
 				// 						mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i+1][2], 
-				// 						(Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
+				// 						(Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
 				// 						]);
 
 				// 						MESIN1[i+1][3] -= 0;
 				// 					}else{
 
 				// 						mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i+1][2], 
-				// 						(Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
+				// 						(Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
 				// 						]);
 
 
-				// 					MESIN1[i+1][3] -= (Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]);
+				// 					MESIN1[i+1][3] -= (Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]);
 				// 				}
 
 				// 				// ------ end minus
@@ -986,10 +1032,10 @@
 				// 		if (c == 0) {
 				// 			j = MESIN11[i][7];
 				// 		}
-				// 		if (((j + MESIN11[i+1][7]) / 60) > 22.9) {
+				// 		if (((j + MESIN11[i+1][7]) / 60) > 23.5) {
 				// 			MESIN11_r2[x].push([MESIN11[i][2], MESIN11[i][3]]);
 				// 			if (c == 1) {
-				// 				d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
+				// 				d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
 				// 				MESIN11_r2[x].push([MESIN11[i+1][2], d]);
 				// 				MESIN11[i+1][3] -= d;
 				// 				MESIN11[i+1][7] = Math.floor((Math.floor(MESIN11[i+1][3] / MESIN11[i+1][6]) * MESIN11[i+1][5]) / 60);
@@ -998,21 +1044,21 @@
 				// 				// ---------------- INI PENYEBABNYA -------------------
 				// 				if (MESIN11[i][3] != MESIN11[i][4]) {
 
-				// 					if ((Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]) < 0) {
+				// 					if ((Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]) < 0) {
 
 				// 						MESIN11_r2[x].push([MESIN11[i+1][2], 
-				// 						(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
+				// 						(Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 				// 						]);
 
 				// 						MESIN11[i+1][3] -= 0;
 				// 					}else{
 
 				// 						MESIN11_r2[x].push([MESIN11[i+1][2], 
-				// 						(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
+				// 						(Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 				// 						]);
 
 
-				// 					MESIN11[i+1][3] -= (Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]);
+				// 					MESIN11[i+1][3] -= (Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]);
 				// 				}
 
 				// 				}
@@ -1047,17 +1093,17 @@
 				// 			j = MESIN11[i][7];
 				// 		}
 
-				// 		if ((j  / 60) > 22.9) {
+				// 		if ((j  / 60) > 23.5) {
 				// 			lp++;
 				// 			for (var lpp = 0; lpp < lp; lpp++) {
 				// 			 alert(	MESIN11[i+lpp][2]);
 				// 			}
 
 				// 		}
-				// 		if (((j + MESIN11[i+1][7]) / 60) > 22.9) {
+				// 		if (((j + MESIN11[i+1][7]) / 60) > 23.5) {
 				// 			MESIN11_r2[x].push([MESIN11[i][2], MESIN11[i][3]]);
 				// 			if (c == 1) {
-				// 				d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
+				// 				d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
 				// 				MESIN11_r2[x].push([MESIN11[i+1][2], d]);
 				// 				MESIN11[i+1][3] -= d;
 				// 				MESIN11[i+1][7] = Math.floor((Math.floor(MESIN11[i+1][3] / MESIN11[i+1][6]) * MESIN11[i+1][5]) / 60);
@@ -1096,10 +1142,10 @@
 							j = MESIN1[i][7];
 						}
 
-						if (((j + MESIN1[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN1[i+1][7]) / 60) > 23.5) {
 							mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i][2], MESIN1[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN1[i+1][5]) * MESIN1[i+1][6];
 								mesin1_r2[x].push([(MESIN1[i+1][0]+' - '+MESIN1[i+1][1]),MESIN1[i+1][2], d]);
 								MESIN1[i+1][3] -= d;
 								MESIN1[i+1][7] = Math.floor((Math.floor(MESIN1[i+1][3] / MESIN1[i+1][6]) * MESIN1[i+1][5]) / 60);
@@ -1108,21 +1154,21 @@
 									
 									// ------minus
 
-									if ((Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]) < 0) {
 
 										mesin1_r2[x].push([(MESIN1[i][0]+' - '+MESIN1[i][1]),MESIN1[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
+											(Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
 											]);
 
 										MESIN1[i+1][3] -= 0;
 									}else{
 
 										mesin1_r2[x].push([(MESIN1[i+1][0]+' - '+MESIN1[i+1][1]),MESIN1[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
+											(Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6])
 											]);
 
 										
-										MESIN1[i+1][3] -= (Math.floor(((((22.9 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]);
+										MESIN1[i+1][3] -= (Math.floor(((((23.5 - (MESIN1[i][7] / 60)).toFixed(1))*60)*60) / MESIN1[i+1][5])* MESIN1[i+1][6]);
 										MESIN1[i+1][7] = Math.floor(MESIN1[i+1][3] / MESIN1[i+1][6] * MESIN1[i+1][5] / 60);
 									}
 
@@ -1162,10 +1208,10 @@
 						if (c == 0) {
 							j = MESIN2[i][7];
 						}
-						if (((j + MESIN2[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN2[i+1][7]) / 60) > 23.5) {
 							MESIN2_r2[x].push([(MESIN2[i][0]+' - '+MESIN2[i][1]),MESIN2[i][2], MESIN2[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN2[i+1][5]) * MESIN2[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN2[i+1][5]) * MESIN2[i+1][6];
 								MESIN2_r2[x].push([(MESIN2[i+1][0]+' - '+MESIN2[i+1][1]),MESIN2[i+1][2], d]);
 								MESIN2[i+1][3] -= d;
 								MESIN2[i+1][7] = Math.floor((Math.floor(MESIN2[i+1][3] / MESIN2[i+1][6]) * MESIN2[i+1][5]) / 60);
@@ -1175,21 +1221,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6]) < 0) {
 
 										MESIN2_r2[x].push([(MESIN2[i][0]+' - '+MESIN2[i][1]),MESIN2[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6])
+											(Math.floor(((((23.5 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6])
 											]);
 
 										MESIN2[i+1][3] -= 0;
 									}else{
 
 										MESIN2_r2[x].push([(MESIN2[i+1][0]+' - '+MESIN2[i+1][1]),MESIN2[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6])
+											(Math.floor(((((23.5 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6])
 											]);
 
 										
-										MESIN2[i+1][3] -= (Math.floor(((((22.9 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6]);
+										MESIN2[i+1][3] -= (Math.floor(((((23.5 - (MESIN2[i][7] / 60)).toFixed(1))*60)*60) / MESIN2[i+1][5])* MESIN2[i+1][6]);
 										MESIN2[i+1][7] = MESIN2[i+1][3] / MESIN2[i+1][6] * MESIN2[i+1][5] / 60;
 									}
 
@@ -1227,10 +1273,10 @@
 						if (c == 0) {
 							j = MESIN3[i][7];
 						}
-						if (((j + MESIN3[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN3[i+1][7]) / 60) > 23.5) {
 							MESIN3_r2[x].push([(MESIN3[i][0]+' - '+MESIN3[i][1]),MESIN3[i][2], MESIN3[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN3[i+1][5]) * MESIN3[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN3[i+1][5]) * MESIN3[i+1][6];
 								MESIN3_r2[x].push([(MESIN3[i+1][0]+' - '+MESIN3[i+1][1]),MESIN3[i+1][2], d]);
 								MESIN3[i+1][3] -= d;
 								MESIN3[i+1][7] = Math.floor((Math.floor(MESIN3[i+1][3] / MESIN3[i+1][6]) * MESIN3[i+1][5]) / 60);
@@ -1240,21 +1286,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6]) < 0) {
 
 										MESIN3_r2[x].push([(MESIN3[i][0]+' - '+MESIN3[i][1]),MESIN3[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6])
+											(Math.floor(((((23.5 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6])
 											]);
 
 										MESIN3[i+1][3] -= 0;
 									}else{
 
 										MESIN3_r2[x].push([(MESIN3[i+1][0]+' - '+MESIN3[i+1][1]),MESIN3[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6])
+											(Math.floor(((((23.5 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6])
 											]);
 
 										
-										MESIN3[i+1][3] -= (Math.floor(((((22.9 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6]);
+										MESIN3[i+1][3] -= (Math.floor(((((23.5 - (MESIN3[i][7] / 60)).toFixed(1))*60)*60) / MESIN3[i+1][5])* MESIN3[i+1][6]);
 										MESIN3[i+1][7] = MESIN3[i+1][3] / MESIN3[i+1][6] * MESIN3[i+1][5] / 60;
 									}
 
@@ -1291,10 +1337,10 @@
 						if (c == 0) {
 							j = MESIN4[i][7];
 						}
-						if (((j + MESIN4[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN4[i+1][7]) / 60) > 23.5) {
 							MESIN4_r2[x].push([(MESIN4[i][0]+' - '+MESIN4[i][1]),MESIN4[i][2], MESIN4[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN4[i+1][5]) * MESIN4[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN4[i+1][5]) * MESIN4[i+1][6];
 								MESIN4_r2[x].push([(MESIN4[i+1][0]+' - '+MESIN4[i+1][1]),MESIN4[i+1][2], d]);
 								MESIN4[i+1][3] -= d;
 								MESIN4[i+1][7] = Math.floor((Math.floor(MESIN4[i+1][3] / MESIN4[i+1][6]) * MESIN4[i+1][5]) / 60);
@@ -1304,21 +1350,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6]) < 0) {
 
 										MESIN4_r2[x].push([(MESIN4[i][0]+' - '+MESIN4[i][1]),MESIN4[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
+											(Math.floor(((((23.5 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
 											]);
 
 										MESIN4[i+1][3] -= 0;
 									}else{
 
 										MESIN4_r2[x].push([(MESIN4[i+1][0]+' - '+MESIN4[i+1][1]),MESIN4[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
+											(Math.floor(((((23.5 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6])
 											]);
 
 										
-										MESIN4[i+1][3] -= (Math.floor(((((22.9 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6]);
+										MESIN4[i+1][3] -= (Math.floor(((((23.5 - (MESIN4[i][7] / 60)).toFixed(1))*60)*60) / MESIN4[i+1][5])* MESIN4[i+1][6]);
 										MESIN4[i+1][7] = MESIN4[i+1][3] / MESIN4[i+1][6] * MESIN4[i+1][5] / 60;
 									}
 
@@ -1355,10 +1401,10 @@
 						if (c == 0) {
 							j = MESIN5[i][7];
 						}
-						if (((j + MESIN5[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN5[i+1][7]) / 60) > 23.5) {
 							MESIN5_r2[x].push([(MESIN5[i][0]+' - '+MESIN5[i][1]),MESIN5[i][2], MESIN5[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN5[i+1][5]) * MESIN5[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN5[i+1][5]) * MESIN5[i+1][6];
 								MESIN5_r2[x].push([(MESIN5[i+1][0]+' - '+MESIN5[i+1][1]),MESIN5[i+1][2], d]);
 								MESIN5[i+1][3] -= d;
 								MESIN5[i+1][7] = Math.floor((Math.floor(MESIN5[i+1][3] / MESIN5[i+1][6]) * MESIN5[i+1][5]) / 60);
@@ -1368,21 +1414,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6]) < 0) {
 
 										MESIN5_r2[x].push([(MESIN5[i][0]+' - '+MESIN5[i][1]),MESIN5[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6])
+											(Math.floor(((((23.5 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6])
 											]);
 
 										MESIN5[i+1][3] -= 0;
 									}else{
 
 										MESIN5_r2[x].push([(MESIN5[i+1][0]+' - '+MESIN5[i+1][1]),MESIN5[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6])
+											(Math.floor(((((23.5 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6])
 											]);
 
 										
-										MESIN5[i+1][3] -= (Math.floor(((((22.9 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6]);
+										MESIN5[i+1][3] -= (Math.floor(((((23.5 - (MESIN5[i][7] / 60)).toFixed(1))*60)*60) / MESIN5[i+1][5])* MESIN5[i+1][6]);
 										MESIN5[i+1][7] = MESIN5[i+1][3] / MESIN5[i+1][6] * MESIN5[i+1][5] / 60;
 									}
 
@@ -1419,10 +1465,10 @@
 						if (c == 0) {
 							j = MESIN6[i][7];
 						}
-						if (((j + MESIN6[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN6[i+1][7]) / 60) > 23.5) {
 							MESIN6_r2[x].push([(MESIN6[i][0]+' - '+MESIN6[i][1]),MESIN6[i][2], MESIN6[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN6[i+1][5]) * MESIN6[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN6[i+1][5]) * MESIN6[i+1][6];
 								MESIN6_r2[x].push([(MESIN6[i+1][0]+' - '+MESIN6[i+1][1]),MESIN6[i+1][2], d]);
 								MESIN6[i+1][3] -= d;
 								MESIN6[i+1][7] = Math.floor((Math.floor(MESIN6[i+1][3] / MESIN6[i+1][6]) * MESIN6[i+1][5]) / 60);
@@ -1432,21 +1478,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6]) < 0) {
 
 										MESIN6_r2[x].push([(MESIN6[i][0]+' - '+MESIN6[i][1]),MESIN6[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6])
+											(Math.floor(((((23.5 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6])
 											]);
 
 										MESIN6[i+1][3] -= 0;
 									}else{
 
 										MESIN6_r2[x].push([(MESIN6[i+1][0]+' - '+MESIN6[i+1][1]),MESIN6[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6])
+											(Math.floor(((((23.5 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6])
 											]);
 
 										
-										MESIN6[i+1][3] -= (Math.floor(((((22.9 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6]);
+										MESIN6[i+1][3] -= (Math.floor(((((23.5 - (MESIN6[i][7] / 60)).toFixed(1))*60)*60) / MESIN6[i+1][5])* MESIN6[i+1][6]);
 										MESIN6[i+1][7] = MESIN6[i+1][3] / MESIN6[i+1][6] * MESIN6[i+1][5] / 60;
 									}
 
@@ -1483,10 +1529,10 @@
 						if (c == 0) {
 							j = MESIN7[i][7];
 						}
-						if (((j + MESIN7[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN7[i+1][7]) / 60) > 23.5) {
 							MESIN7_r2[x].push([(MESIN7[i][0]+' - '+MESIN7[i][1]),MESIN7[i][2], MESIN7[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN7[i+1][5]) * MESIN7[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN7[i+1][5]) * MESIN7[i+1][6];
 								MESIN7_r2[x].push([(MESIN7[i+1][0]+' - '+MESIN7[i+1][1]),MESIN7[i+1][2], d]);
 								MESIN7[i+1][3] -= d;
 								MESIN7[i+1][7] = Math.floor((Math.floor(MESIN7[i+1][3] / MESIN7[i+1][6]) * MESIN7[i+1][5]) / 60);
@@ -1496,21 +1542,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6]) < 0) {
 
 										MESIN7_r2[x].push([(MESIN7[i][0]+' - '+MESIN7[i][1]),MESIN7[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6])
+											(Math.floor(((((23.5 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6])
 											]);
 
 										MESIN7[i+1][3] -= 0;
 									}else{
 
 										MESIN7_r2[x].push([(MESIN7[i+1][0]+' - '+MESIN7[i+1][1]),MESIN7[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6])
+											(Math.floor(((((23.5 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6])
 											]);
 
 										
-										MESIN7[i+1][3] -= (Math.floor(((((22.9 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6]);
+										MESIN7[i+1][3] -= (Math.floor(((((23.5 - (MESIN7[i][7] / 60)).toFixed(1))*60)*60) / MESIN7[i+1][5])* MESIN7[i+1][6]);
 										MESIN7[i+1][7] = MESIN7[i+1][3] / MESIN7[i+1][6] * MESIN7[i+1][5] / 60;
 									}
 
@@ -1547,10 +1593,10 @@
 						if (c == 0) {
 							j = MESIN8[i][7];
 						}
-						if (((j + MESIN8[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN8[i+1][7]) / 60) > 23.5) {
 							MESIN8_r2[x].push([(MESIN8[i][0]+' - '+MESIN8[i][1]),MESIN8[i][2], MESIN8[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN8[i+1][5]) * MESIN8[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN8[i+1][5]) * MESIN8[i+1][6];
 								MESIN8_r2[x].push([(MESIN8[i+1][0]+' - '+MESIN8[i+1][1]),MESIN8[i+1][2], d]);
 								MESIN8[i+1][3] -= d;
 								MESIN8[i+1][7] = Math.floor((Math.floor(MESIN8[i+1][3] / MESIN8[i+1][6]) * MESIN8[i+1][5]) / 60);
@@ -1560,21 +1606,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6]) < 0) {
 
 										MESIN8_r2[x].push([(MESIN8[i][0]+' - '+MESIN8[i][1]),MESIN8[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6])
+											(Math.floor(((((23.5 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6])
 											]);
 
 										MESIN8[i+1][3] -= 0;
 									}else{
 
 										MESIN8_r2[x].push([(MESIN8[i+1][0]+' - '+MESIN8[i+1][1]),MESIN8[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6])
+											(Math.floor(((((23.5 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6])
 											]);
 
 										
-										MESIN8[i+1][3] -= (Math.floor(((((22.9 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6]);
+										MESIN8[i+1][3] -= (Math.floor(((((23.5 - (MESIN8[i][7] / 60)).toFixed(1))*60)*60) / MESIN8[i+1][5])* MESIN8[i+1][6]);
 										MESIN8[i+1][7] = MESIN8[i+1][3] / MESIN8[i+1][6] * MESIN8[i+1][5] / 60;
 									}
 
@@ -1611,10 +1657,10 @@
 						if (c == 0) {
 							j = MESIN9[i][7];
 						}
-						if (((j + MESIN9[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN9[i+1][7]) / 60) > 23.5) {
 							MESIN9_r2[x].push([(MESIN9[i][0]+' - '+MESIN9[i][1]),MESIN9[i][2], MESIN9[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN9[i+1][5]) * MESIN9[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN9[i+1][5]) * MESIN9[i+1][6];
 								MESIN9_r2[x].push([(MESIN9[i+1][0]+' - '+MESIN9[i+1][1]),MESIN9[i+1][2], d]);
 								MESIN9[i+1][3] -= d;
 								MESIN9[i+1][7] = Math.floor((Math.floor(MESIN9[i+1][3] / MESIN9[i+1][6]) * MESIN9[i+1][5]) / 60);
@@ -1624,21 +1670,21 @@
 									// ------minus
 
 
-									if ((Math.floor(((((22.9 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6]) < 0) {
 
 										MESIN9_r2[x].push([(MESIN9[i][0]+' - '+MESIN9[i][1]),MESIN9[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6])
+											(Math.floor(((((23.5 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6])
 											]);
 
 										MESIN9[i+1][3] -= 0;
 									}else{
 
 										MESIN9_r2[x].push([(MESIN9[i+1][0]+' - '+MESIN9[i+1][1]),MESIN9[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6])
+											(Math.floor(((((23.5 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6])
 											]);
 
 										
-										MESIN9[i+1][3] -= (Math.floor(((((22.9 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6]);
+										MESIN9[i+1][3] -= (Math.floor(((((23.5 - (MESIN9[i][7] / 60)).toFixed(1))*60)*60) / MESIN9[i+1][5])* MESIN9[i+1][6]);
 										MESIN9[i+1][7] = MESIN9[i+1][3] / MESIN9[i+1][6] * MESIN9[i+1][5] / 60;
 									}
 
@@ -1675,10 +1721,10 @@
 						if (c == 0) {
 							j = MESIN11[i][7];
 						}
-						if (((j + MESIN11[i+1][7]) / 60) > 22.9) {
+						if (((j + MESIN11[i+1][7]) / 60) > 23.5) {
 							MESIN11_r2[x].push([(MESIN11[i][0]+' - '+MESIN11[i][1]),MESIN11[i][2], MESIN11[i][3]]);
 							if (c == 1) {
-								d = Math.floor((((22.9 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
+								d = Math.floor((((23.5 - (j / 60)).toFixed(1) * 60)*60)/ MESIN11[i+1][5]) * MESIN11[i+1][6];
 								MESIN11_r2[x].push([(MESIN11[i+1][0]+' - '+MESIN11[i+1][1]),MESIN11[i+1][2], d]);
 
 								MESIN11[i+1][3] -= d;
@@ -1688,23 +1734,23 @@
 									
 									// ------ minus
 
-									if ((Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]) < 0) {
+									if ((Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]) < 0) {
 
 										MESIN11_r2[x].push([(MESIN11[i][0]+' - '+MESIN11[i][1]),MESIN11[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
+											(Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 											]);
 
-										if (Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6] < 0) console.log(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]); 
+										if (Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6] < 0) console.log(Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]); 
 
 										MESIN11[i+1][3] -= 0;
 									}else{
 
 										MESIN11_r2[x].push([(MESIN11[i+1][0]+' - '+MESIN11[i+1][1]),MESIN11[i+1][2], 
-											(Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
+											(Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6])
 											]);
 
 										
-										MESIN11[i+1][3] -= (Math.floor(((((22.9 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]);
+										MESIN11[i+1][3] -= (Math.floor(((((23.5 - (MESIN11[i][7] / 60)).toFixed(1))*60)*60) / MESIN11[i+1][5])* MESIN11[i+1][6]);
 										MESIN11[i+1][7] = MESIN11[i+1][3] / MESIN11[i+1][6] * MESIN11[i+1][5] / 60;
 									}
 
@@ -3513,10 +3559,17 @@ function saveScheduletmp() {
 				openSuccessGritter('Success!', result.message);
 				chartplan();
 				percenMesin();
-				headblue();
-				blokblue();
-				mjblue();
-				footblue();
+				// headblue();
+				// blokblue();
+				// mjblue();
+				// footblue();
+				injeksiVsAssyBlue();
+				injeksiVsAssyGreen();
+				injeksiVsAssyPink();
+				injeksiVsAssyRed();
+				injeksiVsAssyBrown();
+				injeksiVsAssyIvory();
+
 				chartWorkingMachine();
 
 
@@ -4212,6 +4265,1116 @@ function mjblue() {
 				        name: 'Stock',
 				    	color: 'blue',
 				        data: act
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyBlue() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyBlue") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyBlue', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS BLUE All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyGreen() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyGreen") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyGreen', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS GREEN All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyPink() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyPink") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyPink', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS PINK All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyRed() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyRed") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyRed', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS RED All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyBrown() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyBrown") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyBrown', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS BROWN All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
+				    },]
+					});
+				}
+			}
+		});
+	}
+
+	function injeksiVsAssyIvory() {	
+
+		var tgl1 = $('#tanggal').val();
+		var tgl22 = $('#tanggal22').val();
+		var data = {
+			from:tgl1,
+			toa:tgl22,
+		}
+
+		var assy = [];
+		var p_mj = [];
+		var p_hj = [];
+		var p_bj = [];
+		var p_fj = [];
+
+		var act_mj = [];
+		var act_hj = [];
+		var act_bj = [];
+		var act_fj = [];
+
+		var tgl = [];
+
+		var mj = 0;
+		var mj2 = 0;
+
+		var bj = 0;
+		var bj2 = 0;
+
+		var fj = 0;
+		var fj2 = 0;
+
+		var hj = 0;
+		var hj2 = 0;
+
+		$.get('{{ url("fetch/injeksiVsAssyIvory") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					for (var i = 0; i < result.part.length; i++) {
+						tgl.push(result.part[i].week_date);
+						assy.push(parseInt( result.part[i].assy));
+						p_mj.push(parseInt( result.part[i].mj));
+						p_bj.push(parseInt( result.part[i].block));
+						p_hj.push(parseInt( result.part[i].head));
+						p_fj.push(parseInt( result.part[i].foot));
+
+						
+						mj = (parseInt( result.part[i].mj - result.part[i].assy    ) + mj2);
+						mj2 = mj;
+						// alert(result.part[i].target +' - '+ result.part[i].assy +' = '+actgreen2)
+						act_mj.push(parseInt( mj2));
+
+						bj = (parseInt( result.part[i].block - result.part[i].assy    ) + bj2);
+						bj2 = bj;
+						act_bj.push(parseInt( bj2));
+
+						hj = (parseInt( result.part[i].head - result.part[i].assy    ) + hj2);
+						hj2 = hj;
+						act_hj.push(parseInt( hj2));
+
+						fj = (parseInt( result.part[i].foot - result.part[i].assy    ) + fj2);
+						fj2 = fj;
+						act_fj.push(parseInt( fj2));
+
+					}
+
+
+					Highcharts.chart('injeksiVsAssyIvory', {
+					    chart: {
+					        type: 'spline'
+					    },
+					    title: {
+							text: 'YRS IVORY All PART ',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'Last Update: '+getActualFullDate(),
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+					    xAxis: {
+					        categories: tgl,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Pc'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} pc</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					        	dataLabels: {
+				                enabled: true
+				            },
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        },
+					        spline: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: true
+				        },
+				        
+					    },
+					    series: [{
+      					animation: false,
+					    name: 'Plan Assy',
+					    dashStyle: 'Dash',
+				    	// color: 'Red',
+					    data: assy
+
+					    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Middle Joint',
+				    	// color: 'Red',
+				        data: p_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Head Joint',
+				    	// color: 'Red',
+				        data: p_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Block Joint',
+				    	// color: 'Red',
+				        data: p_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+				        name: 'Plan Injeksi Foot Joint',
+				    	// color: 'Red',
+				        data: p_fj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Middle Joint',
+				    	// color: 'Red',
+				        data: act_mj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Head Joint',
+				    	// color: 'Red',
+				        data: act_hj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Block Joint',
+				    	// color: 'Red',
+				        data: act_bj
+				    },{
+				    	type: 'spline',				    	
+      					animation: false,
+      					dashStyle: 'Dot',
+				        name: 'Stock Foot Joint',
+				    	// color: 'Red',
+				        data: act_fj
 				    },]
 					});
 				}

@@ -31,6 +31,8 @@
 
 			<a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
 
+			<a href="{{ url("index/indexPlanAll") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule 3 Days</a>
+
 			<a href="{{ url("index/opmesin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Operationing</a>
 
 			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>

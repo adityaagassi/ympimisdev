@@ -121,14 +121,16 @@ class VisitorController extends Controller
 	public function filllist($nik)
 	{
 		$id = Auth::id();
-		$date = date('Y-m-d');
+		$tgl = date('Y-m-d');
+		$kurang = date('Y-m-d',strtotime('-30 days'));
+		
 		if ($nik !="") {			
 			// $where = "where employee = '".$nik."'";
-			$where=" where employee in ( SELECT employee_id from mutation_logs WHERE department in ( SELECT department from mutation_logs WHERE employee_id ='".$nik."' and valid_to is null ) and valid_to is null)";
+			$where=" where a.created_at2 >='".$kurang."' and a.created_at2<='".$tgl."' and employee in ( SELECT employee_id from mutation_logs WHERE department in ( SELECT department from mutation_logs WHERE employee_id ='".$nik."' and valid_to is null ) and valid_to is null)";
 		}
 
 		if($nik =="asd"){
-			$where="";
+			$where="WHERE a.created_at2 >='".$kurang."' and a.created_at2<='".$tgl."' ";
 		}
 
 		$op="SELECT *,count(DISTINCT(total1)) as total from (

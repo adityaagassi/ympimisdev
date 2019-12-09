@@ -10,6 +10,6 @@ class TransactionPartInjection extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'gmc', 'part', 'total', 'status', 'created_by'
+		'gmc', 'part', 'total', 'status', 'created_by','created_at'
 	];
 }

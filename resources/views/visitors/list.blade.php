@@ -25,6 +25,7 @@
 	}
 	table.table-bordered > thead > tr > th{
 		border:none;
+		background-color: rgba(126,86,134);
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid rgb(211,211,211);

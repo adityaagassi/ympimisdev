@@ -189,6 +189,35 @@ table.table-bordered > tfoot > tr > th{
 </form>
 </div>
 
+<div class="modal fade" id="modalProgress">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-body table-responsive no-padding" style="min-height: 100px">
+          <center>
+            <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+          </center>
+          <table class="table table-hover table-bordered table-striped" id="tableModal">
+            <thead style="background-color: rgba(126,86,134,.7);">
+              <tr>
+                <th>Part</th>
+                <th>Color</th>
+                <th>Model</th>               
+              </tr>
+            </thead>
+            <tbody id="modalProgressBody">
+            </tbody>
+          
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 @stop
 
@@ -414,7 +443,16 @@ function percenMesin() {
           },
           series: [{
               name: 'Working',
-              data: part
+              data: part,
+              point: {
+                events: {
+                  click: function () {
+                    workingPart(this.category );
+                  }
+                }
+              
+
+    }
 
           }]
       });
@@ -423,6 +461,37 @@ function percenMesin() {
         }
       }
     })
+}
+
+function workingPart(mesin) {
+
+    $('#modalProgress').modal('show');
+
+    var data = {
+      mesin:mesin,
+    }
+    $.get('{{ url("get/workingPartMesin") }}', data, function(result, status, xhr){
+      if(result.status){
+        $('#modalProgressBody').html('');
+        var resultData = '';
+        
+        $.each(result.part, function(key, value) {  
+          resultData += '<tr>';          
+          resultData += '<td style="width: 40%">'+ value.part +'</td>';
+          resultData += '<td style="width: 40%">'+ value.color +'</td>';
+          resultData += '<td style="width: 20%">'+ value.model +'</td>';          
+          resultData += '</tr>';     
+        });
+        
+        $('#modalProgressBody').append(resultData);
+          
+        
+      }
+      else{
+        alert('Attempt to retrieve data failed');
+      }
+    });
+  
 }
 </script>
 

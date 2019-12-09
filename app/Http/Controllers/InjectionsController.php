@@ -85,7 +85,12 @@ class InjectionsController extends Controller
 
     public function indexMachineSchedule()
     {
-        return view('injection.schedule_view')->with('page', 'Injection Schedule View')->with('jpn', '???');
+    $title = 'Injection Schedule';
+    $title_jp = '???';
+        return view('injection.schedule_view',array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+    ))->with('page', 'Injection Schedule View')->with('jpn', '???');
     }
 
     public function scanPartInjeksi(Request $request){
@@ -1302,9 +1307,14 @@ public function fetchSchedule()
     $sch = db::select("SELECT mesin, plan_mesin_injections.color, plan_mesin_injections.qty, due_date, shoot, cycle.cycle, plan_mesin_injections.part FROM `plan_mesin_injections` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injections.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injections.color,' - ', 2)
         order by due_date asc, plan_mesin_injections.id asc");
 
+    $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-30'");
+
+    
+
     $response = array(
         'status' => true,            
-        'schedule' => $sch
+        'schedule' => $sch,          
+        'tgl' => $sch2
 
     );
     return Response::json($response);
@@ -1764,6 +1774,237 @@ public function saveScheduleTmp(Request $request){
         ";
 
 
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function MonhtlyStockAll(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        $model2 = "AND color like 'FJ%'";
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+        if ($location =="Blue") {
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        elseif ($location =="Green") {
+            $reg = "YRS20BG|YRS20GG";
+            $reg2 = "YRS20BG|YRS20GG|YRS20GGK";
+        }
+        elseif ($location =="Pink") {
+            $reg = "YRS20BP|YRS20GP";
+            $reg2 = "YRS20BP|YRS20GP|YRS20GPK";
+        }
+        elseif ($location =="Red") {
+            $reg = "YRS20BR";
+            $reg2 = "YRS20BR";
+        }
+        elseif ($location =="Brown") {
+            $reg = "YRS24BUK";
+            $reg2 = "YRS24BUK";
+        }
+        elseif ($location =="Ivory") {
+            $reg = "YRS23|YRS24B MIDDLE";
+            $reg2 = "YRS23|YRS23BR|YRS23CA|YRS23K|YRS27III|YRS24B|YRS24BBR|YRS24BCA|YRS24BK|YRS28BIII";
+        }
+        elseif ($location =="Yrf") {
+            $reg = "YRF21";
+            $reg2 = "YRF21|YRF21K";
+            $model2 ="AND color like '%A YRF S%'";
+        }else{
+            $reg = "YRS20BB|YRS20GB";
+            $reg2 = "YRS20BB|YRS20GB|YRS20GBK";
+        }
+        
+        
+       
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP '".$reg2."'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP '".$reg."' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function MonhtlyStockAllYrf(Request $request){
+        $tgl = $request->get('tgl');
+
+        $location = $request->get('location');
+
+        $tgl1 = $tgl.'-d';
+        $tgl2 = $tgl.'-01';
+
+        if ($tgl !="") {
+            $moth = $request->get('tgl');
+            $day = date($tgl1, strtotime(carbon::now()->endOfMonth()));
+            $first = date($tgl2);
+        }else{
+            $moth = date('Y-m');
+            $day = date('Y-m-d', strtotime(carbon::now()->endOfMonth()));
+            $first = date('Y-m-01');
+        }
+
+
+        $query = "SELECT week_date, SUM(assy) assy, SUM(b) b, SUM(s) s, SUM(h) h from (
+                SELECT date.week_date, COALESCE(quantity,0) as assy, 0 as b, 0 as s, 0 as h    from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRF21|YRF21K'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(b,0) b,  0 as s, 0 as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as b from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF B%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as b,  COALESCE(s,0) as s, 0 as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as s from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF S%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as b,  0 as s, COALESCE(h,0) as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as h from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF H%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='2019-11-01' and week_date <='2019-11-30'
+                ) as date on aa.due_date = date.week_date
+                                ) as a GROUP BY week_date
+        ";
         $part = DB::select($query);
         $response = array(
             'status' => true,            
@@ -2260,6 +2501,641 @@ public function saveScheduleTmp(Request $request){
         return Response::json($response);
     }
 
+    public function injeksiVsAssyGreen(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BG|YRS20GG|YRS20GGK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BG|YRS20GG' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BG|YRS20GG' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BG|YRS20GG' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BG|YRS20GG' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyBlue(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BB|YRS20GB|YRS20GBK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BB|YRS20GB' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyPink(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BP|YRS20GP|YRS20GPK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BP|YRS20GP' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BP|YRS20GP' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BP|YRS20GP' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BP|YRS20GP' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyRed(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS20BR'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BR' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BR' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BR' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS20BR' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyBrown(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS24BUK'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS24BUK' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS24BUK' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS24BUK' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS24BUK' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyIvory(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(ASSY) assy, SUM(mj) mj, SUM(block) block,SUM(head) head, SUM(foot) foot FROM (                    
+                SELECT date.week_date, COALESCE(quantity,0) as ASSY, 0 as mj, 0 as block, 0 as head, 0 as foot     from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRS23|YRS23BR|YRS23CA|YRS23K|YRS27III|YRS24B|YRS24BBR|YRS24BCA|YRS24BK|YRS28BIII'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(mj,0) mj,  0 as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as mj from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS23|YRS24B MIDDLE' AND
+                color like 'MJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  COALESCE(block,0) as block, 0 as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as block from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS23|YRS24B MIDDLE' AND
+                color like 'BJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, COALESCE(head,0) as head, 0 as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as head from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS23|YRS24B MIDDLE' AND
+                color like 'HJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as mj,  0 as block, 0 as head, COALESCE(foot,0) as foot  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as foot from (
+                SELECT due_date, color, qty from plan_mesin_injection_tmps WHERE part REGEXP 'YRS23|YRS24B MIDDLE' AND
+                color like 'FJ%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                ) TARGET GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function injeksiVsAssyYrf(Request $request){
+        $from = $request->get('from');
+        $to = $request->get('toa');
+
+
+        $query = "SELECT week_date, SUM(assy) assy, SUM(b) b, SUM(s) s, SUM(h) h from (
+                SELECT date.week_date, COALESCE(quantity,0) as assy, 0 as b, 0 as s, 0 as h    from (
+                SELECT target.due_date,target.quantity  from (
+                SELECT material_number,due_date,quantity from production_schedules WHERE 
+                material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+                DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+                ) target
+                LEFT JOIN materials on target.material_number = materials.material_number 
+                WHERE model REGEXP 'YRF21|YRF21K'
+                ) target
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on target.due_date = date.week_date
+                
+                union all
+                                
+                SELECT week_date , 0 as assy, COALESCE(b,0) b,  0 as s, 0 as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as b from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF B%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as b,  COALESCE(s,0) as s, 0 as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as s from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF S%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                
+                                union all
+                                
+                SELECT week_date , 0 as assy, 0 as b,  0 as s, COALESCE(h,0) as h  FROM (                                       
+                SELECT * from (
+                select a.*, SUM(qty) as h from (
+                SELECT due_date, color, qty from plan_mesin_injections WHERE part REGEXP 'YRF21' AND
+                color like 'A YRF H%' 
+                ) a GROUP BY due_date   
+                ) target                                                                                                         
+                ) as aa
+                RIGHT JOIN (
+                SELECT week_date from ympimis.weekly_calendars WHERE 
+                week_date not in ( SELECT tanggal from  ftm.kalender) and week_date >='".$from."' and week_date <='".$to."'
+                ) as date on aa.due_date = date.week_date
+                                ) as a GROUP BY week_date
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
      // -------------------- end hj mesin
 
     // -------------------- start fj mesin
@@ -2532,6 +3408,144 @@ public function saveScheduleTmp(Request $request){
         );
         return Response::json($response);
     }
+
+    public function workingPartMesin(Request $request){
+
+        $mesin = $request->get('mesin');
+       
+        $query = "SELECT part,color,model from working_mesin_injections WHERE mesin='".$mesin."'
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    public function workingPartMesina(Request $request){
+
+        $mesin = $request->get('mesin');
+       
+        $query = "SELECT part,color,model from working_mesin_injections WHERE mesin='".$mesin."'
+        ";
+
+
+        $part = DB::select($query);
+        $response = array(
+            'status' => true,            
+            'part' => $part,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    // ------------------- sock 3 hari
+
+     public function indexPlanAll(){
+
+        return view('injection.shedule_3_hari')->with('page', 'Injection')->with('jpn', '???');
+
+    }
+
+    public function getPlanAll(Request $request){
+
+        $mesin = $request->get('mesin');
+       
+        $queryfjivory = "SELECT COALESCE(part,'-')part,COALESCE(color,'-')color, COALESCE(quantity,0)quantity, COALESCE(quantity2,0)quantity2, COALESCE(total2,0)total2, COALESCE(total_22,0)total_all,  week_date from (
+        SELECT a.*, SUM(total)as total2, SUM(total_2)as total_22, SUM(quantity)as quantity2 from (
+        SELECT target_model.*,detail_part_injections.part,detail_part_injections.part_code,detail_part_injections.color, (quantity * 3) as total, (quantity * 2) as total_2  from (
+        SELECT target.material_number,target.due_date,target.quantity,materials.model  from (
+        SELECT material_number,due_date,quantity from production_schedules WHERE 
+        material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+        DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+        ) target
+        LEFT JOIN materials on target.material_number = materials.material_number 
+        ) as target_model
+        CROSS join  detail_part_injections on target_model.model = detail_part_injections.model                             
+        WHERE due_date in ( SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-30' and DATE_FORMAT(week_date,'%Y')='2019')
+           and part_code like 'FJ%' 
+                     and color ='ivory'
+           ORDER BY due_date                     
+        ) a GROUP BY  due_date, color
+        ) target 
+        RIGHT JOIN (
+                SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and 
+                DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-30'
+                )weekd              
+                 on target.due_date = weekd.week_date
+                  union all
+        SELECT part,color,qty,qty2,total2,total_all,week_date as due_date from (
+        SELECT 0 as part,0 as color,0 as qty,0 as qty2, 0 as total2,0 as total_all ,week_date from ympimis.weekly_calendars WHERE 
+        week_date not in ( SELECT tanggal from  ftm.kalender) 
+        and week_date <'2019-11-01' ORDER BY week_date desc limit 2
+
+        ) a
+        ORDER BY week_date
+        ";
+
+        $queryfjSkelton = "SELECT COALESCE(part,'-')part,COALESCE(color,'-')color, COALESCE(quantity,0)quantity, COALESCE(quantity2,0)quantity2, COALESCE(total2,0)total2, COALESCE(total_22,0)total_all, due_date from (
+        SELECT a.*, SUM(total)as total2, SUM(quantity)as quantity2,SUM(total_2)as total_22 from (
+        SELECT target_model.*,detail_part_injections.part,detail_part_injections.part_code,detail_part_injections.color, (quantity * 3) as total , (quantity * 2) as total_2 from (
+        SELECT target.material_number,target.due_date,target.quantity,materials.model  from (
+        SELECT material_number,due_date,quantity from production_schedules WHERE 
+        material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
+        DATE_FORMAT(due_date,'%Y-%m-%d') >='2019-11-01' and DATE_FORMAT(due_date,'%Y-%m-%d') <='2019-11-30'
+        ) target
+        LEFT JOIN materials on target.material_number = materials.material_number 
+        ) as target_model
+        CROSS join  detail_part_injections on target_model.model = detail_part_injections.model                             
+        WHERE due_date in ( SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-30' and DATE_FORMAT(week_date,'%Y')='2019')
+           and part_code like 'FJ%' 
+                     and color ='ivory'
+           ORDER BY due_date                     
+        ) a GROUP BY  due_date, color
+        ) target 
+        union all
+        SELECT part,color,qty,qty2,total2,total3,week_date as due_date from (
+        SELECT 0 as part,0 as color,0 as qty,0 as qty2, 0 as total2 , 0 as total3,week_date from ympimis.weekly_calendars WHERE 
+        week_date not in ( SELECT tanggal from  ftm.kalender) 
+        and week_date <'2019-11-01' ORDER BY week_date desc limit 2
+
+        ) a
+        ORDER BY due_date
+        ";
+
+        $query2 = "SELECT * from (
+        SELECT week_date from ympimis.weekly_calendars WHERE 
+        week_date not in ( SELECT tanggal from  ftm.kalender) 
+        and week_date <='2019-11-01' ORDER BY week_date desc limit 3
+        ) a
+        union all
+        SELECT week_date from ympimis.weekly_calendars WHERE 
+        week_date not in ( SELECT tanggal from  ftm.kalender) 
+        and week_date >='2019-11-01' and week_date <='2019-11-31' GROUP BY week_date 
+        ORDER BY week_date
+        ";
+
+
+        $queryfjivory = DB::select($queryfjSkelton);
+        $FJSkelton = DB::select($queryfjSkelton);
+
+        $tgl = DB::select($query2);
+        $response = array(
+            'status' => true,            
+            'partFJI' => $queryfjivory,
+
+            'FJSkelton' => $FJSkelton,            
+            'tgl' => $tgl,
+            'message' => 'Get Part Success',
+        );
+        return Response::json($response);
+    }
+
+    
+
+
+
 
 
 
