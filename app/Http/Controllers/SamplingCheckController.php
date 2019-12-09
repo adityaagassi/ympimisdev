@@ -330,7 +330,8 @@ class SamplingCheckController extends Controller
         $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
+                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
         $queryForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
@@ -403,7 +404,8 @@ class SamplingCheckController extends Controller
         $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
+                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
+            where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
         $queryForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
