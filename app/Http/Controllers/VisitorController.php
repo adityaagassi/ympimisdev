@@ -122,7 +122,7 @@ class VisitorController extends Controller
 	{
 		$id = Auth::id();
 		$tgl = date('Y-m-d');
-		$kurang = date('Y-m-d',strtotime('-30 days'));
+		$kurang = date('Y-m-d',strtotime('-14 days'));
 		
 		if ($nik !="") {			
 			// $where = "where employee = '".$nik."'";
@@ -378,7 +378,7 @@ public function display()
 public function filldisplay($nik, Request $request)
 {
 
-	$kurang = date('Y-m-d',strtotime('-30 days'));
+	$kurang = date('Y-m-d',strtotime('-14 days'));
 	$tgl = date('m-Y');
 	$tgl2 = date('Y-m-d');
 
