@@ -984,6 +984,23 @@ class MiddleProcessController extends Controller
 
 	}
 
+	public function fetchBuffingOpWorkMonthlyDetail(Request $request){
+		$detail = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+			left join standart_times s on s.material_number = d.material_number
+			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$request->get('bulan')."'
+			and operator_id = '".$request->get('nik')."'
+			GROUP BY d.operator_id, tgl");
+
+		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail,
+			'emp' => $emp
+		);
+		return Response::json($response);
+	}
+
 	public function fetchBuffingOpWorkMonthly(Request $request){
 		$bulan="";
 		if(strlen($request->get('bulan')) > 0){
@@ -992,9 +1009,10 @@ class MiddleProcessController extends Controller
 			$bulan = date('m-Y');
 		}
 		
-		$act = db::connection('digital_kanban')->select("select operator_id, DATE(selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,sedang_start_time,selesai_start_time)) as act from data_log
-			where DATE_FORMAT(selesai_start_time,'%m-%Y') = '".$bulan."'
-			GROUP BY operator_id, tgl");
+		$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+			left join standart_times s on s.material_number = d.material_number
+			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
+			GROUP BY d.operator_id, tgl");
 
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
 			where g.location = 'bff'");
@@ -1006,6 +1024,32 @@ class MiddleProcessController extends Controller
 			'bulan' => $bulan
 		);
 		return Response::json($response);
+	}
+	public function fetchBuffingOpNgMonthlyDetail(Request $request){
+		$ng = db::select("SELECT g.date, g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
+			left join employees e on e.employee_id = l.operator_id
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
+			and l.operator_id = '".$request->get('nik')."'
+			GROUP BY date, l.operator_id, e.`name`) ng
+			left join
+			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
+			left join employees e on e.employee_id = l.operator_id
+			left join materials m on l.material_number = m.material_number
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
+			and l.operator_id = '".$request->get('nik')."'
+			GROUP BY date, l.operator_id, e.`name`) g
+			on ng.date = g.date and ng.operator_id = g.operator_id
+			order by g.date asc");
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng
+		);
+		return Response::json($response);
+
+
 	}
 
 
@@ -1034,13 +1078,13 @@ class MiddleProcessController extends Controller
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
 			GROUP BY l.operator_id, e.`name`) ng
 			left join
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.created_at,'%m-%Y') = '".$bulan."' ".$addHpl."
+			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
 			GROUP BY l.operator_id, e.`name`) g
 			on ng.operator_id = g.operator_id
 			order by ng_rate desc");
