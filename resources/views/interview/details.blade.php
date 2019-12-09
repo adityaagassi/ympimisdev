@@ -155,7 +155,6 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Aturan K3 YAHAMA</th>
 				                <th>10 Komitmen Berkendara</th>
 				                <th>Kebijakan Mutu</th>
-				                <th>5 Dasar Tindakan Bekerja</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>
@@ -195,14 +194,6 @@ table.table-bordered > tfoot > tr > th{
 				                		<label class="label label-danger">{{ $interview_detail->kebijakan_mutu }}</label>
 				                	@endif
 				                </td>
-				                <td>@if($interview_detail->dasar_tindakan_bekerja == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->dasar_tindakan_bekerja }}</label>
-				                	@elseif($interview_detail->dasar_tindakan_bekerja == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->dasar_tindakan_bekerja }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->dasar_tindakan_bekerja }}</label>
-				                	@endif
-				                </td>
 				                <td>
 				                  <center>
 				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editinterview('{{ url("index/interview/edit_participant") }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
@@ -218,7 +209,6 @@ table.table-bordered > tfoot > tr > th{
 				            </tbody>
 				            <tfoot>
 				              <tr>
-				                <th></th>
 				                <th></th>
 				                <th></th>
 				                <th></th>
@@ -416,18 +406,6 @@ table.table-bordered > tfoot > tr > th{
 				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu_create" value="Not OK">Not OK</label>
 				  </div>
 	            </div>
-	            <div class="form-group">
-	              <label for="">5 Dasar Tindakan Bekerja</label>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja_create" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja_create" value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja_create" value="Not OK">Not OK</label>
-				  </div>
-	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
@@ -581,18 +559,6 @@ table.table-bordered > tfoot > tr > th{
 				  </div>
 				  <div class="radio">
 				    <label><input type="radio" name="kebijakan_mutu" id="kebijakan_mutu" value="Not OK">Not OK</label>
-				  </div>
-	            </div>
-	            <div class="form-group">
-	              <label for="">5 Dasar Tindakan Bekerja</label>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja" value="OK">OK</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja"  value="OK (Kurang Lancar)">OK (Kurang Lancar)</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="dasar_tindakan_bekerja" id="dasar_tindakan_bekerja"  value="Not OK">Not OK</label>
 				  </div>
 	            </div>
             </div>
@@ -884,7 +850,6 @@ table.table-bordered > tfoot > tr > th{
                   $('input[id="aturan_k3"][value="'+data.aturan_k3+'"]').prop('checked',true);
                   $('input[id="komitmen_berkendara"][value="'+data.komitmen_berkendara+'"]').prop('checked',true);
                   $('input[id="kebijakan_mutu"][value="'+data.kebijakan_mutu+'"]').prop('checked',true);
-                  $('input[id="dasar_tindakan_bekerja"][value="'+data.dasar_tindakan_bekerja+'"]').prop('checked',true);
                   $('input[id="enam_pasal_keselamatan"][value="'+data.enam_pasal_keselamatan+'"]').prop('checked',true);
                   $('input[id="budaya_kerja"][value="'+data.budaya_kerja+'"]').prop('checked',true);
                   $('input[id="budaya_5s"][value="'+data.budaya_5s+'"]').prop('checked',true);
@@ -905,7 +870,6 @@ table.table-bordered > tfoot > tr > th{
 		var filosofi_yamaha = $('input[id="komitmen_berkendara_create"]:checked').val();
 		var komitmen_berkendara = $('input[id="kebijakan_mutu_create"]:checked').val();
 		var kebijakan_mutu = $('input[id="kebijakan_mutu_create"]:checked').val();
-		var dasar_tindakan_bekerja = $('input[id="dasar_tindakan_bekerja_create"]:checked').val();
 		var enam_pasal_keselamatan = $('input[id="enam_pasal_keselamatan_create"]:checked').val();
 		var budaya_kerja = $('input[id="budaya_kerja_create"]:checked').val();
 		var budaya_5s = $('input[id="budaya_5s_create"]:checked').val();
@@ -919,7 +883,6 @@ table.table-bordered > tfoot > tr > th{
 			aturan_k3:aturan_k3,
 			komitmen_berkendara:komitmen_berkendara,
 			kebijakan_mutu:kebijakan_mutu,
-			dasar_tindakan_bekerja:dasar_tindakan_bekerja,
 			enam_pasal_keselamatan:enam_pasal_keselamatan,
 			budaya_kerja:budaya_kerja,
 			budaya_5s:budaya_5s,

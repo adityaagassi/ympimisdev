@@ -12,7 +12,7 @@ class InterviewDetail extends Model
     protected $table = 'interview_details';
 
 	protected $fillable = [
-        'interview_id', 'nik','filosofi_yamaha','aturan_k3','komitmen_berkendara','kebijakan_mutu','dasar_tindakan_bekerja','enam_pasal_keselamatan','budaya_kerja','budaya_5s','komitmen_hotel_konsep','janji_tindakan_dasar', 'created_by'
+        'interview_id', 'nik','filosofi_yamaha','aturan_k3','komitmen_berkendara','kebijakan_mutu','enam_pasal_keselamatan','budaya_kerja','budaya_5s','komitmen_hotel_konsep','janji_tindakan_dasar', 'created_by'
     ];
     
     public function activity_lists()

@@ -329,7 +329,6 @@ class InterviewController extends Controller
                     'aturan_k3' => $request->get('aturan_k3'),
                     'komitmen_berkendara' => $request->get('komitmen_berkendara'),
                     'kebijakan_mutu' => $request->get('kebijakan_mutu'),
-                    'dasar_tindakan_bekerja' => $request->get('dasar_tindakan_bekerja'),
                     'enam_pasal_keselamatan' => $request->get('enam_pasal_keselamatan'),
                     'budaya_kerja' => $request->get('budaya_kerja'),
                     'budaya_5s' => $request->get('budaya_5s'),
@@ -345,7 +344,6 @@ class InterviewController extends Controller
                     'aturan_k3' => $request->get('aturan_k3'),
                     'komitmen_berkendara' => $request->get('komitmen_berkendara'),
                     'kebijakan_mutu' => $request->get('kebijakan_mutu'),
-                    'dasar_tindakan_bekerja' => $request->get('dasar_tindakan_bekerja'),
                     'enam_pasal_keselamatan' => $request->get('enam_pasal_keselamatan'),
                     'budaya_kerja' => $request->get('budaya_kerja'),
                     'budaya_5s' => $request->get('budaya_5s'),
@@ -382,7 +380,6 @@ class InterviewController extends Controller
                           'aturan_k3' => $detail->aturan_k3,
                           'komitmen_berkendara' => $detail->komitmen_berkendara,
                           'kebijakan_mutu' => $detail->kebijakan_mutu,
-                          'dasar_tindakan_bekerja' => $detail->dasar_tindakan_bekerja,
                           'enam_pasal_keselamatan' => $detail->enam_pasal_keselamatan,
                           'budaya_kerja' => $detail->budaya_kerja,
                           'budaya_5s' => $detail->budaya_5s,
@@ -428,7 +425,6 @@ class InterviewController extends Controller
                 $interview->aturan_k3 = $request->get('aturan_k3');
                 $interview->komitmen_berkendara = $request->get('komitmen_berkendara');
                 $interview->kebijakan_mutu = $request->get('kebijakan_mutu');
-                $interview->dasar_tindakan_bekerja = $request->get('dasar_tindakan_bekerja');
                 $interview->enam_pasal_keselamatan = $request->get('enam_pasal_keselamatan');
                 $interview->budaya_kerja = $request->get('budaya_kerja');
                 $interview->budaya_5s = $request->get('budaya_5s');
