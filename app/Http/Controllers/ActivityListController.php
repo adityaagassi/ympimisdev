@@ -44,6 +44,7 @@ class ActivityListController extends Controller
     function filter($id,$no)
     {
       $name = Auth::user()->name;
+      $role_code = Auth::user()->role_code;
       $queryDepartments = "SELECT * FROM departments where id='".$id."'";
       $department = DB::select($queryDepartments);
       foreach ($department as $department) {
@@ -79,7 +80,7 @@ class ActivityListController extends Controller
       elseif ($no == 10) {
         $activity_type = 'Cek Area';
       }
-      if($name == "M Khamdan K" || $name == "Clark Kent"){
+      if($role_code == "MIS" || $role_code == "S"){
         $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
       }
       else{

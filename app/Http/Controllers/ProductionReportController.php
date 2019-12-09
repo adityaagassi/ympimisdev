@@ -42,11 +42,11 @@ class ProductionReportController extends Controller
 
     function index($id)
     {
-        $name = Auth::user()->name;
+        $role_code = Auth::user()->role_code;
         $queryActivity = "SELECT DISTINCT(activity_type) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
-                      'name' => $name,
+                      'role_code' => $role_code,
                       'id' => $id);
         return view('production_report.index', $data
           )->with('page', 'Leader Task Monitoring');
@@ -159,10 +159,9 @@ class ProductionReportController extends Controller
                 IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
                 IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
                 IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
-        21 as jumlah_activity_daily,
-        daily.jumlah_daily_check,
+       (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)) as jumlah_activity_daily,
         daily.jumlah_daily_check as jumlah_daily,
-        COALESCE(((daily.jumlah_daily_check)/21)*100,0) as persen_daily,
+        COALESCE(((daily.jumlah_daily_check)/(select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)))*100,0) as persen_daily,
         daily.jumlah_day,
         daily.cur_day,
         (daily.cur_day / daily.jumlah_day)*100 as persen_cur_day,
@@ -570,7 +569,7 @@ class ProductionReportController extends Controller
             and activity_lists.department_id = '".$id."'
             and activity_lists.frequency = '".$frequency."'");
 
-        $detail = db::select("select weekly_calendars.week_date,21 as plan, (select count(DISTINCT(production_date)) from daily_checks join activity_lists as actlist on actlist.id = activity_list_id where DATE_FORMAT(production_date,'%Y-%m') = '".$week_date."' and leader = '".$leader_name."' and production_date = weekly_calendars.week_date and actlist.department_id = '".$id."' and actlist.frequency = '".$frequency."') as jumlah_aktual from weekly_calendars  where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+        $detail = db::select("select weekly_calendars.week_date,(select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and week_date not in (select tanggal from ftm.kalender)) as plan, (select count(DISTINCT(production_date)) from daily_checks join activity_lists as actlist on actlist.id = activity_list_id where DATE_FORMAT(production_date,'%Y-%m') = '".$week_date."' and leader = '".$leader_name."' and production_date = weekly_calendars.week_date and actlist.department_id = '".$id."' and actlist.frequency = '".$frequency."') as jumlah_aktual from weekly_calendars  where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
@@ -1952,6 +1951,15 @@ class ProductionReportController extends Controller
                         and production_audits.activity_list_id = '".$activity_list_id."'
                         and approval is null
                         and production_audits.deleted_at is null");
+        }
+        else if ($activity_type == 'Pengecekan') {
+            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/first_product_audit/print_first_product_audit_email/',first_product_audit_details.activity_list_id,'/',first_product_audit_details.first_product_audit_id,'/','".$month."')) as link, CONCAT(proses,' - ',jenis) as title FROM first_product_audit_details
+                    join first_product_audits on first_product_audits.id = first_product_audit_details.first_product_audit_id
+                    where send_status = 'Sent'
+                    and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                    and first_product_audit_details.activity_list_id = '".$activity_list_id."'
+                    and approval is null
+                    and first_product_audit_details.deleted_at is null");
         }
         $data = array('detail' => $detail,
                       'leader' => $leader,

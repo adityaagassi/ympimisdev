@@ -657,7 +657,8 @@
                         key: result.datas[i][j].leader_name
                       }],
                       showInLegend: true,
-                    }, {
+                    },
+                    {
                       name: 'Monthly',
                       color: Highcharts.getOptions().colors[1],
                       data: [{

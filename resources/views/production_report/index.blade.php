@@ -44,7 +44,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<?php if($name == "Imbang Prasetyo" || $name == "M Khamdan K" || $name == "Clark Kent"){ ?>
+			<?php if($role_code == "PROD-SPL" || $role_code == "MIS" || $role_code == "S"){ ?>
 				<a href="{{ url("index/production_report/approval/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Approval</a>
 			<?php } ?>
 		</div>
