@@ -47,12 +47,12 @@ class InjectionSchedule extends Command
     {
 
       if(date('D')=='Fri' ){
-        $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-      }else if(date('D')=='Sat' ){
         $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+      }else if(date('D')=='Sat' ){
+        $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
       }   
       else{
-        $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+        $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
       }
 
       $yesterday = date('Y-m-d', strtotime(Carbon::yesterday()));
@@ -131,7 +131,7 @@ class InjectionSchedule extends Command
       detail_part_injections.color  from (
       SELECT material_number,due_date,quantity from production_schedules WHERE 
       material_number in (SELECT material_number from materials WHERE category ='fg' and hpl='RC') and 
-      DATE_FORMAT(due_date,'%Y-%m-%d') ='2019-12-12' 
+      DATE_FORMAT(due_date,'%Y-%m-%d') ='".$day2."' 
       ) target
       LEFT JOIN materials on target.material_number = materials.material_number               
       CROSS join  detail_part_injections on materials.model = detail_part_injections.model 
@@ -145,7 +145,7 @@ class InjectionSchedule extends Command
       SELECT MIN(week_date) week_date from (
       SELECT  week_date from ympimis.weekly_calendars WHERE 
       week_date not in ( SELECT tanggal from  ftm.kalender) 
-      and week_date <'2019-12-12' ORDER BY week_date desc limit 2
+      and week_date <'".$day2."' ORDER BY week_date desc limit 2
       ) a
       )
       ) as stock on target.part = stock.part
@@ -171,8 +171,8 @@ class InjectionSchedule extends Command
       SELECT  week_date from (
       SELECT  week_date from ympimis.weekly_calendars WHERE 
       week_date not in ( SELECT tanggal from  ftm.kalender) 
-      and week_date <'2019-12-12' ORDER BY week_date desc limit 2
-      ) a ORDER BY week_date asc
+      and week_date <'".$day2."' ORDER BY week_date desc limit 2
+      ) a ORDER BY week_date asc 
       ";
 
 

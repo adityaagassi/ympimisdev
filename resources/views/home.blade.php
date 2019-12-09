@@ -173,15 +173,6 @@
                             <a href="{{ url("index/toilet") }}">
                                 <i class="fa fa-caret-right"></i> Toilet Availability ()
                             </a>
-                            <br>
-                            <a href="{{ url("index/kaizen/report") }}">
-                                <i class="fa fa-caret-right"></i> Kaizen Teian Rank ()
-                            </a>
-                            <br>
-                            <a href="{{ url("index/kaizen/resume") }}">
-                                <i class="fa fa-caret-right"></i> Kaizen Teian Resume ()
-                            </a>
-                            <br>
                         </td>
                     </tr>
                     <tr>
@@ -563,7 +554,10 @@
                             <a href="{{ url("flute_repair") }}">
                                 <i class="fa fa-caret-right"></i> Flute Repair
                             </a>
-
+                            <br>
+                            <a href="{{ url("recorder_repair") }}">
+                                <i class="fa fa-caret-right"></i> Recorder Repair
+                            </a>
                         </td>
                     </tr>
                     {{-- <tr>

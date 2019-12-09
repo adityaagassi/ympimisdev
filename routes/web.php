@@ -292,6 +292,13 @@ Route::post('scan/recorder_repair/selesai', 'AdditionalController@scanRecorderSe
 
 Route::get('index/recorder_repair/kembali', 'AdditionalController@indexRecorderKembali');
 Route::get('fetch/recorder_repair/kembali', 'AdditionalController@fetchRecorderKembali');
+Route::post('scan/recorder_repair/kembali', 'AdditionalController@scanRecorderKembali');
+
+Route::get('index/recorder_repair/resume', 'AdditionalController@indexRecorderResume');
+Route::get('fetch/recorder_repair/by_status', 'AdditionalController@fetchRecorderByStatus');
+Route::get('fetch/recorder_repair/by_model', 'AdditionalController@fetchRecorderByModel');
+Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderByDate');
+
 
 
 

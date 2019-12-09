@@ -67,7 +67,7 @@
 				<!-- small box -->
 				<div class="small-box bg-teal" style="font-size: 30px;font-weight: bold;height: 143px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>FLUTE BELUM REPAIR</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>RECORDER BELUM REPAIR</b></h3>
 						<h2 style="margin: 0px;font-size: 4vw;" id='butuh'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -79,8 +79,8 @@
 				<!-- small box -->
 				<div class="small-box bg-yellow" style="font-size: 30px;font-weight: bold;height: 153px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>TOTAL MASUK</b></h3>
-						<h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>TOTAL REPAIR</b></h3>
+						{{-- <h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3> --}}
 						<h2 style="margin: 0px;font-size: 4vw;" id='tarik'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -93,7 +93,7 @@
 				<div class="small-box bg-red" style="font-size: 30px;font-weight: bold;height: 153px;">
 					<div class="inner" style="padding-bottom: 0px;">
 						<h3 style="margin-bottom: 0px;font-size: 32px;"><b>BELUM & SEDANG REPAIR</b></h3>
-						<h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3>
+						{{-- <h3 style="margin-bottom: 0px;font-size: 25px;"><b>(PIANICA)</b></h3> --}}
 						<h2 style="margin: 0px;font-size: 4vw;" id='sedang'>0<sup style="font-size: 2vw">set</sup></h2>
 					</div>
 					<div class="icon">
@@ -195,10 +195,9 @@
 	}
 
 	function drawSmallBox(){
-		$.get('{{ url("fetch/flute_repair/by_status") }}', function(result, status, xhr){
+		$.get('{{ url("fetch/recorder_repair/by_status") }}', function(result, status, xhr){
 			if(result.status){
-				// var total_repair = 1368 + 1772;
-				var total_repair = 1386 + 1772;
+				var total_repair = 14;
 				var tarik = 0;
 				var sedang = 0;
 
@@ -243,7 +242,7 @@
 			tanggal:tanggal		
 		}
 
-		$.get('{{ url("fetch/flute_repair/by_model") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/recorder_repair/by_model") }}', data, function(result, status, xhr) {
 			if(result.status){
 
 				var tarik = [];
@@ -275,7 +274,7 @@
 						type: 'column'
 					},
 					title: {
-						text: 'Flute Repair by Model on '+result.date,
+						text: 'Recorder Repair by Model on '+result.date,
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -381,7 +380,7 @@
 		});
 
 
-		$.get('{{ url("fetch/flute_repair/by_date") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/recorder_repair/by_date") }}', function(result, status, xhr) {
 			if(result.status){
 
 				var tarik = [];
@@ -413,7 +412,7 @@
 						type: 'column'
 					},
 					title: {
-						text: 'Flute Repair by Date',
+						text: 'Recorder Repair by Date',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
