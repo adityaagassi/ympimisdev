@@ -579,6 +579,42 @@ class TrainingReportController extends Controller
         }
     }
 
+    function print_training_approval($activity_list_id)
+    {
+        $training = TrainingReport::where('activity_list_id',$activity_list_id)->get();
+        foreach($training as $training){
+            $id = $training->id;
+        }
+        // $activity_list_id = $training->activity_list_id;
+
+        $activityList = ActivityList::find($activity_list_id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+        $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
+        $trainingPicture = DB::select($trainingPictureQuery);
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
+        $trainingParticipant = DB::select($trainingParticipantQuery);
+        if($training == null){
+            return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
+        }else{
+            $data = array(
+                          'training' => $training,
+                          'trainingPicture' => $trainingPicture,
+                          'trainingParticipant' => $trainingParticipant,
+                          'activityList' => $activityList,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'id' => $id,
+                          'id_departments' => $id_departments);
+            return view('training_report.print_email', $data
+                )->with('page', 'Training Report');
+        }
+    }
+
     function scan_employee($id)
     {
             $data = array(

@@ -101,7 +101,8 @@
 												<td>{{$first_product_audit->foreman}}</td>
 												<td>
 													<center>
-														<a class="btn btn-primary btn-sm" href="{{url('index/first_product_audit/details/'.$id.'/'.$first_product_audit->id)}}">Details</a>
+														<a class="btn btn-primary btn-sm" href="{{url('index/first_product_audit/details/'.$id.'/'.$first_product_audit->id)}}">Monthly Evidence</a>
+														<a class="btn btn-warning btn-sm" href="{{url('index/first_product_audit/daily/'.$id.'/'.$first_product_audit->id)}}">Daily Evidence</a>
 													</center>
 												</td>
 												<td>
@@ -309,7 +310,7 @@
 	})
 	function deleteConfirmation(url, name,id,first_product_audit_id) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+''+id+'/'+first_product_audit_id);
+		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+first_product_audit_id);
 	}
 </script>
 @endsection

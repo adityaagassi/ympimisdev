@@ -88,7 +88,10 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->subject('Audit Process (??)')->view('mails.audit_process');
         }
         if($this->remark == 'first_product_audit'){
-            return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama (??)')->view('mails.first_product_audit');
+            return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama Monthly Evidence (??)')->view('mails.first_product_audit');
+        }
+        if($this->remark == 'first_product_audit_daily'){
+            return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama Daily Evidence (??)')->view('mails.first_product_audit_daily');
         }
     }
 }

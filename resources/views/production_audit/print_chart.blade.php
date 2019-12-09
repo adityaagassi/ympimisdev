@@ -44,10 +44,7 @@
 		<table class="table" style="border: 1px solid black;">
 			<tbody>
 				<tr>
-					<td style="border: 1px solid black;" colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
-				</tr>
-				<tr>
-					<td rowspan="5" style="width: 20px;vertical-align: middle;"><center><img width="175px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></center></td>
+					<td style="border: 1px solid black;" colspan="7">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;">Department</td>

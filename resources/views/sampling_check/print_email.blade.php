@@ -88,7 +88,7 @@
 					<td class="head"><center>PIC Check</center></td>
 					<td class="head"><center>Sampling By</center></td>
 				</tr>
-				<form role="form" method="post" action="{{url('index/sampling_check/approval/'.$id.'/'.$subsection.'/'.substr($date, 0, 7))}}">
+				<form role="form" method="post" action="{{url('index/sampling_check/approval/'.$id.'/'.substr($date, 0, 7))}}">
 				@foreach($samplingCheck as $samplingCheck)
 				<tr>
 					<?php $point_check = DB::select("select * from sampling_check_details where sampling_check_id = '".$samplingCheck->id_sampling_check."'");

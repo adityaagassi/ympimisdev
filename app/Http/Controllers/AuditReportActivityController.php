@@ -493,7 +493,7 @@ class AuditReportActivityController extends Controller
         }
     }
 
-    function print_audit_report_email($id,$subsection,$month)
+    function print_audit_report_email($id,$month)
     {
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -502,13 +502,12 @@ class AuditReportActivityController extends Controller
         $id_departments = $activityList->departments->id;
 
 
-        if($subsection != null && $month != null){
+        if($month != null){
             $queryLaporanAktivitas = "select *, audit_report_activities.id as id_audit_report
                 from audit_report_activities
                 join activity_lists on activity_lists.id = audit_report_activities.activity_list_id
                 where activity_lists.id = '".$id."'
                 and activity_lists.department_id = '".$id_departments."'
-                and audit_report_activities.subsection = '".$subsection."' 
                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."' 
                 and audit_report_activities.deleted_at is null";
             $laporanAktivitas = DB::select($queryLaporanAktivitas);
@@ -548,7 +547,6 @@ class AuditReportActivityController extends Controller
                           'approval_leader' => $approval_leader,
                           'approved_date_leader' => $approved_date_leader,
                           'monthTitle' => $monthTitle,
-                          'subsection' => $subsection,
                           'date' => $date,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
@@ -638,6 +636,6 @@ class AuditReportActivityController extends Controller
             $audit_report_activity->approved_date = date('Y-m-d');
             $audit_report_activity->save();
           }
-          return redirect('/index/audit_report_activity/print_audit_report_email/'.$id.'/'.$subsection.'/'.$month)->with('status', 'Approved.')->with('page', 'Laporan Aktivitas Audit');
+          return redirect('/index/audit_report_activity/print_audit_report_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Laporan Aktivitas Audit');
       }
 }

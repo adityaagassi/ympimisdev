@@ -604,7 +604,7 @@ class SamplingCheckController extends Controller
         }
     }
 
-    function print_sampling_email($id,$subsection,$month)
+    function print_sampling_email($id,$month)
     {
         $activityList = ActivityList::find($id);
         // var_dump($request->get('product'));
@@ -615,13 +615,12 @@ class SamplingCheckController extends Controller
         $id_departments = $activityList->departments->id;
 
 
-        if($subsection != null && $month != null){
+        if($month != null){
             $querySamplingCheck = "select *, sampling_checks.id as id_sampling_check
                 from sampling_checks
                 join activity_lists on activity_lists.id = sampling_checks.activity_list_id
                 where activity_lists.id = '".$id."'
                 and activity_lists.department_id = '".$id_departments."'
-                and sampling_checks.subsection = '".$subsection."' 
                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."' 
                 and sampling_checks.deleted_at is null";
             $samplingCheck = DB::select($querySamplingCheck);
@@ -657,7 +656,6 @@ class SamplingCheckController extends Controller
                           'section' => $section,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
-                          'subsection' => $subsection,
                           'month' => $month,
                           'date' => $date,
                           'samplingCheck' => $samplingCheck,
@@ -792,23 +790,22 @@ class SamplingCheckController extends Controller
           }
       }
 
-      public function approval(Request $request,$id,$subsection,$month)
+      public function approval(Request $request,$id,$month)
       {
           $approve = $request->get('approve');
           if(count($approve) > 0){
             foreach($approve as $approve){
                 $sampling_check = SamplingCheck::find($approve);
-                $subsection = $sampling_check->subsection;
                 $month = substr($sampling_check->date,0,7);
                 $date = $sampling_check->date;
                 $sampling_check->approval = "Approved";
                 $sampling_check->approved_date = date('Y-m-d');
                 $sampling_check->save();
               }
-              return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('status', 'Approved.')->with('page', 'Sampling Check');
+              return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Sampling Check');
           }
           else{
-            return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$subsection.'/'.$month)->with('error', 'Not Approved.')->with('page', 'Sampling Check');
+            return redirect('/index/sampling_check/print_sampling_email/'.$id.'/'.$month)->with('error', 'Not Approved.')->with('page', 'Sampling Check');
           }
       }
 }

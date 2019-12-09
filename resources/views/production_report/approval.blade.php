@@ -13,7 +13,7 @@
 	</h1>
 	<ol class="breadcrumb">
     {{-- <li></li> --}}
-    	<li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
+    	<li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning" style="color:white">Back</a></li>
   	</ol>
 </section>
 @stop

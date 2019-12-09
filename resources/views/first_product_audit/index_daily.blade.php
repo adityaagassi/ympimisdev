@@ -40,7 +40,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Monthly Evidence {{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
+		Daily Evidence {{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
 		{{-- <small> <span class="text-purple">??</span></small> --}}
 	</h1>
 	<ol class="breadcrumb">
@@ -72,7 +72,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Filter <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/first_product_audit/filter_first_product_detail/'.$id.'/'.$first_product_audit_id)}}">
+						<form role="form" method="post" action="{{url('index/first_product_audit/filter_first_product_daily/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -90,7 +90,7 @@
 								<div class="col-md-10">
 									<div class="form-group pull-right">
 										<a href="{{ url('index/first_product_audit/list_proses/'.$id) }}" class="btn btn-warning">Back</a>
-										<a href="{{ url('index/first_product_audit/details/'.$id.'/'.$first_product_audit_id) }}" class="btn btn-danger">Clear</a>
+										<a href="{{ url('index/first_product_audit/daily/'.$id.'/'.$first_product_audit_id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
 								</div>
@@ -101,7 +101,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit/print_first_product_audit/'.$id.'/'.$first_product_audit_id)}}">
+						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit/print_first_product_audit_daily/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -128,7 +128,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Send Email <span class="text-purple">{{ $proses }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/first_product_audit/sendemail/'.$id.'/'.$first_product_audit_id)}}">
+						<form role="form" method="post" action="{{url('index/first_product_audit/sendemail_daily/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -174,7 +174,7 @@
 												<th>Jenis</th>
 												<th>Date</th>
 												<th>Auditor</th>
-												<th>Foto Aktual</th>
+												<th>Judgement</th>
 												<th>Note</th>
 												<th>PIC</th>
 												<th>Leader</th>
@@ -185,35 +185,41 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($first_product_audit_details as $first_product_audit_details)
+											@foreach($first_product_audit_daily as $first_product_audit_daily)
 											<tr>
-												<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
-												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
-												<td>{{$first_product_audit_details->date}}</td>
-												<td>{{$first_product_audit_details->auditor}}</td>
-												<td><?php echo $first_product_audit_details->foto_aktual ?></td>
-												<td><?php echo $first_product_audit_details->note ?></td>
-												<td>{{$first_product_audit_details->pic}}</td>
-												<td>{{$first_product_audit_details->leader}}</td>
-												<td>{{$first_product_audit_details->foreman}}</td>
+												<td>{{$first_product_audit_daily->first_product_audit->proses}}</td>
+												<td>{{$first_product_audit_daily->first_product_audit->jenis}}</td>
+												<td>{{$first_product_audit_daily->date}}</td>
+												<td>{{$first_product_audit_daily->auditor}}</td>
 												<td>
-													@if($first_product_audit_details->send_status == "")
+													@if($first_product_audit_daily->judgement == "")
+								                		<label class="label label-danger">{{ $first_product_audit_daily->judgement }}</label>
+								                	@else
+								                		<label class="label label-success">{{ $first_product_audit_daily->judgement }}</label>
+								                	@endif
+												</td>
+												<td><?php echo $first_product_audit_daily->note ?></td>
+												<td>{{$first_product_audit_daily->pic}}</td>
+												<td>{{$first_product_audit_daily->leader}}</td>
+												<td>{{$first_product_audit_daily->foreman}}</td>
+												<td>
+													@if($first_product_audit_daily->send_status == "")
 								                		<label class="label label-danger">Not Yet Sent</label>
 								                	@else
 								                		<label class="label label-success">Sent</label>
 								                	@endif
 												</td>
-												<td>@if($first_product_audit_details->approval == "")
+												<td>@if($first_product_audit_daily->approval == "")
 								                		<label class="label label-danger">Not Approved</label>
 								                	@else
 								                		<label class="label label-success">Approved</label>
 								                	@endif</td>
 												<td>
 													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editdetails('{{ url("index/first_product_audit/update_details") }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editdetails('{{ url("index/first_product_audit/update_daily") }}','{{ $id }}','{{ $first_product_audit_daily->id }}');">
 											               <i class="fa fa-edit"></i>
 											            </button>
-									                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy_details") }}','{{ $first_product_audit_details->first_product_audit->proses }} - {{ $first_product_audit_details->date }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+									                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy_daily") }}','{{ $first_product_audit_daily->first_product_audit->proses }} - {{ $first_product_audit_daily->date }}','{{ $id }}','{{ $first_product_audit_daily->id }}');">
 									                      <i class="fa fa-trash"></i>
 									                    </a>
 													</center>
@@ -276,7 +282,7 @@
       </div>
       <div class="modal-body">
       	<div class="box-body">
-        <form role="form" method="post" action="{{url('index/first_product_audit/store_details/'.$id.'/'.$first_product_audit_id)}}" enctype="multipart/form-data">
+        <form role="form" method="post" action="{{url('index/first_product_audit/store_daily/'.$id.'/'.$first_product_audit_id)}}" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<input type="hidden" class="form-control" name="first_product_audit_id" id="inputfirst_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
@@ -303,12 +309,13 @@
 		              </select>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Image (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
-				  <br>
-	              {{-- <input type="file" class="form-control" name="foto_aktual" id="inputfoto_aktual" placeholder="File" onchange="readInput(this)"> --}}
-	              <textarea name="foto_aktual" id="inputfoto_aktual" class="form-control" rows="2" required="required"></textarea>
-	              <br>
-				  <img width="100px" id="blah" src="" style="display: none" alt="your image" />
+	              <label for="">Judgement</label>
+				  <div class="radio">
+				    <label><input type="radio" name="judgement" id="inputjudgement" value="Good">Good</label>
+				  </div>
+				  <div class="radio">
+				    <label><input type="radio" name="judgement" id="inputjudgement" value="Not Good">Not Good</label>
+				  </div>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -379,8 +386,13 @@
 		              </select>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Image (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
-				  <textarea name="editfoto_aktual" id="editfoto_aktual" class="form-control" rows="2" required="required"></textarea>
+	              <label for="">Judgement</label>
+				  <div class="radio">
+				    <label><input type="radio" name="editjudgement" id="editjudgement" value="Good">Good</label>
+				  </div>
+				  <div class="radio">
+				    <label><input type="radio" name="editjudgement" id="editjudgement" value="Not Good">Not Good</label>
+				  </div>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -658,7 +670,7 @@
 	}
 	function editdetails(url, id,first_product_audit_detail_id) {
     	$.ajax({
-                url: "{{ route('first_product_audit.getdetail') }}?id=" + first_product_audit_detail_id,
+                url: "{{ route('first_product_audit.getdaily') }}?id=" + first_product_audit_detail_id,
                 method: 'GET',
                 success: function(data) {
                   var json = data;
@@ -669,7 +681,7 @@
                   $("#editpic").val(data.pic).trigger('change.select2');
                   $("#editnote").html(CKEDITOR.instances.editnote.setData(data.note));
                   $("#editdate").val(data.date);
-                  $("#editfoto_aktual").html(CKEDITOR.instances.editfoto_aktual.setData(data.foto_aktual));
+                  $('input[id="editjudgement"][value="'+data.judgement+'"]').prop('checked',true);
                 }
             });
     	console.log(first_product_audit_detail_id);

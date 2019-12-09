@@ -476,12 +476,17 @@ class DailyCheckController extends Controller
     public function approval(Request $request,$id,$month)
     {
         $approve = $request->get('approve');
-            foreach($approve as $approve){
+        if(count($approve) == 0){
+          return redirect('/index/daily_check_fg/print_daily_check_email/'.$id.'/'.$month)->with('error', 'Checklist the approval.')->with('page', 'Daily Check');
+        }
+        else{
+          foreach($approve as $approve){
                 $dCheck = DailyCheck::find($approve);
                 $dCheck->approval = "Approved";
                 $dCheck->approved_date = date('Y-m-d');
                 $dCheck->save();
               }
-            return redirect('/index/daily_check_fg/print_daily_check_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Daily Check');
+          return redirect('/index/daily_check_fg/print_daily_check_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Daily Check');
+        }
     }
 }

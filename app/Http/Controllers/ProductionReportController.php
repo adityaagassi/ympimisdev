@@ -83,7 +83,7 @@ class ProductionReportController extends Controller
             return redirect('/index/first_product_audit/list_proses/'.$id)->with('page', 'First Product Audit')->with('no', '6');
         }
         elseif($activity_type == "Pemahaman Proses"){
-            return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', '8');
+            return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', '5');
         }
     }
 
@@ -473,7 +473,7 @@ class ProductionReportController extends Controller
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
                                 and leader_dept = '".$leader_name."'
-                                and actlist.department_id = '8'
+                                and actlist.department_id = '".$id."'
                                 and actlist.id = id_activity
                     and actlist.frequency = '".$frequency."'),
             IF(activity_type = 'Training',
@@ -1766,11 +1766,199 @@ class ProductionReportController extends Controller
 
     function approval_list($id,$leader_name)
     {
-        $activity_list = ActivityList::where('department_id',$id)->where('leader_dept',$leader_name)->where('activity_name','!=','Null')->get();
+        $month = date('Y-m');
+        $activity_list = DB::SELECT("SELECT detail.id_activity_list,
+             detail.activity_type,
+             detail.activity_name,
+             detail.jumlah_approval,
+             detail.link
+                from
+                (select activity_type, activity_lists.id as id_activity_list, activity_name,
+                    IF(activity_type = 'Audit',
+                        (SELECT count(*) FROM production_audits
+                        where send_status = 'Sent'
+                        and DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Training',
+                        (SELECT count(*) FROM training_reports
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Sampling Check',
+                        (SELECT count(*) FROM sampling_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pengecekan Foto',
+                        (SELECT count(*) FROM daily_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Laporan Aktivitas',
+                        (SELECT count(*) FROM audit_report_activities
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pemahaman Proses',
+                        (SELECT count(*) FROM audit_processes
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pengecekan',
+                        (SELECT count(*) FROM first_product_audit_details
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Interview',
+                        (SELECT count(*) FROM interviews
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Labelisasi',
+                        (SELECT count(*) FROM labelings
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))
+                as jumlah_approval,
+                IF(activity_type = 'Audit',
+                        (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM production_audits
+                        where send_status = 'Sent'
+                        and DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Training',
+                        (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list)) FROM training_reports
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Sampling Check',
+                        (SELECT DISTINCT(CONCAT('/index/sampling_check/print_sampling_email/',id_activity_list,'/','".$month."')) FROM sampling_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pengecekan Foto',
+                        (SELECT DISTINCT(CONCAT('/index/daily_check_fg/print_daily_check_email/',id_activity_list,'/','".$month."')) FROM daily_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Laporan Aktivitas',
+                        (SELECT DISTINCT(CONCAT('/index/audit_report_activity/print_audit_report_email/',id_activity_list,'/','".$month."')) FROM audit_report_activities
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pemahaman Proses',
+                        (SELECT DISTINCT(CONCAT('/index/audit_process/print_audit_process_email/',id_activity_list,'/','".$month."')) FROM audit_processes
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Pengecekan',
+                        (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM first_product_audit_details
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Interview',
+                        (SELECT DISTINCT(CONCAT('/index/interview/print_email/',id_activity_list)) FROM interviews
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),
+                    IF(activity_type = 'Labelisasi',
+                        (SELECT DISTINCT(CONCAT('/index/labeling/print_labeling_email/',id_activity_list,'/','".$month."')) FROM labelings
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))
+                as link
+                        from activity_lists
+                        where leader_dept = '".$leader_name."'
+                        and department_id = '".$id."'
+                        and activity_name is not null
+                        and deleted_at is null) detail");
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
                       'id' => $id);
         return view('production_report.approval_list', $data
+          )->with('page', 'Approval Leader Task Monitoring');
+    }
+
+    function approval_detail($activity_list_id)
+    {
+        $activityList = ActivityList::find($activity_list_id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $id_departments = $activityList->departments->id;
+        $activity_alias = $activityList->activity_alias;
+        $activity_type = $activityList->activity_type;
+        $leader = $activityList->leader_dept;
+
+        $month = date('Y-m');
+
+        if ($activity_type == 'Audit') {
+            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/production_audit/print_audit_email/',production_audits.activity_list_id,'/','".$month."','/',product,'/',proses)) as link,
+                CONCAT(product,' - ',proses) as title
+                FROM production_audits
+                        join point_check_audits on production_audits.point_check_audit_id = point_check_audits.id
+                        where send_status = 'Sent'
+                        and DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+                        and production_audits.activity_list_id = '".$activity_list_id."'
+                        and approval is null
+                        and production_audits.deleted_at is null");
+        }
+        $data = array('detail' => $detail,
+                      'leader' => $leader,
+                      'activity_name' => $activity_name,
+                      'id_departments' => $id_departments,
+                      'activity_list_id' => $activity_list_id);
+        return view('production_report.approval_detail', $data
           )->with('page', 'Approval Leader Task Monitoring');
     }
 }

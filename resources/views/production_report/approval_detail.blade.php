@@ -38,12 +38,12 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    Approval of {{ $leader_name }}
+    Detail Approval of {{ $activity_name }} - {{ $leader }}
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
     {{-- <li></li> --}}
-    <li><a href="{{ url("index/production_report/approval/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
+    <li><a href="{{ url("index/production_report/approval_list/".$id_departments.'/'.$leader)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
   </ol>
 </section>
 @endsection
@@ -63,27 +63,17 @@ table.table-bordered > tfoot > tr > th{
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th>Activity Name</th>
-                <th>Activity Type</th>
-                <th>Jumlah Approval</th>
+                <th>Product and Process</th>
                 <th>Details</th>                
               </tr>
             </thead>
             <tbody>
-              @foreach($activity_list as $activity_list)
+              @foreach($detail as $detail)
               <tr>
-                <td>{{$activity_list->activity_name}}</td>
-                <td>{{$activity_list->activity_type}}</td>
+                <td>{{$detail->title}}</td>
                 <td>
-                  @if($activity_list->jumlah_approval == 0)
-                    <button class="btn btn-warning" readonly="readonly">{{$activity_list->jumlah_approval}}</button>
-                  @else
-                    <button class="btn btn-success" readonly="readonly">{{$activity_list->jumlah_approval}}</button>
-                  @endif
-                </td>
-                <td>
-                  @if($activity_list->link != null)
-                    <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Details</a>
+                  @if($detail->link != null)
+                    <a class="btn btn-primary btn-sm" href="{{url("$detail->link")}}">Details</a>
                   @else
                     
                   @endif
@@ -93,8 +83,6 @@ table.table-bordered > tfoot > tr > th{
             </tbody>
             <tfoot>
               <tr>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
