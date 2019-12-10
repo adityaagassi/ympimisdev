@@ -141,7 +141,7 @@ table.table-bordered > tfoot > tr > th{
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				      <div class="box">
 				      	<div class="box-header">
-							<h3 class="box-title">Interview Details <span class="text-purple"></span></h3>
+							<h3 class="box-title">Interview Participants <span class="text-purple"></span></h3>
 							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 						        Create
 						    </button>
@@ -287,6 +287,62 @@ table.table-bordered > tfoot > tr > th{
 				                <th></th>
 				                <th></th>
 				                <th></th>
+				                <th></th>
+				                <th></th>
+				              </tr>
+				            </tfoot>
+				          </table>
+				        </div>
+				      </div>
+
+				      <div class="box">
+				      	<div class="box-header">
+							<h3 class="box-title">Interview Pictures <span class="text-purple"></span></h3>
+							<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id)}}" enctype="multipart/form-data">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+								<div class="form-group">
+									<input type="file" class="btn btn-primary" id="" placeholder="Input field" name="file" onchange="readURL(this);" required>
+									<br>
+									<img width="200px" id="blah" src="" style="display: none" alt="your image" />
+								</div>
+								<br>
+								<button type="submit" class="btn btn-primary ">Upload</button>
+							</form>
+						</div>
+				        <div class="box-body">
+				          <table id="example3" class="table table-bordered table-striped table-hover">
+				            <thead style="background-color: rgba(126,86,134,.7);">
+				              <tr>
+				                <th>Pictures</th>
+				                <th>Action</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+				              @foreach($interview_picture as $interview_picture)
+				              <tr>
+				                <td>
+				                	@if($interview_picture->extension == 'jpg' || $interview_picture->extension == 'png')
+				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/interview/'.$interview_picture->picture) }}"></a>
+				                	@else
+				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
+				                	@endif
+				                </td>
+				                <td>
+				                  <center>
+				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal-picture" onclick="editpicture('{{ url("index/interview/editpicture") }}','{{ url('/data_file/interview/') }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
+						               <i class="fa fa-edit"></i>
+						            </button>
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation2('{{ url("index/interview/destroypicture") }}', '{{ $interview_picture->picture }}','{{ $interview_id }}', '{{ $interview_picture->id }}');">
+				                      <i class="fa fa-trash"></i>
+				                    </a>
+				                  </center>
+				                </td>
+				              </tr>
+				              @endforeach
+				            </tbody>
+				            <tfoot>
+				              <tr>
 				                <th></th>
 				                <th></th>
 				              </tr>
@@ -635,6 +691,38 @@ table.table-bordered > tfoot > tr > th{
   </div>
 </div>
 
+<div class="modal fade" id="edit-modal-picture">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Edit Picture</b></h4>
+      </div>
+      <div class="modal-body">
+        <form role="form" method="post" enctype="multipart/form-data" id="formedit" action="#">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Picture</label> 
+              <br>
+              <img width="100px" id="picture" src="" />
+              <input type="file" class="form-control" name="file" placeholder="File" onchange="readEdit(this)">
+              <br>
+			  <img width="100px" id="blah2" src="" style="display: none" alt="your image" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 
@@ -832,9 +920,76 @@ table.table-bordered > tfoot > tr > th{
       $('#example2 tfoot tr').appendTo('#example2 thead');
 
     });
+    jQuery(document).ready(function() {
+      $('#example3 tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+      } );
+      var table = $('#example3').DataTable({
+        "order": [],
+        'dom': 'Bfrtip',
+        'responsive': true,
+        'lengthMenu': [
+        [ 10, 25, 50, -1 ],
+        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
+          },
+          {
+            extend: 'copy',
+            className: 'btn btn-success',
+            text: '<i class="fa fa-copy"></i> Copy',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          {
+            extend: 'excel',
+            className: 'btn btn-info',
+            text: '<i class="fa fa-file-excel-o"></i> Excel',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          {
+            extend: 'print',
+            className: 'btn btn-warning',
+            text: '<i class="fa fa-print"></i> Print',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          ]
+        }
+      });
+
+      table.columns().every( function () {
+        var that = this;
+
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+          if ( that.search() !== this.value ) {
+            that
+            .search( this.value )
+            .draw();
+          }
+        } );
+      } );
+
+      $('#example3 tfoot tr').appendTo('#example3 thead');
+
+    });
     function deleteConfirmation(url, name, detail_id, interview_id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+interview_id+'/'+detail_id);
+    }
+
+    function deleteConfirmation2(url, name, interview_id,picture_id) {
+      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#modalDeleteButton').attr("href", url+'/'+interview_id+'/'+picture_id);
     }
 
     function editinterview(url, detail_id, interview_id) {
@@ -895,8 +1050,6 @@ table.table-bordered > tfoot > tr > th{
 		$.post('{{ url("index/interview/create_participant") }}', data, function(result, status, xhr){
 			if(result.status){
 				$("#create-modal").modal('hide');
-				// $('#example1').DataTable().ajax.reload();
-				// $('#example2').DataTable().ajax.reload();
 				openSuccessGritter('Success','New Participant has been created');
 				window.location.reload();
 			} else {
@@ -984,6 +1137,38 @@ table.table-bordered > tfoot > tr > th{
         console.error(e);
 
       });
+    }
+
+    function readURL(input) {
+	  if (input.files && input.files[0]) {
+	      var reader = new FileReader();
+
+	      reader.onload = function (e) {
+	        $('#blah').show();
+	          $('#blah')
+	              .attr('src', e.target.result);
+	      };
+
+	      reader.readAsDataURL(input.files[0]);
+	  }
+	}
+	function readEdit(input) {
+	  if (input.files && input.files[0]) {
+	      var reader = new FileReader();
+
+	      reader.onload = function (e) {
+	        $('#blah2').show();
+	          $('#blah2')
+	              .attr('src', e.target.result);
+	      };
+
+	      reader.readAsDataURL(input.files[0]);
+	  }
+	}
+	function editpicture(url,urlimage, name, id, picture_id) {
+      $("#picture").attr("src",urlimage+'/'+name);
+      jQuery('#formedit').attr("action", url+'/'+id+'/'+picture_id);
+      // console.log($('#formedit').attr("action"));
     }
     </script>
 @endsection

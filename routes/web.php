@@ -901,6 +901,9 @@ Route::get('fetch/middle/buffing_group_balance', 'MiddleProcessController@fetchB
 Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuffingIcAtokotei');
 Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
+Route::get('fetch/middle/buffing_target', 'MiddleProcessController@fetchTarget');
+
+
 
 //MIZUSUMASHI
 Route::get('index/middle/muzusumashi', 'MiddleProcessController@indexMizusumashi');
@@ -1558,6 +1561,9 @@ Route::get('index/interview/print_email/{interview_id}', 'InterviewController@pr
 Route::get('index/interview/print_approval/{activity_list_id}/{month}', 'InterviewController@print_approval');
 Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
 Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
+Route::post('index/interview/insertpicture/{id}', 'InterviewController@insertpicture');
+Route::get('index/interview/destroypicture/{id}/{picture_id}', 'InterviewController@destroypicture');
+Route::post('index/interview/editpicture/{id}/{picture_id}', 'InterviewController@editpicture');
 
 //DAILY CHECK FG
 Route::get('index/daily_check_fg/product/{id}', 'DailyCheckController@product');

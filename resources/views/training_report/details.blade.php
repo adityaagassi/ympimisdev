@@ -288,10 +288,10 @@ table.table-bordered > tfoot > tr > th{
 				              @foreach($training_picture as $training_picture)
 				              <tr>
 				                <td>
-				                	@if($training_picture->extension != 'jpg')
-				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
-				                	@else
+				                	@if($training_picture->extension == 'jpg' || $training_picture->extension == 'png')
 				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></a>
+				                	@else
+				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
 				                	@endif
 				                </td>
 				                <td>

@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Interview;
 use App\InterviewDetail;
+use App\InterviewPicture;
 use Response;
 use DataTables;
 use Excel;
@@ -288,6 +289,8 @@ class InterviewController extends Controller
             ->get();
         $interview_detail2 = InterviewDetail::where('interview_id',$interview_id)
             ->get();
+        $interview_picture = InterviewPicture::where('interview_id',$interview_id)
+            ->get();
 
         $interview = Interview::find($interview_id);
 
@@ -302,7 +305,8 @@ class InterviewController extends Controller
         $operator2 = DB::select($queryOperator);
 
         $data = array('interview_detail' => $interview_detail,
-        			  'interview_detail2' => $interview_detail2,
+        			        'interview_detail2' => $interview_detail2,
+                      'interview_picture' => $interview_picture,
                       'interview' => $interview,
                       'departments' => $departments,
                       'operator' => $operator,
@@ -622,5 +626,70 @@ class InterviewController extends Controller
             $interview->save();
             return redirect('/index/interview/print_email/'.$interview_id)->with('status', 'Approved.')->with('page', 'Interview');
         }
+    }
+
+    function insertpicture(Request $request, $id)
+    {
+            $id_user = Auth::id();
+            $tujuan_upload = 'data_file/interview';
+            $date = date('Y-m-d');
+
+            $file = $request->file('file');
+            $nama_file = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $file->getClientOriginalName();
+            $file->move($tujuan_upload,$file->getClientOriginalName());
+
+            InterviewPicture::create([
+                'interview_id' => $id,
+                'picture' => $nama_file,
+                'extension' => $extension,
+                'created_by' => $id_user
+            ]);
+        
+
+        return redirect('index/interview/details/'.$id)
+            ->with('page', 'Interview Report')->with('status', 'New Pictrue has been created.');
+    }
+
+    public function destroypicture($id,$picture_id)
+    {
+      $interview = InterviewPicture::find($picture_id);
+      $interview->delete();
+
+      return redirect('/index/interview/details/'.$id)
+        ->with('status', 'Interview Picture has been deleted.')
+        ->with('page', 'Interview');
+        //
+    }
+
+    function editpicture(Request $request, $id,$picture_id)
+    {
+        try{
+            $tujuan_upload = 'data_file/interview';
+            $date = date('Y-m-d');
+
+            $file = $request->file('file');
+            $nama_file = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $file->getClientOriginalName();
+            $file->move($tujuan_upload,$file->getClientOriginalName());
+
+            $interview_picture = InterviewPicture::find($picture_id);
+            $interview_picture->picture = $nama_file;
+            $interview_picture->extension = $extension;
+            $interview_picture->save();
+
+            return redirect('/index/interview/details/'.$id)->with('status', 'Interview Picture data has been updated.')->with('page', 'Interview');
+          }
+          catch (QueryException $e){
+            $error_code = $e->errorInfo[1];
+            if($error_code == 1062){
+              return back()->with('error', 'Interview Picture already exist.')->with('page', 'Interview');
+            }
+            else{
+              return back()->with('error', $e->getMessage())->with('page', 'Interview');
+            }
+          }
     }
 }
