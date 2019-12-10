@@ -9,6 +9,8 @@ thead input {
 }
 thead>tr>th{
   text-align:center;
+  overflow:hidden;
+  padding: 3px;
 }
 tbody>tr>td{
   text-align:center;
@@ -33,6 +35,10 @@ table.table-bordered > tbody > tr > td{
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
+td{
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
 #loading, #error { display: none; }
 </style>
 @endsection
@@ -234,6 +240,8 @@ table.table-bordered > tfoot > tr > th{
   });
 
   jQuery(document).ready(function() {
+    $('body').toggleClass("sidebar-collapse");
+    $("#navbar-collapse").text('');
     $('#bulandari').datepicker({
         format: "yyyy-mm",
         startView: "months", 
@@ -253,6 +261,7 @@ table.table-bordered > tfoot > tr > th{
           }
         }
       });
+
     });
 
  
@@ -370,6 +379,8 @@ table.table-bordered > tfoot > tr > th{
    function deleteConfirmation(id) {
     jQuery('#modalDeleteButton').attr("href", '{{ url("index/qc_report/delete") }}'+'/'+id);
   }
+
+  
 
 </script>
 

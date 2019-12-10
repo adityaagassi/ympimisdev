@@ -34,6 +34,11 @@ table.table-bordered > tbody > tr > td{
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
+.isi{
+    background-color: #f5f5f5;
+    color: black;
+    padding: 10px;
+  }
 #loading, #error { display: none; }
 
 
@@ -97,15 +102,76 @@ table.table-bordered > tfoot > tr > th{
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
-          <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
+          <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-lg" title="Lihat Komplain" target="_blank">CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
+         <a href="{{url('index/qc_car/print_car', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-lg" target="_blank" >CAR Report</a>
+         
          @if($cpars->posisi == "QA")
-         <a class="btn btn-md btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
+         <a class="btn btn-lg btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
          @endif
         </div>
 
+        
+
+
         @foreach($cars as $cars)
+
+        <?php if ($cpars->file != null){ ?>
+          <div class="box box-primary box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">File CPAR Yang Telah Diupload</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <?php $data = json_decode($cpars->file);
+                for ($i = 0; $i < count($data); $i++) { ?>
+                <div class="col-md-4">
+                  <div class="isi">
+                    <?= $data[$i] ?>
+                  </div>
+                </div>
+                <div  class="col-md-2">
+                    <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                </div>
+              <?php } ?>                       
+            </div>
+          </div>    
+        <?php } ?>
+
+        <?php if ($cars->file != null){ ?>
+          <div class="box box-success box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">File CAR Yang Telah Diupload</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <?php $data = json_decode($cars->file);
+                for ($i = 0; $i < count($data); $i++) { ?>
+                <div class="col-md-4">
+                  <div class="isi">
+                    <?= $data[$i] ?>
+                  </div>
+                </div>
+                <div  class="col-md-2">
+                    <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                </div>
+              <?php } ?>                       
+            </div>
+          </div>    
+        <?php } ?>
+
 
         @if($cpars->status_code != 1)
 

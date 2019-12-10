@@ -1488,7 +1488,7 @@ Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@f
 Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
 Route::get('index/training_report/print/{id}', 'TrainingReportController@print_training');
 Route::get('index/training_report/print_training_email/{id}', 'TrainingReportController@print_training_email');
-Route::get('index/training_report/print_training_approval/{id}', 'TrainingReportController@print_training_approval');
+Route::get('index/training_report/print_training_approval/{id}/{month}', 'TrainingReportController@print_training_approval');
 Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
 Route::get('index/training_report/cek_employee/{nik}/{id}','TrainingReportController@cek_employee');
 Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
@@ -1555,7 +1555,7 @@ Route::post('index/interview/edit_participant/{interview_id}/{detail_id}', 'Inte
 Route::get('index/interview/destroy_participant/{interview_id}/{detail_id}', 'InterviewController@destroy_participant');
 Route::get('index/interview/print_interview/{interview_id}', 'InterviewController@print_interview');
 Route::get('index/interview/print_email/{interview_id}', 'InterviewController@print_email');
-Route::get('index/interview/print_approval/{activity_list_id}', 'InterviewController@print_approval');
+Route::get('index/interview/print_approval/{activity_list_id}/{month}', 'InterviewController@print_approval');
 Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
 Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
 
@@ -1642,6 +1642,12 @@ Route::get('index/audit_guidance/destroy/{id}/{audit_guidance_id}', 'AuditGuidan
 Route::post('index/audit_guidance/store/{id}', 'AuditGuidanceController@store');
 Route::get('index/audit_guidance/getdetail','AuditGuidanceController@getdetail')->name('audit_guidance.getdetail');
 Route::post('index/audit_guidance/update/{id}/{audit_guidance_id}', 'AuditGuidanceController@update');
+
+//report leader tasks
+Route::get('index/leader_task_report/index/{id}', 'LeaderTaskReportController@index');
+Route::get('index/leader_task_report/leader_task_list/{id}/{leader_name}', 'LeaderTaskReportController@leader_task_list');
+Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
+Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

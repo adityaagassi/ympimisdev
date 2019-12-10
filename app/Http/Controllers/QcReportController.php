@@ -67,7 +67,8 @@ class QcReportController extends Controller
         ->leftjoin('departments','qc_cpars.department_id','=','departments.id')
         ->leftjoin('employees','qc_cpars.employee_id','=','employees.employee_id')
         ->leftjoin('statuses','qc_cpars.status_code','=','statuses.status_code')
-        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at')
+        ->leftjoin('qc_cars','qc_cpars.cpar_no','=','qc_cars.cpar_no')
+        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
         ->whereNull('qc_cpars.deleted_at');
 
         if(strlen($request->get('bulandari')) > 0){
@@ -112,13 +113,13 @@ class QcReportController extends Controller
 
         ->editColumn('status_name',function($cpar_details){
             if($cpar_details->status_name == "Unverified CPAR") {
-              return '<label class="label label-warning">'.$cpar_details->status_name. '</label>';
+              return '<label class="label label-danger">'.$cpar_details->status_name. '</label>';
             }
             else if($cpar_details->status_name == "QA Verification"){
               return '<label class="label label-primary">'.$cpar_details->status_name. '</label>';
             }
             else if($cpar_details->status_name == "Closed"){
-              return '<label class="label label-danger">'.$cpar_details->status_name. '</label>';
+              return '<label class="label label-success">'.$cpar_details->status_name. '</label>';
             }
             else if($cpar_details->status_name == "Unverified CAR"){
               return '<label class="label label-warning">'.$cpar_details->status_name. '</label>';
@@ -128,6 +129,7 @@ class QcReportController extends Controller
 
         ->addColumn('action', function($cpar_details){
           $idcpar = $cpar_details->id;
+          $idcar = $cpar_details->id_car;
           $no_cpar = $cpar_details->cpar_no;
           
           // if($cpar_details->email_status != "Sent") {
@@ -135,8 +137,25 @@ class QcReportController extends Controller
           //         <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>
           //         <a href="qc_report/sendemail/'.$idcpar.'" class="btn btn-warning btn-xs">Send Email</a>';
           // }
-          return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
-                  <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>';        
+
+          if($cpar_details->status_name == "Unverified CAR"){
+            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>
+                    <a href="qc_car/detail/'.$idcar.'" class="btn btn-warning btn-xs">Detail CAR</a>
+                    ';
+          }
+
+          else if($cpar_details->status_name == "QA Verification" || $cpar_details->status_name == "Closed"){
+            return '<a href="qc_report/print_cpar/'.$idcpar.'" class="btn btn-success btn-xs">Report CPAR</a>
+                    <a href="qc_car/print_car/'.$idcar.'" class="btn btn-success btn-xs">Report CAR</a><br>
+                    ';
+          }
+
+          else{
+            return '<a href="qc_report/update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail</a>
+                  <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('.$idcpar.');">Delete</a>';
+          }
+
         })
 
         ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif'])
@@ -813,7 +832,7 @@ class QcReportController extends Controller
       $kategori = $request->get("kategori");
       $departemen = $request->get("departemen");
 
-      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, pic.name as picname, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id left join employees as pic on qc_cars.pic = pic.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, pic.name as picname, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car,destinations.destination_shortname FROM qc_cpars join departments on departments.id = qc_cpars.department_id left join destinations on qc_cpars.destination_code = destinations.destination_code join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id left join employees as pic on qc_cars.pic = pic.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
 
       $detail = db::select($query);
 
@@ -1132,6 +1151,15 @@ class QcReportController extends Controller
 
           })
 
+        ->editColumn('sumber_komplain',function($detail){
+          if($detail->sumber_komplain == "Eksternal Complaint") {
+            return $detail->destination_shortname;
+          }
+          else{
+            return $detail->sumber_komplain;
+          }
+        })
+
         ->addColumn('action', function($detail){
           $idcpar = $detail->id;
           $idcar = $detail->id_car;
@@ -1146,7 +1174,7 @@ class QcReportController extends Controller
                     <a href="print_cpar/'.$idcpar.'" class="btn btn-success btn-xs" target="_blank">Report CPAR</a>
                     <a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
                     <a href="../qc_car/print_car/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
-          } 
+          }
 
           else if ($detail->status_name == "QA Verification"){
             return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
@@ -1161,7 +1189,7 @@ class QcReportController extends Controller
 
         })
 
-        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif'])
+        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif','sumber_komplain' => 'sumber_komplain'])
         ->make(true);
     }
 
@@ -1569,7 +1597,7 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "chief";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
-                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                  Mail::to($mailtoo)->bcc('rioirvansyah6@gmail.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
                 }
                 else{
@@ -1590,7 +1618,7 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "foreman";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
-                  Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                  Mail::to($mailtoo)->bcc('rioirvansyah6@gmail.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CPAR');
                 }
                 else{
@@ -1775,7 +1803,64 @@ class QcReportController extends Controller
           }          
       }
 
+       public function unchecked(Request $request,$id)
+      {
+          $alasan = $request->get('alasan');
 
+          $cpars = QcCpar::find($id);
+          
+          $cpars->alasan = $alasan;
+
+          if ($cpars->posisi == "chief") {
+            $cpars->checked_chief = null;              
+          }
+          else if ($cpars->posisi == "foreman") {
+            $cpars->checked_foreman = null;              
+          }
+          else if ($cpars->posisi == "manager") {
+            $cpars->checked_chief = null;              
+            $cpars->checked_foreman = null;
+          }
+          else if ($cpars->posisi == "dgm") {
+            $cpars->checked_manager = null;
+            $cpars->checked_chief = null;              
+            $cpars->checked_foreman = null;              
+          }
+          else if ($cpars->posisi == "gm") {
+            $cpars->approved_dgm = null;
+            $cpars->checked_manager = null;
+            $cpars->checked_chief = null;              
+            $cpars->checked_foreman = null; 
+          }
+
+          if ($cpars->staff != null) {
+            $to = "staff";
+            $cpars->posisi = "staff";
+            $cpars->email_status = "SentStaff";
+          }
+          else if ($cpars->leader != null) {
+            $to = "leader";
+            $cpars->posisi = "leader";
+            $cpars->email_status = "SentLeader";
+          }
+
+
+          $cpars->save();
+
+
+          $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan from qc_cpars where qc_cpars.id='".$id."'";
+          $querycpar = db::select($query);
+
+          $mailto = "select distinct email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mails = DB::select($mailto);
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
+          return redirect('/index/qc_report/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');
+      }
 
       //Verifikasi CAR Oleh QA
       public function verifikasiqa($id)

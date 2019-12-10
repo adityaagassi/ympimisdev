@@ -81,7 +81,7 @@
   @if (session('error'))
   <div class="alert alert-danger alert-dismissible">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
+    <h4><i class="icon fa fa-ban"></i> Not Verified!</h4>
     {{ session('error') }}
   </div>   
   @endif
@@ -169,7 +169,7 @@
               <input type="hidden" value="{{csrf_token()}}" name="_token" />  
                 
                 <tr>
-                  <td colspan="2">Manager</td>
+                  <td colspan="2">Manager yang Dituju</td>
                   <td colspan="2">{{ $cpars->name }}</td>
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
@@ -182,8 +182,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -195,8 +197,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -208,8 +212,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -221,8 +227,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -234,14 +242,16 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Category</td>
+                  <td colspan="2">Kategori Komplain</td>
                   <td colspan="2">{{ $cpars->kategori }}</td>
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
@@ -254,8 +264,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -267,8 +279,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -280,8 +294,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -293,8 +309,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -306,14 +324,16 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Location</td>
+                  <td colspan="2">Lokasi</td>
                   <td colspan="2">{{ $cpars->lokasi }}</td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
@@ -325,8 +345,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -338,8 +360,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -351,8 +375,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -364,8 +390,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -377,14 +405,16 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Request Date</td>
+                  <td colspan="2">CPAR Issue Date</td>
                   <td colspan="2"><?php echo date('d F Y', strtotime($cpars->tgl_permintaan)); ?></td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
@@ -396,8 +426,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -409,8 +441,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -422,8 +456,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -435,8 +471,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -448,14 +486,16 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Request Due Date</td>
+                  <td colspan="2">Request Due Date (CAR)</td>
                   <td colspan="2"><?php echo date('d F Y', strtotime($cpars->tgl_balas)); ?></td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
@@ -467,8 +507,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -480,8 +522,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -493,8 +537,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -506,8 +552,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -519,14 +567,16 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Department</td>
+                  <td colspan="2">Departemen</td>
                   <td colspan="2">{{ $cpars->department_name }}</td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
@@ -538,8 +588,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -551,8 +603,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -564,8 +618,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -577,8 +633,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -590,8 +648,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -609,8 +669,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -622,8 +684,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -635,8 +699,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -648,8 +714,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -661,8 +729,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -682,8 +752,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -695,8 +767,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -708,8 +782,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -721,8 +797,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -734,8 +812,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -753,8 +833,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -766,8 +848,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -779,8 +863,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -792,8 +878,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -805,8 +893,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -824,8 +914,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -837,8 +929,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -850,8 +944,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -863,8 +959,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -876,8 +974,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -895,8 +995,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -908,8 +1010,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -921,8 +1025,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -934,8 +1040,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -947,8 +1055,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -966,8 +1076,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -979,8 +1091,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -992,8 +1106,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1005,8 +1121,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -1018,8 +1136,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -1037,8 +1157,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
@@ -1050,8 +1172,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Manager</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif  
 
                       @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
@@ -1063,8 +1187,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke DGM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
@@ -1076,8 +1202,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke GM</span>
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
@@ -1089,8 +1217,10 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirm Ke Bagian Terkait</span>
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
                         @endif
                       @endif
                   </td>
@@ -1147,11 +1277,53 @@
           <!-- <div class="btn-group">
             <a class="btn btn-danger" href="{{ url('index/qc_report/update',$cpars->id) }}">Cancel</a>
           </div> -->
-          <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          
+
+          @if(($cpars->posisi == "chief" && $cpars->checked_chief == null) || ($cpars->posisi == "foreman" && $cpars->checked_foreman == null))
+          <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CPAR</a>
+          
+          @elseif($cpars->posisi == "manager" && $cpars->checked_manager == null)
+          <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CPAR</a>
+
+          @elseif($cpars->posisi == "dgm" && $cpars->approved_dgm == null)
+          <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CPAR</a>
+
+          @elseif($cpars->posisi == "gm" && $cpars->approved_gm == null)
+          <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CPAR</a>          
+
+          @endif
         </div>
         @endif
       </div>
     </form>
+  </div>
+
+  <div class="modal modal-danger fade" id="notapproved{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" method="post" action="{{url('index/qc_report/unchecked/'.$cpars->id)}}">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <h4>Berikan alasan tidak menyetujui CPAR ini</h4>
+                <textarea class="form-control" required="" name="alasan"></textarea> 
+            </div>    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-outline">Not Approved</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <div class="modal fade" id="statusmodal{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -1164,7 +1336,6 @@
         <div class="modal-body">
           <div class="box-body">
             <table class="table table-hover">
-            <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
               <tbody>
                 <input type="hidden" value="{{csrf_token()}}" name="_token" />  
                   <tr style="background-color: #4caf50;color: white">
@@ -1264,7 +1435,7 @@
                       </td>
                   </tr>
               </tbody>
-          </table>
+            </table>
           </div>    
         </div>
         <div class="modal-footer">

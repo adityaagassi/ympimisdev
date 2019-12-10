@@ -96,18 +96,27 @@
 	var toilet = [];
 	var totalSeconds = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+	var audio_error = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 
 	function setTime() {
+		var alarm = false;
 		for (var i = 0; i < toilet.length; i++) {	
 			if(toilet[i]){
 				totalSeconds[i]++;
 				document.getElementById("seconds"+i).innerHTML = pad(totalSeconds[i] % 60);
 				document.getElementById("minutes"+i).innerHTML = pad(parseInt(totalSeconds[i] / 60));
+				if(parseInt(totalSeconds[i] / 60) >= 15){
+					alarm = true;
+				}
 			}else{
 				document.getElementById("seconds"+i).innerHTML = '--';
 				document.getElementById("minutes"+i).innerHTML = '--';
 			}
 		}
+		if(alarm){
+			audio_error.play();
+		}
+
 	}
 
 

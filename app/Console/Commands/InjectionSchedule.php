@@ -46,7 +46,9 @@ class InjectionSchedule extends Command
     public function handle()
     {
 
-      if(date('D')=='Fri' ){
+      if(date('D')=='Thu' ){
+        $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+      }else if(date('D')=='Fri' ){
         $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
       }else if(date('D')=='Sat' ){
         $day2 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
@@ -108,7 +110,7 @@ class InjectionSchedule extends Command
           'gmc' => $gmc,
           'part' => $part, 
           'stock_akhir' =>  $akhir, 
-          'created_by' => '1',
+          'created_by' => '123',
         ]);
         $StockPartInjection->save();
 
@@ -118,7 +120,7 @@ class InjectionSchedule extends Command
           'total' =>  $akhir,
           'created_at' => $yesterday.' 08:08:08',
           'status' => 'IN',
-          'created_by' => '1',
+          'created_by' => '123',
         ]);
         $TransactionPartInjection->save();
       }

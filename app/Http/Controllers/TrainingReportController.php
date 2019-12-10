@@ -579,9 +579,16 @@ class TrainingReportController extends Controller
         }
     }
 
-    function print_training_approval($activity_list_id)
+    function print_training_approval($activity_list_id,$bulan)
     {
-        $training = TrainingReport::where('activity_list_id',$activity_list_id)->get();
+        $year = substr($bulan,0,4);
+        $month = substr($bulan,-2);
+        $training = TrainingReport::where('activity_list_id',$activity_list_id)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->where('send_status','Sent')
+                ->where('approval',null)
+                ->get();
         foreach($training as $training){
             $id = $training->id;
         }

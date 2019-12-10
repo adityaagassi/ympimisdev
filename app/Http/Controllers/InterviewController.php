@@ -517,9 +517,16 @@ class InterviewController extends Controller
         }
     }
 
-    function print_approval($activity_list_id)
+    function print_approval($activity_list_id,$bulan)
     {
-        $interview = Interview::where('activity_list_id',$activity_list_id)->get();
+        $year = substr($bulan,0,4);
+        $month = substr($bulan,-2);
+        $interview = Interview::where('activity_list_id',$activity_list_id)
+            ->whereYear('date', '=', $year)
+            ->whereMonth('date', '=', $month)
+            ->where('send_status','Sent')
+            ->where('approval',null)
+            ->get();
         foreach($interview as $interview){
             $interview_id = $interview->id;
         }

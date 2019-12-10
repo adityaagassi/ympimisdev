@@ -1853,7 +1853,7 @@ class ProductionReportController extends Controller
                         and approval is null
                         and deleted_at is null),
                     IF(activity_type = 'Training',
-                        (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list)) FROM training_reports
+                        (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list,'/','".$month."')) FROM training_reports
                         where send_status = 'Sent'
                         and leader = '".$leader_name."'
                         and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
@@ -1901,7 +1901,7 @@ class ProductionReportController extends Controller
                         and approval is null
                         and deleted_at is null),
                     IF(activity_type = 'Interview',
-                        (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list)) FROM interviews
+                        (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list,'/','".$month."')) FROM interviews
                         where send_status = 'Sent'
                         and leader = '".$leader_name."'
                         and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
@@ -1922,8 +1922,10 @@ class ProductionReportController extends Controller
                         and department_id = '".$id."'
                         and activity_name is not null
                         and deleted_at is null) detail");
+        $monthTitle = date("F Y", strtotime($month));
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
+                      'monthTitle' => $monthTitle,
                       'id' => $id);
         return view('production_report.approval_list', $data
           )->with('page', 'Approval Leader Task Monitoring');
