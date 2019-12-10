@@ -12,7 +12,7 @@ class TrainingPicture extends Model
     protected $table = 'training_pictures';
 
 	protected $fillable = [
-        'training_id', 'picture','created_by'
+        'training_id', 'picture','extension','created_by'
     ];
     
     public function training_reports()

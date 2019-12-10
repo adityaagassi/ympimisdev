@@ -287,7 +287,13 @@ table.table-bordered > tfoot > tr > th{
 				            <tbody>
 				              @foreach($training_picture as $training_picture)
 				              <tr>
-				                <td><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></td>
+				                <td>
+				                	@if($training_picture->extension != 'jpg')
+				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
+				                	@else
+				                	<a target="_blank" href="{{ url('/data_file/training/'.$training_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/training/'.$training_picture->picture) }}"></a>
+				                	@endif
+				                </td>
 				                <td>
 				                  <center>
 				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editpicture('{{ url("index/training_report/editpicture") }}','{{ url('/data_file/training/') }}', '{{ $training_picture->picture }}','{{ $id }}', '{{ $training_picture->id }}');">

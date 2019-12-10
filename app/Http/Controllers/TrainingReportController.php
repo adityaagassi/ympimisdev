@@ -362,12 +362,14 @@ class TrainingReportController extends Controller
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
             $file->move($tujuan_upload,$file->getClientOriginalName());
 
             TrainingPicture::create([
                 'training_id' => $id,
                 'picture' => $nama_file,
+                'extension' => $extension,
                 'created_by' => $id_user
             ]);
         
@@ -421,11 +423,13 @@ class TrainingReportController extends Controller
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
             $file->move($tujuan_upload,$file->getClientOriginalName());
 
             $training_picture = TrainingPicture::find($picture_id);
             $training_picture->picture = $nama_file;
+            $training_picture->extension = $extension;
             $training_picture->save();
 
             return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
