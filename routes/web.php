@@ -468,6 +468,11 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/buffing_canceled', 'MiddleProcessController@indexBuffingCanceled');
 	Route::get('fetch/middle/buffing_canceled', 'MiddleProcessController@fetchBuffingCanceled');
 	Route::post('delete/middle/buffing_canceled', 'MiddleProcessController@deleteBuffingCanceled');
+
+	Route::get('index/middle/buffing_target/{loc}', 'MiddleProcessController@indexBuffingTarget');
+	Route::get('fetch/middle/buffing_target/{loc}', 'MiddleProcessController@fetchBuffingTarget');
+
+
 	
 });
 
@@ -929,6 +934,7 @@ Route::get('fetch/cost', 'EmployeeController@fetchCost');
 Route::get('index/kaizen2/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
+Route::get('fetch/kaizen/resume', 'EmployeeController@fetchKaizenResume');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
 
 //Clinic
@@ -1549,6 +1555,7 @@ Route::post('index/interview/edit_participant/{interview_id}/{detail_id}', 'Inte
 Route::get('index/interview/destroy_participant/{interview_id}/{detail_id}', 'InterviewController@destroy_participant');
 Route::get('index/interview/print_interview/{interview_id}', 'InterviewController@print_interview');
 Route::get('index/interview/print_email/{interview_id}', 'InterviewController@print_email');
+Route::get('index/interview/print_approval/{activity_list_id}', 'InterviewController@print_approval');
 Route::post('index/interview/approval/{interview_id}', 'InterviewController@approval');
 Route::get('index/interview/sendemail/{interview_id}', 'InterviewController@sendemail');
 
@@ -1669,6 +1676,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/statuscpar/{id}', 'QcReportController@statuscpar');
 	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
 	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
+	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
 
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');

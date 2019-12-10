@@ -1901,7 +1901,7 @@ class ProductionReportController extends Controller
                         and approval is null
                         and deleted_at is null),
                     IF(activity_type = 'Interview',
-                        (SELECT DISTINCT(CONCAT('/index/interview/print_email/',id_activity_list)) FROM interviews
+                        (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list)) FROM interviews
                         where send_status = 'Sent'
                         and leader = '".$leader_name."'
                         and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'

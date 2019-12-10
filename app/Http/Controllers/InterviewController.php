@@ -517,6 +517,39 @@ class InterviewController extends Controller
         }
     }
 
+    function print_approval($activity_list_id)
+    {
+        $interview = Interview::where('activity_list_id',$activity_list_id)->get();
+        foreach($interview as $interview){
+            $interview_id = $interview->id;
+        }
+
+        $activityList = ActivityList::find($activity_list_id);
+        $activity_name = $activityList->activity_name;
+        $departments = $activityList->departments->department_name;
+        $activity_alias = $activityList->activity_alias;
+        $id_departments = $activityList->departments->id;
+
+        $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
+        $interviewDetail = DB::select($interviewDetailQuery);
+
+        if($interview == null){
+            return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
+        }else{
+            $data = array(
+                          'interview' => $interview,
+                          'interviewDetail' => $interviewDetail,
+                          'activityList' => $activityList,
+                          'departments' => $departments,
+                          'activity_name' => $activity_name,
+                          'activity_alias' => $activity_alias,
+                          'interview_id' => $interview_id,
+                          'id_departments' => $id_departments);
+            return view('interview.print_email', $data
+                )->with('page', 'Interview');
+        }
+    }
+
     public function sendemail($interview_id)
       {
           $query_interview = "select *,interviews.id as interview_id from interviews join activity_lists on activity_lists.id = interviews.activity_list_id join departments on activity_lists.department_id = departments.id where interviews.id = '".$interview_id."' and interviews.deleted_at is null";
