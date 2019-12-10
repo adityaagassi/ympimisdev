@@ -360,7 +360,7 @@ table.table-bordered > tfoot > tr > th{
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
 									@if($training_participant->participant_absence == Null)
 									    {{-- <input type="checkbox" id="checklist_participant" name="approve[]" value="{{ $training_participant->id }}"> --}}
-									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->id }}">
+									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->participant_id }}">
 									@endif
 								</td>
 								@endif
@@ -515,7 +515,7 @@ table.table-bordered > tfoot > tr > th{
     	var conf = confirm('Are you sure you want to attend?');
     	if(conf){
     		window.location.href = url+'/'+value+'/{{ $id }}';
-    		// console.log(url+'/'+value);
+    		// console.log(url+'/'+value+'/{{ $id }}');
     	}else{
 
     	}
