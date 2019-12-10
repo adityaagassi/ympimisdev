@@ -9,6 +9,23 @@
 		cursor: pointer;
 		background-color: #7dfa8c;
 	}
+
+	#tableBodyResume > tr:hover {
+		cursor: pointer;
+		background-color: #7dfa8c;
+	}
+
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		/* display: none; <- Crashes Chrome on hover */
+		-webkit-appearance: none;
+		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+	}
+
+	input[type=number] {
+		-moz-appearance:textfield; /* Firefox */
+	}
+	
 	#loading { display: none; }
 </style>
 @stop
@@ -81,7 +98,8 @@
 									<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-minus" onclick="minusCount()"></span></button>
 								</div>
 								<!-- /btn-group -->
-								<input id="addCount" style="font-size: 50px; height: 60px; text-align: center;" type="text" class="form-control" value="0">
+								<input id="addCount" style="font-size: 50px; height: 60px; text-align: center;" type="number" class="form-control" value="0">
+
 								<div class="input-group-btn">
 									<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-plus" onclick="plusCount()"></span></button>
 								</div>
@@ -170,6 +188,8 @@
 					$("#loading").hide();
 				}
 			});
+		}else{
+			$("#loading").hide();
 		}
 	}
 
@@ -183,7 +203,7 @@
 			var tableData = "";
 			var count = 1;
 			$.each(result.lists, function(key, value) {
-				tableData += '<tr>';
+				tableData += '<tr onclick="fetchCount(\''+value.id+'\')">';
 				tableData += '<td>'+ count +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
