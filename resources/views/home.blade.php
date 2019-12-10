@@ -213,8 +213,8 @@
                         <td>
                             <span style="font-weight: bold;">Internet of Things (モノのインターネット)</span>
                             <br>
-                            <a href="{{ url("index/beacon") }}">
-                                <i class="fa fa-caret-right"></i> Cubeacon IoT
+                            <a href="{{ url("index/reedplate/map") }}">
+                                <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate
                             </a>
                             <br>
                             <a href="{{ url("index/index_map") }}">
@@ -273,7 +273,7 @@
                                 <i class="fa fa-caret-right"></i> List Verified e-Kaizen
                             </a>
                             <br>
-                            <a href="#">
+                            <a href="{{ url("/index/kaizen2/resume") }}">
                                 <i class="fa fa-caret-right"></i> Report All Kaizen
                             </a>
                             <br>
