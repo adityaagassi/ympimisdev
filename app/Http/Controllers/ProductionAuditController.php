@@ -516,6 +516,7 @@ class ProductionAuditController extends Controller
                           'product' => $product,
                           'approved_date' => $approved_date,
                           'foreman' => $foreman,
+                          'role_code' => Auth::user()->role_code,
                           'monthTitle' => $monthTitle,
                           'jml_null' => $jml_null,
                           'date_audit' => $date_audit,

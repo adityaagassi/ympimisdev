@@ -73,7 +73,7 @@
 						@endif<br><br>
 						{{ $interview->leader }}<br>Leader</center>
 					</td>
-					@if($interview->approval == Null)
+					@if($interview->approval == Null && $role_code != 'M')
 						<td rowspan="6" id="approval1" style="border: 1px solid black;vertical-align: middle;"><center>Approval</center></td>
 					@endif
 				</tr>
@@ -203,7 +203,7 @@
 							<center><label class="label label-danger">-</label></center>
 						@endif
 					</td>
-					@if($interview->approval == Null)
+					@if($interview->approval == Null && $role_code != 'M')
 						<td id="approval2" style="border: 1px solid black;">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]">
@@ -218,7 +218,7 @@
 					<td style="vertical-align: middle;"><center><label class="label label-success">OK</label></center></td>
 					<td style="vertical-align: middle;"><center><label class="label label-warning">OK (Kurang Lancar)</label></center></td>
 					<td style="vertical-align: middle;"><center><label class="label label-danger">Not OK</label></center></td>
-					@if($interview->approval == Null)
+					@if($interview->approval == Null && $role_code != 'M')
 					<td align="right" colspan="8"><button class="btn btn-success" type="submit">Submit</button></td>
 					@endif
 				</tr>

@@ -80,7 +80,7 @@
 						<br><br>
 						{{ $leader }}<br>Leader</center>
 					</td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="8" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval</center></td>
 					@endif
 				</tr>
@@ -127,7 +127,7 @@
 				</tr>
 				<tr>
 					<td colspan="11" class="head" style="vertical-align: middle"><center>Picture<br><?php echo $first_product_audit->foto_aktual ?></center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($first_product_audit->approval == Null)
@@ -137,7 +137,7 @@
 					@endif
 				</tr>
 				@endforeach
-				@if($jml_null > 0)
+				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
 					<td style="border: 1px solid black;" align="right" colspan="12"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>

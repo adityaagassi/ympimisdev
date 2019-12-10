@@ -391,6 +391,7 @@ class DailyCheckController extends Controller
                           'daily_check' => $daily_check,
                           'activityList' => $activityList,
                           'departments' => $departments,
+                          'role_code' => Auth::user()->role_code,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'id' => $id,

@@ -52,7 +52,7 @@
 				<tr>
 					<td colspan="2" class="head">Department</td>
 					<td colspan="2" class="head">{{ $departments }}</td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td class="head" rowspan="5" id="approval1" style="vertical-align: middle"><center>Approval</center></td>
 					@endif
 					<td class="head" rowspan="4" colspan="4" style="padding: 15px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
@@ -97,7 +97,7 @@
 					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->product }}</center></td>
 					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->no_seri_part }}</center></td>
 					<td class="head" style="vertical-align: middle" rowspan="{{ $jumlah_point_check + 1 }}"><center>{{ $samplingCheck->jumlah_cek }}</center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" class="head" rowspan="{{ $jumlah_point_check + 1 }}" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($samplingCheck->approval == Null)
@@ -116,7 +116,7 @@
 					@endforeach
 				</tr>
 				@endforeach
-				@if($jml_null > 0)
+				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
 					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>

@@ -72,7 +72,7 @@
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif<br>
 						{{ $leader }}<br>Leader</center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="4" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval<br><label class="label label-success"><input type="checkbox" onclick="checkAll(this.checked)">Check All</label></center></td>
 					@endif
 				</tr>
@@ -102,7 +102,7 @@
 					<td style="border: 1px solid black;"><center>{{ $daily_check->serial_number }}</center></td>
 					<td style="border: 1px solid black;"><center>{{ $daily_check->condition }}</center></td>
 					<td style="border: 1px solid black;"><center>{{ $daily_check->keterangan }}</center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($daily_check->approval == Null)
@@ -113,7 +113,7 @@
 				</tr>
 				<?php $no++ ?>
 				@endforeach
-				@if($jml_null > 0)
+				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
 					<td style="border: 1px solid black;" align="right" colspan="7"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>

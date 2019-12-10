@@ -66,7 +66,7 @@
 						<br><br>
 						{{ $foreman }}<br>Foreman</center>
 					</td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="7" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval<br><label class="label label-success"><input type="checkbox" onclick="checkAll(this.checked)">Check All</label></center></td>
 					@endif
 				</tr>
@@ -115,7 +115,7 @@
 					<td style="vertical-align: middle" class="head"><center><?php echo $audit_process->pemahaman ?></center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->kondisi_pemahaman }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->keterangan }}</center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($audit_process->approval == Null)
@@ -126,7 +126,7 @@
 				</tr>
 				<?php $no++ ?>
 				@endforeach
-				@if($jml_null > 0)
+				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
 					<td style="border: 1px solid black;" align="right" colspan="11"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>

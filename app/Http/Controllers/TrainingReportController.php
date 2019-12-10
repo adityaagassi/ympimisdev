@@ -570,6 +570,7 @@ class TrainingReportController extends Controller
                           'trainingParticipant' => $trainingParticipant,
                           'activityList' => $activityList,
                           'departments' => $departments,
+                          'role_code' => Auth::user()->role_code,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'id' => $id,
@@ -614,6 +615,7 @@ class TrainingReportController extends Controller
                           'activityList' => $activityList,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
+                          'role_code' => Auth::user()->role_code,
                           'activity_alias' => $activity_alias,
                           'id' => $id,
                           'id_departments' => $id_departments);

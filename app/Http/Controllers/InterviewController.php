@@ -508,6 +508,7 @@ class InterviewController extends Controller
                           'interviewDetail' => $interviewDetail,
                           'activityList' => $activityList,
                           'departments' => $departments,
+                          'role_code' => Auth::user()->role_code,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,
@@ -530,6 +531,7 @@ class InterviewController extends Controller
         foreach($interview as $interview){
             $interview_id = $interview->id;
         }
+        $role_code = Auth::user()->role_code;
 
         $activityList = ActivityList::find($activity_list_id);
         $activity_name = $activityList->activity_name;
@@ -548,6 +550,7 @@ class InterviewController extends Controller
                           'interviewDetail' => $interviewDetail,
                           'activityList' => $activityList,
                           'departments' => $departments,
+                          'role_code' => $role_code,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,

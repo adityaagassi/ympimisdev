@@ -280,7 +280,6 @@ class AuditProcessController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-
         if($request->get('month') != null){
             $month = $request->get('month');
             $queryaudit_process = "select *, audit_processes.id as id_audit_process
@@ -385,6 +384,7 @@ class AuditProcessController extends Controller
                           'foreman' => $foreman,
                           'section' => $section,
                           'product' => $product,
+                          'role_code' => Auth::user()->role_code,
                           'periode' => $periode,
                           'date' => $date,
                           'jml_null' => $jml_null,

@@ -68,7 +68,7 @@
 							<br>{{ $foreman }}
 							<br>Foreman</center>
 						</td>
-						@if($jml_null > 0)
+						@if($jml_null > 0 && $role_code != 'M')
 						<td rowspan="5" id="approval1"><center>Approval</center></td>
 						@endif
 					</tr>
@@ -108,7 +108,7 @@
 			        	</td>
 						<td>{{ $production_audit->pic_name }}</td>
 						<td>{{ $production_audit->auditor_name }}</td>
-						@if($jml_null > 0)
+						@if($jml_null > 0 && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							@if($production_audit->approval == Null)
@@ -119,7 +119,7 @@
 						@endif
 					</tr>
 					@endforeach
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<tr id="approval3">
 						<td align="right" colspan="8"><button class="btn btn-success" type="submit">Submit</button></td>
 					</tr>

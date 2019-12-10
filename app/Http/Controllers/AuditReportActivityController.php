@@ -544,6 +544,7 @@ class AuditReportActivityController extends Controller
                           'leader' => $leader,
                           'foreman' => $foreman,
                           'section' => $section,
+                          'role_code' => Auth::user()->role_code,
                           'approval_leader' => $approval_leader,
                           'approved_date_leader' => $approved_date_leader,
                           'monthTitle' => $monthTitle,

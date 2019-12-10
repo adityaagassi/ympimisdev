@@ -654,6 +654,7 @@ class SamplingCheckController extends Controller
                           'subsection' => $subsection,
                           'month' => $month,
                           'leader' => $leader,
+                          'role_code' => Auth::user()->role_code,
                           'foreman' => $foreman,
                           'section' => $section,
                           'jml_null' => $jml_null,

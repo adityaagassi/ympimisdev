@@ -72,7 +72,7 @@
 							<b style='color:green'>{{ $training->approved_date_leader }}</b>
 						@endif<br><br>
 						{{ $training->leader }}<br>Leader</center></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 					<td rowspan="5" id="approval1" style="border: 1px solid black;vertical-align: middle;"><center>Approval</center></td>
 					@endif
 				</tr>
@@ -98,7 +98,7 @@
 					<td style="border-top: 1px solid black;text-align: right;padding-top:50px">:</td>
 					<td style="border-top: 1px solid black;padding-top:50px">{{ $training->date }}</td>
 					<td id="approval2" style="border-top: 1px solid black"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2" style="border-top: 1px solid black;padding-top:50px">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="1">
@@ -114,7 +114,7 @@
 					$min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
 				{{$min.' Menit'}}</td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="2">
@@ -127,7 +127,7 @@
 					<td width="15%" style=" text-align: right">:</td>
 					<td width="50%" style="">{{ $training->trainer }}</td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="3">
@@ -140,7 +140,7 @@
 					<td width="15%" style=" text-align: right">:</td>
 					<td width="50%" style="">{{ $training->theme }}</td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="4">
@@ -153,7 +153,7 @@
 					<td width="15%" style=" text-align: right">:</td>
 					<td width="50%" style="">{{ $training->tujuan }}</td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="5">
@@ -166,7 +166,7 @@
 					<td width="15%" style=" text-align: right">:</td>
 					<td width="50%" style="">{{ $training->standard }}</td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="6">
@@ -179,7 +179,7 @@
 					<td width="15%" style=" text-align: right">:</td>
 					<td width="50%" style=""><?php echo $training->isi_training ?></td>
 					<td id="approval2"></td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="7">
@@ -194,7 +194,7 @@
 					<td class="bodytraining" colspan="4">
 						Peserta Training : 
 					</td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="8">
@@ -232,7 +232,7 @@
 					<td class="bodytraining" colspan="4">
 						<?php echo  $training->notes ?> 
 					</td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="9">
@@ -247,7 +247,7 @@
 					<td class="bodytraining" colspan="4">
 						Picture : 
 					</td>
-					@if($training->approval == Null)
+					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="10">
@@ -255,7 +255,7 @@
 						</td>
 					@endif
 				</tr>
-				@if($training->approval == Null)
+				@if($training->approval == Null && $role_code != 'M')
 				<tr id="approval3">
 					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>

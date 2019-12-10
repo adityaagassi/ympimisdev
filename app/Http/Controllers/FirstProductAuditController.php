@@ -575,6 +575,7 @@ class FirstProductAuditController extends Controller
                           'monthTitle' => $monthTitle,
                           'subsection' => $subsection,
                           'date' => $date,
+                          'role_code' => Auth::user()->role_code,
                           'month' => $month,
                           'proses' => $proses,
                           'jenis' => $jenis,

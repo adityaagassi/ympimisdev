@@ -67,7 +67,7 @@
 						@endif
 						<br><br>
 						{{ $leader }}<br>Leader</center></td>
-					@if($jml_null > 0)
+					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="7" class="head" id="approval1" style="vertical-align: middle;"><center>Approval</center></td>
 					@endif
 				</tr>
@@ -92,14 +92,12 @@
 					<td class="head" rowspan="2"><center>Nama Dokumen</center></td>
 					<td class="head" rowspan="2"><center>No. Dokumen</center></td>
 					<td class="head" colspan='3'><center>Hasil Audit IK</center></td>
-					<td class="head" colspan="2"><center>Sosialisasi</center></td>
+					<td class="head" colspan="2" rowspan="2"><center>Nama Operator</center></td>
 				</tr>
 				<tr>
 					<td class="head"><center>Kesesuaian dengan Aktual Proses</center></td>
 					<td class="head"><center>Kelengkapan Point Safety</center></td>
 					<td class="head"><center>Kesesuaian QC Kouteihyo</center></td>
-					<td class="head"><center>Nama Operator</center></td>
-					<td class="head"><center>Operator Sign</center></td>
 				</tr>
 				<form role="form" method="post" action="{{url('index/audit_report_activity/approval/'.$id)}}">
 				<?php $no = 1 ?>
@@ -112,9 +110,8 @@
 					<td class="head"><center><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></center></td>
 					<td class="head"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
 					<td class="head"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->operator }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->operator_sign }}</center></td>
-					@if($jml_null > 0)
+					<td class="head" colspan="2"><center>{{ $laporanAktivitas->operator }}</center></td>
+					@if($jml_null > 0 && $role_code != 'M')
 					<td class="head" id="approval2">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($laporanAktivitas->approval == Null)
@@ -126,7 +123,7 @@
 				</tr>
 				<?php $no++ ?>
 				@endforeach
-				@if($jml_null > 0)
+				@if($jml_null > 0 && $role_code != 'M')
 				<tr id="approval3">
 					<td class="head" align="right" colspan="10"><button class="btn btn-success" type="submit">Submit</button></td>
 				</tr>
