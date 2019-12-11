@@ -208,6 +208,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	})
 
 	function getCost() {
+		var last = 0;
 		var other_child = "";
 		$.get('{{ url("fetch/cost") }}', function(result, status, xhr){
 			$.each(result, function(index, value){
@@ -226,7 +227,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 			$.each(other, function(index, value){
 				other_child += "<tr><th>"+other[index][0]+"</th><td width='20%'><input type='text' id='other_input_"+index+"' class='form-control' onkeyup='otherFill(this,"+other[index][1]+")'></td><td>&nbsp; "+other[index][2]+" &nbsp; X &nbsp; Rp "+other[index][1]+" </td><td width='30%'><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_"+index+"' class='form-control' readonly></div></td></tr>";
+				last = index;
 			})
+			other_child += "<tr><th>Lainnya</th><td width='20%'><input type='text' id='other_input_"+last+1+"' class='form-control' onkeyup='otherFill(this,1)'></td><td></td><td><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_"+last+1+"' class='form-control' readonly></div></td></tr>";
 			other_child += "<tr><td colspan='3' style='padding-right:5px'><p class='pull-right'><b>Total</b></p></td><td><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_total' class='form-control' readonly></div></td></tr>";
 
 			$("#tabel_other").append(other_child);
@@ -238,6 +241,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						event.preventDefault();
 					}
 				})
+			})
+			$("#other_input_lainnya").on('keypress keyup blur', function() {
+				$(this).val($(this).val().replace(/[^\d].+/, ""));
+				if ((event.which < 48 || event.which > 57)) {
+					event.preventDefault();
+				}
 			})
 		})
 	}
