@@ -1,6 +1,11 @@
 @extends('layouts.display')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<script src="{{ url("js/jsQR.js")}}"></script>
 <style type="text/css">
+	canvas{
+		text-align: center;
+	}
 	.morecontent span {
 		display: none;
 	}
@@ -142,7 +147,7 @@
 		</div>
 	</div>
 
-	<!-- start modal -->
+	<!-- start modal detail  -->
 	<div class="modal fade" id="myModal" style="color: black;">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -255,6 +260,75 @@
 	</div>
 	<!-- end modal -->
 
+	<!-- start modal detail  -->
+	<div class="modal fade" id="check-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content" style="color: black;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title" style="text-align: center;">
+						Handling Operator's Efficiency
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+
+								<div id='scanner' class="col-xs-12">
+									<div class="col-xs-6 col-xs-offset-3">
+										<div id="loadingMessage">
+											🎥 Unable to access video stream (please make sure you have a webcam enabled)
+										</div>
+										<canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
+										<div id="output" hidden>
+											<div id="outputMessage">No QR code detected.</div>
+										</div>
+									</div>									
+								</div>
+								
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">NIK</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="input_employee_id">
+									</div>
+								</div>
+								<input type="hidden" id="employee_id">
+								<input type="hidden" id="date">
+
+								<div class="form-group row" align="right" id="field-name">
+									<label class="col-sm-4">Name</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="name" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right" id="field-key">
+									<label class="col-sm-4">Key</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="key" readonly>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="btn-check" class="btn btn-success" onclick="checkEff()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end modal -->
+
+
 </section>
 @endsection
 @section('scripts')
@@ -262,6 +336,7 @@
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -269,21 +344,91 @@
 		}
 	});
 
-
 	jQuery(document).ready(function(){
 		$('.select2').select2();
-
 		fillChart();
 		setInterval(fillChart, 20000);
-
 	});
+
+	var video = document.createElement("video");
+	var canvasElement = document.getElementById("canvas");
+	var canvas = canvasElement.getContext("2d");
+	var loadingMessage = document.getElementById("loadingMessage");
+
+	var outputContainer = document.getElementById("output");
+	var outputMessage = document.getElementById("outputMessage");
+	
+	function drawLine(begin, end, color) {
+		canvas.beginPath();
+		canvas.moveTo(begin.x, begin.y);
+		canvas.lineTo(end.x, end.y);
+		canvas.lineWidth = 4;
+		canvas.strokeStyle = color;
+		canvas.stroke();
+	}
+
+	navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+		video.srcObject = stream;
+		video.setAttribute("playsinline", true);
+		video.play();
+		requestAnimationFrame(tick);
+	});
+
+	function tick() {
+		loadingMessage.innerText = "⌛ Loading video..."
+		if (video.readyState === video.HAVE_ENOUGH_DATA) {
+			loadingMessage.hidden = true;
+			canvasElement.hidden = false;
+			
+			canvasElement.height = video.videoHeight;
+			canvasElement.width = video.videoWidth;
+			canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+			var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+			var code = jsQR(imageData.data, imageData.width, imageData.height, {
+				inversionAttempts: "dontInvert",
+			});
+			if (code) {
+				drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+				drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+				drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+				drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+				outputMessage.hidden = true;
+				$('#scanner').hide();
+				document.getElementById("input_employee_id").value = code.data.substr(0, 9);
+			} else {
+				outputMessage.hidden = false;
+			}
+		}
+		requestAnimationFrame(tick);
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
 
 	function changeGroup() {
 		$("#group").val($("#groupSelect").val());
-	}
-
-	function changeTarget() {
-		$("#target").val($("#targetSelect").val());
 	}
 
 	$('.datepicker').datepicker({
@@ -514,6 +659,75 @@
 		var m = addZero(d.getMinutes());
 		var s = addZero(d.getSeconds());
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
+	function checkEff() {
+		var employee_id = $("#employee_id").val();
+		var name = $("#name").val();
+		var key = $("#key").val();
+		var date = $("#date").val();
+
+		var data = {
+			employee_id: employee_id,
+			name: name,
+			key: key,
+			date: date,
+		}
+
+		$.post('{{ url("update/middle/buffing_op_eff_check") }}', data, function(result, status, xhr) {
+			if(result.status){
+				openSuccessGritter('Success!', result.message);
+				$('#check-modal').modal('hide');
+			}else{
+				openErrorGritter('Error!', result.message);
+				$('#check-modal').modal('hide');
+			}
+
+		});
+
+	}
+
+	$('#input_employee_id').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#input_employee_id").val().length >= 8){
+				if($("#input_employee_id").val() == $("#employee_id").val()){
+					$('#scanner').hide();
+					$('#field-name').show();
+					$('#field-key').show();
+					$('#btn-check').show();
+				}else{
+					openErrorGritter('Error!', 'NIK not match');
+					audio_error.play();
+					$('#scanner').show();
+					$("#input_employee_id").val("");
+					$("#input_employee_id").focus();	
+				}
+			}
+			else{
+				openErrorGritter('Error!', 'NIK Invalid');
+				audio_error.play();
+				$('#scanner').show();
+				$("#input_employee_id").val("");
+				$("#input_employee_id").focus();
+			}			
+		}
+	});
+
+	function showCheck(nik, nama, kunci, tgl) {
+		document.getElementById("employee_id").value = nik;
+		document.getElementById("name").value = nama;
+		document.getElementById("key").value = kunci;
+		document.getElementById("date").value = tgl;
+		$('#scanner').show();
+
+		$('#field-name').hide();
+		$('#field-key').hide();
+		$('#btn-check').hide();
+
+		$('#check-modal').modal('show');
+		$('#input_employee_id').val("");
+		$('#input_employee_id').focus();
+
 	}
 
 	function showDetail(tgl, nama) {
@@ -1162,7 +1376,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 	if(result.status){
 		var target = result.eff_target;
 
-		var op = [];
+		var op_a = [];
+		var name_a = [];
 		var key = [];
 		var eff = [];
 		var data = [];
@@ -1173,7 +1388,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				loop += 1;
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.emp_name[j].employee_id == result.target[i].employee_id){
-						op.push(result.emp_name[j].name);
+						op_a.push(result.target[i].employee_id);
+						name_a.push(result.emp_name[j].name);
 						key.push(result.target[i].key || 'Not Found');
 						eff.push(result.target[i].eff * 100);
 					}
@@ -1186,8 +1402,12 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}
 
 				if(eff[loop-1] < parseInt(target)){
-					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
-				}	
+					if(result.target[i].check != null){
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+					}else{
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					}
+				}
 			}			
 		}
 		var chart = Highcharts.chart('container4_shifta', {
@@ -1254,6 +1474,13 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 					groupPadding: 0.93,
 					borderWidth: 0.93,
 					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_a[event.point.index], name_a[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
 				},
 			},
 			series: [{
@@ -1267,7 +1494,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 
 
 
-		var op = [];
+		var op_b = [];
+		var name_b = [];
 		var key = [];
 		var eff = [];
 		var data = [];
@@ -1278,7 +1506,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				loop += 1;
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.emp_name[j].employee_id == result.target[i].employee_id){
-						op.push(result.emp_name[j].name);
+						op_b.push(result.target[i].employee_id);
+						name_b.push(result.emp_name[j].name);
 						key.push(result.target[i].key || 'Not Found');
 						eff.push(result.target[i].eff * 100);
 
@@ -1292,8 +1521,12 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}
 
 				if(eff[loop-1] < parseInt(target)){
-					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
-				}	
+					if(result.target[i].check != null){
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+					}else{
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					}
+				}
 			}			
 		}
 
@@ -1361,6 +1594,13 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 					groupPadding: 0.93,
 					borderWidth: 0.93,
 					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_b[event.point.index], name_b[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
 				},
 			},
 			series: [{
@@ -1369,12 +1609,10 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				data: data,
 				showInLegend: false
 			}]
-
 		});
 
-
-
-		var op = [];
+		var op_c = [];
+		var name_c = [];
 		var key = [];
 		var eff = [];
 		var data = [];
@@ -1385,7 +1623,8 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				loop += 1;
 				for(var j = 0; j < result.emp_name.length; j++){
 					if(result.emp_name[j].employee_id == result.target[i].employee_id){
-						op.push(result.emp_name[j].name);
+						op_c.push(result.target[i].employee_id);
+						name_c.push(result.emp_name[j].name);
 						key.push(result.target[i].key || 'Not Found');
 						eff.push(result.target[i].eff * 100);
 
@@ -1399,7 +1638,11 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				}
 
 				if(eff[loop-1] < parseInt(target)){
-					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					if(result.target[i].check != null){
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+					}else{
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+					}
 				}	
 			}			
 		}
@@ -1467,6 +1710,13 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 					groupPadding: 0.93,
 					borderWidth: 0.93,
 					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
 				},
 			},
 			series: [{
@@ -1476,9 +1726,7 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 				showInLegend: false
 			}]
 
-		});
-
-		
+		});		
 
 		$(document).scrollTop(position);
 
@@ -1486,7 +1734,6 @@ $.get('{{ url("fetch/middle/buffing_op_eff_target") }}', data, function(result, 
 });
 
 }
-
 
 
 </script>

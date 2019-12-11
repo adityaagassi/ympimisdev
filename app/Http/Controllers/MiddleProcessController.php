@@ -34,6 +34,7 @@ use App\MiddleRequestHelper;
 use App\MiddleMaterialRequest;
 use App\Employee;
 use App\Mail\SendEmail;
+use App\RfidBuffingDataLog;
 use App\RfidBuffingInventory;
 use App\RfidLogEfficiency;
 use Illuminate\Support\Facades\Mail;
@@ -572,6 +573,48 @@ class MiddleProcessController extends Controller
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
 
+	public function updateEffCheck(Request $request){
+		$data = (explode(" ",$request->get('key')));
+		$key = $data[1];
+		$model = $data[0];
+
+		try{
+			$material = Material::where('model', '=', $model)
+			->where('key', '=', $key)
+			->where('mrpc', '=', 's41')
+			->first();
+
+			$data_log = RfidBuffingDataLog::where('operator_id', '=', $request->get('employee_id'))
+			->where('material_number', '=', $material->material_number)
+			->where(db::raw('date(selesai_start_time)'), '=', $request->get('date'))
+			->orderBy('selesai_start_time', 'desc')
+			->first();
+
+			$update = db::connection('digital_kanban')->table('data_log')
+			->where('idx', '=', $data_log->idx)
+			->update([
+				'check' => Auth::id(),
+				'check_time' => date('Y-m-d H:i:s')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Check Efficiency successful',
+				'material' => $material,
+				'data_log' => $data_log,
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
 	public function addBuffingQueue(Request $request){
 		$rack = $request->get('rack');
 		$material = explode('-', $request->get('material'));;
@@ -1037,6 +1080,7 @@ class MiddleProcessController extends Controller
 			left join standart_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$request->get('bulan')."'
 			and operator_id = '".$request->get('nik')."'
+			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sun'
 			GROUP BY d.operator_id, tgl");
 
 		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
@@ -1082,6 +1126,7 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			GROUP BY date, l.operator_id, e.`name`) ng
 			left join
 			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
@@ -1089,6 +1134,7 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			GROUP BY date, l.operator_id, e.`name`) g
 			on ng.date = g.date and ng.operator_id = g.operator_id
 			order by g.date asc");
@@ -1129,12 +1175,14 @@ class MiddleProcessController extends Controller
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			GROUP BY l.operator_id, e.`name`) ng
 			left join
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
 			left join employees e on e.employee_id = l.operator_id
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 			GROUP BY l.operator_id, e.`name`) g
 			on ng.operator_id = g.operator_id
 			order by ng_rate desc");
@@ -1709,11 +1757,11 @@ class MiddleProcessController extends Controller
 
 		$eff_target = db::table("middle_targets")->where('location', '=', 'bff')->where('target_name', '=', 'Operator Efficiency')->select('target')->first();
 
-		$target = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.material_number, CONCAT(m.model,' ',m.`key`) as `key`, dl.finish, dl.act, (dl.material_qty*s.time/60) as std, (dl.material_qty*s.time/60)/dl.act as eff from employee_groups e
+		$target = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.material_number, CONCAT(m.model,' ',m.`key`) as `key`, dl.finish, dl.act, (dl.material_qty*s.time/60) as std, (dl.material_qty*s.time/60)/dl.act as eff, dl.`check` from employee_groups e
 			left join
 			(SELECT a.`group`, a.operator_id, a.material_number, time(a.selesai_start_time) as finish,
 			TIMESTAMPDIFF(SECOND,a.sedang_start_time,a.selesai_start_time)/60 as act,
-			a.material_qty
+			a.material_qty, a.`check`
 			FROM (select * from data_log l
 			left join employee_groups e on l.operator_id = e.employee_id
 			where date(l.selesai_start_time) = '".$date."'

@@ -82,7 +82,7 @@
 		</div>
 	</div>
 
-	{{-- Modal Renew --}}
+	{{-- Modal Update --}}
 	<div class="modal modal-default fade" id="edit_modal">
 		<div class="modal-dialog modal-md">
 			<div class="modal-content">

@@ -546,7 +546,7 @@
 						series: {
 							animation: false,
 							connectNulls: true,
-							lineWidth: 0.75,
+							lineWidth: 0.5,
 							shadow: {
 								width: 1,
 								opacity: 0.8
