@@ -1099,7 +1099,7 @@ public function fetchChat(Request $request)
   $response = array(
     'status' => true,
     'chats' => $data,
-    'tes' => $obj,
+    // 'tes' => $obj,
     'base_avatar' => url('images/avatar/')
   );
 
@@ -1837,7 +1837,7 @@ public function fetchDataKaizen()
       if ($kzn->status == 0) {
         return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
       } else {
-        return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
+        // return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
       }
     }
   })
