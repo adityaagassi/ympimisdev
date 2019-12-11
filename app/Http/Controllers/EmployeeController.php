@@ -177,7 +177,7 @@ class EmployeeController extends Controller
         'position' => $emp,
         'section' => $sc,
         'filter' => $section,
-        'title_jp' => '??'))->with('page', 'Assess')->with('head','Kaizen');
+        'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
     } else {
       return redirect()->back();
     }
@@ -1070,6 +1070,8 @@ $ct = db::connection('mysql3')->select("
 
 $datas = db::select($query);
 
+// $tes = db::connection('sunfish')->select("select * from dbo.view_ympi_emp_orgunit");
+
 if($datas) {
   return view('employees.service.indexEmploymentService', array(
     'status' => true,
@@ -1800,7 +1802,7 @@ public function fetchDataKaizen()
   return DataTables::of($kzn)
   ->addColumn('fr_stat', function($kzn){
     if ($kzn->status == -1) {
-      if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager') {
+      if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || Auth::id() == 53) {
         return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
       } else {
         return '<span class="label bg-yellow">Unverified</span>';
@@ -1809,6 +1811,8 @@ public function fetchDataKaizen()
     else if ($kzn->status == 1){
       if ($kzn->foreman_point_1 != '' && $kzn->foreman_point_2 != '' && $kzn->foreman_point_3 != '') {
         return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
+      } else {
+        return '<span class="label bg-yellow">Unverified</span>';
       }
     } else {
       return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';

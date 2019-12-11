@@ -130,7 +130,8 @@
 								<tr>
 									<th>Id</th>
 									<th>Date</th>
-									<th>Creator</th>
+									<th>NIK</th>
+									<th>Emp Name</th>
 									<th>Section</th>
 									<th>Title</th>
 									<th>Area</th>
@@ -298,6 +299,7 @@
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script>
 
 	$.ajaxSetup({
@@ -324,15 +326,50 @@
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'paging'        : true,
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
 			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
 			"processing": true,
+			"serverSide": true,
 			"ajax": {
 				"type" : "get",
 				"data": { position: pos, area: area, status: stat, filter: filter},
@@ -341,6 +378,7 @@
 			"columns": [
 			{ "data": "id" },
 			{ "data": "propose_date" },
+			{ "data": "employee_id" },
 			{ "data": "employee_name" },
 			{ "data": "section" },
 			{ "data": "title" },
@@ -353,10 +391,10 @@
 			],
 			"columnDefs": [
 			{ "width": "2%", "targets": 0 },
-			{ "width": "5%", "targets": 1 },
-			{ "width": "13%", "targets": 2 },
-			{ "width": "10%", "targets": 3 },
-			{ "width": "5%", "targets": [5,6,7,8,9,10] },
+			{ "width": "5%", "targets": [1,2] },
+			{ "width": "13%", "targets": 3 },
+			{ "width": "10%", "targets": 4 },
+			{ "width": "5%", "targets": [6,7,8,9,10,11] },
 			]
 		});
 	}

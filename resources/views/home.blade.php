@@ -273,6 +273,10 @@
                                 <i class="fa fa-caret-right"></i> List Verified e-Kaizen
                             </a>
                             <br>
+                            <a href="{{ url("/index/kaizen/applied") }}">
+                                <i class="fa fa-caret-right"></i> List Applied e-Kaizen 
+                            </a>
+                            <br>
                             <a href="{{ url("/index/kaizen2/resume") }}">
                                 <i class="fa fa-caret-right"></i> Report All Kaizen
                             </a>

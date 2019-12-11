@@ -108,8 +108,6 @@
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
-<script src="{{ url("js/accessibility.js")}}"></script>
-<script src="{{ url("js/drilldown.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -135,101 +133,86 @@
 			tanggal:tanggal
 		}
 
-		$.get('{{ url("fetch/kaizen/report") }}', data, function(result) {
-			var data1 = [];
-			var data_total = [];
-			var total_tmp = 0;
-			var data_tmp = [];
+		$.get('{{ url("fetch/kaizen/resume") }}', data, function(result) {
+			if (result.status) {
 
-			for (var i = 0; i < result.charts.length; i++) {
-				if (typeof result.charts[i+1] === 'undefined') {
-					total_tmp += parseInt(result.charts[i].kaizen);
-					data_total.push({name:result.charts[i].department, y:total_tmp, drilldown:result.charts[i].department});
-				} else {
-					if (result.charts[i].department != result.charts[i+1].department) {
-						total_tmp += parseInt(result.charts[i].kaizen);
-						data_total.push({name:result.charts[i].department, y:total_tmp, drilldown:result.charts[i].department});
-						total_tmp = 0;
-					} else {
-						total_tmp += parseInt(result.charts[i].kaizen);
-					}
-				}
-			}
+				var kumpul = [];
+				var belum = [];
+				var total_kz = [];
+				var ctg = [];
 
-			// console.table(data_total);
+				$.each(result.datas, function(index, value){
+					kumpul.push(parseInt(value.total_sudah));
+					belum.push(parseInt(value.total_belum));
+					total_kz.push(parseInt(value.total_kaizen));
+					ctg.push(value.name);
+				});
 
-			for (var z = 0; z < data_total.length; z++) {
-				for (var x = 0; x < result.charts.length; x++) {
-					if (data_total[z].name == result.charts[x].department) {
-						data_tmp.push([result.charts[x].section, parseInt(result.charts[x].kaizen)]);
-					}
-				}
-				data1.push({name:data_total[z].name, id:data_total[z].name, data: data_tmp});
-				data_tmp = [];
-			}
+				Highcharts.chart('kz_total', {
+					chart: {
+						type: 'column'
+					},
 
-			// console.table(data1);
-
-			Highcharts.chart('kz_total', {
-				chart: {
-					type: 'column'
-				},
-				title: {
-					text: 'Data Kaizen Teian'
-				},
-				subtitle: {
-					text: 'Click the columns to view detail per Section'
-				},
-				accessibility: {
-					announceNewData: {
-						enabled: true
-					}
-				},
-				xAxis: {
-					type: 'category'
-				},
-				yAxis: {
 					title: {
-						text: 'Total Kaizen'
-					}
+						text: 'Grafik Kaizen Teian FY196'
+					},
 
-				},
-				legend: {
-					enabled: false
-				},
-				plotOptions: {
-					series: {
-						borderWidth: 0,
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}'
+					xAxis: {
+						categories: ctg
+					},
+
+					yAxis: {
+						allowDecimals: false,
+						min: 0,
+						title: {
+							text: 'Number of Kaizen Teian'
 						}
 					},
-					column: {
-						animation: false
-					}
-				},
 
-				credits:{
-					enabled:false
-				},
-				tooltip: {
-					headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-					pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-				},
+					tooltip: {
+						formatter: function () {
+							return '<b>' + this.x + '</b><br/>' +
+							this.series.name + ': ' + this.y;
+						}
+					},
 
-				series: [
-				{
-					name: "Department",
-					colorByPoint: true,
-					data: data_total
-				}
-				],
-				drilldown: {
-					series: data1
-				}
-			});
-		});
+					plotOptions: {
+						column: {
+							stacking: 'normal'
+						},
+						line: {
+							marker: {
+								enabled: false,
+								radius: 0.1
+							},
+
+						}
+					},
+
+					credits: {
+						enabled: false
+					},
+
+					series: [{
+						name: 'Belum Mengumpulkan',
+						data: belum,
+						color: '#db3223'
+					}, {
+						name: 'Mengumpulkan',
+						data: kumpul,
+						color: '#2caddb'
+					},
+					{
+						type: 'line',
+						name: 'Jumlah usulan',
+						data: total_kz,
+						color: '#44ab4b'
+					}]
+				});
+			} else {
+
+			}
+		})
 	}
 
 	$('#tgl').datepicker({

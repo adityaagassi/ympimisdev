@@ -68,8 +68,14 @@
 										<td><?php echo $key->name ?></td>
 										<td><?php echo $key->position ?></td>
 										<td><?php echo $key->department ?></td>
-										<td><?php echo $key->section ?></td>
-										<td><a href="{{ url('index/kaizen/'.$key->section) }}"><?php echo $key->count ?></a></td>
+										<td><?php echo $key->section; if ($key->count > 0) $color = 'btn-warning'; else $color = 'btn-success' ?></td>
+										<td>
+											<a href="{{ url('index/kaizen/'.$key->section) }}">
+												<button class="btn btn-xs <?php echo $color ?>">
+													<?php echo $key->count ?> e-Kaizen
+												</button>
+											</a>
+										</td>
 									</tr>
 								<?php endforeach ?>
 							</tbody>
@@ -84,6 +90,12 @@
 	@section('scripts')
 	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 	<script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
+	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+	<script src="{{ url("js/jszip.min.js")}}"></script>
+	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+	<script src="{{ url("js/buttons.print.min.js")}}"></script>
+	<script src="{{ url("js/vfs_fonts.js")}}"></script>
 	<script>
 
 		$.ajaxSetup({
@@ -105,14 +117,49 @@
 				[ 10, 25, 50, -1 ],
 				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 				],
-				'paging': true,
-				'lengthChange': true,
-				'searching': true,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers"
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					]
+				},
+				'paging'        : true,
+				'lengthChange'  : true,
+				'searching'     : true,
+				'ordering'      : true,
+				'info'        : true,
+				'order'       : [],
+				'autoWidth'   : true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"iDisplayLength": -1
 			});
 
 			var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

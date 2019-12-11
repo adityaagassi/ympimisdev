@@ -177,8 +177,9 @@
 
 		$.get('{{ url("fetch/kaizen/report") }}', data, function(result) {
 
-			// $("#kz_top_sum").empty();
-			// $("#kz_top_count").empty();
+			$("#kz_top_sum").empty();
+			$("#kz_top_count").empty();
+			$("#kz_top_each_score").empty();
 			var data1 = [];
 			var data_total = [];
 			var total_tmp = 0;

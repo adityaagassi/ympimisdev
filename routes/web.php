@@ -473,7 +473,8 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('index/middle/buffing_target/{loc}', 'MiddleProcessController@indexBuffingTarget');
 	Route::get('fetch/middle/buffing_target/{loc}', 'MiddleProcessController@fetchBuffingTarget');
 	Route::post('update/middle/buffing_target', 'MiddleProcessController@updateBuffingTarget');
-	
+
+	Route::post('update/middle/buffing_op_eff_check', 'MiddleProcessController@updateEffCheck');	
 });
 
 Route::get('setting/user', 'UserController@index_setting');

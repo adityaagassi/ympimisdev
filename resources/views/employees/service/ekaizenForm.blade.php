@@ -26,18 +26,23 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 @endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0px;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-4">
 			<label for="kz_tanggal">Tanggal</label>
-			<input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d') }}" readonly>
+			<input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d')}}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nik">NIK</label>
-			<input type="text" id="kz_nik" class="form-control" value="{{ $emp_id }}" readonly>
+			<input type="text" id="kz_nik" class="form-control" value="{{ $emp_id}}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nama">Nama</label>
-			<input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4) }}" readonly>
+			<input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4)}}" readonly>
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
@@ -189,6 +194,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+		// $("#loading").hide();
 
 		$('.select2').select2({
 			language : {
@@ -358,11 +364,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		condition: CKEDITOR.instances.kz_sekarang.getData(),
 		improvement: CKEDITOR.instances.kz_perbaikan.getData()
 	};
+	$("#loading").show();
 
 		// console.log(data);
 
 				// if ($("kz_sub_leader").val() != '' && $("kz_judul").val() != '') {
 					$.post('{{ url("post/ekaizen") }}', data, function(result, status, xhr){
+						$("#loading").hide();
 						window.history.go(-1);
 					})
 				// }
