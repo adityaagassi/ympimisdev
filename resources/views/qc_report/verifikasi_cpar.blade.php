@@ -821,7 +821,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">No Invoice</td>
+                  <td colspan="2">No Invoice / No Lot</td>
                   <td colspan="2">{{ $part->no_invoice }}</td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->

@@ -240,12 +240,12 @@ class EmployeeController extends Controller
     left join
     (select count(id) as count, area from kaizen_forms where `status` = -1 group by area) as kz
     on bagian.section = kz.area
-    order by count desc";
+    order by `name` desc";
 
     $datas = db::select($q_data);
 
     return view('employees.service.kaizenAprovalResume', array(
-      'title' => '',
+      'title' => 'e-Kaizen Unverified Resume',
       'title_jp' => '',
       'datas' => $datas
     ))->with('page', 'Kaizen Aproval Resume');

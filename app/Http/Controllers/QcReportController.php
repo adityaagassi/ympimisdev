@@ -1291,7 +1291,7 @@ class QcReportController extends Controller
 
     public function fetchtable(Request $request)
     {
-      $data = db::select("select qc_cpars.cpar_no,qc_cpars.status_code,departments.department_name,qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
+      $data = db::select("select qc_cpars.id,qc_cars.id as id_car, qc_cpars.cpar_no, qc_cpars.status_code, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
         (CASE WHEN qc_verifikators.verifikatorchief is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
@@ -1836,17 +1836,16 @@ class QcReportController extends Controller
           if ($cpars->staff != null) {
             $to = "staff";
             $cpars->posisi = "staff";
-            $cpars->email_status = "SentStaff";
+            $cpars->email_status = NULL;
           }
           else if ($cpars->leader != null) {
             $to = "leader";
             $cpars->posisi = "leader";
-            $cpars->email_status = "SentLeader";
+            $cpars->email_status = NULL;
           }
 
 
           $cpars->save();
-
 
           $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan from qc_cpars where qc_cpars.id='".$id."'";
           $querycpar = db::select($query);

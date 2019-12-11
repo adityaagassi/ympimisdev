@@ -650,6 +650,11 @@ table > thead > tr > th{
           var e = 0;
 
             //CPAR
+            var urldetailcpar = '{{ url("index/qc_report/update/") }}';
+            var urlverifikasi = '{{ url("index/qc_report/verifikasicpar/") }}';
+            var urldetailcar = '{{ url("index/qc_car/detail/") }}';
+            var urlverifikasicar = '{{ url("index/qc_car/verifikasicar/") }}';
+            var urlverifikasiqa = '{{ url("index/qc_report/verifikasiqa/") }}';
 
             if (value.posisi_cpar != "staff" && value.posisi_cpar != "leader") {
               // statusawal = '<img src="{{ url("ok.png")}}" width="40" height="40"';
@@ -659,13 +664,12 @@ table > thead > tr > th{
             else {
               if (d == 0) {  
                   // statusawal = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                  statusawal = '<span class="label label-danger zoom">'+namasl2+'</span>';
+                  statusawal = '<a href="'+urldetailcpar+'/'+value.id+'"><span class="label label-danger zoom">'+namasl2+'</span></a>';
                   color = 'style="background-color:red"';                    
                   d = 1;
                 } else {
                   statusawal = '';
                 }
-             
             }
 
               //jika tidak ada chief/foreman
@@ -675,7 +679,7 @@ table > thead > tr > th{
                     if (value.posisi_cpar == "chief" || value.posisi_cpar == "foreman") {
                         if (d == 0) {  
                             // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                            statuscf = '<span class="label label-danger">'+namacf2+'</span>';   
+                            statuscf = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';   
                             color = 'style="background-color:red"';                  
                             d = 1;
                           } else {
@@ -691,7 +695,7 @@ table > thead > tr > th{
                 else{
                   if (d == 0) {  
                     // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
-                    statuscf = '<span class="label label-danger">'+namacf2+'</span>'; 
+                    statuscf = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>'; 
                     color = 'style="background-color:red"';                  
                     d = 1;
                   } else {
@@ -708,7 +712,7 @@ table > thead > tr > th{
               if (value.checked_manager == "Checked") {
                   if (value.posisi_cpar == "manager") {
                     if (d == 0) {  
-                        statusm = '<span class="label label-danger">'+namam2+'</span>';
+                        statusm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                         color = 'style="background-color:red"'; 
                         // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -724,7 +728,7 @@ table > thead > tr > th{
               }
               else {
                 if (d == 0) {  
-                  statusm = '<span class="label label-danger">'+namam2+'</span>';
+                  statusm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                   color = 'style="background-color:red"'; 
                   // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;
@@ -737,7 +741,7 @@ table > thead > tr > th{
               if (value.approved_dgm == "Checked") {
                   if (value.posisi_cpar == "dgm") {
                       if (d == 0) {  
-                        statusdgm = '<span class="label label-danger">'+namadgm2+'</span>';
+                        statusdgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                         color = 'style="background-color:red"'; 
                         // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                         d = 1;
@@ -753,7 +757,7 @@ table > thead > tr > th{
 
               else {
                 if (d == 0) {  
-                  statusdgm = '<span class="label label-danger">'+namadgm2+'</span>';
+                  statusdgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                   color = 'style="background-color:red"'; 
                   // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                   d = 1;
@@ -766,7 +770,7 @@ table > thead > tr > th{
               if (value.approved_gm == "Checked") {
                   if (value.posisi_cpar == "gm") {
                       if (d == 0) {  
-                        statusgm = '<span class="label label-danger">'+namagm2+'</span>'; 
+                        statusgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                         color = 'style="background-color:red"';
                         // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                         d = 1;
@@ -781,7 +785,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusgm = '<span class="label label-danger">'+namagm2+'</span>'; 
+                  statusgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                   color = 'style="background-color:red"';
                   // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                   d = 1;
@@ -793,7 +797,7 @@ table > thead > tr > th{
               if (value.received_manager == "Received") {
                   if (value.posisi_car == "bagian") {
                       if (d == 0) {  
-                        statusbagian = '<span class="label label-danger">'+namabagian2+'</span>';
+                        statusbagian = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                         d = 1;
@@ -808,7 +812,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusbagian = '<span class="label label-danger">'+namabagian2+'</span>';
+                  statusbagian = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                   d = 1;
@@ -828,7 +832,7 @@ table > thead > tr > th{
                   }
                   else{
                       if (d == 0) {
-                        statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
+                        statusawalcar = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                         color = 'style="background-color:red"'; 
                         // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                         d = 1 ;
@@ -840,7 +844,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {
-                      statusawalcar = '<span class="label label-danger">'+namapiccar2+'</span>';
+                      statusawalcar = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                       color = 'style="background-color:red"'; 
                       // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                       d = 1 ;
@@ -856,7 +860,7 @@ table > thead > tr > th{
               if (value.checked_chief_car == "Checked" || value.checked_foreman_car == "Checked" || value.checked_coordinator_car == "Checked") {
                   if (value.posisi_car == "chief" || value.posisi_car == "foreman2" || value.posisi_car == "coordinator") {
                       if (d == 0) {  
-                          statuscfcar = '<span class="label label-danger>'+namacfcar2+'</span>';
+                          statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger>'+namacfcar2+'</span></a>';
                           color = 'style="background-color:red"';
                           // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                           d = 1;
@@ -873,13 +877,13 @@ table > thead > tr > th{
               else{
                 if (d == 0) {   
                   if (namacfcar2 == "Tidak Ada") {
-                    statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';                    
-                    statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                    statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';                    
+                    statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                     color = 'style="background-color:red"';
                     // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   }
                   else{
-                    statuscfcar = '<span class="label label-danger">'+namacfcar2+'</span>';
+                    statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
                     color = 'style="background-color:red"';
                     d=1;
                   }
@@ -895,7 +899,7 @@ table > thead > tr > th{
               if (value.checked_manager_car == "Checked") {
                   if (value.posisi_car == "manager") {
                       if (d == 0) {  
-                        statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                        statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -911,7 +915,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusmcar = '<span class="label label-danger">'+namabagian2+'</span>';
+                  statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;
@@ -925,7 +929,7 @@ table > thead > tr > th{
               if (value.approved_dgm_car == "Checked") {
                   if (value.posisi_car == "dgm") {
                       if (d == 0) {  
-                        statusdgmcar = '<span class="label label-danger">'+namadgm2+'</span>';
+                        statusdgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -941,7 +945,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusdgmcar = '<span class="label label-danger">'+namadgm2+'</span>';
+                  statusdgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" cl  ass="zoom">';                    
                   d = 1;
@@ -955,7 +959,7 @@ table > thead > tr > th{
               if (value.approved_gm_car == "Checked") {
                   if (value.posisi_car == "gm") {
                       if (d == 0) {  
-                        statusgmcar = '<span class="label label-danger">'+namagm+'</span>';
+                        statusgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -971,7 +975,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusgmcar = '<span class="label label-danger">'+namagm+'</span>';
+                  statusgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;
@@ -985,7 +989,7 @@ table > thead > tr > th{
               if (value.email_status_car == "SentQA") {
                   if (value.posisi_cpar == "QA") {
                       if (d == 0) {  
-                        statusqa = '<span class="label label-danger">'+namasl2+'</span>';
+                        statusqa = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namasl2+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -1001,7 +1005,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusqa = '<span class="label label-danger">'+namasl2+'</span>';
+                  statusqa = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namasl2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;
@@ -1013,7 +1017,7 @@ table > thead > tr > th{
               if (value.email_status == "SentQA2") {
                   if (value.posisi_cpar == "QA2") {
                       if (d == 0) {  
-                          statusqa2 = '<span class="label label-danger">'+namacf2+'</span>';
+                          statusqa2 = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';
                           color = 'style="background-color:red"';
                         // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -1029,7 +1033,7 @@ table > thead > tr > th{
               }
               else {
                 if (d == 0) {  
-                  statusqa2 = '<span class="label label-danger">'+namacf2+'</span>';
+                  statusqa2 = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;

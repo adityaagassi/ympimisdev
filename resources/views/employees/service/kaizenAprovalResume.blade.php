@@ -50,7 +50,7 @@
 			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-12">
-						<table id="table_resume" class="table table-bordered">
+						<table id="table_resume" class="table table-bordered table-striped table-hover">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th>Employee_Id</th>

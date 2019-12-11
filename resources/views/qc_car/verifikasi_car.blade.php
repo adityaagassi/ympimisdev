@@ -156,6 +156,8 @@
 
         <br/><br/>
 
+        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->username == "clark")
+
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
           	 <thead>
@@ -438,10 +440,16 @@
         <?php } ?>
         
         <div class="col-sm-12">
+          
+          @if(($cars->posisi == "chief" && $cars->checked_chief == null) || ($cars->posisi == "foreman2" && $cars->checked_foreman == null) || ($cars->posisi == "coordinator" && $cars->checked_coordinator == null) || ($cars->posisi == "manager" && $cars->checked_manager == null) || ($cars->posisi == "dgm" && $cars->approved_dgm == null) || ($cars->posisi == "gm" && $cars->approved_gm == null))
           <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+          @endif
+
         </div>
 
+        @endif
         <?php endforeach ?>
+
       </div>
     </form>
   </div>
