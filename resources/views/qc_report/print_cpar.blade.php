@@ -26,8 +26,7 @@
 		<thead>
 			<tr>
 				<td colspan="2" class="centera">
-					<img width="100px" src="{{ public_path() . '/waves.jpg' }}" alt="">
-
+					<img width="140px" src="{{ public_path() . '/waves.jpg' }}" alt="" style="vertical-align: middle !important">
 				</td>
 				<td colspan="5" style="text-align: center; vertical-align: middle;font-size: 14px;font-weight: bold">CORRECTIVE & PREVENTIVE ACTION REQUEST</td>
 				<td colspan="2" style="font-size: 9px;">
@@ -74,7 +73,7 @@
 			<tr>
 				<td>Part Item</td>
 				<td colspan="2">Part Description</td>
-				<td>Invoice No</td>
+				<td>Invoice / Lot No</td>
 				<td>Sample Qty</td>
 				<td>Defect Qty</td>
 				<td>% Defect</td>
@@ -114,7 +113,7 @@
 			<?php } ?>
 			<?php if($jumlahparts != 0) { ?> 
 			<tr>
-				<td colspan="8"><p style="font-size: 14px">Detail Problem : </p><?= $part->detail_problem ?></td>
+				<td colspan="8"><p style="font-size: 12px">Detail Problem : </p><?= $part->detail_problem ?></td>
 			</tr>
 			<?php } else { ?>
 			<tr>
@@ -185,8 +184,8 @@
 			<tr></tr>
 			<tr>
 				@if($cpar->kategori == "Internal")
-				<td>Leader</td>
-				<td>Foreman</td>
+				<td>Staff / Leader</td>
+				<td>Chief / Foreman</td>
 				@else
 				<td>Staff</td>
 				<td>Chief</td>				

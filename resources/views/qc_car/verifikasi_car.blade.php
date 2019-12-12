@@ -506,7 +506,7 @@
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentManager" || $cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "manager" || $cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentManager" || $cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "manager" || $cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "qa"))
                     <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                     <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -521,7 +521,7 @@
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "qa"))
                     <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                     <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -536,7 +536,7 @@
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "gm" || $cars->posisi == "qa"))
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -551,7 +551,7 @@
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if($cars->email_status == "SentQA" && $cars->posisi == "QA")
+                    @if($cars->email_status == "SentQA" && $cars->posisi == "qa")
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>

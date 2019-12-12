@@ -1456,7 +1456,7 @@ class QcReportController extends Controller
           $posisi2 = "foreman";
       } 
 
-      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','statuses.status_name')
+      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
         ->join('departments','qc_cpars.department_id','=','departments.id')
         ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
         ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
@@ -1482,6 +1482,7 @@ class QcReportController extends Controller
       $pdf->getDomPDF()->set_option("enable_php", true);
       $pdf->setPaper('A4', 'potrait');
       $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+      
       $pdf->loadView('qc_report.print_cpar', array(
         'cpars'=>$cpars,
         'parts'=>$parts
