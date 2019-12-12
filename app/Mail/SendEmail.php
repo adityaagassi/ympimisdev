@@ -96,5 +96,8 @@ class SendEmail extends Mailable
         if($this->remark == 'first_product_audit_daily'){
             return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama Daily Evidence (??)')->view('mails.first_product_audit_daily');
         }
+        if($this->remark == 'area_check'){
+            return $this->from('ympimis@gmail.com')->subject('Cek Kondisi Safety Area Kerja (??)')->view('mails.area_check');
+        }
     }
 }

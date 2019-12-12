@@ -794,7 +794,6 @@ function ShowModalChart(leader_name,frequency) {
                   
                   for (var j = 0; j < result.detail[1].length; j++) {
                     if(activity[i] == result.detail[1][j].activity_name){
-
                       for (var k = 1; k < result.detail.length; k++) {
                         for (var l = 0; l < result.detail[k].length; l++) {
                           if(result.detail[k][l].activity_name == activity[i]){
@@ -946,6 +945,7 @@ else if(frequency == 'Daily'){
       for(var a = 0; a < result.act_name.length; a++){
         if(result.act_name[a].activity_name != null){
           head += '<th>'+result.act_name[a].activity_name+'</th>';
+          bb += 1;
         }
         else{
           head += '<th></th>';
@@ -959,9 +959,13 @@ else if(frequency == 'Daily'){
         body += '<tr>';
         body += '<td>'+no+'</td>';
         body += '<td>'+result.date[i].week_date+'</td>';
-        if(parseInt(result.detail[i].jumlah_aktual) != 0){
-          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_aktual+'</td>';
+        if(parseInt(result.detail[i].jumlah_daily_check) != 0){
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
           body += '<td style="background-color: #f7ff59"></td>';
+        }
+        else if(parseInt(result.detail[i].jumlah_area_check) != 0){
+          body += '<td style="background-color: #f7ff59"></td>';
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
         }
         else{
           // body += '<td style="background-color: #f7ff59"></td>';
@@ -970,9 +974,9 @@ else if(frequency == 'Daily'){
           body += '<td></td>';
         }
         body += '</tr>';
-        total_plan += parseInt(result.detail[i].plan);
-        total_aktual += parseInt(result.detail[i].jumlah_aktual);
-        plan = result.detail[i].plan;
+        total_plan += parseInt(result.detail[i].plan) * bb;
+        total_aktual += (parseInt(result.detail[i].jumlah_daily_check) + parseInt(result.detail[i].jumlah_area_check));
+        plan = result.detail[i].plan * bb;
         no++;
       }
       presentase = (total_aktual / plan)*100;

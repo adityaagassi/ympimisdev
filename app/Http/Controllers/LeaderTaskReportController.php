@@ -105,7 +105,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek Area',
+                        (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'
@@ -187,7 +193,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek Area',
+                        (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

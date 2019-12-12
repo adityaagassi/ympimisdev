@@ -85,6 +85,9 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Pemahaman Proses"){
             return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', '5');
         }
+        elseif($activity_type == "Cek Area"){
+            return redirect('/index/area_check/index/'.$id)->with('page', 'Area Check')->with('no', '10');
+        }
     }
 
     function report_all($id)
@@ -159,9 +162,9 @@ class ProductionReportController extends Controller
                 IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
                 IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
                 IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
-       (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)) as jumlah_activity_daily,
-        daily.jumlah_daily_check as jumlah_daily,
-        COALESCE(((daily.jumlah_daily_check)/(select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)))*100,0) as persen_daily,
+        (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
+        daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
+        COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
         daily.jumlah_day,
         daily.cur_day,
         (daily.cur_day / daily.jumlah_day)*100 as persen_cur_day,
@@ -278,6 +281,15 @@ class ProductionReportController extends Controller
                                 and daily_checks.deleted_at is null 
                                 and actlist.department_id = '".$id."'),0)
         as jumlah_daily_check,
+        COALESCE((select count(DISTINCT(area_checks.date)) as jumlah_area_check
+                from area_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$bulan."'
+                    and  actlist.frequency = 'Daily'
+                                and area_checks.leader = '".$dataleader."'
+                                and area_checks.deleted_at is null 
+                                and actlist.department_id = '".$id."'),0)
+        as jumlah_area_check,
         (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
         4 as jumlah_week,
         (SELECT IF(DATE_FORMAT(CURDATE(),'%Y-%m') != '".$bulan."',
@@ -607,7 +619,32 @@ class ProductionReportController extends Controller
             and activity_lists.department_id = '".$id."'
             and activity_lists.frequency = '".$frequency."'");
 
-        $detail = db::select("select weekly_calendars.week_date,(select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and week_date not in (select tanggal from ftm.kalender)) as plan, (select count(DISTINCT(production_date)) from daily_checks join activity_lists as actlist on actlist.id = activity_list_id where DATE_FORMAT(production_date,'%Y-%m') = '".$week_date."' and leader = '".$leader_name."' and production_date = weekly_calendars.week_date and actlist.department_id = '".$id."' and actlist.frequency = '".$frequency."') as jumlah_aktual from weekly_calendars  where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+        $detail = db::select("select 
+        weekly_calendars.week_date,
+                (select count(week_date)
+                from weekly_calendars
+                where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'
+                and week_date not in (select tanggal from ftm.kalender))
+        as plan, 
+                (select count(DISTINCT(production_date))
+                from daily_checks
+                join activity_lists as actlist on actlist.id = activity_list_id
+                where DATE_FORMAT(production_date,'%Y-%m') = '".$week_date."'
+                and leader = '".$leader_name."'
+                and production_date = weekly_calendars.week_date
+                and actlist.department_id = '".$id."'
+                and actlist.frequency = '".$frequency."') as jumlah_daily_check,
+                (select count(DISTINCT(date))
+                from area_checks
+                join activity_lists as actlist on actlist.id = activity_list_id
+                where DATE_FORMAT(date,'%Y-%m') = '".$week_date."'
+                and leader = '".$leader_name."'
+                and date = weekly_calendars.week_date
+                and actlist.department_id = '".$id."'
+                and actlist.frequency = '".$frequency."') as jumlah_area_check
+                        from weekly_calendars 
+                        where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'
+                        and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
         $monthTitle = date("F Y", strtotime($week_date));
 
         $response = array(
@@ -621,34 +658,6 @@ class ProductionReportController extends Controller
             'monthTitle' => $monthTitle
         );
         return Response::json($response);
-
-    }
-
-    public function fetchPointCheck(Request $request,$id){
-        if($request->get('id_point_check') != Null){
-            $leader_name = $request->get('leader_name');
-            $id_activity = $request->get('id_activity');
-            $id_point_check = $request->get('id_point_check');
-        }
-        else{
-            $leader_name = $request->get('leader_name');
-        }
-
-        $point_check = db::select("select title
-                from point_check_audits
-                where point_check_audits.id = '".$id_point_check."' LIMIT 1");
-        foreach($point_check as $point_check){
-            $title = $point_check->title;
-        }
-
-        $response = array(
-            'status' => true,
-            'title' => $title,
-            'id_activity' => $id_activity,
-            'leader_name' => $leader_name,
-        );
-        return Response::json($response);
-
     }
 
     public function fetchDetailReportPrev(Request $request,$id){
@@ -1881,7 +1890,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek Area',
+                        (SELECT count(*) FROM area_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))
                 as jumlah_approval,
                 IF(activity_type = 'Audit',
                         (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM production_audits
@@ -1953,7 +1970,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek Area',
+                        (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

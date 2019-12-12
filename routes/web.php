@@ -788,6 +788,23 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
 
+//KD
+Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
+	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+});
+
+Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
+	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+});
+
+Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
+	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+});
+
+Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
+	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+});
+
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
 Route::get('scan/middle/operator/rfid', 'MiddleProcessController@scanMiddleOperatorKensa');
@@ -1691,7 +1708,7 @@ Route::get('index/area_check/destroy/{id}/{area_check_id}', 'AreaCheckController
 Route::post('index/area_check/print_area_check/{id}','AreaCheckController@print_area_check');
 Route::get('index/area_check/print_area_check_email/{id}/{month}','AreaCheckController@print_area_check_email');
 Route::post('index/area_check/sendemail/{id}','AreaCheckController@sendemail');
-Route::post('index/area_check/approval/{id}','AreaCheckController@approval');
+Route::post('index/area_check/approval/{id}/{month}','AreaCheckController@approval');
 
 
 //WEBCAM

@@ -138,12 +138,16 @@
   padding: 5px;
 }
 </style>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
     // setTimeout(function () { window.print(); }, 200);
     function myFunction() {
 	  window.print();
 	}
 
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+	});
 	function checkAll(isChecked){
 		if(isChecked){
 			$(':checkbox').attr('checked',true);

@@ -357,7 +357,8 @@ class ActivityListController extends Controller
       $queryLeader = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$dept_name."' and mutation_logs.`group` = 'leader') or (mutation_logs.department = '".$dept_name."' and mutation_logs.`group`='foreman')";
+            join promotion_logs on employees.employee_id= promotion_logs.employee_id
+            where (mutation_logs.department = '".$dept_name."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$dept_name."' and promotion_logs.`position`='foreman')";
       $queryForeman = "select DISTINCT(employees.name), employees.employee_id
             from employees
             join mutation_logs on employees.employee_id= mutation_logs.employee_id

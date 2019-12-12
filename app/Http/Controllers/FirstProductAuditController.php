@@ -24,7 +24,6 @@ class FirstProductAuditController extends Controller
     public function __construct()
     {
       $this->middleware('auth');
-      $this->proses = ['Pengerjaan Kunci Sub Assy',];
     }
 
     function index($id)
