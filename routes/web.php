@@ -474,7 +474,8 @@ Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){
 	Route::get('fetch/middle/buffing_target/{loc}', 'MiddleProcessController@fetchBuffingTarget');
 	Route::post('update/middle/buffing_target', 'MiddleProcessController@updateBuffingTarget');
 
-	Route::post('update/middle/buffing_op_eff_check', 'MiddleProcessController@updateEffCheck');	
+	Route::post('update/middle/buffing_op_eff_check', 'MiddleProcessController@updateEffCheck');
+	Route::post('update/middle/buffing_op_ng_check', 'MiddleProcessController@updateNgCheck');
 });
 
 Route::get('setting/user', 'UserController@index_setting');
@@ -868,6 +869,8 @@ Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffi
 Route::get('index/middle/report_buffing_operator_time', 'MiddleProcessController@indexReportOpTime');
 Route::get('fetch/middle/report_buffing_operator_time', 'MiddleProcessController@fetchReportOpTime');
 Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessController@fetchReportOpTimeQty');
+Route::get('index/middle/report_buffing_canceled_log', 'MiddleProcessController@indexReportBuffingCancelled');
+Route::get('fetch/middle/report_buffing_canceled_log', 'MiddleProcessController@fetchReportBuffingCancelled');
 
 
 
@@ -1056,6 +1059,8 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 	Route::get('index/model', 'Pianica@tag_model');
 	Route::post('index/SaveKensaAwal', 'Pianica@savekensaawal');
 	Route::get('index/TotalNg', 'Pianica@total_ng');
+	Route::get('fetch/opTunning', 'Pianica@opTunning');
+
 
 
 	//-----------kensa akhir
@@ -1152,6 +1157,18 @@ Route::get('index/reportVisualDaily', 'Pianica@reportVisualDaily');
 Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 //end pianica
+
+//stock taking
+
+Route::group(['nav' => 'M23', 'middleware' => 'permission'], function(){
+	Route::get('index/bom_output', 'StockTakingController@bom_output');
+	Route::get('fetch/bom_output', 'StockTakingController@fetch_bom_output');
+});
+
+Route::group(['nav' => 'M24', 'middleware' => 'permission'], function(){
+	Route::get('index/material_plant_data_list', 'StockTakingController@mpdl');
+	Route::get('fetch/material_plant_data_list', 'StockTakingController@fetchmpdl');
+});
 
 
 Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
@@ -1656,6 +1673,27 @@ Route::get('index/leader_task_report/leader_task_list/{id}/{leader_name}', 'Lead
 Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
 Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
 
+//AREA CHECK POINT
+Route::get('index/area_check_point/index/{id}', 'AreaCheckPointController@index');
+Route::get('index/area_check_point/show/{id}/{area_check_point_id}', 'AreaCheckPointController@show');
+Route::get('index/area_check_point/destroy/{id}/{area_check_point_id}', 'AreaCheckPointController@destroy');
+Route::post('index/area_check_point/store/{id}', 'AreaCheckPointController@store');
+Route::get('index/area_check_point/getdetail','AreaCheckPointController@getdetail')->name('area_check_point.getdetail');
+Route::post('index/area_check_point/update/{id}/{area_check_point_id}', 'AreaCheckPointController@update');
+
+//AREA CHECK
+Route::get('index/area_check/index/{id}', 'AreaCheckController@index');
+Route::post('index/area_check/filter_area_check/{id}', 'AreaCheckController@filter_area_check');
+Route::post('index/area_check/store/{id}', 'AreaCheckController@store');
+Route::get('index/area_check/getareacheck','AreaCheckController@getareacheck')->name('area_check.getareacheck');
+Route::post('index/area_check/update/{id}','AreaCheckController@update');
+Route::get('index/area_check/destroy/{id}/{area_check_id}', 'AreaCheckController@destroy');
+Route::post('index/area_check/print_area_check/{id}','AreaCheckController@print_area_check');
+Route::get('index/area_check/print_area_check_email/{id}/{month}','AreaCheckController@print_area_check_email');
+Route::post('index/area_check/sendemail/{id}','AreaCheckController@sendemail');
+Route::post('index/area_check/approval/{id}','AreaCheckController@approval');
+
+
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
 Route::post('index/webcam/create', 'WebcamController@create');
@@ -1748,6 +1786,7 @@ Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 //CUBEACON REEDPLATE
 Route::get('index/reedplate/map','ReedplateController@index');
 Route::get('fetch/reedplate/user','ReedplateController@getUser');
+Route::get('fetch/reedplate/log','ReedplateController@fetch_log');
 
 
 //TEMPERATURE / SUHU

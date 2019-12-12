@@ -55,6 +55,16 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexReportBuffingCancelled(){
+		$title = 'Buffing Cancelled Log';
+		$title_jp = '??';
+
+		return view('processes.middle.report.buffing_canceled_log', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Buffing Cancelled Log');
+	}
+
 	public function indexBuffingTarget($loc){
 		if($loc == 'bff'){
 			return view('processes.middle.buffing_target')->with('page', 'queue')->with('head', 'Buffing target');
@@ -572,6 +582,50 @@ class MiddleProcessController extends Controller
 			'hpl' => $hpl,
 		))->with('page', 'wip')->with('head', 'Middle Process Adjustment');
 	}
+	
+
+	public function updateNgCheck(Request $request){
+		$data = (explode(" ",$request->get('key')));
+		$key = $data[1];
+		$model = $data[0];
+
+		try{
+			$material = Material::where('model', '=', $model)
+			->where('key', '=', $key)
+			->where('mrpc', '=', 's41')
+			->first();
+
+			$ng_log = MiddleNgLog::where('operator_id', '=', $request->get('employee_id'))
+			->where('material_number', '=', $material->material_number)
+			->where(db::raw('date(buffing_time)'), '=', $request->get('date'))
+			->orderBy('buffing_time', 'desc')
+			->first();
+
+			$update = db::table('middle_ng_logs')
+			->where('remark', '=', $ng_log->remark)
+			->update([
+				'check' => Auth::id(),
+				'check_time' => date('Y-m-d H:i:s')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Check Efficiency successful',
+				'material' => $material,
+				'ng_log' => $ng_log,
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+
+	}
 
 	public function updateEffCheck(Request $request){
 		$data = (explode(" ",$request->get('key')));
@@ -600,8 +654,6 @@ class MiddleProcessController extends Controller
 			$response = array(
 				'status' => true,
 				'message' => 'Check Efficiency successful',
-				'material' => $material,
-				'data_log' => $data_log,
 			);
 			return Response::json($response);
 
@@ -731,7 +783,7 @@ class MiddleProcessController extends Controller
 			
 			$middle_return_log = new MiddleReturnLog([
 				'tag' => $request->get('tag'),
-				'employee_id' => $request->get('operator_id'),
+				'employee_id' => Auth::id(),
 				'material_number' => $data[0]->material_number,
 				'quantity' => $request->get('qty'),
 				'location' => 'bff',
@@ -770,6 +822,25 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function fetchReportBuffingCancelled(Request $request){
+		$tanggal = "";
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$tanggal = "and date(l.created_at) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$tanggal = $tanggal."and date(l.created_at) <= '".$dateto."' ";
+			}
+		}
+
+		$data = db::select("select u.username, u.`name`, l.tag, l.material_number, m.model, m.`key`, l.quantity, l.created_at  from middle_return_logs l
+			left join users u on l.employee_id = u.id
+			left join materials m on m.material_number = l.material_number
+			where l.location = 'bff' ".$tanggal);
+
+		return DataTables::of($data)->make(true);
 	}
 
 	public function fetchTarget(Request $request){
@@ -2097,7 +2168,7 @@ class MiddleProcessController extends Controller
 
 		$ng_target = db::table("middle_targets")->where('location', '=', 'bff')->where('target_name', '=', 'NG Rate')->select('target')->first();
 
-		$target = db::select("select eg.`group`, eg.employee_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, ng.material_number, CONCAT(m.model,' ',m.`key`) as `key`, ng.ng_name, ng.quantity, ng.buffing_time from employee_groups eg left join
+		$target = db::select("select eg.`group`, eg.employee_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, ng.material_number, CONCAT(m.model,' ',m.`key`) as `key`, ng.ng_name, ng.quantity, ng.buffing_time, ng.`check` from employee_groups eg left join
 			(select * from middle_ng_logs
 			where location = 'bff-kensa'
 			and remark in

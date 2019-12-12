@@ -684,7 +684,6 @@
 			}
 
 		});
-
 	}
 
 	$('#input_employee_id').keydown(function(event) {
