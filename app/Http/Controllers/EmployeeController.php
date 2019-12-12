@@ -128,6 +128,9 @@ class EmployeeController extends Controller
     ->select('position')
     ->first();
 
+    $dd = str_replace("'","", $usr);
+    $dd = explode(',', $dd);
+
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
     left join employees on d.employee_id = employees.employee_id
@@ -143,6 +146,7 @@ class EmployeeController extends Controller
         'title' => 'e-Kaizen (Assessment List)',
         'position' => $emp,
         'section' => $sc,
+        'user' => $dd,
         'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
     } else {
       return redirect()->back();
@@ -186,7 +190,7 @@ class EmployeeController extends Controller
   public function indexKaizenApplied()
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986'";
+    $usr = "'19014987','19014986','E01090823','R14122906'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
@@ -194,6 +198,9 @@ class EmployeeController extends Controller
     ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$usr.'))')
     ->select('position')
     ->first();
+
+    $dd = str_replace("'","", $usr);
+    $dd = explode(',', $dd);
 
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
@@ -209,6 +216,7 @@ class EmployeeController extends Controller
       'title' => 'e-Kaizen (Applied list)',
       'position' => $emp,
       'section' => $sc,
+      'user' => $dd,
       'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
   }
 
@@ -228,6 +236,8 @@ class EmployeeController extends Controller
 
   public function indexKaizenApprovalResume()
   {
+    $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
+
     $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
     (select fr.employee_id, `name`, position, fr.department, struktur.section from
     (select employees.employee_id, `name`, position, department, section from employees left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
@@ -240,6 +250,7 @@ class EmployeeController extends Controller
     left join
     (select count(id) as count, area from kaizen_forms where `status` = -1 group by area) as kz
     on bagian.section = kz.area
+    where department = '".$get_department->department."'
     order by `name` desc";
 
     $datas = db::select($q_data);
@@ -893,9 +904,12 @@ public function fetchReportGender2(Request $request)
   $get_manpower = db::select($gender);
   $monthTitle = date("F Y", strtotime($tgl));
 
+  $tes = db::connection('sunfish')->select("select TOP 50 * from dbo.view_ympi_emp_orgunit");
+
   $response = array(
     'status' => true,
     'manpower_by_gender' => $get_manpower,
+    "tes" => $tes,
     'monthTitle' => $monthTitle
   );
 
@@ -1070,8 +1084,6 @@ $ct = db::connection('mysql3')->select("
 
 $datas = db::select($query);
 
-// $tes = db::connection('sunfish')->select("select * from dbo.view_ympi_emp_orgunit");
-
 if($datas) {
   return view('employees.service.indexEmploymentService', array(
     'status' => true,
@@ -1080,7 +1092,7 @@ if($datas) {
     'emp_id' => $emp_id,
     'profil' => $datas,
     'absences' => $absences,
-    'sisa_cuti' => $ct,
+    'sisa_cuti' => $ct
   ))->with('page', 'Employment Services');
 } else {
   return view('home')->with('page', 'Dashboard');
@@ -1772,10 +1784,24 @@ public function getKaizen(Request $request)
 
 public function fetchDataKaizen()
 {
+  $username = Auth::user()->username;
+  for ($i=0; $i < count($_GET['user']); $i++) { 
+    if ($username == $_GET['user'][$i]) {
+      $d = 1;
+      break;
+    } else {
+      $d = 0;
+    }
+  }
+
+  $dprt = db::select("select distinct section from mutation_logs where valid_to is null and department = (select department from mutation_logs where employee_id = '".$username."' and valid_to is null)");
+
   $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
   ->select('kaizen_forms.id','employee_id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
-  if ($_GET['area'] != "") {
-    $kzn = $kzn->where('area','=', $_GET['area']);
+  if ($_GET['area'][0] != "") {
+    $areas = implode("','", $_GET['area']);
+
+    $kzn = $kzn->whereRaw('area in (\''.$areas.'\')');
   }
 
   if ($_GET['status'] != "") {
@@ -1792,9 +1818,20 @@ public function fetchDataKaizen()
     }
   }
 
+  $dprt2 = [];
+  foreach ($dprt as $dpr) {
+    array_push($dprt2, $dpr->section);
+  }
+
+  $dprt3 = implode("','", $dprt2);
+
   if ($_GET['filter'] != "") {
     $kzn = $kzn->where('area','=', $_GET['filter']);
     $kzn = $kzn->where('status','=', '-1');
+  }
+
+  if ($d == 0) {
+    $kzn = $kzn->whereRaw('area in (\''.$dprt3.'\')');
   }
 
   $kzn->get();
@@ -1817,7 +1854,7 @@ public function fetchDataKaizen()
     } else {
       return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
     }
-    
+
   })
   ->addColumn('action', function($kzn){
     return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
@@ -1927,10 +1964,25 @@ public function assessKaizen(Request $request)
 
 public function fetchAppliedKaizen()
 {
+  $username = Auth::user()->username;
+  for ($i=0; $i < count($_GET['user']); $i++) { 
+    if ($username == $_GET['user'][$i]) {
+      $d = 1;
+      break;
+    } else {
+      $d = 0;
+    }
+  }
+
+  $dprt = db::select("select distinct section from mutation_logs where valid_to is null and department = (select department from mutation_logs where employee_id = '".$username."' and valid_to is null)");
+
   $kzn = KaizenForm::Join('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
-  ->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
-  if ($_GET['area'] != "") {
-    $kzn = $kzn->where('area','=', $_GET['area']);
+  ->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
+  ->where('manager_point_1','<>','0');
+  if ($_GET['area'][0] != "") {
+    $areas = implode("','", $_GET['area']);
+
+    $kzn = $kzn->whereRaw('area in (\''.$areas.'\')');
   }
 
   if ($_GET['status'] != "") {
@@ -1941,6 +1993,16 @@ public function fetchAppliedKaizen()
     } else if ($_GET['status'] == '3') {
       $kzn = $kzn->where('application','=', '0');
     }
+  }
+
+  $dprt2 = [];
+  foreach ($dprt as $dpr) {
+    array_push($dprt2, $dpr->section);
+  }
+
+  $dprt3 = implode("','", $dprt2);
+  if ($d == 0) {
+    $kzn = $kzn->whereRaw('area in (\''.$dprt3.'\')');
   }
 
   $kzn->get();

@@ -111,12 +111,13 @@
 						</div>
 
 						<div class="col-xs-3">
-							<select class="form-control select2" id="section">
-								<option value="">Pilih Area</option>
-								@foreach($section as $scc)
-								<option value="{{ $scc->section }}">{{ $scc->section }}</option>
-								@endforeach
-							</select>
+							<div class="form-group">
+								<select class="form-control select2" id="section" multiple="multiple" data-placeholder="Pilih area">
+									@foreach($section as $scc)
+									<option value="{{ $scc->section }}">{{ $scc->section }}</option>
+									@endforeach
+								</select>
+							</div>
 						</div>
 
 						<div class="col-xs-3">
@@ -308,16 +309,17 @@
 		}
 	});
 
-	var area = "";
+	var area = [""];
 	var stat = "";
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+		$('.select2').select2();
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	});
 
-	function fill_table(pos, area, stat, filter) {
+	function fill_table(pos, area, stat, filter, user) {
 		$('#tableKaizen').DataTable().destroy();
 		var table2 = $('#tableKaizen').DataTable({
 			'dom': 'Bfrtip',
@@ -372,7 +374,7 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"data": { position: pos, area: area, status: stat, filter: filter},
+				"data": { position: pos, area: area, status: stat, filter: filter, user:user},
 				"url" : "{{ url('fetch/kaizen/') }}"
 			},
 			"columns": [
@@ -401,7 +403,8 @@
 
 	$(window).on('pageshow', function(){
 		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
-		fill_table('{{ $position->position }}', area, stat, '{{ $fil }}');
+		var user2 = <?php echo json_encode($user); ?>;
+		fill_table('{{ $position->position }}', area, stat, '{{ $fil }}', user2);
 	});
 
 	function cekDetail(id) {
@@ -474,9 +477,16 @@
 
 	function cari() {
 		area = $("#section").val();
+		if (area.length == 0) {
+			area.push("");
+		}
+		console.log(area);
+		// return false;
+
 		stat = $("#stat").val();
 		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
-		fill_table('{{ $position->position }}',area,stat, '{{ $fil }}');
+		var user2 = <?php echo json_encode($user); ?>;
+		fill_table('{{ $position->position }}',area,stat, '{{ $fil }}', user2);
 	}
 
 	function openErrorGritter(title, message) {

@@ -103,8 +103,7 @@
 						</div>
 
 						<div class="col-xs-3">
-							<select class="form-control select2" id="section">
-								<option value="">Pilih Area</option>
+							<select class="form-control select2" id="section" multiple="multiple" data-placeholder="Pilih Area">
 								@foreach($section as $scc)
 								<option value="{{ $scc->section }}">{{ $scc->section }}</option>
 								@endforeach
@@ -327,17 +326,18 @@
 		}
 	});
 
-	var area = "";
+	var area = [""];
 	var stat = "";
 	var table2 = $('#tableKaizen').DataTable();
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+		$('.select2').select2();
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	});
 
-	function fill_table(pos, area, stat) {
+	function fill_table(pos, area, stat, user) {
 		$('#tableKaizen').DataTable().destroy();
 		var table2 = $('#tableKaizen').DataTable({
 			'dom': 'Bfrtip',
@@ -392,7 +392,7 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"data": { position: pos, area: area, status: stat},
+				"data": { position: pos, area: area, status: stat, user:user},
 				"url" : "{{ url('fetch/kaizen/applied') }}"
 			},
 			"columns": [
@@ -418,7 +418,8 @@
 	}
 
 	$(window).on('pageshow', function(){
-		fill_table('{{ $position->position }}', area, stat);
+		var user2 = <?php echo json_encode($user); ?>;
+		fill_table('{{ $position->position }}', area, stat, user2);
 	});
 
 	function cekDetail(id) {
@@ -514,8 +515,13 @@
 
 	function cari() {
 		area = $("#section").val();
+		if (area.length == 0) {
+			area.push("");
+		}
+
 		stat = $("#stat").val();
-		fill_table('{{ $position->position }}',area,stat);
+		var user2 = <?php echo json_encode($user); ?>;
+		fill_table('{{ $position->position }}',area, stat, user2);
 	}
 
 	function openErrorGritter(title, message) {
