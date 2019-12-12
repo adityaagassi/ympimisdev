@@ -17,6 +17,7 @@ use App\QcCparItem;
 use App\Department;
 use App\Employee;
 use App\Material;
+use App\MaterialPlantDataList;
 use App\Status;
 use App\WeeklyCalendar;
 use App\Destination;
@@ -382,8 +383,8 @@ class QcReportController extends Controller
         // ->where('qc_cpar_items.cpar_no','=',$cpars->cpar_no)
         ->get();
 
-        $materials = Material::select('materials.id','materials.material_number','materials.material_description')
-        ->orderBy('materials.id','ASC')
+        $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
+        ->orderBy('material_plant_data_lists.id','ASC')
         ->get();
 
         return view('qc_report.edit', array(
@@ -1472,9 +1473,9 @@ class QcReportController extends Controller
         ->where('qc_cpars.id','=',$id)
         ->get();
 
-      $parts = QcCparItem::select('qc_cpar_items.*','materials.material_description')
+      $parts = QcCparItem::select('qc_cpar_items.*','material_plant_data_lists.material_description')
       ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
-      ->join('materials','qc_cpar_items.part_item','=','materials.material_number')
+      ->join('material_plant_data_lists','qc_cpar_items.part_item','=','material_plant_data_lists.material_number')
       ->where('qc_cpars.id','=',$id)
       ->get();
 
@@ -1702,11 +1703,10 @@ class QcReportController extends Controller
       public function getmaterialsbymaterialsnumber(Request $request)
       {
           $html = array();
-          $materials_number = Material::where('material_number',$request->materials_number)->get();
+          $materials_number = MaterialPlantDataList::where('material_number',$request->materials_number)->get();
           foreach ($materials_number as $material) {
               $html = array(
-                'material_description' => $material->material_description,
-                'hpl' => $material->hpl,
+                'material_description' => $material->material_description
               );
 
           }
@@ -1762,9 +1762,9 @@ class QcReportController extends Controller
           ->where('qc_cpars.id','=',$id)
           ->get();
 
-          $parts = QcCparItem::select('qc_cpar_items.*','materials.material_description','materials.hpl')
+          $parts = QcCparItem::select('qc_cpar_items.*','material_plant_data_lists.material_description')
           ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
-          ->join('materials','qc_cpar_items.part_item','=','materials.material_number')
+          ->join('material_plant_data_lists','qc_cpar_items.part_item','=','material_plant_data_lists.material_number')
           ->where('qc_cpars.id','=',$id)
           ->get();
 

@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use DataTables;
 use Response;
 use File;
+use App\MaterialPlantDataList;
+use App\BomOutput;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
 
@@ -19,7 +21,160 @@ class StockTakingController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth');
+		$this->storage_location = [
+			'203',
+			'208',
+			'214',
+			'216',
+			'217',
+			'218',
+			'401',
+			'CL21',
+			'CL51',
+			'CL61',
+			'CL91',
+			'CLA0',
+			'CLA2',
+			'CLB9',
+			'CS91',
+			'FA0R',
+			'FA1R',
+			'FL21',
+			'FL51',
+			'FL61',
+			'FL91',
+			'FLA0',
+			'FLA1',
+			'FLA2',
+			'FLT9',
+			'FSTK',
+			'LA0R',
+			'MINS',
+			'MMJR',
+			'MNCF',
+			'MS11',
+			'MSCR',
+			'MSTK',
+			'OTHR',
+			'PN91',
+			'PNR4',
+			'PNR9',
+			'RC11',
+			'RC91',
+			'SA0R',
+			'SA1R',
+			'SX21',
+			'SX51',
+			'SX61',
+			'SX91',
+			'SXA0',
+			'SXA1',
+			'SXA2',
+			'SXBR',
+			'SXT9',
+			'SXWH',
+			'VA0R',
+			'VN11',
+			'VN21',
+			'VN51',
+			'VN91',
+			'VNA0',
+			'WCL',
+			'WCS',
+			'WFL',
+			'WFTP',
+			'WHST',
+			'WLST',
+			'WPCS',
+			'WPN',
+			'WPPN',
+			'WPRC',
+			'WPRS',
+			'WRC',
+			'WSCR',
+			'WSTP',
+			'WSX',
+			'YCJP',
+			'YCJR',
+			'ZPA0'
+		];
+
+		$this->base_unit = [
+			'PC',
+			'L',
+			'SET',
+			'KG',
+			'G',
+			'M',
+			'SHT',
+			'DS',
+			'CAN',
+			'CS',
+			'BT',
+			'DZ',
+			'ROL',
+			'BAG',
+			'PAA'
+		];
 	}
+
+	//Stock Taking Bulanan
+
+	public function mpdl() {
+		$title = 'Material Plant data List';
+		$title_jp = '???';
+
+		return view('stocktakings.mpdl', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'storage_locations' => $this->storage_location,
+			'base_units' => $this->base_unit,
+		))->with('page', 'Material Plant Data List')->with('head', 'MPDL');
+	}
+
+	public function fetchmpdl(Request $request){
+		$material_plant_data_lists = MaterialPlantDataList::orderBy('material_plant_data_lists.material_number', 'asc');
+
+		if($request->get('storage_location') != null){
+			$material_plant_data_lists = $material_plant_data_lists->whereIn('material_plant_data_lists.storage_location', $request->get('storage_location'));
+		}
+
+		if($request->get('base_unit') != null){
+			$material_plant_data_lists = $material_plant_data_lists->whereIn('material_plant_data_lists.bun', $request->get('base_unit'));
+		}
+
+		$material_plant_data_lists = $material_plant_data_lists->select('material_plant_data_lists.material_number', 'material_plant_data_lists.material_description', 'material_plant_data_lists.bun', 'material_plant_data_lists.spt', 'material_plant_data_lists.storage_location', 'material_plant_data_lists.valcl', 'material_plant_data_lists.standard_price')
+		->get();
+
+		return DataTables::of($material_plant_data_lists)->make(true);
+	}
+
+	public function bom_output(){
+		$title = 'BOM Output';
+		$title_jp = '???';
+
+		return view('stocktakings.bomoutput', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'base_units' => $this->base_unit,
+		))->with('page', 'BOM Output')->with('head', 'BOM');
+	}
+	
+	public function fetch_bom_output(Request $request){
+		$bom_outputs = BomOutput::orderBy('bom_outputs.id', 'asc');
+
+		// if($request->get('base_unit') != null){
+		// 	$bom_outputs = $bom_outputs->whereIn('bom_outputs.um', $request->get('base_unit'));
+		// }
+
+		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.um')
+		->get();
+
+		return DataTables::of($bom_outputs)->make(true);
+	}
+
+
+	//Stock Taking Silver
 
 	public function indexSilver($id){
 		if($id == 'fl_assembly'){

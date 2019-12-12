@@ -449,13 +449,6 @@
               <input type="text" class="form-control" id="material_description" placeholder="Material Description" required readonly>
             </div>
           </div>
-          <div class="form-group row" align="left" id="hp">
-            <div class="col-sm-1"></div>
-            <label class="col-sm-2">HPL<span class="text-red">*</span></label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="hpl" placeholder="HPL" required readonly>
-            </div>
-          </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
             <label class="col-sm-2">No Invoice / No Lot</span></label>
@@ -745,13 +738,6 @@
               <input type="text" class="form-control" id="material_description_edit" placeholder="Material Description" required readonly>
             </div>
           </div>
-          <div class="form-group row" align="left">
-            <div class="col-sm-1"></div>
-            <label class="col-sm-2">HPL<span class="text-red">*</span></label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="hpl_edit" placeholder="HPL" required readonly>
-            </div>
-          </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
           <label class="col-sm-2">No Invoice / No Lot</span></label>
@@ -971,7 +957,6 @@
                   obj = JSON.parse(json);
                   console.log(obj);
                   $('#material_description').val(obj.material_description);
-                  $('#hpl').val(obj.hpl);
                 }
             });
         });
@@ -988,7 +973,6 @@
                   obj = JSON.parse(json);
                   console.log(obj);
                   $('#material_description_edit').val(obj.material_description);
-                  $('#hpl_edit').val(obj.hpl);
                 }
             });
         });
@@ -1225,7 +1209,6 @@
                   obj = JSON.parse(json);
                   console.log(obj);
                   $('#material_description_edit').val(obj.material_description);
-                  $('#hpl_edit').val(obj.hpl);
                 }
             });
       });

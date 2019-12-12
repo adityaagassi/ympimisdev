@@ -742,7 +742,7 @@
                 <tr><td colspan="6"><b>MATERIAL <?= $no ?></b></td></tr>
                 <tr>
                   <td colspan="2">Part Item</td>
-                  <td colspan="2">{{ $part->part_item }} - {{ $part->material_description }} - {{ $part->hpl }}</td>
+                  <td colspan="2">{{ $part->part_item }} - {{ $part->material_description }}</td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
