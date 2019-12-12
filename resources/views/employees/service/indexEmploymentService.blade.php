@@ -196,7 +196,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
-					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+					<?php if (Auth::user()->role_code == 'emp-srv' || Auth::user()->role_code == 'MIS') { ?>
+						<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+					<?php } ?>
 				</div>
 				<div class="col-md-9">
 					<div class="box" id="boxing">
