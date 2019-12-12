@@ -1480,7 +1480,7 @@ class QcReportController extends Controller
 
       $pdf = \App::make('dompdf.wrapper');
       $pdf->getDomPDF()->set_option("enable_php", true);
-      $pdf->setPaper('A4', 'potrait');
+      $pdf->setPaper('Legal', 'potrait');
       $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
       
       $pdf->loadView('qc_report.print_cpar', array(
@@ -1779,7 +1779,7 @@ class QcReportController extends Controller
       {
           $checked = $request->get('checked');
           // var_dump(count($checked));die();
-          if(count($checked) == 13 || count($checked) == 7){
+          if(count($checked) == 13 || count($checked) == 19 || count($checked) == 25 || count($checked) == 31 || count($checked) == 37){
             $cpars = QcCpar::find($id);
             if ($cpars->posisi == "chief") {
               $cpars->checked_chief = "Checked";              

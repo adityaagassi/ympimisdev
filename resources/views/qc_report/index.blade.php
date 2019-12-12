@@ -241,6 +241,7 @@ td{
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
+    fillCPARDetail();
     $("#navbar-collapse").text('');
     $('#bulandari').datepicker({
         format: "yyyy-mm",
@@ -261,10 +262,8 @@ td{
           }
         }
       });
-
     });
 
- 
 
   function clearConfirmation(){
     location.reload(true);

@@ -147,10 +147,9 @@
 
         @endif
 
-
         <br/><br/>
 
-        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->username == "clark" )
+        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS")
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
@@ -495,7 +494,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Request Due Date (CAR)</td>
+                  <td colspan="2">Request Due Date (CPAR Return to QA)</td>
                   <td colspan="2"><?php echo date('d F Y', strtotime($cpars->tgl_balas)); ?></td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
@@ -737,8 +736,10 @@
                       @endif
                   </td>
                 </tr>
+                <?php $no = 1; ?>                
                 @foreach($parts as $part)
-                <tr><td colspan="6"><b>MATERIAL</b></td></tr>
+
+                <tr><td colspan="6"><b>MATERIAL <?= $no ?></b></td></tr>
                 <tr>
                   <td colspan="2">Part Item</td>
                   <td colspan="2">{{ $part->part_item }} - {{ $part->material_description }} - {{ $part->hpl }}</td>
@@ -1225,7 +1226,7 @@
                       @endif
                   </td>
                 </tr>
-                @endforeach
+                <?php $no++; ?>@endforeach
             </tbody>
         </table>
         

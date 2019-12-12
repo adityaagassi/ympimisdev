@@ -86,7 +86,7 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>
-    @if(Auth::user()->username == "clark" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+    @if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
     
     @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
     <form role="form" method="post" action="{{url('index/qc_report/close1', $cpars->id)}}">

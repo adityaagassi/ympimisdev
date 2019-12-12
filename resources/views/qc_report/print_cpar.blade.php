@@ -42,8 +42,20 @@
 
 			if($jumlahparts < 2)
 				$jumlah = 0;
-			else
+			else if($jumlahparts == 2)
 				$jumlah = 2;
+			else if($jumlahparts == 3)
+				$jumlah = 4;
+			else if($jumlahparts == 4)
+				$jumlah = 6;
+			else if($jumlahparts == 5)
+				$jumlah = 8;
+			else if($jumlahparts == 6)
+				$jumlah = 10;
+			else if($jumlahparts == 7)
+				$jumlah = 12;
+			else if($jumlahparts == 8)
+				$jumlah = 14;
 			?>
 
 			@foreach($cpars as $cpar)
@@ -57,11 +69,11 @@
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="border: none !important">Request Date : <b>{{$cpar->tgl_permintaan}}</b></td>
+				<td colspan="4" style="border: none !important">Issue Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_permintaan)) ?></b></td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Department : <b>{{$cpar->department_name}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="border: none !important">Request Due Date: <b>{{$cpar->tgl_balas}}</b></td>
+				<td colspan="4" style="border: none !important">Request Due Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_balas)) ?></b><br>(CPAR Return to QA)</td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">
 					@if($cpar->destination_code != null)
 						Customer : <b>{{$cpar->destination_name}}</b>

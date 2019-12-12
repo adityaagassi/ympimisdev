@@ -156,7 +156,7 @@
 
         <br/><br/>
 
-        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->username == "clark")
+        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS")
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
