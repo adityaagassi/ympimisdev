@@ -35,18 +35,22 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		<div class="col-xs-4">
 			<label for="kz_tanggal">Tanggal</label>
 			<input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d')}}" readonly>
+			<!-- <input type="text" id="kz_tanggal" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nik">NIK</label>
 			<input type="text" id="kz_nik" class="form-control" value="{{ $emp_id}}" readonly>
+			<!-- <input type="text" id="kz_nik" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nama">Nama</label>
 			<input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4)}}" readonly>
+			<!-- <input type="text" id="kz_nama" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
 			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}" readonly>
+			<!-- <input type="text" id="kz_bagian" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_leader">Nama Leader</label><br>
@@ -59,9 +63,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			<!-- <input type="text" id="kz_sub_leader" class="form-control"> -->
 		</div>
 		<div class="col-xs-4">
-			<label for="kz_tujuan">Area Kaizen</label><br>
+			<label for="kz_tujuan">Pilih Area Kaizen</label><br>
 			<select id="kz_tujuan" class="form-control select2" style="width: 100% !important;">
-				<option value="">Pilih Area</option>
+				<option value="">Pilih Area Kaizen</option>
 				@foreach($sc as $scc)
 				<option value="{{ $scc->section }}">{{ $scc->section }}</option>
 				@endforeach
@@ -191,6 +195,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	var tmp = [];
 	var oth = 0;
 	var cal = [];
+	var kz_mp = 0, kz_area = 0;
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
@@ -226,10 +231,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			tmp = new Array(other.length);
 
 			$.each(other, function(index, value){
-				other_child += "<tr><th>"+other[index][0]+"</th><td width='20%'><input type='text' id='other_input_"+index+"' class='form-control' onkeyup='otherFill(this,"+other[index][1]+")'></td><td>&nbsp; "+other[index][2]+" &nbsp; X &nbsp; Rp "+other[index][1]+" </td><td width='30%'><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_"+index+"' class='form-control' readonly></div></td></tr>";
+				other_child += "<tr><th>"+other[index][0]+"</th><td width='20%'><input type='text' id='other_input_"+index+"' class='form-control' onkeyup='otherFill(this,"+other[index][1]+")' placeholder='Dlm satu bulan'></td><td>&nbsp; "+other[index][2]+" &nbsp; X &nbsp; Rp "+other[index][1]+" </td><td width='30%'><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_"+index+"' class='form-control' readonly></div></td></tr>";
 				last = index;
 			})
-			other_child += "<tr><th>Lainnya</th><td width='20%'><input type='text' id='other_input_"+last+1+"' class='form-control' onkeyup='otherFill(this,1)'></td><td></td><td><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_"+last+1+"' class='form-control' readonly></div></td></tr>";
 			other_child += "<tr><td colspan='3' style='padding-right:5px'><p class='pull-right'><b>Total</b></p></td><td><div class='input-group'><span class='input-group-addon'>Rp </span><input type='text' id='other_total' class='form-control' readonly></div></td></tr>";
 
 			$("#tabel_other").append(other_child);
@@ -242,12 +246,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					}
 				})
 			})
-			$("#other_input_lainnya").on('keypress keyup blur', function() {
-				$(this).val($(this).val().replace(/[^\d].+/, ""));
-				if ((event.which < 48 || event.which > 57)) {
-					event.preventDefault();
-				}
-			})
 		})
 	}
 
@@ -259,6 +257,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	})
 
 	$("#kz_mp").on('change keyup paste', function() {
+		kz_mp = ($(this).val() * std_mp).toFixed(2) * 20;
 		$("#kz_mp_bulan").val((($(this).val() * std_mp).toFixed(2) * 20).toLocaleString('es-ES'));
 		total();
 	})
@@ -272,13 +271,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 	$("#kz_space").on('change keyup paste', function() {
 		var temp = ($(this).val() * std_space).toFixed(2);
+		kz_area = temp;
 		$("#kz_space_bulan").val(temp.toLocaleString('es-ES'));
 		console.log(temp.toLocaleString('es-ES'));
 		total();
 	})
 
 	function total() {
-		var total = (parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + oth).toFixed(2);
+		var total = parseInt(kz_mp) + parseInt(kz_area) + parseInt(oth);
 
 		if (isNaN(total)) {
 			total = 0;
@@ -303,7 +303,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 		oth = total;
 
-		var total2 = (parseFloat($("#kz_mp_bulan").val()) + parseFloat($("#kz_space_bulan").val()) + total).toFixed(2);
+		var total2 = parseInt(kz_mp) + parseInt(kz_area) + parseInt(total);
 
 		if (isNaN(total2)) {
 			total2 = 0;
@@ -347,16 +347,16 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	cal = [];
 
 	if ($("#kz_mp").val() != "" && $("#kz_mp").val() != "0") {
-		cal.push([1,parseFloat($("#kz_mp").val())]);
+		cal.push([1,parseInt($("#kz_mp").val())]);
 	}
 
 	if ($("#kz_space").val() != "" && $("#kz_space").val() != "0") {
-		cal.push([2,parseFloat($("#kz_space").val())]);
+		cal.push([2,parseInt($("#kz_space").val())]);
 	}
 
 	for (var i = 0; i < other.length; i++) {
 		if ($("#other_input_"+i).val() != "" && $("#other_input_"+i).val() != "0") {
-			cal.push([other[i][4], parseFloat($("#other_input_"+i).val())]);
+			cal.push([other[i][4], parseInt($("#other_input_"+i).val())]);
 		}
 	}
 
