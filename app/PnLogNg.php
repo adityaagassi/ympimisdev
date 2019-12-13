@@ -10,7 +10,7 @@ class PnLogNg extends Model
    use SoftDeletes;
     
     protected $fillable = [
-        'ng','line','operator','tag','model','location','created_by','qty'
+        'ng','line','operator','tag','model','location','created_by','qty','reed'
     ];
 
     	public function user()
