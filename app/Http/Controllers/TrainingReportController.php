@@ -586,14 +586,23 @@ class TrainingReportController extends Controller
 
     function print_training_approval($activity_list_id,$bulan)
     {
+        $role_code = Auth::user()->role_code;
         $year = substr($bulan,0,4);
         $month = substr($bulan,-2);
-        $training = TrainingReport::where('activity_list_id',$activity_list_id)
+        if($role_code == 'PROD-SPL'){
+            $training = TrainingReport::where('activity_list_id',$activity_list_id)
                 ->whereYear('date', '=', $year)
                 ->whereMonth('date', '=', $month)
                 ->where('send_status','Sent')
                 ->where('approval',null)
                 ->get();
+        }
+        else{
+            $training = TrainingReport::where('activity_list_id',$activity_list_id)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->get();
+        }
         foreach($training as $training){
             $id = $training->id;
         }

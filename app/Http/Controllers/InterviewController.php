@@ -524,14 +524,24 @@ class InterviewController extends Controller
 
     function print_approval($activity_list_id,$bulan)
     {
+        $role_code = Auth::user()->role_code;
         $year = substr($bulan,0,4);
         $month = substr($bulan,-2);
-        $interview = Interview::where('activity_list_id',$activity_list_id)
-            ->whereYear('date', '=', $year)
-            ->whereMonth('date', '=', $month)
-            ->where('send_status','Sent')
-            ->where('approval',null)
-            ->get();
+        if($role_code == 'PROD-SPL'){
+            $interview = Interview::where('activity_list_id',$activity_list_id)
+              ->whereYear('date', '=', $year)
+              ->whereMonth('date', '=', $month)
+              ->where('send_status','Sent')
+              ->where('approval',null)
+              ->get();
+        }
+        else{
+            $interview = Interview::where('activity_list_id',$activity_list_id)
+              ->whereYear('date', '=', $year)
+              ->whereMonth('date', '=', $month)
+              ->get();
+        }
+        //interview
         foreach($interview as $interview){
             $interview_id = $interview->id;
         }

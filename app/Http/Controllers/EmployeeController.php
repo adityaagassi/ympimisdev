@@ -64,6 +64,8 @@ class EmployeeController extends Controller
       'Absensi', 'Lembur', 'BPJS Kes', 'BPJS TK', 'Cuti', "PKB", "Penggajian"
     ];
 
+    $this->usr = "'19014987','19014986','E01090823','R14122906','M09041335'";
+
   }
 // master emp
   public function index(){
@@ -119,16 +121,15 @@ class EmployeeController extends Controller
   public function indexKaizen()
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986','E01090823','R14122906','M09041335'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$usr.'))')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
     ->select('position')
     ->first();
 
-    $dd = str_replace("'","", $usr);
+    $dd = str_replace("'","", $this->usr);
     $dd = explode(',', $dd);
 
     $sections = "select section from
@@ -156,14 +157,16 @@ class EmployeeController extends Controller
   public function indexKaizen2($section)
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986','E01090823','R14122906'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$usr.'))')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
     ->select('position')
     ->first();
+
+    $dd = str_replace("'","", $this->usr);
+    $dd = explode(',', $dd);
 
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
@@ -181,6 +184,7 @@ class EmployeeController extends Controller
         'position' => $emp,
         'section' => $sc,
         'filter' => $section,
+        'user' => $dd,
         'title_jp' => 'e-改善（採点対象改善提案リスト）'))->with('page', 'Assess')->with('head','Kaizen');
     } else {
       return redirect()->back();
@@ -190,16 +194,15 @@ class EmployeeController extends Controller
   public function indexKaizenApplied()
   {
     $username = Auth::user()->username;
-    $usr = "'19014987','19014986','E01090823','R14122906'";
 
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$usr.'))')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
     ->select('position')
     ->first();
 
-    $dd = str_replace("'","", $usr);
+    $dd = str_replace("'","", $this->usr);
     $dd = explode(',', $dd);
 
     $sections = "select section from
@@ -236,6 +239,20 @@ class EmployeeController extends Controller
 
   public function indexKaizenApprovalResume()
   {
+    $username = Auth::user()->username;
+
+    $dd = str_replace("'","", $this->usr);
+    $dd = explode(',', $dd);
+
+    for ($i=0; $i < count($dd); $i++) {
+      if ($username == $dd[$i]) {
+        $d = 1;
+        break;
+      } else {
+        $d = 0;
+      }
+    }
+
     $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
 
     $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
@@ -1663,7 +1680,7 @@ public function fetchKaizen(Request $request)
   return DataTables::of($kz)
   ->addColumn('action', function($kz){
     if ($kz->status == '-1') {
-      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="detail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
+      return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
       <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->id . '"><i class="fa fa-pencil"></i> Ubah</a>';
     } else {
       return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>';
@@ -1975,6 +1992,7 @@ public function fetchAppliedKaizen()
   }
 
   $dprt = db::select("select distinct section from mutation_logs where valid_to is null and department = (select department from mutation_logs where employee_id = '".$username."' and valid_to is null)");
+  DB::enableQueryLog(); // Enable query log
 
   $kzn = KaizenForm::Join('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
   ->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
