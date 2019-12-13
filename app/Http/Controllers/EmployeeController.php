@@ -246,10 +246,10 @@ class EmployeeController extends Controller
 
     for ($i=0; $i < count($dd); $i++) {
       if ($username == $dd[$i]) {
-        $d = 1;
+        $d = "";
         break;
       } else {
-        $d = 0;
+        $d = "where department = '".$get_department->department."'";
       }
     }
 
@@ -267,7 +267,7 @@ class EmployeeController extends Controller
     left join
     (select count(id) as count, area from kaizen_forms where `status` = -1 group by area) as kz
     on bagian.section = kz.area
-    where department = '".$get_department->department."'
+    ".$d."
     order by `name` desc";
 
     $datas = db::select($q_data);

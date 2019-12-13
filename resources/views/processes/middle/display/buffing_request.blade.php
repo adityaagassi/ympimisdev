@@ -68,7 +68,7 @@
 			background-color: #f55656;
 		}
 	}
-	#quantity_kanban, #quantity {
+	#quantity_kanban, #quantity, #diff {
 		font-size: 2vw;
 	}
 </style>
@@ -104,6 +104,9 @@
 				</tr>
 				<tr id="quantity">
 					<!-- <th>Total Quantity</th> -->
+				</tr>
+				<tr id="diff">
+					
 				</tr>
 				<tr id="chart2">
 					
@@ -143,6 +146,7 @@
 				$("#quantity").empty();
 				$("#quantity_kanban").empty();
 				$("#chart2").empty();
+				$("#diff").empty();
 
 				var material_req = [];
 				var cat = [];
@@ -154,8 +158,9 @@
 				var max = 0;
 
 				model = "<th style='width:45px'>#</th>";
-				quantity = "<th>Qty</th>";
 				quantity_kanban = "<th>Qty Kanban</th>";
+				quantity = "<th>Request</th>";
+				diff = "<th>Stock</th>";
 				chart = "<th></th>";
 
 				$.each(result.datas, function(index, value){
@@ -168,8 +173,15 @@
 							model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
 						}
 
+						if (parseInt(value.inventory_quantity) - value.quantity < 0) {
+							color2 = "style='background-color:#eb2b21'";
+						} else {
+							color2 = "style='background-color:#12b522'";
+						}
+
 						quantity += "<td>"+value.quantity+"</td>";
 						quantity_kanban += "<td>"+value.kanban+"</td>";
+						diff += "<td "+color2+">"+parseInt(value.inventory_quantity)+"</td>";
 						limit.push(value.kanban);
 					// }
 
@@ -214,6 +226,7 @@
 				$("#modelAll").append(model);
 				$("#quantity").append(quantity);
 				$("#quantity_kanban").append(quantity_kanban);
+				$("#diff").append(diff);
 				$("#chart2").append(chart);
 
 				//CHART

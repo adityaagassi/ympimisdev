@@ -234,7 +234,7 @@ class MiddleProcessController extends Controller
 	public function indexRequestDisplay($id)
 	{
 		return view('processes.middle.display.buffing_request', array( 
-			'title' => 'Middle Request Material '.$id,
+			'title' => 'Middle Request Material',
 			'title_jp' => '中間工程ワーク',
 			'option' => $id)
 	)->with('page', 'Middle Request Material Soldering');
