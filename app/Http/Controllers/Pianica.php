@@ -53,12 +53,13 @@ class Pianica extends Controller{
               '5',
           ];
           $this->bagian = [
-              'bensuki',
-              'benage',
-              'pureto',
-              'kensa awal',
-              'kensa akhir',
-              'kakuning visual',
+              'Bensuki',
+              'Benage',
+              'Pureto',
+              'Tunning',
+              'Kensa Awal',
+              'Kensa Akhir',
+              'Kakuning Visual',
           ];
       }
 
@@ -512,7 +513,7 @@ public function savekensaawal(Request $request){
 
         $log = new PnLogProces([
             'line' => $request->get('line'),
-            'operator' => $request->get('op'),
+            'operator' => $request->get('optuning')."#".$request->get('opfixing'),
             'tag' => $request->get('tag'),
             'model' => $request->get('model'),
             'location' => $request->get('location'),
@@ -520,23 +521,87 @@ public function savekensaawal(Request $request){
             'created_by' => $request->get('op'),
         ]);
 
-        $ng = $request->get('ng');
-        if($ng !=""){
-            $rows = explode(",", $ng);
-            foreach ($rows as $row) 
-            {                          
-                $detail = new PnLogNg([                
-                    'ng' => $row,                
-                    'line' => $request->get('line'),
-                    'operator' => $request->get('op'),
-                    'tag' => $request->get('tag'),
-                    'model' => $request->get('model'),
-                    'location' => $request->get('location'),
-                    'qty' => $request->get('qty'),
-                    'created_by' => $request->get('op'),
-                ]);
-                $detail->save();            
-            }
+        // $ng = $request->get('ng');
+        // if($ng !=""){
+        //     $rows = explode(",", $ng);
+        //     foreach ($rows as $row) 
+        //     {                          
+        //         $detail = new PnLogNg([                
+        //             'ng' => $row,                
+        //             'line' => $request->get('line'),
+        //             'operator' => $request->get('op'),
+        //             'tag' => $request->get('tag'),
+        //             'model' => $request->get('model'),
+        //             'location' => $request->get('location'),
+        //             'qty' => $request->get('qty'),
+        //             'created_by' => $request->get('op'),
+        //         ]);
+        //         $detail->save();            
+        //     }
+        // }
+
+        $biri = $request->get('ngbiri');
+        if($biri !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 101,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('optuning')."#".$request->get('opfixing'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngbiri'),
+            ]);
+            $detail->save();      
+        }
+
+        $oktaf = $request->get('ngoktaf');
+        if($oktaf !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 102,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('optuning')."#".$request->get('opfixing'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngoktaf'),
+            ]);
+            $detail->save();      
+        }
+
+        $tinggi = $request->get('ngtinggi');
+        if($tinggi !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 103,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('optuning')."#".$request->get('opfixing'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngtinggi'),
+            ]);
+            $detail->save();      
+        }
+
+        $rendah = $request->get('ngrendah');
+        if($rendah !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 104,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('optuning')."#".$request->get('opfixing'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngrendah'),
+            ]);
+            $detail->save();      
         }
 
         $log->save();
@@ -752,41 +817,81 @@ public function savekensaakhir(Request $request){
     $id_user = Auth::id();
     try {        
 
-        $ng = $request->get('ng');
-        if($ng !=""){
-            $rows = explode(",", $ng);
-            foreach ($rows as $row) 
-            {                          
-                $detail = new PnLogNg([                
-                    'ng' => $row,                
-                    'line' => $request->get('line'),
-                    'operator' => $request->get('op'),
-                    'tag' => $request->get('tag'),
-                    'model' => $request->get('model'),
-                    'location' => $request->get('location'),
-                    'qty' => $request->get('qty'),
-                    'created_by' => $request->get('op'),
-                ]);
-                $detail->save(); 
+        // $ng = $request->get('ng');
+        // if($ng !=""){
+        //     $rows = explode(",", $ng);
+        //     foreach ($rows as $row) 
+        //     {                          
+        //         $detail = new PnLogNg([                
+        //             'ng' => $row,                
+        //             'line' => $request->get('line'),
+        //             'operator' => $request->get('op'),
+        //             'tag' => $request->get('tag'),
+        //             'model' => $request->get('model'),
+        //             'location' => $request->get('location'),
+        //             'qty' => $request->get('qty'),
+        //             'created_by' => $request->get('op'),
+        //         ]);
+        //         $detail->save(); 
 
 
-            }
+        //     }
 
-            $inventori =  PnInventorie::updateOrCreate(
-                [           
-                    'tag' => $request->get('tag'),            
-                ],
-                [
-                   'line' => $request->get('line'),
-                   'tag' => $request->get('tag'),
-                   'model' => $request->get('model'),
-                   'location' => $request->get('location'),
-                   'qty' => $request->get('qty'),
-                   'status' => '0',
-                   'created_by' => $request->get('op'),
-               ]);
+            // $inventori =  PnInventorie::updateOrCreate(
+            //     [           
+            //         'tag' => $request->get('tag'),            
+            //     ],
+            //     [
+            //      'line' => $request->get('line'),
+            //      'tag' => $request->get('tag'),
+            //      'model' => $request->get('model'),
+            //      'location' => $request->get('location'),
+            //      'qty' => $request->get('qty'),
+            //      'status' => '0',
+            //      'created_by' => $request->get('op'),
+            //  ]);
 
-            $log = new PnLogProces([
+            // $log = new PnLogProces([
+            //     'line' => $request->get('line'),
+            //     'operator' => $request->get('op'),
+            //     'tag' => $request->get('tag'),
+            //     'model' => $request->get('model'),
+            //     'location' => $request->get('location'),
+            //     'qty' => $request->get('qty'),
+            //     'created_by' => $request->get('op'),
+            // ]);
+            // $log->save();
+            // $inventori->save(); 
+
+        // }else{
+        $inventori =  PnInventorie::updateOrCreate(
+            [           
+                'tag' => $request->get('tag'),            
+            ],
+            [
+               'line' => $request->get('line'),
+               'tag' => $request->get('tag'),
+               'model' => $request->get('model'),
+               'location' => $request->get('location'),
+               'qty' => $request->get('qty'),
+               'status' => '1',
+               'created_by' => $request->get('op'),
+           ]);
+
+        $log = new PnLogProces([
+            'line' => $request->get('line'),
+            'operator' => $request->get('op'),
+            'tag' => $request->get('tag'),
+            'model' => $request->get('model'),
+            'location' => $request->get('location'),
+            'qty' => $request->get('qty'),
+            'created_by' => $request->get('op'),
+        ]);
+
+        $biri = $request->get('ngbiri');
+        if($biri !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 101,                
                 'line' => $request->get('line'),
                 'operator' => $request->get('op'),
                 'tag' => $request->get('tag'),
@@ -794,37 +899,63 @@ public function savekensaakhir(Request $request){
                 'location' => $request->get('location'),
                 'qty' => $request->get('qty'),
                 'created_by' => $request->get('op'),
+                'reed' => $request->get('ngbiri'),
             ]);
-            $log->save();
-            $inventori->save(); 
-
-        }else{
-            $inventori =  PnInventorie::updateOrCreate(
-                [           
-                    'tag' => $request->get('tag'),            
-                ],
-                [
-                   'line' => $request->get('line'),
-                   'tag' => $request->get('tag'),
-                   'model' => $request->get('model'),
-                   'location' => $request->get('location'),
-                   'qty' => $request->get('qty'),
-                   'status' => '1',
-                   'created_by' => $request->get('op'),
-               ]);
-
-            $log = new PnLogProces([
-                'line' => $request->get('line'),
-                'operator' => $request->get('op'),
-                'tag' => $request->get('tag'),
-                'model' => $request->get('model'),
-                'location' => $request->get('location'),
-                'qty' => $request->get('qty'),
-                'created_by' => $request->get('op'),
-            ]);
-            $log->save();
-            $inventori->save(); 
+            $detail->save();      
         }
+
+        $oktaf = $request->get('ngoktaf');
+        if($oktaf !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 102,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('op'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngoktaf'),
+            ]);
+            $detail->save();      
+        }
+
+        $tinggi = $request->get('ngtinggi');
+        if($tinggi !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 103,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('op'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngtinggi'),
+            ]);
+            $detail->save();      
+        }
+
+        $rendah = $request->get('ngrendah');
+        if($rendah !="A" ){                                      
+            $detail = new PnLogNg([                
+                'ng' => 104,                
+                'line' => $request->get('line'),
+                'operator' => $request->get('op'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+                'reed' => $request->get('ngrendah'),
+            ]);
+            $detail->save();      
+        }
+
+        
+        $log->save();
+        $inventori->save(); 
+        // }
 
 
 
@@ -3023,7 +3154,7 @@ public function fetchNgBentsukiBenage(Request $request){
         $before = date('Y-m-d', strtotime('-7 days'));
     }
 
-    $ng = db::select("select log.operator, ng_lists.ng_name, sum(ng.qty) as jml from
+    $ng = db::select("select log.operator , ng_lists.ng_name, sum(ng.qty) as jml from
         (select ng, tag, qty from pn_log_ngs
         where location = 'PN_Kensa_Awal'
         and date(created_at) = '".$date."') ng
@@ -3037,7 +3168,7 @@ public function fetchNgBentsukiBenage(Request $request){
         left join ng_lists on ng_lists.id = ng.ng
         group by log.operator, ng_lists.ng_name");
 
-    $op = db::select("SELECT distinct operator, op.name as nama from pn_log_proces log
+    $op = db::select("SELECT distinct  operator, op.name as nama from pn_log_proces log
         left join employees op on op.employee_id = operator
         WHERE location = 'PN_Pureto'
         and date(log.created_at) = '".$date."'");
@@ -3063,24 +3194,54 @@ public function fetchNgKensaAwal(Request $request){
         $before = date('Y-m-d', strtotime('-7 days'));
     }
 
-    $ng = db::select("select log.operator, ng_lists.ng_name, sum(ng.qty) as jml from
+    $ng = db::select("select log.created_by  as operator, ng_lists.ng_name, sum(ng.qty) as jml from
         (select ng, tag, qty from pn_log_ngs
         where location = 'PN_Kensa_Akhir'
         and date(created_at) = '".$date."') ng
         left join
-        (SELECT operator, tag, created_at from pn_log_proces
+        (SELECT created_by, tag, created_at from pn_log_proces
         where id in (select MAX(id) id from pn_log_proces WHERE location = 'PN_Kensa_Awal'
         and date(created_at) <= '".$date."' 
         and date(created_at) >= '".$before."'
         group by tag)) log
         on ng.tag = log.tag
         left join ng_lists on ng_lists.id = ng.ng
-        group by log.operator, ng_lists.ng_name");
-
-    $op = db::select("SELECT distinct operator, op.name as nama from pn_log_proces log
-        left join employees op on op.employee_id = operator
+        group by log.created_by, ng_lists.ng_name");
+    
+    $op = db::select("SELECT distinct log.created_by as operator , op.name as nama from pn_log_proces log
+        left join employees op on op.employee_id = log.created_by
         WHERE location = 'PN_Kensa_Awal'
         and date(log.created_at) = '".$before."'");
+
+    $response = array(
+        'status' => true,            
+        'ng' => $ng,
+        'op' => $op,
+        'date' => $date,
+    );
+    return Response::json($response);
+}
+
+public function fetchNgTuning(Request $request){
+    $date = '';
+
+    if( $request->get('tanggal') != "") {
+        $date = date('Y-m-d', strtotime($request->get('tanggal')));
+    }else{
+        $date = date('Y-m-d');
+    }
+
+    $ng = db::select("SELECT ng.*, SUM(qty) as total from (
+        SELECT ng,ng_name, SPLIT_STRING(operator,'#',1) as tuning, qty from pn_log_ngs 
+        LEFT JOIN ng_lists on pn_log_ngs.ng = ng_lists.id
+        WHERE ng_lists.location='PN_Kensa_Awal' and date(pn_log_ngs.created_at) = '".$date."' 
+        AND pn_log_ngs.location='PN_Kensa_Awal'
+        ) ng 
+
+        GROUP BY tuning,ng");
+
+    $op = db::select("SELECT nik, nama from pn_operators WHERE bagian='tuning' GROUP BY nik,nama");
+   
 
     $response = array(
         'status' => true,            
@@ -3130,6 +3291,28 @@ public function fetchTrendNgWelding(Request $request){
     );
     return Response::json($response);
     
+}
+
+public function opTunning(Request $request)
+{
+    $line = $request->get('line');
+    $op = db::select("SELECT pn_operators.nik,kode,id_number,nama from pn_operators 
+        LEFT JOIN (
+        SELECT * from pn_code_operators WHERE bagian='tuning'
+        ) a on pn_operators.nik = a.nik
+        WHERE pn_operators.bagian='tuning' and pn_operators.line ='".$line."' ");
+
+    $op2 = db::select("SELECT kode,nik,employees.`name` from pn_code_operators 
+        LEFT JOIN employees on pn_code_operators.nik = employees.employee_id
+        WHERE pn_code_operators.remark='Fixing';
+        ");
+
+    $response = array(
+        'status' => true, 
+        'opTunning' => $op,
+        'opFokies' => $op2,
+    );
+    return Response::json($response);
 }
 
 
