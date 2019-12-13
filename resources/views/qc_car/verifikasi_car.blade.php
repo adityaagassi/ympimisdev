@@ -474,7 +474,7 @@
                 <tr>
                     <td colspan="2"><b>
                       @if($cars->car_cpar->kategori == "Internal") 
-                            Leader
+                            Staff / Leader
                         @elseif($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") 
                             Staff
                         @endif
@@ -491,7 +491,7 @@
                     <td colspan="2">
                       <b>
                         @if($cars->car_cpar->kategori == "Internal") 
-                            Foreman
+                            Chief / Foreman
                         @elseif($cars->car_cpar->kategori == "Eksternal") 
                             Chief
                         @elseif($cars->car_cpar->kategori == "Supplier")

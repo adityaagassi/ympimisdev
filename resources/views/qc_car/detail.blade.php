@@ -97,7 +97,7 @@ table.table-bordered > tfoot > tr > th{
 
          <a href="{{url('index/qc_report/print_cpar', $cpar[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain"  target="_blank">Preview CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-info btn-md" target="_blank">Preview CAR</a>
+         <a href="{{url('index/qc_car/print_car', $cars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank">Preview CAR Report</a>
 
          <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-md" style="color:white;margin-right: 5px">Cek Status Verifikasi</a>
 
@@ -323,7 +323,7 @@ table.table-bordered > tfoot > tr > th{
                 <tr>
                     <td colspan="2"><b>
                       @if($cars->car_cpar->kategori == "Internal") 
-                            Leader
+                            Staff / Leader
                         @elseif($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") 
                             Staff
                         @endif
@@ -340,7 +340,7 @@ table.table-bordered > tfoot > tr > th{
                     <td colspan="2">
                       <b>
                         @if($cars->car_cpar->kategori == "Internal") 
-                            Foreman
+                            Chief / Foreman
                         @elseif($cars->car_cpar->kategori == "Eksternal") 
                             Chief
                         @elseif($cars->car_cpar->kategori == "Supplier")
@@ -355,7 +355,7 @@ table.table-bordered > tfoot > tr > th{
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentManager" || $cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "manager" || $cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentManager" || $cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "manager" || $cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "qa"))
                     <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                     <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -370,7 +370,7 @@ table.table-bordered > tfoot > tr > th{
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentDGM" || $cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "dgm" || $cars->posisi == "gm" || $cars->posisi == "qa"))
                     <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                     <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -385,7 +385,7 @@ table.table-bordered > tfoot > tr > th{
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if(($cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "gm" || $cars->posisi == "QA"))
+                    @if(($cars->email_status == "SentGM" || $cars->email_status == "SentQA") && ($cars->posisi == "gm" || $cars->posisi == "qa"))
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
@@ -400,7 +400,7 @@ table.table-bordered > tfoot > tr > th{
                       <span class="label label-danger">Not Checked</span>
                       @endif</b>
                     </td>
-                    @if($cars->email_status == "SentQA" && $cars->posisi == "QA")
+                    @if($cars->email_status == "SentQA" && $cars->posisi == "qa")
                       <td colspan="2"><b><span class="label label-success">Sent</span></b></td>
                     @else
                       <td colspan="2"><b><span class="label label-danger">Not Sent</span></b></td>
