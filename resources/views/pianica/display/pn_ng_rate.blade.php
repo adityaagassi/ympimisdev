@@ -77,6 +77,11 @@
 			</div>				
 		</div>
 		<div class="col-xs-12" style="margin-bottom: 1%;">
+			<div id="bentsuki-benage">
+				<div id="tuning"></div>
+			</div>				
+		</div>
+		<div class="col-xs-12" style="margin-bottom: 1%;">
 			<div id="kensa-awal">
 				<div id="chart3"></div>
 			</div>				
@@ -285,7 +290,7 @@
 						biri.push(data[i].biri);
 						oktaf.push(data[i].oktaf);
 						t_rendah.push(data[i].t_tinggi);
-						t_tinggi.push(data[i].t_rendah);
+						t_tinggi.push(data[i].t_tinggi);
 					}
 
 					Highcharts.chart('chart2', {
@@ -313,7 +318,7 @@
 							gridLineColor: 'RGB(204,255,255)',
 							labels: {
 								style: {
-									fontSize: '26px'
+									fontSize: '18px'
 								}
 							},
 						},
@@ -357,6 +362,153 @@
 							data: biri,
 							color: '#e88113'
 						},
+						// {
+						// 	name: 'Oktaf',
+						// 	data: oktaf,
+						// 	color: '#90ee7e'
+						// },
+						{
+							name: 'T. Tinggi',
+							data: t_tinggi,
+							color: '#f45b5b'
+						},
+						{
+							name: 'T. Rendah',
+							data: t_rendah,
+							color: '#7798BF'
+						}
+						]
+					});
+
+				}
+			}
+		});
+
+		$.get('{{ url("fetch/pianica/ng_tuning") }}',data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					var op = [];
+					var ng = [];
+					var sum = [];
+					var data = [];
+
+					var biri = [];
+					var oktaf = [];
+					var t_rendah = [];
+					var t_tinggi = [];
+
+					for (var i = 0; i < result.op.length; i++) {
+						op.push(result.op[i].nama);
+						biri.push(0);
+						oktaf.push(0);
+						t_rendah.push(0);
+						t_tinggi.push(0);
+
+						for (var j = 0; j < result.ng.length; j++) {
+							if(result.op[i].nik == result.ng[j].tuning){
+								if(result.ng[j].ng_name == 'Biri'){
+									biri[i] = parseInt(result.ng[j].total);
+								}else if(result.ng[j].ng_name == 'Oktaf'){
+									oktaf[i] = parseInt(result.ng[j].total);
+								}else if(result.ng[j].ng_name == 'T. Rendah'){
+									t_rendah[i] = parseInt(result.ng[j].total);
+								}else if(result.ng[j].ng_name == 'T. Tinggi'){
+									t_tinggi[i] = parseInt(result.ng[j].total);
+								}
+							}
+						}
+
+						sum.push(biri[i] + oktaf[i] + t_rendah[i] + t_tinggi[i]);
+						data.push({nama: op[i], biri: biri[i], oktaf: oktaf[i], t_rendah: t_rendah[i], t_tinggi: t_tinggi[i], sum: sum[i]});
+
+					}
+
+					data.sort((a, b) => b.sum - a.sum);
+
+
+					var op = [];
+					var biri = [];
+					var oktaf = [];
+					var t_rendah = [];
+					var t_tinggi = [];
+					for (var i = 0; i < data.length; i++) {
+						op.push(data[i].nama);
+						biri.push(data[i].biri);
+						oktaf.push(data[i].oktaf);
+						t_rendah.push(data[i].t_rendah);
+						t_tinggi.push(data[i].t_tinggi);
+					}
+
+					Highcharts.chart('tuning', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'NG Tuning',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'On '+result.date,
+							style: {
+								fontSize: '18px',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: op,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								style: {
+									fontSize: '18px'
+								}
+							},
+						},
+						yAxis: {
+							title: {
+								text: 'Total NG'
+							},
+							stackLabels: {
+								enabled: true,
+								style: {
+									fontWeight: 'bold',
+									color: 'white',
+									fontSize: '2vw'
+								}
+							},
+						},
+						legend : {
+							enabled: true
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+						},
+						plotOptions: {
+							column: {
+								stacking: 'normal',
+							},
+							series:{
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						// {
+						// 	name: 'Biri',
+						// 	data: biri,
+						// 	color: '#e88113'
+						// },
 						{
 							name: 'Oktaf',
 							data: oktaf,
@@ -432,8 +584,8 @@
 						op.push(data[i].nama);
 						biri.push(data[i].biri);
 						oktaf.push(data[i].oktaf);
-						t_rendah.push(data[i].t_tinggi);
-						t_tinggi.push(data[i].t_rendah);
+						t_rendah.push(data[i].t_rendah);
+						t_tinggi.push(data[i].t_tinggi);
 					}
 
 					Highcharts.chart('chart3', {
