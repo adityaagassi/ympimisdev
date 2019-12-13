@@ -8,15 +8,15 @@
     box-sizing: border-box;
   }
   thead>tr>th{
-    text-align:center;
+    text-align:left;
     background-color: #9c27b0;
     color: white;
   }
   tbody>tr>td{
-    text-align:center;
+    text-align:left;
   }
   tfoot>tr>th{
-    text-align:center;
+    text-align:left;
   }
   td:hover {
     overflow: visible;

@@ -790,20 +790,25 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 
 //KD
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
-	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');	
+	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
 });
 
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
-	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+	Route::get('index/kd_subassy_sx/{id}', 'KnockDownController@indexKD');
 });
 
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
-	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+	Route::get('index/kd_subassy_fl/{id}', 'KnockDownController@indexKD');
 });
 
 Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
-	Route::get('index/kd/{id}', 'KnockDownController@indexKD');
+	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
 });
+
+Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
+Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
+
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
@@ -1118,6 +1123,8 @@ Route::get('fetch/pianica/trend_ng_spot_welding', 'Pianica@fetchTrendNgWelding')
 Route::get('fetch/pianica/trend_ng_bentsuki_benage', 'Pianica@fetchTrendNgBentsukiBenage');
 Route::get('fetch/pianica/trend_ng_kensa_awal', 'Pianica@fetchTrendNgKensaAwal');
 Route::get('index/display_daily_pn_ng', 'Pianica@indexDailyNg');
+Route::get('fetch/pianica/ng_tuning', 'Pianica@fetchNgTuning');
+
 
 
 
@@ -1199,6 +1206,13 @@ Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
 Route::get('index/stocktaking/silver_report', 'StockTakingController@indexSilverReport');
 Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilverReport');
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
+
+Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
+	Route::get('index/pantry/pesanmenu', 'PantryController@index');
+	Route::get('fetch/menu', 'PantryController@fetchmenu');
+	Route::get('fetch/pesanan', 'PantryController@fetchSilverResume');
+	Route::post('index/pantry/inputmenu', 'PantryController@inputMenu');
+});
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -1710,6 +1724,33 @@ Route::get('index/area_check/print_area_check_email/{id}/{month}','AreaCheckCont
 Route::post('index/area_check/sendemail/{id}','AreaCheckController@sendemail');
 Route::post('index/area_check/approval/{id}/{month}','AreaCheckController@approval');
 
+//JISHU HOZEN POINT
+Route::get('index/jishu_hozen_point/index/{id}', 'JishuHozenPointController@index');
+Route::get('index/jishu_hozen_point/show/{id}/{jishu_hozen_point_id}', 'JishuHozenPointController@show');
+Route::get('index/jishu_hozen_point/destroy/{id}/{jishu_hozen_point_id}', 'JishuHozenPointController@destroy');
+Route::post('index/jishu_hozen_point/store/{id}', 'JishuHozenPointController@store');
+Route::get('index/jishu_hozen_point/getdetail','JishuHozenPointController@getdetail')->name('jishu_hozen_point.getdetail');
+Route::post('index/jishu_hozen_point/update/{id}/{jishu_hozen_point_id}', 'JishuHozenPointController@update');
+
+//JISHU HOZEN
+Route::get('index/jishu_hozen/nama_pengecekan/{id}', 'JishuHozenController@nama_pengecekan');
+Route::get('index/jishu_hozen/index/{id}/{jishu_hozen_point_id}', 'JishuHozenController@index');
+Route::post('index/jishu_hozen/filter_jishu_hozen/{id}/{jishu_hozen_point_id}', 'JishuHozenController@filter_jishu_hozen');
+Route::post('index/jishu_hozen/store/{id}/{jishu_hozen_point_id}', 'JishuHozenController@store');
+Route::get('index/jishu_hozen/getjishuhozen','JishuHozenController@getjishuhozen')->name('jishu_hozen.getjishuhozen');
+Route::post('index/jishu_hozen/update/{id}/{jishu_hozen_point_id}/{jishu_hozen_id}','JishuHozenController@update');
+Route::get('index/jishu_hozen/destroy/{id}/{jishu_hozen_point_id}/{jishu_hozen_id}', 'JishuHozenController@destroy');
+Route::get('index/jishu_hozen/print_jishu_hozen/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen');
+Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{month}','JishuHozenController@print_jishu_hozen_email');
+Route::post('index/jishu_hozen/sendemail/{id}','JishuHozenController@sendemail');
+Route::post('index/jishu_hozen/approval/{id}/{month}','JishuHozenController@approval');
+
+//RECORDER PROCESS
+Route::get('index/recorder_process', 'RecorderProcessController@index');
+Route::get('index/recorder_process_push_block', 'RecorderProcessController@index_push_block');
+Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
+Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
+Route::get('index/push_block_recorder/edit/{push_block_code}', 'RecorderProcessController@edit');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -1752,6 +1793,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_car/create_pic/{id}', 'QcCarController@create_pic');
 	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
 	Route::get('index/qc_car/print_car/{id}', 'QcCarController@print_car');
+	Route::get('index/qc_car/print_car_new/{id}', 'QcCarController@print_car2');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
 

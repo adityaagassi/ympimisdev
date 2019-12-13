@@ -1,15 +1,25 @@
-<html>
-<head>
-	<title>YMPI 情報システム</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
-	<link rel="shortcut icon" type="image/x-icon" href="{{ public_path() . '/logo_mirai.png' }}" />
-</head>
-<body>
-	<style type="text/css">
+@extends('layouts.master')
+@section('header')
+<section class="content-header">
+  <h1>
+    <!-- <small>it all starts here</small> -->
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    <br>
+  </h1>
+  <ol class="breadcrumb">
+    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Examples</a></li>
+    <li class="active">Blank page</li> --}}
+  </ol>
+</section>
+<style type="text/css">
+	@media print {
+	.table {-webkit-print-color-adjust: exact;}
+	}
+
 		table tr td,
 		table tr th{
-			font-size: 7pt;
+			font-size: 12pt;
 			border: 1px solid black !important;
 			border-collapse: collapse;
 		}
@@ -26,13 +36,30 @@
 		table {
 			page-break-inside: avoid;
 		}
-	</style>
-	<table class="table table-bordered">
-		@foreach($cars as $car)
+</style>
+@endsection
+@section('content')
+<section class="content">
+  @if ($errors->has('password'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+    {{ $errors->first() }}
+  </div>   
+  @endif
+  <!-- SELECT2 EXAMPLE -->
+  <div class="box box-primary">
+    {{-- <div class="box-header with-border">
+      <h3 class="box-title">Detail User</h3>
+    </div>   --}}
+      <div class="box-body">
+      	<table class="table" style="border: 1px solid black;">
+			@foreach($cars as $car)
 		<thead>
 			<tr>
 				<td colspan="2" rowspan="3" class="centera">
-					<img width="100px" src="{{ public_path() . '/waves.jpg' }}" alt="">
+					<!-- <img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""> -->
+					<img width="100px" src="{{ asset('images/waves.jpg') }}" alt="">
 				</td>
 				<td colspan="5" rowspan="3" class="centera" style="font-size: 14px;font-weight: bold">CORRECTIVE ACTION REPORT</td>
 				<td class="centera">Approved By</td>
@@ -98,18 +125,18 @@
 			</tr>
 			<tr>
 				<td colspan="2" width="20%">Tinjauan 4M : </td>
-				<td colspan="2" width="20%" class="" style="font-size: 10px">Man <input type="checkbox" class="centera" style="font-size: 10px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Man <input type="checkbox" class="centera" style="font-size: 16px;" 
 				@if($split[0]=='1')
 					checked @endif>
 				</td>
-				<td colspan="2" width="20%" class="" style="font-size: 10px">Material <input type="checkbox" class="centera" style="font-size: 10px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Material <input type="checkbox" class="centera" style="font-size: 16px;" 
 				@if($split[1]=='1')
 					checked @endif>
 				</td>
-				<td colspan="2" width="20%" class="" style="font-size: 10px">Machine <input type="checkbox" class="centera" style="font-size: 10px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Machine <input type="checkbox" class="centera" style="font-size: 16px;" 
 				@if($split[2]=='1')
 					checked @endif</td>
-				<td colspan="2" width="20%" class="" style="font-size: 10px">Method <input type="checkbox" class="centera" style="font-size: 10px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Method <input type="checkbox" class="centera" style="font-size: 16px;" 
 				@if($split[3]=='1')
 					checked @endif</td>	
 			</tr>
@@ -199,7 +226,28 @@
 			</tr> -->
 		</tbody>
 		@endforeach
-	</table>
-	<span style="font-size: 8pt">No FM : YMPI/QA/FM/899</span>
-</body>
-</html>
+		</table>
+		<span style="font-size: 12pt">No FM : YMPI/QA/FM/899</span>
+	</div>
+  </div>
+  @endsection
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family:"Arial";
+  padding: 5px;
+}
+@media print {
+	body {-webkit-print-color-adjust: exact;}
+}
+</style>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+<script>
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+	});
+    function myFunction() {
+	  window.print();
+	}
+</script>
