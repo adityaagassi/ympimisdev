@@ -392,7 +392,7 @@ class AreaCheckController extends Controller
             JOIN area_check_points on area_check_points.id = area_checks.area_check_point_id
             join departments on activity_lists.department_id = departments.id
             where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-            and area_checks.activity_list_id = '110'
+            and area_checks.activity_list_id = '".$id."'
             and department_id = '".$id_departments."'
             and area_checks.deleted_at is null";
             
