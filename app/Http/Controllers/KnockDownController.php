@@ -57,7 +57,7 @@ class KnockDownController extends Controller{
 		$id = Auth::id();
 
 		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
-		->where('status', '=', 0)
+		->where('status', '=', 1)
 		->first();
 
 		if(!$knock_down){
@@ -70,7 +70,7 @@ class KnockDownController extends Controller{
 
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
-		$knock_down->status = 1;
+		$knock_down->status = 2;
 		foreach ($knock_down_details as $knock_down_detail) {
 
 			$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
@@ -116,10 +116,10 @@ class KnockDownController extends Controller{
 
 		try{
 			$kd_log = KnockDownLog::updateOrCreate(
-				['kd_number' => $request->get('kd_number'), 'status' => 1],
-				['created_by' => $id, 'status' => 1, 'updated_at' => Carbon::now()]
+				['kd_number' => $request->get('kd_number'), 'status' => 2],
+				['created_by' => $id, 'status' => 2, 'updated_at' => Carbon::now()]
 			);
-			$knock_down->save();
+			$kd_log->save();
 		}
 		catch(\Exception $e){
 			$error_log = new ErrorLog([
@@ -167,7 +167,7 @@ class KnockDownController extends Controller{
 
 		$storage = '';
 		if($id == 'z-pro'){
-			$storage = 'ZPA0';
+			$storage = 'ZPRO';
 		}else if($id == 'sub-assy-sx'){
 			$storage = 'SX91';
 		}else if($id == 'sub-assy-fl'){
@@ -182,14 +182,14 @@ class KnockDownController extends Controller{
 			where date(s.due_date) >= '".$datefrom."'
 			and date(s.due_date) <= '".$dateto."'
 			and m.category = 'KD'
-			and m.issue_storage_location = '".$storage."'
+			and m.hpl = '".$storage."'
 			group by s.material_number, m.material_description
 			union all
 			select d.material_number, m.material_description, sum(-quantity) as quantity from knock_down_details d
 			left join materials m on m.material_number = d.material_number
 			where date(d.created_at) >= '".$datefrom."'
 			and date(d.created_at) <= '".$dateto."'
-			and m.issue_storage_location = '".$storage."'
+			and m.hpl = '".$storage."'
 			group by d.material_number, m.material_description) target
 			group by target.material_number, target.material_description
 			having target > 0
@@ -232,6 +232,58 @@ class KnockDownController extends Controller{
 		return Response::json($response);
 	}
 
+	public function forcePrintLabel(Request $request){
+		$id = Auth::id();
+		$location = $request->get('location');
+		$storage_location = '';
+		if($location = 'z-pro'){
+			$storage_location = 'ZPA0';
+		}
+
+		$knock_down = KnockDown::where('remark','=',$location)
+		->where('status','=', 0)
+		->orderBy('kd_number', 'desc')
+		->first();
+		$knock_down->status = 1;
+
+		$kd_number = $knock_down->kd_number;
+
+		$knock_down_log = KnockDownLog::updateOrCreate(
+			['kd_number' => $kd_number, 'status' => 1],
+			['created_by' => $id, 'status' => 1, 'updated_at' => Carbon::now()]
+		);
+
+		try{
+			DB::transaction(function() use ($knock_down, $knock_down_log){
+				$knock_down->save();
+				$knock_down_log->save();
+			});
+
+			$knock_down_details = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+			->where('knock_down_details.kd_number','=',$kd_number)
+			->select('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', 'knock_down_details.quantity','shipment_schedules.st_date')
+			->get();
+
+			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
+
+			$this->printKDO($kd_number, $knock_down_details[(count($knock_down_details) - 1)]->st_date, $knock_down_details, $storage_location->location);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Label Sukses',
+				'actual_count' => 0,
+			);
+			return Response::json($response);
+		}catch(Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}	
+
+	}
 
 	public function printLabel(Request $request){
 		$prefix_now = 'KD'.date("y").date("m");
@@ -247,6 +299,7 @@ class KnockDownController extends Controller{
 		$material_description = $request->get('material_description');
 		$location = $request->get('location');
 		$max_count = 0;
+
 		if($location = 'z-pro'){
 			$max_count = 10;
 		}
@@ -265,7 +318,7 @@ class KnockDownController extends Controller{
 		
 		if($shipment_schedule){
 			$knock_down = KnockDown::where('remark','=',$location)
-			->where('status','=',0)
+			->where('status','=', 0)
 			->orderBy('kd_number', 'desc')
 			->first();
 
@@ -274,6 +327,7 @@ class KnockDownController extends Controller{
 				if($knock_down->actual_count < $knock_down->max_count){
 					$kd_number = $knock_down->kd_number;
 					$knock_down->actual_count = $knock_down->actual_count + 1;
+
 				}else{
 					$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
 					$kd_number = $code_generator->prefix . $number;
@@ -288,6 +342,7 @@ class KnockDownController extends Controller{
 						'remark' => $location,
 						'status' => 0,
 					]);
+
 				}
 			}else{
 				$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
@@ -303,6 +358,20 @@ class KnockDownController extends Controller{
 					'remark' => $location,
 					'status' => 0,
 				]);
+
+			}
+
+			$knock_down_log;
+			if(($knock_down->actual_count + 1) == $max_count){
+				$knock_down_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $kd_number, 'status' => 1],
+					['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+				);
+			}else{
+				$knock_down_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $kd_number, 'status' => 0],
+					['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+				);
 			}
 
 			$knock_down_detail = new KnockDownDetail([
@@ -314,17 +383,7 @@ class KnockDownController extends Controller{
 				'created_by' => Auth::id(),
 			]);
 
-			$knock_down_log = KnockDownLog::where('kd_number','=',$kd_number)->first();
-
-			if($knock_down_log){
-				$knock_down_log->status = 0;
-			}else{	
-				$knock_down_log = new KnockDownLog([
-					'kd_number' => $kd_number,
-					'status' => 0,
-					'created_by' => Auth::id(),
-				]);
-			}
+			
 
 			$inventory = Inventory::where('plant','=','8190')
 			->where('material_number','=',$material_number)
@@ -369,17 +428,21 @@ class KnockDownController extends Controller{
 				->orderBy('kd_number', 'desc')
 				->first();
 
-				if($knock_down->actual_count == 10){
+				if($knock_down->actual_count == $max_count){
 					$knock_down_details = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
 					->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 					->where('knock_down_details.kd_number','=',$kd_number)
 					->select('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', 'knock_down_details.quantity','shipment_schedules.st_date')
 					->get();
 
+					$knock_down = KnockDown::where('kd_number', '=', $kd_number)->update(['status' => '1']);
+
 					$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 					
 					$this->printKDO($kd_number, $knock_down_details[9]->st_date, $knock_down_details, $storage_location->location);
 				}
+
+				$knock_down = KnockDown::where('kd_number', '=', $kd_number)->first();
 
 				$response = array(
 					'status' => true,

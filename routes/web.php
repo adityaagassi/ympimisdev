@@ -792,6 +792,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');	
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
+	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');	
 });
 
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
@@ -809,6 +810,8 @@ Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_delivery', 'KnockDownController@indexKdDelivery');
 	Route::post('scan/kd_delivery', 'KnockDownController@scanKdDelivery');
+	Route::get('index/kd_stuffing', 'KnockDownController@indexKdStuffing');
+	Route::post('scan/kd_stuffing', 'KnockDownController@scanKdStuffing');
 	Route::post('fetch/kdo', 'KnockDownController@fetchKDO');
 });
 
@@ -1214,11 +1217,16 @@ Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilver
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
-	Route::get('index/pantry/pesanmenu', 'PantryController@index');
+	Route::get('index/pantry/pesanmenu', 'PantryController@pesanmenu');
+	Route::get('index/pantry/daftarmenu', 'PantryController@daftarmenu');
+	Route::get('index/pantry/daftarpesanan', 'PantryController@daftarpesanan');
+
 	Route::get('fetch/menu', 'PantryController@fetchmenu');
 	Route::get('fetch/pesanan', 'PantryController@fetchpesanan');
 	Route::post('index/pantry/inputmenu', 'PantryController@inputMenu');
 	Route::post('index/pantry/deletemenu', 'PantryController@deleteMenu');
+	Route::post('index/pantry/konfirmasipesanan', 'PantryController@konfirmasipesanan');
+
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -1804,6 +1812,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/print_car_new/{id}', 'QcCarController@print_car2');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
+	
 
 	//Verifikator CAR
 	Route::get('index/qc_car/verifikator', 'QcCarController@verifikator');
@@ -1811,6 +1820,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//Verifikasi CAR
 	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
 	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
+	Route::get('index/qc_car/unchecked/{id}', 'QcCarController@unchecked');
 
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasiqa');
@@ -1873,6 +1883,15 @@ Route::get('index/temperature/delete/{id}','TemperatureController@delete');
 Route::get('index/toilet', 'RoomController@indexToilet');
 Route::get('index/room/toilet/{id}', 'RoomController@indexRoomToilet');
 Route::get('fetch/room/toilet', 'RoomController@fetchToilet');
+
+//PRESS
+Route::get('index/press', 'PressController@index');
+Route::get('index/press/sax', 'PressController@index_sax');
+Route::get('index/press/fl', 'PressController@index_fl');
+Route::get('index/press/cl', 'PressController@index_cl');
+Route::get('index/press/vn', 'PressController@index_vn');
+Route::get('scan/press/operator', 'PressController@scanPressOperator');
+Route::get('scan/press/material_number', 'PressController@scanPressMaterial');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

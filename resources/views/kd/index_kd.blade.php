@@ -132,11 +132,22 @@
 						</div>
 						<div class="col-xs-6" style="padding-bottom: 10px;">
 							<br>
-							<button class="btn btn-success" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;"><i class="fa fa-print"></i>
-								PRINT LABEL
+							<button class="btn btn-success" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+								CONFIRM
 							</button>
 						</div>
 					</div>
+				</div>
+				<div class="col-xs-6 pull-right">
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<button class="btn btn-danger" onclick="forcePrint()" style="font-size: 2vw; width: 100%; font-weight: bold; padding: 0;">
+						<i class="fa fa-print"></i> FORCE PRINT KDO
+					</button>
 				</div>
 			</div>
 		</div>
@@ -164,6 +175,28 @@
 		
 		fillTable();
 	});
+
+	function forcePrint() {
+		var location = "{{ $location }}";
+		
+		var data = {
+			location : location,
+		}
+
+		$("#loading").show();
+		$.post('{{ url("fetch/kd_force_print_zpro") }}', data,  function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				$('#actual_count').val(result.actual_count);
+				fillTable();
+				openSuccessGritter('Success', result.message);
+			}else{
+				$("#loading").hide();
+				openErrorGritter('Error!', result.message);
+			}
+
+		});
+	}
 
 	function print() {
 		var material_number = $("#material_number").val();
