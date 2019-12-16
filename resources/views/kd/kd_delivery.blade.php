@@ -255,7 +255,8 @@
   function scan_kdo_delivery(){
    var kd_number  = $("#kdo_number_delivery").val();
    var data = {
-    kd_number : kd_number
+    kd_number : kd_number,
+    status : 2,
   }
 
   $.post('{{ url("scan/kd_delivery") }}', data, function(result, status, xhr){
