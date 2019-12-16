@@ -53,6 +53,7 @@ class UploadCompletionKD extends Command
         ->update(['reference_file' => $kdofilename]);
 
         $upload_completions = TransactionCompletion::where('reference_file', '=', $kdofilename)
+        ->select('material_number', 'issue_location', 'quantity', db::raw('date(created_at) as date'))
         ->get();
 
         $upload_text = "";
