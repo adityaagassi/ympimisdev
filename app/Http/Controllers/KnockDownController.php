@@ -301,7 +301,9 @@ class KnockDownController extends Controller{
 		$max_count = 0;
 
 		if($location = 'z-pro'){
-			$max_count = 10;
+			// $max_count = 10;
+			$max_count = 99;
+
 		}
 
 		$storage_location = '';
