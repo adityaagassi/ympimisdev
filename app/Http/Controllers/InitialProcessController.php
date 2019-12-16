@@ -99,7 +99,7 @@ class InitialProcessController extends Controller
 		select initial_safety_stocks.material_number, initial_safety_stocks.quantity, DATE_FORMAT(valid_date, '%Y-%m') as date_stock from initial_safety_stocks where initial_safety_stocks.quantity > 0 and initial_safety_stocks.quantity is not null
 		) as stocks on stocks.date_stock = DATE_FORMAT(inventories.date_stock, '%Y-%m') and stocks.material_number = inventories.material_number
 		) as final
-		group by category, date_stock having category is not null
+		group by category, date_stock having category is not null order by date_stock, stock asc
 		";
 
 		$stocks = db::select($query);
