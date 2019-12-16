@@ -252,33 +252,56 @@
   </li>
   @endif
 
-@if(in_array('M22', $navs))
-    @if(isset($head) && $head == "IoT")<li class="treeview active">@else<li class="treeview">@endif
-      <a href="#">
-        <i class="fa fa-users"></i> <span>Internet of Things (IoT)</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
-        </span>
-      </a>
-      <ul class="treeview-menu">
-       @if(isset($page) && $page == "Standartisasi Suhu")<li class="active">@else<li>@endif
-        <a href="{{ url("index/standart_temperature") }}"><i class="fa fa-list-ol"></i>Standarisasi Suhu</a>
-      </li>
+  @if(in_array('M22', $navs))
+  @if(isset($head) && $head == "IoT")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-users"></i> <span>Internet of Things (IoT)</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+     @if(isset($page) && $page == "Standartisasi Suhu")<li class="active">@else<li>@endif
+      <a href="{{ url("index/standart_temperature") }}"><i class="fa fa-list-ol"></i>Standarisasi Suhu</a>
+    </li>
 
-    </ul>
-  </li>
-  @endif
+  </ul>
+</li>
+@endif
 
 
-  @if(in_array('S0', $navs))
-  <li class="header">Service Menu</li>
-  @endif
+@if(in_array('S0', $navs))
+<li class="header">Service Menu</li>
+@endif
 
-  @if(in_array('S28', $navs))
+@if(in_array('S28', $navs))
+@if(isset($head) && $head == "Pantry")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+    <i class="fa fa-coffee"></i> <span>Pantry</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+    @if(isset($page) && $page == "Pantry")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/pantry/pesanmenu") }}"><i class="fa fa-coffee"></i> <span>Pesan Minuman</span></a>
+    </li>
+    @if(isset($page) && $page == "Pantry Menu")<li class="active">@else<li>@endif
+      <a href="{{ url("index/pantry/menu") }}"><i class="fa fa-calendar-plus-o"></i>Pantry Menu</a>
+    </li>
+    @if(isset($page) && $page == "Pantry Orders")<li class="active">@else<li>@endif
+      <a href="{{ url("index/pantry/pesanan") }}"><i class="fa fa-cubes"></i>Daftar Pesanan</a>
+    </li>
+  </ul>
+</li>
+@endif
+
+  <!-- @if(in_array('S28', $navs))
   @if(isset($page) && $page == "Pantry")<li class="active">@else<li>@endif
     <a href="{{ url("/index/pantry") }}"><i class="fa fa-coffee"></i> <span>Pantry</span></a>
+
   </li>
-  @endif
+  @endif -->
 
   @if(in_array('S11', $navs))
   @if(isset($page) && $page == "Check Sheet")<li class="active">@else<li>@endif
@@ -342,25 +365,31 @@
 
   @if(in_array('S24', $navs))
   @if(isset($page) && $page == "KD Z-PRO")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd/"."z-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Z-PRO</span></a>
+    <a href="{{ url("index/kd_zpro/"."z-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Z-PRO</span></a>
   </li>
   @endif
 
   @if(in_array('S25', $navs))
   @if(isset($page) && $page == "KD Sub Assy SX")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy SX</span></a>
+    <a href="{{ url("index/kd_subassy_sx/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy SX</span></a>
   </li>
   @endif
 
   @if(in_array('S26', $navs))
   @if(isset($page) && $page == "KD Sub Assy FL")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd/"."sub-assy-fl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy FL</span></a>
+    <a href="{{ url("index/kd_subassy_fl/"."sub-assy-fl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy FL</span></a>
   </li>
   @endif
 
   @if(in_array('S27', $navs))
   @if(isset($page) && $page == "KD Sub Assy CL")<li class="active">@else<li>@endif
-    <a href="{{ url("index/kd/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
+    <a href="{{ url("index/kd_subassy_cl/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
+  </li>
+  @endif
+
+  @if(in_array('S29', $navs))
+  @if(isset($page) && $page == "KD Delivery")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_delivery") }}"><i class="fa fa-shopping-cart"></i> <span>KD  <i class="fa fa-angle-right"></i> Delivery</span></a>
   </li>
   @endif
 

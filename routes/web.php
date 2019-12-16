@@ -31,7 +31,7 @@ Route::get('/trial', function () {
 Route::get('/trial2', function () {
 	return view('trial2');
 });
-Route::post('upload/trial', 'TrialController@uploadtrial');
+Route::get('print/trial', 'TrialController@printKDO');
 
 Route::get('/machinery_monitoring', function () {
 	return view('plant_maintenance.machinery_monitoring', array(
@@ -806,6 +806,12 @@ Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
 });
 
+Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_delivery', 'KnockDownController@indexKdDelivery');
+	Route::post('scan/kd_delivery', 'KnockDownController@scanKdDelivery');
+	Route::post('fetch/kdo', 'KnockDownController@fetchKDO');
+});
+
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
 
@@ -1210,8 +1216,9 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::get('index/pantry/pesanmenu', 'PantryController@index');
 	Route::get('fetch/menu', 'PantryController@fetchmenu');
-	Route::get('fetch/pesanan', 'PantryController@fetchSilverResume');
+	Route::get('fetch/pesanan', 'PantryController@fetchpesanan');
 	Route::post('index/pantry/inputmenu', 'PantryController@inputMenu');
+	Route::post('index/pantry/deletemenu', 'PantryController@deleteMenu');
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -1751,6 +1758,7 @@ Route::get('index/recorder_process_push_block', 'RecorderProcessController@index
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::get('index/push_block_recorder/edit/{push_block_code}', 'RecorderProcessController@edit');
+Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

@@ -11,7 +11,7 @@ class ShipmentSchedule extends Model
 	use SoftDeletes;
     //
 	protected $fillable = [
-		'st_month', 'sales_order', 'shipment_condition_code', 'destination_code', 'material_number', 'hpl', 'bl_date', 'st_date', 'quantity', 'created_by'
+		'st_month', 'sales_order', 'shipment_condition_code', 'destination_code', 'material_number', 'hpl', 'bl_date', 'st_date', 'quantity' , 'actual_quantity', 'created_by'
 	];
 
 	public function user()
