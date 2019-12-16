@@ -8,6 +8,7 @@ use App\ErrorLog;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\TransactionCompletion;
+use File;
 
 class UploadCompletionKD extends Command
 {
