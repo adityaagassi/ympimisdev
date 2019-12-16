@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
         Commands\EmailUserDocument::class,        
         Commands\InjectionSchedule::class,
         Commands\InjectionScheduleTrial::class,
+        Commands\CallRoute::class,
+        Commands\UploadCompletionKD::class,
     ];
 
     /**
