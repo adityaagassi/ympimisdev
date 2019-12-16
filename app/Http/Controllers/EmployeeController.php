@@ -247,7 +247,7 @@ class EmployeeController extends Controller
     $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
 
     for ($i=0; $i < count($dd); $i++) {
-      if ($username == $dd[$i]) {
+      if ($username == $dd[$i] || Auth::user()->role_code == 'S' || Auth::user()->role_code == 'MIS') {
         $d = "";
         break;
       } else {
