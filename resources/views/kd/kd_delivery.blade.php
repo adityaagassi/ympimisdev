@@ -157,7 +157,7 @@
 
   function fetchKDO(){
     var data = {
-      status : 1,
+      status : 2,
     }
     $('#kdo_table tfoot th').each( function () {
       var title = $(this).text();

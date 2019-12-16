@@ -56,8 +56,10 @@ class KnockDownController extends Controller{
 
 		$id = Auth::id();
 
+		$status = $request->get('status');
+
 		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
-		->where('status', '=', 1)
+		->where('status', '=', ($status-1))
 		->first();
 
 		if(!$knock_down){
