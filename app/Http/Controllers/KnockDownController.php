@@ -259,15 +259,21 @@ class KnockDownController extends Controller{
 				$knock_down_log->save();
 			});
 
-			$knock_down_details = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
-			->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+			$knock_down_details = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 			->where('knock_down_details.kd_number','=',$kd_number)
-			->select('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', 'knock_down_details.quantity','shipment_schedules.st_date')
+			->select('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', db::raw('sum(knock_down_details.quantity) as quantity'))
+			->groupBy('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description')
 			->get();
+
+			$st_date = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+			->where('knock_down_details.kd_number','=',$kd_number)
+			->select('knock_down_details.kd_number','knock_down_details.material_number','shipment_schedules.st_date')
+			->orderBy('shipment_schedules.st_date','asc')
+			->first();
 
 			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-			$this->printKDO($kd_number, $knock_down_details[(count($knock_down_details) - 1)]->st_date, $knock_down_details, $storage_location->location);
+			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location);
 
 			$response = array(
 				'status' => true,
