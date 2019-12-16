@@ -72,7 +72,7 @@ class KnockDownController extends Controller{
 
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
-		$knock_down->status = 2;
+		$knock_down->status = $status;
 		foreach ($knock_down_details as $knock_down_detail) {
 
 			$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
@@ -96,10 +96,11 @@ class KnockDownController extends Controller{
 			]);
 
 			try{
-				DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer){
+				DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer, $knock_down){
 					$inventoryWIP->save();
 					$inventoryFSTK->save();
 					$transaction_transfer->save();
+					$knock_down->save();
 				});	
 			}
 			catch(\Exception $e){
@@ -118,8 +119,8 @@ class KnockDownController extends Controller{
 
 		try{
 			$kd_log = KnockDownLog::updateOrCreate(
-				['kd_number' => $request->get('kd_number'), 'status' => 2],
-				['created_by' => $id, 'status' => 2, 'updated_at' => Carbon::now()]
+				['kd_number' => $request->get('kd_number'), 'status' => $status],
+				['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
 			);
 			$kd_log->save();
 		}
@@ -148,6 +149,7 @@ class KnockDownController extends Controller{
 
 		$knock_downs = KnockDown::leftJoin('knock_down_logs', 'knock_down_logs.kd_number', '=', 'knock_downs.kd_number')
 		->where('knock_down_logs.status', '=', $status)
+		->where('knock_downs.status', '=', $status)
 		->orderBy('knock_down_logs.updated_at', 'desc')
 		->select('knock_downs.kd_number', 'knock_downs.actual_count', 'knock_down_logs.updated_at')
 		->get();
