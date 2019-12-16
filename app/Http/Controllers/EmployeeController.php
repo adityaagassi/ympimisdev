@@ -244,6 +244,8 @@ class EmployeeController extends Controller
     $dd = str_replace("'","", $this->usr);
     $dd = explode(',', $dd);
 
+    $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
+
     for ($i=0; $i < count($dd); $i++) {
       if ($username == $dd[$i]) {
         $d = "";
@@ -252,8 +254,6 @@ class EmployeeController extends Controller
         $d = "where department = '".$get_department->department."'";
       }
     }
-
-    $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
 
     $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
     (select fr.employee_id, `name`, position, fr.department, struktur.section from
@@ -921,7 +921,7 @@ public function fetchReportGender2(Request $request)
   $get_manpower = db::select($gender);
   $monthTitle = date("F Y", strtotime($tgl));
 
-  $tes = db::connection('sunfish')->select("select TOP 50 * from dbo.view_ympi_emp_orgunit");
+  // $tes = db::connection('sunfish')->select("select TOP 50 * from dbo.view_ympi_emp_orgunit");
 
   $response = array(
     'status' => true,
@@ -1896,10 +1896,10 @@ public function fetchDataKaizen()
     }
   })
   ->addColumn('fr_point', function($kzn){
-    return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 20) + ($kzn->foreman_point_3 * 20);
+    return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 30) + ($kzn->foreman_point_3 * 30);
   })
   ->addColumn('mg_point', function($kzn){
-    return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 20) + ($kzn->manager_point_3 * 20);
+    return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 30) + ($kzn->manager_point_3 * 30);
   })
   ->rawColumns(['fr_stat', 'mg_stat', 'fr_point', 'mg_point', 'action'])
   ->make(true);

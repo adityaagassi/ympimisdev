@@ -449,7 +449,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 											<td id="kz_after"></td>
 										</tr>
 									</table>
-									<table id="tableEstimasi" style="border: 1px solid black"></table>
+									<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
 									<br>
 									<table width="100%" border="1" id="tabel_assess">
 										<tr>
@@ -823,27 +823,27 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							if (value.cost_name == "Manpower") {
 								unit = "menit";
 								sub_tot = (value.sub_total_cost * 20);
-								tot += sub_tot;
+								tot += parseInt(sub_tot);
 							} else if (value.cost_name == "Tempat") {
 								unit = value.unit+"<sup>2</sup>";
-								sub_tot = parseFloat(value.sub_total_cost);
+								sub_tot = parseInt(value.sub_total_cost);
 								tot += sub_tot;
 							}
 							else {
 								unit = value.frequency;
 								sub_tot = value.sub_total_cost;
-								tot += sub_tot;
+								tot += parseInt(sub_tot);
 							}
 
 							bd += "<th>"+value.cost_name+"</th>";
-							bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
-							bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+							bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
+							bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
 							bd += "</tr>";
 						});
 
 						bd += "<tr style='font-size: 18px;'>";
 						bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
-						bd += "<td><b>Rp "+tot+",00</b></td>";
+						bd += "<td><b>Rp "+tot+",-</b></td>";
 						bd += "</tr>";
 
 						$("#tableEstimasi").append(bd);
