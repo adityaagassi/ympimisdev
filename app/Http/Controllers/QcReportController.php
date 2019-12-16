@@ -1804,7 +1804,7 @@ class QcReportController extends Controller
           }          
       }
 
-       public function unchecked(Request $request,$id)
+      public function unchecked(Request $request,$id)
       {
           $alasan = $request->get('alasan');
 

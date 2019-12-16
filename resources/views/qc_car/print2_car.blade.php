@@ -59,12 +59,12 @@
 			<tr>
 				<td colspan="2" rowspan="3" class="centera">
 					<!-- <img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""> -->
-					<img width="100px" src="{{ asset('images/waves.jpg') }}" alt="">
+					<img width="200px" src="{{ asset('waves.jpg') }}" alt="">
 				</td>
-				<td colspan="5" rowspan="3" class="centera" style="font-size: 14px;font-weight: bold">CORRECTIVE ACTION REPORT</td>
-				<td class="centera">Approved By</td>
-				<td class="centera">Approved By</td>
-				<td class="centera">Approved By</td>
+				<td colspan="6" rowspan="3" class="centera" style="font-size: 25px;font-weight: bold">CORRECTIVE ACTION REPORT</td>
+				<td class="centera" width="10%">Approved By</td>
+				<td class="centera" width="10%">Approved By</td>
+				<td class="centera" width="10%">Approved By</td>
 			</tr>
 			<tr>
 				<td class="centera">
@@ -119,46 +119,47 @@
 				<td colspan="2" width="20%">
 					Date : <?php echo date('d F Y', strtotime($car->tgl_permintaan)) ?>
 				</td>
-				<td colspan="2" width="20%">
+				<td colspan="3" width="20%">
 					Location : {{ $car->lokasi }}			
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" width="20%">Tinjauan 4M : </td>
-				<td colspan="2" width="20%" class="" style="font-size: 16px">Man <input type="checkbox" class="centera" style="font-size: 16px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Man <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
 				@if($split[0]=='1')
 					checked @endif>
 				</td>
-				<td colspan="2" width="20%" class="" style="font-size: 16px">Material <input type="checkbox" class="centera" style="font-size: 16px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Material <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
 				@if($split[1]=='1')
 					checked @endif>
 				</td>
-				<td colspan="2" width="20%" class="" style="font-size: 16px">Machine <input type="checkbox" class="centera" style="font-size: 16px;" 
+				<td colspan="2" width="20%" class="" style="font-size: 16px">Machine <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
 				@if($split[2]=='1')
 					checked @endif</td>
-				<td colspan="2" width="20%" class="" style="font-size: 16px">Method <input type="checkbox" class="centera" style="font-size: 16px;" 
+				<td colspan="3" width="20%" class="" style="font-size: 16px">Method <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
 				@if($split[3]=='1')
 					checked @endif</td>	
 			</tr>
 			<tr style="page-break-inside:avoid">
-				<td colspan="10"><b style="font-size: 12px">Description</b> : <?= $car->deskripsi ?></td>
+				<td colspan="11"><b style="font-size: 20px">Description</b> : <?= $car->deskripsi ?></td>
 				<!-- <td rowspan="2" colspan="3" class="centera" style="font-weight: bold;font-size: 12px">Tinjauan 4M </td> -->
 			</tr>
 			<tr style="page-break-inside:avoid">
-				<td colspan="10"><b style="font-size: 12px">A. Immediately Action</b> : <?= $car->tindakan ?></td>
+				<td colspan="11"><b style="font-size: 20px">A. Immediately Action</b> : <?= $car->tindakan ?></td>
 			</tr>
 			<tr style="page-break-inside:avoid">
-				<td colspan="10"><b style="font-size: 12px">B. Possibility Cause</b> : <?= $car->penyebab ?></td>
+				<td colspan="11"><b style="font-size: 20px">B. Possibility Cause</b> : <?= $car->penyebab ?></td>
 			</tr>
 			<tr style="page-break-inside:avoid">
-				<td colspan="10"><b style="font-size: 12px">C. Corrective Action</b> : <?= $car->perbaikan ?></td>
+				<td colspan="11"><b style="font-size: 20px">C. Corrective Action</b> : <?= $car->perbaikan ?></td>
 			</tr>
 			<tr>
+				<td colspan="9"></td>
 				<td class="centera">Prepared</td>
 				<td class="centera">Checked</td>
-				<td colspan="8"></td>
 			</tr>
 			<tr>
+				<td rowspan="2" colspan="9"></td>
 				<td rowspan="2" class="centera">
 					@if($car->pic != null)
 						{{$car->picname}}
@@ -177,10 +178,10 @@
 						&nbsp;
 					@endif
 				</td>
-				<td rowspan="2" colspan="8"></td>
 			</tr>
 			<tr></tr>
 			<tr>
+				<td colspan="9"></td>			
 				@if($car->kategori == "Internal")
 					<td class="centera">Leader</td>
 					<td class="centera">Foreman</td>
@@ -188,7 +189,6 @@
 					<td class="centera">Staff</td>
 					<td class="centera">Chief</td>				
 				@endif
-				<td colspan="8"></td>
 			</tr>
 			<!-- <tr>
 				<td colspan="10"></td>
@@ -227,7 +227,9 @@
 		</tbody>
 		@endforeach
 		</table>
-		<span style="font-size: 12pt">No FM : YMPI/QA/FM/899</span>
+		<div class="col-md-12" style="text-align: right;">
+			<span style="font-size: 20px">No FM : YMPI/QA/FM/899</span>
+		</div>
 	</div>
   </div>
   @endsection

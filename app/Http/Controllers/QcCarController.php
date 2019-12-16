@@ -652,7 +652,7 @@ class QcCarController extends Controller
           //     $from = "staff";
           // }
 
-          $cars = QcCar::select('qc_cars.*','qc_cpars.employee_id','qc_cpars.dgm','qc_cpars.gm','qc_cpars.kategori','qc_verifikators.verifikatorchief','qc_verifikators.verifikatorforeman','qc_verifikators.verifikatorcoordinator')
+          $cars = QcCar::select('qc_cars.*','qc_cpars.employee_id','qc_cpars.dgm','qc_cpars.gm','qc_cpars.kategori','qc_verifikators.verifikatorchief','qc_verifikators.verifikatorforeman','qc_verifikators.verifikatorcoordinator','qc_cpars.id as id_cpar')
           ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
           ->join('qc_verifikators','qc_cpars.department_id','=','qc_verifikators.department_id')
           ->join('departments','departments.id','=','qc_verifikators.department_id')
@@ -675,7 +675,6 @@ class QcCarController extends Controller
               $cars->checked_chief = "Checked";
               $cars->checked_foreman = "none";
               $cars->checked_coordinator = "none";
-
             }
 
             else if ($cars->posisi == "foreman2") {
@@ -708,8 +707,59 @@ class QcCarController extends Controller
           else{
             return redirect('/index/qc_car/verifikasicar/'.$id)->with('error', 'CAR Not Approved')->with('page', 'CAR');
           }          
-      } 
+      }
 
+      public function unchecked(Request $request,$id)
+      {
+          $alasan = $request->get('alasan');
+          $cars = QcCar::find($id);
+          
+          $cars->qa_perbaikan = $alasan;
+
+          if ($cars->posisi == "manager") {
+              $cars->checked_chief = null;              
+              $cars->checked_foreman = null;
+              $cars->checked_coordinator = null;             
+          }
+
+          else if ($cars->posisi == "dgm") {
+            $cars->checked_chief = null;              
+            $cars->checked_foreman = null;
+            $cars->checked_coordinator = null;
+            $cars->checked_manager = null;              
+          }
+
+          else if ($cars->posisi == "gm") {
+            $cars->checked_chief = null;              
+            $cars->checked_foreman = null;
+            $cars->checked_coordinator = null;
+            $cars->checked_manager = null;
+            $cars->approved_dgm = null; 
+          }
+
+          if($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") {
+            $cars->email_status = "SentStaff";            
+            $cars->posisi = "staff";                
+          } 
+
+          else if ($cars->car_cpar->kategori == "Internal") {
+            $cars->email_status = "SentForeman";            
+            $cars->posisi = "foreman";                
+          }
+
+          $cars->save();
+          $query = "select qc_cars.id, qc_cars.cpar_no, qc_cars.qa_perbaikan from qc_cars where qc_cars.id='".$id."'";
+          $querycar = db::select($query);
+          $mailto = "select distinct email from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+          $mails = DB::select($mailto);
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
+          return redirect('/index/qc_car/verifikasicar/'.$id)->with('error', 'CAR Rejected')->with('page', 'CAR');
+      } 
 
       //Verifikator QA
       public function verifikator()

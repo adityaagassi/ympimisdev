@@ -2,6 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
+  body{
+    font-size: 16px;
+  }
   thead input {
     width: 100%;
     padding: 3px;
@@ -42,6 +45,9 @@
     background-color: #f5f5f5;
     color: black;
     padding: 10px;
+  }
+  #verifikasi > tbody > tr >  td {
+    text-align: center
   }
   #loading, #error { display: none; }
 </style>
@@ -93,7 +99,9 @@
 
         <a data-toggle="modal" data-target="#statusmodal{{$cars->id}}" class="btn btn-primary btn-sm pull-right">Cek Status Verifikasi</a>
         
-        <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report"  target="_blank">Preview CAR Report</a>
+        <a href="{{url('index/qc_report/print_cpar', $cars['id_cpar'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report CPAR"  target="_blank">Preview CPAR Report</a>
+
+        <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report CAR"  target="_blank">Preview CAR Report</a>        
 
         <!-- Email Chief -->
 
@@ -162,24 +170,24 @@
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
           	 <thead>
               <tr>
-                <th colspan="6" style="background-color: #ef6c00; color: white; font-size: 20px;border: none"><b>VERIFIKASI CAR </b></th>
+                <th colspan="6" style="background-color: #ef6c00; color: white; font-size: 24px;border: none;text-align: center;width: 100%"><b>VERIFIKASI CAR </b></th>
               </tr>
               <tr>
-                <th colspan="1" style="width: 20%;border: none"><b>Point</b></th>
-                <th colspan="4" style="width: 60%;border: none"><b>Content</b></th>
-                <th colspan="1" style="width: 20%;border: none"><b>Checked</b></th>
+                <th colspan="1" style="width: 10%;border: none;text-align: center;font-size: 18px"><b>Point</b></th>
+                <th colspan="4" style="width: 70%;border: none;text-align: center;font-size: 18px"><b>Content</b></th>
+                <th colspan="1" style="width: 20%;border: none;text-align: center;font-size: 18px"><b>Checked</b></th>
               </tr>
             </thead>
             <tbody>
               <input type="hidden" value="{{csrf_token()}}" name="_token" />  
                 <tr>
-                  <td colspan="1">Deskripsi</td>
+                  <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Deskripsi</td>
                   <td colspan="4"><?= $cars->deskripsi ?></td>
                   <td colspan="1">
                       @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -192,7 +200,7 @@
                       @elseif(Auth::user()->username == $cars->employee_id)
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -205,7 +213,7 @@
                       @elseif(Auth::user()->username == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -218,7 +226,7 @@
                       @elseif(Auth::user()->username == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -231,13 +239,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="1">Tindakan</td>
+                  <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Tindakan</td>
                   <td colspan="4"><?= $cars->tindakan ?></td>
                   <td colspan="1">
                   	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -250,7 +258,7 @@
                       @elseif(Auth::user()->username == $cars->employee_id)
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -263,7 +271,7 @@
                       @elseif(Auth::user()->username == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -276,7 +284,7 @@
                       @elseif(Auth::user()->username == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center" >
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -289,13 +297,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="1">Penyebab</td>
+                  <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Penyebab</td>
                   <td colspan="4"><?= $cars->penyebab ?></td>
                   <td colspan="1">
                   	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -308,7 +316,7 @@
                       @elseif(Auth::user()->username == $cars->employee_id)
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -321,7 +329,7 @@
                       @elseif(Auth::user()->username == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -334,7 +342,7 @@
                       @elseif(Auth::user()->username == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -347,13 +355,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="1">Perbaikan</td>
+                  <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center;">Perbaikan</td>
                   <td colspan="4"><?= $cars->perbaikan ?></td>
                   <td colspan="1">
                   	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -366,7 +374,7 @@
                       @elseif(Auth::user()->username == $cars->employee_id)
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -379,7 +387,7 @@
                       @elseif(Auth::user()->username == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -392,7 +400,7 @@
                       @elseif(Auth::user()->username == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
-                            <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox" style="text-align: center">
                             <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
                             </div>
                           @else
@@ -443,16 +451,43 @@
           
           @if(($cars->posisi == "chief" && $cars->checked_chief == null) || ($cars->posisi == "foreman2" && $cars->checked_foreman == null) || ($cars->posisi == "coordinator" && $cars->checked_coordinator == null) || ($cars->posisi == "manager" && $cars->checked_manager == null) || ($cars->posisi == "dgm" && $cars->approved_dgm == null) || ($cars->posisi == "gm" && $cars->approved_gm == null))
           <button type="submit" class="btn btn-success col-sm-14" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+           <a data-toggle="modal" data-target="#notapproved{{$cars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CAR</a>
           @endif
 
         </div>
 
+        
         @endif
         <?php endforeach ?>
 
       </div>
     </form>
   </div>
+
+  <div class="modal modal-danger fade" id="notapproved{{$cars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form role="form" method="post" action="{{url('index/qc_car/unchecked/'.$cars->id)}}">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+            </div>
+            <div class="modal-body">
+              <div class="box-body">
+                  <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                  <h4>Berikan alasan tidak menyetujui CAR ini</h4>
+                  <textarea class="form-control" required="" name="alasan"></textarea>
+                  *CAR Akan Dikirim kembali lagi ke Foreman / Staff masing - masing departemen
+              </div>    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-outline">Not Approved</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
   <div class="modal fade" id="statusmodal{{$cars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -463,7 +498,7 @@
       </div>
       <div class="modal-body">
         <div class="box-body">
-          <table class="table table-hover">
+          <table class="table table-hover" id="verifikasi">
             <tbody>
               <input type="hidden" value="{{csrf_token()}}" name="_token" />  
                 <tr style="background-color: #4caf50;color: white">
@@ -586,6 +621,8 @@
     $("body").on("click",".btn-danger",function(){ 
       $(this).parents(".control-group").remove();
     });
+    $('body').toggleClass("sidebar-collapse");
+    $("#navbar-collapse").text('');
   });
 
   $.ajaxSetup({

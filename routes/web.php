@@ -1820,7 +1820,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//Verifikasi CAR
 	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
 	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
-	Route::get('index/qc_car/unchecked/{id}', 'QcCarController@unchecked');
+	Route::post('index/qc_car/unchecked/{id}', 'QcCarController@unchecked');
 
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasiqa');
@@ -1891,7 +1891,8 @@ Route::get('index/press/fl', 'PressController@index_fl');
 Route::get('index/press/cl', 'PressController@index_cl');
 Route::get('index/press/vn', 'PressController@index_vn');
 Route::get('scan/press/operator', 'PressController@scanPressOperator');
-Route::get('scan/press/material_number', 'PressController@scanPressMaterial');
+Route::get('fetch/press/press_list', 'PressController@fetchPressList');
+Route::get('fetch/press/fetchMaterialList', 'PressController@fetchMaterialList');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
