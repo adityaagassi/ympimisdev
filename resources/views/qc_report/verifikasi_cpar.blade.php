@@ -149,7 +149,7 @@
 
         <br/><br/>
 
-        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS")
+        @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->username == $cpars->dgm || Auth::user()->username == $cpars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL")
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
