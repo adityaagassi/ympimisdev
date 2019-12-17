@@ -51,7 +51,7 @@ class UploadTransferKD extends Command
         $transfers = TransactionTransfer::whereNull('reference_file')
         ->update(['reference_file' => $kdofilename]);
 
-        $upload_transfers = TransactionCompletion::where('reference_file', '=', $kdofilename)
+        $upload_transfers = TransactionTransfer::where('reference_file', '=', $kdofilename)
         ->select('plant', 'material_number', 'issue_plant', 'issue_location', 'receive_plant', 'receive_location', db::raw('sum(quantity) as quantity'), 'cost_center', 'gl_account', db::raw('date(created_at) as date', 'transcation_code', 'reason_code'))
         ->groupBy('plant', 'material_number', 'issue_plant', 'issue_location', 'receive_plant', 'receive_location', 'cost_center', 'gl_account', db::raw('date(created_at)'), 'transcation_code', 'reason_code')
         ->get();
