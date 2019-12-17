@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\ShipmentSchedule;
+use App\ContainerSchedule;
 use App\KnockDownLog;
 use App\KnockDownDetail;
 use App\KnockDown;
@@ -52,6 +53,24 @@ class KnockDownController extends Controller{
 		))->with('page', 'KD Delivery')->with('head', $title);
 	}
 
+	public function indexKdDelivery(){
+		return view('kd.kd_delivery')->with('page', 'KD Delivery');
+	}
+
+	public function indexKdStuffing(){
+		$first = date('Y-m-01');
+		$now = date('Y-m-d');
+		$container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
+		->where('shipment_date', '>=', $first)
+		->where('shipment_date', '<=', $now)
+		->get();
+		
+		return view('kd.kd_stuffing', array(
+			'container_schedules' => $container_schedules,
+		))->with('page', 'KD Stuffing');
+	}
+
+
 	public function scanKdDelivery(Request $request){
 
 		$id = Auth::id();
@@ -73,6 +92,7 @@ class KnockDownController extends Controller{
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
 		$knock_down->status = $status;
+
 		foreach ($knock_down_details as $knock_down_detail) {
 
 			$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
@@ -144,14 +164,93 @@ class KnockDownController extends Controller{
 		return Response::json($response);
 	}
 
+	public function scanKdStuffing(Request $request){
+		$id = Auth::id();
+		$status = $request->get('status');
+		$invoice_number = $request->get('invoice_number');
+		$container_id = $request->get('container_id');
+
+		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
+		->where('status', '=', ($status - 1))
+		->first();
+
+		if(!$knock_down){
+			$response = array(
+				'status' => false,
+				'message' => 'Nomor KDO tidak ditemukan',
+			);
+			return Response::json($response);
+		}
+
+		$knock_down->status = $status;
+		$knock_down->invoice_number = $invoice_number;
+		$knock_down->container_id = $container_id;
+
+		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
+
+		foreach ($knock_down_details as $knock_down_detail) {
+
+			$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
+			$inventoryFSTK->quantity = ($inventoryFSTK->quantity-$knock_down_detail->quantity);
+
+
+			try{
+				DB::transaction(function() use ($inventoryFSTK, $knock_down){
+					$inventoryFSTK->save();
+					$knock_down->save();
+				});	
+			}
+			catch(\Exception $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => $id
+				]);
+				$error_log->save();
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}
+
+		try{
+			$kd_log = KnockDownLog::updateOrCreate(
+				['kd_number' => $request->get('kd_number'), 'status' => $status],
+				['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
+			);
+			$kd_log->save();
+		}
+		catch(\Exception $e){
+			$error_log = new ErrorLog([
+				'error_message' => $e->getMessage(),
+				'created_by' => $id
+			]);
+			$error_log->save();
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+		
+		$response = array(
+			'status' => true,
+			'message' => 'KDO berhasil distuffing',
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchKDO(Request $request){
 		$status = $request->get('status');
 
 		$knock_downs = KnockDown::leftJoin('knock_down_logs', 'knock_down_logs.kd_number', '=', 'knock_downs.kd_number')
+		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
 		->where('knock_down_logs.status', '=', $status)
 		->where('knock_downs.status', '=', $status)
 		->orderBy('knock_down_logs.updated_at', 'desc')
-		->select('knock_downs.kd_number', 'knock_downs.actual_count', 'knock_down_logs.updated_at')
+		->select('knock_downs.kd_number', 'container_schedules.shipment_date', 'knock_downs.actual_count', 'knock_downs.remark', 'knock_down_logs.updated_at', 'knock_downs.invoice_number', 'knock_downs.container_id')
 		->get();
 
 		return DataTables::of($knock_downs)
@@ -204,13 +303,8 @@ class KnockDownController extends Controller{
 			'target' => $target,
 		);
 		return Response::json($response);
-
 	}
-
-	public function indexKdDelivery(){
-		return view('kd.kd_delivery')->with('page', 'KD Delivery');
-	}
-
+	
 	public function fetchKdDetail(Request $request){
 		$location = $request->get('location');
 
@@ -292,7 +386,6 @@ class KnockDownController extends Controller{
 			);
 			return Response::json($response);
 		}	
-
 	}
 
 	public function printLabel(Request $request){

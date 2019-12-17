@@ -69,7 +69,8 @@
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
                   <th style="width: 10%">KDO</th>
-                  <th style="width: 10%">Max Count</th>
+                  <th style="width: 10%">Count Item</th>
+                  <th style="width: 10%">Location</th>
                   <th style="width: 10%">Received At</th>
                   <th style="width: 10%">Details</th>
                   <th style="width: 10%">Cancel Delivery</th>
@@ -79,6 +80,7 @@
               </tbody>
               <tfoot>
                 <tr>
+                  <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -223,6 +225,7 @@
       "columns": [
       { "data": "kd_number" },
       { "data": "actual_count" },
+      { "data": "remark" },
       { "data": "updated_at" },
       { "data": "detailKDO" },
       { "data": "deleteKDO" }

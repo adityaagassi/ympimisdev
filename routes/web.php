@@ -813,6 +813,8 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_stuffing', 'KnockDownController@indexKdStuffing');
 	Route::post('scan/kd_stuffing', 'KnockDownController@scanKdStuffing');
 	Route::post('fetch/kdo', 'KnockDownController@fetchKDO');
+
+	
 });
 
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
@@ -1217,16 +1219,24 @@ Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilver
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
+	//Pesanan + master
 	Route::get('index/pantry/pesanmenu', 'PantryController@pesanmenu');
-	Route::get('index/pantry/daftarmenu', 'PantryController@daftarmenu');
-	Route::get('index/pantry/daftarpesanan', 'PantryController@daftarpesanan');
+	Route::get('index/pantry/menu', 'PantryController@daftarmenu');
+	Route::get('index/pantry/pesanan', 'PantryController@daftarpesanan');
 
+	//Pesanan
 	Route::get('fetch/menu', 'PantryController@fetchmenu');
 	Route::get('fetch/pesanan', 'PantryController@fetchpesanan');
 	Route::post('index/pantry/inputmenu', 'PantryController@inputMenu');
 	Route::post('index/pantry/deletemenu', 'PantryController@deleteMenu');
 	Route::post('index/pantry/konfirmasipesanan', 'PantryController@konfirmasipesanan');
 
+	//CRUD Menu
+	Route::get('index/pantry/create_menu', 'PantryController@create_menu');
+	Route::post('index/pantry/create_menu', 'PantryController@create_menu_action');
+	Route::get('index/pantry/delete_menu/{id}', 'PantryController@delete_menu');
+	Route::get('index/pantry/edit_menu/{id}', 'PantryController@edit_menu');
+	Route::post('index/pantry/edit_menu/{id}', 'PantryController@edit_menu_action');
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -1864,6 +1874,7 @@ Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 Route::get('index/reedplate/map','ReedplateController@index');
 Route::get('fetch/reedplate/user','ReedplateController@getUser');
 Route::get('fetch/reedplate/log','ReedplateController@fetch_log');
+Route::get('fetch/reedplate/trial','ReedplateController@trial_log');
 
 
 //TEMPERATURE / SUHU
@@ -1893,6 +1904,11 @@ Route::get('index/press/vn', 'PressController@index_vn');
 Route::get('scan/press/operator', 'PressController@scanPressOperator');
 Route::get('fetch/press/press_list', 'PressController@fetchPressList');
 Route::get('fetch/press/fetchMaterialList', 'PressController@fetchMaterialList');
+Route::get('fetch/press/fetchProcess', 'PressController@fetchProcess');
+Route::post('index/press/store_sax', 'PressController@store_sax');
+Route::post('index/press/store_fl', 'PressController@store_fl');
+Route::post('index/press/store_cl', 'PressController@store_cl');
+Route::post('index/press/store_vn', 'PressController@store_vn');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

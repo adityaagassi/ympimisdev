@@ -393,6 +393,12 @@
   </li>
   @endif
 
+   @if(in_array('S29', $navs))
+  @if(isset($page) && $page == "KD Delivery")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_stuffing") }}"><i class="fa fa-truck"></i> <span>KD  <i class="fa fa-angle-right"></i> Stuffing</span></a>
+  </li>
+  @endif
+
   @if(in_array('S14', $navs))
   @if(isset($page) && $page == "Overtime Form")<li class="active">@else<li>@endif
     <a href="{{ url("/index/overtime/overtime_form") }}"><i class="fa fa-clock-o"></i> <span> <span>Overtime Form</span></a>
