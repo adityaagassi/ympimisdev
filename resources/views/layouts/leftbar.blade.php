@@ -284,7 +284,7 @@
   </a>
   <ul class="treeview-menu">
     @if(isset($page) && $page == "Pantry")<li class="active">@else<li>@endif
-      <a href="{{ url("/index/pantry/pesanmenu") }}"><i class="fa fa-coffee"></i> <span>Pesan Minuman</span></a>
+      <a href="{{ url("/index/pantry/pesanmenu") }}"><i class="fa fa-coffee"></i><span>Pesan Minuman</span></a>
     </li>
     @if(isset($page) && $page == "Pantry Menu")<li class="active">@else<li>@endif
       <a href="{{ url("index/pantry/menu") }}"><i class="fa fa-calendar-plus-o"></i>Pantry Menu</a>

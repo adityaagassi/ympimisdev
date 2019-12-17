@@ -666,6 +666,11 @@ class QcCarController extends Controller
 
       public function checked(Request $request,$id)
       {
+
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+
+          $emailcar = db::select($query);
+
           $checked = $request->get('checked');
 
           if(count($checked) == 4){
@@ -694,7 +699,12 @@ class QcCarController extends Controller
             }
 
             else if ($cars->posisi == "dgm") {
-              $cars->approved_dgm = "Checked";              
+              $cars->approved_dgm = "Checked";  
+              $cars->email_status = "SentGM";
+              $cars->email_send_date = date('Y-m-d');
+              $cars->posisi = "gm";
+              $cars->save();
+              Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($emailcar, 'car'));            
             }
 
             else if ($cars->posisi == "gm") {

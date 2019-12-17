@@ -331,9 +331,7 @@
       <div class="col-xs-12">
         <div class="box">
           <div class="box-body">
-
             <a data-toggle="modal" data-target="#createModal" class="btn btn-primary col-sm-12" style="width: 100%;color:white;font-weight: bold; font-size: 20px">Tambahkan Material</a>
-           
             <br><br><br>
             <table id="example1" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">

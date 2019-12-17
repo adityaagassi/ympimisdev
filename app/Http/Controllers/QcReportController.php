@@ -172,7 +172,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','6','10','11','13','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','10','11','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -180,7 +180,7 @@ class QcReportController extends Controller
         $productions = Department::select('departments.*')
         ->join('divisions','departments.id_division','=','divisions.id')
         ->where('id_division','=','5')
-        ->whereNotIn('departments.id',['10','11','13','14'])
+        ->whereNotIn('departments.id',['10','11','14'])
         ->get();
 
         $procurements = Department::select('departments.*')
@@ -243,8 +243,6 @@ class QcReportController extends Controller
           //   $file == "";
           // }
 
-         
-
           $id_user = Auth::id();
           $tgl_permintaan = $request->get('tgl_permintaan');
           $tgl_balas = $request->get('tgl_balas');
@@ -264,7 +262,27 @@ class QcReportController extends Controller
                 $posisi = "leader";
                 $chief = null;
                 $foreman = $this->chief;
-              }              
+              }
+              else{
+                $staff = null;
+                $leader = Auth::user()->username;
+                $posisi = "leader";
+                $chief = null;
+
+                $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance' ";
+                $fore = DB::select($getforeman);
+                
+                if ($fore != null) {
+                  foreach ($fore as $for) {
+                    $hasilforeman = $for->username;
+                  }
+
+                  $foreman = $hasilforeman;                
+                }
+                else{
+                  $foreman = null;
+                } 
+              }             
             }
             else
             {
@@ -350,7 +368,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','6','10','11','13','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','10','11','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -358,7 +376,7 @@ class QcReportController extends Controller
         $productions = Department::select('departments.*')
         ->join('divisions','departments.id_division','=','divisions.id')
         ->where('id_division','=','5')
-        ->whereNotIn('departments.id',['10','11','13','14'])
+        ->whereNotIn('departments.id',['10','11','14'])
         ->get();
 
         $procurements = Department::select('departments.*')
@@ -1777,6 +1795,10 @@ class QcReportController extends Controller
 
       public function checked(Request $request,$id)
       {
+
+          $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
+          $emailcpar = db::select($query);
+
           $checked = $request->get('checked');
           // var_dump(count($checked));die();
           if(count($checked) == 13 || count($checked) == 19 || count($checked) == 25 || count($checked) == 31 || count($checked) == 37){
@@ -1791,7 +1813,12 @@ class QcReportController extends Controller
               $cpars->checked_manager = "Checked";              
             }
             else if ($cpars->posisi == "dgm") {
-              $cpars->approved_dgm = "Checked";              
+              $cpars->approved_dgm = "Checked";
+              $cpars->email_status = "SentGM";
+              $cpars->email_send_date = date('Y-m-d');
+              $cpars->posisi = "gm";
+              $cpars->progress = "50";
+              Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($emailcpar, 'cpar'));            
             }
             else if ($cpars->posisi == "gm") {
               $cpars->approved_gm = "Checked"; 
@@ -1898,7 +1925,6 @@ class QcReportController extends Controller
       }
 
       public function emailverification(Request $request,$id){
-
 
           $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
 
