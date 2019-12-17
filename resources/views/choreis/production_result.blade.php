@@ -504,7 +504,7 @@
 
 						$('#export_week_jp').text(result.weekTitle.replace(/[^0-9\.]/g, ''));
 						$('#export_month_jp').text(result.now.substring(5,7));
-						$('#export_date_jp').text(result.now.substring(5,7));
+						$('#export_date_jp').text(result.now.substring(8,10));
 						$('#export_date_id').text(result.dateTitle);
 						$('#export_week_id').text(result.weekTitle);
 
