@@ -115,6 +115,7 @@
 					{{-- <li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">EI Production Result<br><span class="text-purple">EI生産実績</span></a></li> --}}
 					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">EI Production Accuracy<br><span class="text-purple">EI週次出荷</span></a></li>
 					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">EI Weekly Shipment<br><span class="text-purple">EI週次出荷</span></a></li>
+					<li class="vendor-tab"><a href="#tab_7" data-toggle="tab" id="tab_header_7">Chorei Text<br><span class="text-purple">朝礼用の生産報告文章</span></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1" style="height: 580px;">
@@ -174,6 +175,120 @@
 							</div>
 						</div>
 						<div id="container6" style="width:100%; height:530px;"></div>
+					</div>
+					<div class="tab-pane" id="tab_7">
+						<table style="width: 100%;">
+							<tbody>
+								<tr>
+									<td style="text-align: left; width: 40%;">
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Ohayou Gozaimasu</span>
+											<br>
+											<span style="font-size: 16px;">Selamat pagi</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;"><span style="color: red;" id="production_month_jp">????</span>-gatsu <span style="color: red;" id="production_date_jp">????</span>-nichi made no, seisan no kekka wo hokoku shimasu.</span>
+											<br>
+											<span style="font-size: 16px;">Diinformasikan hasil produksi sampai tanggal <span style="color: red;" id="production_date_id">????</span></span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Aitemu goto no seisan no kekka wa:</span>
+											<br>
+											<span style="font-size: 16px;">Hasil kesesuaian per item sebagai berikut :</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Furuuto wa mainasu <span style="color: red;" id="fl_minus_jp">????</span> setto, purasu <span style="color: red;" id="fl_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">FL minus <span style="color: red;" id="fl_minus_id">????</span> set, plus <span style="color: red;" id="fl_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Kurarinetto wa mainasu <span style="color: red;" id="cl_minus_jp">????</span> setto, purasu <span style="color: red;" id="cl_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">CL minus <span style="color: red;" id="cl_minus_id">????</span> Set, plus <span style="color: red;" id="cl_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Aruto Sakkusu wa mainasu <span style="color: red;" id="as_minus_jp">????</span> setto, purasu <span style="color: red;" id="as_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">AS minus <span style="color: red;" id="as_minus_id">????</span> Set, plus <span style="color: red;" id="as_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Tena Sakkusu wa mainasu <span style="color: red;" id="ts_minus_jp">????</span> setto, purasu <span style="color: red;" id="ts_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">TS minus <span style="color: red;" id="ts_minus_id">????</span> Set, plus <span style="color: red;" id="ts_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Pianica wa mainasu <span style="color: red;" id="pn_minus_jp">????</span> setto, purasu <span style="color: red;" id="pn_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">PN minus <span style="color: red;" id="pn_minus_id">????</span> Set, plus <span style="color: red;" id="pn_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Rekoda wa mainasu <span style="color: red;" id="rc_minus_jp">????</span> setto, purasu <span style="color: red;" id="rc_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">RC minus <span style="color: red;" id="rc_minus_id">????</span> Set, plus <span style="color: red;" id="rc_plus_id">????</span> set.</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Venova wa mainasu <span style="color: red;" id="vn_minus_jp">????</span> setto, purasu <span style="color: red;" id="vn_plus_jp">????</span> setto desu.</span>
+											<br>
+											<span style="font-size: 16px;">VN minus <span style="color: red;" id="vn_minus_id">????</span> Set, plus <span style="color: red;" id="vn_plus_id">????</span> set.</span>
+										</p>
+									</td>
+									<td style="text-align: left; width: 40%;">
+										<p>
+											<span style="font-weight: bold; font-size: 16px;"><span style="color: red;" id="export_week_jp">????</span> shuume no// shuuji shukka wo// tassei suru tameni, <span style="color: red;" id="export_month_jp">????</span>-gatsu <span style="color: red;" id="export_date_jp">????</span>-nichi made no // souko e no// shukka kekka wo// houkokushimasu:</span>
+											<br>
+											<span style="font-size: 16px;">Pengiriman ke gudang sampai tanggal <span style="color: red;" id="export_date_id">????</span> untuk pencapaian target weekly export <span style="color: red;" id="export_week_id">????</span> sebagai berikut:</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Furuuto wa: <span style="color: red;" id="fl_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Flute FG: <span style="color: red;" id="fl_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Kurarinetto wa: <span style="color: red;" id="cl_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Clarinet FG: <span style="color: red;" id="cl_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Aruto Sakkusu wa: <span style="color: red;" id="as_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Alto Saxophone FG: <span style="color: red;" id="as_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Tena Sakkusu wa: <span style="color: red;" id="ts_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Tenor Saxophone FG: <span style="color: red;" id="ts_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Pianika wa: <span style="color: red;" id="pn_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Pianica FG: <span style="color: red;" id="pn_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Rekoda wa: <span style="color: red;" id="rc_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Recorder FG: <span style="color: red;" id="rc_id">????</span> %</span>
+										</p>
+										<p>
+											<span style="font-weight: bold; font-size: 16px;">Venova wa: <span style="color: red;" id="vn_jp">????</span> paasento</span>
+											<br>
+											<span style="font-size: 16px;">Venova FG: <span style="color: red;" id="vn_id">????</span> %</span>
+										</p>
+									</td>
+									<td style="text-align: left; width: 20%;">
+										<p style="font-weight: bold;">
+											*Note : Jika CLARINET FG Sesuai Target<br>
+											KURARINETTO WA KEIKAKU DOORI DESU.<br>
+											CLARINET FG SESUAI DENGAN TARGET.<br>
+										</p>
+										<p style="font-weight: bold;">
+											*Note : Jika 100%<br>
+											KANSEIHIN WA // ZENBU HYAKU PASSSENTO DESU.<br>
+											SEMUA FG 100%<br>
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>			
@@ -243,6 +358,11 @@
 			}, 10000);
 		});
 
+		var th = ['','thousand','million', 'billion','trillion'];
+
+		var dg = ['zero','one','two','three','four', 'five','six','seven','eight','nine']; var tn = ['ten','eleven','twelve','thirteen', 'fourteen','fifteen','sixteen', 'seventeen','eighteen','nineteen']; var tw = ['twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety']; function toWords(s){s = s.toString(); s = s.replace(/[\, ]/g,''); if (s != parseFloat(s)) return 'not a number'; var x = s.indexOf('.'); if (x == -1) x = s.length; if (x > 15) return 'too big'; var n = s.split(''); var str = ''; var sk = 0; for (var i=0; i < x; i++) {if ((x-i)%3==2) {if (n[i] == '1') {str += tn[Number(n[i+1])] + ' '; i++; sk=1;} else if (n[i]!=0) {str += tw[n[i]-2] + ' ';sk=1;}} else if (n[i]!=0) {str += dg[n[i]] +' '; if ((x-i)%3==0) str += 'hundred ';sk=1;} if ((x-i)%3==1) {if (sk) str += th[(x-i-1)/3] + ' ';sk=0;}} if (x != s.length) {var y = s.length; str += 'point '; for (var i=x+1; i<y; i++) str += dg[n[i]] +' ';} return str.replace(/\s+/g,' ');}
+
+
 		$(function() {
 			$(document).keydown(function(e) {
 				switch(e.which) {
@@ -258,17 +378,17 @@
 					case 51:
 					$("#tab_header_3").click()
 					break;
-				// case 52:
-				// $("#tab_header_4").click()
-				// break;
-				case 52:
-				$("#tab_header_5").click()
-				break;
-				case 53:
-				$("#tab_header_6").click()
-				break;
-			}
-		});
+					case 52:
+					$("#tab_header_5").click()
+					break;
+					case 53:
+					$("#tab_header_6").click()
+					break;
+					case 54:
+					$("#tab_header_7").click()
+					break;
+				}
+			});
 		});
 
 		function searchDate(){
@@ -298,9 +418,6 @@
 
 		function fillWeek(){
 			$.get('{{ url("fetch/daily_production_result_week") }}', function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#weekResult').html('');
@@ -327,9 +444,6 @@
 				week:id,
 			}
 			$.get('{{ url("fetch/daily_production_result_date") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#dateResult').html('');
@@ -367,16 +481,12 @@
 			return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 		}
 
-		function getWeekProgres() {
-			
-		}
-
 		function fillChart(id){
 			var now = new Date();
 			var now_tgl = addZero(now.getFullYear())+'-'+addZero(now.getMonth()+1)+'-'+addZero(now.getDate());
 			var req = new Date(id);
 			var req_tgl = addZero(req.getFullYear())+'-'+addZero(req.getMonth()+1)+'-'+addZero(req.getDate());
-			
+
 			if(id != 0){
 				$('#dateHidden').val(id);
 			}
@@ -386,11 +496,18 @@
 			};
 
 			$.get('{{ url("fetch/daily_production_result") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
+						$('#production_month_jp').text(result.now.substring(5,7));
+						$('#production_date_jp').text(result.now.substring(8,10));
+						$('#production_date_id').text(result.dateTitle);
+
+						$('#export_week_jp').text(result.weekTitle.replace(/[^0-9\.]/g, ''));
+						$('#export_month_jp').text(result.now.substring(5,7));
+						$('#export_date_jp').text(result.now.substring(5,7));
+						$('#export_date_id').text(result.dateTitle);
+						$('#export_week_id').text(result.weekTitle);
+
 
 						// Progres bar hari kerja/minggu
 						for (var i = 1; i < 3; i++) {
@@ -784,6 +901,48 @@
 							plusCountEI.push(data2[i].plus);
 							minusCountEI.push(data2[i].minus);
 						}
+						if(data2[i].hpl == "FLFG"){
+							$('#fl_minus_jp').text(data2[i].minus);
+							$('#fl_plus_jp').text(data2[i].plus);
+							$('#fl_minus_id').text(data2[i].minus);
+							$('#fl_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "CLFG"){
+							$('#cl_minus_jp').text(data2[i].minus);
+							$('#cl_plus_jp').text(data2[i].plus);
+							$('#cl_minus_id').text(data2[i].minus);
+							$('#cl_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "ASFG"){
+							$('#as_minus_jp').text(data2[i].minus);
+							$('#as_plus_jp').text(data2[i].plus);
+							$('#as_minus_id').text(data2[i].minus);
+							$('#as_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "TSFG"){
+							$('#ts_minus_jp').text(data2[i].minus);
+							$('#ts_plus_jp').text(data2[i].plus);
+							$('#ts_minus_id').text(data2[i].minus);
+							$('#ts_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "VENOVA"){
+							$('#vn_minus_jp').text(data2[i].minus);
+							$('#vn_plus_jp').text(data2[i].plus);
+							$('#vn_minus_id').text(data2[i].minus);
+							$('#vn_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "RC"){
+							$('#rc_minus_jp').text(data2[i].minus);
+							$('#rc_plus_jp').text(data2[i].plus);
+							$('#rc_minus_id').text(data2[i].minus);
+							$('#rc_plus_id').text(data2[i].plus);
+						}
+						if(data2[i].hpl == "PN"){
+							$('#pn_minus_jp').text(data2[i].minus);
+							$('#pn_plus_jp').text(data2[i].plus);
+							$('#pn_minus_id').text(data2[i].minus);
+							$('#pn_plus_id').text(data2[i].plus);
+						}
 					}
 
 					Highcharts.chart('container2', {
@@ -962,6 +1121,35 @@
 							xAxis3EI.push(data3[i].hpl);
 							planBLCountEI.push(data3[i].prc_plan);
 							actualBLCountEI.push(data3[i].prc_actual);
+						}
+
+						if(data2[i].hpl == "FLFG"){
+							$('#fl_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#fl_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "CLFG"){
+							$('#cl_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#cl_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "ASFG"){
+							$('#as_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#as_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "TSFG"){
+							$('#ts_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#ts_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "VENOVA"){
+							$('#vn_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#vn_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "RC"){
+							$('#rc_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#rc_id').text(Math.round(data3[i].prc_actual*100));
+						}
+						if(data2[i].hpl == "PN"){
+							$('#pn_jp').text(Math.round(data3[i].prc_actual*100));
+							$('#pn_id').text(Math.round(data3[i].prc_actual*100));
 						}
 					}
 
