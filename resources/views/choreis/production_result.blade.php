@@ -285,6 +285,8 @@
 											KANSEIHIN WA // ZENBU HYAKU PASSSENTO DESU.<br>
 											SEMUA FG 100%<br>
 										</p>
+										<textarea style="width: 100%; height: 200px;">
+										</textarea>
 									</td>
 								</tr>
 							</tbody>
