@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         Commands\InjectionScheduleTrial::class,
         Commands\CallRoute::class,
         Commands\UploadCompletionKD::class,
+        Commands\UploadTransferKD::class,
     ];
 
     /**

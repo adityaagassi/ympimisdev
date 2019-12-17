@@ -107,7 +107,6 @@ class UploadCompletions extends Command
                     ]);
                     $log_transaction->save();
                 }
-
             }
             catch(\Exception $e){
                 $flo_error = FloDetail::where('completion', '=', $flofilename);

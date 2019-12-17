@@ -53,7 +53,8 @@ class UploadCompletionKD extends Command
         ->update(['reference_file' => $kdofilename]);
 
         $upload_completions = TransactionCompletion::where('reference_file', '=', $kdofilename)
-        ->select('material_number', 'issue_location', 'quantity', db::raw('date(created_at) as date'))
+        ->select('material_number', 'issue_location', db::raw('sum(quantity) as quantity'), db::raw('date(created_at) as date'))
+        ->groupBy('material_number', 'issue_location', db::raw('date(created_at)'))
         ->get();
 
         $upload_text = "";
@@ -85,6 +86,8 @@ class UploadCompletionKD extends Command
                 'created_by' => '1'
             ]);
             $error_log->save();
+            echo 'false';
+            exit;
         }
     }
 
