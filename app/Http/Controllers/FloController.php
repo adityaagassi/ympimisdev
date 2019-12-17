@@ -29,6 +29,7 @@ use App\LogProcess;
 use App\LogTransaction;
 use App\ErrorLog;
 use App\Mail\SendEmail;
+use App\KnockDown;
 use Illuminate\Support\Facades\Mail;
 
 class FloController extends Controller
@@ -295,7 +296,23 @@ class FloController extends Controller
 
 	public function input_flo_lading(Request $request){
 		$bl_date =  date('Y-m-d', strtotime($request->get('bl_date')));
-		$flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);
+		$id = Auth::id();
+		try{
+			$flos = Flo::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);
+			$flos = KnockDown::where('invoice_number', '=', $request->get('invoice_number'))->update(['bl_date' => $bl_date, 'status' => 4]);	
+		}
+		catch (QueryException $e){
+			$error_log = new ErrorLog([
+				'error_message' => $e->getMessage(),
+				'created_by' => $id
+			]);
+			$error_log->save();
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 
 		$response = array(
 			'status' => true,
