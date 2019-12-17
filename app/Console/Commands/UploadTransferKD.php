@@ -52,7 +52,7 @@ class UploadTransferKD extends Command
         ->update(['reference_file' => $kdofilename]);
 
         $upload_transfers = TransactionTransfer::where('reference_file', '=', $kdofilename)
-        ->select('plant', 'material_number', 'issue_plant', 'issue_location', 'receive_plant', 'receive_location', db::raw('sum(quantity) as quantity'), 'cost_center', 'gl_account', db::raw('date(created_at) as date', 'transaction_code', 'reason_code'))
+        ->select(db::raw('plant as ympi_plant'), 'material_number', 'issue_plant', 'issue_location', 'receive_plant', 'receive_location', db::raw('sum(quantity) as quantity'), 'cost_center', 'gl_account', db::raw('date(created_at) as date', 'transaction_code', 'reason_code'))
         ->groupBy('plant', 'material_number', 'issue_plant', 'issue_location', 'receive_plant', 'receive_location', 'cost_center', 'gl_account', db::raw('date(created_at)'), 'transaction_code', 'reason_code')
         ->get();
 
@@ -63,7 +63,7 @@ class UploadTransferKD extends Command
         }
 
         foreach ($upload_transfers as $upload_transfer){
-            $upload_text .= self::writeString($upload_transfer->plant, 15, " ");
+            $upload_text .= self::writeString($upload_transfer->ympi_plant, 15, " ");
             $upload_text .= self::writeString($upload_transfer->issue_plant, 4, " ");
             $upload_text .= self::writeString($upload_transfer->material_number, 18, " ");
             $upload_text .= self::writeString($upload_transfer->issue_location, 4, " ");
