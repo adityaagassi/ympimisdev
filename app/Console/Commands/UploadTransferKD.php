@@ -3,6 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use FTP;
+use App\ErrorLog;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use App\TransactionTransfer;
+use File;
 
 class UploadTransferKD extends Command
 {
