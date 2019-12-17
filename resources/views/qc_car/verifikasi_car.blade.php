@@ -101,7 +101,7 @@
         
         <a href="{{url('index/qc_report/print_cpar', $cars['id_cpar'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report CPAR"  target="_blank">Preview CPAR Report</a>
 
-        <a href="{{url('index/qc_car/print_car', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report CAR"  target="_blank">Preview CAR Report</a>        
+        <a href="{{url('index/qc_car/print_car_new', $cars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-sm pull-right" style="margin-right: 5px;" title="Lihat Report CAR"  target="_blank">Preview CAR Report</a>        
 
         <!-- Email Chief -->
 

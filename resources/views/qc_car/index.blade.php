@@ -101,7 +101,7 @@ table.table-bordered > tfoot > tr > th{
                 <td style="width: 15%">
                   <center>
                     <a href="{{url('index/qc_car/detail', $car['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a>
-                    <!-- <a href="{{url('index/qc_car/print_car', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a> -->
+                    <!-- <a href="{{url('index/qc_car/print_car_new', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a> -->
                   </center>
                 </td>
               </tr>

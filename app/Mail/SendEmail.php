@@ -58,13 +58,13 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->priority(1)->subject('Corrective and Preventive Action Request (CPAR) (是正防止処置要求)')->view('mails.cpar');
         }
         if($this->remark == 'rejectcpar'){
-            return $this->from('ympimis@gmail.com')->subject('Penolakan Corrective and Preventive Action Request (CPAR) (是正防止処置要求)')->view('mails.rejectcpar');
+            return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective and Preventive Action Request (CPAR) (是正防止処置要求)')->view('mails.rejectcpar');
         }
         if($this->remark == 'car'){
-            return $this->from('ympimis@gmail.com')->subject('Corrective Action Report (CAR) (是正処置対策)')->view('mails.car');
+            return $this->from('ympimis@gmail.com')->priority(1)->subject('Corrective Action Report (CAR) (是正処置対策)')->view('mails.car');
         }
         if($this->remark == 'rejectcar'){
-            return $this->from('ympimis@gmail.com')->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
+            return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
         }
         if($this->remark == 'user_document'){
             return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (??)')->view('mails.user_document');

@@ -104,7 +104,7 @@ table.table-bordered > tfoot > tr > th{
           </div>
           <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-lg" title="Lihat Komplain" target="_blank">CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-lg" target="_blank" >CAR Report</a>
+         <a href="{{url('index/qc_car/print_car_new', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-lg" target="_blank" >CAR Report</a>
          
          @if($cpars->posisi == "QA")
          <a class="btn btn-lg btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
