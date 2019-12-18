@@ -11,55 +11,62 @@
 			font-weight: bold;
 			margin: 0px;
 			position: fixed;
-			top: 1px;
-			left: 10px;
+			top: 0px;
+			left: 0px;
 			right: 0px;
 			height: 50px;
+			max-width: 120px;
+			text-align: left;
 		}
-
 		.crop {
 			position: fixed;
 			top: 15px;	
 		}
 		.kiri {
 			font-size: 10pt;
-			font-family: 'arial';	
-			position: fixed;
-			top: 54px;
-			left: 57px;
-			right: 0px;
-			height: 50px;
-			margin: 0px;
-		}
-		.tengah {
-			font-size: 6.5pt;
 			font-family: 'arial';
 			margin: 0px;
 			position: fixed;
-			top: 68px;
-			left: 10px;
+			top: 44px;
+			left: 0px;
 			right: 0px;
 			height: 50px;
-			max-width: 150px;
+			max-width: 120px;
+			text-align: center;
+		}
+		.tengah {
+			font-size: 7pt;
+			font-family: 'arial';
+			margin: 0px;
+			position: fixed;
+			top: 57px;
+			left: 0px;
+			right: 0px;
+			height: 50px;
+			max-width: 120px;
 			text-align: center;
 		}
 
 		.bawah {
 			font-size: 7pt;
 			font-family: 'arial';
-			position: relative;
 			margin: 0px;
-			top: 75px;
-			left: 42px;
+			position: fixed;
+			top: 80px;
+			left: 0px;
 			right: 0px;
 			height: 50px;
+			max-width: 120px;
+			text-align: center;
 		}
 
 		td{
 			padding: 0px;
 			margin: 0px;
 			vertical-align: text-bottom;
-		}	
+		}
+
+		
 
 	</style>
 
@@ -76,7 +83,7 @@
 		
 		<tr>		
 			<td align="left">
-				<p class="product">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GMC: </p>
+				<p class="product">GMC: </p>
 				<img class="crop" id="128" src="">
 				<p class="kiri" id="print_material_number">ZQ66151</p>
 			</td>
@@ -108,7 +115,7 @@
 		var material_description = $('#material_description').val();
 		var quantity = $('#quantity').val();
 		var url1 = "{{url('/app/barcode/')}}";
-		var url2 ="/barcode.php?f=svg&s=code-128&w=150&h=40&p=0&wq=0";
+		var url2 ="/barcode.php?f=svg&s=code-128&w=100&h=30&p=0&wq=0";
 		var code ="&d="+ material_number;
 		var janfix = url1.replace("/public","");
 		$("#128").attr("src",janfix+url2+code);
@@ -121,7 +128,7 @@
 
 function defineCustomPaperSize() {
 	console.log("Define custom paper size", false);
-	jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 52.8, 24.8, jsPrintSetup.kPaperSizeInches);
+	jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 33, 25, jsPrintSetup.kPaperSizeInches);
   // w, h
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 }
@@ -136,9 +143,9 @@ var printSettings = {
 	"edgeRight": 0,
 	"edgeTop": 0,
 	"edgeBottom": 0,
-	"marginLeft": 3,
+	"marginLeft": 0,
 	"marginRight": 0,
-	"marginTop": 2,
+	"marginTop": 1,
 	"marginBottom": 0,
 	// "scaling": 1,
 	"title": "",
@@ -149,7 +156,7 @@ var printSettings = {
 	"footerStrLeft": "",
 	"footerStrCenter": "",
 	"footerStrRight": "",
-	"printerName" : "SATO CX400" 
+	"printerName" : "SATO CG408TT" 
 };
 
 function printWindow(win, what) {
@@ -198,13 +205,7 @@ function printWindow(win, what) {
 		 console.log("before print: "+what, true);
 		});
   	win.addEventListener("afterprint", function(event) {
-  		var sn = $('#codemodel').val();
-  		var rem = $('#rem').val();
-  		console.log("after print: "+what, true);
-  		if(rem =="P"){
-  			window.open('{{ url("index/label_des") }}'+'/'+sn,'_blank');
-  		}
-  		
+   		
   		window.close();
   	});
   }
