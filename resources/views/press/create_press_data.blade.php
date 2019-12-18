@@ -109,7 +109,7 @@
 	<section class="content-header">
 		<h1>
 			{{ $page }} - {{ $head }}
-			<span class="text-purple">??</span>
+			<span class="text-purple">{{ $title_jp }}</span>
 			<button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#trouble-modal" onclick="troubleMaker()">
 				<b>TROUBLE</b>
 			</button>
@@ -313,7 +313,7 @@
 					</div>
 				</div>
 				<button class="btn btn-success" onclick="start()" id="start_button" style="font-size:40px; width: 100%; font-weight: bold; padding: 0;">
-					START
+					MULAI PROSES
 				</button>			
 				<div class="row" id="processtime_picker">
 					<div class="col-xs-6">
@@ -406,10 +406,7 @@
 					</div>
 				</div>
 				<button class="btn btn-danger" onclick="end()" id="end_button" style="font-size:40px; width: 100%; font-weight: bold; padding: 0;">
-					END
-				</button>
-				<button class="btn btn-warning" onclick="reset()" id="reset_button" style="font-size:40px; width: 100%; font-weight: bold; padding: 0;">
-					RESET
+					SELESAI PROSES
 				</button>
 			</div>
 		</div>
@@ -811,9 +808,9 @@
 			$("#production_data").show();
 		}
 
-		function reset(){
-			window.location = "{{ url('index/press/create/'.$head) }}";
-		}
+		// function reset(){
+			
+		// }
 
 		function end(){
 			$("#end_time").html(getActualFullDate());
@@ -876,8 +873,8 @@
 					die_value : die_value,
 				}
 				console.log(data);
-				$("#end_button").hide();
-				$("#reset_button").show();
+				// $("#end_button").hide();
+				// $("#reset_button").show();
 
 				$.post('{{ url("index/press/store") }}', data, function(result, status, xhr){
 					if(result.status){
@@ -895,6 +892,7 @@
 						openErrorGritter('Error','Create Kanagata Log Failed');
 					}
 				});
+				window.location = "{{ url('index/press/create/'.$head) }}";
 			}
 		}
 

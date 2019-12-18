@@ -33,7 +33,7 @@ class InitialProcessController extends Controller
 			))->with('page', 'Material Process FL');
 		}
 		if($id == 'mpro_cl'){
-			$title = 'Material Process Flute';
+			$title = 'Material Process Clarinet';
 			$title_jp = '??';
 			return view('processes.initial.index_mpro_cl', array(
 				'title' => $title,
@@ -41,7 +41,7 @@ class InitialProcessController extends Controller
 			))->with('page', 'Material Process CL');
 		}
 		if($id == 'mpro_sx'){
-			$title = 'Material Process Flute';
+			$title = 'Material Process Saxophone';
 			$title_jp = '??';
 			return view('processes.initial.index_mpro_sx', array(
 				'title' => $title,

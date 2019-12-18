@@ -162,10 +162,20 @@ class PressController extends Controller
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
+		if($product == "Saxophone"){
+			$title_jp = "生産のプレス機　‐　サックス";
+		}
+		elseif($product == "Flute"){
+			$title_jp = "生産のプレス機　‐　フルート";
+		}
+		elseif($product == "Clarinet"){
+			$title_jp = "生産のプレス機　‐　クラリネット";
+		}
+
 		$data = array(
                 	'process' => $process,
                 	'machine' => $machine);
-		return view('press.create_press_data',$data)->with('page', 'Press Machine Production')->with('head', $product);
+		return view('press.create_press_data',$data)->with('page', 'Press Machine Production')->with('head', $product)->with('title_jp', $title_jp);
 	}
 
 	function store(Request $request)
@@ -355,8 +365,8 @@ class PressController extends Controller
     // Khusus Monitoring / Grafik
 
     public function monitoring() {
-    	$title = 'Machine Press Data Result';
-		$title_jp = '';
+    	$title = 'Press Machine Monitoring';
+		$title_jp = 'プレス機管理';
 
 		$process = DB::table('mp_processes')->orderBy('id', 'ASC')->get();
 

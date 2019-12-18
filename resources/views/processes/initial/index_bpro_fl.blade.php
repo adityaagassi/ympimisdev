@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Flute Body Process<span class="text-purple"> ??</span>
+		Flute Body Process<span class="text-purple"> フルートの部品加工</span>
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
 	</h1>
 </section>
