@@ -2,18 +2,10 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
-<style type="text/css">
-	thead>tr>th{
-		font-size: 16px;
-	}
-	/*#tableMachine> tbody > tr > td :hover {
-		cursor: pointer;
-		background-color: #7dfa8c;
-		}*/
-	/*#tableShift> tbody > tr > td :hover {
-		cursor: pointer;
-		background-color: #7dfa8c;
-		}*/
+	<style type="text/css">
+		thead>tr>th{
+			font-size: 16px;
+		}
 		#tableBodyList > tr:hover {
 			cursor: pointer;
 			background-color: #7dfa8c;
@@ -126,32 +118,16 @@
 					<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 						<tbody>
 							<tr>
-								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="10">Operator</th>
+								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="7">Operator</th>
 							</tr>
 							<tr>
 								<td style="background-color: #6e81ff; text-align: center; color: black; font-size:1vw; padding:0;width: 30%;" colspan="3" id="op">-</td>
-								<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; padding:0;font-size: 1vw;" colspan="7" id="op2">-</td>
+								<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; padding:0;font-size: 1vw;" colspan="4" id="op2">-</td>
 							</tr>
 							<tr>
-								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="3" width="50%">Shift List</th>
 								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="7" width="50%">Machine List (Amada)</th>
 							</tr>
 							<tr>
-								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 1')">
-									<center>
-										<p class="btn btn-success" style="font-size: 1vw;">1</p>
-									</center>
-								</td>
-								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 2')">
-									<center>
-										<p class="btn btn-success" style="font-size: 1vw;">2</p>
-									</center>
-								</td>
-								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 3')">
-									<center>
-										<p class="btn btn-success" style="font-size: 1vw;">3</p>
-									</center>
-								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 1')">
 									<center>
 										<p class="btn btn-primary" style="font-size: 1vw;">#1</p>
@@ -215,11 +191,6 @@
 						</table>
 					</div>
 				</div>
-				<div class="box" style="padding: 0;">
-					<div class="box-body">
-						
-					</div>
-				</div>
 			</div>
 			<div class="col-xs-7">
 				<div class="row">
@@ -255,35 +226,33 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
-							<div class="col-xs-1">
-								<span style="font-weight: bold; font-size: 15px;">Shift:</span>
-							</div>
-							<div class="col-xs-3">
-								<input type="text" id="shift" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
-							<div class="col-xs-1">
+							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Machine:</span>
 							</div>
-							<div class="col-xs-3">
+							<div class="col-xs-4">
 								<input type="text" id="machine" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
-							<div class="col-xs-1">
+							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Material:</span>
 							</div>
-							<div class="col-xs-3">
+							<div class="col-xs-4">
 								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
-							<div class="col-xs-6">
+							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Part Name:</span>
-								<input type="text" id="part_name" style="width: 70%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
-							<div class="col-xs-6">
+							<div class="col-xs-4">
+								<input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Description:</span>
-								<input type="text" id="material_description" style="width: 70%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="material_description" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 						</div>						
 					</div>
@@ -297,7 +266,7 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td style=" text-align: center; color: black; font-size12vw; width: 30%;">
+									<td style=" text-align: center; color: black; font-size:1vw; width: 30%;">
 										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="punch" name="punch" data-placeholder="Choose Punch" required>
 											<option></option>
 										</select>
@@ -346,17 +315,6 @@
 					</div>
 				</div>
 				<div class="row" id="downtime_picker">
-					<div class="col-xs-12" style="padding-top: 5px;">
-						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
-							<thead>
-								<tr>
-
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
 					<div class="col-xs-12">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
@@ -521,10 +479,6 @@
 			$("#machine").val(nama_mesin);
 		}
 
-		function getDataShift(shift){
-			$("#shift").val(shift);
-		}
-
 		function troubleMaker(){
 			$("#trouble_start").val(getActualFullDate());
 			troubleList();
@@ -664,10 +618,9 @@
 
 		function createTrouble(){
 			var date = $("#date").text();
-			var pic = $("#op2").text();
+			var pic = $("#op").text();
 			var product = $("#product").text();
 			var machine = $("#machine").val();
-			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();
 			var process = $("#process_desc").val();
 			var trouble_start = $("#trouble_start").val();
@@ -678,7 +631,6 @@
 				pic : pic,
 				product : product,
 				machine : machine,
-				shift : shift,
 				material_number : material_number,
 				process : process,
 				start_time : trouble_start,
@@ -700,7 +652,7 @@
 
 		function troubleList(){
 			var date = $("#date").text();
-			var pic = $("#op2").text();
+			var pic = $("#op").text();
 			var product = $("#product").text();
 			var machine = $("#machine").val();
 			var material_number = $("#material_number").val();
@@ -816,10 +768,9 @@
 			$("#end_time").html(getActualFullDate());
 
 			var date = $("#date").text();
-			var pic = $("#op2").text();
+			var pic = $("#op").text();
 			var product = $("#product").text();
 			var machine = $("#machine").val();
-			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();
 			var process = $("#process_desc").val();
 			var punch_number = $("#punch").val();
@@ -843,7 +794,6 @@
 					pic : pic,
 					product : product,
 					machine : machine,
-					shift : shift,
 					material_number : material_number,
 					process : process,
 					punch_number : punch_number,
@@ -861,8 +811,8 @@
 				var data2 = {
 					date : date,
 					pic : pic,
+					product : product,
 					machine : machine,
-					shift : shift,
 					material_number : material_number,
 					process : process,
 					punch_number : punch_number,

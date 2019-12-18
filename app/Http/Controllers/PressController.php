@@ -30,10 +30,6 @@ class PressController extends Controller
       $this->middleware('auth');
     }
 
-    public function index(){
-		return view('press.index')->with('page', 'Press Machine Production')->with('head', 'Press Machine');
-	}
-
 	public function scanPressOperator(Request $request){
 
 		$nik = $request->get('employee_id');
@@ -189,7 +185,6 @@ class PressController extends Controller
                     'pic' => $request->get('pic'),
                     'product' => $request->get('product'),
                     'machine' => $request->get('machine'),
-                    'shift' => $request->get('shift'),
                     'material_number' => $request->get('material_number'),
                     'process' => $request->get('process'),
                     'punch_number' => $request->get('punch_number'),
@@ -234,8 +229,8 @@ class PressController extends Controller
 	          MpKanagataLog::create([
 	                'date' => $request->get('date'),
 	                'pic' => $request->get('pic'),
+	                'product' => $request->get('product'),
 	                'machine' => $request->get('machine'),
-	                'shift' => $request->get('shift'),
 	                'material_number' => $request->get('material_number'),
 	                'process' => $request->get('process'),
 	                'punch_number' => $request->get('punch_number'),
@@ -297,8 +292,8 @@ class PressController extends Controller
                 MpTroubleLog::create([
                     'date' => $request->get('date'),
                     'pic' => $request->get('pic'),
+                    'product' => $request->get('product'),
                     'machine' => $request->get('machine'),
-                    'shift' => $request->get('shift'),
                     'material_number' => $request->get('material_number'),
                     'process' => $request->get('process'),
                     'start_time' => $request->get('start_time'),
@@ -361,11 +356,31 @@ class PressController extends Controller
 
 		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY mp_machines.machine_name,mp_record_prods.date");
 
+		$operator = db::select("select distinct pic, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl from mp_record_prods where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY pic,mp_record_prods.date");
+
 		$response = array(
 			'status' => true,
 			'datas' => $data,
 			'date' => $date,
+			'operator' => $operator
 		);
 		return Response::json($response);
+	}
+
+	public function report($product){
+
+		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+
+		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
+
+		$result_prod = DB::SELECT("SELECT * FROM `mp_record_prods` where product = 'Saxophone'");
+
+		$data = array(
+                	'process' => $process,
+                	'result_prod' => $result_prod,
+                	'trouble_history' => $trouble_history,
+                	'kanagata_log' => $kanagata_log,
+                	'machine' => $machine);
+		return view('press.report_press_data',$data)->with('page', 'Press Machine Report')->with('head', $product)->with('title_jp', "??");
 	}
 }

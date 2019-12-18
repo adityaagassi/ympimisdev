@@ -201,7 +201,7 @@
 								                	@endif</td>
 												<td>
 													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id)}}">View</a>
+														{{-- <a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id)}}">View</a> --}}
 														{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
 														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_area_check('{{ url("index/area_check/update") }}','{{ $area_check->id }}');">
 											               Edit

@@ -10,8 +10,13 @@ class MpTroubleLog extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'date','pic','shift', 'material_number','process','machine','start_time','end_time','reason','created_by'
+		'date','pic','product','shift', 'material_number','process','machine','start_time','end_time','reason','created_by'
 	];
+
+	public function employee_pic()
+    {
+        return $this->belongsTo('App\Employee', 'pic', 'employee_id')->withTrashed();
+    }
 
     public function user()
 	{
