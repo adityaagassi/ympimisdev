@@ -347,10 +347,10 @@
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Electric Supply Time</th>
 								</tr>
 								<tr>
-									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00"></td>
-									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00"></td>
-									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00"></td>
-									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00"></td>
+									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 								</tr>
 							</tbody>
 						</table>
@@ -838,7 +838,7 @@
 			var punch_value = $("#jumlah_punch").val();
 			var die_value = $("#jumlah_dies").val();
 
-			if(process == '' || machine == '' || data_ok == ''){
+			if(process == '' || machine == '' || data_ok == '' || lepas_molding == '' || pasang_molding == '' || process_time == '' || electric_supply_time == ''){
 				alert("Semua Data Harus Diisi.");
 			}
 			else{
