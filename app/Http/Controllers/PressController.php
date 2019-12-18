@@ -206,72 +206,7 @@ class PressController extends Controller
                     'created_by' => $id_user
                 ]);
 
-              $response = array(
-                'status' => true,
-              );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
-              return Response::json($response);
-            }catch(\Exception $e){
-              $response = array(
-                'status' => false,
-                'message' => $e->getMessage(),
-              );
-              return Response::json($response);
-            }
-    }
-
-    function finish_trouble(Request $request)
-    {
-        	try{    
-              $id_user = Auth::id();
-              // $interview_id = $request->get('interview_id');
-              $trouble = MpTroubleLog::find($request->get('id'));
-              $trouble->end_time = date('Y-m-d h:i:s');
-              $trouble->save();
-              
-                // MpRecordProd::create([
-                //     'date' => $request->get('date'),
-                //     'pic' => $request->get('pic'),
-                //     'product' => $request->get('product'),
-                //     'machine' => $request->get('machine'),
-                //     'material_number' => $request->get('material_number'),
-                //     'process' => $request->get('process'),
-                //     'punch_number' => $request->get('punch_number'),
-                //     'die_number' => $request->get('die_number'),
-                //     'start_time' => $request->get('start_time'),
-                //     'end_time' => $request->get('end_time'),
-                //     'lepas_molding' => $request->get('lepas_molding'),
-                //     'pasang_molding' => $request->get('pasang_molding'),
-                //     'process_time' => $request->get('process_time'),
-                //     'electric_supply_time' => $request->get('electric_supply_time'),
-                //     'data_ok' => $request->get('data_ok'),
-                //     'punch_value' => $request->get('punch_value'),
-                //     'die_value' => $request->get('die_value'),
-                //     'created_by' => $id_user
-                // ]);
-
-              $response = array(
-                'status' => true,
-              );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
-              return Response::json($response);
-            }catch(\Exception $e){
-              $response = array(
-                'status' => false,
-                'message' => $e->getMessage(),
-              );
-              return Response::json($response);
-            }
-    }
-
-    function store_kanagata(Request $request)
-    {
-        	try{
-        	  $id_user = Auth::id();
-
-				$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."'");
+               $kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."'");
 
 				$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."'");
 
@@ -313,6 +248,30 @@ class PressController extends Controller
 	                'die_total' => $total_die,
 	                'created_by' => $id_user
 	          ]);
+
+              $response = array(
+                'status' => true,
+              );
+              // return redirect('index/interview/details/'.$interview_id)
+              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function finish_trouble(Request $request)
+    {
+        	try{    
+              $id_user = Auth::id();
+              // $interview_id = $request->get('interview_id');
+              $trouble = MpTroubleLog::find($request->get('id'));
+              $trouble->end_time = date('Y-m-d h:i:s');
+              $trouble->save();
 
               $response = array(
                 'status' => true,

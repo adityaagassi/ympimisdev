@@ -808,9 +808,9 @@
 			$("#production_data").show();
 		}
 
-		// function reset(){
-			
-		// }
+		function reset(){
+			window.location = "{{ url('index/press/create/'.$head) }}";
+		}
 
 		function end(){
 			$("#end_time").html(getActualFullDate());
@@ -872,27 +872,19 @@
 					punch_value : punch_value,
 					die_value : die_value,
 				}
-				console.log(data);
+				console.log(data2);
 				// $("#end_button").hide();
 				// $("#reset_button").show();
 
 				$.post('{{ url("index/press/store") }}', data, function(result, status, xhr){
 					if(result.status){
-						openSuccessGritter('Success','New Production Record has been created');					
+						openSuccessGritter('Success','New Production Record has been created');
+						reset();
 					} else {
 						audio_error.play();
 						openErrorGritter('Error','Create Production Record Failed');
 					}
 				});
-
-				$.post('{{ url("index/press/store_kanagata") }}', data2, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success','New Kanagata Log has been created');					
-					} else {
-						openErrorGritter('Error','Create Kanagata Log Failed');
-					}
-				});
-				window.location = "{{ url('index/press/create/'.$head) }}";
 			}
 		}
 
