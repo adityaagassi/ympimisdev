@@ -812,12 +812,11 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('scan/kd_delivery', 'KnockDownController@scanKdDelivery');
 	Route::get('index/kd_stuffing', 'KnockDownController@indexKdStuffing');
 	Route::post('scan/kd_stuffing', 'KnockDownController@scanKdStuffing');
-	Route::post('fetch/kdo', 'KnockDownController@fetchKDO');
-
-	
+	Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
+	Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');	
 });
-
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
+Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
 
 
@@ -1102,7 +1101,7 @@ Route::group(['nav' => 'S18', 'middleware' => 'permission'], function(){
 
 	//------------ kakuning visual
 	Route::get('index/KakuningVisual', 'Pianica@kakuningvisual');
-	Route::post('index/SaveKakuningVisual', 'Pianica@savekensaakhir');
+	Route::post('index/SaveKakuningVisual', 'Pianica@saveKakuningVisual');
 	
 	Route::get('index/FillOp', 'Pianica@fillop');
 });
@@ -1874,8 +1873,6 @@ Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 Route::get('index/reedplate/map','ReedplateController@index');
 Route::get('fetch/reedplate/user','ReedplateController@getUser');
 Route::get('fetch/reedplate/log','ReedplateController@fetch_log');
-Route::get('fetch/reedplate/trial','ReedplateController@trial_log');
-
 
 //TEMPERATURE / SUHU
 Route::get('index/grafikServer','TemperatureController@grafikServer');
@@ -1903,12 +1900,20 @@ Route::get('index/press/cl', 'PressController@index_cl');
 Route::get('index/press/vn', 'PressController@index_vn');
 Route::get('scan/press/operator', 'PressController@scanPressOperator');
 Route::get('fetch/press/press_list', 'PressController@fetchPressList');
+Route::get('fetch/press/trouble_list', 'PressController@fetchTroubleList');
 Route::get('fetch/press/fetchMaterialList', 'PressController@fetchMaterialList');
 Route::get('fetch/press/fetchProcess', 'PressController@fetchProcess');
-Route::post('index/press/store_sax', 'PressController@store_sax');
+Route::post('index/press/store', 'PressController@store');
 Route::post('index/press/store_fl', 'PressController@store_fl');
 Route::post('index/press/store_cl', 'PressController@store_cl');
 Route::post('index/press/store_vn', 'PressController@store_vn');
+Route::post('index/press/store_kanagata', 'PressController@store_kanagata');
+Route::post('index/press/store_trouble', 'PressController@store_trouble');
+Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
+//Display Press
+Route::get('index/press/monitoring', 'PressController@monitoring');
+Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
+
 
 //ROOMS
 Route::get('/meetingroom1', function () {

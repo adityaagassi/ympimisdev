@@ -671,7 +671,7 @@ public function total_ng(Request $request)
     select v.*, count(pn_log_ngs.ng) as jml from (  
 
     select b.id,ng_name, tag, model from (
-    select * from ng_lists where location ='".$request->get('location')."'
+    select * from ng_lists where location ='PN_Kensa_Awal'
     ) b
     CROSS join 
     (
@@ -956,6 +956,104 @@ public function savekensaakhir(Request $request){
         $log->save();
         $inventori->save(); 
         // }
+
+
+
+        $response = array(
+            'status' => true,
+            'message' => 'Input Success'
+        );
+        return Response::json($response);
+    }
+    catch(\Exception $e){
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+    }
+
+}
+
+//--------------kensa akhir
+
+public function saveKakuningVisual(Request $request){
+    $id_user = Auth::id();
+    try {        
+
+        $ng = $request->get('ng');
+        if($ng !=""){
+            $rows = explode(",", $ng);
+            foreach ($rows as $row) 
+            {                          
+                $detail = new PnLogNg([                
+                    'ng' => $row,                
+                    'line' => $request->get('line'),
+                    'operator' => $request->get('op'),
+                    'tag' => $request->get('tag'),
+                    'model' => $request->get('model'),
+                    'location' => $request->get('location'),
+                    'qty' => $request->get('qty'),
+                    'created_by' => $request->get('op'),
+                ]);
+                $detail->save(); 
+                
+
+            }
+
+            $inventori =  PnInventorie::updateOrCreate(
+                [           
+                    'tag' => $request->get('tag'),            
+                ],
+                [
+                 'line' => $request->get('line'),
+                 'tag' => $request->get('tag'),
+                 'model' => $request->get('model'),
+                 'location' => $request->get('location'),
+                 'qty' => $request->get('qty'),
+                 'status' => '0',
+                 'created_by' => $request->get('op'),
+             ]);
+
+            $log = new PnLogProces([
+                'line' => $request->get('line'),
+                'operator' => $request->get('op'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+            ]);
+            $log->save();
+            $inventori->save(); 
+
+        }else{
+            $inventori =  PnInventorie::updateOrCreate(
+                [           
+                    'tag' => $request->get('tag'),            
+                ],
+                [
+                 'line' => $request->get('line'),
+                 'tag' => $request->get('tag'),
+                 'model' => $request->get('model'),
+                 'location' => $request->get('location'),
+                 'qty' => $request->get('qty'),
+                 'status' => '1',
+                 'created_by' => $request->get('op'),
+             ]);
+
+            $log = new PnLogProces([
+                'line' => $request->get('line'),
+                'operator' => $request->get('op'),
+                'tag' => $request->get('tag'),
+                'model' => $request->get('model'),
+                'location' => $request->get('location'),
+                'qty' => $request->get('qty'),
+                'created_by' => $request->get('op'),
+            ]);
+            $log->save();
+            $inventori->save(); 
+        }
 
 
 
