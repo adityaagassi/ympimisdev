@@ -1907,6 +1907,8 @@ Route::get('scan/press/operator', 'PressController@scanPressOperator');
 Route::get('fetch/press/press_list', 'PressController@fetchPressList');
 Route::get('fetch/press/trouble_list', 'PressController@fetchTroubleList');
 Route::get('fetch/press/fetchMaterialList', 'PressController@fetchMaterialList');
+Route::get('fetch/press/fetchPunch', 'PressController@fetchPunch');
+Route::get('fetch/press/fetchDie', 'PressController@fetchDie');
 Route::get('fetch/press/fetchProcess', 'PressController@fetchProcess');
 Route::post('index/press/store', 'PressController@store');
 Route::post('index/press/store_fl', 'PressController@store_fl');

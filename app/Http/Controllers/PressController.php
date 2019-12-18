@@ -123,6 +123,14 @@ class PressController extends Controller
 		->distinct()
 		->get();
 
+		$punch_first = MpKanagata::where('mp_kanagatas.material_number', '=', $kanagata_material_number)
+		->where('part', 'like', 'PUNCH%')
+		->where('process', '=', $process)
+		->where('product', '=', $product)
+		->select('mp_kanagatas.punch_die_number')
+		->distinct()
+		->first();
+
 		$punch_data = '';
 		foreach ($punch as $punch) {
             $punch_data .= '<option value="'.$punch->punch_die_number.'">'.$punch->punch_die_number.'</option>';
@@ -136,6 +144,14 @@ class PressController extends Controller
 		->distinct()
 		->get();
 
+		$dies_first = MpKanagata::where('mp_kanagatas.material_number', '=', $kanagata_material_number)
+		->where('part', '=', 'DIE')
+		->where('process', '=', $process)
+		->where('product', '=', $product)
+		->select('mp_kanagatas.punch_die_number')
+		->distinct()
+		->first();
+
 		$dies_data = '';
 		foreach ($dies as $dies) {
             $dies_data .= '<option value="'.$dies->punch_die_number.'">'.$dies->punch_die_number.'</option>';
@@ -146,8 +162,49 @@ class PressController extends Controller
 			'count' => $count,
 			'punch' => $punch,
 			'dies' => $dies,
+			'punch_first' => $punch_first,
+			'dies_first' => $dies_first,
 			'punch_data' => $punch_data,
 			'dies_data' => $dies_data,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchPunch(Request $request){
+
+		$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."'");
+		
+		$total_punch = 0;
+	      if(count($kanagata_log_punch) == 0){
+	      	$total_punch = 0;
+	      }else{
+	      	foreach ($kanagata_log_punch as $kanagata_log_punch) {
+		       $total_punch = $kanagata_log_punch->punch_total;
+		    }
+	      }
+
+		$response = array(
+			'status' => true,
+			'total_punch' => $total_punch
+		);
+		return Response::json($response);
+	}
+
+	public function fetchDie(Request $request){
+
+		$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."'");
+		$total_die = 0;
+	      if(count($kanagata_log_dies) == 0){
+	      	$total_die = 0;
+	      }else{
+	      	foreach ($kanagata_log_dies as $kanagata_log_dies) {
+		       $total_die = $kanagata_log_dies->die_total;
+		    }
+	      }
+
+		$response = array(
+			'status' => true,
+			'total_die' => $total_die
 		);
 		return Response::json($response);
 	}
@@ -356,7 +413,8 @@ class PressController extends Controller
 
 		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY mp_machines.machine_name,mp_record_prods.date");
 
-		$operator = db::select("select distinct pic, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl from mp_record_prods where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY pic,mp_record_prods.date");
+		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
+
 
 		$response = array(
 			'status' => true,
@@ -373,7 +431,26 @@ class PressController extends Controller
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
-		$result_prod = DB::SELECT("SELECT * FROM `mp_record_prods` where product = 'Saxophone'");
+		$result_prod = DB::SELECT("select mp_record_prods.id,employees.employee_id,employees.name,date,product,material_number,process,machine,start_time,end_time,lepas_molding,pasang_molding,process_time,electric_supply_time,data_ok
+			from mp_record_prods
+			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			where product = '".$product."'
+			ORDER BY mp_record_prods.id");
+
+		$kanagata_log = DB::SELECT("select mp_kanagata_logs.id,employees.employee_id,employees.name,date,product,material_number,process,machine,start_time,end_time,punch_number,punch_value,punch_total,die_number,die_value,die_total
+			from mp_kanagata_logs
+			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			where product = '".$product."'
+			ORDER BY mp_kanagata_logs.id");
+
+		$trouble_history = DB::SELECT("select mp_trouble_logs.id,employees.employee_id,employees.name,date,product,material_number,process,machine,start_time,end_time,reason
+			from mp_trouble_logs
+			join employee_groups on employee_groups.employee_id = mp_trouble_logs.pic
+			join employees on employee_groups.employee_id = employees.employee_id
+			where product = '".$product."'
+			ORDER BY mp_trouble_logs.id");
 
 		$data = array(
                 	'process' => $process,

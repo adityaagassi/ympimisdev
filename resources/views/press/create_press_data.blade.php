@@ -256,6 +256,22 @@
 							</div>
 						</div>						
 					</div>
+					<div class="col-md-12" style="padding-top: 5px;">
+						<div class="row">
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Punch Total:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="punch_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Die Total:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="die_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+						</div>						
+					</div>
 					<div class="col-xs-12" style="padding-top: 5px;">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
@@ -267,12 +283,12 @@
 							<tbody>
 								<tr>
 									<td style=" text-align: center; color: black; font-size:1vw; width: 30%;">
-										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="punch" name="punch" data-placeholder="Choose Punch" required>
+										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="punch" name="punch" data-placeholder="Choose Punch" required onchange="fetchTotalPunch(this.value)">
 											<option></option>
 										</select>
 									</td>
 									<td style=" text-align: center; color: black; font-size:1vw; width: 30%;">
-										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="dies" name="dies" data-placeholder="Choose Dies" required>
+										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="dies" name="dies" data-placeholder="Choose Dies" required onchange="fetchTotalDie(this.value)">
 											<option></option>
 										</select>
 									</td>
@@ -542,7 +558,7 @@
 					openErrorGritter('Error!', 'Employee ID Invalid.');
 					audio_error.play();
 					$("#operator").val("");
-				}			
+				}
 			}
 		});
 
@@ -576,7 +592,6 @@
 						tableData += '<td>'+ value.material_name +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '</tr>';
-
 						count += 1;
 					});
 					$('#tableBodyList').append(tableData);
@@ -724,7 +739,45 @@
 					$('#punch').html(result.punch_data);
 					$('#dies').html(result.dies_data);
 					$('#countMaterial').val(result.count.quantity_check);
+					fetchTotalPunch(result.punch_first.punch_die_number);
+					fetchTotalDie(result.dies_first.punch_die_number);
 					$('#addCount').val("0");
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
+			});
+		}
+
+		function fetchTotalPunch(punch_number){
+			var material_number = $("#material_number").val();
+			var process = $("#process_desc").val();
+			var data = {
+				material_number : material_number,
+				process : process,
+				punch_number : punch_number,
+			}
+			$.get('{{ url("fetch/press/fetchPunch") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#punch_total').val(result.total_punch);
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
+			});
+		}
+
+		function fetchTotalDie(die_number){
+			var material_number = $("#material_number").val();
+			var process = $("#process_desc").val();
+			var data = {
+				material_number : material_number,
+				process : process,
+				die_number : die_number,
+			}
+			$.get('{{ url("fetch/press/fetchDie") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#die_total').val(result.total_die);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
