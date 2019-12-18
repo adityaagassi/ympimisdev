@@ -984,7 +984,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Sample Qty</td>
+                  <td colspan="2">Sample / Check Qty</td>
                   <td colspan="2">{{ $part->sample_qty }} Pcs</td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->

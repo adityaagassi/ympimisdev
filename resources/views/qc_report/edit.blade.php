@@ -339,11 +339,11 @@
                   <th>No CPAR</th>
                   <th>Part Item</th>    
                   <th>No Invoice</th>
-                  <th>Lot Qty</th>
-                  <th>Sample Qty</th>
-                  <th>Detail Problem</th>
-                  <th>Defect Qty</th>
-                  <th>Defect Presentase</th>
+                  <th>Jumlah Lot</th>
+                  <th>Jumlah Cek</th>
+                  <th>Detail Masalah</th>
+                  <th>Jumlah Defect</th>
+                  <th>Presentase Defect</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -456,46 +456,46 @@
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Lot Qty</span></label>
+            <label class="col-sm-2">Jumlah Lot</span></label>
             <div class="col-sm-8">
               <div class="input-group">
-                <input type="number" class="form-control" id="lot_qty" placeholder="Lot Quantity" required>
+                <input type="number" class="form-control" id="lot_qty" placeholder="Jumlah Lot" required>
                 <span class="input-group-addon">pc(s)</span>
               </div>
             </div>
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Sample Qty</span></label>
+            <label class="col-sm-2">Jumlah Cek</span></label>
             <div class="col-sm-8">
               <div class="input-group">
-                <input type="number" class="form-control" id="sample_qty" placeholder="Sample Quantity" onkeyup="getPersen()" required>
+                <input type="number" class="form-control" id="sample_qty" placeholder="Jumlah Cek / Temuan" onkeyup="getPersen()" required>
                 <span class="input-group-addon">pc(s)</span>
               </div>
             </div>
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Detail Problem<span class="text-red">*</span></label>
+            <label class="col-sm-2">Detail Masalah<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <textarea class="form-control" id="detail_problem" placeholder="Detail Problem" required></textarea>
+              <textarea class="form-control" id="detail_problem" placeholder="Detail Masalah" required></textarea>
             </div>
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Defect Qty</span></label>
+            <label class="col-sm-2">Jumlah Defect</span></label>
             <div class="col-sm-8" align="left">
               <div class="input-group">
-                <input type="number" class="form-control" id="defect_qty" placeholder="Defect Quantity" onkeyup="getPersen()" required>
+                <input type="number" class="form-control" id="defect_qty" placeholder="Jumlah Defect" onkeyup="getPersen()" required>
                 <span class="input-group-addon">pc(s)</span>
               </div>
             </div>
           </div>
           <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Defect Presentase (Persen)</label>
+            <label class="col-sm-2">Presentase Defect (Persen)</label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" id="defect_presentase" placeholder="Defect Presentase" disabled required>
+              <input type="text" class="form-control" id="defect_presentase" placeholder="Presentase Defect" disabled required>
             </div>
           </div>
         </div>
@@ -535,27 +535,27 @@
           </div>
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">Lot Qty</label>
+            <label class="col-sm-2">Jumlah Lot</label>
             <div class="col-sm-6" align="left" id="lot_qty_view"></div>
           </div>
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">Sample Qty</label>
+            <label class="col-sm-2">Jumlah Cek</label>
             <div class="col-sm-6" align="left" id="sample_qty_view"></div>
           </div>
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">Detail Problem</label>
+            <label class="col-sm-2">Detail Masalah</label>
             <div class="col-sm-6" align="left" id="detail_problem_view"></div>
           </div>
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">Defect Qty</label>
+            <label class="col-sm-2">Jumlah Defect</label>
             <div class="col-sm-6" align="left" id="defect_qty_view"></div>
           </div>
           <div class="form-group row" align="left">
             <label class="col-sm-4"></label>
-            <label class="col-sm-2">Defect Presentase</label>
+            <label class="col-sm-2">Presentase Defect</label>
             <div class="col-sm-6" align="left" id="defect_presentase_view"></div>
           </div>
           <div class="form-group row" align="left">
@@ -745,22 +745,22 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Lot Qty</span></label>
+          <label class="col-sm-2">Jumlah Lot</span></label>
           
           <div class="col-sm-8">
             <div class="input-group">
-              <input type="number" class="form-control" id="lot_qty_edit" placeholder="Lot Quantity" required>
+              <input type="number" class="form-control" id="lot_qty_edit" placeholder="Jumlah Lot" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Sample Qty</span></label>
+          <label class="col-sm-2">Jumlah Cek</span></label>
           
           <div class="col-sm-8">
             <div class="input-group">
-              <input type="number" class="form-control" id="sample_qty_edit" placeholder="Sample Quantity" onkeyup="getPersenEdit()" required>
+              <input type="number" class="form-control" id="sample_qty_edit" placeholder="Jumlah Cek / Temuan" onkeyup="getPersenEdit()" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -774,10 +774,10 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Defect Qty</span></label>
+          <label class="col-sm-2">Jumlah Defect</span></label>
           <div class="col-sm-8" align="left">
             <div class="input-group">
-              <input type="number" class="form-control" id="defect_qty_edit" placeholder="Defect Quantity" onkeyup="getPersenEdit()" required>
+              <input type="number" class="form-control" id="defect_qty_edit" placeholder="Jumlah Defect" onkeyup="getPersenEdit()" required>
               <span class="input-group-addon">pc(s)</span>
             </div>
           </div>
@@ -785,9 +785,9 @@
         </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
-          <label class="col-sm-2">Defect Presentase</span></label>
+          <label class="col-sm-2">Presentase Defect</span></label>
           <div class="col-sm-8" align="left">
-            <input type="number" class="form-control" id="defect_presentase_edit" placeholder="Defect Presentase" disabled required>
+            <input type="number" class="form-control" id="defect_presentase_edit" placeholder="Presentase Defect" disabled required>
           </div>
         </div>
       </div>

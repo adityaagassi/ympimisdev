@@ -86,7 +86,7 @@
 				<td>Part Item</td>
 				<td colspan="2">Part Description</td>
 				<td>Invoice / Lot No</td>
-				<td>Sample Qty</td>
+				<td>Sample / Check Qty</td>
 				<td>Defect Qty</td>
 				<td>% Defect</td>
 				<td></td>
