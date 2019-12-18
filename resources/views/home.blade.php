@@ -339,15 +339,19 @@
                             <span style="font-weight: bold;">MATERIAL Process (イニシアル工程)</span>
                             <br>
                             <a href="{{ url("/index/initial", "mpro_cl") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet (?)
+                                <i class="fa fa-caret-right"></i> Clarinet (クラリネット)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "mpro_fl") }}">
-                                <i class="fa fa-caret-right"></i> Flute (?)
+                                <i class="fa fa-caret-right"></i> Flute (フルート)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "mpro_sx") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone (?)
+                                <i class="fa fa-caret-right"></i> Saxophone (サックス)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/press/monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Press Machine Monitoring(プレス機管理)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
@@ -429,6 +433,10 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス仮組～組立)
                             </a>
                             <br>
+                            <a href="{{ url("index/recorder_process") }}">
+                                <i class="fa fa-caret-right"></i> Recorder (???)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/display/sub_assy/assy?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
@@ -453,10 +461,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Stock Taking (?)</span>
+                            <span style="font-weight: bold;">Stock Taking (棚卸し)</span>
                             <br>
                             <a href="{{ url("/index/stocktaking/silver_report") }}">
-                                <i class="fa fa-caret-right"></i> Silver Stock Taking Report (?)
+                                <i class="fa fa-caret-right"></i> Silver Stock Taking Report (銀材棚卸し報告)
                             </a>
                         </td>
                     </tr>
@@ -467,7 +475,7 @@
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
-                        <th>Finished Goods<br/>完成品</th>
+                        <th>Finished Goods & KD Parts<br/>完成品・KD部品</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -478,10 +486,10 @@
                             <a href="{{ url("/index/fg_production_schedule") }}">
                                 <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                             </a>
-                            <br>
+                            {{-- <br>
                             <a href="{{ url("/index/fg_production_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Production Schedule Monitoring (??)
-                            </a>
+                            </a> --}}
                             <br>
                             <a href="{{ url("/index/dp_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
@@ -506,7 +514,28 @@
                     </tr>
                     <tr>
                         <td>
+                            <span style="font-weight: bold;">KD Parts Control (KD部品管理)</span>
+                            <br>
+                            <a href="{{ url("#") }}">
+                                <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
+                            </a>
+                            <br>
+                            <a href="{{ url("#") }}">
+                                <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
+                            </a>
+                            <br>
+                            <a href="{{ url("#") }}">
+                                <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
+                            <br>
+                            <a href="{{ url("#") }}">
+                                <i class="fa fa-caret-right"></i> All Stock (???)
+                            </a>
                             <br>
                             <a href="{{ url("/index/fg_shipment_schedule") }}">
                                 <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)

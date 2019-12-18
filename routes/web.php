@@ -1894,7 +1894,7 @@ Route::get('fetch/room/toilet', 'RoomController@fetchToilet');
 
 //PRESS
 Route::get('index/press', 'PressController@index');
-Route::get('index/press/sax', 'PressController@index_sax');
+Route::get('index/press/create/{product}', 'PressController@create');
 Route::get('index/press/fl', 'PressController@index_fl');
 Route::get('index/press/cl', 'PressController@index_cl');
 Route::get('index/press/vn', 'PressController@index_vn');

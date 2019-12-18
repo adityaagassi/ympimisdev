@@ -32,6 +32,22 @@ class InitialProcessController extends Controller
 				'title_jp' => $title_jp,
 			))->with('page', 'Material Process FL');
 		}
+		if($id == 'mpro_cl'){
+			$title = 'Material Process Flute';
+			$title_jp = '??';
+			return view('processes.initial.index_mpro_cl', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Material Process CL');
+		}
+		if($id == 'mpro_sx'){
+			$title = 'Material Process Flute';
+			$title_jp = '??';
+			return view('processes.initial.index_mpro_sx', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'Material Process SAX');
+		}
 	}
 
 	public function indexStockMonitoring($id){
