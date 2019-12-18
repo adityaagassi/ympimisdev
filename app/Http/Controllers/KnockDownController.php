@@ -70,6 +70,17 @@ class KnockDownController extends Controller{
 		))->with('page', 'KD Stuffing');
 	}
 
+	public function indexPrintLabelZpro($id){
+		$knock_down_detail = KnockDownDetail::leftJoin('materials','materials.material_number','=','knock_down_details.material_number')
+		->where('knock_down_details.id','=',$id)
+		->select('knock_down_details.material_number','materials.material_description','knock_down_details.quantity')
+		->first();
+
+		return view('kd.label.print_label_zpro', array(
+			'knock_down_detail' => $knock_down_detail,
+		));
+	}
+
 
 	public function scanKdDelivery(Request $request){
 
@@ -282,7 +293,6 @@ class KnockDownController extends Controller{
 		})
 		->rawColumns(['deleteKDO' => 'deleteKDO'])
 		->make(true);
-
 	}
 
 	public function fetchKD($id){
@@ -580,6 +590,7 @@ class KnockDownController extends Controller{
 				->orderBy('kd_number', 'desc')
 				->first();
 
+
 				if($knock_down->actual_count == $max_count){
 					$knock_down_details = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
 					->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
@@ -596,10 +607,16 @@ class KnockDownController extends Controller{
 
 				$knock_down = KnockDown::where('kd_number', '=', $kd_number)->first();
 
+				$knock_down_detail = KnockDownDetail::where('kd_number', '=', $kd_number)
+				->select('knock_down_details.id')
+				->orderBy('knock_down_details.created_at', 'desc')
+				->first();
+
 				$response = array(
 					'status' => true,
 					'message' => 'Print Label Sukses',
 					'actual_count' => $knock_down->actual_count,
+					'knock_down_detail_id' => $knock_down_detail->id,
 				);
 				return Response::json($response);
 			}catch(Exception $e) {

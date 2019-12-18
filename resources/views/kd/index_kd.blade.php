@@ -257,6 +257,9 @@
 		$("#loading").show();
 		$.post('{{ url("fetch/kd_print_zpro") }}', data,  function(result, status, xhr){
 			if(result.status){
+				var id = result.knock_down_detail_id;
+				window.open('{{ url("index/print_label_zpro") }}'+'/'+id, '_blank');
+
 				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
 				fillTableList();
