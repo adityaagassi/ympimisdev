@@ -10,7 +10,7 @@ class MpKanagataLog extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'date','pic','product','shift','material_number','process','machine','punch_number','die_number','punch_value','die_value','punch_total','die_total','start_time','end_time','note','created_by'
+		'date','pic','shift','product','shift','material_number','process','machine','punch_number','die_number','punch_value','die_value','punch_total','die_total','start_time','end_time','note','created_by'
 	];
 
 	public function employee_pic()

@@ -10,7 +10,7 @@ class MpTroubleLog extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'date','pic','product','shift', 'material_number','process','machine','start_time','end_time','reason','created_by'
+		'date','pic','shift','product','shift', 'material_number','process','machine','start_time','end_time','reason','created_by'
 	];
 
 	public function employee_pic()

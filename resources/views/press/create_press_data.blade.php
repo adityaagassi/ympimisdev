@@ -118,16 +118,32 @@
 					<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 						<tbody>
 							<tr>
-								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="7">Operator</th>
+								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="10">Operator</th>
 							</tr>
 							<tr>
 								<td style="background-color: #6e81ff; text-align: center; color: black; font-size:1vw; padding:0;width: 30%;" colspan="3" id="op">-</td>
-								<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; padding:0;font-size: 1vw;" colspan="4" id="op2">-</td>
+								<td style="background-color: rgb(204,255,255); text-align: center; color: #000000; padding:0;font-size: 1vw;" colspan="7" id="op2">-</td>
 							</tr>
 							<tr>
+								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="3" width="50%">Shift List</th>
 								<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;" colspan="7" width="50%">Machine List (Amada)</th>
 							</tr>
 							<tr>
+								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 1')">
+									<center>
+										<p class="btn btn-success" style="font-size: 1vw;">1</p>
+									</center>
+								</td>
+								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 2')">
+									<center>
+										<p class="btn btn-success" style="font-size: 1vw;">2</p>
+									</center>
+								</td>
+								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getDataShift('Shift 3')">
+									<center>
+										<p class="btn btn-success" style="font-size: 1vw;">3</p>
+									</center>
+								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 1')">
 									<center>
 										<p class="btn btn-primary" style="font-size: 1vw;">#1</p>
@@ -226,16 +242,22 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
-							<div class="col-xs-2">
+							<div class="col-xs-1">
+								<span style="font-weight: bold; font-size: 15px;">Shift:</span>
+							</div>
+							<div class="col-xs-3">
+								<input type="text" id="shift" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-1">
 								<span style="font-weight: bold; font-size: 15px;">Machine:</span>
 							</div>
-							<div class="col-xs-4">
+							<div class="col-xs-3">
 								<input type="text" id="machine" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
-							<div class="col-xs-2">
+							<div class="col-xs-1">
 								<span style="font-weight: bold; font-size: 15px;">Material:</span>
 							</div>
-							<div class="col-xs-4">
+							<div class="col-xs-3">
 								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
 							</div>
 						</div>
@@ -495,6 +517,10 @@
 			$("#machine").val(nama_mesin);
 		}
 
+		function getDataShift(shift){
+			$("#shift").val(shift);
+		}
+
 		function troubleMaker(){
 			$("#trouble_start").val(getActualFullDate());
 			troubleList();
@@ -636,6 +662,7 @@
 			var pic = $("#op").text();
 			var product = $("#product").text();
 			var machine = $("#machine").val();
+			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();
 			var process = $("#process_desc").val();
 			var trouble_start = $("#trouble_start").val();
@@ -646,6 +673,7 @@
 				pic : pic,
 				product : product,
 				machine : machine,
+				shift : shift,
 				material_number : material_number,
 				process : process,
 				start_time : trouble_start,
@@ -824,6 +852,7 @@
 			var pic = $("#op").text();
 			var product = $("#product").text();
 			var machine = $("#machine").val();
+			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();
 			var process = $("#process_desc").val();
 			var punch_number = $("#punch").val();
@@ -847,6 +876,7 @@
 					pic : pic,
 					product : product,
 					machine : machine,
+					shift : shift,
 					material_number : material_number,
 					process : process,
 					punch_number : punch_number,
@@ -864,6 +894,7 @@
 				var data2 = {
 					date : date,
 					pic : pic,
+					shift : shift,
 					product : product,
 					machine : machine,
 					material_number : material_number,

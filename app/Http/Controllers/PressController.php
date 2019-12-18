@@ -242,6 +242,7 @@ class PressController extends Controller
                     'pic' => $request->get('pic'),
                     'product' => $request->get('product'),
                     'machine' => $request->get('machine'),
+                    'shift' => $request->get('shift'),
                     'material_number' => $request->get('material_number'),
                     'process' => $request->get('process'),
                     'punch_number' => $request->get('punch_number'),
@@ -288,6 +289,7 @@ class PressController extends Controller
 	                'pic' => $request->get('pic'),
 	                'product' => $request->get('product'),
 	                'machine' => $request->get('machine'),
+	                'shift' => $request->get('shift'),
 	                'material_number' => $request->get('material_number'),
 	                'process' => $request->get('process'),
 	                'punch_number' => $request->get('punch_number'),
@@ -318,7 +320,7 @@ class PressController extends Controller
 
     function finish_trouble(Request $request)
     {
-        	try{    
+        	try{
               $id_user = Auth::id();
               // $interview_id = $request->get('interview_id');
               $trouble = MpTroubleLog::find($request->get('id'));
@@ -351,6 +353,7 @@ class PressController extends Controller
                     'pic' => $request->get('pic'),
                     'product' => $request->get('product'),
                     'machine' => $request->get('machine'),
+                    'shift' => $request->get('shift'),
                     'material_number' => $request->get('material_number'),
                     'process' => $request->get('process'),
                     'start_time' => $request->get('start_time'),
@@ -411,9 +414,9 @@ class PressController extends Controller
 		// }
 
 
-		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY mp_machines.machine_name,mp_record_prods.date");
+		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY mp_machines.machine_name,mp_record_prods.date");
 
-		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
+		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date, TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_total from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
 
 
 		$response = array(
@@ -445,11 +448,12 @@ class PressController extends Controller
 			where product = '".$product."'
 			ORDER BY mp_kanagata_logs.id");
 
-		$trouble_history = DB::SELECT("select mp_trouble_logs.id,employees.employee_id,employees.name,date,product,material_number,process,machine,start_time,end_time,reason
+		$trouble_history = DB::SELECT("select DISTINCT(mp_kanagatas.material_number),mp_trouble_logs.id,employees.employee_id,employees.name,date,mp_trouble_logs.product,mp_trouble_logs.process,machine,start_time,end_time,reason,mp_kanagatas.material_name
 			from mp_trouble_logs
 			join employee_groups on employee_groups.employee_id = mp_trouble_logs.pic
 			join employees on employee_groups.employee_id = employees.employee_id
-			where product = '".$product."'
+			join mp_kanagatas on mp_trouble_logs.material_number= mp_kanagatas.material_number
+			where mp_trouble_logs.product = '".$product."'
 			ORDER BY mp_trouble_logs.id");
 
 		$data = array(
