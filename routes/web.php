@@ -62,6 +62,7 @@ Route::get('404', function() {
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
+Route::get('/project_timeline', 'HomeController@indexProjectTimeline');
 Route::get('/fetch/mis_investment', 'HomeController@fetch_mis_investment');
 Route::get('download/manual/{reference_file}', 'HomeController@download');
 
@@ -790,9 +791,12 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 
 //KD
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');	
+	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
-	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');	
+	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
+
+	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
+
 });
 
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
@@ -1134,6 +1138,8 @@ Route::get('fetch/pianica/trend_ng_bentsuki_benage', 'Pianica@fetchTrendNgBentsu
 Route::get('fetch/pianica/trend_ng_kensa_awal', 'Pianica@fetchTrendNgKensaAwal');
 Route::get('index/display_daily_pn_ng', 'Pianica@indexDailyNg');
 Route::get('fetch/pianica/ng_tuning', 'Pianica@fetchNgTuning');
+
+Route::get('fetch/pianica/totalNgReed', 'Pianica@totalNgReed');
 
 
 
@@ -1893,7 +1899,6 @@ Route::get('index/room/toilet/{id}', 'RoomController@indexRoomToilet');
 Route::get('fetch/room/toilet', 'RoomController@fetchToilet');
 
 //PRESS
-Route::get('index/press', 'PressController@index');
 Route::get('index/press/create/{product}', 'PressController@create');
 Route::get('index/press/fl', 'PressController@index_fl');
 Route::get('index/press/cl', 'PressController@index_cl');
@@ -1913,6 +1918,8 @@ Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
 //Display Press
 Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
+//Report Press
+Route::get('index/press/report/{product}', 'PressController@report');
 
 
 //ROOMS
