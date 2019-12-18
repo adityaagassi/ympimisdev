@@ -1067,45 +1067,45 @@ class ProcessController extends Controller
 		// LEFT JOIN users on a.created_by = users.id			
 		// ORDER BY serial_number DESC";
 
-		$query = "
-		SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark,users.`name` from log_processes 
-		LEFT JOIN 
-		users on log_processes.created_by = users.id
-		WHERE process_code ='1' and 
-		DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' ORDER BY log_processes.serial_number DESC
-		";
+			$query = "
+			SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark,users.`name` from log_processes 
+			LEFT JOIN 
+			users on log_processes.created_by = users.id
+			WHERE process_code ='1' and 
+			DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' ORDER BY log_processes.serial_number DESC
+			";
+			$log_processes = db::select($query);
+		}elseif($id =="YTS2"){
+
+			$query = "SELECT a.*,users.`name` from (
+			SELECT serial_number,model,log_processes.created_at,log_processes.id from log_processes 	WHERE process_code ='2' and DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' 
+			) a LEFT JOIN (
+			SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark from log_processes 	WHERE process_code ='1' and model REGEXP 'YAS|YTS' 
+			) b on a.serial_number = b.serial_number
+			LEFT JOIN users on b.created_by = users.id
+			ORDER BY created_at DESC
+			";
+			$log_processes = db::select($query);
+		}elseif($id =="YTS3"){
+			$query="SELECT * FROM (
+			SELECT * FROM stamp_inventories WHERE model LIKE 'YTS%' and process_code ='3' 
+			UNION ALL
+			SELECT * FROM stamp_inventories WHERE model LIKE 'YAS%'  and process_code ='3'
+		) A ORDER BY updated_at DESC";
 		$log_processes = db::select($query);
-	}elseif($id =="YTS2"){
-		
-		$query = "SELECT a.*,users.`name` from (
-		SELECT serial_number,model,log_processes.created_at,log_processes.id from log_processes 	WHERE process_code ='2' and DATE_FORMAT(log_processes.created_at,'%Y-%m-%d') ='".$now."' and model REGEXP 'YAS|YTS' 
-		) a LEFT JOIN (
-		SELECT serial_number,model,log_processes.created_at,log_processes.id,log_processes.created_by,remark from log_processes 	WHERE process_code ='1' and model REGEXP 'YAS|YTS' 
-		) b on a.serial_number = b.serial_number
-		LEFT JOIN users on b.created_by = users.id
-		ORDER BY created_at DESC
-		";
-	$log_processes = db::select($query);
-}elseif($id =="YTS3"){
-	$query="SELECT * FROM (
-	SELECT * FROM stamp_inventories WHERE model LIKE 'YTS%' and process_code ='3' 
-	UNION ALL
-	SELECT * FROM stamp_inventories WHERE model LIKE 'YAS%'  and process_code ='3'
-) A ORDER BY updated_at DESC";
-$log_processes = db::select($query);
-}else{
-	$log_processes = db::table('log_processes')
-	->where('process_code', '=', '1')
-	->where('model', 'like', $id_all)
-	->where(db::raw('date(created_at)'), '=', $now)
-	->orderBy('created_at', 'desc')
-	->get();
-}
-$response = array(
-	'status' => true,
-	'resultData' => $log_processes,
-);
-return Response::json($response);
+	}else{
+		$log_processes = db::table('log_processes')
+		->where('process_code', '=', '1')
+		->where('model', 'like', $id_all)
+		->where(db::raw('date(created_at)'), '=', $now)
+		->orderBy('created_at', 'desc')
+		->get();
+	}
+	$response = array(
+		'status' => true,
+		'resultData' => $log_processes,
+	);
+	return Response::json($response);
 }
 
 
@@ -1174,16 +1174,16 @@ public function label_kecil($id,$remark){
 	$date = date('Y-m-d');
 	
 	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-(
-SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='4' and origin_group_code='043'
+	(
+	SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='4' and origin_group_code='043'
 )";
-	$barcode = DB::select($query);
-	
-	return view('processes.assy_fl_saxT.print_label_kecil',array(
-		'barcode' => $barcode,
-		'sn' => $sn,
-		'remark' => $remark2,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+$barcode = DB::select($query);
+
+return view('processes.assy_fl_saxT.print_label_kecil',array(
+	'barcode' => $barcode,
+	'sn' => $sn,
+	'remark' => $remark2,
+))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
 public function label_besar($id,$gmc,$remark){
@@ -1242,38 +1242,38 @@ public function label_besar($id,$gmc,$remark){
 		LEFT JOIN 
 		(
 		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4' and log_processes.origin_group_code ='043'
-		) c on a.serial_number = c.sn2";
-	}
+	) c on a.serial_number = c.sn2";
+}
 
-	elseif ($remark =="NJRB"){
-		$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J' and log_processes.origin_group_code ='043'
-		) a INNER JOIN (
-		SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
-		on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
-		LEFT JOIN 
-		(
-		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4' and log_processes.origin_group_code ='043'
-		) c on a.serial_number = c.sn2";
-	}
+elseif ($remark =="NJRB"){
+	$query ="select serial_number,finished,janean,upc,date_code, remark,c.model_2 as model from (
+	select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
+	INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+	WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and stamp_hierarchies.finished='".$gmc."'  and stamp_hierarchies.remark !='J' and log_processes.origin_group_code ='043'
+	) a INNER JOIN (
+	SELECT week_date,date_code from weekly_calendars WHERE week_date=(select DATE_FORMAT(created_at,'%Y-%m-%d')as a  from log_processes WHERE log_processes.process_code='3' and log_processes.serial_number='".$id."' and log_processes.origin_group_code ='043'))b
+	on DATE_FORMAT(a.created_at,'%Y-%m-%d') = b.week_date
+	LEFT JOIN 
+	(
+	SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='4' and log_processes.origin_group_code ='043'
+) c on a.serial_number = c.sn2";
+}
 
-	$barcode = DB::select($query);
+$barcode = DB::select($query);
 
-	$date = date('Y-m-d');
-	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+$date = date('Y-m-d');
+$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
 (
-SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
+	SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
 )";
-	$date2 = DB::select($querydate);
-	
-	return view('processes.assy_fl_saxT.print_label_besar',array(
-		'barcode' => $barcode,
-		'date2' => $date2,
+$date2 = DB::select($querydate);
 
-		'remark' => $remark,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+return view('processes.assy_fl_saxT.print_label_besar',array(
+	'barcode' => $barcode,
+	'date2' => $date2,
+
+	'remark' => $remark,
+))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
 //end edit reprint ali
@@ -1299,11 +1299,11 @@ public function getsnsax(Request $request)
 	if ($sn != null) {
 
 		if ($sn->status =="return") {
-				$msg ="3";
-			}
-			else{
-				$msg ="1";
-			}	
+			$msg ="3";
+		}
+		else{
+			$msg ="1";
+		}	
 
 		$response = array(
 			'status' => true,
@@ -1316,11 +1316,11 @@ public function getsnsax(Request $request)
 	}elseif ($sn2 != null) {
 
 		if ($sn2->status =="return") {
-				$msg ="3";
-			}
-			else{
-				$msg ="2";
-			}
+			$msg ="3";
+		}
+		else{
+			$msg ="2";
+		}
 
 		$response = array(
 			'status' => true,
@@ -1381,7 +1381,7 @@ public function print_sax(Request $request){
 		$err->save();
 
 		$inventoryReturn = StampInventory::where('origin_group_code','=' ,$request->get('origin'))
-			->where('serial_number','=' ,$request->get('sn'));
+		->where('serial_number','=' ,$request->get('sn'));
 		$inventoryReturn->update(['status' => null]);
 	}
 
@@ -1647,9 +1647,9 @@ public function fetchStampPlansax3($id){
 	$query3 ="select model, COUNT(model) as actual from stamp_inventories where process_code='3' and origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
 
 	$query4 ="SELECT COUNT(quantity) as actual,  b.model from (
-SELECT serial_number from log_processes WHERE origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(created_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3' ) a
-LEFT JOIN (
-SELECT model,serial_number,quantity from stamp_inventories WHERE model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3') b on a.serial_number = b.serial_number GROUP BY b.model";
+	SELECT serial_number from log_processes WHERE origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(created_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3' ) a
+	LEFT JOIN (
+	SELECT model,serial_number,quantity from stamp_inventories WHERE model like '".$id_all."' and DATE_FORMAT(updated_at,'%Y-%m-%d')  ='" . $now . "' and process_code='3') b on a.serial_number = b.serial_number GROUP BY b.model";
 
 	$query5 ="select model, COUNT(model) as actual from log_processes where process_code='4' and origin_group_code='043' and model like '".$id_all."' and DATE_FORMAT(created_at,'%Y-%m-%d') ='" . $now . "' GROUP BY model";
 
@@ -1902,7 +1902,7 @@ public function print_sax2(Request $request){
 // 	$date = date('Y-m-d');
 // 	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
 // 	$date2 = DB::select($querydate);
-	
+
 // 	return view('processes.assy_fl_saxT.print_label_besar',array(
 // 		'barcode' => $barcode,
 // 		'date2' => $date2,
@@ -1931,7 +1931,7 @@ public function print_sax2(Request $request){
 
 // 	$query = "SELECT week_date,date_code from weekly_calendars WHERE week_date='".$date."'";
 // 	$barcode = DB::select($query);
-	
+
 // 	return view('processes.assy_fl_saxT.print_label_kecil',array(
 // 		'barcode' => $barcode,
 // 		'sn' => $sn,
@@ -2143,7 +2143,7 @@ public function fetch_plan_labelsax($id){
 	select model, count(MODEL)AS act from stamp_inventories where process_code='3' AND origin_group_code='043' and  date(updated_at) = '". $now ."' GROUP BY model) b
 	on a.model = b.model 
 	)
-				as a
+	as a
 	LEFT JOIN (
 	SELECT COUNT(quantity) as act1, model from stamp_inventories where process_code='3' and origin_group_code='043' and DATE_FORMAT(updated_at,'%Y-%m-%d') = '". $now ."' and model like '".$id_all."'  GROUP BY model
 	) b on a.model = b.model where a.model like '".$id_all."' ORDER BY a.model asc
@@ -2164,27 +2164,27 @@ public function fetch_plan_labelsax($id){
 
 // print Flute
 
-	public function indexLabelFL(){
-		return view('processes.assy_fl.print_label')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-	}
+public function indexLabelFL(){
+	return view('processes.assy_fl.print_label')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
 
-	public function fetchResultFL5(){
-		$now = date('Y-m-d');
-		$log_processes = db::table('log_processes')
-		->where('process_code', '=', '6')
-		->where('model', 'like', 'YFL%')
-		->where(db::raw('date(created_at)'), '=', $now)
-		->orderBy('created_at', 'desc')
-		->get();
+public function fetchResultFL5(){
+	$now = date('Y-m-d');
+	$log_processes = db::table('log_processes')
+	->where('process_code', '=', '6')
+	->where('model', 'like', 'YFL%')
+	->where(db::raw('date(created_at)'), '=', $now)
+	->orderBy('created_at', 'desc')
+	->get();
 
-		$response = array(
-			'status' => true,
-			'resultData' => $log_processes,
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'resultData' => $log_processes,
+	);
+	return Response::json($response);
+}
 
-	public function getModelfl(Request $request)
+public function getModelfl(Request $request)
 {
 	if ($request->get('log')==5) {
 		$query ="select material_number,material_description,remark from materials
@@ -2254,7 +2254,7 @@ public function print_FL(Request $request){
 	try{
 		$id = Auth::id();
 		if ($request->get('status') =="update") {
-		
+
 			
 			$log_process = LogProcess::updateOrCreate(
 				[
@@ -2306,36 +2306,36 @@ public function label_besarFL($id,$gmc,$remark){
 		LEFT JOIN 
 		(
 		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6'
-		) c on a.serial_number = c.sn2";
-	}
+	) c on a.serial_number = c.sn2";
+}
 
-	elseif ($remark =="R"){
-		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
-		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,			log_processes.created_at  from log_processes 
-		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."' 
-		) a		
-		LEFT JOIN 
-		(
-		SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6'
-		) c on a.serial_number = c.sn2";
-	}
+elseif ($remark =="R"){
+	$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
+	select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,			log_processes.created_at  from log_processes 
+	INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
+	WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."' 
+	) a		
+	LEFT JOIN 
+	(
+	SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6'
+) c on a.serial_number = c.sn2";
+}
 
-	$barcode = DB::select($query);
+$barcode = DB::select($query);
 
-	$date = date('Y-m-d');
-	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
+$date = date('Y-m-d');
+$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
 (
-SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
+	SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
 )";
-	$date2 = DB::select($querydate);
-	
-	return view('processes.assy_fl.print_label_besar_flute',array(
-		'barcode' => $barcode,
-		'date2' => $date2,
+$date2 = DB::select($querydate);
 
-		'remark' => $remark,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+return view('processes.assy_fl.print_label_besar_flute',array(
+	'barcode' => $barcode,
+	'date2' => $date2,
+
+	'remark' => $remark,
+))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
 public function getModelReprintAllFL(Request $request)
@@ -2359,21 +2359,21 @@ public function label_kecil_fl($id,$remark){
 	$date = date('Y-m-d');
 	
 	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-(
-SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'
+	(
+	SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'
 ) ";
-	
-	$query2=" SELECT serial_number,model  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'";
 
-	$barcode = DB::select($query);
-	$des = DB::select($query2);
-	
-	return view('processes.assy_fl.print_label_kecil_fl',array(
-		'barcode' => $barcode,
-		'sn' => $sn,
-		'remark' => $remark2,
-		'des' => $des,
-	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+$query2=" SELECT serial_number,model  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'";
+
+$barcode = DB::select($query);
+$des = DB::select($query2);
+
+return view('processes.assy_fl.print_label_kecil_fl',array(
+	'barcode' => $barcode,
+	'sn' => $sn,
+	'remark' => $remark2,
+	'des' => $des,
+))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
 public function label_des_fl($id){
@@ -2435,24 +2435,24 @@ public function fetchStampPlanFL5(Request $request){
 // email double serial sax
 
 public function mailSax($sn, $model, $id,$log){
-     $mail_to = db::table('send_emails')
-     ->where('remark', '=', 'ali')
-     ->select('email')
-     ->get();
+	$mail_to = db::table('send_emails')
+	->where('remark', '=', 'ali')
+	->select('email')
+	->get();
 
-     $query = "SELECT a.*, users.`name` as user3, '".$log."' as log from (
-     SELECT serial_number, model, log_processes.updated_at, NOW() as input, '".$model."' as model2, users.`name` as user1 , '".$id."' as user2
-     from log_processes 
-     LEFT JOIN users on log_processes.created_by = users.id
-     WHERE serial_number='".$sn."' and process_code='".$log."'
-      ) a
-		 LEFT JOIN users on a.user2 = users.id";
+	$query = "SELECT a.*, users.`name` as user3, '".$log."' as log from (
+	SELECT serial_number, model, log_processes.updated_at, NOW() as input, '".$model."' as model2, users.`name` as user1 , '".$id."' as user2
+	from log_processes 
+	LEFT JOIN users on log_processes.created_by = users.id
+	WHERE serial_number='".$sn."' and process_code='".$log."'
+	) a
+	LEFT JOIN users on a.user2 = users.id";
 
-     $datas = db::select($query);
+	$datas = db::select($query);
 
-     if($datas != null){
-          Mail::to('anton.budi.santoso@music.yamaha.com')->send(new SendEmail($datas, 'duobleserialnumber'));
-     }
+	if($datas != null){
+		Mail::to('anton.budi.santoso@music.yamaha.com')->send(new SendEmail($datas, 'duobleserialnumber'));
+	}
 }
 
 //end email
@@ -2484,61 +2484,61 @@ public function fetchImageSax(Request $request)
 // return sax
 
 public function indexRepairSx(){
-		return view('processes.assy_fl_saxT.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	return view('processes.assy_fl_saxT.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
-	}
+}
 
 public function returnfgStamp(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'return']);
+	$stamp_inventory->update(['status' => 'return']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
-	public function fetchReturnTableSx(){
-		$stamp_inventories = StampInventory::where('origin_group_code', '=', '043')
-		->where('status', '=', 'return')
-		->orderBy('updated_at', 'desc')
-		->get();
+public function fetchReturnTableSx(){
+	$stamp_inventories = StampInventory::where('origin_group_code', '=', '043')
+	->where('status', '=', 'return')
+	->orderBy('updated_at', 'desc')
+	->get();
 
-		return DataTables::of($stamp_inventories)
-		->make(true);
-	}
+	return DataTables::of($stamp_inventories)
+	->make(true);
+}
 
-	public function scanSerialNumberReturnSx(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+public function scanSerialNumberReturnSx(Request $request){
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'return']);
+	$stamp_inventory->update(['status' => 'return']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
 
 // end return sax
@@ -2547,61 +2547,61 @@ public function returnfgStamp(Request $request){
 // return cl
 
 public function indexRepairCl(){
-		return view('processes.assy_fl_cla.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	return view('processes.assy_fl_cla.return')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
-	}
+}
 
 public function returnClStamp(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'return']);
+	$stamp_inventory->update(['status' => 'return']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'Return - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
-	public function fetchReturnTableCl(){
-		$stamp_inventories = StampInventory::where('origin_group_code', '=', '042')
-		->where('status', '=', 'return')
-		->orderBy('updated_at', 'desc')
-		->get();
+public function fetchReturnTableCl(){
+	$stamp_inventories = StampInventory::where('origin_group_code', '=', '042')
+	->where('status', '=', 'return')
+	->orderBy('updated_at', 'desc')
+	->get();
 
-		return DataTables::of($stamp_inventories)
-		->make(true);
-	}
+	return DataTables::of($stamp_inventories)
+	->make(true);
+}
 
-	public function scanSerialNumberReturnCl(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+public function scanSerialNumberReturnCl(Request $request){
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'return']);
+	$stamp_inventory->update(['status' => 'return']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'Return - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
 
 // end return cl
@@ -2610,61 +2610,61 @@ public function returnClStamp(Request $request){
 // ng sax
 
 public function indexngSx(){
-		return view('processes.assy_fl_saxT.ng')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	return view('processes.assy_fl_saxT.ng')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
-	}
+}
 
 public function ngsxStamp(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'NG']);
+	$stamp_inventory->update(['status' => 'NG']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'NG - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'NG - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
-	public function fetchngTableSx(){
-		$stamp_inventories = StampInventory::where('origin_group_code', '=', '043')
-		->where('status', '=', 'NG')
-		->orderBy('updated_at', 'desc')
-		->get();
+public function fetchngTableSx(){
+	$stamp_inventories = StampInventory::where('origin_group_code', '=', '043')
+	->where('status', '=', 'NG')
+	->orderBy('updated_at', 'desc')
+	->get();
 
-		return DataTables::of($stamp_inventories)
-		->make(true);
-	}
+	return DataTables::of($stamp_inventories)
+	->make(true);
+}
 
-	public function scanSerialNumberngSx(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+public function scanSerialNumberngSx(Request $request){
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'NG']);
+	$stamp_inventory->update(['status' => 'NG']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'NG - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'NG - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
 
 // end ng sax
@@ -2673,381 +2673,279 @@ public function ngsxStamp(Request $request){
 // ng FL
 
 public function indexngFL(){
-		return view('processes.assy_fl.ng')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	return view('processes.assy_fl.ng')->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
-	}
+}
 
 public function ngFLStamp(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('id'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'NG']);
+	$stamp_inventory->update(['status' => 'NG']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'NG - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'NG - '.$request->get('id').'-'.$request->get('model').'-'.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
-	public function fetchngTableFL(){
-		$stamp_inventories = StampInventory::where('origin_group_code', '=', '041')
-		->where('status', '=', 'NG')
-		->orderBy('updated_at', 'desc')
-		->get();
+public function fetchngTableFL(){
+	$stamp_inventories = StampInventory::where('origin_group_code', '=', '041')
+	->where('status', '=', 'NG')
+	->orderBy('updated_at', 'desc')
+	->get();
 
-		return DataTables::of($stamp_inventories)
-		->make(true);
-	}
+	return DataTables::of($stamp_inventories)
+	->make(true);
+}
 
-	public function scanSerialNumberngFL(Request $request){
-		$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
-		->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
+public function scanSerialNumberngFL(Request $request){
+	$stamp_inventory = StampInventory::where('stamp_inventories.serial_number', '=', $request->get('serialNumber'))
+	->where('stamp_inventories.origin_group_code', '=', $request->get('originGroupCode'));
 
-		$stamp_inventory->update(['status' => 'NG']);
+	$stamp_inventory->update(['status' => 'NG']);
 
-		$id = Auth::id();
-		$err = new ErrorLog([
-			'error_message' => 'NG - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
-			'created_by' => $id,
-		]);
+	$id = Auth::id();
+	$err = new ErrorLog([
+		'error_message' => 'NG - '.$request->get('serialNumber').' - '.$request->get('originGroupCode'), 
+		'created_by' => $id,
+	]);
 
-		$err->save();
+	$err->save();
 
-		$response = array(
-			'status' => true,
-			'message' => 'Return success',
-		);
-		return Response::json($response);
-	}
+	$response = array(
+		'status' => true,
+		'message' => 'Return success',
+	);
+	return Response::json($response);
+}
 
 
 // end ng FL
 
 	//result sax new
 
-	public function indexfetchResultSaxnew(){
-		return view('processes.assy_fl_saxT.picking_schedule', array(
-			'title' => 'Picking Schedule Saxophone',
-			'title_jp' => '(??)',
-		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+public function indexfetchResultSaxnew(){
+	return view('processes.assy_fl_saxT.picking_schedule', array(
+		'title' => 'Picking Schedule Saxophone',
+		'title_jp' => '(??)',
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
+}
+
+public function fetchResultSaxnew(Request $request)
+{
+	if(date('D')=='Fri' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	}else if(date('D')=='Sat' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	}		
+	else{
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
 	}
 
-	public function fetchResultSaxnew(Request $request)
-	{
-		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-		}else if(date('D')=='Sat' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-		}		
-		else{
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
-		}
-
-		$first = date('Y-m-01');
-		if(date('Y-m-d') != date('Y-m-01')){
-			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
-		}
-		else{
-			$last = date('Y-m-d');
-		}
-		$now = date('Y-m-d');
-
-		if($first != $now){
-			$debt = "union all
-
-			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-			(
-			select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
-
-			union all
-
-			select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-			) as debt
-			group by material_number";
-		}
-		else{
-			$debt= "";
-		}
-
-
-		$query = "
-		select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(plan)-sum(debt)-sum(wip)-sum(actual) as target_assy, sum(stamp) as stamp, sum(h1)/2 as h1  from
-		(
-		select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
-		(
-		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
-
-		union all
-
-		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual from flo_details where date(created_at) = '".$now."' group by material_number
-
-		union all
-
-					select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-					(
-					select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
-
-					union all
-
-					select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."' group by material_number
-					) as debt
-					group by material_number
-		) as assy left join materials on materials.material_number = assy.material_number where materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
-
-		union all
-
-		select model, 0 as debt, 0 as plan, 0 as actual, sum(wip) as wip, 0 as ng, 0 as stamp, 0 as h1 from
-		(
-		select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and process_code = 2 and (stamp_inventories.status is null or stamp_inventories.status = 'ng') group by model
-
-		union all
-
-		select materials.model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories left join materials on materials.material_description = stamp_inventories.model where stamp_inventories.origin_group_code = '043' and process_code = 3 and stamp_inventories.status <> 'return' group by materials.model
-		) as wip group by model
-
-		union all
-
-		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and `status` = 'ng' group by model
-
-		union all
-
-		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '043' and process_code = '2' and date(created_at) = '".$now."' group by model
-
-		union all
-
-		select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
-		) as picking group by model
-		";
-
-		$tableData = DB::select($query);
-		
-		$response = array(
-			'status' => true,
-			'tableData' => $tableData,
-		);
-		return Response::json($response);
+	$first = date('Y-m-01');
+	if(date('Y-m-d') != date('Y-m-01')){
+		$last = date('Y-m-d', strtotime(Carbon::yesterday()));
 	}
+	else{
+		$last = date('Y-m-d');
+	}
+	$now = date('Y-m-d');
+
+	if($first != $now){
+		$debt = "union all
+
+		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+		(
+		select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+
+		union all
+
+		select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+		) as debt
+		group by material_number";
+	}
+	else{
+		$debt= "";
+	}
+
+
+	$query = "
+	select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(plan)-sum(debt)-sum(wip)-sum(actual) as target_assy, sum(stamp) as stamp, sum(h1)/2 as h1  from
+	(
+	select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
+	(
+	select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
+
+	union all
+
+	select material_number, 0 as debt, 0 as plan, sum(quantity) as actual from flo_details where date(created_at) = '".$now."' group by material_number
+
+	union all
+
+	select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+	(
+	select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
+
+	union all
+
+	select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."' group by material_number
+	) as debt
+	group by material_number
+	) as assy left join materials on materials.material_number = assy.material_number where materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
+
+	union all
+
+	select model, 0 as debt, 0 as plan, 0 as actual, sum(wip) as wip, 0 as ng, 0 as stamp, 0 as h1 from
+	(
+	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and process_code = 2 and (stamp_inventories.status is null or stamp_inventories.status = 'ng') group by model
+
+	union all
+
+	select materials.model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories left join materials on materials.material_description = stamp_inventories.model where stamp_inventories.origin_group_code = '043' and process_code = 3 and stamp_inventories.status <> 'return' group by materials.model
+	) as wip group by model
+
+	union all
+
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '043' and `status` = 'ng' group by model
+
+	union all
+
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '043' and process_code = '2' and date(created_at) = '".$now."' group by model
+
+	union all
+
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '043' group by materials.model
+	) as picking group by model
+	";
+
+	$tableData = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'tableData' => $tableData,
+	);
+	return Response::json($response);
+}
 
 //------flute
-	public function fetchResultFlStamp(Request $request)
-	{
-		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-		}else if(date('D')=='Sat' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-		}
-		else{
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-		}
+public function fetchResultFlStamp(Request $request)
+{
+	if(date('D')=='Fri' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	}
+	else if(date('D')=='Sat' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	}
+	else if(date('D')=='Thu' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	}
+	else if(date('D')=='Wed' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	}
+	else{
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	}
 
-		$first = date('Y-m-01');
-		if(date('Y-m-d') != date('Y-m-01')){
-			$last = date('Y-m-d', strtotime(Carbon::yesterday()));
-		}
-		else{
-			$last = date('Y-m-d');
-		}
-		$now = date('Y-m-d');
+	$first = date('Y-m-01');
+	if(date('Y-m-d') != date('Y-m-01')){
+		$last = date('Y-m-d', strtotime(Carbon::yesterday()));
+	}
+	else{
+		$last = date('Y-m-d');
+	}
+	$now = date('Y-m-d');
 
-		if($first != $now){
-			$debt = "union all
+	if($first != $now){
+		$debt = "union all
 
-			select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-			(
-			select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
+		select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+		(
+		select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '". $first ."' and due_date <= '". $last ."' group by material_number
 
-			union all
+		union all
 
-			select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
-			) as debt
-			group by material_number";
-		}
-		else{
-			$debt= "";
-		}
-
-
-// 		$query = "select * from (
-// 		select * from (
-// 		select * from (
-// 		select * from ( 
-// 		select  sum(target2.debt) as debt, sum(target2.plan) as plan, sum(target2.actual) as actual,model3.model as model3 from (		 
-// 		select target_packing.* from ( 
-
-// 		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
-// 		(
-// 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-// 		from production_schedules 
-// 		where due_date = '". $now ."' 
-// 		group by material_number
-
-// 		union all
-
-// 		select material_number, 0 as debt, 0 as plan, sum(quantity) as actual 
-// 		from flo_details 
-// 		where date(created_at) = '". $now ."'  
-// 		group by material_number
-
-// 		".$debt."
-
-// 		) as result
-// 		left join materials on materials.material_number = result.material_number
-// 		where materials.category = 'FG' and materials.origin_group_code = '041'
-// 		group by result.material_number, materials.material_description
-// 		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-// 	) target_packing ) target2
-
-// 		LEFT JOIN(
-// 	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-// 	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
-
-// 	left Join
-
-// 	(
-	
-// 		SELECT model2 as model, COALESCE(SUM(total_return),0)  as total_return FROM (
-// 		SELECT model, SUM(quantity) as total_return from (
-// 			SELECT serial_number, model, process_code,quantity from stamp_inventories WHERE  origin_group_code='041'  and serial_number not in (SELECT serial_number from stamp_inventories WHERE origin_group_code='041' and `status` ='return') 
-// 			) a WHERE a.serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') GROUP BY model
-// 			) a 
-			
-// 			RIGHT JOIN(
-// 		SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-// 		) model3 on a.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
-
-// ) as t_return on paking.model3 = t_return.model ) as packing_return
-
-// left Join
-// (
-
-// SELECT model2 as modelng, COALESCE(SUM(quantity),0) as total_ng from (
-// SELECT model, SUM(quantity) as quantity from stamp_inventories WHERE `status` ='ng' and origin_group_code='041' GROUP BY model
-//  ) ng 
-// 	RIGHT JOIN(
-// SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-// ) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
-
-// ) as t_ng on packing_return.model3 = t_ng.modelng
-// ) as packing_return_ng
+		select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '". $first ."' and date(created_at) <= '". $last ."' group by material_number
+		) as debt
+		group by material_number";
+	}
+	else{
+		$debt= "";
+	}
 
 
-// left Join
+	$queryAll = "select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(stamp) as stamp, sum(h1) as h1 from
+	(
+	select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
+	(
+	select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
 
-// (
-// SELECT * from (
-// select  COALESCE(sum(target2.plan),0) as planh2, model3.model as modelh2 from (		 
-// 		select target_packing.* from ( 
+	union all
 
-// 		select  materials.material_description as model, sum(result.debt) as debt, sum(result.plan) as plan, sum(result.actual) as actual from
-// 		(
-// 		select material_number, 0 as debt, sum(quantity) as plan, 0 as actual 
-// 		from production_schedules 
-// 		where due_date = '". $nextday ."' 
-// 		group by material_number
+	select material_number, 0 as debt, 0 as plan, sum(quantity) as actual from flo_details where date(created_at) = '".$now."' group by material_number
 
-		
+	union all
 
-// 		) as result
-// 		left join materials on materials.material_number = result.material_number
-// 		where materials.category = 'FG' and materials.origin_group_code = '041'
-// 		group by result.material_number, materials.material_description
-// 		having sum(result.debt) <> 0 or sum(result.plan) <> 0 or sum(result.actual) <> 0
-// 	) target_packing ) target2
+	select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
+	(
+	select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
 
-// 		LEFT JOIN(
-// 	SELECT DISTINCT(model) as model from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-// 	) model3 on target2.model like concat('%',RIGHT(model3.model,3) ,'%') GROUP BY model3.model ) as paking
+	union all
 
-// ) as pakingh2 on packing_return_ng.model3 = pakingh2.modelh2 ) as all_data
+	select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."' group by material_number
+	) as debt
+	group by material_number
+	) as assy left join materials on materials.material_number = assy.material_number where materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
 
-// left Join
-// (
-// SELECT model2 as model_stamp, COALESCE(SUM(quantity),0) as total_stamp from (
-// SELECT model, SUM(quantity) as quantity from (
-// SELECT DISTINCT (serial_number) as sn, model, quantity  from log_processes WHERE DATE_FORMAT(updated_at,'%Y-%m-%d')='".$now."' and origin_group_code='041' and serial_number not in (SELECT serial_number from flo_details WHERE origin_group_code='041') and remark ='FG'
-// ) a GROUP BY  model
-//  ) ng 
-// 	RIGHT JOIN(
-// SELECT DISTINCT(model) as model2 from log_processes WHERE model LIKE 'YFL%' and origin_group_code='041' and process_code='1' and model != 'YFL'
-// ) model3 on ng.model like concat('%',RIGHT(model3.model2,3) ,'%') GROUP BY model3.model2
-// ) as hasil on all_data.model3 = hasil.model_stamp
+	union all
 
-// 	";
+	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` is null group by model
 
+	union all
 
-		$queryAll = "select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(stamp) as stamp, sum(h1) as h1 from
-			(
-			select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
-			(
-			select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` = 'ng' group by model
 
-			union all
+	union all
 
-			select material_number, 0 as debt, 0 as plan, sum(quantity) as actual from flo_details where date(created_at) = '".$now."' group by material_number
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '041' and process_code = '1' and date(created_at) = '".$now."' group by model
 
-			union all
+	union all
 
-						select material_number, sum(debt) as debt, 0 as plan, 0 as actual from
-						(
-						select material_number, -(sum(quantity)) as debt from production_schedules where due_date >= '".$first."' and due_date <= '".$last."' group by material_number
-
-						union all
-
-						select material_number, sum(quantity) as debt from flo_details where date(created_at) >= '".$first."' and date(created_at) <= '".$last."' group by material_number
-						) as debt
-						group by material_number
-			) as assy left join materials on materials.material_number = assy.material_number where materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
-
-			union all
-
-			select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` is null group by model
-
-			union all
-
-			select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` = 'ng' group by model
-
-			union all
-
-			select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '041' and process_code = '1' and date(created_at) = '".$now."' group by model
-
-			union all
-
-			select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
-			) as picking group by model 
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
+	) as picking group by model 
 
 	";
 
 	$materials = DB::table('materials')->where('model', 'like', 'YFL%')->select('model')->distinct()
 	->orderBy('model')->get();
 
-		$tableData = DB::select($queryAll);
-		
-		$response = array(
-			'status' => true,
-			'planData' => $tableData,
-			'model' => $materials,
-			// 'a' => $query,
-		);
-		return Response::json($response);
-	}
+	$tableData = DB::select($queryAll);
 
-	public function indexfetchResultFlStamp(){
-		return view('processes.assy_fl.picking_schedule', array(
-			'title' => 'Picking Schedule Flute',
-			'title_jp' => '',
-		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	$response = array(
+		'status' => true,
+		'planData' => $tableData,
+		'model' => $materials,
+	);
+	return Response::json($response);
+}
 
-	}
+public function indexfetchResultFlStamp(){
+	return view('processes.assy_fl.picking_schedule', array(
+		'title' => 'Picking Schedule Flute',
+		'title_jp' => '',
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+
+}
 
 }
 
