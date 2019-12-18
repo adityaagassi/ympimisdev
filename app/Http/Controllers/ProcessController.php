@@ -2842,12 +2842,12 @@ public function ngFLStamp(Request $request){
 	public function fetchResultFlStamp(Request $request)
 	{
 		if(date('D')=='Fri' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
 		}else if(date('D')=='Sat' ){
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 		}
 		else{
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
 		}
 
 		$first = date('Y-m-01');

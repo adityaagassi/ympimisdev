@@ -54,7 +54,7 @@
 							<th colspan="2" style="padding:0; width:1%;">Stock</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy</th>
 							<th rowspan="2" style="padding:0; width:1%;">Stamp</th>
-							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1)</th>
+							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1&H+2)</th>
 							<!-- <th>Diff</th> -->
 						</tr>
 						<tr>
