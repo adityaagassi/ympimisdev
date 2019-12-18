@@ -92,12 +92,13 @@ class FloController extends Controller
 	}
 
 	public function index_lading(){
-		$invoices = Flo::orderBy('invoice_number', 'asc')
-		->whereNotNull('invoice_number')
-		->whereNull('bl_date')
-		->select('invoice_number')
-		->distinct()
-		->get();
+
+		$query = "select distinct invoice_number from
+		(select invoice_number from flos where bl_date is null
+		union all
+		select invoice_number from knock_downs where bl_date is null) as invoice where invoice_number is not null";
+
+		$invoices = DB::select($query);
 
 		return view('flos.flo_lading', array(
 			'invoices' => $invoices,
@@ -139,14 +140,14 @@ class FloController extends Controller
 	}
 
 	public function index_flo_invoice(){
-		$invoices = DB::table('flos')
-		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->whereNotNull('flos.bl_date')
-		->select('flos.invoice_number', 'shipment_schedules.st_date', 'shipment_schedules.destination_code', 'destinations.destination_name', 'shipment_schedules.bl_date as plan_bl', 'flos.bl_date as actual_bl')
-		->groupBy('flos.invoice_number', 'shipment_schedules.st_date', 'shipment_schedules.destination_code', 'destinations.destination_name', 'shipment_schedules.bl_date', 'flos.bl_date')
-		->orderBy('flos.bl_date', 'desc')
-		->get();
+
+		$query = "select distinct invoice.invoice_number, date_format(container_schedules.shipment_date, '%d-%b-%Y') as st_date, container_schedules.destination_code, destinations.destination_name, date_format(bl_date, '%d-%b-%Y') as actual_bl_date, bl_date from
+		(
+		select distinct invoice_number, container_id, bl_date from flos where bl_date is not null
+		union all
+		select distinct invoice_number, container_id, bl_date from knock_downs where bl_date is not null) as invoice left join container_schedules on container_schedules.container_id = invoice.container_id left join destinations on destinations.destination_code = container_schedules.destination_code order by bl_date desc";
+
+		$invoices = db::select($query);
 
 		return DataTables::of($invoices)
 		->addColumn('action', function($invoices){
@@ -676,7 +677,7 @@ class FloController extends Controller
 				return Response::json($response);
 			}
 		}
-		
+
 		$code_generator_pd->index = $code_generator_pd->index+1;
 		$code_generator_pd->save();
 

@@ -353,7 +353,7 @@
 
   @if(in_array('S6', $navs))
   @if(isset($page) && $page == "FLO Lading")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO  <i class="fa fa-angle-right"></i> On Board</span></a>
+    <a href="{{ url("/index/flo_view/lading") }}"><i class="fa fa-ship"></i> <span> <span>FLO&KDO  <i class="fa fa-angle-right"></i> On Board</span></a>
   </li>
   @endif
 

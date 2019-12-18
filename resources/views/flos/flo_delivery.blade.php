@@ -218,9 +218,6 @@
       status : '2',
     }
     $.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
-      console.log(status);
-      console.log(result);
-      console.log(xhr);
       if(xhr.status == 200){
         if(result.status){
           openSuccessGritter('Success!', result.message);
