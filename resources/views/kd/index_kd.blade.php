@@ -82,13 +82,12 @@
 		<div class="col-xs-6">
 			<div class="box box-danger">
 				<div class="box-body">
-					<span style="font-size: 20px; font-weight: bold;">TARGET LIST:</span>
 					<table class="table table-hover table-striped" id="tableList">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 20%;">Material Number</th>
-								<th style="width: 65%;">Material Description</th>
-								<th style="width: 15%;">Target Left</th>
+								<th style="width: 20%;">Material</th>
+								<th style="width: 65%;">Description</th>
+								<th style="width: 15%;">Sisa Target</th>
 							</tr>					
 						</thead>
 						<tbody id="tableBodyList">
@@ -132,27 +131,64 @@
 						</div>
 						<div class="col-xs-6" style="padding-bottom: 10px;">
 							<br>
-							<button class="btn btn-success" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+							<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
 								CONFIRM
 							</button>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 pull-right">
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<button class="btn btn-danger" onclick="forcePrint()" style="font-size: 2vw; width: 100%; font-weight: bold; padding: 0;">
-						<i class="fa fa-print"></i> FORCE PRINT KDO
+				<div class="col-xs-12">
+					<span style="font-size: 20px; font-weight: bold;">PACKED LIST:</span>
+					<table class="table table-hover" id="tablePack">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 5%;">No</th>
+								<th style="width: 20%;">Material Number</th>
+								<th style="width: 65%;">Material Description</th>
+								<th style="width: 10%;">Quantity</th>
+							</tr>					
+						</thead>
+						<tbody id="tableBodyPack">
+						</tbody>
+						<tfoot id="tableFootPack" style="background-color: rgb(252, 248, 227);">
+						</tfoot>
+					</table>
+					<button class="btn btn-success" onclick="showPrint()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+						<i class="fa fa-print"></i> PRINT KDO NUMBER 
 					</button>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="modal modal-default fade" id="print_kdo_modal">
+		<div class="modal-dialog modal-xs">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title">
+						Print KDO Number
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="modal-body">
+						<h5>Are you sure print KDO Number ?</h5>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button class="btn btn-success" onclick="forcePrint()"><span><i class="fa fa-print"></i> Print</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </section>
+
 
 @endsection
 @section('scripts')
@@ -173,8 +209,13 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		
-		fillTable();
+		fillTableList();
+		fillTablePack();
 	});
+
+	function showPrint() {
+		$("#print_kdo_modal").modal('show');
+	}
 
 	function forcePrint() {
 		var location = "{{ $location }}";
@@ -183,12 +224,14 @@
 			location : location,
 		}
 
+		$("#print_kdo_modal").modal('hide');
 		$("#loading").show();
 		$.post('{{ url("fetch/kd_force_print_zpro") }}', data,  function(result, status, xhr){
 			if(result.status){
 				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
-				fillTable();
+				fillTableList();
+				fillTablePack();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -216,7 +259,8 @@
 			if(result.status){
 				$("#loading").hide();
 				$('#actual_count').val(result.actual_count);
-				fillTable();
+				fillTableList();
+				fillTablePack();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -246,8 +290,40 @@
 		});
 	}
 
+	function fillTablePack(){
+		$.get('{{ url("fetch/kd_pack/".$location) }}',  function(result, status, xhr){
+			if(result.status){
+				$('#tableBodyPack').append().empty();
+				$('#tableFootPack').append().empty();
 
-	function fillTable(){
+				var tableData = "";
+				var tableFoot = "";
+
+				var total_qty = 0;
+				var count = 0;
+				$.each(result.pack, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ ++count +'</td>';
+					tableData += '<td>'+ value.material_number +'</td>';
+					tableData += '<td>'+ value.material_description +'</td>';
+					tableData += '<td>'+ value.quantity +'</td>';
+					tableData += '</tr>';
+					total_qty += value.quantity;
+				});
+				$('#tableBodyPack').append(tableData);
+
+				tableFoot += '<tr>';
+				tableFoot += '<th colspan="3" style="text-align:center;">Total:</th>';
+				tableFoot += '<th>'+ total_qty +'</th>';
+				tableFoot += '</tr>';
+				$('#tableFootPack').append(tableFoot);
+			}
+
+		});
+	}
+
+
+	function fillTableList(){
 
 		$.get('{{ url("fetch/kd/".$location) }}',  function(result, status, xhr){
 			$('#tableList').DataTable().clear();
@@ -255,8 +331,6 @@
 			$('#tableBodyList').html("");
 
 			var tableData = "";
-			var tableFoot = "";
-
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
 				tableData += '<tr onclick="fillField(\''+value.material_number+'\')">';

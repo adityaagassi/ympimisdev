@@ -72,8 +72,8 @@
                   <th style="width: 10%">Count Item</th>
                   <th style="width: 10%">Location</th>
                   <th style="width: 10%">Received At</th>
-                  <th style="width: 10%">Details</th>
-                  <th style="width: 10%">Cancel Delivery</th>
+                  <th style="width: 8%">Details</th>
+                  <th style="width: 8%">Cancel Delivery</th>
                 </tr>
               </thead>
               <tbody>
@@ -218,7 +218,7 @@
       "processing": true,
       "serverSide": true,
       "ajax": {
-        "type" : "post",
+        "type" : "get",
         "url" : "{{ url("fetch/kdo") }}",
         "data" : data,
       },
@@ -247,8 +247,8 @@
     $('#kdo_table tfoot tr').appendTo('#kdo_table thead');
   }
 
-  function detailKDO(){
-
+  function detailKDO(id){
+    alert(id);
   }
 
   function deleteKDO(){

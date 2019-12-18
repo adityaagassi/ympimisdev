@@ -258,10 +258,31 @@ class KnockDownController extends Controller{
 			return '<a href="javascript:void(0)" class="btn btn-sm btn-primary" onClick="detailKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-eye"></i></a>';
 		})
 		->addColumn('deleteKDO', function($knock_downs){
-			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="glyphicon glyphicon-trash"></i></a>';
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="glyphicon glyphicon-remove-sign"></i></a>';
 		})
 		->rawColumns([ 'detailKDO' => 'detailKDO', 'deleteKDO' => 'deleteKDO'])
 		->make(true);
+	}
+
+
+	public function fetchKDODetail(Request $request){
+		$status = $request->get('status');
+
+		$knock_down_detail = KnockDownDetail::leftJoin('knock_downs','knock_down_details.kd_number','=','knock_downs.kd_number')
+		->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
+		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
+		->where('knock_downs.status', '=', $status)
+		->select('knock_down_details.kd_number', 'container_schedules.shipment_date', 'knock_down_details.material_number', 'materials.material_description', 'storage_locations.location', 'knock_downs.updated_at', 'knock_downs.invoice_number', 'knock_downs.container_id', 'knock_down_details.quantity')
+		->get();
+
+		return DataTables::of($knock_down_detail)
+		->addColumn('deleteKDO', function($knock_downs){
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="glyphicon glyphicon-remove-sign"></i></a>';
+		})
+		->rawColumns(['deleteKDO' => 'deleteKDO'])
+		->make(true);
+
 	}
 
 	public function fetchKD($id){
@@ -301,6 +322,32 @@ class KnockDownController extends Controller{
 		$response = array(
 			'status' => true,
 			'target' => $target,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchKdPack($id){
+		$location = $id;
+
+		$knock_down = KnockDown::where('status','=','0')
+		->where('remark','=',$location)
+		->first();
+
+		if(!$knock_down){
+			$response = array(
+				'status' => false,
+			);
+			return Response::json($response);
+		}
+
+		$pack = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->where('knock_down_details.kd_number','=',$knock_down->kd_number)
+		->select('knock_down_details.material_number', 'materials.material_description', 'knock_down_details.quantity')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'pack' => $pack,
 		);
 		return Response::json($response);
 	}

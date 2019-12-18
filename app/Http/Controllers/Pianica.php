@@ -495,6 +495,7 @@ public function savepureto(Request $request){
 //------------ kensa awal ----------
 
 public function savekensaawal(Request $request){
+    
     $id_user = Auth::id();
     try {
         $inventori =  PnInventorie::updateOrCreate(
@@ -671,7 +672,7 @@ public function total_ng(Request $request)
     select v.*, count(pn_log_ngs.ng) as jml from (  
 
     select b.id,ng_name, tag, model from (
-    select * from ng_lists where location ='PN_Kensa_Awal'
+    select * from ng_lists where location ='".$request->get('location')."'
     ) b
     CROSS join 
     (
@@ -891,7 +892,7 @@ public function savekensaakhir(Request $request){
         $biri = $request->get('ngbiri');
         if($biri !="A" ){                                      
             $detail = new PnLogNg([                
-                'ng' => 101,                
+                'ng' => 105,                
                 'line' => $request->get('line'),
                 'operator' => $request->get('op'),
                 'tag' => $request->get('tag'),
@@ -907,7 +908,7 @@ public function savekensaakhir(Request $request){
         $oktaf = $request->get('ngoktaf');
         if($oktaf !="A" ){                                      
             $detail = new PnLogNg([                
-                'ng' => 102,                
+                'ng' => 106,                
                 'line' => $request->get('line'),
                 'operator' => $request->get('op'),
                 'tag' => $request->get('tag'),
@@ -923,7 +924,7 @@ public function savekensaakhir(Request $request){
         $tinggi = $request->get('ngtinggi');
         if($tinggi !="A" ){                                      
             $detail = new PnLogNg([                
-                'ng' => 103,                
+                'ng' => 107,                
                 'line' => $request->get('line'),
                 'operator' => $request->get('op'),
                 'tag' => $request->get('tag'),
@@ -939,7 +940,7 @@ public function savekensaakhir(Request $request){
         $rendah = $request->get('ngrendah');
         if($rendah !="A" ){                                      
             $detail = new PnLogNg([                
-                'ng' => 104,                
+                'ng' => 108,                
                 'line' => $request->get('line'),
                 'operator' => $request->get('op'),
                 'tag' => $request->get('tag'),

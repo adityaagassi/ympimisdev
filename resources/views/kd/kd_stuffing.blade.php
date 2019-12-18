@@ -49,10 +49,8 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-       <div class="box-header">
-        <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3>
-      </div>
-      <div class="box-body">
+       <div class="box-header"><h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3></div>
+       <div class="box-body">
         <div class="row">
 
           <div class="col-md-12">
@@ -102,45 +100,87 @@
           </div>
 
 
-
-
-          <div class="col-md-12" style="padding-top: 10px;">
-            <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
-              <thead style="background-color: rgba(126,86,134,.7);">
-                <tr>
-                  <th style="width: 10%">KDO</th>
-                  <th style="width: 10%">Ship. Date</th>
-                  <th style="width: 10%">Count Item</th>
-                  <th style="width: 10%">Location</th>
-                  <th style="width: 10%">I/V</th>
-                  <th style="width: 10%">Container ID</th>
-                  <th style="width: 10%">Stuff. Date </th>
-                  <th style="width: 10%">Details</th>
-                  <th style="width: 10%">Cancel</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <div class="col-xs-12" style="padding-top: 1%;">
+
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+        <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing</a></li>
+        <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Stuffing Detail</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab_1" style="height: 580px;">
+          <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+            <thead style="background-color: rgba(126,86,134,.7);">
+              <tr>
+                <th style="width: 10%">KDO</th>
+                <th style="width: 10%">Ship. Date</th>
+                <th style="width: 10%">Count Item</th>
+                <th style="width: 20%">Location</th>
+                <th style="width: 10%">I/V</th>
+                <th style="width: 10%">Container ID</th>
+                <th style="width: 20%">Stuff. Date </th>
+                <th style="width: 5%">Cancel</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="tab-pane" id="tab_2" style="height: 580px;">
+          <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+            <thead style="background-color: rgba(126,86,134,.7);">
+              <tr>
+                <th style="width: 5%">KD Number</th>
+                <th style="width: 5%">Ship. Date</th>
+                <th style="width: 5%">Material Number</th>
+                <th style="width: 30%">Material Description</th>
+                <th style="width: 10%">Location</th>
+                <th style="width: 5%">I/V</th>
+                <th style="width: 5%">Container ID</th>
+                <th style="width: 15%">Stuff. Date</th>
+                <th style="width: 5%">Quantity</th>
+                <th style="width: 5%">Cancel</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </section>
 @stop
@@ -164,6 +204,7 @@
   jQuery(document).ready(function() {
     $("#kdo_number_delivery").focus();
     fetchKDO();
+    fetchKDODetail();
     refresh();
     $('#toggle_lock').change(function(){        
       if(this.checked){
@@ -314,7 +355,7 @@
       "processing": true,
       "serverSide": true,
       "ajax": {
-        "type" : "post",
+        "type" : "get",
         "url" : "{{ url("fetch/kdo") }}",
         "data" : data,
       },
@@ -326,7 +367,6 @@
       { "data": "invoice_number" },
       { "data": "container_id" },
       { "data": "updated_at" },
-      { "data": "detailKDO" },
       { "data": "deleteKDO" }
       ]
     });
@@ -344,6 +384,102 @@
     });
 
     $('#kdo_table tfoot tr').appendTo('#kdo_table thead');
+  }
+
+  function fetchKDODetail(){
+    var data = {
+      status : 3,
+    }
+
+    $('#kdo_detail tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+    });
+    var table = $('#kdo_detail').DataTable( {
+      'paging'        : true,
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'lengthChange'  : true,
+      'searching'     : true,
+      'ordering'      : true,
+      'info'        : true,
+      'order'       : [],
+      'autoWidth'   : true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "type" : "get",
+        "url" : "{{ url("fetch/kdo_detail") }}",
+        "data" : data,
+      },
+      "columns": [
+      { "data": "kd_number" },
+      { "data": "shipment_date" },
+      { "data": "material_number" },
+      { "data": "material_description" },
+      { "data": "location" },
+      { "data": "invoice_number" },
+      { "data": "container_id" },
+      { "data": "updated_at" },
+      { "data": "quantity" },
+      { "data": "deleteKDO" }
+      ]
+    });
+
+    table.columns().every( function () {
+      var that = this;
+
+      $( 'input', this.footer() ).on( 'keyup change', function () {
+        if ( that.search() !== this.value ) {
+          that
+          .search( this.value )
+          .draw();
+        }
+      });
+    });
+
+    $('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
+
   }
 
   function scanKdoNumber(){
