@@ -210,7 +210,7 @@
 			</div>
 			<div class="col-xs-7">
 				<div class="row">
-					<div class="col-xs-12">
+					{{-- <div class="col-xs-12">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
 								<tr>
@@ -223,7 +223,7 @@
 								</tr>
 							</tbody>
 						</table>
-					</div>
+					</div> --}}
 					{{-- <div class="col-xs-6">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
@@ -243,6 +243,22 @@
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Date:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="date" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled value="{{ date('Y-m-d') }}">
+							</div>
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Product:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="product" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+						</div>						
+					</div>
+					<div class="col-md-12" style="padding-top: 5px;">
+						<div class="row">
+							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Shift:</span>
 							</div>
 							<div class="col-xs-4">
@@ -254,7 +270,7 @@
 							<div class="col-xs-4">
 								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
 							</div>
-						</div>						
+						</div>
 					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
@@ -270,38 +286,22 @@
 							<div class="col-xs-4">
 								<input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-12" style="padding-top: 5px;">
-						<div class="row">
-							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 13px;">Running Punch:</span>
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="punch_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
-							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Desc:</span>
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="material_description" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
 						</div>						
 					</div>
 					
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Running Dies:</span>
+								{{-- <span style="font-weight: bold; font-size: 15px;">Part:</span> --}}
 							</div>
 							<div class="col-xs-4">
-								<input type="text" id="die_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+								{{-- <input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled> --}}
 							</div>
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Product:</span>
+								<span style="font-weight: bold; font-size: 15px;">Desc:</span>
 							</div>
 							<div class="col-xs-4">
-								<input type="text" id="product" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+								<input type="text" id="material_description" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 						</div>						
 					</div>
@@ -324,6 +324,18 @@
 										<select class="form-control" style="width: 100%; height: 40px; font-size: 15px; text-align: center;" id="dies" name="dies" data-placeholder="Choose Dies" required onchange="fetchTotalDie(this.value)">
 											<option></option>
 										</select>
+									</td>
+								</tr>
+								<tr>
+									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">RUNNING PUNCH</th>
+									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">RUNNING DIES</th>
+								</tr>
+								<tr>
+									<td style=" text-align: center; color: black; font-size:1vw; width: 30%;">
+										<input type="text" id="punch_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+									</td>
+									<td style=" text-align: center; color: black; font-size:1vw; width: 30%;">
+										<input type="text" id="die_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 									</td>
 								</tr>
 							</tbody>
@@ -380,10 +392,31 @@
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Electric Supply Time</th>
 								</tr>
 								<tr>
-									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
-									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
-									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
-									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style="text-align: center; color: black; font-size:2vw; ">
+							        <button class="btn btn-sm btn-success" id="startpasmod" onClick="timerpasmod.start(1000)">Start</button> 
+							        <button class="btn btn-sm btn-danger" id="stoppasmod" onClick="timerpasmod.stop()">Stop</button>
+									<div class="timerpasmod">
+							            <span class="hourpasmod">00</span>:<span class="minutepasmod">00</span>:<span class="secondpasmod">10</span>
+							        </div>
+							        <input type="hidden" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required>
+							    	</td>
+									<td style=" text-align: center; color: black; font-size:2vw; ">
+									<button class="btn btn-sm btn-success" id="startlepmod" onClick="timerlepmod.start(1000)">Start</button> 
+							        <button class="btn btn-sm btn-danger" id="stoplepmod" onClick="timerlepmod.stop()">Stop</button>
+									<div class="timerlepmod">
+							            <span class="hourlepmod">00</span>:<span class="minutelepmod">00</span>:<span class="secondlepmod">10</span>
+							        </div>
+									<input type="hidden" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required>
+									</td>
+									<td style=" text-align: center; color: black; font-size:2vw; ">
+									<input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style="text-align: center; color: black; font-size:2vw; ">
+									{{-- <button class="btn btn-sm btn-success" id="startelectime" onClick="timerelectime.start(1000)">Start</button>  --}}
+							        <button class="btn btn-sm btn-danger" id="stopelectime" onClick="timerelectime.stop()">Stop</button>
+									<div class="timerelectime">
+							            <span class="hourelectime">00</span>:<span class="minuteelectime">00</span>:<span class="secondelectime">10</span>
+							        </div>
+									<input type="hidden" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 								</tr>
 							</tbody>
 						</table>
@@ -553,6 +586,11 @@
 			$("#reset_button").hide();
 			$("#process_desc_select").hide();
 
+			$('#stoppasmod').hide();
+			$('#stoplepmod').hide();
+			// $('#stopproctime').hide();
+			$('#stopelectime').hide();
+
 			$('.timepicker').timepicker({
 				minuteStep: 1,
 				template: 'modal',
@@ -669,7 +707,7 @@
 		}
 
 		function createTrouble(){
-			var date = $("#date").text();
+			var date = $("#date").val();
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();
@@ -705,7 +743,7 @@
 		}
 
 		function troubleList(){
-			var date = $("#date").text();
+			var date = $("#date").val();
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();
@@ -860,7 +898,7 @@
 		function end(){
 			$("#end_time").html(getActualFullDate());
 
-			var date = $("#date").text();
+			var date = $("#date").val();
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();
@@ -933,6 +971,349 @@
 				});
 			}
 		}
+
+		function _timerpasmod(callback)
+		{
+		    var time = 0;     //  The default time of the timer
+		    var mode = 1;     //    Mode: count up or count down
+		    var status = 0;    //    Status: timer is running or stoped
+		    var timer_id;
+		    var hour;
+		    var minute;
+		    var second;    //    This is used by setInterval function
+		    
+		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
+		    this.start = function(interval)
+		    {
+		    	$('#startpasmod').hide();
+				$('#stoppasmod').show();
+				timerelectime.start(1000);
+		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
+		 
+		        if(status == 0)
+		        {
+		            status = 1;
+		            timer_id = setInterval(function()
+		            {
+		                switch(1)
+		                {
+		                    default:
+		                    if(time)
+		                    {
+		                        time--;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                    
+		                    case 1:
+		                    if(time < 86400)
+		                    {
+		                        time++;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                }
+		            }, interval);
+		        }
+		    }
+		    
+		    //  Same as the name, this will stop or pause the timer ex. timer.stop()
+		    this.stop =  function()
+		    {
+		        if(status == 1)
+		        {
+		            status = 0;
+		            var detik = $('div.timerpasmod span.secondpasmod').text();
+			        var menit = $('div.timerpasmod span.minutepasmod').text();
+			        var jam = $('div.timerpasmod span.hourpasmod').text();
+			        var waktu = jam + ':' + menit + ':' + detik;
+			        $('#pasang_molding').val(waktu);
+			        $('#stoppasmod').hide();
+		            clearInterval(timer_id);
+		        }
+		    }
+		    
+		    // Reset the timer to zero or reset it to your own custom time ex. reset to zero second timer.reset(0)
+		    this.reset =  function(sec)
+		    {
+		        sec = (typeof(sec) !== 'undefined') ? sec : 0;
+		        time = sec;
+		        generateTime(time);
+		    }
+		    this.getTime = function()
+		    {
+		        return time;
+		    }
+		    this.getMode = function()
+		    {
+		        return mode;
+		    }
+		    this.getStatus
+		    {
+		        return status;
+		    }
+		    function generateTime()
+		    {
+		        second = time % 60;
+		        minute = Math.floor(time / 60) % 60;
+		        hour = Math.floor(time / 3600) % 60;
+		        
+		        second = (second < 10) ? '0'+second : second;
+		        minute = (minute < 10) ? '0'+minute : minute;
+		        hour = (hour < 10) ? '0'+hour : hour;
+		        
+		        $('div.timerpasmod span.secondpasmod').html(second);
+		        $('div.timerpasmod span.minutepasmod').html(minute);
+		        $('div.timerpasmod span.hourpasmod').html(hour);
+		    }
+		}
+		 
+		var timerpasmod;
+		$(document).ready(function(e) 
+		{
+		    timerpasmod = new _timerpasmod
+		    (
+		        function(time)
+		        {
+		            if(time == 0)
+		            {
+		                timerpasmod.stop();
+		                alert('time out');
+		            }
+		        }
+		    );
+		    timerpasmod.reset(0);
+		});
+
+		function _timerlepmod(callback)
+		{
+		    var time = 0;     //  The default time of the timer
+		    var mode = 1;     //    Mode: count up or count down
+		    var status = 0;    //    Status: timer is running or stoped
+		    var timer_id;
+		    var hour;
+		    var minute;
+		    var second;    //    This is used by setInterval function
+		    
+		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
+		    this.start = function(interval)
+		    {
+		    	$('#startlepmod').hide();
+		    	$('#stoplepmod').show();
+		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
+		 
+		        if(status == 0)
+		        {
+		            status = 1;
+		            timer_id = setInterval(function()
+		            {
+		                switch(1)
+		                {
+		                    default:
+		                    if(time)
+		                    {
+		                        time--;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                    
+		                    case 1:
+		                    if(time < 86400)
+		                    {
+		                        time++;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                }
+		            }, interval);
+		        }
+		    }
+		    
+		    //  Same as the name, this will stop or pause the timer ex. timer.stop()
+		    this.stop =  function()
+		    {
+		        if(status == 1)
+		        {
+		            status = 0;
+		            var detik = $('div.timerlepmod span.secondlepmod').text();
+			        var menit = $('div.timerlepmod span.minutelepmod').text();
+			        var jam = $('div.timerlepmod span.hourlepmod').text();
+			        var waktu = jam + ':' + menit + ':' + detik;
+			        $('#stoplepmod').hide();
+			        $('#lepas_molding').val(waktu);
+		            clearInterval(timer_id);
+		        }
+		    }
+		    
+		    // Reset the timer to zero or reset it to your own custom time ex. reset to zero second timer.reset(0)
+		    this.reset =  function(sec)
+		    {
+		        sec = (typeof(sec) !== 'undefined') ? sec : 0;
+		        time = sec;
+		        generateTime(time);
+		    }
+		    this.getTime = function()
+		    {
+		        return time;
+		    }
+		    this.getMode = function()
+		    {
+		        return mode;
+		    }
+		    this.getStatus
+		    {
+		        return status;
+		    }
+		    function generateTime()
+		    {
+		        second = time % 60;
+		        minute = Math.floor(time / 60) % 60;
+		        hour = Math.floor(time / 3600) % 60;
+		        
+		        second = (second < 10) ? '0'+second : second;
+		        minute = (minute < 10) ? '0'+minute : minute;
+		        hour = (hour < 10) ? '0'+hour : hour;
+		        
+		        $('div.timerlepmod span.secondlepmod').html(second);
+		        $('div.timerlepmod span.minutelepmod').html(minute);
+		        $('div.timerlepmod span.hourlepmod').html(hour);
+		    }
+		}
+		 
+		var timerlepmod;
+		$(document).ready(function(e) 
+		{
+		    timerlepmod = new _timerlepmod
+		    (
+		        function(time)
+		        {
+		            if(time == 0)
+		            {
+		                timerlepmod.stop();
+		                alert('time out');
+		            }
+		        }
+		    );
+		    timerlepmod.reset(0);
+		});
+
+		function _timerelectime(callback)
+		{
+		    var time = 0;     //  The default time of the timer
+		    var mode = 1;     //    Mode: count up or count down
+		    var status = 0;    //    Status: timer is running or stoped
+		    var timer_id;
+		    var hour;
+		    var minute;
+		    var second;    //    This is used by setInterval function
+		    
+		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
+		    this.start = function(interval)
+		    {
+		    	$('#startelectime').hide();
+				$('#stopelectime').show();
+		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
+		 
+		        if(status == 0)
+		        {
+		            status = 1;
+		            timer_id = setInterval(function()
+		            {
+		                switch(1)
+		                {
+		                    default:
+		                    if(time)
+		                    {
+		                        time--;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                    
+		                    case 1:
+		                    if(time < 86400)
+		                    {
+		                        time++;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                }
+		            }, interval);
+		        }
+		    }
+		    
+		    //  Same as the name, this will stop or pause the timer ex. timer.stop()
+		    this.stop =  function()
+		    {
+		        if(status == 1)
+		        {
+		            status = 0;
+		            var detik = $('div.timerelectime span.secondelectime').text();
+			        var menit = $('div.timerelectime span.minuteelectime').text();
+			        var jam = $('div.timerelectime span.hourelectime').text();
+			        var waktu = jam + ':' + menit + ':' + detik;
+			        $('#electric_time').val(waktu);
+			        $('#stopelectime').hide();
+		            clearInterval(timer_id);
+		        }
+		    }
+		    
+		    // Reset the timer to zero or reset it to your own custom time ex. reset to zero second timer.reset(0)
+		    this.reset =  function(sec)
+		    {
+		        sec = (typeof(sec) !== 'undefined') ? sec : 0;
+		        time = sec;
+		        generateTime(time);
+		    }
+		    this.getTime = function()
+		    {
+		        return time;
+		    }
+		    this.getMode = function()
+		    {
+		        return mode;
+		    }
+		    this.getStatus
+		    {
+		        return status;
+		    }
+		    function generateTime()
+		    {
+		        second = time % 60;
+		        minute = Math.floor(time / 60) % 60;
+		        hour = Math.floor(time / 3600) % 60;
+		        
+		        second = (second < 10) ? '0'+second : second;
+		        minute = (minute < 10) ? '0'+minute : minute;
+		        hour = (hour < 10) ? '0'+hour : hour;
+		        
+		        $('div.timerelectime span.secondelectime').html(second);
+		        $('div.timerelectime span.minuteelectime').html(minute);
+		        $('div.timerelectime span.hourelectime').html(hour);
+		    }
+		}
+		 
+		var timerelectime;
+		$(document).ready(function(e) 
+		{
+		    timerelectime = new _timerelectime
+		    (
+		        function(time)
+		        {
+		            if(time == 0)
+		            {
+		                timerelectime.stop();
+		                alert('time out');
+		            }
+		        }
+		    );
+		    timerelectime.reset(0);
+		});
 
 		function openSuccessGritter(title, message){
 			jQuery.gritter.add({

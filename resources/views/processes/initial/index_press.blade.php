@@ -20,7 +20,7 @@
 			{{-- <span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Stock Taking <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/stocktaking/silver", "fl_mpro") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Silver</a> --}}
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Press Machine <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/press/create") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Press Machine</a>
+			<a href="{{ url("index/press/create") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Press Machine Forging</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
