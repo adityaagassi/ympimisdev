@@ -398,7 +398,7 @@
 									<div class="timerpasmod">
 							            <span class="hourpasmod">00</span>:<span class="minutepasmod">00</span>:<span class="secondpasmod">10</span>
 							        </div>
-							        <input type="hidden" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required>
+							        <input type="hidden" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required>
 							    	</td>
 									<td style=" text-align: center; color: black; font-size:2vw; ">
 									<button class="btn btn-sm btn-success" id="startlepmod" onClick="timerlepmod.start(1000)">Start</button> 
@@ -406,7 +406,7 @@
 									<div class="timerlepmod">
 							            <span class="hourlepmod">00</span>:<span class="minutelepmod">00</span>:<span class="secondlepmod">10</span>
 							        </div>
-									<input type="hidden" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required>
+									<input type="hidden" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required>
 									</td>
 									<td style=" text-align: center; color: black; font-size:2vw; ">
 									<input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
@@ -416,7 +416,7 @@
 									<div class="timerelectime">
 							            <span class="hourelectime">00</span>:<span class="minuteelectime">00</span>:<span class="secondelectime">10</span>
 							        </div>
-									<input type="hidden" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<input type="hidden" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required></td>
 								</tr>
 							</tbody>
 						</table>
