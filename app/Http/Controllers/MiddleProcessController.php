@@ -2061,6 +2061,7 @@ class MiddleProcessController extends Controller
 			left join standart_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY l.operator_id) dl on dl.operator_id = e.employee_id
+			WHERE e.location = 'bff'
 			ORDER BY e.`group`, e.employee_id asc;");
 
 		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
@@ -2180,6 +2181,7 @@ class MiddleProcessController extends Controller
 			on eg.employee_id = ng.operator_id
 			left join materials m on m.material_number = ng.material_number
 			left join employees e on e.employee_id = eg.employee_id
+			where eg.location = 'bff'
 			order by eg.`group`, eg.employee_id asc");
 
 		$operator = db::select("select * from employee_groups where location = 'bff' order by `group`, employee_id asc");
@@ -2224,6 +2226,7 @@ class MiddleProcessController extends Controller
 			on c.operator_id = ng.operator_id) rate
 			on rate.operator_id = eg.employee_id
 			left join employees e on e.employee_id = eg.employee_id
+			where eg.location = 'bff'
 			ORDER BY eg.`group`, eg.employee_id asc");
 
 		$response = array(
