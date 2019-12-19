@@ -441,7 +441,7 @@
 
 					if (value.cost_name == "Manpower") {
 						unit = "menit";
-						sub_tot = (value.sub_total_cost * 20);
+						sub_tot = parseInt(value.sub_total_cost) * 20;
 						tot += sub_tot;
 					}  else if (value.cost_name == "Tempat") {
 						unit = value.unit+"<sup>2</sup>";
