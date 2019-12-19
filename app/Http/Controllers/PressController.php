@@ -236,14 +236,14 @@ class PressController extends Controller
         	try{    
               $id_user = Auth::id();
               // $interview_id = $request->get('interview_id');
-              $electric_supply_time = new DateTime($request->get('electric_supply_time'));
-              $lepas_molding = new DateTime($request->get('lepas_molding'));
-              $mins = $electric_supply_time->diff($lepas_molding);
-              if($request->get('lepas_molding') == '0:00:00'){
+              // $electric_supply_time = new DateTime($request->get('electric_supply_time'));
+              // $lepas_molding = new DateTime($request->get('lepas_molding'));
+              // $mins = $electric_supply_time->diff($lepas_molding);
+              // if($request->get('lepas_molding') == '0:00:00'){
               	$lepas_molding_new = $request->get('lepas_molding');
-              }else{
-              	$lepas_molding_new = $mins->format('%H:%I:%S');
-              }
+              // }else{
+              // 	$lepas_molding_new = $mins->format('%H:%I:%S');
+              // }
               
                 MpRecordProd::create([
                     'date' => $request->get('date'),
@@ -480,5 +480,38 @@ class PressController extends Controller
                 	'kanagata_log' => $kanagata_log,
                 	'machine' => $machine);
 		return view('press.report_press_data',$data)->with('page', 'Press Machine Report')->with('head', $product)->with('title_jp', "??");
+	}
+
+	public function fetchReasonList(Request $request){
+		$date = '';
+		if(strlen($request->get("date")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("date")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		 $process = $request->get('proses');
+
+	      if ($process != null) {
+	          $proses = json_encode($process);
+	          $pro = str_replace(array("[","]"),array("(",")"),$proses);
+
+	          $where = 'and mp_record_prods.process in'.$pro;
+	      }else{
+	          $where = '';
+	      }
+
+		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' ".$where." GROUP BY mp_machines.machine_name,mp_record_prods.date");
+
+		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date, TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_total from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' ".$where." GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
+
+
+		$response = array(
+			'status' => true,
+			'datas' => $data,
+			'date' => $date,
+			'operator' => $operator
+		);
+		return Response::json($response);
 	}
 }
