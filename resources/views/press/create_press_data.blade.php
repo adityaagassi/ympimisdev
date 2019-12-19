@@ -363,14 +363,14 @@
 							</thead>
 							<tbody>
 								<tr>
-									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Lepas Molding</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Pasang Molding</th>
+									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Lepas Molding</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Process Time</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Electric Supply Time</th>
 								</tr>
 								<tr>
-									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="pasang_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
+									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="lepas_molding" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 									<td style=" text-align: center; color: black; font-size:2vw; "><input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 									<td style="text-align: center; color: black; font-size:2vw; "><input type="text" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 								</tr>
@@ -906,7 +906,7 @@
 					punch_value : punch_value,
 					die_value : die_value,
 				}
-				console.log(data2);
+				console.log(data);
 				// $("#end_button").hide();
 				// $("#reset_button").show();
 

@@ -1817,8 +1817,7 @@ class QcReportController extends Controller
               $cpars->email_status = "SentGM";
               $cpars->email_send_date = date('Y-m-d');
               $cpars->posisi = "gm";
-              $cpars->progress = "50";
-              Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($emailcpar, 'cpar'));            
+              $cpars->progress = "50";            
             }
             else if ($cpars->posisi == "gm") {
               $cpars->approved_gm = "Checked"; 

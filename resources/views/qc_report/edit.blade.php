@@ -939,8 +939,6 @@
   
   </script>
   <script>
-
-
         $("#desc").hide();
         $("#hp").hide();
         $("#part_item").change(function(){

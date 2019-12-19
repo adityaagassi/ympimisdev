@@ -236,6 +236,14 @@ class PressController extends Controller
         	try{    
               $id_user = Auth::id();
               // $interview_id = $request->get('interview_id');
+              $electric_supply_time = new DateTime($request->get('electric_supply_time'));
+              $lepas_molding = new DateTime($request->get('lepas_molding'));
+              $mins = $electric_supply_time->diff($lepas_molding);
+              if($request->get('lepas_molding') == '0:00:00'){
+              	$lepas_molding_new = $request->get('lepas_molding');
+              }else{
+              	$lepas_molding_new = $mins->format('%H:%I:%S');
+              }
               
                 MpRecordProd::create([
                     'date' => $request->get('date'),
@@ -249,7 +257,7 @@ class PressController extends Controller
                     'die_number' => $request->get('die_number'),
                     'start_time' => $request->get('start_time'),
                     'end_time' => $request->get('end_time'),
-                    'lepas_molding' => $request->get('lepas_molding'),
+                    'lepas_molding' => $lepas_molding_new,
                     'pasang_molding' => $request->get('pasang_molding'),
                     'process_time' => $request->get('process_time'),
                     'electric_supply_time' => $request->get('electric_supply_time'),
@@ -399,24 +407,20 @@ class PressController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		// $where = "";
-		// if($request->get('proses') != null) {
-		// 	$prosess = $request->get('proses');
-		// 	$proses = "";
+		 $process = $request->get('proses');
 
-		// 	for($x = 0; $x < count($prosess); $x++) {
-		// 		$proses = $proses."'".substr($prosess[$x],0,3)."'";
-		// 		if($x != count($prosess)-1){
-		// 			$proses = $proses.",";
-		// 		}
-		// 	}
-		// 	$where = "and m.origin_group_code in (".$code.") ";
-		// }
+	      if ($process != null) {
+	          $proses = json_encode($process);
+	          $pro = str_replace(array("[","]"),array("(",")"),$proses);
 
+	          $where = 'and mp_record_prods.process in'.$pro;
+	      }else{
+	          $where = '';
+	      }
 
-		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' GROUP BY mp_machines.machine_name,mp_record_prods.date");
+		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' ".$where." GROUP BY mp_machines.machine_name,mp_record_prods.date");
 
-		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date, TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_total from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
+		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date, TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_total from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' ".$where." GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
 
 
 		$response = array(
@@ -427,6 +431,19 @@ class PressController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	public function monitoring2() {
+    	$title = 'Press Machine Monitoring';
+		$title_jp = 'プレス機管理';
+
+		$process = DB::table('mp_processes')->orderBy('id', 'ASC')->get();
+
+		return view('press.monitoring_result2', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'process' => $process
+		))->with('page', 'Machine press')->with('head', 'Machine Press');
+    }
 
 	public function report($product){
 

@@ -46,7 +46,7 @@
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;"></div>
-<!-- 				<div id="container2" style="width: 100%;"></div> -->
+				<div id="container2" style="width: 100%;"></div>
 			</div>
 		</div>
 	</div>
@@ -86,8 +86,8 @@
 	}, null, document.getElementsByTagName('head')[0]);
 
 	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+		colors: ['#90ee7e', '#2b908f', '#eeaaee', '#ec407a', '#7798BF', '#f45b5b',
+		'#ff9800', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 		chart: {
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
@@ -304,6 +304,7 @@
 	function fillChart() {
 		var proses = $('#process').val();
 		var tanggal = $('#tanggal').val();
+		
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 		
 		var data = {
@@ -315,45 +316,25 @@
 			if(xhr.status == 200){
 				if(result.status){
 
-					//CHart By NG Name
+					//Chart Machine Report
 					var machine = [];
+					var machine2 = [];
 					var jml = [];
 					var color = [];
 					var series = [];
+					var waktu = [];
+					var series2 = [];
 
 					for (var i = 0; i < result.datas.length; i++) {
-						if (result.datas[i].machine_name == 'Amada 1') {
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#90ee7e');
-						}else if(result.datas[i].machine_name == 'Amada 2'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#2b908f');
-						}else if(result.datas[i].machine_name == 'Amada 3'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#eeaaee');
-						}else if(result.datas[i].machine_name == 'Amada 4'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#ff0066');
-						}else if(result.datas[i].machine_name == 'Amada 5'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#7798BF');
-						}else if(result.datas[i].machine_name == 'Amada 6'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#f45b5b');
-						}else if(result.datas[i].machine_name == 'Amada 7'){
-							machine.push(result.datas[i].machine_name);
-							jml.push([parseInt(result.datas[i].actual_shoot)]);
-							color.push('#f45b5b');
-						}
+						machine.push(result.datas[i].machine_name);
+						jml.push(parseInt(result.datas[i].actual_shoot));
+						series.push([machine[i], jml[i]]);
 
-						series.push({name : machine[i], data: jml[i], color: color[i]});
+						machine2.push(result.datas[i].machine_name);
+						waktu.push(parseFloat(result.datas[i].waktu_mesin));
+						series2.push([machine2[i], waktu[i]]);
 					}
+
 
 					Highcharts.chart('container1', {
 						chart: {
@@ -378,16 +359,41 @@
 							type: 'category',
 							gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
-							reversed: true,
-			              	lineWidth:2,
-			             	lineColor:'#9e9e9e'
-						},
-						yAxis: {
-
-							title: {
-								text: 'Total Actual Shoot'
+							lineWidth:2,
+							lineColor:'#9e9e9e',
+							labels: {
+								style: {
+									fontSize: '20px'
+								}
 							},
-							type: 'linear'
+						},
+						yAxis: [{
+							title: {
+								text: 'Total Actual Shot'
+							},
+							labels:{
+					        	style:{
+									fontSize:"20px"
+								}
+					        },
+							type: 'linear',
+							opposite: true
+						},
+						, { // Secondary yAxis
+					        title: {
+					            text: 'Total Process Time(Minute)',
+					        },
+					        labels:{
+					        	style:{
+									fontSize:"20px"
+								}
+					        },
+					        type: 'linear',
+					        
+					    }],
+						tooltip: {
+							headerFormat: '<span>Machine</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
 						},
 						legend: {
 							layout: 'vertical',
@@ -399,11 +405,139 @@
 							borderWidth: 1,
 							backgroundColor:
 							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-							shadow: true
+							shadow: true,
+							enabled : false
+						},	
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										textOutline: false,
+										fontSize: '1vw'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							},
+						},credits: {
+							enabled: false
 						},
+						series: [{
+							type: 'column',
+							data: series,
+							colorByPoint: false,
+							color: "#009688"
+						},{
+							type: 'column',
+							data: series2,
+							yAxis:2,
+							colorByPoint: false,
+							color:'#cddc39'
+						},
+						]
+					});
+
+					//Chart Press Machine Per Operator
+					var operator = [];
+					var operator2 = [];
+					var jmlop = [];
+					var waktu = [];
+					var color = [];
+					var series = [];
+					var series2 = [];
+
+					for (var i = 0; i < result.operator.length; i++) {
+						operator.push(result.operator[i].name);
+						jmlop.push(parseInt(result.operator[i].actual_shot));
+						// color.push('#90ee7e');
+
+						series.push([operator[i], jmlop[i]]);
+						// console.table(series);
+
+						operator2.push(result.operator[i].name);
+						waktu.push(parseFloat(result.operator[i].waktu_total));
+						series2.push([operator2[i], waktu[i]]);
+						// console.table(series2);
+						// series.push({name : operator[i], data: jmlop[i], color: color[i]});
+					}
+
+					Highcharts.chart('container2', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'Press Machine Result By Operator',
+							style: {
+								fontSize: '30px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'on '+result.date,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: operator,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							lineWidth:2,
+							lineColor:'#9e9e9e',
+							labels: {
+								style: {
+									fontSize: '18px'
+								}
+							},
+						},
+						yAxis: [{
+							title: {
+								text: 'Total Actual Shot'
+							},
+							labels:{
+								style:{
+									fontSize:"20px"
+								}
+							},
+							type: 'linear',
+							opposite: true
+						},
+						, { // Secondary yAxis
+					        title: {
+					            text: 'Total Process Time(Minute)',
+					        },
+					        labels:{
+					        	style:{
+									fontSize:"20px"
+								}
+					        },
+					        type: 'linear',
+					        
+					    }],
+						legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -40,
+							y: 80,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true,
+							enabled:false
+						},
+						
 						tooltip: {
-							headerFormat: '<span>Machine</span><br/>',
-							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
+							headerFormat: '<span>Operator</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name}</span>: <b>{point.y}</b><br/>',
 						},
 						plotOptions: {
 							series:{
@@ -424,8 +558,21 @@
 						},credits: {
 							enabled: false
 						},
-						series: series
+						series :  [{
+							type: 'column',
+							data: series,
+							colorByPoint: false,
+							color: "#009688"
+						},{
+							type: 'column',
+							data: series2,
+							yAxis:2,
+							colorByPoint: false,
+							color:'#cddc39'
+						},
+						]
 					});
+
 
 				}
 			}

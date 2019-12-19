@@ -34,11 +34,7 @@ class TemperatureController extends Controller
 			'title' => 'Temperature Map',
 			'title_jp' => '温度分布'))->with('page', 'Map');
 	}
-	// public function index_maps()
-	// {	
-	// 	//lokasi letak view
-	// 	return view('beacons.temperatur.map');
-	// }
+	
 
 public function grafikOffice()
 	{
@@ -47,28 +43,15 @@ public function grafikOffice()
 			'title_jp' => '事務所温度センサーの監視'))->with('page', 'suhu1');
 	}
 
-	// public function suhu_2()
-	// {	
-	// 	//lokasi letak view
-	// 	return view('beacons.temperatur.suhu2');
-	// }
-
-    
-
-
+	  
 public function log_map_server(Request $request) //server
     {
       
-      $data = DB::select("SELECT * FROM
-(SELECT temperature, lokasi FROM `temperature` WHERE lokasi='Server' ORDER BY id DESC LIMIT 1) tmp LEFT JOIN standart_temperatures on standart_temperatures.lokasi=tmp.lokasi");
+      $data = DB::select("SELECT * FROM (SELECT temperature, lokasi FROM `temperature` WHERE lokasi='Server' ORDER BY id DESC LIMIT 1) tmp LEFT JOIN standart_temperatures on standart_temperatures.lokasi=tmp.lokasi");
       
-
-
       $response = array(
         'status' => true,
         'datas' => $data,
-
-
       );
 
       return Response::json($response);
@@ -79,16 +62,11 @@ public function log_map_server(Request $request) //server
     public function log_map_office(Request $request) //office
     {
       
-      $data = DB::select("SELECT * FROM
-(SELECT temperature, lokasi FROM `temperature` WHERE lokasi='Office' ORDER BY id DESC LIMIT 1) tmp LEFT JOIN standart_temperatures on standart_temperatures.lokasi=tmp.lokasi");
+      $data = DB::select("SELECT * FROM (SELECT temperature, lokasi FROM `temperature` WHERE lokasi='Office' ORDER BY id DESC LIMIT 1) tmp LEFT JOIN standart_temperatures on standart_temperatures.lokasi=tmp.lokasi");
       
-
-
       $response = array(
         'status' => true,
         'datas' => $data,
-
-
       );
 
       return Response::json($response);
@@ -106,15 +84,12 @@ public function log_map_server(Request $request) //server
 
       $data = DB::select("select *,DATE_FORMAT(temperature.datetime,'%H:%i:%s') as time from temperature where DATE_FORMAT(temperature.datetime,'%Y-%m-%d') = CURDATE() and lokasi='Server' ORDER BY id DESC LIMIT 10");
       $monthTitle = date("F Y", strtotime($bulan));
-
-     
-
+   
       $response = array(
         'status' => true,
         'datas' => $data,
         'monthTitle' => $monthTitle,
-     
-      );
+     );
 
       return Response::json($response);
     }
@@ -131,14 +106,12 @@ public function log_map_server(Request $request) //server
 
       $data = DB::select("select *,DATE_FORMAT(temperature.datetime,'%H:%i:%s') as time from temperature where DATE_FORMAT(temperature.datetime,'%Y-%m-%d') = CURDATE() and lokasi='Office' ORDER BY id DESC LIMIT 10");
       $monthTitle = date("F Y", strtotime($bulan));
-
-     
+    
       $response = array(
         'status' => true,
         'datas' => $data,
         'monthTitle' => $monthTitle,
-     
-      );
+     );
 
       return Response::json($response);
     }
@@ -160,9 +133,7 @@ public function edit(Request $request)
 			$temperatur = standart_temperature::find($request->get("id"));
 			$lokasi = $temperatur['lokasi'];
 			$upper_limit = $temperatur['upper_limit'];
-			$lower_limit = $temperatur['lower_limit'];
-           
-			
+			$lower_limit = $temperatur['lower_limit'];	
 
 			$response = array(
 				'status' => true,
@@ -191,8 +162,6 @@ public function edit(Request $request)
 			}
 		}
 	}
-
-
 
 
 	public function delete($id)
