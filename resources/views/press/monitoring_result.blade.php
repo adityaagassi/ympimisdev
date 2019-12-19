@@ -32,13 +32,13 @@
 						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
 				</div>
-				<div class="col-xs-2" style="padding-right: 0; color:black;">
+				<!-- <div class="col-xs-2" style="padding-right: 0; color:black;">
 					<select class="form-control select2" multiple="multiple" id='process' data-placeholder="Select Process" style="width: 100%;">
 						@foreach($process as $process)
 						<option value="{{ $process->process_desc }}">{{ $process->process_desc }}</option>
 						@endforeach
 					</select>
-				</div>
+				</div> -->
 				<div class="col-xs-2">
 					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 				</div>
