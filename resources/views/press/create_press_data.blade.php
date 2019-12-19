@@ -100,7 +100,7 @@
 	@section('header')
 	<section class="content-header">
 		<h1>
-			{{ $page }} - {{ $head }}
+			{{ $page }}
 			<span class="text-purple">{{ $title_jp }}</span>
 			<button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#trouble-modal" onclick="troubleMaker()">
 				<b>TROUBLE</b>
@@ -210,7 +210,7 @@
 			</div>
 			<div class="col-xs-7">
 				<div class="row">
-					<div class="col-xs-6">
+					<div class="col-xs-12">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
 								<tr>
@@ -224,7 +224,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="col-xs-6">
+					{{-- <div class="col-xs-6">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
 							<thead>
 								<tr>
@@ -233,64 +233,75 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td style="background-color: #ffd8b7; text-align: center; color: black; font-size:1vw; padding:0;width: 30%;" id="product">{{ $head }}</td>
+									<td style="background-color: #ffd8b7; text-align: center; color: black; font-size:1vw; padding:0;width: 30%;" id="product"></td>
 								</tr>
 							</tbody>
 						</table>
-					</div>
+					</div> --}}
 				</div>
 				<div class="row">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-xs-1">
-								<span style="font-weight: bold; font-size: 15px;">Shift:</span>
-							</div>
-							<div class="col-xs-3">
-								<input type="text" id="shift" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
-							<div class="col-xs-1">
-								<span style="font-weight: bold; font-size: 15px;">Machine:</span>
-							</div>
-							<div class="col-xs-3">
-								<input type="text" id="machine" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
-							<div class="col-xs-1">
-								<span style="font-weight: bold; font-size: 15px;">Material:</span>
-							</div>
-							<div class="col-xs-3">
-								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
-							</div>
-						</div>
-					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Part Name:</span>
+								<span style="font-weight: bold; font-size: 15px;">Shift:</span>
 							</div>
 							<div class="col-xs-4">
-								<input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+								<input type="text" id="shift" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Description:</span>
+								<span style="font-weight: bold; font-size: 15px;">Material:</span>
 							</div>
 							<div class="col-xs-4">
-								<input type="text" id="material_description" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
 							</div>
 						</div>						
 					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Punch Total:</span>
+								<span style="font-weight: bold; font-size: 15px;">Machine:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="machine" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Part:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12" style="padding-top: 5px;">
+						<div class="row">
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 13px;">Running Punch:</span>
 							</div>
 							<div class="col-xs-4">
 								<input type="text" id="punch_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Die Total:</span>
+								<span style="font-weight: bold; font-size: 15px;">Desc:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="material_description" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+						</div>						
+					</div>
+					
+					<div class="col-md-12" style="padding-top: 5px;">
+						<div class="row">
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Running Dies:</span>
 							</div>
 							<div class="col-xs-4">
 								<input type="text" id="die_total" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
+							</div>
+							<div class="col-xs-2">
+								<span style="font-weight: bold; font-size: 15px;">Product:</span>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="product" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 						</div>						
 					</div>
@@ -319,8 +330,8 @@
 						</table>
 					</div>
 				</div>
-				<button class="btn btn-success" onclick="start()" id="start_button" style="font-size:40px; width: 100%; font-weight: bold; padding: 0;">
-					MULAI PROSES
+				<button class="btn btn-success" onclick="start()" id="start_button" style="font-size:35px; width: 100%; font-weight: bold; padding: 0;">
+					TEKAN UNTUK MULAI PROSES
 				</button>			
 				<div class="row" id="processtime_picker">
 					<div class="col-xs-6">
@@ -402,7 +413,7 @@
 					</div>
 				</div>
 				<button class="btn btn-danger" onclick="end()" id="end_button" style="font-size:40px; width: 100%; font-weight: bold; padding: 0;">
-					SELESAI PROSES
+					TEKAN UNTUK SELESAI PROSES
 				</button>
 			</div>
 		</div>
@@ -591,7 +602,7 @@
 		function itemList(){
 			var data = {
 				process : 'Forging',
-				product : $("#product").text()
+				product : $("#product").val()
 			}
 
 			$.get('{{ url("fetch/press/fetchProcess") }}', data, function(result, status, xhr){
@@ -660,7 +671,7 @@
 		function createTrouble(){
 			var date = $("#date").text();
 			var pic = $("#op").text();
-			var product = $("#product").text();
+			var product = $("#product").val();
 			var machine = $("#machine").val();
 			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();
@@ -696,7 +707,7 @@
 		function troubleList(){
 			var date = $("#date").text();
 			var pic = $("#op").text();
-			var product = $("#product").text();
+			var product = $("#product").val();
 			var machine = $("#machine").val();
 			var material_number = $("#material_number").val();
 			var process = $("#process_desc").val();
@@ -764,6 +775,7 @@
 					$('#material_number').val(result.count.material_number);
 					$('#material_description').val(result.count.material_description);
 					$('#part_name').val(result.count.material_name);
+					$('#product').val(result.count.product);
 					$('#punch').html(result.punch_data);
 					$('#dies').html(result.dies_data);
 					$('#countMaterial').val(result.count.quantity_check);
@@ -842,7 +854,7 @@
 		}
 
 		function reset(){
-			window.location = "{{ url('index/press/create/'.$head) }}";
+			window.location = "{{ url('index/press/create') }}";
 		}
 
 		function end(){
@@ -850,7 +862,7 @@
 
 			var date = $("#date").text();
 			var pic = $("#op").text();
-			var product = $("#product").text();
+			var product = $("#product").val();
 			var machine = $("#machine").val();
 			var shift = $("#shift").val();
 			var material_number = $("#material_number").val();

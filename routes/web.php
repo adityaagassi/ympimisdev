@@ -817,7 +817,9 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_stuffing', 'KnockDownController@indexKdStuffing');
 	Route::post('scan/kd_stuffing', 'KnockDownController@scanKdStuffing');
 	Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
-	Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');	
+	Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
+	Route::post('delete/kdo_stuffing', 'KnockDownController@deleteKdStuffing');
+	Route::post('delete/kdo_delivery', 'KnockDownController@deleteKdDelivery');	
 });
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
@@ -1140,6 +1142,10 @@ Route::get('index/display_daily_pn_ng', 'Pianica@indexDailyNg');
 Route::get('fetch/pianica/ng_tuning', 'Pianica@fetchNgTuning');
 
 Route::get('fetch/pianica/totalNgReed', 'Pianica@totalNgReed');
+Route::get('fetch/pianica/detailReedTuning', 'Pianica@detailReedTuning');
+
+Route::get('fetch/pianica/totalNgReedSpotWelding', 'Pianica@totalNgReedSpotWelding');
+
 
 
 
@@ -1899,7 +1905,7 @@ Route::get('index/room/toilet/{id}', 'RoomController@indexRoomToilet');
 Route::get('fetch/room/toilet', 'RoomController@fetchToilet');
 
 //PRESS
-Route::get('index/press/create/{product}', 'PressController@create');
+Route::get('index/press/create', 'PressController@create');
 Route::get('index/press/fl', 'PressController@index_fl');
 Route::get('index/press/cl', 'PressController@index_cl');
 Route::get('index/press/vn', 'PressController@index_vn');
@@ -1920,8 +1926,10 @@ Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
 //Display Press
 Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
+Route::get('index/press/monitoring2', 'PressController@monitoring2');
 //Report Press
 Route::get('index/press/report/{product}', 'PressController@report');
+Route::get('fetch/press/fetchReasonList', 'PressController@fetchReasonList');
 
 
 //ROOMS

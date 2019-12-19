@@ -24,29 +24,21 @@ class InitialProcessController extends Controller
 				'title_jp' => $title_jp,
 			))->with('page', 'Body Process FL');
 		}
-		if($id == 'mpro_fl'){
-			$title = 'Material Process Flute';
+		if($id == 'lotting'){
+			$title = 'Material Process Lotting';
 			$title_jp = '??';
-			return view('processes.initial.index_mpro_fl', array(
+			return view('processes.initial.index_lotting', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
-			))->with('page', 'Material Process FL');
+			))->with('page', 'Material Process Lotting');
 		}
-		if($id == 'mpro_cl'){
-			$title = 'Material Process Clarinet';
+		if($id == 'press'){
+			$title = 'Material Process Press';
 			$title_jp = '??';
-			return view('processes.initial.index_mpro_cl', array(
+			return view('processes.initial.index_press', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
-			))->with('page', 'Material Process CL');
-		}
-		if($id == 'mpro_sx'){
-			$title = 'Material Process Saxophone';
-			$title_jp = '??';
-			return view('processes.initial.index_mpro_sx', array(
-				'title' => $title,
-				'title_jp' => $title_jp,
-			))->with('page', 'Material Process SAX');
+			))->with('page', 'Material Process Press');
 		}
 	}
 

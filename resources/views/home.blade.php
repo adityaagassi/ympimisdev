@@ -338,16 +338,12 @@
                         <td>
                             <span style="font-weight: bold;">MATERIAL Process (イニシアル工程)</span>
                             <br>
-                            <a href="{{ url("/index/initial", "mpro_cl") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet (クラリネット)
+                            <a href="{{ url("/index/initial", "press") }}">
+                                <i class="fa fa-caret-right"></i> Press ()
                             </a>
                             <br>
-                            <a href="{{ url("/index/initial", "mpro_fl") }}">
-                                <i class="fa fa-caret-right"></i> Flute (フルート)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/initial", "mpro_sx") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone (サックス)
+                            <a href="{{ url("/index/initial", "lotting") }}">
+                                <i class="fa fa-caret-right"></i> Lotting ()
                             </a>
                             <br>
                             <a href="{{ url("/index/press/monitoring") }}">

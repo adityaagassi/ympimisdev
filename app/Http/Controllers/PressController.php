@@ -60,7 +60,6 @@ class PressController extends Controller
 	public function fetchPressList(Request $request){
 
 		$lists = MpKanagata::where('process', '=', $request->get('process'))
-		->where('product', '=', $request->get('product'))
 		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description', 'mp_kanagatas.id')
 		->distinct()
 		->get();
@@ -209,26 +208,26 @@ class PressController extends Controller
 		return Response::json($response);
 	}
 
-	public function create($product){
+	public function create(){
 
 		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
-		if($product == "Saxophone"){
-			$title_jp = "生産のプレス機　‐　サックス";
-		}
-		elseif($product == "Flute"){
-			$title_jp = "生産のプレス機　‐　フルート";
-		}
-		elseif($product == "Clarinet"){
-			$title_jp = "生産のプレス機　‐　クラリネット";
-		}
+		// if($product == "Saxophone"){
+		// 	$title_jp = "生産のプレス機　‐　サックス";
+		// }
+		// elseif($product == "Flute"){
+		// 	$title_jp = "生産のプレス機　‐　フルート";
+		// }
+		// elseif($product == "Clarinet"){
+			$title_jp = "生産のプレス機";
+		// }
 
 		$data = array(
                 	'process' => $process,
                 	'machine' => $machine);
-		return view('press.create_press_data',$data)->with('page', 'Press Machine Production')->with('head', $product)->with('title_jp', $title_jp);
+		return view('press.create_press_data',$data)->with('page', 'Press Machine Production')->with('title_jp', $title_jp);
 	}
 
 	function store(Request $request)
@@ -418,7 +417,9 @@ class PressController extends Controller
 	          $where = '';
 	      }
 
-		$data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' ".$where." GROUP BY mp_machines.machine_name,mp_record_prods.date");
+		// $data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' ".$where." GROUP BY mp_machines.machine_name,mp_record_prods.date");
+
+	     $data = db::select("select machine_name, sum(data_ok) as actual_shoot, CURDATE() as tgl, sum(waktu) as waktu_mesin from (select machine_name, 0 as data_ok, CURDATE(), 0 as waktu from mp_machines UNION ALL select machine_name, data_ok, date, TIME_TO_SEC(process_time) / 60 as waktu from mp_machines LEFT JOIN mp_record_prods on mp_machines.machine_name = mp_record_prods.machine where mp_record_prods.date = '".$date."' ) as aw GROUP BY machine_name");
 
 		$operator = db::select("select employees.name, employee_groups.`group`, COALESCE(sum(mp_record_prods.data_ok),0) as actual_shot, mp_record_prods.date, TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_total from employee_groups left join mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employee_groups.employee_id = employees.employee_id where employee_groups.location='Press' and DATE_FORMAT(mp_record_prods.date,'%Y-%m-%d') = '".$date."' ".$where." GROUP BY employees.name, employee_groups.`group`,mp_record_prods.date order by actual_shot DESC");
 
