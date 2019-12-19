@@ -445,11 +445,11 @@
 						tot += sub_tot;
 					}  else if (value.cost_name == "Tempat") {
 						unit = value.unit+"<sup>2</sup>";
-						sub_tot = parseFloat(value.sub_total_cost);
+						sub_tot = parseInt(value.sub_total_cost);
 						tot += sub_tot;
 					}
 					else {
-						unit = value.frequency;
+						unit = value.unit;
 						sub_tot = value.sub_total_cost;
 						tot += sub_tot;
 					}
@@ -457,8 +457,8 @@
 					sub_tot = sub_tot.toLocaleString('es-ES');
 
 					bd += "<th>"+value.cost_name+"</th>";
-					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",00</b></td>";
-					bd += "<td><b>Rp "+sub_tot+",00 / bulan</b></td>";
+					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
+					bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
 					bd += "</tr>";
 				});
 
@@ -466,7 +466,7 @@
 
 				bd += "<tr style='font-size: 18px;'>";
 				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total : </th>";
-				bd += "<td><b>Rp "+tot+",00</b></td>";
+				bd += "<td><b>Rp "+tot+",-</b></td>";
 				bd += "</tr>";
 
 				$("#tabel_nilai").append(bd);
