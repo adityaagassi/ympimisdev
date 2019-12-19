@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         Commands\CallRoute::class,
         Commands\UploadCompletionKD::class,
         Commands\UploadTransferKD::class,
+        Commands\SyncSunfish::class,
     ];
 
     /**
