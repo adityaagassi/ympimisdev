@@ -67,7 +67,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 7000);
 		
 	});
 
@@ -369,7 +369,13 @@
 						},
 						yAxis: [{
 							title: {
-								text: 'Total Actual Shot'
+								text: 'Total Actual Shot',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '25px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
 							},
 							labels:{
 					        	style:{
@@ -381,7 +387,13 @@
 						},
 						, { // Secondary yAxis
 					        title: {
-					            text: 'Total Process Time(Minute)',
+					            text: 'Total Process Time (Minute)',
+					            style: {
+			                        color: '#eee',
+			                        fontSize: '20px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
 					        },
 					        labels:{
 					        	style:{
@@ -396,17 +408,19 @@
 							pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
 						},
 						legend: {
-							layout: 'vertical',
+							layout: 'horizontal',
 							align: 'right',
 							verticalAlign: 'top',
-							x: -40,
-							y: 80,
+							x: -90,
+							y: 20,
 							floating: true,
 							borderWidth: 1,
 							backgroundColor:
 							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 							shadow: true,
-							enabled : false
+							itemStyle: {
+				                fontSize:'16px',
+				            },
 						},	
 						plotOptions: {
 							series:{
@@ -430,11 +444,13 @@
 						series: [{
 							type: 'column',
 							data: series,
+							name: 'Actual Shot',
 							colorByPoint: false,
 							color: "#009688"
 						},{
 							type: 'column',
 							data: series2,
+							name: 'Process Time',
 							yAxis:2,
 							colorByPoint: false,
 							color:'#cddc39'
@@ -499,7 +515,13 @@
 						},
 						yAxis: [{
 							title: {
-								text: 'Total Actual Shot'
+								text: 'Total Actual Shot',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '25px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
 							},
 							labels:{
 								style:{
@@ -511,7 +533,13 @@
 						},
 						, { // Secondary yAxis
 					        title: {
-					            text: 'Total Process Time(Minute)',
+					            text: 'Total Process Time (Minute)',
+					            style: {
+			                        color: '#eee',
+			                        fontSize: '19px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
 					        },
 					        labels:{
 					        	style:{
@@ -522,17 +550,19 @@
 					        
 					    }],
 						legend: {
-							layout: 'vertical',
+							layout: 'horizontal',
 							align: 'right',
 							verticalAlign: 'top',
-							x: -40,
-							y: 80,
+							x: -90,
+							y: 20,
 							floating: true,
 							borderWidth: 1,
 							backgroundColor:
 							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 							shadow: true,
-							enabled:false
+							itemStyle: {
+				                fontSize:'16px',
+				            },
 						},
 						
 						tooltip: {
@@ -561,11 +591,13 @@
 						series :  [{
 							type: 'column',
 							data: series,
+							name: 'Actual Shot',
 							colorByPoint: false,
 							color: "#009688"
 						},{
 							type: 'column',
 							data: series2,
+							name: 'Process Time',
 							yAxis:2,
 							colorByPoint: false,
 							color:'#cddc39'
