@@ -1202,8 +1202,9 @@ function fillModalTuning(nama ,ng, tgl, procescode){
 				return [Number(key), count[key]];
 			});
 
-			console.log( resultReed)
-
+			console.log( resultReed);
+			resultReed.sort(function(a, b){return b[1] - a[1]});
+			// console.log( resultReed);
 			for (var i = 0; i < resultReed.length; i++) {					
 
 				resultData += '<tr >';
