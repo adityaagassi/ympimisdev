@@ -495,7 +495,7 @@ public function savepureto(Request $request){
 //------------ kensa awal ----------
 
 public function savekensaawal(Request $request){
-    
+
     $id_user = Auth::id();
     try {
         $inventori =  PnInventorie::updateOrCreate(
@@ -3340,7 +3340,7 @@ public function fetchNgTuning(Request $request){
         GROUP BY tuning,ng");
 
     $op = db::select("SELECT nik, nama from pn_operators WHERE bagian='tuning' GROUP BY nik,nama");
-   
+
 
     $response = array(
         'status' => true,            
@@ -3414,5 +3414,130 @@ public function opTunning(Request $request)
     return Response::json($response);
 }
 
+// ---------------- NG Per RATE
+
+
+public function totalNgReed(Request $request)
+{
+    $ng ="";
+    $text = "";
+    for ($i=1; $i < 38 ; $i++) { 
+       $text1 =" IF( FIND_IN_SET('".$i."', reed) != '0',1,0) AS s".$i.", ";
+       $text = $text . $text1;
+
+       $ng1 = "SUM(s".$i.")s".$i.", ";
+       $ng = $ng . $ng1;
+   }
+
+   $op = db::select("SELECT ".$ng." ng from (
+    SELECT  ".$text." ng  FROM pn_log_ngs WHERE location='PN_Kensa_awal' 
+    and DATE(created_at) ='2019-12-17' GROUP BY tag,ng,reed ORDER BY created_at
+    ) a GROUP BY ng
+    ");
+
+
+
+   $response = array(
+    'status' => true, 
+    'twxt' => $ng,
+    'ngTotal' => $op,
+);
+   return Response::json($response);
+}
+
+public function detailReedTuning(Request $request)
+{
+    $nama = $request->get('nama');
+    $ng = $request->get('ng');
+    $tgl = '';
+
+    $procescode =  $request->get('procescode');
+
+    
+    $before = '';
+
+    if( $request->get('tgl') != "") {
+        $tgl = date('Y-m-d', strtotime($request->get('tgl')));
+        $before = date('Y-m-d', strtotime('-7 days', strtotime($request->get('tgl'))));
+    }else{
+        $tgl = date('Y-m-d');
+        $before = date('Y-m-d', strtotime('-7 days'));
+    }
+
+    if ($procescode =="Tuning") {
+     $op = db::select("SELECT ng, SPLIT_STRING(operator,'#',1) as tuning,reed,qty from pn_log_ngs 
+        WHERE date(pn_log_ngs.created_at) = '".$tgl."' AND SPLIT_STRING(operator,'#',1) in  (
+        SELECT DISTINCT(nik) from pn_operators WHERE bagian='Tuning' and nama ='".$nama."') and ng='".$ng."' and location='PN_Kensa_Awal'
+        ");
+ }
+
+ else if ($procescode =="Awal") {
+  $op = db::select("
+      SELECT * from (
+      select ng, log.created_by  as tuning, reed, qty from
+      (select ng, tag, qty, reed from pn_log_ngs
+      where location = 'PN_Kensa_Akhir'
+      and date(created_at) = '".$tgl."') ng
+      left join
+      (SELECT created_by, tag, created_at from pn_log_proces
+      where id in (select MAX(id) id from pn_log_proces WHERE location = 'PN_Kensa_Awal'
+      and date(created_at) <= '".$tgl."' 
+      and date(created_at) >= '".$before."'
+      group by tag)) log
+      on ng.tag = log.tag
+      ) a  WHERE tuning in (  SELECT DISTINCT(nik) from pn_operators WHERE nama ='".$nama."') and ng='".$ng."'
+      ");
+}
+
+else if ($procescode =="Bentsuki") {
+  $op = db::select("
+      SELECT * from (
+      select ng, log.operator  as tuning, reed, qty from
+      (select ng, tag, qty, reed from pn_log_ngs
+      where location = 'PN_Kensa_Awal'
+      and date(created_at) = '".$tgl."') ng
+      left join
+      (SELECT operator, tag, created_at from pn_log_proces
+      where id in (select MAX(id) id from pn_log_proces WHERE location = 'PN_Pureto'
+      and date(created_at) <= '".$tgl."' 
+      and date(created_at) >= '".$before."'
+      group by tag)) log
+      on ng.tag = log.tag
+      ) a  WHERE tuning in (  SELECT DISTINCT(nik) from pn_operators WHERE nama ='".$nama."') and ng='".$ng."'
+      ");
+}
+
+$response = array(
+    'status' => true, 
+    'twxt' => $ng,
+    'ngTotal' => $op,
+);
+return Response::json($response);
+}
+
+public function totalNgReedSpotWelding(Request $request)
+{
+    $nama = $request->get('nama');
+    if( $request->get('tgl') != "") {
+        $tgl = date('Y-m-d', strtotime($request->get('tgl')));
+    }else{
+        $tgl = date('Y-m-d');
+    }
+
+    $op = db::select("
+        select op.nama,ng, h.mesin, h.model, d.posisi  from detail_bensukis d
+        left join header_bensukis h on h.id = d.id_bensuki
+        left join pn_operators op on op.nik = h.nik_op_plate
+        where date(d.created_at) = '".$tgl."' and op.nama='".$nama."'
+        ");
+
+
+
+    $response = array(
+        'status' => true, 
+        'ngTotal' => $op,
+    );
+    return Response::json($response);
+}
 
 }
