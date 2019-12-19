@@ -3217,7 +3217,7 @@ public function getReportVisualDaily(Request $request){
 
 public function fetchNgWelding(Request $request){
 
-    $date = '';
+    // $date = '';
 
     if( $request->get('tanggal') != "") {
         $date = date('Y-m-d',strtotime($request->get('tanggal')));
@@ -3242,8 +3242,8 @@ public function fetchNgWelding(Request $request){
 
 
 public function fetchNgBentsukiBenage(Request $request){
-    $date = '';
-    $before = '';
+    // $date = '';
+    // $before = '';
 
     if( $request->get('tanggal') != "") {
         $date = date('Y-m-d', strtotime($request->get('tanggal')));
@@ -3282,8 +3282,8 @@ public function fetchNgBentsukiBenage(Request $request){
 }
 
 public function fetchNgKensaAwal(Request $request){
-    $date = '';
-    $before = '';
+    // $date = '';
+    // $before = '';
 
     if( $request->get('tanggal') != "") {
         $date = date('Y-m-d', strtotime($request->get('tanggal')));
@@ -3310,7 +3310,7 @@ public function fetchNgKensaAwal(Request $request){
     $op = db::select("SELECT distinct log.created_by as operator , op.name as nama from pn_log_proces log
         left join employees op on op.employee_id = log.created_by
         WHERE location = 'PN_Kensa_Awal'
-        and date(log.created_at) = '".$before."'");
+        and date(log.created_at) = '".$date."'");
 
     $response = array(
         'status' => true,            
@@ -3322,7 +3322,7 @@ public function fetchNgKensaAwal(Request $request){
 }
 
 public function fetchNgTuning(Request $request){
-    $date = '';
+    // $date = '';
 
     if( $request->get('tanggal') != "") {
         $date = date('Y-m-d', strtotime($request->get('tanggal')));
@@ -3449,12 +3449,12 @@ public function detailReedTuning(Request $request)
 {
     $nama = $request->get('nama');
     $ng = $request->get('ng');
-    $tgl = '';
+    // $tgl = '';
 
     $procescode =  $request->get('procescode');
 
     
-    $before = '';
+    // $before = '';
 
     if( $request->get('tgl') != "") {
         $tgl = date('Y-m-d', strtotime($request->get('tgl')));
@@ -3530,9 +3530,6 @@ public function totalNgReedSpotWelding(Request $request)
         left join pn_operators op on op.nik = h.nik_op_plate
         where date(d.created_at) = '".$tgl."' and op.nama='".$nama."'
         ");
-
-
-
     $response = array(
         'status' => true, 
         'ngTotal' => $op,
