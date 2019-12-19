@@ -171,7 +171,7 @@
 									<label class="col-sm-4">Rack<span class="text-red">*</span></label>
 									<div class="col-sm-3" align="left">
 										<select class="form-control select2" data-placeholder="Select Rack" name="rack" id="rack" style="width: 100%">
-											<option style="color:grey;">Select Rack</option>
+											<option style="color:grey;" value="">Select Rack</option>
 											<option value="SXKEY-82">SXKEY-82</option>
 											<option value="SXKEY-C">SXKEY-C</option>
 											<option value="SXKEY-D">SXKEY-D</option>
