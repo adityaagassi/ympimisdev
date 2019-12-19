@@ -411,7 +411,7 @@
 									<td style=" text-align: center; color: black; font-size:2vw; ">
 									<input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 									<td style="text-align: center; color: black; font-size:2vw; ">
-									{{-- <button class="btn btn-sm btn-success" id="startelectime" onClick="timerelectime.start(1000)">Start</button>  --}}
+									<button class="btn btn-sm btn-success" id="startelectime" onClick="timerelectime.start(1000)">Start</button> 
 							        <button class="btn btn-sm btn-danger" id="stopelectime" onClick="timerelectime.stop()">Stop</button>
 									<div class="timerelectime">
 							            <span class="hourelectime">00</span>:<span class="minuteelectime">00</span>:<span class="secondelectime">10</span>
@@ -987,7 +987,6 @@
 		    {
 		    	$('#startpasmod').hide();
 				$('#stoppasmod').show();
-				timerelectime.start(1000);
 		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
 		 
 		        if(status == 0)
