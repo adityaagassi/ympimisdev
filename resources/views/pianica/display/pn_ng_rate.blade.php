@@ -349,7 +349,8 @@
 							}
 						}
 
-						sum.push(biri[i] + oktaf[i] + t_rendah[i] + t_tinggi[i]);
+						sum.push(biri[i]  + t_rendah[i] + t_tinggi[i]);
+						// sum.push(biri[i] + oktaf[i] + t_rendah[i] + t_tinggi[i]);
 						data.push({nama: op[i], biri: biri[i], oktaf: oktaf[i], t_rendah: t_rendah[i], t_tinggi: t_tinggi[i], sum: sum[i]});
 
 					}
@@ -517,7 +518,8 @@
 							}
 						}
 
-						sum.push(biri[i] + oktaf[i] + t_rendah[i] + t_tinggi[i]);
+						// sum.push(biri[i] + oktaf[i] + t_rendah[i] + t_tinggi[i]);
+						sum.push( oktaf[i] + t_rendah[i] + t_tinggi[i]);
 						data.push({nama: op[i], biri: biri[i], oktaf: oktaf[i], t_rendah: t_rendah[i], t_tinggi: t_tinggi[i], sum: sum[i]});
 
 					}
