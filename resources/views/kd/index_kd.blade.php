@@ -79,83 +79,150 @@
 	</div>
 	<input type="hidden" id="location" value="{{ $location }}">
 	<div class="row">
-		<div class="col-xs-6">
-			<div class="box box-danger">
-				<div class="box-body">
-					<table class="table table-hover table-striped" id="tableList">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th style="width: 20%;">Material</th>
-								<th style="width: 65%;">Description</th>
-								<th style="width: 15%;">Sisa Target</th>
-							</tr>					
-						</thead>
-						<tbody id="tableBodyList">
-						</tbody>
-						<tfoot style="background-color: rgb(252, 248, 227);">
-							<tr>
-								<th colspan="2" style="text-align:center;">Total:</th>
-								<th></th>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-12">
 			<div class="row">
-				<input type="hidden" id="id_silver">
-				
-
 				<div class="col-xs-6">
-					<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
-				</div>
-				<div class="col-xs-6">
-					<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
-				</div>
-				<div class="col-xs-6">
-					<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-				</div>
-				<div class="col-xs-6">
-					<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-				</div>
-				<div class="col-xs-12">
-					<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
-					<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-				</div>
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Actual Count:</span>
-							<input type="text" id="actual_count" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+					<div class="box box-danger">
+						<div class="box-body">
+							<table class="table table-hover table-striped" id="tableList">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 20%;">Material</th>
+										<th style="width: 65%;">Description</th>
+										<th style="width: 15%;">Sisa Target</th>
+									</tr>					
+								</thead>
+								<tbody id="tableBodyList">
+								</tbody>
+								<tfoot style="background-color: rgb(252, 248, 227);">
+									<tr>
+										<th colspan="2" style="text-align:center;">Total:</th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
-						<div class="col-xs-6" style="padding-bottom: 10px;">
-							<br>
-							<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
-								CONFIRM
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="row">
+						<input type="hidden" id="id_silver">
+
+
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
+						</div>
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-12">
+							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
+							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-6">
+									<span style="font-weight: bold; font-size: 16px;">Actual Count:</span>
+									<input type="text" id="actual_count" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+								</div>
+								<div class="col-xs-6" style="padding-bottom: 10px;">
+									<br>
+									<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+										CONFIRM
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<span style="font-size: 20px; font-weight: bold;">PACKED LIST:</span>
+							<table class="table table-hover" id="tablePack">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 5%;">No</th>
+										<th style="width: 20%;">Material Number</th>
+										<th style="width: 60%;">Material Description</th>
+										<th style="width: 15%;">Quantity</th>
+									</tr>					
+								</thead>
+								<tbody id="tableBodyPack">
+								</tbody>
+								<tfoot id="tableFootPack" style="background-color: rgb(252, 248, 227);">
+								</tfoot>
+							</table>
+							<button class="btn btn-success" onclick="showPrint()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+								<i class="fa fa-print"></i> PRINT KDO NUMBER 
 							</button>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12">
-					<span style="font-size: 20px; font-weight: bold;">PACKED LIST:</span>
-					<table class="table table-hover" id="tablePack">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th style="width: 5%;">No</th>
-								<th style="width: 20%;">Material Number</th>
-								<th style="width: 65%;">Material Description</th>
-								<th style="width: 10%;">Quantity</th>
-							</tr>					
-						</thead>
-						<tbody id="tableBodyPack">
-						</tbody>
-						<tfoot id="tableFootPack" style="background-color: rgb(252, 248, 227);">
-						</tfoot>
-					</table>
-					<button class="btn btn-success" onclick="showPrint()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
-						<i class="fa fa-print"></i> PRINT KDO NUMBER 
-					</button>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO</a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Detail</a></li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 1%">KDO</th>
+									<th style="width: 1%">Count Item</th>
+									<th style="width: 1%">Location</th>
+									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Cancel</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 1%">KD Number</th>
+									<th style="width: 1%">Material Number</th>
+									<th style="width: 1%">Material Description</th>
+									<th style="width: 1%">Location</th>
+									<th style="width: 1%">Quantity</th>
+									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Cancel</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -211,15 +278,246 @@
 		
 		fillTableList();
 		fillTablePack();
+		fillTable();
+		fillTableDetail();
 	});
 
 	function showPrint() {
 		$("#print_kdo_modal").modal('show');
 	}
 
+	function deleteKDODetail(id){
+		if(confirm("Apa anda yakin akan menghapus data?")){
+			$("#loading").show();
+			var data = {
+				id:id
+			}
+			$.post('{{ url("delete/kdo_detail") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#kdo_table').DataTable().ajax.reload();
+					$('#kdo_detail').DataTable().ajax.reload();
+					$("#loading").hide();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
+		else{
+			$("#loading").hide();				
+		}
+	}
+
+	function deleteKDO(id){
+		if(confirm("Apa anda yakin akan menghapus data?")){
+			$("#loading").show();
+			var data = {
+				kd_number:id
+			}
+			$.post('{{ url("delete/kdo") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#kdo_table').DataTable().ajax.reload();
+					$('#kdo_detail').DataTable().ajax.reload();
+					$("#loading").hide();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
+		else{
+			$("#loading").hide();				
+		}
+	}
+
+	function fillTableDetail(){
+		var data = {
+			status : 1,
+		}
+
+		$('#kdo_detail tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var table = $('#kdo_detail').DataTable( {
+			'paging'        : true,
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/kdo_detail") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "kd_number" },
+			{ "data": "material_number" },
+			{ "data": "material_description" },
+			{ "data": "location" },
+			{ "data": "quantity" },
+			{ "data": "updated_at" },
+			{ "data": "deleteKDO" }
+			]
+		});
+
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+
+		$('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
+	}
+
+	function fillTable(){
+		var data = {
+			status : 1,
+		}
+		$('#kdo_table tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var table = $('#kdo_table').DataTable( {
+			'paging'        : true,
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				]
+			},
+			'lengthChange'  : true,
+			'searching'     : true,
+			'ordering'      : true,
+			'info'        : true,
+			'order'       : [],
+			'autoWidth'   : true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/kdo") }}",
+				"data" : data,
+			},
+			"columns": [
+			{ "data": "kd_number" },
+			{ "data": "actual_count" },
+			{ "data": "remark" },
+			{ "data": "updated_at" },
+			{ "data": "deleteKDO" }
+			]
+		});
+
+		table.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+
+		$('#kdo_table tfoot tr').appendTo('#kdo_table thead');
+	}
+
 	function forcePrint() {
 		var location = "{{ $location }}";
-		
+
 		var data = {
 			location : location,
 		}
@@ -246,7 +544,7 @@
 		var quantity = $("#quantity").val();
 		var material_description = $("#material_description").val();
 		var location = "{{ $location }}";
-		
+
 		var data = {
 			material_number : material_number,
 			quantity : quantity,

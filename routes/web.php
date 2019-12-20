@@ -1264,7 +1264,7 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::get('index/pantry/konfirmasi/{id}', 'PantryController@konfirmasi');
 	Route::get('index/pantry/selesaikan/{id}', 'PantryController@selesaikan');
 
-
+	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){

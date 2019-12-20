@@ -49,138 +49,139 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-       <div class="box-header"><h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3></div>
-       <div class="box-body">
-        <div class="row">
-
-          <div class="col-md-12">
-            <div class="col-md-6 col-md-offset-3">
-              <div class="col-md-10">
-                <div class="input-group">
-                  <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-                    <i class="glyphicon glyphicon-list-alt"></i>
+        <div class="box-header">
+          <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-10">
+                  <div class="input-group">
+                    <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+                      <i class="glyphicon glyphicon-list-alt"></i>
+                    </div>
+                    <input type="text" class="form-control" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
                   </div>
-                  <input type="text" class="form-control" id="invoice_number" name="invoice_number" placeholder="Invoice Number" required>
+                  <br>
                 </div>
-                <br>
+              </div>
+              <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-10">
+                  <div class="input-group">
+                    <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+                      <i class="fa fa-bus"></i>
+                    </div>
+                    <select class="form-control select2" id="container_id" name="container_id" style="width: 100%;" data-placeholder="Choose a Container ID" required>
+                      <option></option>
+                      @foreach($container_schedules as $container_schedule)
+                      <option value="{{ $container_schedule->container_id }}">
+                        {{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }}
+                      </option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <br>
+                </div>
+                <div class="col-md-2">
+                  <input id="toggle_lock" data-toggle="toggle" data-on="Lock" data-off="Open" type="checkbox">
+                </div>
               </div>
             </div>
-            <div class="col-md-6 col-md-offset-3">
-              <div class="col-md-10">
-                <div class="input-group">
-                  <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-                    <i class="fa fa-bus"></i>
-                  </div>
-                  <select class="form-control select2" id="container_id" name="container_id" style="width: 100%;" data-placeholder="Choose a Container ID" required>
-                    <option></option>
-                    @foreach($container_schedules as $container_schedule)
-                    <option value="{{ $container_schedule->container_id }}">
-                      {{ $container_schedule->container_id. ' | ' .$container_schedule->container_code. ' | ' .date('d-M-Y', strtotime($container_schedule->shipment_date)). ' | ' .$container_schedule->weeklycalendar->week_name. ' | ' .$container_schedule->destination->destination_shortname }}
-                    </option>
-                    @endforeach
-                  </select>
+            <div class="col-md-12">
+              <div class="input-group col-md-8 col-md-offset-2">
+                <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+                  <i class="glyphicon glyphicon-barcode"></i>
                 </div>
-                <br>
-              </div>
-              <div class="col-md-2">
-                <input id="toggle_lock" data-toggle="toggle" data-on="Lock" data-off="Open" type="checkbox">
+                <input type="text" style="text-align: center; font-size: 22" class="form-control" id="kdo_number_settlement" name="kdo_number_settlement" placeholder="Scan KDO Here..." required>
+                <div class="input-group-addon" id="icon-serial">
+                  <i class="glyphicon glyphicon-ok"></i>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-12">
-            <div class="input-group col-md-8 col-md-offset-2">
-              <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-                <i class="glyphicon glyphicon-barcode"></i>
-              </div>
-              <input type="text" style="text-align: center; font-size: 22" class="form-control" id="kdo_number_settlement" name="kdo_number_settlement" placeholder="Scan KDO Here..." required>
-              <div class="input-group-addon" id="icon-serial">
-                <i class="glyphicon glyphicon-ok"></i>
-              </div>
-            </div>
-          </div>
-
-
         </div>
       </div>
     </div>
   </div>
-  <div class="col-xs-12" style="padding-top: 1%;">
 
-    <div class="nav-tabs-custom">
-      <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-        <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing</a></li>
-        <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Stuffing Detail</a></li>
-      </ul>
+  <div class="row">
+    <div class="col-xs-12" style="padding-top: 1%;">
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+          <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing</a></li>
+          <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Stuffing Detail</a></li>
+        </ul>
 
-      <div class="tab-content">
-        <div class="tab-pane active" id="tab_1" style="height: 580px;">
-          <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th style="width: 10%">KDO</th>
-                <th style="width: 10%">Ship. Date</th>
-                <th style="width: 10%">Count Item</th>
-                <th style="width: 20%">Location</th>
-                <th style="width: 10%">I/V</th>
-                <th style="width: 10%">Container ID</th>
-                <th style="width: 20%">Stuff. Date </th>
-                <th style="width: 5%">Cancel</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab_1">
+            <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th style="width: 10%">KDO</th>
+                  <th style="width: 10%">Ship. Date</th>
+                  <th style="width: 10%">Count Item</th>
+                  <th style="width: 20%">Location</th>
+                  <th style="width: 10%">I/V</th>
+                  <th style="width: 10%">Container ID</th>
+                  <th style="width: 20%">Stuff. Date </th>
+                  <th style="width: 5%">Cancel</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
-        <div class="tab-pane" id="tab_2" style="height: 580px;">
-          <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th style="width: 5%">KD Number</th>
-                <th style="width: 5%">Ship. Date</th>
-                <th style="width: 5%">Material Number</th>
-                <th style="width: 30%">Material Description</th>
-                <th style="width: 10%">Location</th>
-                <th style="width: 5%">I/V</th>
-                <th style="width: 5%">Container ID</th>
-                <th style="width: 15%">Stuff. Date</th>
-                <th style="width: 5%">Quantity</th>
-                <th style="width: 5%">Cancel</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
+          <div class="tab-pane" id="tab_2">
+            <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th style="width: 5%">KD Number</th>
+                  <th style="width: 5%">Ship. Date</th>
+                  <th style="width: 5%">Material Number</th>
+                  <th style="width: 30%">Material Description</th>
+                  <th style="width: 10%">Location</th>
+                  <th style="width: 5%">I/V</th>
+                  <th style="width: 5%">Container ID</th>
+                  <th style="width: 15%">Stuff. Date</th>
+                  <th style="width: 5%">Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 
 </section>
 @stop
@@ -293,6 +294,33 @@
   }
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+  function deleteKDO(id){
+    if(confirm("Are you sure you want to delete this data?")){
+      var data = {
+        kd_number:id
+      }
+      $.post('{{ url("delete/kdo_stuffing") }}', data, function(result, status, xhr){
+        if(result.status){
+          $('#kdo_table').DataTable().ajax.reload();
+          $('#kdo_detail').DataTable().ajax.reload();
+          openSuccessGritter('Success!', result.message);
+          $('#kdo_number_settlement').val('');
+          $('#kdo_number_settlement').focus();
+        }
+        else{
+          openErrorGritter('Error!', result.message);
+          $('#kdo_number_settlement').val('');
+          $('#kdo_number_settlement').focus();
+          audio_error.play();
+        }
+      });
+    }
+    else{
+      $('#kdo_number_settlement').val('');
+      $('#kdo_number_settlement').focus();
+    }
+  }
 
   function fetchKDO(){
     var data = {
@@ -461,8 +489,7 @@
       { "data": "invoice_number" },
       { "data": "container_id" },
       { "data": "updated_at" },
-      { "data": "quantity" },
-      { "data": "deleteKDO" }
+      { "data": "quantity" }
       ]
     });
 
@@ -497,6 +524,7 @@
         if(result.status){
           openSuccessGritter('Success!', result.message);
           $('#kdo_table').DataTable().ajax.reload();
+          $('#kdo_detail').DataTable().ajax.reload();
           $('#kdo_number_settlement').val('');
         }
         else{

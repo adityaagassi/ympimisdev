@@ -251,8 +251,23 @@
     alert(id);
   }
 
-  function deleteKDO(){
+  function deleteKDO(id){
+    var data = {
+      kd_number:id
+    }
+    $.post('{{ url("delete/kdo_delivery") }}', data, function(result, status, xhr){
+      if(result.status){
 
+        openSuccessGritter('Success!', result.message);
+        $("#kdo_number_delivery").val("");
+        $("#kdo_number_delivery").focus();
+      }
+      else{
+        openErrorGritter('Error!', result.message);
+        $("#kdo_number_delivery").val("");
+        $("#kdo_number_delivery").focus();
+      }
+    }
   }
 
   function scan_kdo_delivery(){
