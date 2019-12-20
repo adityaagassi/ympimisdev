@@ -190,6 +190,8 @@
 			if(result.status){
 				$('#modal1').modal('show');
 				$('#ng-rate-body').append().empty();
+				$('#judul').append().empty();
+				
 				$('#judul1').append('<b>'+result.ng[0].operator_id+' - '+result.ng[0].name+' on '+bulanText(bulan)+'</b>');
 
 				var ng = 0;
