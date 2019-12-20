@@ -10,7 +10,7 @@ class MpRecordProd extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'date','pic','shift', 'product','material_number','process','machine','punch_number','die_number','start_time','end_time','lepas_molding','pasang_molding','process_time','electric_supply_time','data_ok','punch_value','die_value','note','created_by'
+		'date','pic','shift', 'product','material_number','process','machine','punch_number','die_number','start_time','end_time','lepas_molding','pasang_molding','process_time','kensa_time','electric_supply_time','data_ok','punch_value','die_value','note','created_by'
 	];
 
 	public function employee_pic()

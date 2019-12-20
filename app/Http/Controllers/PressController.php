@@ -259,6 +259,7 @@ class PressController extends Controller
                     'lepas_molding' => $lepas_molding_new,
                     'pasang_molding' => $request->get('pasang_molding'),
                     'process_time' => $request->get('process_time'),
+                    'kensa_time' => $request->get('kensa_time'),
                     'electric_supply_time' => $request->get('electric_supply_time'),
                     'data_ok' => $request->get('data_ok'),
                     'punch_value' => $request->get('punch_value'),
@@ -419,14 +420,14 @@ class PressController extends Controller
 
 		// $data = db::select("select mp_machines.machine_name, COALESCE(sum(mp_record_prods.data_ok),0)  as actual_shoot, COALESCE(mp_record_prods.date,CURDATE()) as tgl , TRUNCATE(SUM(TIME_TO_SEC(mp_record_prods.process_time) / 60 ),2) as waktu_mesin from mp_machines left join mp_record_prods on mp_machines.machine_name = mp_record_prods.machine left join mp_processes on mp_record_prods.process = mp_processes.process_desc where DATE_FORMAT(COALESCE(mp_record_prods.date,CURDATE()),'%Y-%m-%d') = '".$date."' ".$where." GROUP BY mp_machines.machine_name,mp_record_prods.date");
 
-	     $data = db::select("select machine_name, sum(data_ok) as actual_shoot, CURDATE() as tgl, sum(waktu) as waktu_mesin from (select machine_name, 0 as data_ok, CURDATE(), 0 as waktu from mp_machines UNION ALL select machine_name, data_ok, date, TRUNCATE(TIME_TO_SEC(process_time) / 60,2) as waktu from mp_machines LEFT JOIN mp_record_prods on mp_machines.machine_name = mp_record_prods.machine where mp_record_prods.date = '".$date."' ) as aw GROUP BY machine_name");
+	     $data = db::select("select machine_name, sum(data_ok) as actual_shoot, CURDATE() as tgl, sum(waktu) as waktu_mesin from (select machine_name, 0 as data_ok, CURDATE(), 0 as waktu from mp_machines UNION ALL select machine_name, data_ok, date, ROUND(TIME_TO_SEC(process_time) / 60,1) as waktu from mp_machines LEFT JOIN mp_record_prods on mp_machines.machine_name = mp_record_prods.machine where mp_record_prods.date = '".$date."' ) as aw GROUP BY machine_name");
 
 		$operator = db::select("select name, sum(data_ok) as actual_shot, CURDATE() as date, sum(waktu) as waktu_total from 
-(
-select employees.name, 0 as data_ok, CURDATE(), 0 as waktu from employee_groups join employees on employees.employee_id = employee_groups.employee_id where location='Press'
-UNION ALL 
-select employees.name, data_ok, mp_record_prods.date, TRUNCATE(TIME_TO_SEC(process_time) / 60,2) as waktu from employee_groups LEFT JOIN mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employees.employee_id = employee_groups.employee_id and location='Press' and mp_record_prods.date = '".$date."'
-) as aw GROUP BY name");
+			(
+			select employees.name, 0 as data_ok, CURDATE(), 0 as waktu from employee_groups join employees on employees.employee_id = employee_groups.employee_id where location='Press'
+			UNION ALL 
+			select employees.name, data_ok, mp_record_prods.date, ROUND(TIME_TO_SEC(process_time) / 60,1) as waktu from employee_groups LEFT JOIN mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employees.employee_id = employee_groups.employee_id and location='Press' and mp_record_prods.date = '".$date."'
+			) as aw GROUP BY name");
 
 
 		$response = array(

@@ -381,7 +381,7 @@
 							<thead>
 								<tr>
 									<th style="width:15%; background-color: #6e81ff; text-align: center; color: black; padding:0;font-size: 15px;" colspan="2">SETUP MOLDING</th>
-									<th style="width:15%; background-color: #6e81ff; text-align: center; color: black; padding:0;font-size: 15px;" colspan="2">PRODUCTION TIME</th>
+									<th style="width:15%; background-color: #6e81ff; text-align: center; color: black; padding:0;font-size: 15px;" colspan="3">PRODUCTION TIME</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -389,6 +389,7 @@
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Pasang Molding</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Lepas Molding</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Process Time</th>
+									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Kensa Time</th>
 									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Electric Supply Time</th>
 								</tr>
 								<tr>
@@ -411,10 +412,17 @@
 									<td style=" text-align: center; color: black; font-size:2vw; ">
 									<input type="text" id="process_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" placeholder="0:00:00" required></td>
 									<td style="text-align: center; color: black; font-size:2vw; ">
+									<button class="btn btn-sm btn-success" id="startkensatime" onClick="timerkensatime.start(1000)">Start</button> 
+							        <button class="btn btn-sm btn-danger" id="stopkensatime" onClick="timerkensatime.stop()">Stop</button>
+									<div class="timerkensatime">
+							            <span class="hourkensatime">00</span>:<span class="minutekensatime">00</span>:<span class="secondkensatime">00</span>
+							        </div>
+									<input type="text" id="kensa_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required disabled></td>
+									<td style="text-align: center; color: black; font-size:2vw; ">
 									<button class="btn btn-sm btn-success" id="startelectime" onClick="timerelectime.start(1000)">Start</button> 
 							        <button class="btn btn-sm btn-danger" id="stopelectime" onClick="timerelectime.stop()">Stop</button>
 									<div class="timerelectime">
-							            <span class="hourelectime">00</span>:<span class="minuteelectime">00</span>:<span class="secondelectime">10</span>
+							            <span class="hourelectime">00</span>:<span class="minuteelectime">00</span>:<span class="secondelectime">00</span>
 							        </div>
 									<input type="hidden" id="electric_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required></td>
 								</tr>
@@ -911,6 +919,7 @@
 			var lepas_molding = $("#lepas_molding").val();
 			var pasang_molding = $("#pasang_molding").val();
 			var process_time = $("#process_time").val();
+			var kensa_time = $("#kensa_time").val();
 			var electric_supply_time = $("#electric_time").val();
 			var data_ok = $("#data_ok").val();
 			var punch_value = $("#jumlah_punch").val();
@@ -935,6 +944,7 @@
 					lepas_molding : lepas_molding,
 					pasang_molding : pasang_molding,
 					process_time : process_time,
+					kensa_time : kensa_time,
 					electric_supply_time : electric_supply_time,
 					data_ok : data_ok,
 					punch_value : punch_value,
@@ -1311,6 +1321,120 @@
 		        }
 		    );
 		    timerelectime.reset(0);
+		});
+
+		function _timerkensatime(callback)
+		{
+		    var time = 0;     //  The default time of the timer
+		    var mode = 1;     //    Mode: count up or count down
+		    var status = 0;    //    Status: timer is running or stoped
+		    var timer_id;
+		    var hour;
+		    var minute;
+		    var second;    //    This is used by setInterval function
+		    
+		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
+		    this.start = function(interval)
+		    {
+		    	// $('#startkensatime').hide();
+				$('#stopkensatime').show();
+		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
+		 
+		        if(status == 0)
+		        {
+		            status = 1;
+		            timer_id = setInterval(function()
+		            {
+		                switch(1)
+		                {
+		                    default:
+		                    if(time)
+		                    {
+		                        time--;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                    
+		                    case 1:
+		                    if(time < 86400)
+		                    {
+		                        time++;
+		                        generateTime();
+		                        if(typeof(callback) === 'function') callback(time);
+		                    }
+		                    break;
+		                }
+		            }, interval);
+		        }
+		    }
+		    
+		    //  Same as the name, this will stop or pause the timer ex. timer.stop()
+		    this.stop =  function()
+		    {
+		        if(status == 1)
+		        {
+		            status = 0;
+		            var detik = $('div.timerkensatime span.secondkensatime').text();
+			        var menit = $('div.timerkensatime span.minutekensatime').text();
+			        var jam = $('div.timerkensatime span.hourkensatime').text();
+			        var waktu = jam + ':' + menit + ':' + detik;
+			        $('#kensa_time').val(waktu);
+			        $('#stopkensatime').hide();
+		            clearInterval(timer_id);
+		        }
+		    }
+		    
+		    // Reset the timer to zero or reset it to your own custom time ex. reset to zero second timer.reset(0)
+		    this.reset =  function(sec)
+		    {
+		        sec = (typeof(sec) !== 'undefined') ? sec : 0;
+		        time = sec;
+		        generateTime(time);
+		    }
+		    this.getTime = function()
+		    {
+		        return time;
+		    }
+		    this.getMode = function()
+		    {
+		        return mode;
+		    }
+		    this.getStatus
+		    {
+		        return status;
+		    }
+		    function generateTime()
+		    {
+		        second = time % 60;
+		        minute = Math.floor(time / 60) % 60;
+		        hour = Math.floor(time / 3600) % 60;
+		        
+		        second = (second < 10) ? '0'+second : second;
+		        minute = (minute < 10) ? '0'+minute : minute;
+		        hour = (hour < 10) ? '0'+hour : hour;
+		        
+		        $('div.timerkensatime span.secondkensatime').html(second);
+		        $('div.timerkensatime span.minutekensatime').html(minute);
+		        $('div.timerkensatime span.hourkensatime').html(hour);
+		    }
+		}
+		 
+		var timerkensatime;
+		$(document).ready(function(e) 
+		{
+		    timerkensatime = new _timerkensatime
+		    (
+		        function(time)
+		        {
+		            if(time == 0)
+		            {
+		                timerkensatime.stop();
+		                alert('time out');
+		            }
+		        }
+		    );
+		    timerkensatime.reset(0);
 		});
 
 		function openSuccessGritter(title, message){
