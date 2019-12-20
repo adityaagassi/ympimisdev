@@ -417,7 +417,7 @@
 									<div class="timerkensatime">
 							            <span class="hourkensatime">00</span>:<span class="minutekensatime">00</span>:<span class="secondkensatime">00</span>
 							        </div>
-									<input type="text" id="kensa_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required disabled></td>
+									<input type="hidden" id="kensa_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="0:00:00" required disabled></td>
 									<td style="text-align: center; color: black; font-size:2vw; ">
 									<button class="btn btn-sm btn-success" id="startelectime" onClick="timerelectime.start(1000)">Start</button> 
 							        <button class="btn btn-sm btn-danger" id="stopelectime" onClick="timerelectime.stop()">Stop</button>
@@ -598,6 +598,7 @@
 			$('#stoplepmod').hide();
 			// $('#stopproctime').hide();
 			$('#stopelectime').hide();
+			$('#stopkensatime').hide();
 
 			$('.timepicker').timepicker({
 				minuteStep: 1,
