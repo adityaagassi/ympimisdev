@@ -1142,7 +1142,7 @@ public function overtimeControl(Request $request)
 		'report_control' => $report_control,
 		'emp_total' => $employee,
 		'emp_fc' => $employee_fc,
-		'emp_bdg' => $employee_bdg,
+		'emp_bdg' => $employee_bdg
 	);
 
 	return Response::json($response);

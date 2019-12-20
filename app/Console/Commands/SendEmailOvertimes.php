@@ -116,6 +116,7 @@ class SendEmailOvertimes extends Command
         $productions = array();
         $c_ofc = 1;
         $c_prd = 1;
+        
         foreach ($datas as $data) {
             if(in_array($data->code, $ofc) && $c_ofc <= 20){
                 array_push($offices, [
@@ -162,7 +163,7 @@ class SendEmailOvertimes extends Command
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
         Artisan::call('config:cache');
-        if($data != null){
+        if($datas != null){
             Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
         }
 

@@ -102,5 +102,8 @@ class SendEmail extends Mailable
         if($this->remark == 'area_check'){
             return $this->from('ympimis@gmail.com')->subject('Cek Kondisi Safety Area Kerja (??)')->view('mails.area_check');
         }
+        if($this->remark == 'kaizen'){
+            return $this->from('ympimis@gmail.com')->subject('MIS Unverified Kaizen Teian')->view('mails.kaizen');
+        }
     }
 }

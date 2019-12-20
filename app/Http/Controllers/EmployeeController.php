@@ -921,12 +921,9 @@ public function fetchReportGender2(Request $request)
   $get_manpower = db::select($gender);
   $monthTitle = date("F Y", strtotime($tgl));
 
-  // $tes = db::connection('sunfish')->select("select TOP 50 * from dbo.view_ympi_emp_orgunit");
-
   $response = array(
     'status' => true,
     'manpower_by_gender' => $get_manpower,
-    "tes" => $tes,
     'monthTitle' => $monthTitle
   );
 
@@ -1053,32 +1050,38 @@ public function indexEmployeeService(Request $request)
   $title = 'Employee Self Services';
   $title_jp = '従業員の情報サービス';
   $emp_id = Auth::user()->username;
-  
-  $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, address, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
-  left join 
-  (
-  SELECT employee_id, `status` FROM employment_logs
-  WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-  ) as emp_log on employees.employee_id = emp_log.employee_id
-  left join
-  (
-  select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
-  WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-  ) as mut_log on employees.employee_id = mut_log.employee_id
-  left join
-  (
-  select employee_id ,grade_code, grade_name, position from promotion_logs
-  WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-  ) as promot_log on employees.employee_id = promot_log.employee_id
-  where employees.employee_id = '".$emp_id."'";
+  // $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-  $absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
-  (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
-  group by DATE_FORMAT(tanggal,'%b %Y') 
-  order by tanggal asc) abs
-  left join (
-  select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
-  group by DATE_FORMAT(tanggal,'%b %Y')
+// if (!file_exists(public_path().'/kcfinderimages/'.$emp_id)) {
+//   mkdir(public_path().'/kcfinderimages/'.$emp_id, 0777, true);
+//   mkdir(public_path().'/kcfinderimages/'.$emp_id.'/files', 0777, true);
+// }
+
+$query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, address, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
+left join 
+(
+SELECT employee_id, `status` FROM employment_logs
+WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+) as emp_log on employees.employee_id = emp_log.employee_id
+left join
+(
+select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
+WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+) as mut_log on employees.employee_id = mut_log.employee_id
+left join
+(
+select employee_id ,grade_code, grade_name, position from promotion_logs
+WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+) as promot_log on employees.employee_id = promot_log.employee_id
+where employees.employee_id = '".$emp_id."'";
+
+$absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
+(select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
+group by DATE_FORMAT(tanggal,'%b %Y') 
+order by tanggal asc) abs
+left join (
+select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
+group by DATE_FORMAT(tanggal,'%b %Y')
 ) ovr on ovr.period = abs.period";
 
 $absences = db::connection('mysql3')->select($absence);
