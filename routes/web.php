@@ -1261,7 +1261,7 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::post('index/pantry/edit_menu/{id}', 'PantryController@edit_menu_action');
 
 	//Konfirmasi Pesanan
-	Route::get('index/pantry/konfirmasi/{id}', 'PantryController@konfirmasi');
+	Route::post('index/pantry/konfirmasi', 'PantryController@konfirmasi');
 	Route::get('index/pantry/selesaikan/{id}', 'PantryController@selesaikan');
 
 	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');

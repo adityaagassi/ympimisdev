@@ -427,7 +427,6 @@
 									enabled: true,
 									format: '{point.y}',
 									style:{
-										textOutline: false,
 										fontSize: '1vw'
 									}
 								},

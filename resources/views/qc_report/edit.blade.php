@@ -143,6 +143,7 @@
               <option value='Plating'>Plating</option>
               <option value='Recorder'>Recorder</option>
               <option value='Sub Assy'>Sub Assy</option>
+              <option value='Case KD'>Case KD</option>
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
