@@ -196,7 +196,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
-					<?php if ($profil[0]->position == '-') { ?>
+					<?php if ($profil[0]->position == '-' && $profil[0]->position != 'Sub Leader' && strpos($profil[0]->grade_name, 'Staff') === false) { ?>
 						<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<?php } ?>
 				</div>
