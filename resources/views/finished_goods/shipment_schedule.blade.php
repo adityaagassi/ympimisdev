@@ -100,6 +100,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 1%;">Period</th>
+										<th style="width: 1%;">Cat.</th>
 										<th style="width: 1%;">Sales Order</th>
 										<th style="width: 1%;">Dest</th>
 										<th style="width: 1%;">By</th>
@@ -125,6 +126,7 @@
 										<th></th>
 										<th></th>
 										<th></th>
+										<th></th>
 										<th>Total</th>
 										<th id="totalPlan"></th>
 										<th id="totalActual"></th>
@@ -133,7 +135,6 @@
 										<th></th>
 										<th></th>
 										<th></th>
-										{{-- <th></th> --}}
 										{{-- <th></th> --}}
 									</tr>
 								</tfoot>
@@ -215,6 +216,7 @@
 					$.each(result.tableData, function(key, value) {
 						tableData += '<tr>';
 						tableData += '<td>'+ value.st_month +'</td>';
+						tableData += '<td>'+ value.category +'</td>';
 						tableData += '<td>'+ value.sales_order +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';
 						tableData += '<td>'+ value.shipment_condition_name +'</td>';
@@ -290,10 +292,6 @@
 								i : 0;
 							};
 							var api = this.api();
-							var totalPlan = api.column(6).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(6).footer()).html(totalPlan.toLocaleString());
 							var totalPlan = api.column(7).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
@@ -310,9 +308,13 @@
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(10).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(11).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(11).footer()).html(totalPlan.toLocaleString());
 						},
 						"columnDefs": [ {
-							"targets": [8, 10],
+							"targets": [9, 11],
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
