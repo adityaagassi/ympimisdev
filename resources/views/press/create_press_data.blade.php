@@ -146,37 +146,37 @@
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 1')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#1</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#1</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 2')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#2</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#2</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 3')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#3</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#3</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 4')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#4</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#4</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 5')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#5</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#5</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 6')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#6</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#6</p>
 									</center>
 								</td>
 								<td style="padding-left: 0;padding-right: 0;padding-bottom: 0;padding-top: 0;" onclick="getData('Amada 7')">
 									<center>
-										<p class="btn btn-primary" style="font-size: 1vw;">#7</p>
+										<p class="btn btn-danger" style="font-size: 1vw;">#7</p>
 									</center>
 								</td>
 							</tr>
@@ -639,8 +639,7 @@
 
 		function itemList(){
 			var data = {
-				process : 'Forging',
-				product : $("#product").val()
+				process : 'Forging'
 			}
 
 			$.get('{{ url("fetch/press/fetchProcess") }}', data, function(result, status, xhr){
