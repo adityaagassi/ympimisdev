@@ -68,7 +68,6 @@
 		$('.select2').select2();
 		fillChart();
 		setInterval(fillChart, 7000);
-		
 	});
 
 	$('.datepicker').datepicker({
@@ -575,7 +574,6 @@
 									enabled: true,
 									format: '{point.y}',
 									style:{
-										textOutline: false,
 										fontSize: '1vw'
 									}
 								},
