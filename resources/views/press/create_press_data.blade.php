@@ -1222,7 +1222,7 @@
 		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
 		    this.start = function(interval)
 		    {
-		    	$('#startelectime').hide();
+		    	// $('#startelectime').hide();
 				$('#stopelectime').show();
 		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
 		 
