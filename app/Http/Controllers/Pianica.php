@@ -3270,7 +3270,8 @@ public function fetchNgBentsukiBenage(Request $request){
     $op = db::select("SELECT distinct  operator, op.name as nama from pn_log_proces log
         left join employees op on op.employee_id = operator
         WHERE location = 'PN_Pureto'
-        and date(log.created_at) = '".$date."'");
+        and date(log.created_at) <= '".$date."' 
+        and date(log.created_at) >= '".$before."'");
 
     $response = array(
         'status' => true,            
@@ -3310,7 +3311,8 @@ public function fetchNgKensaAwal(Request $request){
     $op = db::select("SELECT distinct log.created_by as operator , op.name as nama from pn_log_proces log
         left join employees op on op.employee_id = log.created_by
         WHERE location = 'PN_Kensa_Awal'
-        and date(log.created_at) = '".$date."'");
+        and date(log.created_at) <= '".$date."' 
+        and date(log.created_at) >= '".$before."'");
 
     $response = array(
         'status' => true,            

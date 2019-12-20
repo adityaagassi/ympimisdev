@@ -366,7 +366,7 @@
 						op.push(data[i].nama);
 						biri.push(data[i].biri);
 						oktaf.push(data[i].oktaf);
-						t_rendah.push(data[i].t_tinggi);
+						t_rendah.push(data[i].t_rendah);
 						t_tinggi.push(data[i].t_tinggi);
 					}
 
