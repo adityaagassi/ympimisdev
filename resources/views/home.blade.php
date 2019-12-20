@@ -166,6 +166,10 @@
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
                             </a>
                             <br>
+                            <a href="{{ url("index/display/clinic_visitor") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Display ()
+                            </a>
+                            <br>
                             <a href="{{ url("index/emergency_response") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Condition ()
                             </a>
@@ -516,7 +520,7 @@
                                 <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                             </a>
                             <br>
-                            <a href="{{ url("#") }}">
+                            <a href="{{ url("/index/kd_daily_production_result") }}">
                                 <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
                             </a>
                             <br>

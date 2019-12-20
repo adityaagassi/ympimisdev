@@ -820,10 +820,16 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 	Route::post('delete/kdo_stuffing', 'KnockDownController@deleteKdStuffing');
 	Route::post('delete/kdo_delivery', 'KnockDownController@deleteKdDelivery');	
+	Route::post('delete/kdo', 'KnockDownController@deleteKd');
+	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 });
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
+Route::get('index/kd_daily_production_result', 'KnockDownController@indexKdDailyProductionResult');
+Route::get('fetch/kd_daily_production_result', 'KnockDownController@fetchKdDailyProductionResult');
+Route::get('index/kd_production_schedule_data', 'KnockDownController@indexKdProductionScheduleData');
+Route::get('fetch/kd_production_schedule_data', 'KnockDownController@fetchKdProductionScheduleData');
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -990,6 +996,7 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
 });
 Route::get('index/display/clinic_visitor', 'ClinicController@indexClinicVisitor');
+Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 
 
 
@@ -1234,10 +1241,14 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::get('index/pantry/pesanmenu', 'PantryController@pesanmenu');
 	Route::get('index/pantry/menu', 'PantryController@daftarmenu');
 	Route::get('index/pantry/pesanan', 'PantryController@daftarpesanan');
+	Route::get('index/pantry/confirmation', 'PantryController@daftarkonfirmasi');
 
 	//Pesanan
 	Route::get('fetch/menu', 'PantryController@fetchmenu');
 	Route::get('fetch/pesanan', 'PantryController@fetchpesanan');
+	Route::post('fetch/pantry/pesanan','PantryController@filter');
+	Route::get('fetch/konfirmasi/pesanan','PantryController@filterkonfirmasi');
+
 	Route::post('index/pantry/inputmenu', 'PantryController@inputMenu');
 	Route::post('index/pantry/deletemenu', 'PantryController@deleteMenu');
 	Route::post('index/pantry/konfirmasipesanan', 'PantryController@konfirmasipesanan');
@@ -1248,6 +1259,12 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::get('index/pantry/delete_menu/{id}', 'PantryController@delete_menu');
 	Route::get('index/pantry/edit_menu/{id}', 'PantryController@edit_menu');
 	Route::post('index/pantry/edit_menu/{id}', 'PantryController@edit_menu_action');
+
+	//Konfirmasi Pesanan
+	Route::get('index/pantry/konfirmasi/{id}', 'PantryController@konfirmasi');
+	Route::get('index/pantry/selesaikan/{id}', 'PantryController@selesaikan');
+
+
 });
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
@@ -1928,7 +1945,7 @@ Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
 Route::get('index/press/monitoring2', 'PressController@monitoring2');
 //Report Press
-Route::get('index/press/report/{product}', 'PressController@report');
+Route::get('index/press/report_trouble', 'PressController@report_trouble');
 Route::get('fetch/press/fetchReasonList', 'PressController@fetchReasonList');
 
 
