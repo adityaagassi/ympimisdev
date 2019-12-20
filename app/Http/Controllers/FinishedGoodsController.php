@@ -161,61 +161,48 @@ class FinishedGoodsController extends Controller
 	} 
 
 	public function fetch_fg_shipment_schedule(Request $request){
-		$shipment_schedules = db::table('shipment_schedules');
-
-		if(strlen($request->get('periodFrom')) > 0){
+		if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) == 0){
 			$periodFrom = $request->get('periodFrom');
-			$shipment_schedules = $shipment_schedules->where('st_month', '>=', $periodFrom);
+			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."'";
+		}
+		else if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) > 0){
+			$periodTo = $request->get('periodTo');
+			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."' and shipment_schedules.st_month <= '".$periodTo."'";
 		}
 		else{
 			$st_month = date('Y-m-01');			
-			$shipment_schedules = $shipment_schedules->where('st_month', '=', $st_month);
+			$where1 = " where shipment_schedules.st_month = '".$st_month."'";
 		}
-		if(strlen($request->get('periodTo')) > 0){
-			$periodTo = $request->get('periodTo');
-			$shipment_schedules = $shipment_schedules->where('st_month', '<=', $periodTo);
-		}
-
-		$shipment_schedules = $shipment_schedules->leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
-		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
-		->leftJoin(db::raw('(select shipment_schedule_id, sum(actual) as actual_fstk from flos where status in ("2", "3", "4") group by shipment_schedule_id) as fstk'), 'fstk.shipment_schedule_id', 'shipment_schedules.id')
-		->select(
-			db::raw('date_format(shipment_schedules.st_month, "%b-%Y") as st_month'), 
-			'shipment_schedules.id', 
-			'shipment_schedules.sales_order', 
-			'destinations.destination_shortname', 
-			'shipment_conditions.shipment_condition_name', 
-			'materials.material_number', 
-			'materials.material_description', 
-			'shipment_schedules.quantity', 
-			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual)) as actual'), 
-			db::raw('if(sum(flos.actual) is null, 0, sum(flos.actual))-shipment_schedules.quantity as diff'), 
-			db::raw('if(fstk.actual_fstk is null, 0, fstk.actual_fstk) as actual_fstk'), 
-			db::raw('if(fstk.actual_fstk is null, 0, fstk.actual_fstk)-shipment_schedules.quantity as diff_fstk'),
-			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'),
-			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y") as bl_date_plan')
-		);
 
 		if(strlen($request->get('originGroupCode')) > 0){
-			$shipment_schedules = $shipment_schedules->where('materials.origin_group_code', '=', $request->get('originGroupCode'));
+			$where2 = " and materials.origin_group_code = '".$request->get('originGroupCode')."'";
+		}
+		else{
+			$where2 = "";
 		}
 
-		$shipment_schedules = $shipment_schedules->groupBy(
-			db::raw('date_format(shipment_schedules.st_month, "%b-%Y")'),
-			'shipment_schedules.id', 
-			'shipment_schedules.sales_order', 
-			'destinations.destination_shortname', 
-			'shipment_conditions.shipment_condition_name', 
-			'materials.material_number', 
-			'materials.material_description', 
-			'shipment_schedules.quantity', 
-			db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'),
-			db::raw('date_format(shipment_schedules.bl_date, "%d-%b-%Y")'),
-			'fstk.actual_fstk'
-		)
-		->get();
+		if(strlen($request->get('hpl')) > 0){
+			$where3 = " and materials.hpl = '".$request->get('hpl')."'";
+		}
+		else{
+			$where3 = "";
+		}
+
+		$query = "select shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y') as st_month, shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y') as st_date, date_format(shipment_schedules.bl_date, '%d-%b-%Y') as bl_date_plan, sum(coalesce(stock.quantity, 0)) as quantity_production, sum(if(stock.status > 1, stock.quantity, 0)) as quantity_delivery FROM `shipment_schedules` left join
+		(select shipment_schedule_id, sum(actual) as quantity, status from flos group by shipment_schedule_id, status
+		union all
+		select knock_down_details.shipment_schedule_id, sum(knock_down_details.quantity) as quantity, knock_downs.`status` from knock_down_details 
+		left join knock_downs on knock_downs.kd_number = knock_down_details.kd_number 
+		group by shipment_schedule_id, knock_downs.status) as stock on shipment_schedules.id = stock.shipment_schedule_id
+		left join destinations on destinations.destination_code = shipment_schedules.destination_code 
+		left join shipment_conditions on shipment_conditions.shipment_condition_code = shipment_schedules.shipment_condition_code 
+		left join materials on materials.material_number = shipment_schedules.material_number
+		".$where1."
+		".$where2."
+		".$where3."
+		group by shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y'), shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y'), date_format(shipment_schedules.bl_date, '%d-%b-%Y')";
+
+		$shipment_schedules = DB::select($query);
 
 		$response = array(
 			'status' => true,
@@ -295,7 +282,8 @@ class FinishedGoodsController extends Controller
 			'destinations.destination_shortname', 
 			'shipment_schedules.sales_order', 
 			'flos.container_id', 
-			db::raw('count(container_attachments.container_id) as att'))
+			db::raw('count(container_attachments.container_id) as att'),
+			'flo_details.image')
 		->groupBy(
 			db::raw('date_format(flo_details.created_at, "%d-%b-%Y")'), 
 			'flo_details.flo_number', 
@@ -308,7 +296,8 @@ class FinishedGoodsController extends Controller
 			'flos.bl_date',
 			'destinations.destination_shortname', 
 			'shipment_schedules.sales_order', 
-			'flos.container_id')
+			'flos.container_id',
+			'flo_details.image')
 		->get();
 
 		$response = array(

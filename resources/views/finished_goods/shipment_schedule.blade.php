@@ -221,10 +221,10 @@
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
-						tableData += '<td>'+ value.actual +'</td>';
-						tableData += '<td>'+ value.diff +'</td>';
-						tableData += '<td>'+ value.actual_fstk +'</td>';
-						tableData += '<td>'+ value.diff_fstk +'</td>';
+						tableData += '<td>'+ value.quantity_production +'</td>';
+						tableData += '<td>'+ (value.quantity_production-value.quantity) +'</td>';
+						tableData += '<td>'+ value.quantity_delivery +'</td>';
+						tableData += '<td>'+ (value.quantity_delivery-value.quantity) +'</td>';
 						tableData += '<td>'+ value.st_date +'</td>';
 						tableData += '<td>'+ value.bl_date_plan +'</td>';
 						// tableData += '<td>'+ value.bl_date +'</td>';
