@@ -994,7 +994,7 @@
 		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
 		    this.start = function(interval)
 		    {
-		    	$('#startpasmod').hide();
+		    	// $('#startpasmod').hide();
 				$('#stoppasmod').show();
 		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
 		 
@@ -1108,7 +1108,7 @@
 		    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
 		    this.start = function(interval)
 		    {
-		    	$('#startlepmod').hide();
+		    	// $('#startlepmod').hide();
 		    	$('#stoplepmod').show();
 		        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
 		 
