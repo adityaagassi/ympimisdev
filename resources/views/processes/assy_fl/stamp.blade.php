@@ -260,12 +260,13 @@
 			$('.select2').select2()
 		});
 		
-		stamp();
+		
 
 		$('body').toggleClass("sidebar-collapse");
 		fillPlannew();
 		fillSerialNumber();
 		fillResult();
+		stamp();
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
