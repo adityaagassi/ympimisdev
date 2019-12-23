@@ -26,6 +26,7 @@
 				<?php $lokasi = $datas->lokasi ?>
 				<?php $tgl_permintaan = $datas->tgl_permintaan ?>
 				<?php $tgl_balas = $datas->tgl_balas ?>
+				<?php $judul_komplain = $datas->judul_komplain ?>
 				<?php $sumber_komplain = $datas->sumber_komplain ?>
 				<?php $posisi = $datas->posisi ?>
 				<?php if ($posisi == "bagian"){ 
@@ -37,6 +38,9 @@
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Penerbitan CPAR {{ $cpar_no }}<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
+
+			<h1>Komplain : {{$judul_komplain}}</h1>
+
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>

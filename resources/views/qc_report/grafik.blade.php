@@ -225,7 +225,7 @@ table > thead > tr > th{
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
               <tr>
-                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">Nomor CPAR</th>
+                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">Komplain</th>
                 <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Departemen</th>
                 <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
                 <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
@@ -350,6 +350,7 @@ table > thead > tr > th{
                     <th>Location</th>
                     <th>Request Date</th>
                     <th>Due Date</th>
+                    <th>Complain</th>
                     <th>Departement</th>
                     <th>Source Of Complaint</th>
                     <th>Next Verification</th>
@@ -495,7 +496,18 @@ table > thead > tr > th{
               type: 'column'
             },
             title: {
-              text: '<span style="font-size: 20px;">Digital Complain Report By Month</span>'
+              text: 'Digital Complain Report By Month',
+              style: {
+                fontSize: '30px',
+                fontWeight: 'bold'
+              }
+            },
+            subtitle: {
+              text: 'CPAR CAR Monitoring',
+              style: {
+                fontSize: '1vw',
+                fontWeight: 'bold'
+              }
             },
             xAxis: {
               type: 'category',
@@ -524,7 +536,7 @@ table > thead > tr > th{
               align: 'right',
               x: -30,
               verticalAlign: 'top',
-              y: 46,
+              y: 30,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
@@ -1044,8 +1056,8 @@ table > thead > tr > th{
 
 
             table += '<tr>';
-            table += '<td>'+value.cpar_no+'</td>'; 
-            table += '<td style="border-left:3px solid #f44336">'+value.department_name+'</td>';
+            table += '<td>'+value.judul_komplain+'</td>'; 
+            table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(value.department_name)+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
             table += '<td>'+statuscf+'</td>';
             table += '<td>'+statusm+'</td>';
@@ -1070,6 +1082,10 @@ table > thead > tr > th{
       }
     })
   }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
   // function drawChartDepartemen() {
 
@@ -1268,6 +1284,7 @@ table > thead > tr > th{
           { "data": "lokasi" },
           { "data": "tgl_permintaan" },
           { "data": "tgl_balas" },
+          { "data": "judul_komplain" },
           { "data": "department_name" },
           { "data": "sumber_komplain" },
           { "data": "verif", "className": "table-posisi" },

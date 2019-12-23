@@ -78,6 +78,7 @@ table.table-bordered > tfoot > tr > th{
                 <th>Lokasi</th>
                 <th>Tgl Permintaan</th>
                 <th>Tgl Balas</th>
+                <th>Judul Komplain</th>
                 <th>Departemen</th>
                 <th>Sumber Komplain</th>
                 <th>Status</th>
@@ -93,6 +94,7 @@ table.table-bordered > tfoot > tr > th{
                 <td style="width: 10%">{{$car->lokasi}}</td>
                 <td>{{$car->tgl_permintaan}}</td>
                 <td>{{$car->tgl_balas}}</td>
+                <td>{{$car->judul_komplain}}</td>
                 <td>{{$car->department_name}}</td>
                 <td>{{$car->sumber_komplain}}</td>
                 <td>
@@ -111,7 +113,7 @@ table.table-bordered > tfoot > tr > th{
               <tr>
                 <th></th>
                 <th></th>
-                <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

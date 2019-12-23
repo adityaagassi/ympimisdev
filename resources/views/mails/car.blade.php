@@ -24,6 +24,7 @@
 				<?php $lokasi = $datas->lokasi ?>
 				<?php $kategori = $datas->kategori ?>
 				<?php $sumber_komplain = $datas->sumber_komplain ?>
+				<?php $judul_komplain = $datas->judul_komplain ?>
 				<?php $pic_name = $datas->pic_name ?>
 				<?php $posisi = $datas->posisi ?>
 				<?php 
@@ -39,6 +40,8 @@
 			@endif
 			<p style="font-size: 18px;">Pembuatan CAR dari Penerbitan CPAR {{ $cpar_no }}<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.<br><br>
+
+			<h1>Komplain : {{$judul_komplain}}</h1>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">

@@ -69,7 +69,7 @@ class QcReportController extends Controller
         ->leftjoin('employees','qc_cpars.employee_id','=','employees.employee_id')
         ->leftjoin('statuses','qc_cpars.status_code','=','statuses.status_code')
         ->leftjoin('qc_cars','qc_cpars.cpar_no','=','qc_cars.cpar_no')
-        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
+        ->select('qc_cpars.id','qc_cpars.cpar_no','qc_cpars.kategori', 'employees.name', 'qc_cpars.lokasi', 'qc_cpars.tgl_permintaan', 'qc_cpars.tgl_balas', 'qc_cpars.via_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.judul_komplain', 'qc_cpars.email_status', 'departments.department_name', 'qc_cpars.sumber_komplain', 'qc_cpars.status_code', 'statuses.status_name', 'qc_cpars.created_at', 'qc_cars.id as id_car')
         ->whereNull('qc_cpars.deleted_at');
 
         if(strlen($request->get('bulandari')) > 0){
@@ -321,6 +321,7 @@ class QcReportController extends Controller
             'department_id' => $request->get('department_id'),
             'tgl_permintaan' => date("Y-m-d", strtotime($date_permintaan)),
             'tgl_balas' => date("Y-m-d", strtotime($date_balas)),
+            'judul_komplain' => $request->get('judul_komplain'),
             'file' => $file->filename,
             'via_komplain' => $request->get('via_komplain'),
             'sumber_komplain' => $request->get('sumber_komplain'),
@@ -460,6 +461,7 @@ class QcReportController extends Controller
             $cpars->department_id = $request->get('department_id');
             $cpars->tgl_permintaan = date('Y-m-d', strtotime($date_permintaan));
             $cpars->tgl_balas = date("Y-m-d", strtotime($date_balas));
+            $cpars->judul_komplain = $request->get('judul_komplain');
             $cpars->via_komplain = $request->get('via_komplain');
             $cpars->sumber_komplain = $request->get('sumber_komplain');
             $cpars->destination_code = $request->get('customer');
@@ -512,7 +514,6 @@ class QcReportController extends Controller
 
     public function fetch_item($id)
     {
-
         $cpars = QcCpar::find($id);
 
         $qc_cpar_items = QcCparItem::leftJoin("qc_cpars","qc_cpar_items.cpar_no","=","qc_cpars.cpar_no")
@@ -1310,7 +1311,7 @@ class QcReportController extends Controller
 
     public function fetchtable(Request $request)
     {
-      $data = db::select("select qc_cpars.id,qc_cars.id as id_car, qc_cpars.cpar_no, qc_cpars.status_code, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
+      $data = db::select("select qc_cpars.id,qc_cars.id as id_car, qc_cpars.cpar_no, qc_cpars.status_code, qc_cpars.judul_komplain, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
         (CASE WHEN qc_verifikators.verifikatorchief is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)

@@ -26,7 +26,7 @@ class QcCarController extends Controller
 
       public function index()
       {
-       $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','employees.name','statuses.status_name')
+       $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','qc_cpars.judul_komplain','departments.department_name','employees.name','statuses.status_name')
        ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
        ->join('departments','qc_cpars.department_id','=','departments.id')
        ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
@@ -358,7 +358,7 @@ class QcCarController extends Controller
 
           $id_user = Auth::id();
 
-          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
           $cars = db::select($query);
 
@@ -448,7 +448,14 @@ class QcCarController extends Controller
           
           } else{
 
-            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.employee_id = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+            if ($posisi == "staff" || $posisi == "foreman") {
+              $to = "employee_id";
+            } 
+            else if ($posisi == "manager") {
+              $to = "dgm";
+            }
+
+            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
             $mails = DB::select($mailto);
 
           }
@@ -521,7 +528,7 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "gm";
                 $qc_cars->save();
-                Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cars, 'car'));
+                // Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CAR');
               }
               else if($qc_cars->email_status == "SentGM" && $qc_cars->posisi == "gm"){
@@ -582,12 +589,21 @@ class QcCarController extends Controller
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR'); 
                 }
 
+                else if($qc_cars->email_status == "SentManager" && $qc_cars->posisi == "manager"){
+                  $qc_cars->email_status = "SentDGM";
+                  $qc_cars->email_send_date = date('Y-m-d');
+                  $qc_cars->posisi = "dgm";
+                  $qc_cars->save();
+                  Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                  return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
+                }
+
                 else if($qc_cars->email_status == "SentDGM" && $qc_cars->posisi == "dgm"){
                   $qc_cars->email_status = "SentGM";
                   $qc_cars->email_send_date = date('Y-m-d');
                   $qc_cars->posisi = "gm";
                   $qc_cars->save();
-                  Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cars, 'car'));
+                  // Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cars, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CAR');
                 }
                 else if($qc_cars->email_status == "SentGM" && $qc_cars->posisi == "gm"){
@@ -623,7 +639,7 @@ class QcCarController extends Controller
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
                 }
 
-                else if($qc_cpars->email_status == "SentChief" || $qc_cpars->email_status == "SentManager" || $qc_cpars->email_status == "SentDGM" || $qc_cpars->email_status == "SentGM" || $qc_cpars->email_status == "SentQA"){
+                else if($qc_cars->email_status == "SentChief" || $qc_cars->email_status == "SentManager" || $qc_cars->email_status == "SentDGM" || $qc_cars->email_status == "SentGM" || $qc_cars->email_status == "SentQA"){
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('error', 'Email pernah dikirim')->with('page', 'CAR');
                 }
             }
@@ -704,7 +720,7 @@ class QcCarController extends Controller
               $cars->email_send_date = date('Y-m-d');
               $cars->posisi = "gm";
               $cars->save();
-              Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($emailcar, 'car'));            
+              // Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($emailcar, 'car'));            
             }
 
             else if ($cars->posisi == "gm") {

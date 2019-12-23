@@ -46,9 +46,10 @@
               @endforeach
             </select>
           </div>
-          <label class="col-sm-1">Via Komplain<span class="text-red">*</span></label>
+          <label class="col-sm-1">Judul Komplain<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" name="via_komplain" id="via_komplain" value="Email" required readonly>
+            <input type="text" class="form-control" name="judul_komplain" id="judul_komplain" placeholder="Judul / Subject Komplain" required="">
+            <input type="hidden" class="form-control" name="via_komplain" id="via_komplain" value="Email" required readonly>
           </div>
         </div>
 

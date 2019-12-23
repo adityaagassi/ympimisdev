@@ -151,7 +151,7 @@ td{
                 <th>Lokasi</th>
                 <th>Tgl Permintaan</th>
                 <th>Tgl Balas</th>
-                <th>Via Komplain</th>
+                <th>Judul Komplain</th>
                 <th>Departemen</th>
                 <th>Sumber Komplain</th>
                 <th>Status</th>
@@ -350,7 +350,7 @@ td{
           { "data": "lokasi" },
           { "data": "tgl_permintaan" },
           { "data": "tgl_balas" },
-          { "data": "via_komplain" },
+          { "data": "judul_komplain" },
           { "data": "department_name" , "width": "15%"},
           { "data": "sumber_komplain" },
           { "data": "status_name" },
