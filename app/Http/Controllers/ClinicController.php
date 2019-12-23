@@ -132,8 +132,8 @@ class ClinicController extends Controller{
 
 	}
 
-	public function indexClinicVisitor(){
-		$title = 'Clinic Visitor';
+	public function indexClinicMonitoring(){
+		$title = 'Clinic Visitor Monitoring';
 		$title_jp = '??';
 
 		return view('clinic.display.visitor', array(
@@ -164,12 +164,10 @@ class ClinicController extends Controller{
 			$id = 'and p.idx = '. $request->get('id');
 		}
 
-		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.`name`, e.hire_date, m.department  from patient_list p
-			left join ympimis.employees e on e.employee_id = p.employee_id
-			left join ympimis.mutation_logs m on m.employee_id = p.employee_id
+		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.employee_name, e.hire_date, e.section  from patient_list p
+			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
 			where p.`status` is null
-			and p.note is null
-			and m.valid_to is null ".$id."
+			and p.note is null ".$id."
 			order by p.in_time asc");
 
 		$response = array(
@@ -180,12 +178,10 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchPatient(){
-		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.`name`, e.hire_date, m.department, d.purpose from patient_list p
-			left join ympimis.employees e on e.employee_id = p.employee_id
-			left join ympimis.mutation_logs m on m.employee_id = p.employee_id
+		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.employee_name, e.hire_date, e.section, d.purpose from patient_list p
+			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
 			left join ympimis.clinic_patient_details d on d.id = p.`status`
 			where p.note is null
-			and m.valid_to is null
 			order by p.in_time asc");
 
 		$response = array(

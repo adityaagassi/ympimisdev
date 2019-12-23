@@ -41,7 +41,7 @@
 								<th style="width: 15%; text-align: center;">In Time</th>
 								<th style="width: 15%; text-align: center;">NIK</th>
 								<th style="width: 25%;">Name</th>
-								<th style="width: 20%; text-align: center;">Department</th>
+								<th style="width: 20%; text-align: center;">Section</th>
 								<th style="width: 15%; text-align: center;">Action</th>
 							</tr>					
 						</thead>
@@ -85,8 +85,8 @@
 								<input type="text" id="name" style="width: 100%; height: 35px; font-size: 15px;" disabled>
 							</div>
 							<div class="col-xs-4">
-								<span style="font-weight: bold; font-size: 16px;">Department:</span>
-								<input type="text" id="department" style="width: 100%; height: 35px; font-size: 15px;" disabled>
+								<span style="font-weight: bold; font-size: 16px;">Section:</span>
+								<input type="text" id="section" style="width: 100%; height: 35px; font-size: 15px;" disabled>
 							</div>
 
 							<div class="col-xs-4" style="color: black;">
@@ -324,7 +324,7 @@
 				$("#nik").val("");
 				$("#hire_date").val("");
 				$("#name").val("");
-				$("#department").val("");
+				$("#section").val("");
 				$("#family").val("");
 				$("#family_name").val("");
 
@@ -399,8 +399,8 @@
 				$('#date').val(result.visitor[0].in_time);
 				$('#nik').val(result.visitor[0].employee_id);
 				$('#hire_date').val(result.visitor[0].hire_date);
-				$('#name').val(result.visitor[0].name);
-				$('#department').val(result.visitor[0].department);
+				$('#name').val(result.visitor[0].employee_name);
+				$('#section').val(result.visitor[0].section);
 			}
 		});
 
@@ -421,10 +421,10 @@
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ ++count +'</td>';
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].in_time +'</td>';
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ result.visitor[i].name +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].department +'</td>';
+					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ result.visitor[i].employee_name +'</td>';
+					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].section +'</td>';
 					tableData += '<td style="text-align: center;">';
-					tableData += '<button style="width: 50%; height: 100%;" onClick="showDelete(this)" id="'+result.visitor[i].idx+'+'+ result.visitor[i].name +'" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-fw fa-trash"></i> Delete</span></button>';
+					tableData += '<button style="width: 50%; height: 100%;" onClick="showDelete(this)" id="'+result.visitor[i].idx+'+'+ result.visitor[i].employee_name +'" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-fw fa-trash"></i> Delete</span></button>';
 					tableData += '</td>';
 					tableData += '</tr>';
 				}

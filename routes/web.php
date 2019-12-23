@@ -995,7 +995,7 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::post('delete/diagnose', 'ClinicController@deleteVisitor');
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
 });
-Route::get('index/display/clinic_visitor', 'ClinicController@indexClinicVisitor');
+Route::get('index/display/clinic_monitoring', 'ClinicController@indexClinicMonitoring');
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 
 
@@ -1262,7 +1262,7 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 
 	//Konfirmasi Pesanan
 	Route::post('index/pantry/konfirmasi', 'PantryController@konfirmasi');
-	Route::get('index/pantry/selesaikan/{id}', 'PantryController@selesaikan');
+	Route::post('index/pantry/selesaikan', 'PantryController@selesaikan');
 
 	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');
 });

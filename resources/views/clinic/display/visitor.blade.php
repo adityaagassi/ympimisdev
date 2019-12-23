@@ -84,7 +84,7 @@
 						<th style="width: 4%;">#</th>
 						<th style="width: 10%; text-align: center;">NIK</th>
 						<th style="width: 21%; text-align: center;">Name</th>
-						<th style="width: 21%; text-align: center;">Department</th>
+						<th style="width: 21%; text-align: center;">Section</th>
 						<th style="width: 14%; text-align: center;">In Time</th>
 						<th style="width: 10%; text-align: center;">Duration</th>
 						<th style="width: 20%; text-align: center;">Keperluan</th>
@@ -188,8 +188,8 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ ++count +'</td>';
 					tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td>'+ result.visitor[i].name +'</td>';
-					tableData += '<td>'+ result.visitor[i].department +'</td>';
+					tableData += '<td>'+ result.visitor[i].employee_name +'</td>';
+					tableData += '<td>'+ result.visitor[i].section +'</td>';
 					tableData += '<td>'+ result.visitor[i].in_time +'</td>';
 					in_time.push(new Date(result.visitor[i].in_time));
 					tableData += '<td><p class="patient-duration">';

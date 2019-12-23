@@ -235,13 +235,17 @@
                         <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a>
-                        <br>
+                        {{-- <br>
                         <a href="http://172.17.128.114/clinic-new/chart.php">
                             <i class="fa fa-caret-right"></i> Clinic Visit ()
+                        </a> --}}
+                        <br>
+                        <a href="{{ url("index/display/clinic_monitoring") }}">
+                            <i class="fa fa-caret-right"></i> Clinic Monitoring ()
                         </a>
                         <br>
-                        <a href="{{ url("index/display/clinic_visitor") }}">
-                            <i class="fa fa-caret-right"></i> Clinic Display ()
+                        <a href="{{ url("index/display/clinic_visit") }}">
+                            <i class="fa fa-caret-right"></i> Clinic Visit ()
                         </a>
                         <br>
                         <a href="{{ url("index/emergency_response") }}">
