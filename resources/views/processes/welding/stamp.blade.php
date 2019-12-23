@@ -451,7 +451,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					$("#lastCounter").val(result.lastCounter);
 					$("#nextCounter").val(result.nextCounter);
-					Stamp();
+					stamp();
 				}
 				else{
 					audio_error.play();
