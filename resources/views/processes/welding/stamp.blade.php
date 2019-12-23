@@ -275,7 +275,7 @@ table.table-bordered > tfoot > tr > th{
 			$('.select2').select2()
 		});
 		// setInterval(fillSerialNumber, 5000);
-		stamp();
+		// stamp();
 
 		$('body').toggleClass("sidebar-collapse");
 		fillPlan2()
@@ -451,6 +451,7 @@ table.table-bordered > tfoot > tr > th{
 				if(result.status){
 					$("#lastCounter").val(result.lastCounter);
 					$("#nextCounter").val(result.nextCounter);
+					Stamp();
 				}
 				else{
 					audio_error.play();
