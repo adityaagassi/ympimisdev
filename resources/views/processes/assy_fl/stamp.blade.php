@@ -266,7 +266,7 @@
 		fillPlannew();
 		fillSerialNumber();
 		fillResult();
-		stamp();
+		// stamp();
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -368,6 +368,7 @@
 				if(result.status){
 					$("#lastCounter").val(result.lastCounter);
 					$("#nextCounter").val(result.nextCounter);
+					stamp();
 				}
 				else{
 					audio_error.play();
