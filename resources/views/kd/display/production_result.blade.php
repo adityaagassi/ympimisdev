@@ -290,7 +290,7 @@
 						},
 						plotOptions: {
 							series:{
-								minPointLength: 10,
+								// minPointLength: 10,
 								pointPadding: 0,
 								groupPadding: 0,
 								animation:{
