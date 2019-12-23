@@ -472,7 +472,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal fade modal-danget" id="trouble-modal">
+		<div class="modal fade modal-danger" id="trouble-modal">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -837,7 +837,7 @@
 
 		function fetchTotalPunch(punch_number){
 			var material_number = $("#material_number").val();
-			var process = $("#process_desc").val();
+			var process = 'Forging';
 			var data = {
 				material_number : material_number,
 				process : process,
@@ -855,7 +855,7 @@
 
 		function fetchTotalDie(die_number){
 			var material_number = $("#material_number").val();
-			var process = $("#process_desc").val();
+			var process = 'Forging';
 			var data = {
 				material_number : material_number,
 				process : process,
