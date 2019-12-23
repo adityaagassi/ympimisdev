@@ -261,8 +261,8 @@
 								formatter () {
 									return `<span style="color: white;">${this.value}</span>`
 								}
-							},
-							type:'logarithmic'
+							}
+							// ,type:'logarithmic'
 						},
 						credits:{
 							enabled: false

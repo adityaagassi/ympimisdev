@@ -104,6 +104,10 @@
 		background: white;
 	}
 
+	img {
+	    width: 100%;
+	}
+
 </style>
 @stop
 @section('header')
@@ -125,18 +129,18 @@
 					<span style="font-size: 20px; font-weight: bold;">Drink List Order (飲み物注文リスト) </span><br><br>
 					<div class="row">
 						<?php foreach ($menus as $menu){ ?>
-						<!-- <div class="col-xs-6" onclick="getData({{$menu->id}})" style="cursor: pointer;">
+						<div class="col-md-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
 							<div class="text-center">
-								<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto">
+								<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto;height: 160px">
 								<p style="font-size: 1.5vw;padding: 5px">{{ $menu->menu }}</p>
 							</div>
-						</div> -->
-						<div onclick="getData({{$menu->id}})" style="cursor: pointer;display: inline-block;margin-left: 20px">
+						</div>
+						<!-- <div onclick="getData({{$menu->id}})" style="cursor: pointer;display: inline-block;margin-left: 20px">
 							<center>
 								<img src="{{ url('images/minuman', $menu->gambar) }}" alt="kopi" width="210px">
 								<p style="font-size: 1.5vw;padding: 5px">{{ $menu->menu }}</p>
 							</center>
-						</div>
+						</div> -->
 
 						<?php } ?>
 					</div>

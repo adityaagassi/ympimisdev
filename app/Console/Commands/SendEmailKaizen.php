@@ -56,6 +56,12 @@ class SendEmailKaizen extends Command
         ->select('employees.employee_id','employees.name','position', 'department','email')
         ->get();
 
+        $mail_to2 = db::table('send_emails')
+        ->Where('remark', '=', 'superman')
+        ->WhereNull('deleted_at')
+        ->select('email')
+        ->get();
+
         // $tes = DB::getQueryLog();
 
         $query_cf = "select child_code, area, SUM(unv_frm) as frm, SUM(unv_mngr) as mngr from
@@ -77,7 +83,7 @@ class SendEmailKaizen extends Command
         join organization_structures as os on organization_structures.`status` = os.parent_name
         where organization_structures.remark = 'department') as bagian
         on bagian.section = kaizen_forms.area
-        where `status` = 1 and manager_point_1 is null
+        where `status` = 1 and (manager_point_1 is null or manager_point_1 = 0)
         group by area) alls group by child_code, area";
         
         $kzn = db::select($query_cf);
@@ -86,6 +92,10 @@ class SendEmailKaizen extends Command
         $cf_fr = array();
         $mngr = array();
         $mail_tos = array();
+
+        foreach ($mail_to2 as $data2) {
+            array_push($mail_tos ,$data2->email);
+        }
 
         foreach ($mail_to as $data) {
             if ($data->position == 'Chief' || $data->position == 'Foreman') {
@@ -127,6 +137,7 @@ class SendEmailKaizen extends Command
     }
 }
 
+// print_r($mail_tos);
 
 $kaizens = [
     'kaizens' => $kzn

@@ -76,6 +76,8 @@ label {
   </div>   
   @endif
 
+  @if(Auth::user()->username == "pantry" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "S")
+
   <div class="row">
     <div class="col-xs-12">
       <table id="example1" class="table table-bordered table-striped table-hover">
@@ -112,16 +114,18 @@ label {
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <a id="modalconfirm" href="#" type="button" class="btn btn-success">Confirm</a>
+        <input type="hidden" id="id_konfirmasi">
+        <a onclick="finish()" href="#" type="button" class="btn btn-success">Confirm</a>
+        <!-- <a id="modalconfirm" href="#" type="button" class="btn btn-success">Confirm</a> -->
       </div>
     </div>
   </div>
 </div>
-
+  @endif
 @stop
 
 @section('scripts')
-
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
@@ -145,6 +149,7 @@ label {
   function open_Modal(id) {
     $("#myModal").modal('show');
     $("#adaw").text(id);
+    $("#id_konfirmasi").val(id);
 
     jQuery('#modalconfirm').attr("href", '{{ url("index/pantry/selesaikan") }}'+'/'+id);
   }
@@ -158,9 +163,27 @@ label {
 
       if (result.status == true) {
         fetchTable();
-        openSuccessGritter("Success","This Orders has been confirmed.");
+        openSuccessGritter("Success","Pesanan Berhasil Dikonfirmasi");
       } else {
         openErrorGritter("Error","Failed.");
+      }
+    })
+  }
+
+  function finish() {
+    var data = {
+      id: $("#id_konfirmasi").val()
+    }
+
+    $.post('{{ url("index/pantry/selesaikan") }}', data, function(result, status, xhr){
+
+      if (result.status == true) {
+        fetchTable();
+        $("#myModal").modal('hide');
+        openSuccessGritter("Success","Pesanan Sudah Selesai Dibuat");
+      } else {
+        $("#myModal").modal('hide');
+        openErrorGritter("Error","Failed");
       }
     })
   }

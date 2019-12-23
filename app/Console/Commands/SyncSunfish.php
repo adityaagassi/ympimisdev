@@ -40,32 +40,34 @@ class SyncSunfish extends Command
     {
         $insert = array();
         $datas = db::connection('sunfish')->select("select * from dbo.view_ympi_emp_orgunit");
+        $datas2 = json_decode(json_encode($datas), true);
         
-        foreach ($datas as $data) {
+        foreach ($datas2 as $data) {
             $row = array();
 
-            $row['employee_id'] = $data->Emp_no;
-            $row['employee_name'] = $data->Full_name;
-            $row['gender'] = $data->gender;
-            $row['birth_place'] = $data->birthplace;
-            $row['birth_date'] = $data->birthdate;
-            $row['address'] = $data->address;
-            $row['phone'] = $data->phone;
-            $row['identity_number'] = $data->identity_no;
-            $row['taxfile_number'] = $data->taxfilenumber;
-            $row['JP'] = $data->JP;
-            $row['BPJS'] = $data->BPJS;
-            $row['hire_date'] = $data->start_date;
-            $row['position_name'] = $data->pos_name_en;
-            $row['grade_code'] = $data->grade_code;
-            $row['grade_category'] = $data->gradecategory_name;
-            $row['division'] = $data->Division;
-            $row['department'] = $data->Department;
-            $row['section'] = $data->Section;
-            $row['group'] = $data->Group;
-            $row['employment_status'] = $data->employ_code;
-            $row['cost_center'] = $data->cost_center;
-            $row['assignment'] = $data->Penugasan;
+            $row['employee_id'] = $data['Emp_no'];
+            $row['employee_name'] = $data['Full_name'];
+            $row['gender'] = $data['gender'];
+            $row['birth_place'] = $data['birthplace'];
+            $row['birth_date'] = $data['birthdate'];
+            $row['address'] = $data['address'];
+            $row['phone'] = $data['phone'];
+            $row['identity_number'] = $data['identity_no'];
+            $row['taxfile_number'] = $data['taxfilenumber'];
+            $row['JP'] = $data['JP'];
+            $row['BPJS'] = $data['BPJS'];
+            $row['hire_date'] = $data['start_date'];
+            $row['position_name'] = $data['pos_name_en'];
+            $row['grade_code'] = $data['grade_code'];
+            $row['grade_category'] = $data['gradecategory_name'];
+            $row['division'] = $data['Division'];
+            $row['department'] = $data['Department'];
+            $row['section'] = $data['Section'];
+            $row['sub_section'] = $data['Sub-Section'];
+            $row['group'] = $data['Group'];
+            $row['employment_status'] = $data['employ_code'];
+            $row['cost_center'] = $data['cost_center'];
+            $row['assignment'] = $data['Penugasan'];
 
             $insert[] = $row;
         }

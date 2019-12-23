@@ -35,6 +35,10 @@ class HomeController extends Controller
         }
     }
 
+    public function indexProjectTimeline(){
+          return view('about_mis.project_timeline')->with('page', 'Project Timeline');
+    }
+
     public function indexAboutMIS(){
         $projects = db::table('mis_investments')->orderby('start_date', 'asc')
         ->leftJoin('mis_investment_details', 'mis_investments.project', '=', 'mis_investment_details.project')

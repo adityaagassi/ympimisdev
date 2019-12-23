@@ -361,11 +361,11 @@ class PantryController extends Controller
 	    }
 	}
 
-    public function selesaikan(Request $request, $id){
+    public function selesaikan(Request $request){
 		try{
 			$id_user = Auth::id();
 
-			$pantry = PantryOrder::find($id);
+			$pantry = PantryOrder::find($request->get("id"));
 
             $log = new PantryLog([
                 'pemesan' => $pantry->pemesan,
@@ -383,15 +383,27 @@ class PantryController extends Controller
 
            	$pantry->delete();
 
-            return redirect('/index/pantry/confirmation')->with('page', 'Pantry');
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil",
+            );
+            return Response::json($response);
         }
         catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-                return back()->with('error', 'Menu name already exist.')->with('page', 'Pantry');
-            }
-            else{
-                return back()->with('error', $e->getMessage())->with('page', 'Pantry');
+             $response = array(
+              'status' => false,
+              'datas' => "Error",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Error",
+            );
+             return Response::json($response);
             }
         } 
     }

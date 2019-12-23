@@ -436,34 +436,9 @@ class DisplayController extends Controller
 
 		$tableData = DB::select($query);
 
-		// $query2 = "select result.material_number, materials.material_description as model, sum(result.plan) as plan, sum(result.actual) as actual from
-		// (
-		// select material_number, sum(quantity) as plan, 0 as actual 
-		// from production_schedules 
-		// where due_date >= '". $first ."' and due_date <= '". $now ."' 
-		// group by material_number
-
-		// union all
-
-		// select material_number, 0 as plan, sum(quantity) as actual
-		// from flo_details
-		// where date(created_at) >= '". $first ."' and date(created_at) <= '". $now ."'
-		// group by material_number
-		// ) as result
-		// left join materials on materials.material_number = result.material_number
-		// ". $hpl ."
-		// group by result.material_number, materials.material_description
-		// having sum(result.plan) <> 0 or sum(result.actual) <> 0";
-
-		// $chartData = DB::select($query2);
-
-		// $totalPlan = DB::select();
-
 		$response = array(
 			'status' => true,
 			'tableData' => $tableData,
-			// 'chartData' => $chartData,
-			// 'totalPlan' => $totalPlan,
 		);
 		return Response::json($response);
 	}

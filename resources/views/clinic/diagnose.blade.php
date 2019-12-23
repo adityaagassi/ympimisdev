@@ -93,7 +93,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Purpose:</span>
 								<div class="form-group">
 									<select style="width: 100%;" class="form-control select2 purpose" id="purpose"  data-placeholder="Select Purpose">
-										<option value="">Select Purpose</option>
+										<option value=""></option>
 										@foreach($purposes as $purpose)
 										<option value="{{ $purpose }}">{{ $purpose }}</option>
 										@endforeach
@@ -275,8 +275,6 @@
 			}		
 		}
 		med--;
-
-		console.log(med);
 	}
 
 	function inputDiagnose(){
@@ -330,25 +328,24 @@
 				$("#family").val("");
 				$("#family_name").val("");
 
-				$("#purpose").val("");
-				$("#diagnose").val("");
-				$("#doctor").val("");
+				$('#purpose').prop('selectedIndex', 0).change();
+				$('#diagnose').prop('selectedIndex', 0).change();
+				$('#doctor').prop('selectedIndex', 0).change();
 				
 				$('#medicine').append().empty();
 				$('#family-field').hide();
 				$('#pemeriksaan-kesehatan').hide();
 
-
-
 				fillVisitor();
 				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
 			}else{
-				$("#purpose").val("");
 				$("#family").val("");
 				$("#family_name").val("");
-				$("#diagnose").val("");
-				$("#doctor").val("");
+
+				$('#purpose').prop('selectedIndex', 0).change();
+				$('#diagnose').prop('selectedIndex', 0).change();
+				$('#doctor').prop('selectedIndex', 0).change();
 
 				$("#loading").hide();
 				openErrorGritter('Error!', result.message);
