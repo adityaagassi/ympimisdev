@@ -660,8 +660,6 @@
 	}
 
 	function konfirmasi(){
-		// $('#reset_button').show();
-		// $('#selesai_button').hide();
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
 		var check_date = $("#check_date").val();
@@ -742,6 +740,8 @@
 					openErrorGritter('Error!', result.message);
 				}
 			});
+			$('#reset_button').show();
+			$('#selesai_button').hide();
 		}
 	}
 
