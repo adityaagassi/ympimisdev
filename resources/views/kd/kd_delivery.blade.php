@@ -257,7 +257,6 @@
     }
     $.post('{{ url("delete/kdo_delivery") }}', data, function(result, status, xhr){
       if(result.status){
-
         openSuccessGritter('Success!', result.message);
         $("#kdo_number_delivery").val("");
         $("#kdo_number_delivery").focus();
@@ -267,7 +266,7 @@
         $("#kdo_number_delivery").val("");
         $("#kdo_number_delivery").focus();
       }
-    }
+    });
   }
 
   function scan_kdo_delivery(){
