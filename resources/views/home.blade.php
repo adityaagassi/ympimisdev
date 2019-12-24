@@ -244,7 +244,7 @@
                             <i class="fa fa-caret-right"></i> Clinic Monitoring ()
                         </a>
                         <br>
-                        <a href="{{ url("index/display/clinic_visit") }}">
+                        <a href="{{ url("index/display/clinic_visit?dateto=&datefrom=") }}">
                             <i class="fa fa-caret-right"></i> Clinic Visit ()
                         </a>
                         <br>
@@ -528,7 +528,7 @@
                         <td>
                             <span style="font-weight: bold;">KD Parts Control (KD部品管理)</span>
                             <br>
-                            <a href="{{ url("#") }}">
+                            <a href="{{ url("/index/kd_production_schedule_data") }}">
                                 <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                             </a>
                             <br>

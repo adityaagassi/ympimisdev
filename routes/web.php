@@ -353,6 +353,7 @@ Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('create/ekaizen/{id}/{name}/{section}/{group}', 'EmployeeController@makeKaizen');
 Route::post('post/ekaizen', 'EmployeeController@postKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
+Route::get('index/updateKaizen/{id}', 'EmployeeController@indexUpdateKaizenDetail');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
 Route::post('post/hrqa', 'EmployeeController@postChat');
@@ -996,7 +997,10 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
 });
 Route::get('index/display/clinic_monitoring', 'ClinicController@indexClinicMonitoring');
+Route::get('index/display/clinic_visit', 'ClinicController@indexClinicVisit');
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
+Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
+Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 
 
 
@@ -1794,8 +1798,8 @@ Route::get('index/jishu_hozen/getjishuhozen','JishuHozenController@getjishuhozen
 Route::post('index/jishu_hozen/update/{id}/{jishu_hozen_point_id}/{jishu_hozen_id}','JishuHozenController@update');
 Route::get('index/jishu_hozen/destroy/{id}/{jishu_hozen_point_id}/{jishu_hozen_id}', 'JishuHozenController@destroy');
 Route::get('index/jishu_hozen/print_jishu_hozen/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen');
-Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{month}','JishuHozenController@print_jishu_hozen_email');
-Route::post('index/jishu_hozen/sendemail/{id}','JishuHozenController@sendemail');
+Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen_email');
+Route::get('index/jishu_hozen/sendemail/{id}/{jishu_hozen_point_id}','JishuHozenController@sendemail');
 Route::post('index/jishu_hozen/approval/{id}/{month}','JishuHozenController@approval');
 
 //RECORDER PROCESS
@@ -1803,7 +1807,6 @@ Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
-Route::get('index/push_block_recorder/edit/{push_block_code}', 'RecorderProcessController@edit');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 
 //WEBCAM
@@ -1943,6 +1946,8 @@ Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
 //Display Press
 Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
+Route::get('index/press/detail_press', 'PressController@detail_press');
+Route::get('index/press/detail_pic', 'PressController@detail_pic');
 Route::get('index/press/monitoring2', 'PressController@monitoring2');
 //Report Press
 Route::get('index/press/report_trouble', 'PressController@report_trouble');

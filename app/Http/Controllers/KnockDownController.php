@@ -22,6 +22,7 @@ use App\StorageLocation;
 use App\Material;
 use App\ErrorLog;
 use App\OriginGroup;
+use App\ProductionSchedule;
 use Carbon\Carbon;
 use DataTables;
 use Response;
@@ -73,46 +74,80 @@ class KnockDownController extends Controller{
 	}
 
 	public function indexKdProductionScheduleData(){
-		if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) == 0){
-			$periodFrom = $request->get('periodFrom');
-			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."'";
+		$origin_groups = DB::table('origin_groups')->get();
+		$materials = Material::where('category','=','KD')->orderBy('material_number', 'ASC')->get();
+		$locations = Material::where('category', '=', 'KD')
+		->whereNotNull('hpl')
+		->select('hpl')
+		->distinct()
+		->orderBy('hpl', 'asc')
+		->get();
+
+		return view('kd.display.production_schedule_data', array(
+			'title' => 'Production Schedule Data',
+			'title_jp' => '生産スケジュールデータ',
+			'origin_groups' => $origin_groups,
+			'materials' => $materials,
+			'locations' => $locations
+		))->with('page', 'KD Schedule Data');
+	}
+
+	public function fetchKdProductionScheduleData(Request $request){
+		$first = date("Y-m-01", strtotime($request->get("dateTo")));
+
+		$production_schedules = ProductionSchedule::leftJoin('materials', 'materials.material_number', '=', 'production_schedules.material_number')
+		->where('production_schedules.due_date', '>=', $first)
+		->where('materials.category', '=', 'KD');
+
+		$knock_down_details = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->where(db::raw('date(knock_down_details.created_at)'), '>=', $first)
+		->where('materials.category', '=', 'KD');
+
+		$knock_down_deliveries = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->leftJoin('knock_downs', 'knock_downs.kd_number', '=', 'knock_down_details.kd_number')
+		->where(db::raw('date(knock_down_details.created_at)'), '>=', $first)
+		->whereIn('knock_downs.status', [2,3,4])
+		->where('materials.category', '=', 'KD');
+
+		if(strlen($request->get('dateTo'))>0){
+			$knock_down_details = $knock_down_details->where(db::raw('date(knock_down_details.created_at)'), '<=', $request->get('dateTo'));
+			$knock_down_deliveries = $knock_down_deliveries->where(db::raw('date(knock_down_details.created_at)'), '<=', $request->get('dateTo'));
+			$production_schedules = $production_schedules->where('production_schedules.due_date', '<=', $request->get('dateTo'));
 		}
-		else if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) > 0){
-			$periodTo = $request->get('periodTo');
-			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."' and shipment_schedules.st_month <= '".$periodTo."'";
+		if($request->get('originGroup') != null){
+			$knock_down_details = $knock_down_details->whereIn('materials.origin_group_code', $request->get('originGroup'));
+			$knock_down_deliveries = $knock_down_deliveries->whereIn('materials.origin_group_code', $request->get('originGroup'));
+			$production_schedules = $production_schedules->whereIn('materials.origin_group_code', $request->get('originGroup'));
 		}
-		else{
-			$st_month = date('Y-m-01');			
-			$where1 = " where shipment_schedules.st_month = '".$st_month."'";
+		
+		// if($request->get('hpl') != null){
+		// 	$knock_down_details = $knock_down_details->whereIn('materials.hpl', $request->get('hpl'));
+		// 	$knock_down_deliveries = $knock_down_deliveries->whereIn('materials.hpl', $request->get('hpl'));
+		// 	$production_schedules = $production_schedules->whereIn('materials.hpl', $request->get('hpl'));
+		// }
+
+		if($request->get('material_number') != null){
+			$knock_down_details = $knock_down_details->whereIn('knock_down_details.material_number', $request->get('material_number'));
+			$knock_down_deliveries = $knock_down_deliveries->whereIn('knock_down_details.material_number', $request->get('material_number'));
+			$production_schedules = $production_schedules->whereIn('production_schedules.material_number', $request->get('material_number'));
 		}
 
-		if(strlen($request->get('originGroupCode')) > 0){
-			$where2 = " and materials.origin_group_code = '".$request->get('originGroupCode')."'";
-		}
+		$production_schedules = $production_schedules->select("production_schedules.due_date", "production_schedules.material_number", "materials.material_description", "production_schedules.quantity","materials.origin_group_code","materials.hpl")
+		->get();
 
-		if(strlen($request->get('hpl')) > 0){
-			$where2 = " and materials.hpl = '".$request->get('hpl')."'";
-		}
+		$knock_down_details = $knock_down_details->select("knock_down_details.material_number", db::raw("sum(knock_down_details.quantity) as packing"), db::raw('date(knock_down_details.created_at) as date'))
+		->groupBy('knock_down_details.material_number', db::raw('date(knock_down_details.created_at)'))
+		->get();
 
-		$query = "select shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y') as st_month, shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y') as st_date, date_format(shipment_schedules.bl_date, '%d-%b-%Y') as bl_date_plan, sum(coalesce(stock.quantity, 0)) as quantity_production, sum(if(stock.status > 1, stock.quantity, 0)) as quantity_delivery FROM `shipment_schedules` left join
-		(select shipment_schedule_id, sum(actual) as quantity, status from flos group by shipment_schedule_id, status
-		union all
-		select knock_down_details.shipment_schedule_id, sum(knock_down_details.quantity) as quantity, knock_downs.`status` from knock_down_details 
-		left join knock_downs on knock_downs.kd_number = knock_down_details.kd_number 
-		group by shipment_schedule_id, knock_downs.status) as stock on shipment_schedules.id = stock.shipment_schedule_id
-		left join destinations on destinations.destination_code = shipment_schedules.destination_code 
-		left join shipment_conditions on shipment_conditions.shipment_condition_code = shipment_schedules.shipment_condition_code 
-		left join materials on materials.material_number = shipment_schedules.material_number
-		'".$where1."'
-		'".$where2."'
-		'".$where3."'
-		group by shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y'), shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y'), date_format(shipment_schedules.bl_date, '%d-%b-%Y')";
-
-		$shipment_schedules = DB::select($query);
+		$knock_down_deliveries = $knock_down_deliveries->select("knock_down_details.material_number", db::raw("sum(knock_down_details.quantity) as deliv"), db::raw('date(knock_down_details.created_at) as date'))
+		->groupBy('knock_down_details.material_number', db::raw('date(knock_down_details.created_at)'))
+		->get();
 
 		$response = array(
 			'status' => true,
-			'shipment_schedules' => $shipment_schedules,
+			'production_sch' => $production_schedules,
+			'packing' => $knock_down_details,
+			'deliv' => $knock_down_deliveries
 		);
 		return Response::json($response);
 	}
@@ -124,7 +159,7 @@ class KnockDownController extends Controller{
 		->where('shipment_date', '>=', $first)
 		->where('shipment_date', '<=', $now)
 		->get();
-		
+
 		return view('kd.kd_stuffing', array(
 			'container_schedules' => $container_schedules,
 		))->with('page', 'KD Stuffing');
@@ -537,7 +572,7 @@ class KnockDownController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 		$response = array(
 			'status' => true,
 			'message' => 'KDO berhasil ditransfer ke FSTK.',
@@ -613,7 +648,7 @@ class KnockDownController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 		$response = array(
 			'status' => true,
 			'message' => 'KDO berhasil distuffing',
@@ -730,7 +765,7 @@ class KnockDownController extends Controller{
 		);
 		return Response::json($response);
 	}
-	
+
 	public function fetchKdDetail(Request $request){
 		$location = $request->get('location');
 
@@ -846,7 +881,7 @@ class KnockDownController extends Controller{
 		->orderBy('id', 'asc')
 		->orderBy('st_date', 'asc')
 		->first();
-		
+
 		if($shipment_schedule){
 			$knock_down = KnockDown::where('remark','=',$location)
 			->where('status','=', 0)
@@ -968,7 +1003,7 @@ class KnockDownController extends Controller{
 					$knock_down = KnockDown::where('kd_number', '=', $kd_number)->update(['status' => '1']);
 
 					$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
-					
+
 					$this->printKDO($kd_number, $knock_down_details[9]->st_date, $knock_down_details, $storage_location->location);
 				}
 
@@ -1003,7 +1038,7 @@ class KnockDownController extends Controller{
 	}
 
 	public function printKDO($kd_number, $st_date, $knock_down_details, $storage_location){
-		
+
 		if(Auth::user()->role_code == 'op-zpro'){
 			$printer_name = 'KDO ZPRO';
 		}
@@ -1013,7 +1048,7 @@ class KnockDownController extends Controller{
 
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
-		
+
 		$printer->setJustification(Printer::JUSTIFY_LEFT);
 		$printer->setUnderline(true);
 		$printer->text('Storage Location:');

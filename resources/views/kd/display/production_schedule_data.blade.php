@@ -82,10 +82,10 @@
 					<div class="col-md-12 col-md-offset-3">
 						<div class="col-md-6">
 							<div class="form-group">
-								<select class="form-control select2" multiple="multiple" data-placeholder="Select Model" id="model" style="width: 100%;">
+								<select class="form-control select2" multiple="multiple" data-placeholder="Select Location" id="hpl" style="width: 100%;">
 									<option></option>
-									@foreach($models as $model)
-									<option value="{{ $model->model }}">{{ $model->model }}</option>
+									@foreach($locations as $location)
+									<option value="{{ $location->hpl }}">{{ $location->hpl }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -211,45 +211,34 @@
 			if (tmpTo != tmpFrom) {
 				alert("Date From and Date To must on same month");
 				return false;
-			} else {
+			} 
+			else {
 				dateTo = $('#dateTo').val();
 				dateFrom = $('#dateFrom').val();
 			}
-		} else if($('#dateTo').val() == "" || $('#dateFrom').val() == ""){
+		} 
+		else if($('#dateTo').val() == "" || $('#dateFrom').val() == ""){
 			alert("Date From and Date To must be filled");
 			return false;
-		} else {
+		} 
+		else {
 			alert("Date From and Date To must be filled");
 			return false;
 		}
 
-		if ($('#origin_group').val() != "") {
-			originGroupCode = $('#origin_group').val();
-		} else {
-			originGroupCode = "";
-		}
-
-		if ($('#material_number').val() != "") {
-			material = $('#material_number').val();
-		} else {
-			material = "";
-		}
-
-		if ($('#model').val() != "") {
-			model = $('#model').val();
-		} else {
-			model = "";
-		}
+		var originGroup = $('#origin_group').val();
+		var material_number = $('#material_number').val();
+		var hpl = $('#hpl').val();
 
 		var data = {
 			dateFrom:dateFrom,
 			dateTo:dateTo,
-			product_code:originGroupCode,
-			material_number:material,
-			model:model
+			originGroup:originGroup,
+			material_number:material_number,
+			hpl:hpl
 		}
 
-		$.get('{{ url("fetch/fg_production_schedule") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/kd_production_schedule_data") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
@@ -367,7 +356,7 @@
 							}
 						}
 
-						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_tmp, diff1 : (pkg_tmp - qty_tmp), deliv: deliv_tmp, diff2: (deliv_tmp - qty_tmp), model: value.model, origin_group: value.origin_group_code, plan_act: value.quantity});
+						arr_datas.push({due_date: value.due_date, material_number: value.material_number, mat_desc: value.material_description, qty: qty_tmp, pkg: pkg_tmp, diff1 : (pkg_tmp - qty_tmp), deliv: deliv_tmp, diff2: (deliv_tmp - qty_tmp), hpl: value.hpl, origin_group: value.origin_group_code, plan_act: value.quantity});
 					});
 
 					var number = 0;
@@ -383,8 +372,8 @@
 
 						if (value5.due_date.split("-")[2] >= dateFrom.split("-")[2]) {
 							//JIKA FILTER ORIGIN GROUP
-							if (originGroupCode != "") {
-								if (originGroupCode.indexOf(value5.origin_group) !== -1) {
+							if (originGroup != "") {
+								if (originGroup.indexOf(value5.origin_group) !== -1) {
 									status1 = true;
 								} else {
 									status1 = false;
@@ -394,8 +383,8 @@
 							}
 
 							//JIKA FILTER MATERIAL
-							if (material != "") {
-								if (material.indexOf(value5.material_number) !== -1) {
+							if (material_number != "") {
+								if (material_number.indexOf(value5.material_number) !== -1) {
 									status2 = true;
 								} else {
 									status2 = false;
@@ -405,8 +394,8 @@
 							}
 
 							//JIKA FILTER MODEL
-							if (model != "") {
-								if (model.indexOf(value5.model) !== -1) {
+							if (hpl != "") {
+								if (hpl.indexOf(value5.hpl) !== -1) {
 									status3 = true;
 								} else {
 									status3 = false;
