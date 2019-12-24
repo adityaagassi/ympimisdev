@@ -63,16 +63,16 @@
 					<span><i class="fa fa-fw fa-square" style="color: #f24b4b;"></i>Trouble</span>
 				</div>
 				<div class="col-xs-12" style="padding:0px;">
-					<span><i class="fa fa-fw fa-square" style="color: #00a65a;"></i>Setup</span>
+					<span><i class="fa fa-fw fa-square" style="color: #3366cc;"></i>Setup</span>
 				</div>
 
 			</div>
 			<div class="col-xs-3" style="padding:0px;">
 				<div class="col-xs-12" style="padding:0px;">
-					<span><i class="fa fa-fw fa-square" style="color: #FCF33A;"></i>Process</span>
+					<span><i class="fa fa-fw fa-square" style="color: #00a65a;"></i>Process</span>
 				</div>
 				<div class="col-xs-12" style="padding:0px;">
-					<span><i class="fa fa-fw fa-square" style="color: #3366cc;"></i> Idle 1</span>
+					<span><i class="fa fa-fw fa-square" style="color: #FCF33A;"></i> Idle 1</span>
 				</div>
 
 			</div>
