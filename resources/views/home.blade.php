@@ -536,8 +536,12 @@
                                 <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
                             </a>
                             <br>
-                            <a href="{{ url("#") }}">
+                            <a href="{{ url("/index/kd_stock") }}">
                                 <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/kd_shipment_progress") }}">
+                                <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
                             </a>
                         </td>
                     </tr>

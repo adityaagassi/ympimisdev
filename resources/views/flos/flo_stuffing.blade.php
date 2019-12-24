@@ -233,11 +233,13 @@ table.table-bordered > tfoot > tr > th{
 			var flo_number = $("#flo_number_settlement").val();
 			var invoice_number = $("#invoice_number").val();
 			var container_id = $("#container_id").val();
+			var status = 3;
 			var data = {
 				flo_number : flo_number,
 				status : '3',
 				invoice_number : invoice_number,
 				container_id : container_id,
+				status : status,
 			}
 			$.post('{{ url("scan/flo_settlement") }}', data, function(result, status, xhr){
 				console.log(status);
