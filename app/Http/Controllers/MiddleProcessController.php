@@ -1152,6 +1152,7 @@ class MiddleProcessController extends Controller
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$request->get('bulan')."'
 			and operator_id = '".$request->get('nik')."'
 			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sun'
+			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sat'
 			GROUP BY d.operator_id, tgl");
 
 		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
@@ -1176,6 +1177,7 @@ class MiddleProcessController extends Controller
 			left join standart_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
 			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sun'
+			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sat'
 			GROUP BY d.operator_id, tgl");
 
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
@@ -1198,6 +1200,7 @@ class MiddleProcessController extends Controller
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY date, l.operator_id, e.`name`) ng
 			left join
 			(SELECT date(l.buffing_time) as date, l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
@@ -1206,6 +1209,7 @@ class MiddleProcessController extends Controller
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$request->get('bulan')."'
 			and l.operator_id = '".$request->get('nik')."'
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY date, l.operator_id, e.`name`) g
 			on ng.date = g.date and ng.operator_id = g.operator_id
 			order by g.date asc");
@@ -1247,6 +1251,7 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY l.operator_id, e.`name`) ng
 			left join
 			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
@@ -1254,6 +1259,7 @@ class MiddleProcessController extends Controller
 			left join materials m on l.material_number = m.material_number
 			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY l.operator_id, e.`name`) g
 			on ng.operator_id = g.operator_id
 			order by ng_rate desc");
