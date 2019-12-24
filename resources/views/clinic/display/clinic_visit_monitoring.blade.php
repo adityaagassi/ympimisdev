@@ -57,12 +57,6 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
-		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
-		</p>
-	</div>
-
 	<div class="row">
 		<div class="col-xs-4">
 			<table class="table" id="tableMedic" style="font-size: 2vw;">
