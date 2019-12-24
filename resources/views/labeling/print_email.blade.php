@@ -143,6 +143,7 @@
   padding: 5px;
 }
 </style>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
     // setTimeout(function () { window.print(); }, 200);
     function myFunction() {
