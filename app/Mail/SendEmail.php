@@ -105,5 +105,8 @@ class SendEmail extends Mailable
         if($this->remark == 'kaizen'){
             return $this->from('ympimis@gmail.com')->subject('MIS Unverified Kaizen Teian')->view('mails.kaizen');
         }
+        if($this->remark == 'jishu_hozen'){
+            return $this->from('ympimis@gmail.com')->subject('Audit Implementasi Jishu Hozen (??)')->view('mails.jishu_hozen');
+        }
     }
 }

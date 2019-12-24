@@ -88,6 +88,9 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Cek Area"){
             return redirect('/index/area_check/index/'.$id)->with('page', 'Area Check')->with('no', '10');
         }
+        elseif($activity_type == "Jishu Hozen"){
+            return redirect('/index/jishu_hozen/nama_pengecekan/'.$id)->with('page', 'Jishu Hozen')->with('no', '11');
+        }
     }
 
     function report_all($id)
@@ -1898,7 +1901,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Jishu Hozen',
+                        (SELECT count(*) FROM jishu_hozens
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))))
                 as jumlah_approval,
                 IF(activity_type = 'Audit',
                         (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM production_audits
@@ -1978,7 +1989,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Jishu Hozen',
+                        (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

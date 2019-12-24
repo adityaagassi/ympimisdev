@@ -1803,6 +1803,7 @@ Route::post('index/jishu_hozen/update/{id}/{jishu_hozen_point_id}/{jishu_hozen_i
 Route::get('index/jishu_hozen/destroy/{id}/{jishu_hozen_point_id}/{jishu_hozen_id}', 'JishuHozenController@destroy');
 Route::get('index/jishu_hozen/print_jishu_hozen/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen');
 Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen_email');
+Route::get('index/jishu_hozen/print_jishu_hozen_approval/{activity_list_id}/{month}','JishuHozenController@print_jishu_hozen_approval');
 Route::get('index/jishu_hozen/sendemail/{id}/{jishu_hozen_point_id}','JishuHozenController@sendemail');
 Route::post('index/jishu_hozen/approval/{id}/{jishu_hozen_id}/{month}','JishuHozenController@approval');
 

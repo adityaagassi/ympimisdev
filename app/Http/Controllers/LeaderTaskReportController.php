@@ -111,7 +111,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Jishu Hozen',
+                        (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null)))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

@@ -25,7 +25,8 @@ class ActivityListController extends Controller
                         'Pengecekan',
                         'Pemahaman Proses',
                         'Labelisasi',
-                        'Cek Area'];
+                        'Cek Area',
+                        'Jishu Hozen'];
 
       $this->frequency = ['Daily',
                         'Weekly',
@@ -79,6 +80,9 @@ class ActivityListController extends Controller
       }
       elseif ($no == 10) {
         $activity_type = 'Cek Area';
+      }
+      elseif ($no == 11) {
+        $activity_type = 'Jishu Hozen';
       }
       if($role_code == "MIS" || $role_code == "S"){
         $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
