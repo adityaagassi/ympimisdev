@@ -831,6 +831,10 @@ Route::get('index/kd_daily_production_result', 'KnockDownController@indexKdDaily
 Route::get('fetch/kd_daily_production_result', 'KnockDownController@fetchKdDailyProductionResult');
 Route::get('index/kd_production_schedule_data', 'KnockDownController@indexKdProductionScheduleData');
 Route::get('fetch/kd_production_schedule_data', 'KnockDownController@fetchKdProductionScheduleData');
+Route::get('index/kd_stock', 'KnockDownController@indexKdStock');
+Route::get('fetch/kd_stock', 'KnockDownController@fetchKdStock');
+Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentProgress');
+Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -1800,7 +1804,7 @@ Route::get('index/jishu_hozen/destroy/{id}/{jishu_hozen_point_id}/{jishu_hozen_i
 Route::get('index/jishu_hozen/print_jishu_hozen/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen');
 Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{jishu_hozen_id}/{month}','JishuHozenController@print_jishu_hozen_email');
 Route::get('index/jishu_hozen/sendemail/{id}/{jishu_hozen_point_id}','JishuHozenController@sendemail');
-Route::post('index/jishu_hozen/approval/{id}/{month}','JishuHozenController@approval');
+Route::post('index/jishu_hozen/approval/{id}/{jishu_hozen_id}/{month}','JishuHozenController@approval');
 
 //RECORDER PROCESS
 Route::get('index/recorder_process', 'RecorderProcessController@index');

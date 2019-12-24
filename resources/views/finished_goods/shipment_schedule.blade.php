@@ -335,7 +335,6 @@
 				alert('Disconnected from server');
 			}
 		});
-
 }
 
 

@@ -56,6 +56,45 @@ class KnockDownController extends Controller{
 		))->with('page', $title)->with('head', $title);
 	}
 
+	public function indexKdStock(){
+		return view('kd.display.stock')->with('page', 'KD Daily Production Result');
+	}
+
+	public function fetchKdStock(){
+
+		$stock2 = KnockDownDetail::leftJoin('knock_downs', 'knock_downs.kd_number', '=', 'knock_down_details.kd_number')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'knock_down_details.material_number')
+		->whereIn('knock_downs.status', [0,1,2,'M']);
+
+		$total_volume = $stock2->sum(DB::raw('((material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton)*knock_down_details.quantity'));
+
+		$total_stock = $stock2->sum('knock_down_details.quantity');
+
+		$jsonData = $stock2->select(db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), DB::raw('sum(if(knock_downs.status = "0" or knock_downs.status = "M", knock_down_details.quantity, 0)) as production'), DB::raw('sum(if(knock_downs.status = "1", knock_down_details.quantity, 0)) as intransit'), DB::raw('sum(if(knock_downs.status = "2", knock_down_details.quantity, 0)) as fstk'), DB::raw('sum(knock_down_details.quantity) as actual'))
+		->groupBy('destinations.destination_shortname')->orderBy(db::raw('knock_down_details.quantity'), 'desc')->get();
+
+		$stock = KnockDownDetail::leftJoin('knock_downs', 'knock_downs.kd_number', '=', 'knock_down_details.kd_number')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+		->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->whereIn('knock_downs.status', ['0', '1', '2', 'M'])
+		->select('knock_down_details.material_number', 'materials.material_description', db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), db::raw('if(knock_downs.status = "M" or knock_downs.status = "0", "Production", if(knock_downs.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(knock_down_details.quantity) as quantity'))
+		->groupBy('knock_down_details.material_number', 'materials.material_description', 'destinations.destination_shortname', 'knock_downs.status')
+		->orderBy('knock_down_details.material_number', 'destinations.destination_shortname')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'jsonData' => $jsonData,
+			'total_volume' => $total_volume,
+			'total_stock' => $total_stock,
+			'stockData' => $stock,
+		);
+		return Response::json($response);
+	}
+
 	public function indexKdDailyProductionResult(){
 		$locations = Material::where('category', '=', 'KD')
 		->whereNotNull('hpl')
