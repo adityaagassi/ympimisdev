@@ -154,8 +154,8 @@ class ProductionReportController extends Controller
         $dataleader = $leader->leader_dept; 
         $data[] = db::select("select monthly.leader_name,
         monthly.jumlah_activity_monthly,
-        monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit as jumlah_monthly,
-        COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
+        monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen as jumlah_monthly,
+        COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen )/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
         IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
                 IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
@@ -226,7 +226,17 @@ class ProductionReportController extends Controller
                                 and first_product_audit_details.deleted_at is null 
                                 and actlist.department_id = '".$id."'
                                 GROUP BY first_product_audit_details.leader),0)
-        as jumlah_first_product_audit
+        as jumlah_first_product_audit,
+        COALESCE((select count(DISTINCT(leader)) as jishu_hozens
+                from jishu_hozens
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$bulan."'
+                    and  actlist.frequency = 'Monthly'
+                                and jishu_hozens.leader = '".$dataleader."'
+                                and jishu_hozens.deleted_at is null 
+                                and actlist.department_id = '".$id."'
+                                GROUP BY jishu_hozens.leader),0)
+        as jumlah_jishu_hozen
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
@@ -581,8 +591,17 @@ class ProductionReportController extends Controller
                                 and first_product_audit_details.leader = '".$leader_name."'
                                 and actlist.id = id_activity
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0)))))))))
-            as jumlah_aktual
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Jishu Hozen',
+            (select count(DISTINCT(jishu_hozens.leader)) as jumlah_jishu_hozen
+                from jishu_hozens
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '2019-12'
+                                and jishu_hozens.leader = 'Ardiyanto'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '8'
+                    and actlist.frequency = 'Monthly'),0))))))))))
+            jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
                         and frequency = '".$frequency."'
