@@ -344,7 +344,7 @@
 				</div>
 				<button class="btn btn-success" onclick="start()" id="start_button" style="font-size:35px; width: 100%; font-weight: bold; padding: 0;">
 					TEKAN UNTUK MULAI PROSES
-				</button>			
+				</button>
 				<div class="row" id="processtime_picker">
 					<div class="col-xs-6">
 						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">

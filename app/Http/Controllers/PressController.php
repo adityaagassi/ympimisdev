@@ -439,6 +439,32 @@ class PressController extends Controller
 		return Response::json($response);
 	}
 
+	public function detail_press(Request $request){
+
+      $machine = $request->get("mesin");
+      $tanggal = $request->get("tanggal");
+
+      $query = "select date, name, machine, material_number, data_ok from mp_record_prods join employees on mp_record_prods.pic = employees.employee_id where date='".$tanggal."' and machine='".$machine."'";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+      ->make(true);
+    }
+
+    public function detail_pic(Request $request){
+
+      $pic = $request->get("pic");
+      $tanggal = $request->get("tanggal");
+
+      $query = "select date, name, machine, material_number, data_ok from mp_record_prods join employees on mp_record_prods.pic = employees.employee_id where date='".$tanggal."' and name='".$pic."'";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+      ->make(true);
+    }
+
 	public function monitoring2() {
     	$title = 'Press Machine Monitoring';
 		$title_jp = 'プレス機管理';

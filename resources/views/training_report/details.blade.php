@@ -1,7 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/font-awesome.css') }}">
 <link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/bootstrap.min.css') }}">
 {{-- <script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

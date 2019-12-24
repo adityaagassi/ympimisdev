@@ -275,13 +275,13 @@
 			radioClass   : 'iradio_minimal-red'
 		});
 
-		Webcam.set({
-			width: 4096,
-			height: 2160,
-			image_format: 'jpeg',
-			jpeg_quality: 100
-		});
-		Webcam.attach('#my_camera');
+		// Webcam.set({
+		// 	width: 4096,
+		// 	height: 2160,
+		// 	image_format: 'jpeg',
+		// 	jpeg_quality: 100
+		// });
+		// Webcam.attach('#my_camera');
 
 		$('#flo_table').DataTable().destroy();
 		fillFloTableSettlement();
@@ -423,15 +423,15 @@
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-$(function() {
-	$(document).keydown(function(e) {
-		switch(e.which) {
-			case 119:
-			take_snapshot();
-			break;
-		}
-	});
-});
+// $(function() {
+// 	$(document).keydown(function(e) {
+// 		switch(e.which) {
+// 			case 119:
+// 			take_snapshot();
+// 			break;
+// 		}
+// 	});
+// });
 
 function take_snapshot() {
 	Webcam.snap( function(data_uri) {

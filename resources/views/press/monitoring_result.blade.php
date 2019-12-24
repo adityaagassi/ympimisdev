@@ -1,6 +1,67 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
+
+	table.table-bordered{
+  border:1px solid rgb(150,150,150);
+}
+table.table-bordered > thead > tr > th{
+  border:1px solid rgb(54, 59, 56) !important;
+  text-align: center;
+  background-color: #212121;  
+  color:white;
+}
+table.table-bordered > tbody > tr > td{
+  border:1px solid rgb(54, 59, 56);
+  background-color: #212121;
+  color: white;
+  vertical-align: middle;
+  text-align: center;
+  padding:3px;
+
+}
+table.table-bordered > tfoot > tr > th{
+  border:1px solid rgb(150,150,150);
+  padding:0;
+}
+table.table-bordered > tbody > tr > td > p{
+  color: #abfbff;
+}
+
+table.table-striped > thead > tr > th{
+  border:1px solid black !important;
+  text-align: center;
+  background-color: rgba(126,86,134,.7) !important;  
+}
+
+table.table-striped > tbody > tr > td{
+  border: 1px solid #eeeeee !important;
+  border-collapse: collapse;
+  color: black;
+  padding: 3px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: white;
+}
+
+thead input {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+thead>tr>th{
+  text-align:center;
+}
+tfoot>tr>th{
+  text-align:center;
+}
+td:hover {
+  overflow: visible;
+}
+table > thead > tr > th{
+  border:2px solid #f4f4f4;
+  color: white;
+}
 	.content{
 		color: white;
 		font-weight: bold;
@@ -15,6 +76,7 @@
 		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
+
 </style>
 @endsection
 @section('header')
@@ -50,7 +112,48 @@
 			</div>
 		</div>
 	</div>
+
+	
 </section>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="example2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Date</th>
+                    <th>PIC</th> 
+                    <th>Machine</th>    
+                    <th>Material Number</th>
+                    <th>Data OK</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot style="background-color: RGB(252, 248, 227);">
+					<th>Total</th>
+					<th colspan="3"></th>
+					<th id="modalResultTotal"></th>
+				</tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -301,14 +404,14 @@
 	}
 
 	function fillChart() {
-		var proses = $('#process').val();
+		// var proses = $('#process').val();
 		var tanggal = $('#tanggal').val();
 		
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 		
 		var data = {
-			tanggal:tanggal,
-			proses:proses
+			tanggal:tanggal
+			// proses:proses
 		}
 
 		$.get('{{ url("fetch/press/monitoring") }}',data, function(result, status, xhr) {
@@ -423,6 +526,14 @@
 						},	
 						plotOptions: {
 							series:{
+								cursor: 'pointer',
+				                point: {
+				                  events: {
+				                    click: function () {
+				                      ShowModal(this.category,result.date);
+				                    }
+				                  }
+				                },
 								dataLabels: {
 									enabled: true,
 									format: '{point.y}',
@@ -569,6 +680,14 @@
 						},
 						plotOptions: {
 							series:{
+								cursor: 'pointer',
+				                point: {
+				                  events: {
+				                    click: function () {
+				                      ShowModalpic(this.category,result.date);
+				                    }
+				                  }
+				                },
 								dataLabels: {
 									enabled: true,
 									format: '{point.y}',
@@ -607,8 +726,191 @@
 			}
 		});
 
-}
+	}
 
+	function ShowModal(mesin,tanggal) {
+    tabel = $('#example2').DataTable();
+    tabel.destroy();
+
+    $("#myModal").modal("show");
+
+    var table = $('#example2').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+          "type" : "get",
+          "url" : "{{ url("index/press/detail_press") }}",
+          "data" : {
+            mesin : mesin,
+            tanggal : tanggal
+          }
+        },
+      "columns": [
+          { "data": "date" },
+          { "data": "name" },
+          { "data": "machine" },
+          { "data": "material_number" },
+          { "data": "data_ok" }
+        ],
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            total = api
+                .column( 4 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Total over this page
+            pageTotal = api
+                .column( 4, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Update footer
+            $( api.column( 4 ).footer() ).html(
+                ''+pageTotal +' ('+ total +' total)'
+            );
+        }     
+    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center>Perolehan di <b>'+mesin+' Pada '+tanggal+'</center></b>');
+    
+  }
+
+  function ShowModalpic(pic,tanggal) {
+    tabel = $('#example2').DataTable();
+    tabel.destroy();
+
+    $("#myModal").modal("show");
+
+    var table = $('#example2').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+          "type" : "get",
+          "url" : "{{ url("index/press/detail_pic") }}",
+          "data" : {
+            pic : pic,
+            tanggal : tanggal
+          }
+        },
+      "columns": [
+          { "data": "date" },
+          { "data": "name" },
+          { "data": "machine" },
+          { "data": "material_number" },
+          { "data": "data_ok" }
+        ],
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            total = api
+                .column( 4 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Total over this page
+            pageTotal = api
+                .column( 4, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Update footer
+            $( api.column( 4 ).footer() ).html(
+                ''+pageTotal +' ('+ total +' total)'
+            );
+        }   
+    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center>Perolehan <b>'+pic+' Pada '+tanggal+'</center></b>');
+    
+  }
 
 
 </script>

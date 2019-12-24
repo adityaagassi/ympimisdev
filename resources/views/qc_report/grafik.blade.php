@@ -225,10 +225,11 @@ table > thead > tr > th{
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
               <tr>
-                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">Komplain</th>
+                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">No CPAR</th>
+                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Subject</th>
                 <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Departemen</th>
-                <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
-                <th style="width: 35%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
+                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
+                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
                 <th style="background-color:#448aff;width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="3">QA Verification</th>
 
               </tr>
@@ -1056,7 +1057,8 @@ table > thead > tr > th{
 
 
             table += '<tr>';
-            table += '<td>'+value.judul_komplain+'</td>'; 
+            table += '<td>'+value.cpar_no+'</td>';
+            table += '<td style="border-left:3px solid #f44336">'+value.judul_komplain+'</td>'; 
             table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(value.department_name)+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
             table += '<td>'+statuscf+'</td>';
