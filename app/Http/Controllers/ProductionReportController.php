@@ -158,13 +158,13 @@ class ProductionReportController extends Controller
         COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit)/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
         IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
-                IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
-                IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
-                IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0)))) as jumlah_weekly,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)  < 12,2,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)< 16,3,0)))) as jumlah_weekly,
         COALESCE((IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
-                IF(4 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
-                IF(8 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 12,2,
-                IF(12 <= (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)  < 12,2,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)< 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
         daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
@@ -236,7 +236,7 @@ class ProductionReportController extends Controller
 
         (select count(activity_type) as jumlah_activity_weekly,
         leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(sampling_checks.date)) as jumlah_sampling
+        COALESCE((select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
                 from sampling_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
                     where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
@@ -256,7 +256,7 @@ class ProductionReportController extends Controller
                                 and actlist.department_id = '".$id."'
                                 GROUP BY audit_processes.leader),0)
         as jumlah_audit_process,
-        COALESCE((select count(DISTINCT(production_audits.date)) as jumlah_audit
+        COALESCE((select count(DISTINCT(production_audits.week_name)) as jumlah_audit
                 from production_audits
                     join activity_lists as actlist on actlist.id = activity_list_id
                                 join point_check_audits as point_check on point_check.id = point_check_audit_id
