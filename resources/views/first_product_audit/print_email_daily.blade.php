@@ -154,4 +154,7 @@
     function myFunction() {
 	  window.print();
 	}
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+	});
 </script>

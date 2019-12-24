@@ -157,4 +157,7 @@
 			$(':checkbox').attr('checked',false);
 		}
 	}
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+	});
 </script>
