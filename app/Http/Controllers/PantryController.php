@@ -28,7 +28,7 @@ class PantryController extends Controller
         ->get();
 
         $username = Auth::user()->username;
-        $user = "select name from employees where employee_id='$username'";
+        $user = "select name from users where username='$username'";
        	$users = DB::select($user);
 
 		return view('pantry.index', array(
@@ -36,7 +36,7 @@ class PantryController extends Controller
 			'title_jp' => $title_jp,
 			'menus' => $menus,
 			'users' => $users
-		))->with('page', 'Pantry');
+		))->with('page', 'Pantry')->with('head', 'Pantry');
 	}
 
 	public function daftarpesanan(){
@@ -49,7 +49,7 @@ class PantryController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'orders' => $orders
-		))->with('page', 'Pesanan Pantry');
+		))->with('page', 'Pantry Orders')->with('head', 'Pantry');
 	}
 
 	public function fetchMenu(Request $request){
@@ -82,6 +82,7 @@ class PantryController extends Controller
             $menu = new PantryOrder([
                 'pemesan' => $request->get('pemesan'),
                 'minuman' => $request->get('menu'),
+                'informasi' => $request->get('informasi'),
                 'keterangan' => $request->get('keterangan'),
                 'gula' => $request->get('gula'),
                 'jumlah' => $request->get('jumlah'),
@@ -179,7 +180,7 @@ class PantryController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'menus' => $menus
-		))->with('page', 'Pantry');
+		))->with('page', 'Pantry Menu')->with('head', 'Pantry');
 	}
 
     public function create_menu()
@@ -273,8 +274,8 @@ class PantryController extends Controller
 	function filter(Request $request)
     {
         $detailpesanan = DB::table('pantry_orders')
-        ->select('name','minuman','keterangan','gula','jumlah','tempat','status')
-        ->join('employees','employees.employee_id','=','pantry_orders.pemesan')
+        ->select('name','minuman','informasi','keterangan','gula','jumlah','tempat','status')
+        ->join('users','users.username','=','pantry_orders.pemesan')
         ->where('pemesan','=',Auth::user()->username)
         ->orWhere(function ($query) {
 		    $query->where('status', '=', 'proses')
@@ -296,9 +297,30 @@ class PantryController extends Controller
             }
           })
 
-
         ->rawColumns(['status' => 'status'])
         ->make(true);
+    }
+
+    public function getPesanan()
+    {
+        $detailpesanan = DB::table('pantry_orders')
+        ->select('name','minuman','informasi','keterangan','gula','jumlah','tempat','status')
+        ->join('users','users.username','=','pantry_orders.pemesan')
+        ->where('pemesan','=',Auth::user()->username)
+        ->orWhere(function ($query) {
+            $query->where('status', '=', 'proses')
+                  ->where('status', '=', 'confirmed');
+        })
+        ->whereNull('pantry_orders.deleted_at');
+
+        $detailpesanan = $detailpesanan->orderBy('pantry_orders.id', 'DESC');
+        $pesanan = $detailpesanan->get();
+
+        $response = array(
+            'status' => true,
+            'pesanan' => $pesanan
+        );
+        return Response::json($response);
     }
 
     public function daftarkonfirmasi(){
@@ -314,8 +336,8 @@ class PantryController extends Controller
 	function filterkonfirmasi(Request $request)
     {
         $detailpesanan = DB::table('pantry_orders')
-        ->select('pantry_orders.id','name','minuman','keterangan','gula','jumlah','tempat','status')
-        ->join('employees','employees.employee_id','=','pantry_orders.pemesan')
+        ->select('pantry_orders.id','name','minuman','informasi','keterangan','gula','jumlah','tempat','status')
+        ->join('users','users.username','=','pantry_orders.pemesan')
         ->where('status', '=', 'confirmed')
         ->orwhere('status', '=', 'proses')
         ->whereNull('pantry_orders.deleted_at');
@@ -370,6 +392,7 @@ class PantryController extends Controller
             $log = new PantryLog([
                 'pemesan' => $pantry->pemesan,
                 'minuman' => $pantry->minuman,
+                'informasi' => $pantry->informasi,
                 'keterangan' => $pantry->keterangan,
                 'gula' => $pantry->gula,
                 'jumlah' => $pantry->jumlah,

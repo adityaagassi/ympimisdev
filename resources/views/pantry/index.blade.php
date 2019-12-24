@@ -181,49 +181,65 @@
 							</tr>
 						</tbody>
 					</table> -->
-					<a class="btn btn-primary" class="btn btn-danger btn-sm" href="{{ url('index/pantry/pesanan') }}" style="font-size: 20px; width: 100%; font-weight: bold; padding: 0;">
-					See Your Order List
-					</a>
+					<!-- <a class="btn btn-primary" href="{{ url('index/pantry/pesanan') }}" style="font-size: 20px; width: 100%; font-weight: bold; padding: 0;"> -->
+					<a onclick="orderlist()" class="btn btn-primary btn-sm" style="font-size: 20px; width: 100%; font-weight: bold; padding: 0;">See Your Order List</a>
+
+					<!-- </a> -->
 				</div>
 			</div>
 		</div>
 		<div class="col-xs-7">
 			<div class="row">
 				<!-- <input type="hidden" id="data"> -->
-				<div class="col-xs-6">
+				<div class="col-xs-12">
 					<span style="font-weight: bold; font-size: 16px;">Drinks (飲み物)</span>
 					<input type="text" id="menu" style="width: 100%; height: 40px; font-size: 25px; text-align: center;" disabled>
 					<input type="hidden" id="pemesan" style="width: 100%; height: 40px; font-size: 25px; text-align: center;" value=" {{ Auth::user()->username}} ">
 				</div>
+
+				<div class="col-xs-6">
+					<span style="font-weight: bold; font-size: 16px;">Information ()</span>
+					<div style="height: 40px;vertical-align: middle;border: 1px solid #d2d6de;">
+					    <label class="radio" style="margin-top: 5px;margin-left: 5px">Cold
+						  <input type="radio" checked="checked" id="information" name="information" value="Cold">
+						  <span class="checkmark"></span>
+						</label>
+						&nbsp;&nbsp;
+						<label class="radio" style="margin-top: 5px">Hot
+						  <input type="radio" id="information" name="information" value="Hot">
+						  <span class="checkmark"></span>
+						</label>
+					</div>
+				</div>
+
 				<div class="col-xs-6">
 					<span style="font-weight: bold; font-size: 16px;">Add-Ons (砂糖・クリームの追加)</span><br>
 				    <div style="height: 40px;vertical-align: middle;border: 1px solid #d2d6de;">
 					    <label class="radio" style="margin-top: 5px;margin-left: 5px">No Creamer
-						  <input type="radio" checked="checked" id="keterangan" name="keterangan" value="Tanpa Creamer">
+						  <input type="radio" checked="checked" id="keterangan" name="keterangan" value="No Creamer">
 						  <span class="checkmark"></span>
 						</label>
 						&nbsp;&nbsp;
 						<label class="radio" style="margin-top: 5px">With Creamer
-						  <input type="radio" id="keterangan" name="keterangan" value="Creamer">
+						  <input type="radio" id="keterangan" name="keterangan" value="With Creamer">
 						  <span class="checkmark"></span>
 						</label>
-
 					</div>
 				</div>
 				<div class="col-xs-6">
 					<span style="font-weight: bold; font-size: 16px;">Sugar (砂糖) </span><br>
 					<select class="form-control select2" style="width: 100%; height: 40px; font-size: 18px; text-align: center;" id="gula" name="gula" data-placeholder="Choose Amount Of Sugar" required>
 		              <option></option>
-		              <option value='Tidak Pakai Gula'>No Sugar</option>
-		              <option value='Gula Sedikit'>Less Sugar</option>
-		              <option value='Gula Banyak'>Many Sugar</option>
+		              <option value='No Sugar'>No Sugar</option>
+		              <option value='Less Sugar'>Less Sugar</option>
+		              <option value='Many Sugar'>Many Sugar</option>
 		            </select>
 				</div>
 				<div class="col-xs-6">
 					<span style="font-weight: bold; font-size: 16px;">Places (場所)</span>
 					<select class="form-control select2" style="width: 100%; height: 40px; font-size: 18px; text-align: center;" id="tempat" name="tempat" data-placeholder="Choose Places" required>
 		              <option></option>
-		              <option value='Meja <?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'><?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'s Table</option>
+		              <option value="<?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'s Table "><?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'s Table</option>
 		              <option value='Guest Room'>Guest Room</option>
 		              <option value='Meeting Room 1'>Meeting Room 1</option>
 		              <option value='Meeting Room 2'>Meeting Room 2</option>
@@ -272,8 +288,9 @@
 										<th style="width: 1%;">No</th>
 										<th style="width: 2%;">Drinks</th>
 										<th style="width: 2%;">Information</th>
+										<th style="width: 2%;">Add-Ons</th>
 										<th style="width: 2%;">Sugar</th>
-										<th style="width: 1%; text-align:right;">Quantity</th>
+										<th style="width: 1%;">Quantity</th>
 										<th style="width: 2%;">Places</th>
 										<th style="width: 1%;">Action</th>
 									</tr>
@@ -292,8 +309,6 @@
 	</div>
 </section>
 
-
-
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -311,6 +326,41 @@
       </div>
     </div>
   </div>
+
+ <div class="modal fade" id="orderlist" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">List Pesanan Anda</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+          <table class="table table-hover table-bordered table-striped" id="tableResult">
+			<thead style="background-color: rgba(126,86,134,.7);">
+				<tr>
+					<th>Pemesan</th>
+	                <th>Minuman</th>
+	                <th>Informasi</th>
+	                <th>Keterangan</th>
+	                <th>Gula</th>
+	                <th>Jumlah</th>
+	                <th style="width: 20px">Tempat</th>
+	                <th>Status</th>
+				</tr>
+			</thead>
+			<tbody id="tableBodyList">
+			</tbody>
+		</table>
+        </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 @endsection
 @section('scripts')
@@ -369,6 +419,7 @@
 		var data = {
 			pemesan : $("#pemesan").val(),
 			menu : $("#menu").val(),
+			informasi : $('input[id="information"]:checked').val(),
 			keterangan : $('input[id="keterangan"]:checked').val(),
 			gula : $("#gula").val(),
 			tempat : $("#tempat").val(),
@@ -389,6 +440,43 @@
 		});
 	}
 
+	function orderlist() {
+	    var data = {
+	      pemesan : $("#pemesan").val()
+	    }
+
+	    $.get('{{ url("fetch/pantry/pesan") }}', data, function(result, status, xhr){
+	      if (result.status == true) {
+	        $("#orderlist").modal('show');
+	        $('#tableBodyList').html("");
+          	var tableData = "";
+
+          	$.each(result.pesanan, function(key, value) {
+	            tableData += '<tr>';
+	            tableData += '<td>'+ value.name +'</td>';
+	            tableData += '<td>'+ value.minuman +'</td>';
+	            tableData += '<td>'+ value.informasi +'</td>';            
+	            tableData += '<td>'+ value.keterangan +'</td>';
+	            tableData += '<td>'+ value.gula +'</td>';
+	            tableData += '<td>'+ value.jumlah +'</td>';
+	            tableData += '<td width=15%>'+ value.tempat +'</td>';
+	            if(value.status == "confirmed") {
+	              tableData += '<td width=15%><label class="label label-danger">Waiting Confirmation</td>';
+	            }
+	            else if(value.status == "proses") {
+	              tableData += '<td width=15%><label class="label label-primary">Making Your Orders</label></td>';
+	            }
+	            tableData += '</tr>';
+
+	          });
+	          // }
+	          $('#tableBodyList').append(tableData);
+	      } else {
+	        // $("#orderlist").modal('show');
+	      }
+	    })
+	  }
+
 	function daftarmenu(){
 		var data = {
 			pemesan : $("#pemesan").val()
@@ -405,6 +493,7 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.minuman +'</td>';
+					tableData += '<td>'+ value.informasi +'</td>';
 					tableData += '<td>'+ value.keterangan +'</td>';
 					tableData += '<td>'+ value.gula +'</td>';
 					tableData += '<td style="text-align:right">'+ value.jumlah +'</td>';

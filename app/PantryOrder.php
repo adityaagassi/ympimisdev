@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PantryOrder extends Model
 {
     protected $fillable = [
-		'pemesan', 'minuman', 'keterangan', 'gula', 'jumlah', 'tempat', 'status', 'tgl_pesan', 'created_by'
+		'pemesan', 'minuman', 'informasi', 'keterangan', 'gula', 'jumlah', 'tempat', 'status', 'tgl_pesan', 'created_by'
 	];
 
 	public function user()

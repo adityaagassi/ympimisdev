@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PantryLog extends Model
 {
     protected $fillable = [
-		'pemesan', 'minuman', 'keterangan', 'gula', 'jumlah', 'tempat', 'tgl_pesan', 'tgl_dibuat', 'created_by'
+		'pemesan', 'minuman', 'informasi', 'keterangan', 'gula', 'jumlah', 'tempat', 'tgl_pesan', 'tgl_dibuat', 'created_by'
 	];
 
 	public function user()

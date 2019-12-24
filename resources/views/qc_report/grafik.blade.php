@@ -6,6 +6,7 @@
 
 table.table-bordered{
   border:1px solid rgb(150,150,150);
+
 }
 table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
@@ -64,6 +65,9 @@ table > thead > tr > th{
   border:2px solid #f4f4f4;
   color: white;
 }
+#tabelmonitor{
+  font-size: 0.83vw;
+}
 
 .zoom{
    -webkit-user-select: none;
@@ -80,7 +84,7 @@ table > thead > tr > th{
   100% {transform: scale(0.7);}
 }
 @keyframes zoomin {
-  0% {transform: scale(0.7);}
+  0% {transform: scale(0.7);}   
   50% {transform: scale(1);}
   100% {transform: scale(0.7);}
 } /*End of Zoom in Keyframes */
@@ -223,32 +227,32 @@ table > thead > tr > th{
           <div id="chart" style="width: 99%"></div>
 
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
-            <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
+            <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 10%; padding: 0;vertical-align: middle;" rowspan="2">No CPAR</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Subject</th>
-                <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" rowspan="2">Departemen</th>
-                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="6">CPAR</th>
-                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="5">CAR</th>
-                <th style="background-color:#448aff;width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important" colspan="3">QA Verification</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;;font-size: 16px;" rowspan="2">No CPAR</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Subject</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Departemen</th>
+                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="6">CPAR</th>
+                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="5">CAR</th>
+                <th style="background-color:#448aff;width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">QA Verification</th>
 
               </tr>
               <tr>
-                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Leader</th>
-                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
-                <th style="width: 6%; padding: 0;">Manager</th>
-                <th style="width: 6%; padding: 0;">DGM</th>
-                <th style="width: 6%; padding: 0;">GM</th>
-                <th style="width: 6%; padding: 0;">Received By Manager</th>
+                <th style="width: 5%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">Manager</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">DGM</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">GM</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">Received By Manager</th>
 
-                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Foreman</th>
-                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
-                <th style="width: 6%; padding: 0;">Manager</th>
-                <th style="width: 6%; padding: 0;">DGM</th>
-                <th style="width: 6%; padding: 0;">GM</th>
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Foreman</th>
+                <th style="width: 6%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
+                <th style="width: 6%; padding: 0;vertical-align: middle;">Manager</th>
+                <th style="width: 6%; padding: 0;vertical-align: middle;">DGM</th>
+                <th style="width: 6%; padding: 0;vertical-align: middle;">GM</th>
 
-                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important">Staff / Leader</th>
-                <th style="width: 6%; padding: 0;">Chief / Foreman</th>
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
+                <th style="width: 6%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
 
               </tr>
             </thead>

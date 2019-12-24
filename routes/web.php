@@ -352,6 +352,7 @@ Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('create/ekaizen/{id}/{name}/{section}/{group}', 'EmployeeController@makeKaizen');
 Route::post('post/ekaizen', 'EmployeeController@postKaizen');
+Route::post('update/ekaizen', 'EmployeeController@updateKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('index/updateKaizen/{id}', 'EmployeeController@indexUpdateKaizenDetail');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
@@ -833,6 +834,7 @@ Route::get('index/kd_production_schedule_data', 'KnockDownController@indexKdProd
 Route::get('fetch/kd_production_schedule_data', 'KnockDownController@fetchKdProductionScheduleData');
 Route::get('index/kd_stock', 'KnockDownController@indexKdStock');
 Route::get('fetch/kd_stock', 'KnockDownController@fetchKdStock');
+Route::get('fetch/kd_stock_detail', 'KnockDownController@fetchKdStockDetail');
 Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
 
@@ -1271,6 +1273,8 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	//Konfirmasi Pesanan
 	Route::post('index/pantry/konfirmasi', 'PantryController@konfirmasi');
 	Route::post('index/pantry/selesaikan', 'PantryController@selesaikan');
+
+	Route::get('fetch/pantry/pesan','PantryController@getPesanan');
 
 	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');
 });

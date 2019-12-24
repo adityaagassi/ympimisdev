@@ -69,6 +69,7 @@ table.table-bordered > tfoot > tr > th{
               <tr>
                 <th>Pemesan</th>
                 <th>Minuman</th>
+                <th>Informasi</th>
                 <th>Keterangan</th>
                 <th>Gula</th>
                 <th>Jumlah</th>
@@ -208,6 +209,7 @@ table.table-bordered > tfoot > tr > th{
         "columns": [
           { "data": "name" },
           { "data": "minuman" },
+          { "data": "informasi" },
           { "data": "keterangan" },
           { "data": "gula" },
           { "data": "jumlah" },

@@ -1,4 +1,4 @@
-@extends('layouts.visitor')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -34,11 +34,12 @@ table.table-bordered{
 }
 table.table-bordered > thead > tr > th{
   border:1px solid black;
+  vertical-align: middle;
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 5px;
+  vertical-align: middle;
+  padding: 5px;
 }
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
@@ -213,15 +214,19 @@ label {
             }
             tableData += '<tr>';
             tableData += '<td>'+ value.name +'</td>';
-            tableData += '<td>'+ value.minuman +'</td>';
+             if (value.informasi == "Hot") {
+              tableData += '<td>  <label class="label label-danger">'+value.informasi+'</label> '+ value.minuman +'</td>';
+            }else{
+              tableData += '<td>  <label class="label label-info">'+value.informasi+'</label> '+ value.minuman +'</td>';
+            }
             tableData += '<td>'+ value.keterangan +'</td>';
             tableData += '<td>'+ value.gula +'</td>';
             tableData += '<td>'+ value.jumlah +'</td>';
-            tableData += '<td>'+ value.tempat +'</td>';
+            tableData += '<td width=15%>'+ value.tempat +'</td>';
             if (value.status == "confirmed") {
-              tableData += '<td><label class="label label-danger">Menunggu Konfirmasi</label></td><td width=15%><a onclick="konfirmasi('+value.id+')"" class="btn btn-primary btn-xs">Buatkan Pesanan</a></td>';
+              tableData += '<td><label class="label label-danger" style="font-size:14px">Menunggu Konfirmasi</label></td><td width=15%><a onclick="konfirmasi('+value.id+')"" class="btn btn-primary btn-md">Buatkan Pesanan</a></td>';
             } else if (value.status == "proses") {
-              tableData += '<td><label class="label label-primary">Sedang Dibuat</label></td><td width=15%><a data-toggle="modal" onclick="open_Modal('+value.id+')" class="btn btn-success btn-xs">Selesaikan Pesanan</a></td>';
+              tableData += '<td><label class="label label-primary" style="font-size:14px">Sedang Dibuat</label></td><td width=15%><a data-toggle="modal" onclick="open_Modal('+value.id+')" class="btn btn-success btn-md">Selesaikan Pesanan</a></td>';
             }
             tableData += '</tr>';
 
@@ -244,10 +249,10 @@ label {
               
               ]
             },
-            'paging': true,
+            'paging': false,
             'lengthChange': true,
             'pageLength': 10,
-            'searching': true,
+            'searching': false,
             'ordering': true,
             'order': [],
             'info': true,
