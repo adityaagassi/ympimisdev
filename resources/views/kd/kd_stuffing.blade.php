@@ -52,7 +52,7 @@
         <div class="box-header">
           <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3>
         </div>
-        <div class="box-body">
+        <div class="box-body" style="padding-bottom: 30px;">
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-6 col-md-offset-3">
