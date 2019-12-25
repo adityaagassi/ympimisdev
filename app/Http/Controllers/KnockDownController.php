@@ -56,8 +56,46 @@ class KnockDownController extends Controller{
 		))->with('page', $title)->with('head', $title);
 	}
 
+	public function indexKdShipmentProgress(){
+		return view('kd.display.shipment_progress')->with('page', 'KD Shipment Progress');
+	}
+
+	public function fetchKdShipmentProgress(Request $request){
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setWeekEndsAt(Carbon::SATURDAY);
+
+		if($request->get('datefrom') != ""){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		else{
+			$datefrom = date('Y-m-d', strtotime(Carbon::now()->subDays(1)));
+		}
+
+		if($request->get('dateto') != ""){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+		else{
+			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
+		}
+
+		$shipment_results = ShipmentSchedule::leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->leftJoin(db::raw('(select shipment_schedule_id, material_number, sum(quantity) as quantity from knock_down_details group by shipment_schedule_id, material_number) as knock_down_details'), 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->where('materials.category', '=', 'KD')
+		->where('shipment_schedules.st_date', '>=', $datefrom)
+		->where('shipment_schedules.st_date', '<=', $dateto)
+		->select(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'materials.hpl', db::raw('sum(coalesce(knock_down_details.quantity)) as act'), db::raw('sum(shipment_schedules.quantity) as plan'))
+		->groupBy(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'), 'materials.hpl')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'shipment_results' => $shipment_results,
+		);
+		return Response::json($response);
+	}
+
 	public function indexKdStock(){
-		return view('kd.display.stock')->with('page', 'KD Daily Production Result');
+		return view('kd.display.stock')->with('page', 'KD Stock');
 	}
 
 	public function indexKdDailyProductionResult(){
@@ -94,6 +132,45 @@ class KnockDownController extends Controller{
 			'materials' => $materials,
 			'locations' => $locations
 		))->with('page', 'KD Schedule Data');
+	}
+
+	public function fetchKdStockDetail(Request $request){
+
+		if($request->get('destination') == 'Maedaoshi'){
+			$destination = null;
+		}
+		else{
+			$destination = $request->get('destination');
+		}
+
+		$stock = KnockDownDetail::leftJoin('knock_downs', 'knock_downs.kd_number', '=', 'knock_down_details.kd_number')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+		->leftJoin('destinations', 'shipment_schedules.destination_code', '=', 'destinations.destination_code')
+		->leftJoin('material_volumes', 'material_volumes.material_number', 'knock_down_details.material_number')
+		->leftJoin('materials', 'materials.material_number', 'knock_down_details.material_number')
+		->whereIn('knock_downs.status', $request->get('status'))
+		->where('destinations.destination_shortname', '=', $destination)
+		->select('knock_down_details.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width', 'material_volumes.lot_carton', DB::raw('sum(knock_down_details.quantity) as actual'))
+		->groupBy('knock_down_details.material_number', 'materials.material_description', 'material_volumes.length', 'material_volumes.height', 'material_volumes.width', 'material_volumes.lot_carton')
+		->get();
+
+		if(in_array('0', $request->get('status')) || in_array('M', $request->get('status'))){
+			$location = 'Production';
+		}
+		elseif(in_array('1', $request->get('status'))){
+			$location = 'InTransit';
+		}
+		elseif(in_array('2', $request->get('status'))){
+			$location = 'FSTK';
+		}
+
+		$response = array(
+			'status' => true,
+			'table' => $stock,
+			'title' => $request->get('destination'),
+			'location' => $location,
+		);
+		return Response::json($response); 
 	}
 
 	public function fetchKdStock(){

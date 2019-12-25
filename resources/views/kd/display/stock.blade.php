@@ -387,7 +387,7 @@ function modalStock(destination, location){
 		destination:destination
 	}
 
-	$.get('{{ url("fetch/tb_stock") }}', data, function(result, status, xhr){
+	$.get('{{ url("fetch/kd_stock_detail") }}', data, function(result, status, xhr){
 		console.log(status);
 		console.log(result);
 		console.log(xhr);
