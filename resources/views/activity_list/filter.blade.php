@@ -42,7 +42,9 @@ table.table-bordered > tfoot > tr > th{
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-    <!-- <li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a>&nbsp<a href="{{ url("index/activity_list/create_by_department/".$id.'/'.$no)}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li> -->
+    <li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a>&nbsp
+      <!-- <a href="{{ url("index/activity_list/create_by_department/".$id.'/'.$no)}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a> -->
+    </li>
   </ol>
 </section>
 @endsection
