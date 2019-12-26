@@ -1854,6 +1854,7 @@ class MiddleProcessController extends Controller
 			on dl.operator_id = e.employee_id
 			left join standart_times s on s.material_number = dl.material_number
 			left join materials m on m.material_number = dl.material_number
+			where e.location = 'bff'
 			".$group."
 			order by e.`group`, e.employee_id");
 
