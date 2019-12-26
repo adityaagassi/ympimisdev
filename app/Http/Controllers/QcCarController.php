@@ -49,6 +49,9 @@ class QcCarController extends Controller
 
     public function detail($id)
     {
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
        $cars = QcCar::find($id);
 
        $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')

@@ -198,7 +198,7 @@
 				</div>
 
 				<div class="col-xs-6">
-					<span style="font-weight: bold; font-size: 16px;">Information ()</span>
+					<span style="font-weight: bold; font-size: 16px;">Information (熱い/冷たい)</span>
 					<div style="height: 40px;vertical-align: middle;border: 1px solid #d2d6de;">
 					    <label class="radio" style="margin-top: 5px;margin-left: 5px">Cold
 						  <input type="radio" checked="checked" id="information" name="information" value="Cold">

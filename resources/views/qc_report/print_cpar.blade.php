@@ -22,11 +22,11 @@
 	</style>
 	
  	
-	<table class="table table-bordered">
+	<table class="table table-bordered" style="table-layout: fixed">
 		<thead>
 			<tr>
-				<td colspan="2" class="centera">
-					<img width="140px" src="{{ public_path() . '/waves.jpg' }}" alt="" style="vertical-align: middle !important">
+				<td colspan="3" class="centera" >
+					<img width="120" src="{{ public_path() . '/waves.jpg' }}" alt="" style="vertical-align: middle !important">
 				</td>
 				<td colspan="5" style="text-align: center; vertical-align: middle;font-size: 14px;font-weight: bold">CORRECTIVE & PREVENTIVE ACTION REQUEST</td>
 				<td colspan="2" style="font-size: 9px;">
@@ -60,20 +60,20 @@
 
 			@foreach($cpars as $cpar)
 			<tr>
-				<td rowspan="{{ 12 + $jumlah }}">{{ $i++ }}</td>
-				<td colspan="4" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
+				<td rowspan="{{ 12 + $jumlah }}" style="width: 5%">{{ $i++ }}</td>
+				<td colspan="5" style="border: none !important">To : <b>{{$cpar->name}}</b></td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">CPAR No : <b>{{$cpar->cpar_no}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="border: none !important">Location : <b>{{$cpar->lokasi}}</b></td>
+				<td colspan="5" style="border: none !important">Location : <b>{{$cpar->lokasi}}</b></td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="border: none !important">Issue Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_permintaan)) ?></b></td>
+				<td colspan="5" style="border: none !important">Issue Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_permintaan)) ?></b></td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Department : <b>{{$cpar->department_name}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="4" style="border: none !important">Request Due Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_balas)) ?></b><br>(CPAR Return to QA)</td>
+				<td colspan="5" style="border: none !important">Request Due Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_balas)) ?></b><br>(CPAR Return to QA)</td>
 				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">
 					@if($cpar->destination_code != null)
 						Customer : <b>{{$cpar->destination_name}}</b>
@@ -89,7 +89,7 @@
 				<td>Sample / Check Qty</td>
 				<td>Defect Qty</td>
 				<td>% Defect</td>
-				<td></td>
+				<td colspan="2"></td>
 			</tr>
 
 			<?php 
@@ -105,7 +105,7 @@
 				<td rowspan="2">{{$part->sample_qty}}</td>
 				<td rowspan="2">{{$part->defect_qty}}</td>
 				<td rowspan="2">{{$part->defect_presentase}}</td>
-				<td rowspan="2"></td>
+				<td rowspan="2" colspan="2"></td>
 			</tr>
 			<tr></tr>
 			@endforeach
@@ -119,17 +119,17 @@
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
 				<td rowspan="2"></td>
-				<td rowspan="2"></td>
+				<td rowspan="2" colspan="2"></td>
 			</tr>
 			<tr></tr>
 			<?php } ?>
 			<?php if($jumlahparts != 0) { ?> 
 			<tr>
-				<td colspan="8"><p style="font-size: 12px">Detail Problem : </p><?= $part->detail_problem ?></td>
+				<td colspan="9"><p style="font-size: 12px">Detail Problem : </p><?= $part->detail_problem ?></td>
 			</tr>
 			<?php } else { ?>
 			<tr>
-				<td colspan="8">&nbsp;</td>
+				<td colspan="9">&nbsp;</td>
 			</tr>	
 			<?php } ?>
 			<!-- <tr><td colspan="8"></td></tr> -->
@@ -140,7 +140,7 @@
 				<td>Approved By</td>
 				<td>Approved By</td>
 				<td>Received By</td>
-				<td colspan="2" rowspan="4">&nbsp;</td>
+				<td colspan="3" rowspan="4">&nbsp;</td>
 			</tr>
 			<tr>
 				<td rowspan="2" style="vertical-align: middle;">
@@ -210,30 +210,30 @@
 			</tr>
 			<tr>
 				<td rowspan="2">2</td>
-				<td colspan="8">Immediate Action (Filled By QA)</td>
+				<td colspan="9">Immediate Action (Filled By QA)</td>
 			</tr>
 			<tr>
-				<td colspan="8"><?= $cpar->tindakan ?></td>
+				<td colspan="9"><?= $cpar->tindakan ?></td>
 			</tr>
 			<tr>
 				<td rowspan="2">3</td>
-				<td colspan="8">Verification Status</td>
+				<td colspan="9">Verification Status</td>
 			</tr>
 			<tr>
-				<td colspan="8">{{$cpar->status_name}}</td>
+				<td colspan="9">{{$cpar->status_name}}</td>
 			</tr>
 			<tr>
 				<td rowspan="6">4</td>
-				<td colspan="8">Cost Estimation</td>
+				<td colspan="9">Cost Estimation</td>
 			</tr>
 			<tr>
-				<td colspan="8"><?= $cpar->cost ?> </td>
+				<td colspan="9"><?= $cpar->cost ?> </td>
 			</tr>
 			<tr>
 				<td>Prepared By</td>
 				<td>Checked By</td>
 				<td>Known By</td>
-				<td colspan="5"></td>
+				<td colspan="6"></td>
 			</tr>
 			<tr>
 				<td rowspan="2">
@@ -265,14 +265,14 @@
 						&nbsp;
 					@endif
 				</td>
-				<td colspan="5" rowspan="2"></td>
+				<td colspan="6" rowspan="2"></td>
 			</tr>
 			<tr></tr>
 			<tr>
 				<td>Staff</td>
 				<td>Chief</td>
 				<td>Manager</td>
-				<td colspan="5"></td>
+				<td colspan="6"></td>
 			</tr>
 			@endforeach
 		</tbody>

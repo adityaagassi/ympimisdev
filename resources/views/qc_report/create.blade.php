@@ -107,7 +107,7 @@
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Masukkan Tanggal Permintaan" required>
+              <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Masukkan Tanggal Permintaan" onchange="selectbulan()" required>
             </div>
           </div>
           <label class="col-sm-1">Sumber Komplain<span class="text-red">*</span></label>
@@ -136,7 +136,7 @@
             <input type="hidden" class="form-control" name="kategori" id="kategori" placeholder="kategori" required>
             <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
             <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
-
+            <input type="hidden" class="form-control" name="getbulan" id="getbulan" placeholder="getbulan" required>
             <!-- <input type="text" class="form-control" name="staff" id="staff" placeholder="staff" required value="O11081664">
             <input type="text" class="form-control" name="chief" id="chief" placeholder="chief" required value="G03110980">
             <input type="text" class="form-control" name="manager" id="manager" placeholder="manager" required value="A97100056">
@@ -274,19 +274,27 @@
         });
     }
 
+    function selectbulan(){
+          var tgl = document.getElementById("tgl_permintaan").value;
+          var time = new Date(tgl);
+          var dateArr = tgl.split("/");
+          var forDate = dateArr[1];
+          // console.log(forDate);
+          $('#getbulan').val(forDate);  
+    }
+
 
     function selectsumber() {
-
         var sumber = document.getElementById("sumber_komplain");
         var departemen = document.getElementById("department_id");
         var nomorcpar = document.getElementById("cpar_no");
         var kategori_cpar = document.getElementById("kategori");
+        var getbulan = document.getElementById("getbulan").value;
         var getdepartemen = departemen.options[departemen.selectedIndex].value;
         var getsumber = sumber.options[sumber.selectedIndex].value;
         var kategori;
 
         var lastthree = $('#lastthree').val();
-
         if (getsumber == "Eksternal Complaint"){
           kategori = "E";
         }
@@ -311,8 +319,8 @@
           $("#supplier").hide();
         }
 
-        var bulan = new Date().getMonth()+1;
-        var romawi = romanize(bulan);
+        // var bulan = new Date().getMonth()+1;
+        var romawi = romanize(getbulan);
         var year = new Date().getFullYear();
 
         $.ajax({

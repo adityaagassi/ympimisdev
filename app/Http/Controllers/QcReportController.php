@@ -41,6 +41,9 @@ class QcReportController extends Controller
 
     public function index()
     {	
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
         $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name')
         ->join('departments','qc_cpars.department_id','=','departments.id')
         ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
@@ -362,6 +365,11 @@ class QcReportController extends Controller
 
     public function update($id)
     {
+
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+
         $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
         ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
         ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')

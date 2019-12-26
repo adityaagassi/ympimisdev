@@ -52,7 +52,7 @@ class ReedplateController extends Controller
 						
             SELECT employees.`name`, reedplate_temps.major, reedplate_temps.minor,reedplate_temps.reader, (TIME_TO_SEC(TIMEDIFF(NOW(),reedplate_temps.mulai))/ 60) as jam_kerja FROM reedplate_temps JOIN reedplates on reedplates.minor = reedplate_temps.minor JOIN employees on employees.employee_id = reedplates.employee_id GROUP BY reedplate_temps.mulai, reedplate_temps.minor, reedplate_temps.major, employees.`name`, reedplate_temps.reader) AS gabung
             GROUP BY major, minor, `name`, reader) as datas
-            right join 
+            RIGHT JOIN 
 				
             (SELECT reedplate_distances.lokasi,reedplates.employee_id, `name`,major,minor, reedplate_distances.reader from reedplates cross join reedplate_distances LEFT JOIN employees on reedplates.employee_id = employees.employee_id) as mstr
             on datas.major = mstr.major and datas.minor = mstr.minor and datas.reader = mstr.reader ORDER BY reader ASC, minor ASC');

@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:confirmation_overtime')->weekdays()->dailyAt('06:55');
 
         $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
-        $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:00');
+        $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');

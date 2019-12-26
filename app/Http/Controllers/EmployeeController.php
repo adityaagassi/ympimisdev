@@ -279,7 +279,48 @@ class EmployeeController extends Controller
     ))->with('page', 'Kaizen Aproval Resume');
   }
 
+  public function indexUpdateKaizenDetail($id)
+  {
+    $data = KaizenForm::where('kaizen_forms.id','=', $id)
+    ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
+    ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost')
+    ->get();
+
+    $section = explode(" ~ ",$data[0]->section)[0];
+
+    $q_subleader = "select employees.name, position, employees.employee_id from employees 
+    left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+    left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+    where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
+    and end_date is null and section = '".$section."'
+    order by name asc";
+
+    $subleader = db::select($q_subleader);
+
+    $sections = "select section from
+    (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'chief')) d
+    left join employees on d.employee_id = employees.employee_id
+    left join
+    (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
+    group by section
+    order by section";
+
+    $sc = db::select($sections);
+
+    return view('employees.service.ekaizenUpdate', array(
+      'title' => 'e-Kaizen Update',
+      'title_jp' => '',
+      'subleaders' => $subleader,
+      'sc' => $sc,
+      'data' => $data
+    ))->with('page', 'Kaizen Update');
+  }
+
   public function makeKaizen($id, $name, $section, $group){
+    if ($section == 'Assembly Process Control') {
+      $section = 'Assembly Process';
+    }
+
     $q_subleader = "select employees.name, position, employees.employee_id from employees 
     left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
     left join mutation_logs on mutation_logs.employee_id = employees.employee_id
@@ -621,7 +662,6 @@ catch (QueryException $e){
 
 }
 
-
     // end master emp
 
     // absensi import
@@ -684,7 +724,6 @@ catch (QueryException $e){
 
 }
     // end absensi import
-
 
     // master promotion_logs
 
@@ -1050,38 +1089,38 @@ public function indexEmployeeService(Request $request)
   $title = 'Employee Self Services';
   $title_jp = '従業員の情報サービス';
   $emp_id = Auth::user()->username;
-  // $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+  $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
 // if (!file_exists(public_path().'/kcfinderimages/'.$emp_id)) {
 //   mkdir(public_path().'/kcfinderimages/'.$emp_id, 0777, true);
 //   mkdir(public_path().'/kcfinderimages/'.$emp_id.'/files', 0777, true);
 // }
 
-$query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, address, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
-left join 
-(
-SELECT employee_id, `status` FROM employment_logs
-WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-) as emp_log on employees.employee_id = emp_log.employee_id
-left join
-(
-select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
-WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-) as mut_log on employees.employee_id = mut_log.employee_id
-left join
-(
-select employee_id ,grade_code, grade_name, position from promotion_logs
-WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-) as promot_log on employees.employee_id = promot_log.employee_id
-where employees.employee_id = '".$emp_id."'";
+  $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, address, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
+  left join 
+  (
+  SELECT employee_id, `status` FROM employment_logs
+  WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as emp_log on employees.employee_id = emp_log.employee_id
+  left join
+  (
+  select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
+  WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as mut_log on employees.employee_id = mut_log.employee_id
+  left join
+  (
+  select employee_id ,grade_code, grade_name, position from promotion_logs
+  WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
+  ) as promot_log on employees.employee_id = promot_log.employee_id
+  where employees.employee_id = '".$emp_id."'";
 
-$absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
-(select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
-group by DATE_FORMAT(tanggal,'%b %Y') 
-order by tanggal asc) abs
-left join (
-select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
-group by DATE_FORMAT(tanggal,'%b %Y')
+  $absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
+  (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
+  group by DATE_FORMAT(tanggal,'%b %Y') 
+  order by tanggal asc) abs
+  left join (
+  select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
+  group by DATE_FORMAT(tanggal,'%b %Y')
 ) ovr on ovr.period = abs.period";
 
 $absences = db::connection('mysql3')->select($absence);
@@ -1684,7 +1723,8 @@ public function fetchKaizen(Request $request)
   ->addColumn('action', function($kz){
     if ($kz->status == '-1') {
       return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
-      <a href="'. url("index/updateEmp")."/".$kz->employee_id.'" class="btn btn-xs btn-warning"  id="' . $kz->id . '"><i class="fa fa-pencil"></i> Ubah</a>';
+      <a href="'. url("index/updateKaizen")."/".$kz->id.'" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i> Ubah</a>
+      <button onclick="openDeleteDialog('.$kz->id.',\''.$kz->title.'\', \''.$kz->propose_date.'\')" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>';
     } else {
       return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>';
     }
@@ -2172,4 +2212,61 @@ public function fetchKaizenResume(Request $request)
   );
   return Response::json($response);
 }
+
+public function updateKaizen(Request $request)
+{
+  try {
+    $kz = KaizenForm::where('id',$request->get('id'))
+    ->update([
+      'leader' => $request->get('leader'),
+      'title' => $request->get('title'),
+      'condition' => $request->get('condition'),
+      'improvement' => $request->get('improvement'),
+      'area' => $request->get('area_kz'),
+      'purpose' => $request->get('purpose')
+    ]);
+    if ($request->get('estimasi')) {
+
+      KaizenCalculation::where('id_kaizen',$request->get('id'))->forceDelete();
+
+      foreach ($request->get('estimasi') as $est) {
+       $kc = new KaizenCalculation([
+        'id_kaizen' => $request->get('id'),
+        'id_cost' => $est[0],
+        'cost' => $est[1],
+        'created_by' => Auth::id(),
+        'created_at' => date('Y-m-d H:i:s'),
+      ]);
+
+       $kc->save();
+     }
+   }
+
+   $response = array(
+    'status' => true,
+    'datas' => 'Kaizen Berhasil diubah'
+  );
+   return Response::json($response);
+   
+
+ } catch (QueryException $e){
+  $response = array(
+    'status' => false,
+    'datas' => $e->getMessage()
+  );
+  return Response::json($response);
+}
+}
+
+public function deleteKaizen(Request $request)
+{
+  KaizenForm::where('id',$request->get('id'))->delete();
+
+  $response = array(
+    'status' => true,
+    'datas' => 'Data Berhasil dihapus'
+  );
+  return Response::json($response);
+}
+
 }

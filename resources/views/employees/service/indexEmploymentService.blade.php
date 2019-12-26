@@ -544,6 +544,32 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				</div>
 			</div>
 
+
+			<!-- DELETE -->
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog modal-md modal-danger">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<p id="kz_title_delete"></p>
+									<input type="hidden" id="id_delete">
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
+							<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+
 		</section>
 		@endsection
 		@section('scripts')
@@ -866,6 +892,32 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					
 					fill_chat();
 				})
+			}
+
+			// function modalEditKaizen(id) {
+			// 	alert(id);
+			// }
+
+			function deleteKaizen() {
+				var ids = $("#id_delete").val();
+
+				var data = {
+					id : ids
+				}
+
+				$.get('{{ url("delete/kaizen") }}', data, function(result, status, xhr){
+					fill_kaizen();
+				})
+			}
+
+			function openDeleteDialog(id, title, date) {
+				$('#modalDelete').modal({
+					backdrop: 'static',
+					keyboard: false
+				})
+
+				$("#kz_title_delete").text('"'+title+'" ?');
+				$("#id_delete").val(id);
 			}
 
 			function questionForm() {

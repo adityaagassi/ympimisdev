@@ -355,6 +355,7 @@ Route::post('post/ekaizen', 'EmployeeController@postKaizen');
 Route::post('update/ekaizen', 'EmployeeController@updateKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
 Route::get('index/updateKaizen/{id}', 'EmployeeController@indexUpdateKaizenDetail');
+Route::get('delete/kaizen', 'EmployeeController@deleteKaizen');
 Route::get('fetch/chat/hrqa', 'EmployeeController@fetchChat');
 Route::post('post/chat/comment', 'EmployeeController@postComment');
 Route::post('post/hrqa', 'EmployeeController@postChat');
@@ -1810,6 +1811,18 @@ Route::get('index/jishu_hozen/print_jishu_hozen_email/{id}/{jishu_hozen_id}/{mon
 Route::get('index/jishu_hozen/print_jishu_hozen_approval/{activity_list_id}/{month}','JishuHozenController@print_jishu_hozen_approval');
 Route::get('index/jishu_hozen/sendemail/{id}/{jishu_hozen_point_id}','JishuHozenController@sendemail');
 Route::post('index/jishu_hozen/approval/{id}/{jishu_hozen_id}/{month}','JishuHozenController@approval');
+
+//APD CHECK
+Route::get('index/apd_check/index/{id}', 'ApdCheckController@index');
+Route::post('index/apd_check/filter_apd_check/{id}', 'ApdCheckController@filter_apd_check');
+Route::post('index/apd_check/store/{id}', 'ApdCheckController@store');
+Route::get('index/apd_check/getapdcheck','ApdCheckController@getapdcheck')->name('apd_check.getapdcheck');
+Route::post('index/apd_check/update/{id}','ApdCheckController@update');
+Route::get('index/apd_check/destroy/{id}/{area_check_id}', 'ApdCheckController@destroy');
+Route::post('index/apd_check/print_apd_check/{id}','ApdCheckController@print_apd_check');
+Route::get('index/apd_check/print_apd_check_email/{id}/{month}','ApdCheckController@print_apd_check_email');
+Route::post('index/apd_check/sendemail/{id}','ApdCheckController@sendemail');
+Route::post('index/apd_check/approval/{id}/{month}','ApdCheckController@approval');
 
 //RECORDER PROCESS
 Route::get('index/recorder_process', 'RecorderProcessController@index');

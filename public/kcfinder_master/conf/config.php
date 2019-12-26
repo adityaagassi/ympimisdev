@@ -23,6 +23,7 @@ $urlxxx = dirname($urlxx).PHP_EOL;
 $urlxxxx = trim($urlxxx);
 $server = $_SERVER['HTTP_HOST'];
 $url = "http://".$server."".$urlxxxx."/public/kcfinderimages";
+// var_dump($url);
 return array(
 
 
@@ -53,7 +54,7 @@ return array(
     'jpegQuality' => 90,
     'thumbsDir' => ".thumbs",
 
-    'maxImageWidth' => 0,
+    'maxImageWidth' => 500,
     'maxImageHeight' => 0,
 
     'thumbWidth' => 100,
@@ -86,8 +87,8 @@ return array(
 
         'dirs' => array(
             'create' => true,
-            'delete' => true,
-            'rename' => true
+            'delete' => false,
+            'rename' => false
         )
     ),
 
