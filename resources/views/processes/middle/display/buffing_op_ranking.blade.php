@@ -80,7 +80,7 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%; margin-top: 1%;"></div>
 				<div id="container3" style="width: 100%; margin-top: 1%;"></div>
-				<div id="container2" style="width: 100%; margin-top: 1%;"></div>
+				<div id="container2" style="width: 100%; margin-top: 1%; display: none;"></div>
 				
 			</div>
 		</div>
@@ -282,16 +282,14 @@
 			bulan: bulan
 		}
 
-		var position = $(document).scrollTop();
-
-
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-		
+		var position = $(document).scrollTop();		
 
 		$.get('{{ url("fetch/middle/bff_op_ng_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 
+					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+					
 					var name = [];
 					var ng_rate = [];
 					var data = [];
