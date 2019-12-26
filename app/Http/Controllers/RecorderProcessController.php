@@ -40,13 +40,13 @@ class RecorderProcessController extends Controller
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
     }
 
-    public function index(){
+  public function index(){
 		return view('recorder.process.index')->with('page', 'Process Assy Recorder')->with('head', 'Assembly Process');
 	}
 
-	public function index_push_block(){
+	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17');
+		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('remark', $remark);
 	}
 
 	function fetch_push_block(Request $request)
@@ -105,6 +105,7 @@ class RecorderProcessController extends Controller
               $judgement = $request->get('judgement');
               $head = $request->get('head');
               $block = $request->get('block');
+              $push_block_code = $request->get('push_block_code');
               for($i = 0; $i<16;$i++){
                 $check_date = $request->get('check_date');
                 $product_type = $request->get('product_type');
@@ -122,7 +123,7 @@ class RecorderProcessController extends Controller
                     'created_by' => $id_user
                 ]);
 
-                $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
+                $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
 
                 if($judgement[$i] == 'NG'){
                   foreach($this->mail as $mail_to){

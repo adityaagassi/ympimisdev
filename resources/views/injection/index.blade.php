@@ -20,8 +20,6 @@
 			<span style="font-size: 3vw; color: red;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/masterMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Master Machine</a>
 			<a href="{{ url("index/masterCycleMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Cycle Time Machine</a>
-			
-			
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
@@ -37,6 +35,7 @@
 
 			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>
 			
+			<a href="{{ url("index/recorder_process_push_block","First Shoot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

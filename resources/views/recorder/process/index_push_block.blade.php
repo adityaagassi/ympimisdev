@@ -656,7 +656,7 @@
 	}
 
 	function reset(){
-		window.location = "{{ url('index/recorder_process_push_block') }}";
+		window.location = "{{ url('index/recorder_process_push_block/'.$remark) }}";
 	}
 
 	function konfirmasi(){
@@ -675,7 +675,7 @@
 		var push_pull2 = [];
 		var judgement2 = [];
 		var status_false = 0;
-		var push_block_code = check_date+'-'+injection_date+'-'+product_type+'-'+head_id+'-'+block_id;
+		var push_block_code = '{{ $remark }}';
 		for(var i = 1; i <= 4; i++){
 			for(var j = 1; j <= 4; j++){
 				array_head.push($("#head_"+[j]).val());

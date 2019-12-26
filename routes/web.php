@@ -984,6 +984,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');
+	Route::post('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
 });
 
 Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
@@ -1826,7 +1827,7 @@ Route::post('index/apd_check/approval/{id}/{month}','ApdCheckController@approval
 
 //RECORDER PROCESS
 Route::get('index/recorder_process', 'RecorderProcessController@index');
-Route::get('index/recorder_process_push_block', 'RecorderProcessController@index_push_block');
+Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');

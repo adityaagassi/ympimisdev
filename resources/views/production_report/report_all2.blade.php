@@ -781,12 +781,12 @@ function ShowModalChart(leader_name,frequency) {
                     }
                     }
                 })
-
                 var nomer = 0;
                 var aktual = 0;
                 var total_aktual = 0;
                 var plan = 1;
                 var total_plan =  plan * activity.length;
+                // console.table(result.detail[1][1]);
                 for (var i = 0; i < activity.length; i++) {
                   dd += "<tr>";
                   dd += "<td>"+ (++nomer) +"</td>";
@@ -811,7 +811,7 @@ function ShowModalChart(leader_name,frequency) {
                   dd += "<tr>";
                 }
                 // console.log(aktual);
-                console.log(parseInt(aktual));
+                // console.log(parseInt(aktual));
                 if(parseInt(aktual) < 4 ){
                   total_aktual = 0;
                 }
