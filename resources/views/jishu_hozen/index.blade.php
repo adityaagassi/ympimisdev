@@ -154,11 +154,10 @@
 														@if($jishu_hozen->send_status == "")
 														<a class="btn btn-primary btn-sm" href="{{url('index/jishu_hozen/sendemail/'.$jishu_hozen->id.'/'.$jishu_hozen_point_id)}}">Send Email</a>
 														@endif
-														{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
 														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_jishu_hozen('{{ url("index/jishu_hozen/update") }}','{{ $id }}','{{ $jishu_hozen_point_id }}','{{ $jishu_hozen->id }}');">
 											               Edit
 											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen/destroy") }}', '{{ $jishu_hozen->jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen->month }}','{{ $id }}','{{ $jishu_hozen_point_id }}' ,'{{ $jishu_hozen->id }}');">
+														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen/destroy") }}','{{ $jishu_hozen->jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen->month }}','{{ $id }}','{{ $jishu_hozen_point_id }}' ,'{{ $jishu_hozen->id }}');">
 															Delete
 														</a>
 													</center>
