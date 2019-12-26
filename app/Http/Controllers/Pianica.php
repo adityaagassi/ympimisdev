@@ -56,7 +56,7 @@ class Pianica extends Controller{
               'Bensuki',
               'Benage',
               'Pureto',
-              'Tunning',
+              'Tuning',
               'Kensa Awal',
               'Kensa Akhir',
               'Kakuning Visual',

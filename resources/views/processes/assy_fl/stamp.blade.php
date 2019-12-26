@@ -263,7 +263,7 @@
 		
 
 		$('body').toggleClass("sidebar-collapse");
-		fillPlannew();
+		// fillPlannew();
 		fillSerialNumber();
 		fillResult();
 		// stamp();
@@ -538,7 +538,7 @@
 				if(result.status){
 					if(result.statusCode == 'stamp'){
 						fillResult();
-						fillPlannew();
+						// fillPlannew();
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
@@ -606,7 +606,7 @@
 						$('#editModal').modal('hide');
 						openSuccessGritter('Success!', result.message);					
 						fillResult();
-						fillPlannew();
+						// fillPlannew();
 					}
 					else{
 						audio_error.play();
@@ -642,7 +642,7 @@
 					$('#editModal').modal('hide');
 					openSuccessGritter('Success!', result.message);					
 					fillResult();
-					fillPlannew();
+					// fillPlannew();
 				}
 				else{
 					audio_error.play();
