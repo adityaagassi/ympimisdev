@@ -62,7 +62,7 @@ class FinishedGoodsController extends Controller
 	}
 
 	public function index_fg_shipment_schedule(){
-		$periods = DB::table('shipment_schedules')->select('st_month')->distinct()->get();
+		$periods = DB::table('shipment_schedules')->select('st_month')->orderBy('st_month', 'desc')->distinct()->get();
 		$origin_groups = DB::table('origin_groups')->get();
 		$categories = $this->category;
 		$hpls = DB::table('materials')->whereIn('materials.category', ['KD', 'FG'])
