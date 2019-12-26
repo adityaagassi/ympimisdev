@@ -296,7 +296,7 @@
 					$('#planTableBody').append(planData);
 					$('#listModel').html("");
 					$.unique(result.model.map(function (d) {
-						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
+						$('#listModel').append('<button type="button" class="btn bg-olive btn-lg" style="margin-top: 3px; margin-left: 2px; margin-right: 2px; width: 19%; font-size: 1vw" id="'+d.model+'" onclick="model(id)">'+d.model+'</button>');
 					}));
 					$('#planTable').DataTable({
 						'paging': false,

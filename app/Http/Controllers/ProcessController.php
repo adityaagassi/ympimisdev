@@ -1027,6 +1027,12 @@ class ProcessController extends Controller
 			$materials = DB::table('materials')->where('model', 'like', 'YTS%')->where('issue_storage_location', '=', 'sx21')->where('hpl', '=', 'TSBODY')
 			->where('category', '=', 'wip')->select('model')->distinct()->get();
 		}
+		
+		if ($id =="YFL") {
+			$materials = DB::table('materials')->where('model', 'like', $id_all)->select('model')->distinct()->get();
+			$planData ="";
+
+		}
 
 		if($id =="YCL"){
 			$planData = DB::select($query2);
@@ -1035,9 +1041,7 @@ class ProcessController extends Controller
 			$planData = DB::select($query);
 		}
 
-		if ($id =="YFL") {
-			$materials = DB::table('materials')->where('model', 'like', $id_all)->select('model')->distinct()->get();
-		}
+
 
 		$response = array(
 			'status' => true,
