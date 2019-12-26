@@ -91,6 +91,9 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Jishu Hozen"){
             return redirect('/index/jishu_hozen/nama_pengecekan/'.$id)->with('page', 'Jishu Hozen')->with('no', '11');
         }
+        elseif($activity_type == "Cek APD"){
+            return redirect('/index/apd_check/index/'.$id)->with('page', 'APD Check')->with('no', '12');
+        }
     }
 
     function report_all($id)
@@ -157,14 +160,16 @@ class ProductionReportController extends Controller
         monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen as jumlah_monthly,
         COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen )/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
-        IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)  < 12,2,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)< 16,3,0)))) as jumlah_weekly,
-        COALESCE((IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 4,0,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) < 8,1,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)  < 12,2,
-                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process)< 16,3,0))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
+        IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 4,0,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 8,1,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)  < 12,2,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 16,3,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 16 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 20,4,0))))) as jumlah_weekly,
+        COALESCE((IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 4,0,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 4 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 8,1,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 8 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)  < 12,2,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 12 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 16,3,
+                IF((weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 16 && (weekly.jumlah_sampling+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 20,4,0)))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
         daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
@@ -276,7 +281,17 @@ class ProductionReportController extends Controller
                                 and production_audits.deleted_at is null 
                               and actlist.department_id = '".$id."'
                                 GROUP BY point_check.leader),0)
-        as jumlah_audit
+        as jumlah_audit,
+        COALESCE((select count(DISTINCT(apd_checks.week_name)) as jumlah_audit
+                from apd_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$bulan."'
+                    and actlist.frequency = 'Weekly'
+                                and apd_checks.leader = '".$dataleader."'
+                                and apd_checks.deleted_at is null 
+                              and actlist.department_id = '".$id."'
+                                GROUP BY apd_checks.leader),0)
+        as jumlah_apd_check
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
@@ -466,7 +481,17 @@ class ProductionReportController extends Controller
                                 and actlist.id = id_activity
                                 and week_name = '".$date2->week_name."'
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0))) 
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Cek APD',
+            (select count(apd_checks.week_name) as jumlah_apd_check
+                from apd_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$week_date."'
+                                and apd_checks.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and week_name = '".$date2->week_name."'
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0))))
             as jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
@@ -1928,7 +1953,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek APD',
+                        (SELECT count(*) FROM apd_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))))
                 as jumlah_approval,
                 IF(activity_type = 'Audit',
                         (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM production_audits
@@ -2016,7 +2049,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Cek APD',
+                        (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

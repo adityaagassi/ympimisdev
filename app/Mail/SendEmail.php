@@ -108,5 +108,8 @@ class SendEmail extends Mailable
         if($this->remark == 'jishu_hozen'){
             return $this->from('ympimis@gmail.com')->subject('Audit Implementasi Jishu Hozen (??)')->view('mails.jishu_hozen');
         }
+        if($this->remark == 'apd_check'){
+            return $this->from('ympimis@gmail.com')->subject('Cek Alat Pelindung Diri (APD}) (??)')->view('mails.apd_check');
+        }
     }
 }

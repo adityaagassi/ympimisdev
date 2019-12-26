@@ -44,9 +44,6 @@
 	@endif
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
-    {{-- <div class="box-header with-border">
-      <h3 class="box-title">Detail User</h3>
-    </div>   --}}
       <div class="box-body">
 			<table class="table" style="border: 1px solid black;">
 				<tbody>

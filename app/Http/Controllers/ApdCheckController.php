@@ -9,26 +9,39 @@ use Illuminate\Database\QueryException;
 use App\ActivityList;
 use App\User;
 use Illuminate\Support\Facades\DB;
-use App\AreaCheckPoint;
-use App\AreaCheck;
+use App\ApdCheck;
+use App\WeeklyCalendar;
 use Response;
 use DataTables;
 use Excel;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File;
 
-class AreaCheckController extends Controller
+class ApdCheckController extends Controller
 {
     public function __construct()
     {
       $this->middleware('auth');
+      $this->apd = [
+                        'Masker',
+                        'Celemek',
+                        'Ear Muff',
+                        'Ear Plug',
+                        'Safety Shoes',
+                        'Safety Glass',
+                        'Safety Gloves',
+                        'Safety Google'];
     }
 
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$area_check = AreaCheck::where('activity_list_id',$id)
-            ->orderBy('area_checks.id','desc')->get();
+    	$apdCheck = ApdCheck::where('activity_list_id',$id)->orderBy('apd_checks.id','desc')
+            ->get();
+
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
     	$activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
@@ -36,59 +49,38 @@ class AreaCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
-
+        // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $queryPointCheck = "select * from area_check_points where activity_list_id = '".$id."' and deleted_at is null";
-        $point_check = DB::select($queryPointCheck);
-        $point_check2 = DB::select($queryPointCheck);
-        $point_check3 = DB::select($queryPointCheck);
-
         $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
-    	$data = array('area_check' => $area_check,
-            				  'departments' => $departments,
-            				  'activity_name' => $activity_name,
-                      'activity_alias' => $activity_alias,
+    	$data = array('apd_check' => $apdCheck,
                       'subsection' => $subsection,
                       'subsection2' => $subsection2,
                       'subsection3' => $subsection3,
-                      'point_check' => $point_check,
-                      'point_check2' => $point_check2,
-                      'point_check3' => $point_check3,
-                      'pic' => $pic,
+    				  'departments' => $departments,
+    				  'activity_name' => $activity_name,
+                      'activity_alias' => $activity_alias,
+    				  'id' => $id,
+    				  'apd' => $this->apd,
+    				  'apd2' => $this->apd,
+    				  'pic' => $pic,
                       'pic2' => $pic2,
                       'leader' => $leader,
                       'foreman' => $foreman,
-    				  'id' => $id,
                       'id_departments' => $id_departments);
-    	return view('area_check.index', $data
-    		)->with('page', 'Area Check');
+    	return view('apd_check.index', $data
+    		)->with('page', 'APD Check');
     }
 
-    function filter_area_check(Request $request,$id)
+    function filter_apd_check(Request $request,$id)
     {
         $activityList = ActivityList::find($id);
-        if(strlen($request->get('month')) != null){
-            $year = substr($request->get('month'),0,4);
-            $month = substr($request->get('month'),-2);
-            $area_check = AreaCheck::where('activity_list_id',$id)
-                ->whereYear('date', '=', $year)
-                ->whereMonth('date', '=', $month)
-                ->orderBy('area_checks.id','desc')
-                ->get();
-        }
-        else{
-            $area_check = AreaCheck::where('activity_list_id',$id)
-            ->orderBy('area_checks.id','desc')->get();
-        }
-
-        // foreach ($activityList as $activityList) {
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
@@ -96,64 +88,98 @@ class AreaCheckController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
-        $subsection = DB::select($querySubSection);
+        $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $queryPointCheck = "select * from area_check_points where activity_list_id = '".$id."' and deleted_at is null";
-        $point_check = DB::select($queryPointCheck);
-        $point_check2 = DB::select($queryPointCheck);
-        $point_check3 = DB::select($queryPointCheck);
         $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
+        if(strlen($request->get('month')) != null){
+            $year = substr($request->get('month'),0,4);
+            $month = substr($request->get('month'),-2);
+            $apdCheck = ApdCheck::where('activity_list_id',$id)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->orderBy('apd_checks.id','desc')
+                ->get();
+        }
+        elseif ($request->get('month') > null) {
+            $year = substr($request->get('month'),0,4);
+            $month = substr($request->get('month'),-2);
+            $apdCheck = ApdCheck::where('activity_list_id',$id)
+                // ->where(DATE_FORMAT('date',"%Y-%m"),$month)
+                ->whereYear('date', '=', $year)
+                ->whereMonth('date', '=', $month)
+                ->orderBy('apd_checks.id','desc')
+                ->get();
+        }
+        elseif(strlen($request->get('month')) == null){
+            $apdCheck = ApdCheck::where('activity_list_id',$id)
+                ->orderBy('apd_checks.id','desc')
+                ->get();
+        }
+        else{
+            $apdCheck = ApdCheck::where('activity_list_id',$id)
+                ->orderBy('apd_checks.id','desc')
+                ->get();
+        }
         $data = array(
-                      'area_check' => $area_check,
+                      'apd_check' => $apdCheck,
+                      'subsection' => $sub_section,
+                      'subsection2' => $subsection2,
+                      'subsection3' => $subsection3,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
-                      'leader' => $leader,
-					            'subsection' => $subsection,
-                      'subsection2' => $subsection2,
-                      'subsection3' => $subsection3,
-                      'point_check' => $point_check,
-                      'point_check2' => $point_check2,
-                      'point_check3' => $point_check3,
+                      'id' => $id,
+                      'apd' => $this->apd,
+                      'apd2' => $this->apd,
                       'pic' => $pic,
                       'pic2' => $pic2,
+                      'leader' => $leader,
                       'foreman' => $foreman,
-                      'id' => $id,
                       'id_departments' => $id_departments);
-        return view('area_check.index', $data
-            )->with('page', 'Area Check');
+        return view('apd_check.index', $data
+            )->with('page', 'APD Check');
     }
 
-    public function destroy($id,$area_check_id)
+    public function destroy($id,$apd_check_id)
     {
-      $area_check = AreaCheck::find($area_check_id);
-      $area_check->delete();
+      $apd_check = ApdCheck::find($apd_check_id);
+      $apd_check->delete();
 
-      return redirect('/index/area_check/index/'.$id)
-        ->with('status', 'Area Check has been deleted.')
-        ->with('page', 'Area Check');        
+      return redirect('/index/apd_check/index/'.$id)
+        ->with('status', 'APD Check has been deleted.')
+        ->with('page', 'APD Check');        
     }
 
     function store(Request $request,$id)
     {
         	try{    
               $id_user = Auth::id();
-              // $interview_id = $request->get('interview_id');
-              
-                AreaCheck::create([
+              $date = $request->get('date');
+              $week = WeeklyCalendar::where('week_date',$date)->get();
+              foreach($week as $week){
+                  $week_name = $week->week_name;
+              }
+
+                ApdCheck::create([
                     'activity_list_id' => $id,
                     'department' => $request->get('department'),
                     'subsection' => $request->get('subsection'),
-                    'area_check_point_id' => $request->get('point_check'),
                     'date' => $request->get('date'),
-                    'condition' => $request->get('condition'),
+                    'week_name' => $week_name,
                     'pic' => $request->get('pic'),
+                    'proses' => $request->get('proses'),
+                    'jenis_apd' => $request->get('jenis_apd'),
+                    'kondisi' => $request->get('kondisi'),
+                    'foto_aktual' => $request->get('foto_aktual'),
                     'leader' => $request->get('leader'),
                     'foreman' => $request->get('foreman'),
                     'created_by' => $id_user
@@ -174,17 +200,19 @@ class AreaCheckController extends Controller
             }
     }
 
-    function getareacheck(Request $request)
+    function getapdcheck(Request $request)
     {
           try{
-            $detail = AreaCheck::find($request->get("id"));
-            $data = array('area_check_id' => $detail->id,
-            			  'area_check_point_id' => $detail->area_check_point_id,
+            $detail = ApdCheck::find($request->get("id"));
+            $data = array('apd_check_id' => $detail->id,
                           'department' => $detail->department,
                           'subsection' => $detail->subsection,
                           'date' => $detail->date,
-                          'condition' => $detail->condition,
-                          'pic' => $detail->pic);
+                          'kondisi' => $detail->kondisi,
+                          'pic' => $detail->pic,
+                          'proses' => $detail->proses,
+                          'foto_aktual' => $detail->foto_aktual,
+                          'jenis_apd' => $detail->jenis_apd);
 
             $response = array(
               'status' => true,
@@ -215,14 +243,16 @@ class AreaCheckController extends Controller
     function update(Request $request,$id)
     {
         try{
-                $interview = AreaCheck::find($id);
-                $interview->department = $request->get('department');
-                $interview->subsection = $request->get('subsection');
-                $interview->date = $request->get('date');
-                $interview->area_check_point_id = $request->get('area_check_point_id');
-                $interview->condition = $request->get('condition');
-                $interview->pic = $request->get('pic');
-                $interview->save();
+                $apd_check = ApdCheck::find($id);
+                $apd_check->department = $request->get('department');
+                $apd_check->subsection = $request->get('subsection');
+                $apd_check->date = $request->get('date');
+                $apd_check->proses = $request->get('proses');
+                $apd_check->jenis_apd = $request->get('jenis_apd');
+                $apd_check->foto_aktual = $request->get('foto_aktual');
+                $apd_check->kondisi = $request->get('kondisi');
+                $apd_check->pic = $request->get('pic');
+                $apd_check->save();
 
             // return redirect('index/interview/details/'.$interview_id)
             //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
@@ -241,7 +271,7 @@ class AreaCheckController extends Controller
             }
     }
 
-    function print_area_check(Request $request,$id)
+    function print_apd_check(Request $request,$id)
     {
         $month = $request->get('month');
 
@@ -251,45 +281,38 @@ class AreaCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $date = db::select("select week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$month."' and week_date not in (select tanggal from ftm.kalender)");
-        $countdate = count($date);
-
-        $point_check = db::select("select * from area_check_points where activity_list_id = '".$id."'");
-
-        $areaCheckQuery = "select * from area_checks
-          JOIN activity_lists on activity_lists.id = area_checks.activity_list_id
-          where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        $apdCheckQuery = "select * from apd_checks
+          JOIN activity_lists on activity_lists.id = apd_checks.activity_list_id
+          where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
           and activity_list_id = '".$id."'
           and department_id = '".$id_departments."'
-          and area_checks.deleted_at is null";
-        $area_check = DB::select($areaCheckQuery);
-        $area_check2 = DB::select($areaCheckQuery);
+          and apd_checks.deleted_at is null";
+        $apd_check = DB::select($apdCheckQuery);
+        $apd_check2 = DB::select($apdCheckQuery);
         $jml_null = 0;
         $jml_null_leader = 0;
-        foreach($area_check2 as $area_check2){
-          $subsection = $area_check2->subsection;
-          $leader = $area_check2->leader_dept;
-          $foreman = $area_check2->foreman_dept;
-          if($area_check2->approval == Null){
+        foreach($apd_check2 as $apd_check2){
+          $subsection = $apd_check2->subsection;
+          $leader = $apd_check2->leader_dept;
+          $foreman = $apd_check2->foreman_dept;
+          if($apd_check2->approval == Null){
             $jml_null = $jml_null + 1;
           }
-          if($area_check2->approval_leader == Null){
+          if($apd_check2->approval_leader == Null){
             $jml_null_leader = $jml_null_leader + 1;
           }
-          $approved_date = $area_check2->approved_date;
-          $approved_date_leader = $area_check2->approved_date_leader;
+          $approved_date = $apd_check2->approved_date;
+          $approved_date_leader = $apd_check2->approved_date_leader;
         }
 
         $monthTitle = date("F Y", strtotime($month));
 
-        if($area_check == null){
-            return redirect('/index/area_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Area Check');
+        if($apd_check == null){
+            return redirect('/index/apd_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'APD Check');
         }else{
             $data = array(
-                          'countdate' => $countdate,
-                          'date' => $date,
                           'subsection' => $subsection,
-                          'point_check' => $point_check,
+                          'apd_check' => $apd_check,
                           'activityList' => $activityList,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
@@ -305,58 +328,52 @@ class AreaCheckController extends Controller
                           'approved_date' => $approved_date,
                           'approved_date_leader' => $approved_date_leader,
                           'foreman' => $foreman,);
-            return view('area_check.print', $data
-                )->with('page', 'Area Check');
+            return view('apd_check.print', $data
+                )->with('page', 'APD Check');
         }
     }
 
-    function print_area_check_email($id,$month)
+    function print_apd_check_email($id,$month)
     {
+
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $date = db::select("select week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$month."' and week_date not in (select tanggal from ftm.kalender)");
-        $countdate = count($date);
-
-        $point_check = db::select("select * from area_check_points where activity_list_id = '".$id."'");
-
-        $areaCheckQuery = "select * from area_checks
-          JOIN activity_lists on activity_lists.id = area_checks.activity_list_id
-          where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        $apdCheckQuery = "select *,apd_checks.id as id_apd_check from apd_checks
+          JOIN activity_lists on activity_lists.id = apd_checks.activity_list_id
+          where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
           and activity_list_id = '".$id."'
           and department_id = '".$id_departments."'
-          and area_checks.deleted_at is null";
-        $area_check = DB::select($areaCheckQuery);
-        $area_check2 = DB::select($areaCheckQuery);
+          and apd_checks.deleted_at is null";
+        $apd_check = DB::select($apdCheckQuery);
+        $apd_check2 = DB::select($apdCheckQuery);
         $jml_null = 0;
         $jml_null_leader = 0;
-        foreach($area_check2 as $area_check2){
-          $subsection = $area_check2->subsection;
-          $leader = $area_check2->leader_dept;
-          $foreman = $area_check2->foreman_dept;
-          if($area_check2->approval == Null){
+        foreach($apd_check2 as $apd_check2){
+          $subsection = $apd_check2->subsection;
+          $leader = $apd_check2->leader_dept;
+          $foreman = $apd_check2->foreman_dept;
+          if($apd_check2->approval == Null){
             $jml_null = $jml_null + 1;
           }
-          if($area_check2->approval_leader == Null){
+          if($apd_check2->approval_leader == Null){
             $jml_null_leader = $jml_null_leader + 1;
           }
-          $approved_date = $area_check2->approved_date;
-          $approved_date_leader = $area_check2->approved_date_leader;
+          $approved_date = $apd_check2->approved_date;
+          $approved_date_leader = $apd_check2->approved_date_leader;
         }
 
         $monthTitle = date("F Y", strtotime($month));
 
-        if($area_check == null){
-            return redirect('/index/area_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Area Check');
+        if($apd_check == null){
+            return redirect('/index/apd_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'APD Check');
         }else{
             $data = array(
-                          'countdate' => $countdate,
-                          'date' => $date,
                           'subsection' => $subsection,
-                          'point_check' => $point_check,
+                          'apd_check' => $apd_check,
                           'activityList' => $activityList,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
@@ -372,8 +389,8 @@ class AreaCheckController extends Controller
                           'approved_date' => $approved_date,
                           'approved_date_leader' => $approved_date_leader,
                           'foreman' => $foreman,);
-            return view('area_check.print_email', $data
-                )->with('page', 'Area Check');
+            return view('apd_check.print_email', $data
+                )->with('page', 'APD Check');
         }
     }
 
@@ -387,30 +404,28 @@ class AreaCheckController extends Controller
           $activity_alias = $activityList->activity_alias;
           $id_departments = $activityList->departments->id;
 
-          $areaCheckQuery = "select *,area_checks.id as id_area_check,'".$month."' as month from area_checks
-            JOIN activity_lists on activity_lists.id = area_checks.activity_list_id
-            JOIN area_check_points on area_check_points.id = area_checks.area_check_point_id
+          $apdCheckQuery = "
+            select *,apd_checks.id as id_apd_check,'".$month."' as month from apd_checks
+            JOIN activity_lists on activity_lists.id = apd_checks.activity_list_id
             join departments on activity_lists.department_id = departments.id
-            where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-            and area_checks.activity_list_id = '".$id."'
+            where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+            and apd_checks.activity_list_id = '".$id."'
             and department_id = '".$id_departments."'
-            and area_checks.deleted_at is null";
+            and apd_checks.deleted_at is null";
             
-          $area_check = DB::select($areaCheckQuery);
-          $area_check3 = DB::select($areaCheckQuery);
-          $area_check2 = DB::select($areaCheckQuery);
-          // $training2 = DB::select($query_training);
+          $apd_check = DB::select($apdCheckQuery);
+          $apd_check3 = DB::select($apdCheckQuery);
+          $apd_check2 = DB::select($apdCheckQuery);
 
-          if($area_check != null){
-            foreach($area_check as $area_check){
-              $foreman = $area_check->foreman;
-              $send_status = $area_check->send_status;
-              $subsection = $area_check->subsection;
-              // var_dump($id);
+          if($apd_check != null){
+            foreach($apd_check as $apd_check){
+              $foreman = $apd_check->foreman;
+              $send_status = $apd_check->send_status;
+              $subsection = $apd_check->subsection;
             }
 
-            foreach ($area_check2 as $area_check2) {
-              $aCheck = AreaCheck::find($area_check2->id_area_check);
+            foreach ($apd_check2 as $apd_check2) {
+              $aCheck = ApdCheck::find($apd_check2->id_apd_check);
               $aCheck->send_status = "Sent";
               $aCheck->send_date = date('Y-m-d');
               $aCheck->approval_leader = "Approved";
@@ -426,19 +441,19 @@ class AreaCheckController extends Controller
             }
           }
           else{
-            return redirect('/index/area_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'Area Check');
+            return redirect('/index/apd_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'APD Check');
           }
 
           if($send_status == "Sent"){
-            return redirect('/index/area_check/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Area Check');
+            return redirect('/index/apd_check/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'APD Check');
           }
           
-          elseif($area_check != null){
-              Mail::to($mail_to)->send(new SendEmail($area_check3, 'area_check'));
-              return redirect('/index/area_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Area Check');
+          elseif($apd_check != null){
+              Mail::to($mail_to)->send(new SendEmail($apd_check3, 'apd_check'));
+              return redirect('/index/apd_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'APD Check');
           }
           else{
-            return redirect('/index/area_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'Area Check');
+            return redirect('/index/apd_check/index/'.$id)->with('error', 'Data tidak tersedia.')->with('page', 'APD Check');
           }
       }
 
@@ -446,16 +461,16 @@ class AreaCheckController extends Controller
     {
         $approve = $request->get('approve');
         if(count($approve) == 0){
-          return redirect('/index/area_check/print_area_check_email/'.$id.'/'.$month)->with('error', 'Checklist the approval.')->with('page', 'Area Check');
+          return redirect('/index/apd_check/print_apd_check_email/'.$id.'/'.$month)->with('error', 'Checklist the approval.')->with('page', 'APD Check');
         }
         else{
           foreach($approve as $approve){
-                $dCheck = AreaCheck::find($approve);
-                $dCheck->approval = "Approved";
-                $dCheck->approved_date = date('Y-m-d');
-                $dCheck->save();
+                $apd_check = ApdCheck::find($approve);
+                $apd_check->approval = "Approved";
+                $apd_check->approved_date = date('Y-m-d');
+                $apd_check->save();
               }
-          return redirect('/index/area_check/print_area_check_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Area Check');
+          return redirect('/index/apd_check/print_apd_check_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'APD Check');
         }
     }
 }
