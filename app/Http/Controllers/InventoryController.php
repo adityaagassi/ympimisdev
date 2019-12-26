@@ -81,20 +81,24 @@ class InventoryController extends Controller
 
         if(strlen($request->get('dateFrom')) > 0 && strlen($request->get('dateTo')) == 0){
             $where1 = ' and date(transaction_date) >= "'.$date_from.'"';
-            $where1_2 = ' and date(created_at) >= "'.$date_from.'"';
+            $where1_2 = ' and date(transaction_completions.created_at) >= "'.$date_from.'"';
+            $where1_3 = ' and date(transaction_transfers.created_at) >= "'.$date_from.'"';
         }
         else{
             $where1 = '';
             $where1_2 = '';
+            $where1_3 = '';
         }
 
         if(strlen($request->get('dateTo')) > 0 && strlen($request->get('dateFrom')) > 0){
             $where1 = ' and date(transaction_date) >= "'.$date_from.'" and date(transaction_date) <= "'.$date_to.'"';
-            $where1_2 = ' and date(created_at) >= "'.$date_from.'" and date(created_at) <= "'.$date_to.'"';
+            $where1_2 = ' and date(transaction_completions.created_at) >= "'.$date_from.'" and date(transaction_completions.created_at) <= "'.$date_to.'"';
+            $where1_3 = ' and date(transaction_transfers.created_at) >= "'.$date_from.'" and date(transaction_transfers.created_at) <= "'.$date_to.'"';
         }
         else{
             $where1 = '';
             $where1_2 = '';
+            $where1_3 = '';
         }
 
         if($request->get('originGroup') != null){
@@ -173,7 +177,7 @@ class InventoryController extends Controller
         from transaction_transfers 
         left join materials on materials.material_number = transaction_transfers.material_number
         where transaction_transfers.deleted_at is null
-        ".$where1_2."
+        ".$where1_3."
         ".$where2."
         ".$where3."
         ".$where4."
