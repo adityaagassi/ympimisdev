@@ -906,6 +906,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				}
 
 				$.get('{{ url("delete/kaizen") }}', data, function(result, status, xhr){
+					openSuccessGritter('Success','Kaizen Teian berhasil dihapus..');
 					fill_kaizen();
 				})
 			}

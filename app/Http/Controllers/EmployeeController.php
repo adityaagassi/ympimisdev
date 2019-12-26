@@ -316,15 +316,25 @@ class EmployeeController extends Controller
     ))->with('page', 'Kaizen Update');
   }
 
+  public function indexUploadKaizenImage()
+  {
+    return view('employees.service.ekaizenUpload', array(
+      'title' => 'e-Kaizen Upload Images',
+      'title_jp' => ''
+    ))->with('page', 'Kaizen Upload Images');
+  }
+
   public function makeKaizen($id, $name, $section, $group){
+    $ldr = "position = 'Leader'";
     if ($section == 'Assembly Process Control') {
-      $section = 'Assembly Process';
+      $ldr = "grade_name = 'Staff'";
     }
+
 
     $q_subleader = "select employees.name, position, employees.employee_id from employees 
     left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
     left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-    where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
+    where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
     and end_date is null and section = '".$section."'
     order by name asc";
 
