@@ -1496,8 +1496,9 @@ Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffing
 
 //ASSY PICKING
 Route::get('index/display/sub_assy/{id}', 'AssyProcessController@indexDisplayAssy');
-Route::get('fetch/display/sub_assy', 'AssyProcessController@fetchPicking');
+Route::get('fetch/display/sub_assy/{id}', 'AssyProcessController@fetchPicking');
 Route::get('fetch/display/welding', 'AssyProcessController@fetchPickingWelding');
+
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 
@@ -1831,11 +1832,12 @@ Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessControl
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
+Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
+Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
 Route::post('index/webcam/create', 'WebcamController@create');
-
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	//CPAR

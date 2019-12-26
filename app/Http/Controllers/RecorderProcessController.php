@@ -185,4 +185,62 @@ class RecorderProcessController extends Controller
             }
         }
     }
+
+    public function report_push_block($remark)
+    {
+        $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')
+              ->get();
+
+        $data = array('push_block_check' => $push_block_check,
+                      'remark' => $remark,);
+      return view('recorder.report.report_push_block', $data
+        )->with('page', 'Report Push Block Check')->with('remark', $remark);
+    }
+
+    public function filter_report_push_block(Request $request,$remark)
+    {
+      $judgement = $request->get('judgement');
+      $date_from = $request->get('date_from');
+      $date_to = $request->get('date_to');
+      $datenow = date('Y-m-d');
+
+      if($request->get('date_to') == null){
+        if($request->get('date_from') == null){
+          $date = "";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$datenow."'";
+        }
+      }
+      elseif($request->get('date_to') != null){
+        if($request->get('date_from') == null){
+          $date = "and date(check_date) <= '".$date_to."'";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$date_to."'";
+        }
+      }
+
+      $judgement = '';
+      if($request->get('judgement') != null){
+        $judgements =  explode(",", $request->get('judgement'));
+        for ($i=0; $i < count($judgements); $i++) {
+          $judgement = $judgement."'".$judgements[$i]."'";
+          if($i != (count($judgements)-1)){
+            $judgement = $judgement.',';
+          }
+        }
+        $judgementin = " and `judgement` in (".$judgement.") ";
+      }
+      else{
+        $judgementin = "";
+      }
+
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ".$judgementin." ORDER BY push_block_recorders.id desc");
+
+      $data = array('push_block_check' => $push_block_check,
+                      'remark' => $remark,);
+      return view('recorder.report.report_push_block', $data
+        )->with('page', 'Report Push Block Check')->with('remark', $remark);
+    }
 }

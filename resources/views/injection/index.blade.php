@@ -43,7 +43,7 @@
 
 			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a>
 
-		
+			 <a href="{{ url("/index/recorder/report_push_block","First Shoot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 		
 		</div>
 	</div>
 </section>
