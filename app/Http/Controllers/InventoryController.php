@@ -76,42 +76,111 @@ class InventoryController extends Controller
 
     public function fetchHistory(Request $request){
         $log_transactions = LogTransaction::leftJoin('materials', 'materials.material_number', '=', 'log_transactions.material_number');
+        $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
+        $date_to = date('Y-m-d', strtotime($request->get('dateTo')));
 
-        if(strlen($request->get('dateFrom')) > 0){
-            $date_from = date('Y-m-d', strtotime($request->get('dateFrom')));
-            $log_transactions = $log_transactions->where(DB::raw('DATE_FORMAT(log_transactions.transaction_date, "%Y-%m-%d")'), '>=', $date_from);
+        if(strlen($request->get('dateFrom')) > 0 && strlen($request->get('dateTo')) == 0){
+            $where1 = ' and date(transaction_date) >= "'.$date_from.'"';
+            $where1_2 = ' and date(created_at) >= "'.$date_from.'"';
+        }
+        else{
+            $where1 = '';
+            $where1_2 = '';
         }
 
-        if(strlen($request->get('dateTo')) > 0){
-            $date_to = date('Y-m-d', strtotime($request->get('dateTo')));
-            $log_transactions = $log_transactions->where(DB::raw('DATE_FORMAT(log_transactions.transaction_date, "%Y-%m-%d")'), '<=', $date_to);
+        if(strlen($request->get('dateTo')) > 0 && strlen($request->get('dateFrom')) > 0){
+            $where1 = ' and date(transaction_date) >= "'.$date_from.'" and date(transaction_date) <= "'.$date_to.'"';
+            $where1_2 = ' and date(created_at) >= "'.$date_from.'" and date(created_at) <= "'.$date_to.'"';
+        }
+        else{
+            $where1 = '';
+            $where1_2 = '';
         }
 
         if($request->get('originGroup') != null){
-            $log_transactions = $log_transactions->whereIn('materials.origin_group_code', $request->get('originGroup'));
+            $origin_group_code = implode("','", $request->get('originGroup'));
+            $where2 = ' and materials.origin_group_code in (\''.$origin_group_code.'\')';
+        }
+        else{
+            $where2 = '';
         }
 
         if($request->get('mvt') != null){
-            $log_transactions = $log_transactions->whereIn('log_transactions.mvt', $request->get('mvt'));
+            $mvt = implode("','", $request->get('mvt'));
+            $where3 = ' and materials.origin_group_code in (\''.$mvt.'\')';
+        }
+        else{
+            $where3 = '';
         }
 
         if(strlen($request->get('materialNumber')) > 0){
-            $material_number = explode(",", $request->get('materialNumber'));
-            $log_transactions = $log_transactions->whereIn('log_transactions.material_number', $material_number);
+            $material_number_arr = explode(",", $request->get('materialNumber'));
+            $material_number = implode("','", $material_number_arr);
+            $where4 = ' and materials.material_number in (\''.$material_number.'\')';
+        }
+        else{
+            $where4 = '';
         }
 
         if(strlen($request->get('issueStorageLocation')) > 0){
-            $sloc = explode(",", $request->get('issueStorageLocation'));
-            $log_transactions = $log_transactions->whereIn('log_transactions.issue_storage_location', $sloc);
+            $sloc_arr = explode(",", $request->get('issueStorageLocation'));
+            $sloc = implode("','", $sloc_arr);
+            $where5 = ' and log_transactions.issue_storage_location in (\''.$sloc.'\')';
+            $where5_2 = ' and transaction_completions.issue_location in (\''.$sloc.'\')';
+            $where5_3 = ' and transaction_transfers.issue_location in (\''.$sloc.'\')';
+        }
+        else{
+            $where5 = '';
+            $where5_2 = '';
+            $where5_3 = '';
         }
 
         if(strlen($request->get('receiveStorageLocation')) > 0){
-            $toloc = explode(",", $request->get('receiveStorageLocation'));
-            $log_transactions = $log_transactions->whereIn('log_transactions.receive_storage_location', $toloc);
+            $toloc_arr = explode(",", $request->get('receiveStorageLocation'));
+            $toloc = implode("','", $toloc_arr);
+            $where6 = ' and log_transactions.receive_storage_location in (\''.$toloc.'\')';
+            $where6_3 = ' and transaction_transfers.receive_location in (\''.$toloc.'\')';
+        }
+        else{
+            $where6 = '';
+            $where6_3 = '';
         }
 
-        $log_transactions = $log_transactions->select('log_transactions.material_number', 'materials.material_description', 'log_transactions.issue_storage_location', db::raw('coalesce(log_transactions.receive_storage_location, "-") as receive_storage_location'), 'log_transactions.mvt', 'log_transactions.qty', 'log_transactions.transaction_date', 'log_transactions.created_at')
-        ->get();
+        $query = "select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at from (
+        select log_transactions.material_number, materials.material_description, log_transactions.issue_storage_location, coalesce(log_transactions.receive_storage_location, '-') as receive_storage_location, log_transactions.mvt, log_transactions.qty, log_transactions.transaction_date, log_transactions.created_at 
+        from log_transactions 
+        left join materials on materials.material_number = log_transactions.material_number
+        where log_transactions.deleted_at is null
+        ".$where1."
+        ".$where2."
+        ".$where3."
+        ".$where4."
+        ".$where5."
+        ".$where6."
+        union all
+        select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at from (
+        select transaction_completions.material_number, materials.material_description, transaction_completions.issue_location as issue_storage_location, '-' as receive_storage_location, transaction_completions.movement_type as mvt, transaction_completions.quantity as qty, transaction_completions.updated_at as transaction_date, transaction_completions.created_at 
+        from transaction_completions 
+        left join materials on materials.material_number = transaction_completions.material_number
+        where transaction_completions.deleted_at is null
+        ".$where1_2."
+        ".$where2."
+        ".$where3."
+        ".$where4."
+        ".$where5_2."
+        union all
+        select transaction_transfers.material_number, materials.material_description, transaction_transfers.issue_location as issue_storage_location, transaction_transfers.receive_location as receive_storage_location, transaction_transfers.movement_type as mvt, transaction_transfers.quantity as qty, transaction_transfers.updated_at as transaction_date, transaction_transfers.created_at 
+        from transaction_transfers 
+        left join materials on materials.material_number = transaction_transfers.material_number
+        where transaction_transfers.deleted_at is null
+        ".$where1_2."
+        ".$where2."
+        ".$where3."
+        ".$where4."
+        ".$where5_3."
+        ".$where6_3.") as transactions ) as final order by final.created_at asc";
+
+        $log_transactions = db::select($query);
 
         return DataTables::of($log_transactions)->make(true);
     }
