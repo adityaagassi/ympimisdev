@@ -665,8 +665,6 @@
 		var group = "{{$_GET['group']}}";
 		var tanggal = "{{$_GET['tanggal']}}";
 
-		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
 		var position = $(document).scrollTop();
 
 		var data = {
@@ -726,6 +724,7 @@
 
 		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr){
 			if(result.status){
+				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 				var date = result.date;
 				var target = result.ng_target;
 

@@ -321,6 +321,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
+					<button class="btn btn-danger" onclick="stopScan()"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
 					<button id="btn-check" class="btn btn-success" onclick="checkEff()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
 				</div>
 			</div>
@@ -349,58 +350,6 @@
 		fillChart();
 		setInterval(fillChart, 20000);
 	});
-
-	var video = document.createElement("video");
-	var canvasElement = document.getElementById("canvas");
-	var canvas = canvasElement.getContext("2d");
-	var loadingMessage = document.getElementById("loadingMessage");
-
-	var outputContainer = document.getElementById("output");
-	var outputMessage = document.getElementById("outputMessage");
-	
-	function drawLine(begin, end, color) {
-		canvas.beginPath();
-		canvas.moveTo(begin.x, begin.y);
-		canvas.lineTo(end.x, end.y);
-		canvas.lineWidth = 4;
-		canvas.strokeStyle = color;
-		canvas.stroke();
-	}
-
-	navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-		video.srcObject = stream;
-		video.setAttribute("playsinline", true);
-		video.play();
-		requestAnimationFrame(tick);
-	});
-
-	function tick() {
-		loadingMessage.innerText = "⌛ Loading video..."
-		if (video.readyState === video.HAVE_ENOUGH_DATA) {
-			loadingMessage.hidden = true;
-			canvasElement.hidden = false;
-			
-			canvasElement.height = video.videoHeight;
-			canvasElement.width = video.videoWidth;
-			canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-			var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-			var code = jsQR(imageData.data, imageData.width, imageData.height, {
-				inversionAttempts: "dontInvert",
-			});
-			if (code) {
-				drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-				drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-				drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-				drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-				outputMessage.hidden = true;
-				$('#scanner').hide();
-				document.getElementById("input_employee_id").value = code.data.substr(0, 9);
-			} else {
-				outputMessage.hidden = false;
-			}
-		}
-		requestAnimationFrame(tick);
-	}
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
@@ -688,31 +637,92 @@
 
 	$('#input_employee_id').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#input_employee_id").val().length >= 8){
-				if($("#input_employee_id").val() == $("#employee_id").val()){
-					$('#scanner').hide();
-					$('#field-name').show();
-					$('#field-key').show();
-					$('#btn-check').show();
-				}else{
-					openErrorGritter('Error!', 'NIK not match');
-					audio_error.play();
-					$('#scanner').show();
-					$("#input_employee_id").val("");
-					$("#input_employee_id").focus();	
-				}
-			}
-			else{
-				openErrorGritter('Error!', 'NIK Invalid');
-				audio_error.play();
-				$('#scanner').show();
-				$("#input_employee_id").val("");
-				$("#input_employee_id").focus();
-			}			
+			showData();
 		}
 	});
 
+	function showData() {
+		if($("#input_employee_id").val().length >= 8){
+			if($("#input_employee_id").val() == $("#employee_id").val()){
+				$('#scanner').hide();
+				$('#field-name').show();
+				$('#field-key').show();
+				$('#btn-check').show();
+			}else{
+				openErrorGritter('Error!', 'NIK not match');
+				audio_error.play();
+				$('#scanner').show();
+				$("#input_employee_id").val("");
+				$("#input_employee_id").focus();	
+			}
+		}
+		else{
+			openErrorGritter('Error!', 'NIK Invalid');
+			audio_error.play();
+			$('#scanner').show();
+			$("#input_employee_id").val("");
+			$("#input_employee_id").focus();
+		}
+	}
+
+	function stopScan() {
+		$('#check-modal').modal('hide');
+	}
+
 	function showCheck(nik, nama, kunci, tgl) {
+		var video = document.createElement("video");
+		var canvasElement = document.getElementById("canvas");
+		var canvas = canvasElement.getContext("2d");
+		var loadingMessage = document.getElementById("loadingMessage");
+
+		var outputContainer = document.getElementById("output");
+		var outputMessage = document.getElementById("outputMessage");
+
+		function drawLine(begin, end, color) {
+			canvas.beginPath();
+			canvas.moveTo(begin.x, begin.y);
+			canvas.lineTo(end.x, end.y);
+			canvas.lineWidth = 4;
+			canvas.strokeStyle = color;
+			canvas.stroke();
+		}
+
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			video.srcObject = stream;
+			video.setAttribute("playsinline", true);
+			video.play();
+			requestAnimationFrame(tick);
+		});
+
+		function tick() {
+			loadingMessage.innerText = "⌛ Loading video..."
+			if (video.readyState === video.HAVE_ENOUGH_DATA) {
+				loadingMessage.hidden = true;
+				canvasElement.hidden = false;
+
+				canvasElement.height = video.videoHeight;
+				canvasElement.width = video.videoWidth;
+				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: "dontInvert",
+				});
+				if (code) {
+					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+					outputMessage.hidden = true;
+					$('#scanner').hide();
+					document.getElementById("input_employee_id").value = code.data.substr(0, 9);
+					showData();
+				} else {
+					outputMessage.hidden = false;
+				}
+			}
+			requestAnimationFrame(tick);
+		}
+
 		document.getElementById("employee_id").value = nik;
 		document.getElementById("name").value = nama;
 		document.getElementById("key").value = kunci;
@@ -877,8 +887,6 @@ function fillChart() {
 	
 	var position = $(document).scrollTop();
 
-	$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
 	var data = {
 		tanggal:tanggal,
 		group:group,
@@ -935,6 +943,7 @@ function fillChart() {
 
 	$.get('{{ url("fetch/middle/buffing_op_eff") }}', data, function(result, status, xhr) {
 		if(result.status){
+			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 			var target = result.eff_target;
 
 			var op_name = [];
