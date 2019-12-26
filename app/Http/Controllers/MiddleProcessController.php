@@ -2705,11 +2705,11 @@ class MiddleProcessController extends Controller
 			$incoming = 'plt-incoming-sx';
 			$kensa = 'plt-kensa-sx';
 		}elseif($id == 'fl'){
-			$incoming = '';
-			$kensa = '';
+			$incoming = 'plt-incoming-fl';
+			$kensa = 'plt-kensa-fl';
 		}elseif($id == 'cl'){
-			$incoming = '';
-			$kensa = '';
+			$incoming = 'plt-incoming-cl';
+			$kensa = 'plt-kensa-cl';
 		}
 
 		$bulan="";
@@ -2727,7 +2727,7 @@ class MiddleProcessController extends Controller
 		where location = '".$incoming."' and m.surface not like '%LCQ%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) b on a.week_date = b.tgl
 		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = '".$incoming."' and m.surface not like '%LCQ%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) c on a.week_date = c.tgl
@@ -2742,7 +2742,7 @@ class MiddleProcessController extends Controller
 		where location = '".$kensa."' and m.surface not like '%LCQ%' and DATE_FORMAT(n.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) b on a.week_date = b.tgl
 		left join
-		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%Y-%m-%d') as tgl, sum(g.quantity) g from middle_check_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = '".$kensa."' and m.surface not like '%LCQ%' and DATE_FORMAT(g.created_at,'%m-%Y') = '".$bulan."'
 		GROUP BY tgl) c on a.week_date = c.tgl
@@ -2869,7 +2869,7 @@ class MiddleProcessController extends Controller
 		where location = '".$incoming."' and m.surface not like '%LCQ%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = '".$incoming."' and m.surface not like '%LCQ%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
@@ -2883,7 +2883,7 @@ class MiddleProcessController extends Controller
 		where location = '".$kensa."' and m.surface not like '%LCQ%'
 		GROUP BY tgl) b on a.tgl = b.tgl
 		left join
-		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_logs g
+		(SELECT DATE_FORMAT(g.created_at,'%m-%Y') as tgl, sum(g.quantity) g from middle_check_logs g
 		left join materials m on m.material_number = g.material_number
 		where location = '".$kensa."' and m.surface not like '%LCQ%'
 		GROUP BY tgl) c on a.tgl = c.tgl";
@@ -3108,14 +3108,14 @@ class MiddleProcessController extends Controller
 
 		// IC
 		$totalCekIC_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'ASKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'ASKEY') b");
 
 		$totalCekIC_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$incoming."' and m.hpl = 'TSKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
@@ -3172,14 +3172,14 @@ class MiddleProcessController extends Controller
 
 		// Kensa
 		$totalCekKensa_alto = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'ASKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'ASKEY') b");
 
 		$totalCekKensa_tenor = db::select("select a.g as total from
-			(select sum(quantity) as g from middle_logs l left join materials m on m.material_number = l.material_number
+			(select sum(quantity) as g from middle_check_logs l left join materials m on m.material_number = l.material_number
 			where ".$bulan." m.surface not like '%LCQ%' and location = '".$kensa."' and m.hpl = 'TSKEY') a
 			cross join
 			(select sum(quantity) as ng from middle_ng_logs l left join materials m on m.material_number = l.material_number
@@ -3303,7 +3303,7 @@ class MiddleProcessController extends Controller
 			and location = '".$incoming."' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) b on a.tgl = b.tgl
 			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
 			and location = '".$incoming."' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
@@ -3316,7 +3316,7 @@ class MiddleProcessController extends Controller
 			and location = '".$incoming."' and m.hpl = 'TSKEY'
 			GROUP BY tgl, hpl) b on a.tgl = b.tgl
 			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
 			and location = '".$incoming."' and m.hpl = 'TSKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
@@ -3331,7 +3331,7 @@ class MiddleProcessController extends Controller
 			and location = '".$kensa."' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) b on a.tgl = b.tgl
 			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
 			and location = '".$kensa."' and m.hpl = 'ASKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
@@ -3344,7 +3344,7 @@ class MiddleProcessController extends Controller
 			and location = '".$kensa."' and m.hpl = 'TSKEY'
 			GROUP BY tgl, hpl) b on a.tgl = b.tgl
 			left join		
-			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_logs g
+			(SELECT DATE_FORMAT(g.created_at,'%d-%m-%Y') as tgl, m.hpl, sum(g.quantity) as g from middle_check_logs g
 			left join materials m on m.material_number = g.material_number ".$bulan2." and m.surface not like '%LCQ%'
 			and location = '".$kensa."' and m.hpl = 'TSKEY'
 			GROUP BY tgl, hpl) c on a.tgl = c.tgl;");
