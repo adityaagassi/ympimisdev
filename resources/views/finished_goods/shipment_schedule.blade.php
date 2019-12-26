@@ -78,13 +78,33 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-12 col-md-offset-3">
-						<div class="col-md-6">
+					<div class="col-md-12">
+						<div class="col-md-4">
 							<div class="form-group">
-								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group" style="width: 100%;">
+								<select class="form-control select2" data-placeholder="Select Origin Group" name="origin_group" id="origin_group">
 									<option></option>
 									@foreach($origin_groups as $origin_group)
 									<option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select Location" name="hpl" id="hpl" style="width: 100%;">
+									<option></option>
+									@foreach($hpls as $hpl)
+									<option value="{{ $hpl->hpl }}">{{ $hpl->hpl }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<select class="form-control select2" data-placeholder="Select Category" name="category" id="category" style="width: 100%;">
+									<option></option>
+									@foreach($categories as $category)
+									<option value="{{ $category }}">{{ $category }}<option>
 									@endforeach
 								</select>
 							</div>
@@ -197,10 +217,14 @@
 		var periodTo = $('#periodTo').val();
 		var periodFrom = $('#periodFrom').val();
 		var originGroupCode = $('#origin_group').val();
+		var hpl = $('#hpl').val();
+		var category = $('#category').val();
 		var data = {
 			periodTo:periodTo,
 			periodFrom:periodFrom,
 			originGroupCode:originGroupCode,
+			hpl:hpl,
+			category:category,
 		}
 		$.get('{{ url("fetch/fg_shipment_schedule") }}', data, function(result, status, xhr){
 			console.log(status);

@@ -16,6 +16,11 @@ class FinishedGoodsController extends Controller
 	
 	public function __construct()
 	{
+		$this->category = [
+			'FG',
+			'KD',
+		];
+
 		$this->middleware('auth');
 	}
 
@@ -59,10 +64,17 @@ class FinishedGoodsController extends Controller
 	public function index_fg_shipment_schedule(){
 		$periods = DB::table('shipment_schedules')->select('st_month')->distinct()->get();
 		$origin_groups = DB::table('origin_groups')->get();
+		$categories = $this->category;
+		$hpls = DB::table('materials')->whereIn('materials.category', ['KD', 'FG'])
+		->select('hpl')
+		->distinct()
+		->get();
 
 		return view('finished_goods.shipment_schedule', array(
 			'periods' => $periods,
 			'origin_groups' => $origin_groups,
+			'categories' => $categories,
+			'hpls' => $hpls,
 		))->with('page', 'FG Shipment Schedule')->with('head', 'Finished Goods');		
 	}
 
@@ -161,16 +173,16 @@ class FinishedGoodsController extends Controller
 	} 
 
 	public function fetch_fg_shipment_schedule(Request $request){
+		$periodFrom = $request->get('periodFrom');
+		$periodTo = $request->get('periodTo');
+		$st_month = date('Y-m-01');
 		if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) == 0){
-			$periodFrom = $request->get('periodFrom');
 			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."'";
 		}
 		else if(strlen($request->get('periodFrom')) > 0 && strlen($request->get('periodTo')) > 0){
-			$periodTo = $request->get('periodTo');
 			$where1 = " where shipment_schedules.st_month >= '".$periodFrom."' and shipment_schedules.st_month <= '".$periodTo."'";
 		}
-		else{
-			$st_month = date('Y-m-01');			
+		else{		
 			$where1 = " where shipment_schedules.st_month = '".$st_month."'";
 		}
 
@@ -188,6 +200,13 @@ class FinishedGoodsController extends Controller
 			$where3 = "";
 		}
 
+		if(strlen($request->get('category')) > 0){
+			$where4 = " and materials.category = '".$request->get('category')."'";
+		}
+		else{
+			$where4 = "";
+		}
+
 		$query = "select materials.category, shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y') as st_month, shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y') as st_date, date_format(shipment_schedules.bl_date, '%d-%b-%Y') as bl_date_plan, sum(coalesce(stock.quantity, 0)) as quantity_production, sum(if(stock.status > 1, stock.quantity, 0)) as quantity_delivery FROM `shipment_schedules` left join
 		(select shipment_schedule_id, sum(actual) as quantity, status from flos group by shipment_schedule_id, status
 		union all
@@ -200,6 +219,7 @@ class FinishedGoodsController extends Controller
 		".$where1."
 		".$where2."
 		".$where3."
+		".$where4."
 		group by materials.category, shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y'), shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y'), date_format(shipment_schedules.bl_date, '%d-%b-%Y')";
 
 		$shipment_schedules = DB::select($query);
