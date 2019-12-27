@@ -158,7 +158,7 @@
 					</div>
 
 					<!-- JIKA SUB ASSY -->
-					@if($option == "assy")
+					@if(substr($option,0,4) == "assy")
 					<div class="col-xs-2">
 						<select class="form-control select2" id="surface" multiple="multiple" onchange="changeSurface()" data-placeholder="Select Surface">
 							@foreach($surfaces as $surface)
@@ -308,8 +308,8 @@
 		// $.each(values.split(","), function(i,e){
 		// 	$("#key option[value='" + e + "']").prop("selected", true);
 		// });
-		if ("{{$option}}" == "assy") {
-			var url = '{{ url("fetch/display/sub_assy") }}';
+		if ("{{$option}}".substr(0, 4) == "assy") {
+			var url = '{{ url("fetch/display/sub_assy/".$option) }}';
 		} else {
 			var url = '{{ url("fetch/display/welding") }}';
 		}
@@ -332,7 +332,7 @@
 				totplan = "<th>Plan</th>";
 				picking = "<th>Pick</th>";
 
-				if ("{{$option}}" == "assy") {
+				if ("{{$option}}".substr(0, 4) == "assy") {
 					diff = "<th>Diff</th>";
 				} else {
 					diff = "<th>Target</th>";
@@ -342,7 +342,7 @@
 				pickAcc = "<th>Pick acc</th>";
 				retunAcc = "<th>Return acc</th>";
 
-				if ("{{$option}}" == "assy") {
+				if ("{{$option}}".substr(0, 4) == "assy") {
 					stk = "<th style='border: 1px solid white;'>Stock Room</th>";
 				} else {
 					stk = "<th style='border: 1px solid white;'>Stock All</th>";
@@ -380,7 +380,7 @@
 					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
 					totplan += "<td>"+value.plan+"</td>";
 					picking += "<td>"+value.picking+"</td>";
-					if ("{{$option}}" == "assy") {
+					if ("{{$option}}".substr(0, 4) == "assy") {
 						diff += "<td "+style+">"+(-value.diff)+"</td>";
 					} else {
 						diff += "<td "+style+">"+value.diff+"</td>";
@@ -417,7 +417,7 @@
 
 				$.each(result.stok, function(index2, value2){
 
-					if ("{{$option}}" != "assy") {
+					if ("{{$option}}".substr(0, 4) != "assy") {
 						tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
 						if (tmp >= diffs[index2]) {
 							color2 = "background-color:#00a65a";
@@ -446,7 +446,7 @@
 
 					}
 
-					if ("{{$option}}" != "assy") {
+					if ("{{$option}}".substr(0, 4) != "assy") {
 						stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
 
 						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / plans[index2]).toFixed(1)+"</td>";
