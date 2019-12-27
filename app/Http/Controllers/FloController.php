@@ -40,7 +40,7 @@ class FloController extends Controller
 
 	public function index_bi(){
 		$flos = Flo::orderBy('flo_number', 'asc')
-		->where('flos.status', '=', '0')
+		->whereIn('flos.status', ['0', '1'])
 		->get();
 		return view('flos.flo_bi', array(
 			'flos' => $flos,
