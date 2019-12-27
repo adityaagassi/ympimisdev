@@ -24,6 +24,7 @@ use App\HrQuestionDetail;
 use App\KaizenForm;
 use App\KaizenScore;
 use App\Employee;
+use App\EmployeeSync;
 use App\EmploymentLog;
 use App\OrganizationStructure;
 use App\StandartCost;
@@ -65,6 +66,8 @@ class EmployeeController extends Controller
     ];
 
     $this->usr = "'19014987','19014986','E01090823','R14122906','M09041335'";
+
+    $this->wst = ['18084786', '18094874', 'S15053064'];
 
   }
 // master emp
@@ -318,9 +321,17 @@ class EmployeeController extends Controller
 
   public function indexUploadKaizenImage()
   {
+    $username = Auth::user()->username;
+
+    $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
+
+    $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
+
+
     return view('employees.service.ekaizenUpload', array(
       'title' => 'e-Kaizen Upload Images',
-      'title_jp' => ''
+      'title_jp' => '',
+      'employees' => $datas
     ))->with('page', 'Kaizen Upload Images');
   }
 
@@ -330,7 +341,6 @@ class EmployeeController extends Controller
       $ldr = "grade_name = 'Staff'";
     }
 
-
     $q_subleader = "select employees.name, position, employees.employee_id from employees 
     left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
     left join mutation_logs on mutation_logs.employee_id = employees.employee_id
@@ -338,8 +348,13 @@ class EmployeeController extends Controller
     and end_date is null and section = '".$section."'
     order by name asc";
 
+
     $subleader = db::select($q_subleader);
 
+    if (in_array($id , $this->wst)) {
+
+    }
+    
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'chief')) d
     left join employees on d.employee_id = employees.employee_id
@@ -1934,7 +1949,7 @@ public function fetchDataKaizen()
       if ($kzn->manager_point_1 != '' && $kzn->manager_point_2 != '' && $kzn->manager_point_3 != '') {
         return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
       } else {
-        if ($_GET['position'] == 'Manager') {
+        if ($_GET['position'] == 'Manager' || $_GET['position'] == 'Deputy General Manager') {
           return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
         } else {
           return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>'; 
@@ -2278,5 +2293,21 @@ public function deleteKaizen(Request $request)
   );
   return Response::json($response);
 }
+
+// public function fetchEmployee(Request $request)
+// {
+//   $username = Auth::user()->username;
+
+//   $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
+
+//   $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
+
+//   $response = array(
+//     'status' => true,
+//     'employees' => $datas,
+//     'master' => $mstr
+//   );
+//   return Response::json($response);
+// }
 
 }
