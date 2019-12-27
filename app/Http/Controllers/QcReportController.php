@@ -1966,7 +1966,6 @@ class QcReportController extends Controller
       {
 
         try{
-
             $cpars = QcCpar::find($id);
             $cpars->status_code = "1";
             $cpars->posisi = "QAmanager";
@@ -1997,4 +1996,6 @@ class QcReportController extends Controller
             }
           }
       }
+
+
 }

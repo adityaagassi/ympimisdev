@@ -987,6 +987,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 });
 
 Route::get('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
+Route::post('post/upload_kaizen', 'EmployeeController@UploadKaizenImage');
 // Route::get('fetch/upload_kaizen/image', 'EmployeeController@fetchEmployee');
 
 
@@ -1500,7 +1501,7 @@ Route::get('index/display/stuffing_monitoring', 'DisplayController@indexStuffing
 //ASSY PICKING
 Route::get('index/display/sub_assy/{id}', 'AssyProcessController@indexDisplayAssy');
 Route::get('fetch/display/sub_assy/{id}', 'AssyProcessController@fetchPicking');
-Route::get('fetch/display/welding', 'AssyProcessController@fetchPickingWelding');
+Route::get('fetch/display/welding/{id}', 'AssyProcessController@fetchPickingWelding');
 
 Route::get('fetch/chart/sub_assy', 'AssyProcessController@chartPicking');
 Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
@@ -1905,6 +1906,9 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 Route::get('index/request_qa', 'QcRequestController@index');
 Route::get('index/request_qa/create', 'QcRequestController@create');
+Route::post('index/request_qa/create_action', 'QcRequestController@create_action');
+Route::get('index/request_qa/detail/{id}', 'QcRequestController@detail');
+Route::get('index/request_qa/fetchDataTable', 'QcRequestController@fetchDataTable');
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');

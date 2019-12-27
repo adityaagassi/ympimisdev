@@ -238,7 +238,6 @@
 				<div class="col-xs-6">
 					<span style="font-weight: bold; font-size: 16px;">Places (場所)</span>
 					<select class="form-control select2" style="width: 100%; height: 40px; font-size: 18px; text-align: center;" id="tempat" name="tempat" data-placeholder="Choose Places" required>
-		              <option></option>
 		              <option value="<?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'s Table "><?= implode(' ', array_slice(explode(' ', Auth::user()->name), 0, 2)); ?>'s Table</option>
 		              <option value='Guest Room'>Guest Room</option>
 		              <option value='Meeting Room 1'>Meeting Room 1</option>
@@ -300,7 +299,7 @@
 							</table>
 						</div>
 					</div>
-					<button class="btn btn-success" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="konfirmasipesanan()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+					<button class="btn btn-success" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
 						ORDER CONFIRMATION
 					</button>
 				</div>
@@ -486,7 +485,6 @@
 			$('#tablepesanan').html("");
 			var tableData = '';
 			var count = 1;
-			console.log();
 
 			if (result.lists.length > 0) {
 				$.each(result.lists, function(key, value) {
@@ -541,7 +539,7 @@
 				$('#tempat').val("");
 				$('#gula').val("");
 				$('#jumlah').val("1");
-
+				// console.log(result.sms);
 				$('#myModal').modal('hide');
 				openSuccessGritter('Success', result.message);
 				daftarmenu();

@@ -16,7 +16,7 @@ class AssyProcessController extends Controller
 {
 	public function indexDisplayAssy($id)
 	{	
-		if($id == 'assy_sax'){
+		if($id == 'assy_sax' || $id == 'welding_sax'){
 			$title = 'Saxophone Picking Monitor';
 			$title_jp = 'サックスのピッキング監視';
 
@@ -42,7 +42,7 @@ class AssyProcessController extends Controller
 				'option' => $id
 			))->with('page', 'Assy Schedule')->with('head', '');
 
-		}elseif ($id == 'assy_cl') {
+		}elseif ($id == 'assy_cl' || $id == 'welding_cl'){
 			$title = 'Clarinet Picking Monitor';
 			$title_jp = '??';
 
@@ -211,6 +211,7 @@ class AssyProcessController extends Controller
 		select assy_picking_schedules.material_number, sum(quantity) as plan, sum(quantity) as plan_ori from assy_picking_schedules 
 		left join materials on materials.material_number = assy_picking_schedules.material_number
 		where due_date >= '".$first."' and due_date <= '".$tanggal."'
+		and assy_picking_schedules.remark = '".$location."'
 		group by assy_picking_schedules.material_number
 		) as plan group by material_number
 
@@ -257,7 +258,7 @@ class AssyProcessController extends Controller
 		(
 		select distinct bom_components.material_child, parent.key, parent.model, parent.surface from
 		(
-		select bom_components.material_child, materials.key, materials.model, materials.surface from materials left join bom_components on bom_components.material_parent = materials.material_number where materials.hpl in ('ASKEY', 'TSKEY') and materials.key is not null and mrpc = '".$location."'
+		select bom_components.material_child, materials.key, materials.model, materials.surface from materials left join bom_components on bom_components.material_parent = materials.material_number where materials.hpl in ('ASKEY', 'TSKEY') and materials.key is not null and mrpc in ('S51')
 		) as parent
 		left join bom_components on bom_components.material_parent = parent.material_child
 		) as welding
@@ -314,8 +315,16 @@ class AssyProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchPickingWelding(Request $request)
-	{
+	public function fetchPickingWelding(Request $request , $id){
+		$location = '';
+		if($id == "welding_sax") {
+			$location = 'SX51';
+		}elseif ($id == "welding_cl") {
+			$location = 'CL51';
+		}elseif ($id == "welding_fl") {
+			$location = 'FL51';
+		}
+
 		if ($request->get('tanggal') == "") {
 			$tanggal = date('Y-m-d');
 		} else {
@@ -404,12 +413,12 @@ class AssyProcessController extends Controller
 		(
 		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as plus, 0 as minus, 0 as stock, 0 as plan_ori from
 		(
-		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number ) as pick
 
 		union all
 
-		select inventories.material_number, 0 as plan, 0 as picking, 0 as plus, 0 as minus, sum(inventories.lot) as stock, 0 as plan_ori from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location in ('SX51', 'CL51', 'FL51') and materials.category = 'key' group by inventories.material_number
+		select inventories.material_number, 0 as plan, 0 as picking, 0 as plus, 0 as minus, sum(inventories.lot) as stock, 0 as plan_ori from kitto.inventories left join kitto.materials on materials.material_number = inventories.material_number where materials.location = '".$location."' and materials.category = 'key' group by inventories.material_number
 
 		union all
 
@@ -417,7 +426,7 @@ class AssyProcessController extends Controller
 		(
 		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan, 0 as plan_ori from
 		(
-		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 
 		union all
@@ -425,6 +434,7 @@ class AssyProcessController extends Controller
 		select assy_picking_schedules.material_number, sum(quantity) as plan, sum(quantity) as plan_ori from assy_picking_schedules 
 		left join materials on materials.material_number = assy_picking_schedules.material_number
 		where due_date >= '".$first."' and due_date <= '".$tanggal."'
+		and assy_picking_schedules.remark = '".$location."'
 		group by assy_picking_schedules.material_number
 		) as plan group by material_number
 
@@ -432,7 +442,7 @@ class AssyProcessController extends Controller
 		
 		select materials.material_number, 0 as plan, 0 as picking, sum(if(histories.transfer_movement_type = '9I3', histories.lot,0)) as plus, sum( if(histories.transfer_movement_type = '9I4', histories.lot,0)) as minus, 0 as stock, 0 as plan_ori from
 		(
-		select materials.id, materials.material_number from kitto.materials where materials.location in ('SX51', 'CL51', 'FL51') and category = 'key'
+		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
 		) as final group by material_number having plan > 0  
 		) as final2
@@ -457,7 +467,7 @@ class AssyProcessController extends Controller
 		(select sum(stockroom) stockroom, sum(barrel) barrel, sum(lacquering) lacquering, sum(plating) plating, sum(welding) welding, `key`, model from 
 		(select middle.material_number, sum(middle.stockroom) as stockroom, sum(middle.barrel) as barrel, sum(middle.lacquering) as lacquering, sum(middle.plating) as plating, sum(middle.welding) as welding, materials.key, materials.model from
 		(
-		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as barrel, 0 as lacquering, 0 as plating, 0 as welding from kitto.inventories where kitto.inventories.issue_location like 'SX51' group by kitto.inventories.material_number
+		select kitto.inventories.material_number, sum(lot) as stockroom, 0 as barrel, 0 as lacquering, 0 as plating, 0 as welding from kitto.inventories where kitto.inventories.issue_location like '".$location."' group by kitto.inventories.material_number
 
 		union all
 

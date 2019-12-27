@@ -171,6 +171,10 @@
                         <td>
                             <span style="font-weight: bold;">Quality Assurance (品質保証)</span>
                             <br>
+                            <a href="{{ url("index/request_qa") }}">
+                                <i class="fa fa-caret-right"></i> Form Request CPAR QA
+                            </a>
+                            <br>
                             <a href="{{ url("index/qc_report") }}">
                                 <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request (CPAR)
                             </a>
@@ -231,7 +235,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                     <td>
+                       <td>
                         <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a>
@@ -412,8 +416,12 @@
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
                             </a>
                             <br>
-                            <a href="{{ url("/index/display/sub_assy/wld?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
+                            <a href="{{ url("/index/display/sub_assy/welding_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/display/sub_assy/welding_cl?date=&order2=") }}">
+                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor ()
                             </a>
                         </td>
                     </tr>

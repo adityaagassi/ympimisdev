@@ -12,6 +12,7 @@ use Response;
 use App\PantryOrder;
 use App\PantryMenu;
 use App\PantryLog;
+use App\User;
 
 class PantryController extends Controller
 {
@@ -19,6 +20,31 @@ class PantryController extends Controller
 	{
 		$this->middleware('auth');
 	}
+
+    // public function gw_send_sms($user,$pass,$sms_from,$sms_to,$sms_msg)  
+    // {           
+    //     $query_string = "api.aspx?apiusername=".$user."&apipassword=".$pass;
+    //     $query_string .= "&senderid=".rawurlencode($sms_from)."&mobileno=".rawurlencode($sms_to);
+    //     $query_string .= "&message=".rawurlencode(stripslashes($sms_msg)) . "&languagetype=1";        
+    //     $url = "http://gateway.onewaysms.com.au:10001/".$query_string;       
+    //     $fd = @implode('', file($url));      
+    //     if ($fd)  
+    //     {                       
+    //         if ($fd > 0) {
+    //             Print("MT ID : " . $fd);
+    //             $ok = "success";
+    //         }        
+    //         else {
+    //             print("Please refer to API on Error : " . $fd);
+    //             $ok = "fail";
+    //         }
+    //     }           
+    //     else      
+    //     {                       
+    //         $ok = "fail";       
+    //     }           
+    //     return $ok;  
+    // } 
 
 	public function pesanmenu()
 	{
@@ -139,18 +165,27 @@ class PantryController extends Controller
 	public function konfirmasipesanan(Request $request)
     {
     	try{
-	        $pantry = 
-
+            $emp = User::where('username','=',$request->get("pemesan"))->first();
+            $name = $emp->name;
+            
 	        PantryOrder::where('pemesan', '=', $request->get("pemesan"))->update([
 				'status' => 'confirmed'
 			]);
 			// PantryOrder::find($request->get("pemesan"));
-	  //       $pantry->status = 'confirmed';
-	  //       $pantry->save();
+        	// $pantry->status = 'confirmed';
+        	// $pantry->save();
+
+            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode("62811372398");
+            $query_string .= "&message=".rawurlencode(stripslashes("Ada Pesanan Pantry Dari ".$name.", Mohon untuk segera dibuatkan. Terimakasih")) . "&languagetype=1";        
+            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+            $fd = @implode('', file($url));
+            
+            // $sms = gw_send_sms('API3Y9RTZ5R6Y','API3Y9RTZ5R6Y3Y9RT','YMPI','6285645896741','Terdapat Order Pantry');
 
 	        $response = array(
 		    	'status' => true,
-		    	'message' => 'Pesanan Berhasil Dikonfirmasi',
+		    	'message' => 'Pesanan Berhasil Dikonfirmasi'
 		    );
 		    return Response::json($response);
 
@@ -164,6 +199,8 @@ class PantryController extends Controller
 		}
 
     }
+
+     
 
 
 

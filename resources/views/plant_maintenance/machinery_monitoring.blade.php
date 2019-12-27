@@ -74,7 +74,6 @@
 				<div class="col-xs-12" style="padding:0px;">
 					<span><i class="fa fa-fw fa-square" style="color: #FCF33A;"></i> Idle 1</span>
 				</div>
-
 			</div>
 			<div class="col-xs-3 pull-right" style="padding:0px;">
 				<div class="col-xs-12" style="padding:0px;">
