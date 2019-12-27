@@ -243,4 +243,64 @@ class RecorderProcessController extends Controller
       return view('recorder.report.report_push_block', $data
         )->with('page', 'Report Push Block Check')->with('remark', $remark);
     }
+
+    public function push_block_check_monitoring($remark){
+      $name = Auth::user()->name;
+      return view('recorder.display.push_block_check_monitoring')->with('page', 'Recorder Push Block Check Monitoring')->with('head', 'Recorder Push Block Check Monitoring')->with('title', 'Recorder Push Block Check Monitoring')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('remark', $remark);
+    }
+
+    public function fetch_push_block_check_monitoring(Request $request,$remark){
+    $date = '';
+    if(strlen($request->get("bulan")) > 0){
+      $date = date('Y-m', strtotime($request->get("bulan")));
+    }else{
+      $date = date('Y-m');
+    }
+
+    $monthTitle = date("F Y", strtotime($date));
+
+    $data = db::select("select 
+        weekly_calendars.week_date as date,
+                (select sum(case when judgement = 'OK' then 1 else 0 end) as jumlah_ok from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
+        as jumlah_ok,
+        (select sum(case when judgement = 'NG' then 1 else 0 end) as jumlah_ok from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
+        as jumlah_ng
+                        from weekly_calendars 
+                        where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$date."'
+                        and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+
+    $response = array(
+      'status' => true,
+      'datas' => $data,
+      'date' => $date,
+      'remark' => $remark,
+      'monthTitle' => $monthTitle,
+    );
+    return Response::json($response);
+  }
+
+  public function detail_monitoring(Request $request)
+  {
+    $tanggal = $request->get("tanggal");
+    $judgement = $request->get("judgement");
+    if($judgement == 'Jumlah OK'){
+      $jdgm = 'OK';
+    }
+    else{
+      $jdgm = 'NG';
+    }
+    $remark = $request->get("remark");
+
+    $query = "SELECT * FROM `push_block_recorders` where date(check_date) = '".$tanggal."' and judgement = '".$jdgm."' and push_block_code = '".$remark."'";
+
+    $detail = db::select($query);
+
+    $response = array(
+      'status' => true,
+      'jdgm' => $jdgm,
+      'lists' => $detail,
+    );
+    return Response::json($response);
+  }
 }
+  

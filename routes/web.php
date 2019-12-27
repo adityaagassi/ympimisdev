@@ -984,9 +984,11 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');
-	Route::get('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
-	Route::get('fetch/upload_kaizen/image', 'EmployeeController@fetchEmployee');
 });
+
+Route::get('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
+// Route::get('fetch/upload_kaizen/image', 'EmployeeController@fetchEmployee');
+
 
 Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
 
@@ -1835,6 +1837,9 @@ Route::post('index/push_block_recorder/create', 'RecorderProcessController@creat
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
 Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
+Route::get('index/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@push_block_check_monitoring');
+Route::get('fetch/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@fetch_push_block_check_monitoring');
+Route::get('index/recorder/detail_monitoring', 'RecorderProcessController@detail_monitoring');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -1898,7 +1903,8 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 });
 
-Route::get('index/request_qa', 'QcReportController@request_cpar');
+Route::get('index/request_qa', 'QcRequestController@index');
+Route::get('index/request_qa/create', 'QcRequestController@create');
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
