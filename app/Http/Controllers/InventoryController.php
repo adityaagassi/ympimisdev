@@ -106,10 +106,14 @@ class InventoryController extends Controller
 
         if($request->get('mvt') != null){
             $mvt = implode("','", $request->get('mvt'));
-            $where3 = ' and materials.origin_group_code in (\''.$mvt.'\')';
+            $where3 = ' and log_transactions.mvt in (\''.$mvt.'\')';
+            $where3_2 = ' and transaction_completions.movement_type in (\''.$mvt.'\')';
+            $where3_3 = ' and transaction_transfers.movement_type in (\''.$mvt.'\')';
         }
         else{
             $where3 = '';
+            $where3_2 = '';
+            $where3_3 = '';
         }
 
         if(strlen($request->get('materialNumber')) > 0){
@@ -164,7 +168,7 @@ class InventoryController extends Controller
         where transaction_completions.deleted_at is null
         ".$where1_2."
         ".$where2."
-        ".$where3."
+        ".$where3_2."
         ".$where4."
         ".$where5_2."
         union all
@@ -174,7 +178,7 @@ class InventoryController extends Controller
         where transaction_transfers.deleted_at is null
         ".$where1_3."
         ".$where2."
-        ".$where3."
+        ".$where3_3."
         ".$where4."
         ".$where5_3."
         ".$where6_3.") as transactions ) as final order by final.created_at asc";
