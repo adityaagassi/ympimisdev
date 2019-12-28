@@ -320,7 +320,7 @@ table.table-bordered > tfoot > tr > th{
 				      <div class="box">
 				      	<div class="box-header">
 							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
-							<a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a>
+							<!-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a> -->
 							<div class="panel-body text-center" >
 				              <video width="200px" id="preview"></video>
 				            </div>
