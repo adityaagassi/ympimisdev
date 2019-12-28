@@ -71,53 +71,63 @@
 						<div class="box-header">
 							<h3 class="box-title">Filter</h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/recorder/filter_report_push_block/'.$remark)}}">
-							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-4">
-									<div class="form-group">
-										<label for="">Date From</label>
-										<div class="input-group date">
-											<div class="input-group-addon bg-white">
-												<i class="fa fa-calendar"></i>
+						<div class="col-xs-6">
+							<form role="form" method="post" action="{{url('index/recorder/filter_report_push_block/'.$remark)}}">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+								<div class="col-md-12">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="">Date From</label>
+											<div class="input-group date">
+												<div class="input-group-addon bg-white">
+													<i class="fa fa-calendar"></i>
+												</div>
+												<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" autocomplete="off">
 											</div>
-											<input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" autocomplete="off">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="">Date To</label>
+											<div class="input-group date">
+												<div class="input-group-addon bg-white">
+													<i class="fa fa-calendar"></i>
+												</div>
+												<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" autocomplete="off">
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label for="">Date To</label>
-										<div class="input-group date">
-											<div class="input-group-addon bg-white">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" autocomplete="off">
+								<div class="col-md-12">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="">Judgement</label>
+											<select class="form-control select2" multiple="multiple" id='judgementSelect' onchange="changeJudgement()" data-placeholder="Select Judgement" style="width: 100%;">
+												<option value="OK">OK</option>
+												<option value="NG">NG</option>
+											</select>
+											<input type="text" name="judgement" id="judgement" hidden>			
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-8">
-									<div class="form-group">
-										<label for="">Judgement</label>
-										<select class="form-control select2" multiple="multiple" id='judgementSelect' onchange="changeJudgement()" data-placeholder="Select Judgement" style="width: 100%;">
-											<option value="OK">OK</option>
-											<option value="NG">NG</option>
-										</select>
-										<input type="text" name="judgement" id="judgement" hidden>			
+								<div class="col-md-12 col-md-offset-2">
+									<div class="col-md-12">
+										<div class="form-group pull-right">
+											@if($remark == 'After Injection')
+											<a href="{{ url('index/recorder_process') }}" class="btn btn-warning">Back</a>
+											@else
+											<a href="{{ url('index/injeksi') }}" class="btn btn-warning">Back</a>
+											@endif
+											<a href="{{ url('index/recorder/report_push_block/'.$remark) }}" class="btn btn-danger">Clear</a>
+											<button type="submit" class="btn btn-primary col-sm-14">Search</button>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group pull-right">
-										<a href="{{ url('index/recorder/report_push_block/'.$remark) }}" class="btn btn-danger">Clear</a>
-										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
-									</div>
-								</div>
-							</div>
-						</form>
+							</form>
+						</div>
+						<div class="col-xs-6">
+							
+						</div>
 					</div>
 					<div class="row">
 						<div class="col-xs-12">

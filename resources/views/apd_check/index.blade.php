@@ -300,12 +300,6 @@
 	                  @endforeach
 	                </select>
 	            </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<div class="form-group">
-	              <label for="">Foto Aktual (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
-	              <textarea name="inputfoto_aktual" id="inputfoto_aktual" class="form-control" rows="2" required="required"></textarea>
-	            </div>
 	            <div class="form-group">
 	              <label for="">Kondisi</label>
 				  <div class="radio">
@@ -314,6 +308,12 @@
 				  <div class="radio">
 				    <label><input type="radio" name="inputkondisi" id="inputkondisi" value="Not Good">Not Good</label>
 				  </div>
+	            </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<div class="form-group">
+	              <label for="">Foto Aktual (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
+	              <textarea name="inputfoto_aktual" id="inputfoto_aktual" class="form-control" rows="2" required="required"></textarea>
 	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
@@ -380,12 +380,6 @@
 	                  @endforeach
 	                </select>
 	            </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<div class="form-group">
-	              <label for="">Foto Aktual (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
-	              <textarea name="editfoto_aktual" id="editfoto_aktual" class="form-control" rows="2" required="required"></textarea>
-	            </div>
 	            <div class="form-group">
 	              <label for="">Kondisi</label>
 				  <div class="radio">
@@ -395,9 +389,15 @@
 				    <label><input type="radio" name="editkondisi" id="editkondisi" value="Not Good">Not Good</label>
 				  </div>
 	            </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<div class="form-group">
+	              <label for="">Foto Aktual (Max Width 800) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
+	              <textarea name="editfoto_aktual" id="editfoto_aktual" class="form-control" rows="2" required="required"></textarea>
+	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+	                <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic2 as $pic2)
 	                    <option value="{{ $pic2->name }}">{{ $pic2->employee_id }} - {{ $pic2->name }}</option>
@@ -432,11 +432,11 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no date";
-				}
-			}
+			dropdownParent: $('#create-modal')
+		});
+
+		$('.select3').select2({
+			dropdownParent: $('#edit-modal')
 		});
 
 		CKEDITOR.replace('inputfoto_aktual' ,{

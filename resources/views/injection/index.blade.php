@@ -35,7 +35,7 @@
 
 			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>
 			
-			<a href="{{ url("index/recorder_process_push_block","First Shoot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a>
+			<a href="{{ url("index/recorder_process_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
@@ -43,9 +43,9 @@
 
 			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a>
 
-			 <a href="{{ url("/index/recorder/report_push_block","First Shoot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
+			 <a href="{{ url("/index/recorder/report_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
 
-			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shoot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Push Block Check Monitoring</a>		
+			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Push Block Check Monitoring</a>		
 		</div>
 	</div>
 </section>
