@@ -103,6 +103,7 @@ class UploadCompletions extends Command
                         'mvt' => '101',
                         'transaction_date' => $date,
                         'qty' => $flo_completion->qty,
+                        'reference_file' => $flofilename,
                         'created_by' => 1
                     ]);
                     $log_transaction->save();

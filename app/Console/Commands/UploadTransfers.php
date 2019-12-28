@@ -117,6 +117,7 @@ class UploadTransfers extends Command
                         'mvt' => '9P1',
                         'transaction_date' => $date,
                         'qty' => $flo_transfer->qty,
+                        'reference_file' => $flofilename,
                         'created_by' => 1
                     ]);
                     $log_transaction->save();
