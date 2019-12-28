@@ -335,6 +335,7 @@ class TrainingReportController extends Controller
         $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
+        $operator3 = DB::select($queryOperator);
         // var_dump($productionAudit);
         $data = array('training_report' => $trainingReport,
                       'training_picture' => $trainingPicture,
@@ -343,6 +344,7 @@ class TrainingReportController extends Controller
                       'jml_null' => $jml_null,
                       'operator' => $operator,
                       'operator2' => $operator2,
+                      'operator3' => $operator3,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
@@ -768,6 +770,28 @@ class TrainingReportController extends Controller
                 $training->approved_date = date('Y-m-d');
                 $training->save();
             return redirect('/index/training_report/print_training_email/'.$id)->with('status', 'Approved.')->with('page', 'Training Report');
+          }
+      }
+
+      public function importparticipant(Request $request,$id)
+      {
+          $empid = $request->get('empid');
+          $empidcount = count($empid);
+          if($empidcount == 0){
+            // echo "<script>alert('Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')</script>";
+            return redirect('/index/training_report/details/'.$id.'/view')->with('error', 'Pilih Participant.')->with('page', 'Training Report');
+          }
+          else{
+                $id_user = Auth::id();
+
+                foreach ($empid as $key) {
+                    TrainingParticipant::create([
+                        'training_id' => $id,
+                        'participant_id' => $key,
+                        'created_by' => $id_user
+                    ]);
+                }
+            return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Participant berhasil dibuat.')->with('page', 'Training Report');
           }
       }
 }

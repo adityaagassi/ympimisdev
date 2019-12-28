@@ -117,14 +117,8 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -136,6 +130,13 @@ table.table-bordered > tfoot > tr > th{
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 			<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
 			{{ session('status') }}
+		</div>   
+	@endif
+	@if (session('error'))
+		<div class="alert alert-warning alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4> Warning!</h4>
+			{{ session('error') }}
 		</div>   
 	@endif
 	<div class="row">
@@ -321,6 +322,9 @@ table.table-bordered > tfoot > tr > th{
 				      	<div class="box-header">
 							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
 							<!-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a> -->
+							<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#participant-modal" onclick="importparticipant('{{ url("index/training_report/importparticipant") }}','{{ $id }}');">
+				               Import Participant
+				            </button>
 							<div class="panel-body text-center" >
 				              <video width="200px" id="preview"></video>
 				            </div>
@@ -497,6 +501,47 @@ table.table-bordered > tfoot > tr > th{
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="participant-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Import Participant</b></h4>
+      </div>
+      <div class="modal-body">
+        <form role="form" method="post" enctype="multipart/form-data" id="formimport" action="#">
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="box-body">
+            <table class="table table-hover table-striped" id="tableImport">
+				<thead>
+					<tr>
+						<th style="width: 1%;">#</th>
+						<th style="width: 2%;">Employee ID</th>
+						<th style="width: 5%;">Employee Name</th>
+					</tr>					
+				</thead>
+				<tbody id="tableImportList">
+					@foreach($operator3 as $operator3)
+						<tr>
+							<td><input type="checkbox" name="empid[]" value="{{ $operator3->employee_id }}"></td>
+							<td>{{ $operator3->employee_id }}</td>
+							<td>{{ $operator3->name }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Import</button>
           </div>
         </form>
       </div>
@@ -681,17 +726,37 @@ table.table-bordered > tfoot > tr > th{
       $('#example2 tfoot tr').appendTo('#example2 thead');
 
     });
-    // $(function () {
 
-    //   $('#example2').DataTable({
-    //     'paging'      : true,
-    //     'lengthChange': false,
-    //     'searching'   : false,
-    //     'ordering'    : true,
-    //     'info'        : true,
-    //     'autoWidth'   : false
-    //   })
-    // })
+	$('#tableImport').DataTable({
+		'dom': 'Bfrtip',
+		'responsive':true,
+		'lengthMenu': [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		'buttons': {
+			buttons:[
+			{
+				extend: 'pageLength',
+				className: 'btn btn-default',
+			},
+			
+			]
+		},
+		'paging': true,
+		'lengthChange': true,
+		'pageLength': 10,
+		'searching': true,
+		'ordering': true,
+		'order': [],
+		'info': true,
+		'autoWidth': true,
+		"sPaginationType": "full_numbers",
+		"bJQueryUI": true,
+		"bAutoWidth": false,
+		"processing": true
+	});
+
     function deleteConfirmation(url, name, id, picture_id) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
@@ -719,6 +784,22 @@ table.table-bordered > tfoot > tr > th{
             });
       jQuery('#formedit2').attr("action", url+'/'+id+'/'+participant_id);
       // console.log($('#formedit2').attr("action"));
+    }
+
+    function importparticipant(url, id) {
+    	// $.ajax({
+     //            url: "{{ route('admin.participantedit') }}?id=" + participant_id,
+     //            method: 'GET',
+     //            success: function(data) {
+     //              var json = data;
+     //              // obj = JSON.parse(json);
+     //              var participant = data.participant_id;
+     //              $("#participant_name").val(participant).trigger('change.select2');
+     //              console.log(participant);
+     //            }
+     //        });
+      jQuery('#formimport').attr("action", url+'/'+id);
+      console.log($('#formimport').attr("action"));
     }
   </script>
   <script language="JavaScript">

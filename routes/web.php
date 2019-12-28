@@ -1618,6 +1618,7 @@ Route::get('index/training_report/cek_employee/{nik}/{id}','TrainingReportContro
 Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
 Route::get('index/training_report/sendemail/{id}', 'TrainingReportController@sendemail');
 Route::post('index/training_report/approval/{id}', 'TrainingReportController@approval');
+Route::post('index/training_report/importparticipant/{id}', 'TrainingReportController@importparticipant');
 
 //sampling check
 Route::get('index/sampling_check/index/{id}', 'SamplingCheckController@index');
