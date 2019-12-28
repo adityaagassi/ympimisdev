@@ -28,7 +28,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/press/report_trouble") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Press Machine Truoble Report</a>
+			<a href="{{ url("index/press/report_trouble") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Press Machine Trouble Report</a>
 			<a href="{{ url("index/press/report_prod_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Press Machine Production Result</a>
 			<a href="{{ url("index/press/report_kanagata_lifetime") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Press Machine Kanagata Lifetime</a>
 		</div>
