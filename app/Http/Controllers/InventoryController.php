@@ -95,11 +95,6 @@ class InventoryController extends Controller
             $where1_2 = ' and date(transaction_completions.created_at) >= "'.$date_from.'" and date(transaction_completions.created_at) <= "'.$date_to.'"';
             $where1_3 = ' and date(transaction_transfers.created_at) >= "'.$date_from.'" and date(transaction_transfers.created_at) <= "'.$date_to.'"';
         }
-        else{
-            $where1 = '';
-            $where1_2 = '';
-            $where1_3 = '';
-        }
 
         if($request->get('originGroup') != null){
             $origin_group_code = implode("','", $request->get('originGroup'));
@@ -150,8 +145,8 @@ class InventoryController extends Controller
             $where6_3 = '';
         }
 
-        $query = "select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at from (
-        select log_transactions.material_number, materials.material_description, log_transactions.issue_storage_location, coalesce(log_transactions.receive_storage_location, '-') as receive_storage_location, log_transactions.mvt, log_transactions.qty, log_transactions.transaction_date, log_transactions.created_at 
+        $query = "select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at, reference_file from (
+        select log_transactions.material_number, materials.material_description, log_transactions.issue_storage_location, coalesce(log_transactions.receive_storage_location, '-') as receive_storage_location, log_transactions.mvt, log_transactions.qty, log_transactions.transaction_date, log_transactions.created_at, log_transactions.reference_file 
         from log_transactions 
         left join materials on materials.material_number = log_transactions.material_number
         where log_transactions.deleted_at is null
@@ -162,8 +157,8 @@ class InventoryController extends Controller
         ".$where5."
         ".$where6."
         union all
-        select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at from (
-        select transaction_completions.material_number, materials.material_description, transaction_completions.issue_location as issue_storage_location, '-' as receive_storage_location, transaction_completions.movement_type as mvt, transaction_completions.quantity as qty, transaction_completions.updated_at as transaction_date, transaction_completions.created_at 
+        select material_number, material_description, issue_storage_location, receive_storage_location, mvt, qty, transaction_date, created_at, reference_file from (
+        select transaction_completions.material_number, materials.material_description, transaction_completions.issue_location as issue_storage_location, '-' as receive_storage_location, transaction_completions.movement_type as mvt, transaction_completions.quantity as qty, transaction_completions.updated_at as transaction_date, transaction_completions.created_at, transaction_completions.reference_file
         from transaction_completions 
         left join materials on materials.material_number = transaction_completions.material_number
         where transaction_completions.deleted_at is null
@@ -173,7 +168,7 @@ class InventoryController extends Controller
         ".$where4."
         ".$where5_2."
         union all
-        select transaction_transfers.material_number, materials.material_description, transaction_transfers.issue_location as issue_storage_location, transaction_transfers.receive_location as receive_storage_location, transaction_transfers.movement_type as mvt, transaction_transfers.quantity as qty, transaction_transfers.updated_at as transaction_date, transaction_transfers.created_at 
+        select transaction_transfers.material_number, materials.material_description, transaction_transfers.issue_location as issue_storage_location, transaction_transfers.receive_location as receive_storage_location, transaction_transfers.movement_type as mvt, transaction_transfers.quantity as qty, transaction_transfers.updated_at as transaction_date, transaction_transfers.created_at, transaction_transfers.reference_file
         from transaction_transfers 
         left join materials on materials.material_number = transaction_transfers.material_number
         where transaction_transfers.deleted_at is null

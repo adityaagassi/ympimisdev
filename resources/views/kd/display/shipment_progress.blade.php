@@ -358,7 +358,7 @@
 			date:cat,
 			hpl:hpl
 		}
-		$.get('{{ url("fetch/display/modal_shipment_progress") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/kd_shipment_progress_detail") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#tableModal').DataTable().destroy();
 				// $('#modalProgressTitle').html('');
@@ -429,20 +429,26 @@
 
 				var data = result.shipment_results;
 				var xCategories = [];
-				var planFL = [];
-				var planCL = [];
-				var planAS = [];
-				var planTS = [];
-				var planPN = [];
-				var planRC = [];
-				var planVN = [];
-				var actualFL = [];
-				var actualCL = [];
-				var actualAS = [];
-				var actualTS = [];
-				var actualPN = [];
-				var actualRC = [];
-				var actualVN = [];
+				var planZPRO = [];
+				var actualZPRO = [];
+				var planMPRO = [];
+				var actualMPRO = [];
+				var planBPRO = [];
+				var actualBPRO = [];
+				var planMIDD = [];
+				var actualMIDD = [];
+				var planTNPO = [];
+				var actualTNPO = [];
+				var planCASE = [];
+				var actualCASE = [];
+				var planEDIN = [];
+				var actualEDIN = [];
+				var planCL91 = [];
+				var actualCL91 = [];
+				var planFL91 = [];
+				var actualFL91 = [];
+				var planSX91 = [];
+				var actualSX91 = [];
 				var i, cat;
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?
@@ -455,33 +461,45 @@
 					if(xCategories.indexOf(cat) === -1){
 						xCategories[xCategories.length] = cat;
 					}
-					if(data[i].hpl == 'FLFG'){
-						planFL.push(data[i].plan-data[i].act);
-						actualFL.push(data[i].act);
+					if(data[i].hpl == 'ZPRO'){
+						planZPRO.push(data[i].plan-data[i].act);
+						actualZPRO.push(data[i].act);
 					}
-					if(data[i].hpl == 'CLFG'){
-						planCL.push(data[i].plan-data[i].act);
-						actualCL.push(data[i].act);
+					if(data[i].hpl == 'MPRO'){
+						planMPRO.push(data[i].plan-data[i].act);
+						actualMPRO.push(data[i].act);
 					}
-					if(data[i].hpl == 'ASFG'){
-						planAS.push(data[i].plan-data[i].act);
-						actualAS.push(data[i].act);
+					if(data[i].hpl == 'BPRO'){
+						planMBPRO.push(data[i].plan-data[i].act);
+						actualBPRO.push(data[i].act);
 					}
-					if(data[i].hpl == 'TSFG'){
-						planTS.push(data[i].plan-data[i].act);
-						actualTS.push(data[i].act);
+					if(data[i].hpl == 'MIDD'){
+						planWELD.push(data[i].plan-data[i].act);
+						actualWELD.push(data[i].act);
 					}
-					if(data[i].hpl == 'PN'){
-						planPN.push(data[i].plan-data[i].act);
-						actualPN.push(data[i].act);
+					if(data[i].hpl == 'TNPO'){
+						planTNPO.push(data[i].plan-data[i].act);
+						actualTNPO.push(data[i].act);
 					}
-					if(data[i].hpl == 'RC'){
-						planRC.push(data[i].plan-data[i].act);
-						actualRC.push(data[i].act);
+					if(data[i].hpl == 'CASE'){
+						planTANP.push(data[i].plan-data[i].act);
+						actualTANP.push(data[i].act);
 					}
-					if(data[i].hpl == 'VENOVA'){
-						planVN.push(data[i].plan-data[i].act);
-						actualVN.push(data[i].act);
+					if(data[i].hpl == 'EDIN'){
+						planEDIN.push(data[i].plan-data[i].act);
+						actualEDIN.push(data[i].act);
+					}
+					if(data[i].hpl == 'SX91'){
+						planSX91.push(data[i].plan-data[i].act);
+						actualSX91.push(data[i].act);
+					}
+					if(data[i].hpl == 'CL91'){
+						planCL91.push(data[i].plan-data[i].act);
+						actualCL91.push(data[i].act);
+					}
+					if(data[i].hpl == 'FL91'){
+						planFL91.push(data[i].plan-data[i].act);
+						actualFL91.push(data[i].act);
 					}
 				}
 
@@ -536,25 +554,10 @@
 						tickPositioner: function() {
 							return yAxisLabels;
 						},
-						// plotLines: [{
-						// 	color: '#FF0000',
-						// 	width: 2,
-						// 	value: 100,
-						// 	label: {
-						// 		align:'right',
-						// 		text: '100%',
-						// 		x:-7,
-						// 		style: {
-						// 			fontSize: '1vw',
-						// 			color: '#FF0000',
-						// 			fontWeight: 'bold'
-						// 		}
-						// 	}
-						// }],
 						labels: {
 							enabled:false
-						}
-						,stackLabels: {
+						},
+						stackLabels: {
 							enabled: true,
 							verticalAlign: 'left',
 							align:'center',
@@ -563,7 +566,9 @@
 								color: 'white',
 								textOutline: false,
 								fontWeight: 'bold',
+								color:'yellow'
 							},
+							rotation: -90,
 							formatter:  function() {
 								return this.stack;
 							}
@@ -576,13 +581,13 @@
 							'Total: ' + this.point.stackTotal;
 						}
 					},
+
 					plotOptions: {
 						column: {
 							stacking: 'percent',
 						},
 						series:{
 							animation: false,
-							// minPointLength: 2,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
@@ -609,99 +614,129 @@
 					},
 					series: [{
 						name: 'Plan',
-						data: planFL,
-						stack: 'FL',
+						data: planZPRO,
+						stack: 'ZPRO',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planCL,
-						stack: 'CL',
+						data: planMPRO,
+						stack: 'MPRO',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planAS,
-						stack: 'AS',
+						data: planBPRO,
+						stack: 'BPRO',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planTS,
-						stack: 'TS',
+						data: planMIDD,
+						stack: 'MIDD',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planPN,
-						stack: 'PN',
+						data: planTNPO,
+						stack: 'TNPO',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planRC,
-						stack: 'RC',
+						data: planCASE,
+						stack: 'CASE',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planVN,
-						stack: 'VN',
+						data: planEDIN,
+						stack: 'EDIN',
+						color: 'rgba(255, 0, 0, 0.25)'
+					}, {
+						name: 'Plan',
+						data: planSX91,
+						stack: 'SX91',
+						color: 'rgba(255, 0, 0, 0.25)'
+					}, {
+						name: 'Plan',
+						data: planCL91,
+						stack: 'CL91',
+						color: 'rgba(255, 0, 0, 0.25)'
+					}, {
+						name: 'Plan',
+						data: planFL91,
+						stack: 'FL91',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Actual',
-						data: actualFL,
-						stack: 'FL',
+						data: actualZPRO,
+						stack: 'ZPRO',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualCL,
-						stack: 'CL',
+						data: actualMPRO,
+						stack: 'MPRO',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualAS,
-						stack: 'AS',
+						data: actualBPRO,
+						stack: 'BPRO',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualTS,
-						stack: 'TS',
+						data: actualMIDD,
+						stack: 'MIDD',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualPN,
-						stack: 'PN',
+						data: actualTNPO,
+						stack: 'TNPO',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualRC,
-						stack: 'RC',
+						data: actualCASE,
+						stack: 'CASE',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualVN,
-						stack: 'VN',
+						data: actualEDIN,
+						stack: 'EDIN',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'Actual',
+						data: actualSX91,
+						stack: 'SX91',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'Actual',
+						data: actualCL91,
+						stack: 'CL91',
+						color: 'rgba(0, 255, 0, 0.90)'
+					}, {
+						name: 'Actual',
+						data: actualFL91,
+						stack: 'FL91',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}]
 				});
 
-				$('.highcharts-xaxis-labels text').on('click', function () {
-					fillModal(this.textContent, 'all');
-				});
+$('.highcharts-xaxis-labels text').on('click', function () {
+	fillModal(this.textContent, 'all');
+});
 
-				$.each(chart.xAxis[0].ticks, function(i, tick) {
-					$('.highcharts-xaxis-labels text').hover(function () {
-						$(this).css('fill', '#33c570');
-						$(this).css('cursor', 'pointer');
+$.each(chart.xAxis[0].ticks, function(i, tick) {
+	$('.highcharts-xaxis-labels text').hover(function () {
+		$(this).css('fill', '#33c570');
+		$(this).css('cursor', 'pointer');
 
-					},
-					function () {
-						$(this).css('cursor', 'pointer');
-						$(this).css('fill', 'white');
-					});
-				});
+	},
+	function () {
+		$(this).css('cursor', 'pointer');
+		$(this).css('fill', 'white');
+	});
+});
 
 
-			}
-			else{
-				alert('Attempt to retrieve data failed.')
-			}
-		});
+}
+else{
+	alert('Attempt to retrieve data failed.')
+}
+});
 }
 
 

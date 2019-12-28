@@ -153,6 +153,7 @@
 										<th style="width:8%;">Quantity</th>
 										<th style="width:15%;">Upload</th>
 										<th style="width:15%;">Created At</th>
+										<th style="width:15%;">File</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -377,7 +378,8 @@
 			{ "data": "mvt"},
 			{ "data": "qty"},
 			{ "data": "transaction_date"},
-			{ "data": "created_at"}
+			{ "data": "created_at"},
+			{ "data": "reference_file"}
 			]
 		});
 	}

@@ -838,6 +838,7 @@ Route::get('fetch/kd_stock', 'KnockDownController@fetchKdStock');
 Route::get('fetch/kd_stock_detail', 'KnockDownController@fetchKdStockDetail');
 Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
+Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShipmentProgressDetail');
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -924,8 +925,6 @@ Route::get('fetch/middle/report_buffing_operator_time_qty', 'MiddleProcessContro
 Route::get('index/middle/report_buffing_canceled_log', 'MiddleProcessController@indexReportBuffingCancelled');
 Route::get('fetch/middle/report_buffing_canceled_log', 'MiddleProcessController@fetchReportBuffingCancelled');
 
-
-
 //Display Buffing
 Route::get('fetch/middle/buffing_hourly_ng', 'MiddleProcessController@fetchBuffingHourlyNg');
 Route::get('index/middle/buffing_ng', 'MiddleProcessController@indexBuffingNg');
@@ -958,7 +957,6 @@ Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuf
 Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
 Route::get('fetch/middle/buffing_target', 'MiddleProcessController@fetchTarget');
-
 
 
 //MIZUSUMASHI
@@ -1001,7 +999,7 @@ Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
 Route::get('fetch/kaizen/resume', 'EmployeeController@fetchKaizenResume');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
 
-//Clinic
+//START CLINIC
 Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('index/diagnose', 'ClinicController@indexDiagnose');
 	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
@@ -1013,8 +1011,13 @@ Route::get('index/display/clinic_visit', 'ClinicController@indexClinicVisit');
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
+//END CLINIC
 
 
+//WORKSHOP
+Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
+
+//END WORKSHOP
 
 
 //INITIAL
@@ -1842,6 +1845,7 @@ Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcess
 Route::get('index/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@push_block_check_monitoring');
 Route::get('fetch/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@fetch_push_block_check_monitoring');
 Route::get('index/recorder/detail_monitoring', 'RecorderProcessController@detail_monitoring');
+Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

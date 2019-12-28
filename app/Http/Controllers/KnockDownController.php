@@ -79,17 +79,41 @@ class KnockDownController extends Controller{
 		}
 
 		$shipment_results = ShipmentSchedule::leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->leftJoin(db::raw('(select shipment_schedule_id, material_number, sum(quantity) as quantity from knock_down_details group by shipment_schedule_id, material_number) as knock_down_details'), 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
 		->where('materials.category', '=', 'KD')
 		->where('shipment_schedules.st_date', '>=', $datefrom)
 		->where('shipment_schedules.st_date', '<=', $dateto)
-		->select(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'materials.hpl', db::raw('sum(coalesce(knock_down_details.quantity)) as act'), db::raw('sum(shipment_schedules.quantity) as plan'))
+		->select(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'materials.hpl', db::raw('sum(coalesce(shipment_schedules.actual_quantity)) as act'), db::raw('sum(shipment_schedules.quantity) as plan'))
 		->groupBy(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'), 'materials.hpl')
 		->get();
 
 		$response = array(
 			'status' => true,
 			'shipment_results' => $shipment_results,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchKdShipmentProgressDetail(Request $request){
+		$st_date = date('Y-m-d', strtotime($request->get('date')));
+
+		$hpl = $request->get('hpl');
+
+		$shipment_progress = ShipmentSchedule::leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+		->where('materials.category', '=', 'KD')
+		->where('shipment_schedules.st_date', '=', $st_date);
+
+		if($hpl != 'all'){
+			$shipment_progress = $shipment_progress->where('materials.hpl', '=', $hpl);
+		}
+
+		$shipment_progress = $shipment_progress->select('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname', db::raw('sum(shipment_schedules.quantity) as plan'), db::raw('sum(shipment_schedules.actual_quantity) as actual'), db::raw('sum(shipment_schedules.actual_quantity)-sum(shipment_schedules.quantity) as diff'))
+		->groupBy('shipment_schedules.material_number', 'materials.material_description', 'destinations.destination_shortname')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'shipment_progress' => $shipment_progress,
 		);
 		return Response::json($response);
 	}
