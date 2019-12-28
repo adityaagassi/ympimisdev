@@ -65,7 +65,7 @@ class EmployeeController extends Controller
       'Absensi', 'Lembur', 'BPJS Kes', 'BPJS TK', 'Cuti', "PKB", "Penggajian"
     ];
 
-    $this->usr = "'19014987','19014986','E01090823','R14122906','M09041335'";
+    $this->usr = "'O11101710'";
 
     $this->wst = ['18084786', '18094874', 'S15053064'];
 
@@ -128,7 +128,7 @@ class EmployeeController extends Controller
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS") or username in ('.$this->usr.')')
     ->select('position')
     ->first();
 
