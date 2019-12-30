@@ -235,7 +235,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                       <td>
+                     <td>
                         <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a>
@@ -329,6 +329,22 @@
                         <td>
                             <a href="http://172.17.144.11/sf6/" target="_blank">
                                 <i class="fa fa-caret-right"></i> Sunfish
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>Workshop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="{{ url("index/workshop/create_wjo") }}">
+                                <i class="fa fa-caret-right"></i> Create WJO
                             </a>
                         </td>
                     </tr>
@@ -569,7 +585,7 @@
                             <td>
                                 <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                                 <br>
-                                <a href="{{ url("#") }}">
+                                <a href="{{ url("/index/display/all_stock") }}">
                                     <i class="fa fa-caret-right"></i> All Stock (???)
                                 </a>
                                 <br>
