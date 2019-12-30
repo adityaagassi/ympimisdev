@@ -157,12 +157,6 @@ class SendEmailOvertimes extends Command
             'first' => $first,
         ];
 
-        // dd($overtimes);
-        // exit;
-        
-        Artisan::call('cache:clear');
-        Artisan::call('config:clear');
-        Artisan::call('config:cache');
         if($datas != null){
             Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
         }

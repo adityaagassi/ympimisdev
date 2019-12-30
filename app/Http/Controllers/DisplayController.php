@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Response;
 use App\OriginGroup;
+use App\KnockDownDetail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DataTables;
@@ -17,6 +18,10 @@ class DisplayController extends Controller
 		return view('displays.production_result', array(
 			'origin_groups' => $origin_groups,
 		))->with('page', 'Display Production Result')->with('head', 'Display');
+	}
+
+	public function indexAllStock(){
+		return view('displays.shippings.all_stock')->with('page', 'All Stock')->with('head', 'All Stock');		
 	}
 
 	public function indexStuffingProgress(){
@@ -67,6 +72,52 @@ class DisplayController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Display FG Accuracy')->with('head', 'Display');		
+	}
+
+	public function fetchAllStock(){
+
+		$query = "select if(stock.destination_code is null, 'Maedaoshi', destinations.destination_shortname) as destination, sum(production) as production, sum(intransit) as intransit, sum(fstk) as fstk, sum(actual) as actual, sum(coalesce(volume,0)) as volume from (
+
+		select shipment_schedules.destination_code, sum(if(flos.status = 'M' or flos.status = '0', flos.actual, 0)) as production, sum(if(flos.status = '2', flos.actual, 0)) as fstk, sum(if(flos.status = '1', flos.actual, 0)) as intransit, sum(flos.actual) as actual, sum(flos.actual*(material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton) as volume
+		from flos 
+		left join shipment_schedules on shipment_schedules.id = flos.shipment_schedule_id 
+		left join material_volumes on material_volumes.material_number = flos.material_number
+		where flos.status in ('0','1','2','M') and flos.actual > 0 
+		group by shipment_schedules.destination_code
+
+		union all
+
+		select shipment_schedules.destination_code, sum(if(knock_downs.status = 'M' or knock_downs.status = '0', knock_down_details.quantity, 0)) as production, sum(if(knock_downs.status = '2', knock_down_details.quantity, 0)) as fstk, sum(if(knock_downs.status = '1', knock_down_details.quantity, 0)) as intransit, sum(knock_down_details.quantity) as actual, sum(knock_down_details.quantity*(material_volumes.length*material_volumes.width*material_volumes.height)/material_volumes.lot_carton) as volume
+		from knock_down_details 
+		left join knock_downs on knock_downs.kd_number = knock_down_details.kd_number 
+		left join shipment_schedules on shipment_schedules.id = knock_down_details.shipment_schedule_id 
+		left join material_volumes on material_volumes.material_number = knock_down_details.material_number
+		where knock_downs.status in ('0','1','2','M') and knock_down_details.quantity > 0
+		group by shipment_schedules.destination_code) as stock left join destinations on destinations.destination_code = stock.destination_code group by if(stock.destination_code is null, 'Maedaoshi', destinations.destination_shortname)";
+
+		$jsonData = db::select($query);
+
+		$query2 = "";
+
+		$stock = db::select($query2);
+
+		$stock = DB::table('flos')
+		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
+		->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
+		->whereIn('flos.status', ['0', '1', '2', 'M'])
+		->where('flos.actual', '>', 0)
+		->select('materials.material_number', 'materials.material_description', db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), db::raw('if(flos.status = "M" or flos.status = "0", "Production", if(flos.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(flos.actual) as quantity'))
+		->groupBy('materials.material_number', 'materials.material_description', 'destinations.destination_shortname', 'flos.status')
+		->orderBy('materials.material_number', 'destinations.destination_shortname')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'jsonData' => $jsonData,
+			'stockData' => $stock,
+		);
+		return Response::json($response);
 	}
 
 	public function fetchStuffingProgress(Request $request){

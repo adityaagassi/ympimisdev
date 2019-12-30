@@ -99,15 +99,6 @@ class EmailConfirmationOvertimes extends Command
             }
         }
 
-        $query2 = "SELECT email FROM users
-        left join (
-        select s.employee_id, position, section from
-        (select employee_id, position from promotion_logs where position NOT IN ('Leader','Sub Leader','-') and valid_to is null) s
-        left join (select employee_id, section from mutation_logs where valid_to is null) d on s.employee_id = d.employee_id
-        where section in (".$section.")
-        ) d on users.username = d.employee_id
-        where position is not null";
-
         $mail_to = db::table('send_emails')
         ->where('remark', '=', 'overtime_confirmation')
         ->whereNull('deleted_at')
@@ -117,26 +108,10 @@ class EmailConfirmationOvertimes extends Command
         ->distinct()
         ->get();
 
-        $mail_to_2 = db::select($query2);
-
-        $mail = array();
-
-        foreach ($mail_to as $row) {
-            if(!in_array($row->email, $mail)){
-                array_push($mail, $row->email);
-            }
-        }
-
-        foreach ($mail_to_2 as $row) {
-            if(!in_array($row->email, $mail)){
-                array_push($mail, $row->email);
-            }
-        }
-
         $data = $unconfirmed;
 
         if(count($unconfirmed) > 0){
-            Mail::to($mail)->send(new SendEmail($data, 'confirmation_overtime'));
+            Mail::to($mail_to)->send(new SendEmail($data, 'confirmation_overtime'));
         }
     }
 }
