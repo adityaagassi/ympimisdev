@@ -334,6 +334,9 @@ Route::get('fetch/report/detail_ot_by_employee', 'OvertimeController@detailOvert
 Route::get('index/report/overtime_resume', 'OvertimeController@indexMonthlyResume');
 Route::get('fetch/report/overtime_resume', 'OvertimeController@fetchMonthlyResume');
 
+Route::get('index/report/ga_report', 'OvertimeController@indexGAReport');
+Route::get('fetch/report/ga_report', 'OvertimeController@fetchGAReport');
+
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
 });
 
@@ -1016,6 +1019,7 @@ Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 
 //WORKSHOP
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
+Route::post('workshop/create_wjo', 'WorkshopController@createWJO');
 
 //END WORKSHOP
 
@@ -1493,6 +1497,8 @@ Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentPr
 Route::get('index/display/stuffing_progress', 'DisplayController@indexStuffingProgress');
 Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingProgress');
 Route::get('fetch/display/stuffing_detail', 'DisplayController@fetchStuffingDetail');
+Route::get('index/display/all_stock', 'DisplayController@indexAllStock');
+Route::get('fetch/display/all_stock', 'DisplayController@fetchAllStock');
 
 
 //DISPLAY STUFFING TIME
@@ -1834,6 +1840,18 @@ Route::get('index/apd_check/print_apd_check_email/{id}/{month}','ApdCheckControl
 Route::post('index/apd_check/sendemail/{id}','ApdCheckController@sendemail');
 Route::post('index/apd_check/approval/{id}/{month}','ApdCheckController@approval');
 
+//WEEKLY REPORT
+Route::get('index/weekly_report/index/{id}', 'WeeklyActivityReportController@index');
+Route::post('index/weekly_report/filter_weekly_report/{id}', 'WeeklyActivityReportController@filter_weekly_report');
+Route::post('index/weekly_report/store/{id}', 'WeeklyActivityReportController@store');
+Route::get('index/weekly_report/getweeklyreport','WeeklyActivityReportController@getweeklyreport')->name('weekly_report.getweeklyreport');
+Route::post('index/weekly_report/update/{id}','WeeklyActivityReportController@update');
+Route::get('index/weekly_report/destroy/{id}/{area_check_id}', 'WeeklyActivityReportController@destroy');
+Route::post('index/weekly_report/print_weekly_report/{id}','WeeklyActivityReportController@print_weekly_report');
+Route::get('index/weekly_report/print_weekly_report_email/{id}/{month}','WeeklyActivityReportController@print_weekly_report_email');
+Route::post('index/weekly_report/sendemail/{id}','WeeklyActivityReportController@sendemail');
+Route::post('index/weekly_report/approval/{id}/{month}','WeeklyActivityReportController@approval');
+
 //RECORDER PROCESS
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
@@ -1912,8 +1930,15 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 Route::get('index/request_qa', 'QcRequestController@index');
 Route::get('index/request_qa/create', 'QcRequestController@create');
 Route::post('index/request_qa/create_action', 'QcRequestController@create_action');
+Route::post('index/request_qa/update_action/{id}', 'QcRequestController@update_action');
 Route::get('index/request_qa/detail/{id}', 'QcRequestController@detail');
 Route::get('index/request_qa/fetchDataTable', 'QcRequestController@fetchDataTable');
+Route::get('index/request_qa/fetch_item/{id}', 'QcRequestController@fetch_item');
+Route::post('index/request_qa/create_item', 'QcRequestController@create_item');
+Route::post('index/request_qa/edit_item', 'QcRequestController@edit_item');
+Route::get('index/request_qa/edit_item', 'QcRequestController@fetch_item_edit');
+Route::post('index/request_qa/delete_item', 'QcRequestController@delete_item');
+
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
