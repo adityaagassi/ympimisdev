@@ -169,16 +169,16 @@ class ProductionReportController extends Controller
         monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen as jumlah_monthly,
         COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen )/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
         weekly.jumlah_activity_weekly as jumlah_activity_weekly,
-        IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 4,0,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 8,1,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)  < 12,2,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 16,3,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 20,4,0))))) as jumlah_weekly,
-        COALESCE((IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 4,0,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) < 8,1,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)  < 12,2,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 16,3,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check)< 20,4,0)))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
+        IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 4,0,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 8,1,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)  < 12,2,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,0))))) as jumlah_weekly,
+        COALESCE((IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 4,0,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 8,1,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)  < 12,2,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
+                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,0)))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
         daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
@@ -312,7 +312,17 @@ class ProductionReportController extends Controller
                                 and apd_checks.deleted_at is null 
                               and actlist.department_id = '".$id."'
                                 GROUP BY apd_checks.leader),0)
-        as jumlah_apd_check
+        as jumlah_apd_check,
+        COALESCE((select count(DISTINCT(weekly_activity_reports.week_name)) as jumlah_weekly_report
+                from weekly_activity_reports
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$bulan."'
+                    and actlist.frequency = 'Weekly'
+                                and weekly_activity_reports.leader = '".$dataleader."'
+                                and weekly_activity_reports.deleted_at is null 
+                              and actlist.department_id = '".$id."'
+                                GROUP BY weekly_activity_reports.leader),0)
+        as jumlah_weekly_report
         from activity_lists
         where deleted_at is null 
         and department_id = '".$id."'
@@ -512,7 +522,17 @@ class ProductionReportController extends Controller
                                 and actlist.id = id_activity
                                 and week_name = '".$date2->week_name."'
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0))))
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Weekly Report',
+            (select count(weekly_activity_reports.week_name) as jumlah_weekly_report
+                from weekly_activity_reports
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$week_date."'
+                                and weekly_activity_reports.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and week_name = '".$date2->week_name."'
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0)))))
             as jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
