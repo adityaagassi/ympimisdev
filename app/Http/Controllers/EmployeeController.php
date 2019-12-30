@@ -128,7 +128,7 @@ class EmployeeController extends Controller
     $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
     ->where('promotion_logs.employee_id','=', $username)
     ->whereNull('valid_to')
-    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS") or username in ('.$this->usr.')')
+    ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS" or username in ('.$this->usr.'))')
     ->select('position')
     ->first();
 
@@ -338,7 +338,6 @@ class EmployeeController extends Controller
     $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
 
     $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
-
 
     return view('employees.service.ekaizenUpload', array(
       'title' => 'e-Kaizen Upload Images',
@@ -2334,6 +2333,13 @@ public function UploadKaizenImage(Request $request)
   }
   
   $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
+
+  // if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
+  //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
+  //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
+  // }
+  
+  // $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
 }
 }
 
