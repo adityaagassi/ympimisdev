@@ -109,7 +109,10 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->subject('Audit Implementasi Jishu Hozen (??)')->view('mails.jishu_hozen');
         }
         if($this->remark == 'apd_check'){
-            return $this->from('ympimis@gmail.com')->subject('Cek Alat Pelindung Diri (APD}) (??)')->view('mails.apd_check');
+            return $this->from('ympimis@gmail.com')->subject('Cek Alat Pelindung Diri (APD) (??)')->view('mails.apd_check');
+        }
+        if($this->remark == 'weekly_report'){
+            return $this->from('ympimis@gmail.com')->subject('Weekly Activity Report (??)')->view('mails.weekly_report');
         }
     }
 }

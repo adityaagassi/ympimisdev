@@ -100,6 +100,9 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Cek APD"){
             return redirect('/index/apd_check/index/'.$id)->with('page', 'APD Check')->with('no', '12');
         }
+        elseif($activity_type == "Weekly Report"){
+            return redirect('/index/weekly_report/index/'.$id)->with('page', 'Weekly Report')->with('no', '13');
+        }
     }
 
     function report_all($id)

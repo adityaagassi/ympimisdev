@@ -41,7 +41,6 @@
 <section class="content-header">
 	<h1>
 		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -72,7 +71,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/apd_check/filter_apd_check/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/weekly_report/filter_weekly_report/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -89,8 +88,8 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/12') }}" class="btn btn-warning">Back</a>
-										<a href="{{ url('index/apd_check/index/'.$id) }}" class="btn btn-danger">Clear</a>
+										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/13') }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/weekly_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
 								</div>
@@ -101,7 +100,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/apd_check/print_apd_check/'.$id)}}">
+						<form target="_blank" role="form" method="post" action="{{url('index/weekly_report/print_weekly_report/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -128,7 +127,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/apd_check/sendemail/'.$id)}}">
+						<form role="form" method="post" action="{{url('index/weekly_report/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -171,10 +170,9 @@
 											<tr>
 												<th>Sub Section</th>
 												<th>Date</th>
-												<th>PIC</th>
-												<th>Proses</th>
-												<th>Jenis APD</th>
-												<th>Kondisi</th>
+												<th>Tinjauan 4M</th>
+												<th>Problem / Activity</th>
+												<th>Report Action</th>
 												<th>Foto Aktual</th>
 												<th>Send Status</th>
 												<th>Approval Status</th>
@@ -182,33 +180,46 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($apd_check as $apd_check)
+											@foreach($weekly_report as $weekly_report)
+											<?php $type = [] ?>
 											<tr>
-												<td>{{$apd_check->subsection}}</td>
-												<td>{{$apd_check->date}}</td>
-												<td>{{$apd_check->pic}}</td>
-												<td>{{$apd_check->proses}}</td>
-												<td>{{$apd_check->jenis_apd}}</td>
-												<td>{{$apd_check->kondisi}}</td>
-												<td><?php echo $apd_check->foto_aktual ?></td>
+												<td>{{$weekly_report->subsection}}</td>
+												<td>{{$weekly_report->date}}</td>
+												<td><?php $tinjauan = explode(',', $weekly_report->report_type);
+												for ($i = 0; $i < count($tinjauan); $i++) {
+												 	if($tinjauan[$i] == 1){
+												 		$type[] = 'Man';
+												 	}elseif ($tinjauan[$i] == 2) {
+												 		$type[] = 'Machine';
+												 	}elseif ($tinjauan[$i] == 3) {
+												 		$type[] = 'Material';
+												 	}elseif ($tinjauan[$i] == 4) {
+												 		$type[] = 'Method';
+												 	}
+												 }
+												 echo implode(' , ', $type);
+												 ?></td>
+												<td><?php echo $weekly_report->problem ?></td>
+												<td><?php echo $weekly_report->action ?></td>
+												<td><?php echo $weekly_report->foto_aktual ?></td>
 												<td>
-													@if($apd_check->send_status == "")
+													@if($weekly_report->send_status == "")
 								                		<label class="label label-danger">Not Yet Sent</label>
 								                	@else
 								                		<label class="label label-success">Sent</label>
 								                	@endif
 												</td>
-												<td>@if($apd_check->approval == "")
+												<td>@if($weekly_report->approval == "")
 								                		<label class="label label-danger">Not Approved</label>
 								                	@else
 								                		<label class="label label-success">Approved</label>
 								                	@endif</td>
 												<td>
 													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_apd_check('{{ url("index/apd_check/update") }}','{{ $apd_check->id }}');">
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_weekly_report('{{ url("index/weekly_report/update") }}','{{ $weekly_report->id }}');">
 											               Edit
 											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/apd_check/destroy") }}','{{ $apd_check->proses }} - {{ $apd_check->date }}','{{ $id }}', '{{ $apd_check->id }}');">
+														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/weekly_report/destroy") }}','{{ implode(' , ', $type) }} - {{ $weekly_report->date }}','{{ $id }}', '{{ $weekly_report->id }}');">
 															Delete
 														</a>
 													</center>
@@ -218,7 +229,6 @@
 										</tbody>
 										<tfoot>
 											<tr>
-												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -265,7 +275,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create APD Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Create Weekly Activity Report</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -289,40 +299,33 @@
 				  <input type="text" name="inputdate" id="inputdate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
 	            </div>
 	            <div class="form-group">
-	              <label for="">Proses</label>
-				  <input type="text" name="inputproses" id="inputproses" class="form-control" required="required" title="" placeholder="Enter Proses">
+	             <label>Tinjauan 4M<span class="text-red">*</span></label><br>
+	                <label class="checkbox-inline">
+		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="1" id="tinjauan">Man
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="2" id="tinjauan">Machine
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="3" id="tinjauan">Material
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="4" id="tinjauan">Method
+		            </label>
 	            </div>
 	            <div class="form-group">
-	              <label>Jenis APD<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputjenisapd" id="inputjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required>
-	                  @foreach($apd as $apd)
-	                    <option value="{{ $apd }}">{{ $apd }}</option>
-	                  @endforeach
-	                </select>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Kondisi</label>
-				  <div class="radio">
-				    <label><input type="radio" name="inputkondisi" id="inputkondisi" value="Good">Good</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="inputkondisi" id="inputkondisi" value="Not Good">Not Good</label>
-				  </div>
+	              <label for="">Problem</label>
+	              <textarea name="inputproblem" id="inputproblem" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
+	              <label for="">Report Action</label>
+	              <textarea name="inputaction" id="inputaction" class="form-control" rows="2" required="required"></textarea>
+	            </div>
+            	<div class="form-group">
 	              <label for="">Foto Aktual (Max Width 200) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
 	              <textarea name="inputfoto_aktual" id="inputfoto_aktual" class="form-control" rows="2" required="required"></textarea>
-	            </div>
-	            <div class="form-group">
-	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
-	                  <option value=""></option>
-	                  @foreach($pic as $pic)
-	                    <option value="{{ $pic->name }}">{{ $pic->employee_id }} - {{ $pic->name }}</option>
-	                  @endforeach
-	                </select>
 	            </div>
             </div>
           </div>
@@ -344,17 +347,16 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit APD Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Weekly Activity Report</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
-        <div>
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
+	              <input type="hidden" name="url_edit" id="url_edit" class="form-control">
 	              <label for="">Department</label>
 				  <input type="text" name="department" id="editdepartment" class="form-control" value="{{ $departments }}" readonly required="required" title="">
-				  <input type="hidden" name="url" id="url_edit" class="form-control" value="">
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
@@ -369,48 +371,40 @@
 				  <input type="text" name="editdate" id="editdate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
 	            </div>
 	            <div class="form-group">
-	              <label for="">Proses</label>
-				  <input type="text" name="editproses" id="editproses" class="form-control" required="required" title="" placeholder="Enter Proses">
+	             <label>Tinjauan 4M<span class="text-red">*</span></label><br>
+	                <label class="checkbox-inline">
+		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="1" id="edittinjauan">Man
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="2" id="edittinjauan">Machine
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="3" id="edittinjauan">Material
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="4" id="edittinjauan">Method
+		            </label>
 	            </div>
 	            <div class="form-group">
-	              <label>Jenis APD<span class="text-red">*</span></label>
-	                <select class="form-control" name="editjenisapd" id="editjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required>	                  
-	                  @foreach($apd2 as $apd2)
-	                    <option value="{{ $apd2 }}">{{ $apd2 }}</option>
-	                  @endforeach
-	                </select>
-	            </div>
-	            <div class="form-group">
-	              <label for="">Kondisi</label>
-				  <div class="radio">
-				    <label><input type="radio" name="editkondisi" id="editkondisi" value="Good">Good</label>
-				  </div>
-				  <div class="radio">
-				    <label><input type="radio" name="editkondisi" id="editkondisi" value="Not Good">Not Good</label>
-				  </div>
+	              <label for="">Problem</label>
+	              <textarea name="editproblem" id="editproblem" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
+	              <label for="">Report Action</label>
+	              <textarea name="editaction" id="editaction" class="form-control" rows="2" required="required"></textarea>
+	            </div>
+            	<div class="form-group">
 	              <label for="">Foto Aktual (Max Width 200) Click Icon <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
 	              <textarea name="editfoto_aktual" id="editfoto_aktual" class="form-control" rows="2" required="required"></textarea>
 	            </div>
-	            <div class="form-group">
-	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
-	                  <option value=""></option>
-	                  @foreach($pic2 as $pic2)
-	                    <option value="{{ $pic2->name }}">{{ $pic2->employee_id }} - {{ $pic2->name }}</option>
-	                  @endforeach
-	                </select>
-	            </div>
             </div>
-          </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           	<div class="modal-footer">
-            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-            <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
-          </div>
+	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+	            <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
+	          </div>
           </div>
         </div>
       </div>
@@ -439,9 +433,26 @@
 			dropdownParent: $('#edit-modal')
 		});
 
+		CKEDITOR.replace('inputproblem' ,{
+      		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
+	    CKEDITOR.replace('inputaction' ,{
+      		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
 		CKEDITOR.replace('inputfoto_aktual' ,{
       		filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
 	    });
+
+	    CKEDITOR.replace('editaction' ,{
+	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
+	    CKEDITOR.replace('editproblem' ,{
+	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
 	    CKEDITOR.replace('editfoto_aktual' ,{
 	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
 	    });
@@ -592,67 +603,86 @@
 			'autoWidth'   : false
 		})
 	})
-	function deleteConfirmation(url, name,id,apd_check_id) {
+	function deleteConfirmation(url, name,id,weekly_report_id) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+apd_check_id);
+		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+weekly_report_id);
 	}
 
 	function create(){
+		var type = [];
+		var tinjauan;
+		$("input[name='tinjauan']:checked").each(function (i) {
+            type[i] = $(this).val();
+        });
 		var leader = '{{ $leader }}';
 		var foreman = '{{ $foreman }}';
 		var department = $('#inputdepartment').val();
 		var subsection = $('#inputsubsection').val();
 		var date = $('#inputdate').val();
-		var pic = $('#inputpic').val();
-		var kondisi = $('input[id="inputkondisi"]:checked').val();
-		var proses = $('#inputproses').val();
-		var jenis_apd = $('#inputjenisapd').val();
+		var report_type = type.join();
+		var problem = CKEDITOR.instances.inputproblem.getData();
+		var action = CKEDITOR.instances.inputaction.getData();
 		var foto_aktual = CKEDITOR.instances.inputfoto_aktual.getData();
 
 		var data = {
 			department:department,
 			subsection:subsection,
 			date:date,
-			kondisi:kondisi,
-			proses:proses,
-			jenis_apd:jenis_apd,
+			report_type:report_type,
+			problem:problem,
+			action:action,
 			foto_aktual:foto_aktual,
-			pic:pic,
 			leader:leader,
 			foreman:foreman
 		}
-		console.table(data);
+		console.log(data);
 		
-		$.post('{{ url("index/apd_check/store/".$id) }}', data, function(result, status, xhr){
-			if(result.status){
-				$("#create-modal").modal('hide');
-				// $('#example1').DataTable().ajax.reload();
-				// $('#example2').DataTable().ajax.reload();
-				openSuccessGritter('Success','New APD Check has been created');
-				window.location.reload();
-			} else {
-				audio_error.play();
-				openErrorGritter('Error','Create APD Check Failed');
-			}
-		});
+		if(report_type == ""){
+			alert("Semua Data Harus Diisi.");
+		}else{
+			$.post('{{ url("index/weekly_report/store/".$id) }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#create-modal").modal('hide');
+					// $('#example1').DataTable().ajax.reload();
+					// $('#example2').DataTable().ajax.reload();
+					openSuccessGritter('Success','New Weekly Activity Report has been created');
+					window.location.reload();
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Create Weekly Activity Report Failed');
+				}
+			});
+		}
 	}
 
-	function edit_apd_check(url,id) {
+	function edit_weekly_report(url,id) {
     	$.ajax({
-                url: "{{ route('apd_check.getapdcheck') }}?id=" + id,
+                url: "{{ route('weekly_report.getweeklyreport') }}?id=" + id,
                 method: 'GET',
                 success: function(data) {
                   var json = data;
                   // obj = JSON.parse(json);
                   var data = data.data;
+                  var tinjauan = [];
+                  var type = [];
+                  tinjauan = data.report_type.split(",");
+					$("input[name='edittinjauan']").each(function (i) {
+			            type[i] = $(this).val();
+			            $('.edittinjauanCheckbox')[i].checked = false;
+			        });
+                  for (var i  = 0;i < tinjauan.length; i++) {
+                  	for (var j  = 0;j < type.length; j++) {
+	                  	if(type[j] == tinjauan[i]){
+	                  		$('.edittinjauanCheckbox')[j].checked = true;
+	                  	}
+	                }
+                  }
                   $("#url_edit").val(url+'/'+id);
                   $("#editdepartment").val(data.department);
                   $("#editsubsection").val(data.subsection).trigger('change.select2');
-                  $("#editpic").val(data.pic).trigger('change.select2');
                   $("#editdate").val(data.date);
-                  $("#editproses").val(data.proses);
-                  $('input[id="editkondisi"][value="'+data.kondisi+'"]').prop('checked',true);
-                  $("#editjenisapd").val(data.jenis_apd).trigger('change.select2');
+                  $("#editproblem").html(CKEDITOR.instances.editproblem.setData(data.problem));
+                  $("#editaction").html(CKEDITOR.instances.editaction.setData(data.action));
                   $("#editfoto_aktual").html(CKEDITOR.instances.editfoto_aktual.setData(data.foto_aktual));
                 }
             });
@@ -661,15 +691,19 @@
     }
 
     function update(){
+    	var type = [];
+		var tinjauan;
+		$("input[name='edittinjauan']:checked").each(function (i) {
+            type[i] = $(this).val();
+        });
 		var leader = '{{ $leader }}';
 		var foreman = '{{ $foreman }}';
 		var department = $('#editdepartment').val();
 		var subsection = $('#editsubsection').val();
 		var date = $('#editdate').val();
-		var pic = $('#editpic').val();
-		var kondisi = $('input[id="editkondisi"]:checked').val();
-		var proses = $('#editproses').val();
-		var jenis_apd = $('#editjenisapd').val();
+		var report_type = type.join();
+		var problem = CKEDITOR.instances.editproblem.getData();
+		var action = CKEDITOR.instances.editaction.getData();
 		var foto_aktual = CKEDITOR.instances.editfoto_aktual.getData();
 		var url = $('#url_edit').val();
 
@@ -677,11 +711,10 @@
 			department:department,
 			subsection:subsection,
 			date:date,
-			kondisi:kondisi,
-			proses:proses,
-			jenis_apd:jenis_apd,
+			report_type:report_type,
+			problem:problem,
+			action:action,
 			foto_aktual:foto_aktual,
-			pic:pic,
 			leader:leader,
 			foreman:foreman
 		}
@@ -692,11 +725,11 @@
 				$("#edit-modal").modal('hide');
 				// $('#example1').DataTable().ajax.reload();
 				// $('#example2').DataTable().ajax.reload();
-				openSuccessGritter('Success','APD Check has been updated');
+				openSuccessGritter('Success','Weekly Activity Report has been updated');
 				window.location.reload();
 			} else {
 				audio_error.play();
-				openErrorGritter('Error','Update APD Check Failed');
+				openErrorGritter('Error','Update Weekly Activity Report Failed');
 			}
 		});
 	}
