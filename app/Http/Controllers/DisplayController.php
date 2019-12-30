@@ -97,20 +97,25 @@ class DisplayController extends Controller
 
 		$jsonData = db::select($query);
 
-		$query2 = "";
+		$query2 = "select stock.material_number, materials.material_description, if(stock.status = 'M' or stock.status = '0', 'Production', if(stock.status = '1', 'Intransit', 'FSTK')) as location, if(destinations.destination_shortname is null, 'Maedaoshi', destinations.destination_shortname) as destination, sum(stock.quantity) as quantity from (
+		select flos.material_number, flos.destination_code, flos.status, sum(flos.actual) as quantity from flos
+		where flos.status in ('M', '0', '1', '2')
+		and flos.actual > 0
+		group by flos.material_number, flos.destination_code, flos.status
+
+		union all
+
+		select knock_down_details.material_number, shipment_schedules.destination_code, knock_downs.status, sum(knock_down_details.quantity) as quantity from knock_down_details
+		left join knock_downs on knock_downs.kd_number = knock_down_details.kd_number
+		left join shipment_schedules on shipment_schedules.id = knock_down_details.shipment_schedule_id
+		where knock_downs.status in ('M', '0', '1', '2')
+		and knock_down_details.quantity > 0
+		group by knock_down_details.material_number, shipment_schedules.destination_code, knock_downs.status) as stock
+		left join materials on materials.material_number = stock.material_number
+		left join destinations on destinations.destination_code = stock.destination_code
+		group by stock.material_number, if(destinations.destination_shortname is null, 'Maedaoshi', destinations.destination_shortname), if(stock.status = 'M' or stock.status = '0', 'Production', if(stock.status = '1', 'Intransit', 'FSTK')), stock.status, materials.material_description";
 
 		$stock = db::select($query2);
-
-		$stock = DB::table('flos')
-		->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
-		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->leftJoin('materials', 'materials.material_number', '=', 'flos.material_number')
-		->whereIn('flos.status', ['0', '1', '2', 'M'])
-		->where('flos.actual', '>', 0)
-		->select('materials.material_number', 'materials.material_description', db::raw('if(destinations.destination_shortname is null, "Maedaoshi", destinations.destination_shortname) as destination'), db::raw('if(flos.status = "M" or flos.status = "0", "Production", if(flos.status = "1", "Intransit", "FSTK")) as location'), db::raw('sum(flos.actual) as quantity'))
-		->groupBy('materials.material_number', 'materials.material_description', 'destinations.destination_shortname', 'flos.status')
-		->orderBy('materials.material_number', 'destinations.destination_shortname')
-		->get();
 
 		$response = array(
 			'status' => true,
