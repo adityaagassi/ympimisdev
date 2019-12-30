@@ -596,6 +596,11 @@ class ProcessController extends Controller
 			}
 			$data = $datas[0];
 
+			$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
+			$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+
+			$serial_number = $code_generator->prefix.$number;
+
 			if($plc_counter->plc_counter != $data){
 
 				if(Auth::user()->role_code == "OP-SubAssy-FL"){
@@ -607,7 +612,7 @@ class ProcessController extends Controller
 					$log_process = LogProcess::updateOrCreate(
 						[
 							'process_code' => $request->get('processCode'), 
-							'serial_number' => $request->get('serialNumber'),
+							'serial_number' => $serial_number,
 							'origin_group_code' => $request->get('originGroupCode')
 						],
 						[
@@ -620,14 +625,11 @@ class ProcessController extends Controller
 						]
 					);
 
-					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
-					$code_generator->index = $code_generator->index+1;
-
 					if ($request->get('category')=='FG'){
 
 						$stamp_inventory = StampInventory::updateOrCreate(
 							[
-								'serial_number' => $request->get('serialNumber'),
+								'serial_number' => $serial_number,
 								'origin_group_code' => $request->get('originGroupCode')
 							],
 							[
@@ -640,9 +642,21 @@ class ProcessController extends Controller
 						$stamp_inventory->save();
 					}
 
-					$plc_counter->save();
-					$code_generator->save();
-					$log_process->save();
+					$code_generator->index = $code_generator->index+1;
+					try{
+						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+							$code_generator->save();
+							$plc_counter->save();
+							$log_process->save();
+						});				
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
+					}
 
 					// if ($request->get('category')=='FG'){
 					$printer_name = 'SUPERMAN';
@@ -653,9 +667,9 @@ class ProcessController extends Controller
 					$printer->setJustification(Printer::JUSTIFY_CENTER);
 					$printer->setBarcodeWidth(2);
 					$printer->setBarcodeHeight(64);
-					$printer->barcode($request->get('serialNumber'), Printer::BARCODE_CODE39);
+					$printer->barcode($serial_number, Printer::BARCODE_CODE39);
 					$printer->setTextSize(3, 1);
-					$printer->text($request->get('serialNumber')."\n");
+					$printer->text($serial_number."\n");
 					$printer->feed(1);
 					$printer->text($request->get('model')."\n");
 					$printer->setTextSize(1, 1);
@@ -681,7 +695,7 @@ class ProcessController extends Controller
 					$log_process = LogProcess::updateOrCreate(
 						[
 							'process_code' => $request->get('processCode'), 
-							'serial_number' => $request->get('serialNumber'),
+							'serial_number' => $serial_number,
 							'origin_group_code' => $request->get('originGroupCode')
 						],
 						[
@@ -693,14 +707,11 @@ class ProcessController extends Controller
 						]
 					);
 
-					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
-					$code_generator->index = $code_generator->index+1;
-
 					if ($request->get('category')=='fg'){
 
 						$stamp_inventory = StampInventory::updateOrCreate(
 							[
-								'serial_number' => $request->get('serialNumber'),
+								'serial_number' => $serial_number,
 								'origin_group_code' => $request->get('originGroupCode')
 							],
 							[
@@ -713,13 +724,19 @@ class ProcessController extends Controller
 						$stamp_inventory->save();
 					}
 
-					$plc_counter->save();
-					$code_generator->save();
-					$log_process->save();
-
-					if ($request->get('category')=='FG'){
-						//print
-
+					try{
+						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+							$code_generator->save();
+							$plc_counter->save();
+							$log_process->save();
+						});				
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
 					}
 
 					$response = array(
@@ -739,7 +756,7 @@ class ProcessController extends Controller
 					$log_process = LogProcess::updateOrCreate(
 						[
 							'process_code' => $request->get('processCode'), 
-							'serial_number' => $request->get('serialNumber'),
+							'serial_number' => $serial_number,
 							'origin_group_code' => $request->get('originGroupCode')
 						],
 						[
@@ -752,14 +769,11 @@ class ProcessController extends Controller
 						]
 					);
 
-					$code_generator = CodeGenerator::where('note', '=', $request->get('originGroupCode'))->first();
-					$code_generator->index = $code_generator->index+1;
-
 					if ($request->get('category')=='FG'){
 
 						$stamp_inventory = StampInventory::updateOrCreate(
 							[
-								'serial_number' => $request->get('serialNumber'),
+								'serial_number' => $serial_number,
 								'origin_group_code' => $request->get('originGroupCode')
 							],
 							[
@@ -771,14 +785,20 @@ class ProcessController extends Controller
 
 						$stamp_inventory->save();
 					}
-
-					$plc_counter->save();
-					$code_generator->save();
-					$log_process->save();
-
-					if ($request->get('category')=='FG'){
-						//print
-
+					
+					try{
+						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+							$code_generator->save();
+							$plc_counter->save();
+							$log_process->save();
+						});				
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
 					}
 
 					$response = array(
@@ -790,15 +810,6 @@ class ProcessController extends Controller
 					return Response::json($response);
 
 				}
-			// else{
-			// 	$response = array(
-			// 		'status' => true,
-			// 		'statusCode' => 'stamp',
-			// 		'message' => 'Stamp success',
-			// 		'role' => 'Guest'
-			// 	);
-			// 	return Response::json($response);
-			// }
 			}
 			else{
 				$response = array(
