@@ -1982,7 +1982,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Weekly Report',
+                        (SELECT count(*) FROM weekly_activity_reports
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))))))
                 as jumlah_approval,
                 IF(activity_type = 'Audit',
                         (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list)) FROM production_audits
@@ -2078,7 +2086,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Weekly Report',
+                        (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0)))))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

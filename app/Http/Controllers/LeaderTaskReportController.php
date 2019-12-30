@@ -119,11 +119,17 @@ class LeaderTaskReportController extends Controller
                         and activity_list_id = id_activity_list
                         and deleted_at is null),
                     IF(activity_type = 'Cek APD',
-                        (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','2019-12')) FROM apd_checks
+                        (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Weekly Report',
+                        (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null)))))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'
@@ -223,7 +229,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Weekly Report',
+                        (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null)))))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'
