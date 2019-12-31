@@ -1226,7 +1226,7 @@ function drawChartOvertimeControl() {
         borderWidth: 0,
         groupPadding: 0.1,
         animation: false,
-        opacity: 0.2
+        opacity: 1
       },
       scatter : {
         dataLabels: {

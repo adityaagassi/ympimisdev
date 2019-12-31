@@ -130,52 +130,54 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px;">
-	<div class="row">
+<center>
+  <section class="content" style="padding-left: 0px; padding-right: 0px;">
+   <div class="row">
+      <div class="col-md-6">
+          <div class="col-md-12">
+              <div class="box box-solid">
+                  <div class="box-body">
+                      <div class="col-md-12" style="height: 600px;">
+                          <h2><center><a style="font-size: 30px; font-weight: bold;" class="text-red"> Smart Tracking Operator Reedplate</a></center></h2>
+                          <h3><center><a style="font-size: 20px; font-weight: bold;" class="text-yellow">リードプレート作業者の位置把握スマートシステム</a></center></h3>
+                           <div id="parent" style="">
+                            <img src="{{ url("images/maps_reedplate.png") }}" width="700">
+                            <div id="spotWelding" class="square"></div>
+                            <div id="benkuri" class="square"></div>
+                            <div id="bennuki" class="square"></div>
+                            <div id="pressReedplate" class="square"></div>
+                            <div id="ind" class="square"></div>
+                            <div id="la" class="square"></div>
+                            <div id="sc" class="square"></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      <div></div>
+    </div>
     <div class="col-md-6">
-     <div class="col-md-12">
-      <div class="box box-solid">
-       <div class="box-body">
-        <div class="col-md-12" style="height: 600px;">
-         <h2><center><a style="font-size: 30px; font-weight: bold;" class="text-red"> Smart Tracking Operator Reedplate</a></center></h2>
-         <h3><center><a style="font-size: 20px; font-weight: bold;" class="text-yellow">リードプレート作業者の位置把握スマートシステム</a></center></h3>
-         <div id="parent" style="">
-          <img src="{{ url("images/maps_reedplate.png") }}" width="700">
-          <div id="spotWelding" class="square"></div>
-          <div id="benkuri" class="square"></div>
-          <div id="bennuki" class="square"></div>
-          <div id="pressReedplate" class="square"></div>
-          <div id="ind" class="square"></div>
-          <div id="la" class="square"></div>
-          <div id="sc" class="square"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div></div>
-</div>
-<div class="col-md-6">
-  <div class="col-md-12">
-    <div class="box box-solid">
-      <div class="box-body">
-        <div class="col-md-12" style="height: 600px;">
-          <h2><center><a style="font-size: 30px; font-weight: bold;" class="text-Lime"> Working Time / Day</a></center></h2>
-          <h3><center><a style="font-size: 20px; font-weight: bold;" class="text-yellow">日次作業時間</a></center></h3>
-          <figure class="highcharts-figure">
-            <div id="container">
-
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="col-md-12" style="height: 600px;">
+                    <h2><center><a style="font-size: 30px; font-weight: bold;" class="text-Lime"> Working Time / Day</a></center></h2>
+                    <h3><center><a style="font-size: 20px; font-weight: bold;" class="text-yellow">日次作業時間</a></center></h3>
+                    <figure class="highcharts-figure">
+                      <div id="container">
+                      </div>
+                    </figure>
+                    </div>
+                </div>
             </div>
-          </figure>
         </div>
-      </div>
+      <div></div>
     </div>
-  </div>
-  <div></div>
-</div>
+
 
 </div>
 </section>
+</center>
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -226,42 +228,42 @@
                 }
               })
 
-              if (data[i].major == '111' && data[i].minor == '1903') {
+              if (data[i].major == '111' && data[i].minor == '1900') {
                 color = 'salmon';
 
-              } else if (data[i].major == '111' && data[i].minor == '1905') {
+              } else if (data[i].major == '111' && data[i].minor == '1901') {
                 color = 'green';
 
               }
-              else if (data[i].major == '111' && data[i].minor == '1901') {
+              else if (data[i].major == '111' && data[i].minor == '1902') {
                 color = 'red';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1900') {
+              else if (data[i].major == '111' && data[i].minor == '1903') {
                 color = 'aqua';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1902') {
+              else if (data[i].major == '111' && data[i].minor == '1904') {
                 color = 'maroon';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1906') {
+              else if (data[i].major == '111' && data[i].minor == '1905') {
                 color = 'fuchsia';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1907') {
+              else if (data[i].major == '111' && data[i].minor == '1906') {
                 color = 'olive';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1908') {
+              else if (data[i].major == '111' && data[i].minor == '1907') {
                 color = 'teal';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1909') {
+              else if (data[i].major == '111' && data[i].minor == '1908') {
                 color = 'purple';
               }
 
-              else if (data[i].major == '111' && data[i].minor == '1904') {
+              else if (data[i].major == '111' && data[i].minor == '1909') {
                 color = 'silver';
               }
 
@@ -275,7 +277,16 @@ if (data[i].reader == '4c66d0') {
 {
   $( "."+address ).remove();
   $("#benkuri").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
+}else if(data[i].reader == '#') 
+{
+  $( "."+address ).remove();
+  $("#bennuki").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
+}else if(data[i].reader == '#') 
+{
+  $( "."+address ).remove();
+  $("#pressReedplate").append('<div style="background-color: '+color+';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="'+address+'">'+name+'</div>');
 }
+
 name = ' ';
 }
 }
@@ -302,6 +313,7 @@ name = ' ';
           
           for (var i = 0; i < result.data.length; i++) {
             if (typeof result.data[i+1] == 'undefined'){
+              d.push(parseFloat(result.data[i].jam_kerja));
               all_datas.push({name: result.data[i].lokasi+'   '+'('+'Reader :'+result.data[i].reader+')', data: d});
             }
             else {
@@ -319,28 +331,7 @@ name = ' ';
             }
           }
 
-
-          // $.each(result.data, function(key, value) {
-          //   if (typeof result.data[key+1] == 'undefined') {
-          //     all_datas.push({name: value.lokasi+'   '+'('+'Reader :'+value.reader+')', data: d});
-          
-          //   } else {
-          //     if (result.data[key].lokasi != result.data[key+1].lokasi) {
-          //       d.push(parseFloat(value.jam_kerja));
-          //       all_datas.push({name: value.lokasi+'   '+'('+'Reader :'+value.reader+')', data: d});
-          //       d = [];
-          //     } else {
-          //       d.push(parseFloat(value.jam_kerja));
-          //     }
-          //   }
-
-          //   if(jQuery.inArray(value.name, name) != -1) {
-
-          //   } else {
-          //     name.push(value.name+'   '+'('+value.kode+')');
-          //   }
-          // })
-
+          console.log(all_datas);
           console.table(all_datas);
 
           Highcharts.chart('container', {

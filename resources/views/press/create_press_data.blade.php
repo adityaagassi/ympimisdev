@@ -210,52 +210,8 @@
 			</div>
 			<div class="col-xs-7">
 				<div class="row">
-					{{-- <div class="col-xs-12">
-						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
-							<thead>
-								<tr>
-									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Date</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td style="background-color: #fffcb7; text-align: center; color: black; font-size:1vw; padding:0; width: 30%;" id="date">{{ date('Y-m-d') }}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div> --}}
-					{{-- <div class="col-xs-6">
-						<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;">
-							<thead>
-								<tr>
-									<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">Product</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td style="background-color: #ffd8b7; text-align: center; color: black; font-size:1vw; padding:0;width: 30%;" id="product"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div> --}}
 				</div>
 				<div class="row">
-					<div class="col-md-12" style="padding-top: 5px;">
-						<div class="row">
-							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Date:</span>
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="date" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled value="{{ date('Y-m-d') }}">
-							</div>
-							<div class="col-xs-2">
-								<span style="font-weight: bold; font-size: 15px;">Product:</span>
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="product" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
-							</div>
-						</div>						
-					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
@@ -270,7 +226,7 @@
 							<div class="col-xs-4">
 								<input type="text" id="material_number" style="width: 100%; height: 30px; font-size:15px; text-align: center;" disabled>
 							</div>
-						</div>
+						</div>						
 					</div>
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
@@ -286,16 +242,15 @@
 							<div class="col-xs-4">
 								<input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
-						</div>						
+						</div>
 					</div>
-					
 					<div class="col-md-12" style="padding-top: 5px;">
 						<div class="row">
 							<div class="col-xs-2">
-								{{-- <span style="font-weight: bold; font-size: 15px;">Part:</span> --}}
+								<span style="font-weight: bold; font-size: 15px;">Product:</span>
 							</div>
 							<div class="col-xs-4">
-								{{-- <input type="text" id="part_name" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled> --}}
+								<input type="text" id="product" style="width: 100%; height: 30px; font-size: 15px; text-align: center;" disabled>
 							</div>
 							<div class="col-xs-2">
 								<span style="font-weight: bold; font-size: 15px;">Desc:</span>
@@ -465,14 +420,14 @@
 						<div class="modal-body table-responsive no-padding">
 							<div class="form-group">
 								<label for="exampleInputEmail1">Employee ID</label>
-								<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
+								<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Masukkan NIK" required>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="modal fade modal-danger" id="trouble-modal">
+		<div class="modal fade" id="trouble-modal">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -536,11 +491,6 @@
 	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
 	<script src="{{ url("js/buttons.print.min.js")}}"></script>
 	<script>
-		$('#injection_date').datepicker({
-			autoclose: true,
-			format: 'yyyy-mm-dd',
-			todayHighlight: true
-		});
 
 		$.ajaxSetup({
 			headers: {
@@ -608,7 +558,6 @@
 				showMeridian: false,
 				defaultTime: false
 			});
-			itemList();
 		});
 
 		$('#modalOperator').on('shown.bs.modal', function () {
@@ -630,6 +579,7 @@
 							$('#op2').html(result.employee.name);
 							$('#employee_id').val(result.employee.employee_id);
 							$('#tag').focus();
+							itemList();
 						}
 						else{
 							audio_error.play();
@@ -715,7 +665,7 @@
 		}
 
 		function createTrouble(){
-			var date = $("#date").val();
+			var date = '{{ date("Y-m-d") }}';
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();
@@ -751,7 +701,7 @@
 		}
 
 		function troubleList(){
-			var date = $("#date").val();
+			var date = '{{ date("Y-m-d") }}';
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();
@@ -906,7 +856,7 @@
 		function end(){
 			$("#end_time").html(getActualFullDate());
 
-			var date = $("#date").val();
+			var date = '{{ date("Y-m-d") }}';
 			var pic = $("#op").text();
 			var product = $("#product").val();
 			var machine = $("#machine").val();

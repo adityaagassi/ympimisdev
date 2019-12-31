@@ -106,7 +106,8 @@
 								<option value="2">Manager NOT Verified</option>
 								<option value="3">Foreman Verified</option>
 								<option value="4">Manager Verified</option>
-								<option value="5">NOT Kaizen</option>
+								<option value="5">Manager NOT Kaizen</option>
+								<option value="6">ALL NOT Kaizen</option>
 							</select>
 						</div>
 
@@ -259,7 +260,7 @@
 
 								<tr>
 									<td>3</td>
-									<td>350 - 400</td>
+									<td>351 - 400</td>
 									<td>6</td>
 									<td>Baik</td>
 									<td>Rp 10.000,-</td>
@@ -267,7 +268,7 @@
 
 								<tr>
 									<td>4</td>
-									<td>400 - 450</td>
+									<td>401 - 450</td>
 									<td>8</td>
 									<td>Sangat Baik</td>
 									<td>Rp 25,000,-</td>
@@ -404,8 +405,31 @@
 	$(window).on('pageshow', function(){
 		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
 		var user2 = <?php echo json_encode($user); ?>;
+
+		// console.log("{{ json_encode(Session::get('kz_filter')) }}");
+		var tes = "{{ json_encode(Session::get('kz_filter')) }}";
+		tes = tes.replace("[","");
+		tes = tes.replace("]","");
+		tes = tes.split("&quot;").join("");
+		temp = tes.split(",");
+
+		var tes2 = "{{ json_encode(Session::get('kz_stat')) }}";
+		tes2 = tes2.split("&quot;").join("");
+
+
+		if (temp[0] != "null") {
+			area = $("#section").val();
+			$('#section').val(temp).trigger('change');
+		}
+
+		if (tes2 != "null") {
+			stat = $("#stat").val();
+			$('#stat').val(tes2).trigger('change');
+		}
+
 		fill_table('{{ $position->position }}', area, stat, '{{ $fil }}', user2);
 	});
+
 
 	function cekDetail(id) {
 		data = {
@@ -480,10 +504,14 @@
 		if (area.length == 0) {
 			area.push("");
 		}
-		console.log(area);
-		// return false;
-
+		
 		stat = $("#stat").val();
+
+		$.ajax({
+			url: "{{ url('kaizen/session') }}",
+			data: { filter: area, filter2: stat}
+		});
+
 		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
 		var user2 = <?php echo json_encode($user); ?>;
 		fill_table('{{ $position->position }}',area,stat, '{{ $fil }}', user2);

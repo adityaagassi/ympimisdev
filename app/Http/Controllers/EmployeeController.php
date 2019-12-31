@@ -29,6 +29,7 @@ use App\EmploymentLog;
 use App\OrganizationStructure;
 use App\StandartCost;
 use App\KaizenCalculation;
+use Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -365,7 +366,7 @@ class EmployeeController extends Controller
     if (in_array($id , $this->wst)) {
 
     }
-    
+
     $sections = "select section from
     (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'chief')) d
     left join employees on d.employee_id = employees.employee_id
@@ -1905,11 +1906,14 @@ public function fetchDataKaizen()
       $kzn = $kzn->where('status','=', '-1');
     } else if ($_GET['status'] == '2') {
       $kzn = $kzn->where('manager_point_1','=', '0');
+      $kzn = $kzn->where('status','=', '1');
     } else if ($_GET['status'] == '3') {
       $kzn = $kzn->where('status','=', '1');
     } else if ($_GET['status'] == '4') {
       $kzn = $kzn->where('manager_point_1','<>', '0');
     } else if ($_GET['status'] == '5') {
+      $kzn = $kzn->where('status','=', '2');
+    } else if ($_GET['status'] == '6') {
       $kzn = $kzn->where('status','=', '0');
     }
   }
@@ -1947,7 +1951,11 @@ public function fetchDataKaizen()
       } else {
         return '<span class="label bg-yellow">Unverified</span>';
       }
-    } else {
+    }
+    else if ($kzn->status == 2) {
+      return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
+    }
+    else {
       return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
     }
 
@@ -1960,10 +1968,14 @@ public function fetchDataKaizen()
       if ($kzn->manager_point_1 != '' && $kzn->manager_point_2 != '' && $kzn->manager_point_3 != '') {
         return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
       } else {
-        if ($_GET['position'] == 'Manager' || $_GET['position'] == 'Deputy General Manager') {
-          return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
+        if ($kzn->status == 2) {
+          return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
         } else {
-          return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>'; 
+          if ($_GET['position'] == 'Manager' || $_GET['position'] == 'Deputy General Manager') {
+            return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
+          } else {
+            return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>'; 
+          }
         }
       }
     } else {
@@ -2002,19 +2014,38 @@ public function assessKaizen(Request $request)
   $id = Auth::id();
 
   if ($request->get('category') == 'manager') { // --------------- JIKA inputor Manager ----
-    try {
-      $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
-      ->first();
-      
-      $data->manager_point_1 = $request->get('nilai1');
-      $data->manager_point_2 = $request->get('nilai2');
-      $data->manager_point_3 = $request->get('nilai3');
-      $data->save();
+    if ($request->get('nilai1')) {
+      try {
+        $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
+        ->first();
 
-      return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+        $data->manager_point_1 = $request->get('nilai1');
+        $data->manager_point_2 = $request->get('nilai2');
+        $data->manager_point_3 = $request->get('nilai3');
+        $data->save();
 
-    } catch (QueryException $e) {
-      return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+        return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+
+      } catch (QueryException $e) {
+        return ['status' => 'error', 'message' => $e->getMessage()];
+        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+      }
+    } else {
+      // -------------- Jika Kaizen False -----------
+      try {
+        $data = KaizenForm::where('id','=' , $request->get('id'))
+        ->first();
+
+        $data->status = 2;
+        $data->save();
+
+        return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
+      } catch (QueryException $e) {
+        return ['status' => 'error', 'message' => $e->getMessage()];
+        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+      }
     }
   } else if ($request->get('category') == 'foreman') {    // --------------- JIKA inputor Foreman ----
     if ($request->get('nilai1')) {
@@ -2036,10 +2067,12 @@ public function assessKaizen(Request $request)
 
         $kz_nilai->save();
 
-        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+        return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
 
       } catch (QueryException $e) {
-        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        return ['status' => 'error', 'message' => $e->getMessage()];
+        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     } else {
       // ----------------  JIKA KAIZEN false ------------
@@ -2050,9 +2083,12 @@ public function assessKaizen(Request $request)
         $data->status = 0;
         $data->save();
 
-        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
+        return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+
+        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
       } catch (QueryException $e) {
-        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        return ['status' => 'error', 'message' => $e->getMessage()];
+        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     }
   }
@@ -2340,7 +2376,22 @@ public function UploadKaizenImage(Request $request)
   // }
   
   // $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
+  return redirect('/index/upload_kaizen')->with('status', 'Upload Image Successfully');
 }
+}
+
+public function setSession(Request $request)
+{
+  // Session::put('kz_filter', $request->input('filter'));
+
+  // Session::set('kz_filter', $request->input('filter')); 
+  session(['kz_filter' => $request->input('filter'), 'kz_stat' => $request->input('filter2')]);
+  // session('kz_stat', $request->input('stat'));
+  $data = [];
+  foreach (Session::get('kz_filter') as $key) {
+    $data[] = $key;
+  }
+  return Session::all();
 }
 
 }

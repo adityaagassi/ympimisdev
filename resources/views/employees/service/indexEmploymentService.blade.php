@@ -512,7 +512,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 										<tr>
 											<td>3</td>
-											<td>350 - 400</td>
+											<td>351 - 400</td>
 											<td>6</td>
 											<td>Baik</td>
 											<td>Rp 10.000,-</td>
@@ -520,7 +520,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 										<tr>
 											<td>4</td>
-											<td>400 - 450</td>
+											<td>401 - 450</td>
 											<td>8</td>
 											<td>Sangat Baik</td>
 											<td>Rp 25,000,-</td>

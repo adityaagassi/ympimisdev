@@ -130,7 +130,7 @@
 								</table>
 							</div>
 						</div>
-						<center <?php if (Request::segment(5) == 'manager') echo "style='display: none'" ?> ><input type="checkbox" checked data-toggle="toggle" data-on="Kaizen" data-off="Not Kaizen" data-onstyle="success" data-offstyle="danger" data-width="300" id="kz_stat"></center>
+						<center><input type="checkbox" checked data-toggle="toggle" data-on="Kaizen" data-off="Not Kaizen" data-onstyle="success" data-offstyle="danger" data-width="300" id="kz_stat"></center>
 					</div>
 				</div>
 			</div>
@@ -255,6 +255,9 @@
 								</tr>
 							</tfoot>
 						</table>
+						Note :
+						<textarea class="form-control" placeholder="Write a note. . ."></textarea>
+						<button class="btn btn-primary"><i class="fa fa-paper-plane-o"></i> Send</button>
 					</div>
 				</div>
 			</div>
@@ -291,7 +294,7 @@
 
 								<tr>
 									<td>3</td>
-									<td>350 - 400</td>
+									<td>351 - 400</td>
 									<td>6</td>
 									<td>Baik</td>
 									<td>Rp 10.000,-</td>
@@ -299,7 +302,7 @@
 
 								<tr>
 									<td>4</td>
-									<td>400 - 450</td>
+									<td>401 - 450</td>
 									<td>8</td>
 									<td>Sangat Baik</td>
 									<td>Rp 25,000,-</td>
@@ -600,7 +603,7 @@
 			}
 
 			$.post('{{ url("assess/kaizen") }}', data, function(result) {
-
+				window.history.go(-1);
 			})
 		}
 
@@ -610,7 +613,7 @@
 				category : "{{ Request::segment(5) }}"
 			}
 			$.post('{{ url("assess/kaizen") }}', data, function(result) {
-
+				window.history.go(-1);
 			})
 		}
 

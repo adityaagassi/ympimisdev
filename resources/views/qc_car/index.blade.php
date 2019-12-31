@@ -69,7 +69,6 @@ table.table-bordered > tfoot > tr > th{
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
           <table id="example1" class="table table-bordered table-striped table-hover">
-            <!-- <?php var_dump($users[0]->department_name); ?> -->
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>No CPAR</th>
