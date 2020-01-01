@@ -61,6 +61,7 @@ class WorkshopController extends Controller{
 	}
 
 	public function exportListWJO(Request $request){
+
 		$workshop_job_orders = WorkshopJobOrder::leftJoin(db::raw('(select employee_id, name from employee_syncs) as approver'), 'approver.employee_id', '=', 'workshop_job_orders.approved_by')
 		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'workshop_job_orders.operator')
 		->leftJoin(db::raw('(SELECT process_code, process_name FROM processes where remark = "workshop") as processes'), 'processes.process_code', '=', 'workshop_job_orders.remark');
@@ -137,15 +138,58 @@ class WorkshopController extends Controller{
 			'approver.name as approver_name',
 			'pic.name as pic_name'
 		)
-		->get();
+		->get()->toArray();
 
-
-		$data = array(
-			'workshop_job_orders' => $workshop_job_orders
+		$wjos_arr[] = array(
+			'created_at',
+			'sub_section',
+			'item_number',
+			'item_name',
+			'quantity',
+			'request_date',
+			'priority',
+			'type',
+			'material',
+			'problem_description',
+			'process_name',
+			'target_date',
+			'difficulty',
+			'main_process',
+			'rating',
+			'note',
+			'drawing_number',
+			'approver_name',
+			'pic_name'
 		);
-		Excel::create('List WJO', function($excel) use ($data){
-			$excel->sheet('WJO', function($sheet) use ($data) {
-				return $sheet->loadView('workshop.wjo_excel', $data);
+
+		foreach ($workshop_job_orders as $key) {
+			$wjos_arr[] = array(
+				'created_at' => $key['created_at'],
+				'sub_section' => $key['sub_section'],
+				'item_number' => $key['item_number'],
+				'item_name' => $key['item_name'],
+				'quantity' => $key['quantity'],
+				'request_date' => $key['request_date'],
+				'priority' => $key['priority'],
+				'type' => $key['type'],
+				'material' => $key['material'],
+				'problem_description' => $key['problem_description'],
+				'process_name' => $key['process_name'],
+				'target_date' => $key['target_date'],
+				'difficulty' => $key['difficulty'],
+				'main_process' => $key['main_process'],
+				'rating' => $key['rating'],
+				'note' => $key['note'],
+				'drawing_number' => $key['drawing_number'],
+				'approver_name' => $key['approver_name'],
+				'pic_name' => $key['pic_name']
+			);
+		}
+
+		Excel::create('WJO Liist', function($excel) use ($wjos_arr){
+			$excel->setTitle('WJO List');
+			$excel->sheet('WJO List', function($sheet) use ($wjos_arr){
+				$sheet->fromArray($wjos_arr, null, 'A1', false, false);
 			});
 		})->download('xlsx');
 	}
