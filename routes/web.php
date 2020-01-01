@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 
 /*
@@ -1001,6 +1001,7 @@ Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
 Route::get('fetch/kaizen/resume', 'EmployeeController@fetchKaizenResume');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
+Route::get('kaizen/session', 'EmployeeController@setSession');
 
 //START CLINIC
 Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
@@ -1019,8 +1020,12 @@ Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 
 //WORKSHOP
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
+Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
 Route::post('workshop/create_wjo', 'WorkshopController@createWJO');
-
+Route::get('workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
+Route::get('workshop/reject_urgent/{id}', 'WorkshopNotificationController@rejectUrgent');
+Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
+Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
 //END WORKSHOP
 
 
@@ -1923,8 +1928,6 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/close1/{id}', 'QcReportController@close1');
 	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
 	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
-
-
 });
 
 Route::get('index/request_qa', 'QcRequestController@index');
@@ -1936,9 +1939,12 @@ Route::get('index/request_qa/fetchDataTable', 'QcRequestController@fetchDataTabl
 Route::get('index/request_qa/fetch_item/{id}', 'QcRequestController@fetch_item');
 Route::post('index/request_qa/create_item', 'QcRequestController@create_item');
 Route::post('index/request_qa/edit_item', 'QcRequestController@edit_item');
+Route::post('index/request_qa/update_detail/{id}', 'QcRequestController@update_detail');
 Route::get('index/request_qa/edit_item', 'QcRequestController@fetch_item_edit');
 Route::post('index/request_qa/delete_item', 'QcRequestController@delete_item');
-
+Route::get('index/request_qa/print/{id}', 'QcRequestController@print_report');
+Route::post('index/request_qa/approval/{id}', 'QcRequestController@approval');
+Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi');
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');

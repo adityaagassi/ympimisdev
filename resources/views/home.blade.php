@@ -344,8 +344,13 @@
                     <tr>
                         <td>
                             <a href="{{ url("index/workshop/create_wjo") }}">
-                                <i class="fa fa-caret-right"></i> Create WJO
+                                <i class="fa fa-caret-right"></i> Create WJO ()
                             </a>
+                            <br>
+                            <a href="{{ url("index/workshop/list_wjo") }}">
+                                <i class="fa fa-caret-right"></i> List WJO ()
+                            </a>
+                            <br>
                         </td>
                     </tr>
                 </tbody>

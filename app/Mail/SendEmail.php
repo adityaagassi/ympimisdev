@@ -114,5 +114,18 @@ class SendEmail extends Mailable
         if($this->remark == 'weekly_report'){
             return $this->from('ympimis@gmail.com')->subject('Weekly Activity Report (??)')->view('mails.weekly_report');
         }
+        if($this->remark == 'urgent_wjo'){
+            if($this->data[0]->attachment != null){
+                return $this->from('ympimis@gmail.com')
+                ->subject('Urgent Workshop Job Order (??)')
+                ->view('mails.urgent_wjo')
+                ->attach(public_path('workshop/'.$this->data[0]->attachment));
+            }else{
+                return $this->from('ympimis@gmail.com')
+                ->subject('Urgent Workshop Job Order (??)')
+                ->view('mails.urgent_wjo');
+            }
+
+        }
     }
 }
