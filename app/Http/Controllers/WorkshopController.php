@@ -147,10 +147,7 @@ class WorkshopController extends Controller{
 			$excel->sheet('WJO', function($sheet) use ($data) {
 				return $sheet->loadView('workshop.wjo_excel', $data);
 			});
-		})->export('xlsx');
-
-
-
+		})->download('xlsx');
 	}
 
 	public function createWJO(Request $request){
