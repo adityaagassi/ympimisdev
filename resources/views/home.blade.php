@@ -103,7 +103,7 @@
                                 <i class="fa fa-caret-right"></i> Monthly OT & MP Resume (月次残業・要員まとめ)
                             </a>
                             <br>
-                            <a href="http://172.17.128.4/myhris/home/overtime_form">
+                            <a href="{{ url("information_board") }}">
                                 <i class="fa fa-caret-right"></i> Create OT Form (残業申請書)
                             </a>
                         </td>
@@ -197,11 +197,11 @@
                             <span style="font-weight: bold;">Internet of Things (モノのインターネット)</span>
                             <br>
                             <a href="{{ url("index/reedplate/map") }}">
-                                <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate
+                                <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate ()
                             </a>
                             <br>
                             <a href="{{ url("index/index_map") }}">
-                                <i class="fa fa-caret-right"></i> Temperature Map
+                                <i class="fa fa-caret-right"></i> Temperature Map ()
                             </a>                           
                         </td>
                     </tr>
@@ -347,10 +347,7 @@
                                 <i class="fa fa-caret-right"></i> Create WJO ()
                             </a>
                             <br>
-                            <a href="{{ url("index/workshop/list_wjo") }}">
-                                <i class="fa fa-caret-right"></i> List WJO ()
-                            </a>
-                            <br>
+                          
                         </td>
                     </tr>
                 </tbody>

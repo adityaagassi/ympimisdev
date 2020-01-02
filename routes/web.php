@@ -40,6 +40,10 @@ Route::get('/machinery_monitoring', function () {
 	));
 });
 
+Route::get('/information_board', function () {
+	return view('information_board');
+});
+
 Auth::routes();
 
 Route::get('/', function () {
@@ -843,6 +847,22 @@ Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentPro
 Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShipmentProgressDetail');
 
+Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
+	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
+	Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
+	Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
+});
+
+Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
+Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
+Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
+Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
+Route::get('update/workshop/reject_urgent/{id}', 'WorkshopNotificationController@rejectUrgent');
+Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
+Route::get('fetch/workshop/assign_form', 'WorkshopController@fetchAssignForm');
+Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
+Route::get('download/workshop/attachment', 'WorkshopController@downloadAttachment');
+
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
 Route::get('scan/middle/buffing/kensa/material', 'MiddleProcessController@fetchBuffing');
@@ -1016,17 +1036,6 @@ Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 //END CLINIC
-
-
-//WORKSHOP
-Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
-Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
-Route::post('workshop/create_wjo', 'WorkshopController@createWJO');
-Route::get('workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
-Route::get('workshop/reject_urgent/{id}', 'WorkshopNotificationController@rejectUrgent');
-Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
-Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
-//END WORKSHOP
 
 
 //INITIAL
