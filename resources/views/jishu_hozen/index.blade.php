@@ -232,7 +232,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" name="inputdate" id="inputdate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
+				  <input type="text" name="inputdate" id="inputdate" class="form-control" placeholder="Select Date" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -308,7 +308,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" name="editdate" id="editdate" class="form-control" readonly required="required" title="">
+				  <input type="text" name="editdate" id="editdate" class="form-control" placeholder="Select Date" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -407,13 +407,13 @@
 		autoclose: true,
 	});
 
-	$('#inputProductionDate').datepicker({
+	$('#inputdate').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
       todayHighlight: true
     });
     
-    $('#editProductionDate').datepicker({
+    $('#editdate').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
       todayHighlight: true

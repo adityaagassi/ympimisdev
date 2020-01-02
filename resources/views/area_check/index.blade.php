@@ -265,8 +265,6 @@
       </div>
       <div class="modal-body">
       	<div class="box-body">
-        <div>
-        	{{-- <form role="form" method="post" action="{{url('index/interview/create_participant/'.$interview_id)}}" enctype="multipart/form-data"> --}}
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
@@ -321,12 +319,10 @@
           </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           	<div class="modal-footer">
-            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-            <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+              <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+              <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+            </div>
           </div>
-          </div>
-        {{-- </form> --}}
-        </div>
       </div>
     </div>
   </div>

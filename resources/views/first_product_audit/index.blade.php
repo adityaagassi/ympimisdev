@@ -173,6 +173,7 @@
 												<th>Proses</th>
 												<th>Jenis</th>
 												<th>Date</th>
+												<th>Month</th>
 												<th>Auditor</th>
 												<th>Foto Aktual</th>
 												<th>Note</th>
@@ -190,6 +191,7 @@
 												<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
 												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
 												<td>{{$first_product_audit_details->date}}</td>
+												<td>{{$first_product_audit_details->month}}</td>
 												<td>{{$first_product_audit_details->auditor}}</td>
 												<td><?php echo $first_product_audit_details->foto_aktual ?></td>
 												<td><?php echo $first_product_audit_details->note ?></td>
@@ -223,6 +225,7 @@
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -293,6 +296,15 @@
 	              <label for="">Date</label>
 				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
 	            </div>
+	            <div class="form-group">
+	            	<label for="">Month</label>
+					<div class="input-group date">
+						<div class="input-group-addon bg-white">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="inputmonth"name="inputmonth" placeholder="Select Month" autocomplete="off">
+					</div>
+				</div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
 		              <select class="form-control select2" name="pic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
@@ -369,6 +381,15 @@
 	              <label for="">Date</label>
 				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Enter Leader" readonly>
 	            </div>
+	            <div class="form-group">
+	            	<label for="">Month</label>
+					<div class="input-group date">
+						<div class="input-group-addon bg-white">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="editmonth"name="editmonth" placeholder="Select Month" autocomplete="off">
+					</div>
+				</div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
 		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
@@ -622,6 +643,7 @@
 		var proses = $('#inputproses').val();
 		var jenis = $('#inputjenis').val();
 		var date = $('#inputdate').val();
+		var month = $('#inputmonth').val();
 		var no_seri = $('#inputno_seri').val();
 		var judgement = $('input[id="inputjudgement"]:checked').val();
 		var pic = $('#inputpic').val();
@@ -635,6 +657,7 @@
 			proses:proses,
 			jenis:jenis,
 			date:date,
+			month:month,
 			no_seri:no_seri,
 			judgement:judgement,
 			pic:pic,
@@ -667,6 +690,7 @@
                   var data = data.data;
                   console.log(data);
                   $("#editpic").val(data.pic).trigger('change.select2');
+                  $("#editmonth").val(data.month);
                   $("#editnote").html(CKEDITOR.instances.editnote.setData(data.note));
                   $("#editdate").val(data.date);
                   $("#editfoto_aktual").html(CKEDITOR.instances.editfoto_aktual.setData(data.foto_aktual));

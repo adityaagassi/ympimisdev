@@ -10,7 +10,7 @@ class FirstProductAuditDetail extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'activity_list_id','first_product_audit_id','date','auditor', 'foto_aktual', 'note','pic', 'leader', 'foreman', 'created_by'
+		'activity_list_id','first_product_audit_id','date','month','auditor', 'foto_aktual', 'note','pic', 'leader', 'foreman', 'created_by'
 	];
 
 	public function activity_lists()

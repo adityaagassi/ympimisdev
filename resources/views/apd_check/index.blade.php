@@ -452,8 +452,6 @@
 		startView: "months", 
 		minViewMode: "months",
 		autoclose: true,
-		
-
 	});
 
 	$('.datepicker2').datepicker({

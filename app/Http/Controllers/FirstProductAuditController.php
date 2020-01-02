@@ -226,7 +226,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -280,7 +280,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -314,6 +314,7 @@ class FirstProductAuditController extends Controller
                     'activity_list_id' => $request->get('activity_list_id'),
                     'first_product_audit_id' => $request->get('first_product_audit_id'),
                     'date' => $request->get('date'),
+                    'month' => $request->get('inputmonth'),
                     'auditor' => $request->get('auditor'),
                     'foto_aktual' => $request->get('foto_aktual'),
                     'note' => $request->get('note'),
@@ -346,6 +347,7 @@ class FirstProductAuditController extends Controller
             $data = array('first_product_audit_detail_id' => $detail->id,
                           'first_product_audit_id' => $detail->first_product_audit_id,
                           'date' => $detail->date,
+                          'month' => $detail->month,
                           'proses' => $detail->first_product_audit->proses,
                           'jenis' => $detail->first_product_audit->jenis,
                           'auditor' => $detail->auditor,
@@ -389,6 +391,7 @@ class FirstProductAuditController extends Controller
 
                   $first_product_audit_detail = FirstProductAuditDetail::find($first_product_audit_detail_id);
                   $first_product_audit_detail->date = $request->get('editdate');
+                  $first_product_audit_detail->month = $request->get('editmonth');
                   $first_product_audit_detail->pic = $request->get('editpic');
                   $first_product_audit_detail->foto_aktual = $request->get('editfoto_aktual');
                   $first_product_audit_detail->note = $request->get('editnote');
@@ -640,7 +643,7 @@ class FirstProductAuditController extends Controller
                     $laktivitas->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            
@@ -695,7 +698,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -749,7 +752,7 @@ class FirstProductAuditController extends Controller
         $leader2 = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -1102,7 +1105,7 @@ class FirstProductAuditController extends Controller
                     $laktivitas->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            
