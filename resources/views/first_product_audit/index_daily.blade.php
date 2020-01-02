@@ -278,7 +278,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create First Product Audit</b></h4>
+        <h4 class="modal-title" align="center"><b>Create Daily Audit Cek Produk Pertama</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -355,7 +355,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit First Product Audit</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Daily Audit Cek Produk Pertama</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
