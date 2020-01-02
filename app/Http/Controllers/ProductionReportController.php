@@ -234,7 +234,7 @@ class ProductionReportController extends Controller
                 COALESCE((select count(DISTINCT(leader)) as jumlah_first_product_audit
                 from first_product_audit_details
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(first_product_audit_details.month,'%Y-%m') = '".$bulan."'
+                    where month = '".$bulan."'
                     and  actlist.frequency = 'Monthly'
                                 and first_product_audit_details.leader = '".$dataleader."'
                                 and first_product_audit_details.deleted_at is null 
@@ -244,7 +244,7 @@ class ProductionReportController extends Controller
         COALESCE((select count(DISTINCT(leader)) as jishu_hozens
                 from jishu_hozens
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(jishu_hozens.month,'%Y-%m') = '".$bulan."'
+                    where month = '".$bulan."'
                     and  actlist.frequency = 'Monthly'
                                 and jishu_hozens.leader = '".$dataleader."'
                                 and jishu_hozens.deleted_at is null 
@@ -653,7 +653,7 @@ class ProductionReportController extends Controller
             (select count(DISTINCT(first_product_audit_details.leader)) as jumlah_first_product_audit
                 from first_product_audit_details
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(first_product_audit_details.month,'%Y-%m') = '".$week_date."'
+                    where month = '".$week_date."'
                                 and first_product_audit_details.leader = '".$leader_name."'
                                 and actlist.id = id_activity
                                 and actlist.department_id = '".$id."'
@@ -662,7 +662,7 @@ class ProductionReportController extends Controller
             (select count(DISTINCT(jishu_hozens.leader)) as jumlah_jishu_hozen
                 from jishu_hozens
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(jishu_hozens.month,'%Y-%m') = '".$week_date."'
+                    where month = '".$week_date."'
                                 and jishu_hozens.leader = '".$leader_name."'
                                 and actlist.id = id_activity
                                 and actlist.department_id = '".$id."'
