@@ -122,6 +122,9 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Dies Value</th>
 				                <th>Running Punch</th>
 				                <th>Running Dies</th>
+				                @if($role_code == 'PROD' ||$role_code == 'MIS')
+				                <th>Action</th>
+				                @endif
 				              </tr>
 				            </thead>
 				            <tbody id="tableTroubleList">
@@ -143,6 +146,13 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$kanagata_lifetime->die_value}}</td>
 				                <td>{{$kanagata_lifetime->punch_total}}</td>
 				                <td>{{$kanagata_lifetime->die_total}}</td>
+				                @if($role_code == 'PROD' ||$role_code == 'MIS')
+				                <td>
+				                	<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_kanagata('{{ url("index/kanagata/update") }}','{{ $kanagata_lifetime->kanagata_lifetime_id }}');">
+						               Edit
+						            </button>
+					        	</td>
+				                @endif
 				              </tr>
 				              <?php $no++ ?>
 				              @endforeach
@@ -164,6 +174,9 @@ table.table-bordered > tfoot > tr > th{
 				                <th></th>
 				                <th></th>
 				                <th></th>
+				                @if($role_code == 'PROD' ||$role_code == 'MIS')
+				                <th></th>
+				                @endif
 				              </tr>
 				            </tfoot>
 				          </table>
@@ -175,11 +188,89 @@ table.table-bordered > tfoot > tr > th{
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		            <span aria-hidden="true">&times;</span>
+		          </button>
+		          <h4 class="modal-title" align="center"><b>Edit Kanagata Lifetime</b></h4>
+		        </div>
+				<div class="modal-body">
+			      	<div class="box-body">
+			          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+			            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			            	<input type="hidden" name="url_edit" id="url_edit" class="form-control" value="" readonly required="required" title="">
+				            <div class="form-group">
+				              <label for="">Date</label>
+							  <input type="text" name="editdate" id="editdate" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label for="">PIC</label>
+							  <input type="text" name="editpic" id="editpic" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Machine</label>
+				              <input type="text" name="editmachine" id="editmachine" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Product</label>
+				              <input type="text" name="editproduct" id="editproduct" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Material</label>
+				              <input type="text" name="editmaterial_number" id="editmaterial_number" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Part</label>
+				              <input type="text" name="editpart" id="editpart" class="form-control" value="" readonly required="required" title="">
+				            </div>
+			            </div>
+			            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			            	
+				            <div class="form-group">
+				              <label>Punch Number</label>
+				              <input type="text" name="editpunch_number" id="editpunch_number" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Punch Value</label>
+				              <input type="text" name="editpunch_value" id="editpunch_value" class="form-control" value="" readonly required="required" title="" placeholder="Enter Punch Value">
+				            </div>
+				            <div class="form-group">
+				              <label>Punch Total</label>
+				              <input type="text" name="editpunch_total" id="editpunch_total" class="form-control" value="" required="required" title="" placeholder="Enter Punch Total">
+				            </div>
+				            <div class="form-group">
+				              <label>Dies Number</label>
+				              <input type="text" name="editdies_number" id="editdies_number" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Dies Value</label>
+				              <input type="text" name="editdies_value" id="editdies_value" class="form-control" value="" required="required" readonly title="" placeholder="Enter Dies Value">
+				            </div>
+				            <div class="form-group">
+				              <label>Dies Total</label>
+				              <input type="text" name="editdies_total" id="editdies_total" class="form-control" value="" required="required" title="" placeholder="Enter Dies Total">
+				            </div>
+			            </div>
+				          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				          	<div class="modal-footer">
+				              <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+				              <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
+				            </div>
+				          </div>
+			          </div>
+			      </div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 
 
 @section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -208,6 +299,81 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 	});
+
+	function edit_kanagata(url,id) {
+    	$.ajax({
+                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?id=" + id,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  // obj = JSON.parse(json);
+                  console.log(data.data);
+                  var data = data.data;
+                  $("#url_edit").val(url+'/'+id);
+                  $("#editdate").val(data.date);
+                  $("#editpic").val(data.pic_name);
+                  $("#editmachine").val(data.machine);
+                  $("#editproduct").val(data.product);
+                  $("#editmaterial_number").val(data.material_number);
+                  $("#editpart").val(data.part);
+                  $("#editpunch_number").val(data.punch_number);
+                  $("#editpunch_total").val(data.punch_total);
+                  $("#editpunch_value").val(data.punch_value);
+                  $("#editdies_number").val(data.die_number);
+                  $("#editdies_value").val(data.die_value);
+                  $("#editdies_total").val(data.die_total);
+                }
+            });
+      // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
+      // console.log($('#formedit2').attr("action"));
+    }
+
+    function update(){
+		var punch_total = $('#editpunch_total').val();
+		var die_total = $('#editdies_total').val();
+		var url = $('#url_edit').val();
+
+		var data = {
+			punch_total:punch_total,
+			die_total:die_total
+		}
+		console.table(data);
+		
+		$.post(url, data, function(result, status, xhr){
+			if(result.status){
+				$("#edit-modal").modal('hide');
+				// $('#example1').DataTable().ajax.reload();
+				// $('#example2').DataTable().ajax.reload();
+				openSuccessGritter('Success','Kanagata Lifetime has been updated');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Update Kanagata Lifetime Failed');
+			}
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
 
 	jQuery(document).ready(function() {
 		$('#example1 tfoot th').each( function () {

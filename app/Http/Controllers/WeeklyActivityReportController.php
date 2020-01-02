@@ -53,22 +53,16 @@ class WeeklyActivityReportController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
-        $pic = DB::select($querypic);
-        $pic2 = DB::select($querypic);
-
     	$data = array('weekly_report' => $weekly_report,
                       'subsection' => $subsection,
                       'subsection2' => $subsection2,
                       'subsection3' => $subsection3,
-    				  'departments' => $departments,
-    				  'activity_name' => $activity_name,
+            				  'departments' => $departments,
+            				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'report_type' => $this->report_type,
                       'report_type2' => $this->report_type,
-    				  'id' => $id,
-    				  'pic' => $pic,
-                      'pic2' => $pic2,
+            				  'id' => $id,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id_departments' => $id_departments);
@@ -93,10 +87,6 @@ class WeeklyActivityReportController extends Controller
         $sub_section = DB::select($querySubSection);
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
-
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
-        $pic = DB::select($querypic);
-        $pic2 = DB::select($querypic);
 
         if(strlen($request->get('month')) != null){
             $year = substr($request->get('month'),0,4);
@@ -138,8 +128,6 @@ class WeeklyActivityReportController extends Controller
                       'report_type' => $this->report_type,
                       'report_type2' => $this->report_type,
                       'id' => $id,
-                      'pic' => $pic,
-                      'pic2' => $pic2,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id_departments' => $id_departments);

@@ -60,6 +60,34 @@ table.table-bordered > tfoot > tr > th{
     <div class="col-xs-12">
       <div class="box">
         <div class="box-body">
+            <div class="box-header">
+              <h3 class="box-title">Filter</h3>
+            </div>
+            <form role="form" method="post" action="{{url('index/production_report/approval_list_filter/'.$id.'/'.$leader_name)}}">
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />
+              <div class="col-md-12 col-md-offset-4">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="input-group date">
+                      <div class="input-group-addon bg-white">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Select Month" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-md-offset-4">
+                <div class="col-md-4">
+                  <div class="form-group pull-right">
+                    {{-- <a href="{{ url('index/production_report/approval_list/'.$id) }}" class="btn btn-warning">Back</a> --}}
+                    <a href="{{ url('index/production_report/approval_list/'.$id.'/'.$leader_name) }}" class="btn btn-danger">Clear</a>
+                    <button type="submit" class="btn btn-primary col-sm-14">Search</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
@@ -134,6 +162,15 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
+
+      $('.datepicker').datepicker({
+        autoclose: true,
+        format: "yyyy-mm",
+        startView: "months", 
+        minViewMode: "months",
+        autoclose: true,
+      });
+
       $('#example1 tfoot th').each( function () {
         var title = $(this).text();
         $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );

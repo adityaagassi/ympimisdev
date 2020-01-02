@@ -1563,7 +1563,8 @@ Route::get('index/production_report/fetchDetailReportMonthly/{id}', 'ProductionR
 Route::get('index/production_report/fetchDetailReportDaily/{id}', 'ProductionReportController@fetchDetailReportDaily');
 Route::get('index/production_report/approval/{id}', 'ProductionReportController@approval');
 Route::get('index/production_report/approval_list/{id}/{leader_name}', 'ProductionReportController@approval_list');
-Route::get('index/production_report/approval_detail/{activity_list_id}', 'ProductionReportController@approval_detail');
+Route::post('index/production_report/approval_list_filter/{id}/{leader_name}', 'ProductionReportController@approval_list_filter');
+Route::get('index/production_report/approval_detail/{activity_list_id}/{month}', 'ProductionReportController@approval_detail');
 
 
 //Activity List

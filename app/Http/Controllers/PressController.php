@@ -613,7 +613,7 @@ class PressController extends Controller
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
-		$kanagata_lifetime = db::select("select *
+		$kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
 			from mp_kanagata_logs
 			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
 			join employees on employee_groups.employee_id = employees.employee_id
@@ -622,6 +622,7 @@ class PressController extends Controller
 
 		$data = array(
                 	'process' => $process,
+                	'role_code' => Auth::user()->role_code,
                 	'kanagata_lifetime' => $kanagata_lifetime,
                 	'machine' => $machine);
 		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
@@ -655,7 +656,7 @@ class PressController extends Controller
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
-		$kanagata_lifetime = db::select("select *
+		$kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
 			from mp_kanagata_logs
 			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
 			join employees on employee_groups.employee_id = employees.employee_id
@@ -665,8 +666,83 @@ class PressController extends Controller
 
 		$data = array(
                 	'process' => $process,
+                	'role_code' => Auth::user()->role_code,
                 	'kanagata_lifetime' => $kanagata_lifetime,
                 	'machine' => $machine);
 		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
 	}
+
+	function getkanagatalifetime(Request $request)
+    {
+          try{
+            $detail = MpKanagataLog::find($request->get("id"));
+            $data = array('kanagata_log_id' => $detail->id,
+            			  'date' => $detail->date,
+                          'pic' => $detail->pic,
+                          'pic_name' => $detail->employee_pic->name,
+                          'shift' => $detail->shift,
+                          'product' => $detail->product,
+                          'material_number' => $detail->material_number,
+                          'part' => $detail->material->material_name,
+                          'process' => $detail->process,
+                      	  'machine' => $detail->machine,
+                      		'punch_number' => $detail->punch_number,
+                      		'die_number' => $detail->die_number,
+                      		'punch_value' => $detail->punch_value,
+                      		'die_value' => $detail->die_value,
+                      		'punch_total' => $detail->punch_total,
+                      		'die_total' => $detail->die_total,
+                      		'start_time' => $detail->start_time,
+                      		'end_time' => $detail->end_time);
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    function update(Request $request,$id)
+    {
+        try{
+                $kanagata_lifetime = MpKanagataLog::find($id);
+                $kanagata_lifetime->punch_total = $request->get('punch_total');
+                $kanagata_lifetime->die_total = $request->get('die_total');
+                $kanagata_lifetime->save();
+
+            // return redirect('index/interview/details/'.$interview_id)
+            //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
+               $response = array(
+                'status' => true,
+              );
+              // return redirect('index/interview/details/'.$interview_id)
+              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
 }
