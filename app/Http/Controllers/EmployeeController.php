@@ -2024,12 +2024,12 @@ public function assessKaizen(Request $request)
         $data->manager_point_3 = $request->get('nilai3');
         $data->save();
 
-        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
-        return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
 
       } catch (QueryException $e) {
-        return ['status' => 'error', 'message' => $e->getMessage()];
-        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'error', 'message' => $e->getMessage()];
+        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     } else {
       // -------------- Jika Kaizen False -----------
@@ -2040,11 +2040,11 @@ public function assessKaizen(Request $request)
         $data->status = 2;
         $data->save();
 
-        return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
-        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
       } catch (QueryException $e) {
-        return ['status' => 'error', 'message' => $e->getMessage()];
-        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'error', 'message' => $e->getMessage()];
+        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     }
   } else if ($request->get('category') == 'foreman') {    // --------------- JIKA inputor Foreman ----
@@ -2067,12 +2067,12 @@ public function assessKaizen(Request $request)
 
         $kz_nilai->save();
 
-        return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
-        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
 
       } catch (QueryException $e) {
-        return ['status' => 'error', 'message' => $e->getMessage()];
-        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'error', 'message' => $e->getMessage()];
+        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     } else {
       // ----------------  JIKA KAIZEN false ------------
@@ -2083,12 +2083,12 @@ public function assessKaizen(Request $request)
         $data->status = 0;
         $data->save();
 
-        return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+        // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
 
-        // return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
+        return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
       } catch (QueryException $e) {
-        return ['status' => 'error', 'message' => $e->getMessage()];
-        // return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+        // return ['status' => 'error', 'message' => $e->getMessage()];
+        return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
       }
     }
   }
