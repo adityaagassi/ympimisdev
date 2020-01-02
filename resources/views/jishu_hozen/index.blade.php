@@ -232,7 +232,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" name="inputdate" id="inputdate" class="form-control" placeholder="Select Date" required="required" title="">
+				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -308,7 +308,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" name="editdate" id="editdate" class="form-control" placeholder="Select Date" required="required" title="">
+				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Enter Leader" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>

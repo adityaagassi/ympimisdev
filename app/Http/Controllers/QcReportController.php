@@ -24,6 +24,7 @@ use App\Destination;
 use App\Vendor;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 // use App\QcTtdCoba;
 
 
@@ -741,12 +742,14 @@ class QcReportController extends Controller
       $tglto = $request->get('tglto');
 
       if ($tglfrom == "") {
-          $tglfrom = $tahun."-01";
+          $tglfrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
       }
 
       if ($tglto == "") {
-          $tglto = $tahun."-12";
+          $tglto = date('Y-m', strtotime(carbon::now()));
       }
+
+      
 
       // $files=array();
 
@@ -772,7 +775,7 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan order by month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -797,11 +800,11 @@ class QcReportController extends Controller
       $tglto = $request->get('tglto');
 
       if ($tglfrom == "") {
-          $tglfrom = $tahun."-01";
+          $tglfrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
       }
 
       if ($tglto == "") {
-          $tglto = $tahun."-12";
+          $tglto = date('Y-m', strtotime(carbon::now()));
       }
 
       // $files=array();
