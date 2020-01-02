@@ -142,25 +142,29 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$prod_result->start_time}}</td>
 				                <td>{{$prod_result->end_time}}</td>
 				                <td><?php 
+				               		// echo $prod_result->lepas_molding;
 					                $timesplitlepmold=explode(':',$prod_result->lepas_molding);
-					                $minlepmold=($timesplitlepmold[0]*60)+($timesplitlepmold[1])+($timesplitlepmold[2]>30?1:0); ?>
-					              {{$minlepmold}}</td>
+					                // echo $timesplitlepmold[0]*60;
+					                // echo $timesplitlepmold[1];
+					                $minlepmold=($timesplitlepmold[0]*60)+($timesplitlepmold[1]); ?>
+					              {{$minlepmold}}.{{($timesplitlepmold[2])}}
+					          </td>
 				                <td><?php 
 					                $timesplitpasmold=explode(':',$prod_result->pasang_molding);
-					                $minpasmold=($timesplitpasmold[0]*60)+($timesplitpasmold[1])+($timesplitpasmold[2]>30?1:0); ?>
-					              {{$minpasmold}}</td>
+					                $minpasmold=($timesplitpasmold[0]*60)+($timesplitpasmold[1]); ?>
+					              {{$minpasmold}}.{{$timesplitpasmold[2]}}</td>
 				                <td><?php 
 					                $timesplitproctime=explode(':',$prod_result->process_time);
-					                $minproctime=($timesplitproctime[0]*60)+($timesplitproctime[1])+($timesplitproctime[2]>30?1:0); ?>
-					              {{$minproctime}}</td>
+					                $minproctime=($timesplitproctime[0]*60)+($timesplitproctime[1]); ?>
+					              {{$minproctime}}.{{$timesplitproctime[2]}}</td>
 				                <td><?php 
 					                $timesplitkensatime=explode(':',$prod_result->kensa_time);
-					                $minkensatime=($timesplitkensatime[0]*60)+($timesplitkensatime[1])+($timesplitkensatime[2]>30?1:0); ?>
-					              {{$minkensatime}}</td>
+					                $minkensatime=($timesplitkensatime[0]*60)+($timesplitkensatime[1]); ?>
+					              {{$minkensatime}}.{{$timesplitkensatime[2]}}</td>
 				                <td><?php 
 					                $timesplitelectime=explode(':',$prod_result->electric_supply_time);
-					                $minelectime=($timesplitelectime[0]*60)+($timesplitelectime[1])+($timesplitelectime[2]>30?1:0); ?>
-					              {{$minelectime}}</td>
+					                $minelectime=($timesplitelectime[0]*60)+($timesplitelectime[1]); ?>
+					              {{$minelectime}}.{{$timesplitelectime[2]}}</td>
 				                <td>{{$prod_result->data_ok}}</td>
 				              </tr>
 				              <?php $no++ ?>
