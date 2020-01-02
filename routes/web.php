@@ -97,7 +97,7 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 //end visitor control 
 
 //----- Start mesin injeksi
-
+Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
 Route::get('index/injeksi', 'InjectionsController@index');
 Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
 //in
@@ -826,8 +826,6 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('scan/kd_delivery', 'KnockDownController@scanKdDelivery');
 	Route::get('index/kd_stuffing', 'KnockDownController@indexKdStuffing');
 	Route::post('scan/kd_stuffing', 'KnockDownController@scanKdStuffing');
-	Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
-	Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 	Route::post('delete/kdo_stuffing', 'KnockDownController@deleteKdStuffing');
 	Route::post('delete/kdo_delivery', 'KnockDownController@deleteKdDelivery');	
 	Route::post('delete/kdo', 'KnockDownController@deleteKd');
@@ -846,16 +844,21 @@ Route::get('fetch/kd_stock_detail', 'KnockDownController@fetchKdStockDetail');
 Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShipmentProgressDetail');
+Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
+Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
 	Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
 	Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
+	Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
+	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
+	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
+
 });
 
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
-Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
 Route::get('update/workshop/reject_urgent/{id}', 'WorkshopNotificationController@rejectUrgent');
 Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
@@ -2039,6 +2042,8 @@ Route::get('index/press/report_prod_result', 'PressController@report_prod_result
 Route::post('index/press/filter_report_prod_result', 'PressController@filter_report_prod_result');
 Route::get('index/press/report_kanagata_lifetime', 'PressController@report_kanagata_lifetime');
 Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filter_report_kanagata_lifetime');
+Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkanagatalifetime')->name('kanagata_lifetime.getkanagatalifetime');
+Route::post('index/kanagata/update/{id}','PressController@update');
 
 
 //ROOMS
