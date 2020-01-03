@@ -59,14 +59,14 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-body">
-					<div class="col-xs-12">
+					<div class="col-xs-6">
 						<div class="box-header">
 							<h3 class="box-title">Filter</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/press/filter_report_kanagata_lifetime')}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="col-md-12 col-md-offset-3">
-							<div class="col-md-3">
+						<div class="col-md-12">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>Date From</label>
 									<div class="input-group date">
@@ -77,7 +77,7 @@ table.table-bordered > tfoot > tr > th{
 									</div>
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-6">
 								<div class="form-group">
 									<label>Date To</label>
 									<div class="input-group date">
@@ -89,8 +89,8 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 col-md-offset-4">
-							<div class="col-md-3">
+						<div class="col-md-12 col-md-offset-5">
+							<div class="col-md-6">
 								<div class="form-group pull-right">
 									<a href="{{ url('index/initial/press') }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/press/report_kanagata_lifetime') }}" class="btn btn-danger">Clear</a>
@@ -100,6 +100,42 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						</form>
 					</div>
+					@if($role_code == 'PROD' ||$role_code == 'MIS')
+					<div class="col-xs-6">
+						<div class="box-header">
+							<h3 class="box-title">Edit Kanagata Lifetime</h3>
+						</div>
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="col-md-12">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Kanagata</label>
+									<select class="form-control select2" name="kanagata" id="kanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+					                  <option value=""></option>
+					                  <option value="Punch">Punch</option>
+					                  <option value="Dies">Dies</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Kanagata Number</label>
+									<input type="text" class="form-control pull-right" id="kanagata_number" name="kanagata_number" autocomplete="off" placeholder="Enter Kanagata Number">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 pull-right">
+							<!-- <div class="col-md-6"> -->
+								<div class="form-group pull-right">
+									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
+									<button type="button" class="btn btn-warning col-sm-14" data-toggle="modal" data-target="#edit-modal" onclick="edit_kanagata('{{ url("index/kanagata/update") }}',$('#kanagata').val(),$('#kanagata_number').val());">
+						               Edit
+						            </button>
+								</div>
+							<!-- </div> -->
+						</div>
+					</div>
+					@endif
 				  <div class="row">
 				    <div class="col-xs-12">
 				      <div class="box">
@@ -122,9 +158,6 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Dies Value</th>
 				                <th>Running Punch</th>
 				                <th>Running Dies</th>
-				                @if($role_code == 'PROD' ||$role_code == 'MIS')
-				                <th>Action</th>
-				                @endif
 				              </tr>
 				            </thead>
 				            <tbody id="tableTroubleList">
@@ -146,13 +179,6 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$kanagata_lifetime->die_value}}</td>
 				                <td>{{$kanagata_lifetime->punch_total}}</td>
 				                <td>{{$kanagata_lifetime->die_total}}</td>
-				                @if($role_code == 'PROD' ||$role_code == 'MIS')
-				                <td>
-				                	<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_kanagata('{{ url("index/kanagata/update") }}','{{ $kanagata_lifetime->kanagata_lifetime_id }}');">
-						               Edit
-						            </button>
-					        	</td>
-				                @endif
 				              </tr>
 				              <?php $no++ ?>
 				              @endforeach
@@ -174,9 +200,6 @@ table.table-bordered > tfoot > tr > th{
 				                <th></th>
 				                <th></th>
 				                <th></th>
-				                @if($role_code == 'PROD' ||$role_code == 'MIS')
-				                <th></th>
-				                @endif
 				              </tr>
 				            </tfoot>
 				          </table>
@@ -300,16 +323,16 @@ table.table-bordered > tfoot > tr > th{
 		});
 	});
 
-	function edit_kanagata(url,id) {
+	function edit_kanagata(url,kanagata,kanagata_number) {
     	$.ajax({
-                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?id=" + id,
+                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?kanagata=" + kanagata +"&kanagata_number="+kanagata_number,
                 method: 'GET',
                 success: function(data) {
                   var json = data;
                   // obj = JSON.parse(json);
                   console.log(data.data);
                   var data = data.data;
-                  $("#url_edit").val(url+'/'+id);
+                  $("#url_edit").val(url+'/'+data.kanagata_log_id);
                   $("#editdate").val(data.date);
                   $("#editpic").val(data.pic_name);
                   $("#editmachine").val(data.machine);
@@ -443,7 +466,7 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
   <script src="{{ url("js/buttons.flash.min.js")}}"></script>
   <script src="{{ url("js/jszip.min.js")}}"></script>
-  <script src="{{ url("js/vfs_fonts.js")}}"></script>
+  
   <script src="{{ url("js/buttons.html5.min.js")}}"></script>
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>

@@ -675,25 +675,48 @@ class PressController extends Controller
 	function getkanagatalifetime(Request $request)
     {
           try{
-            $detail = MpKanagataLog::find($request->get("id"));
-            $data = array('kanagata_log_id' => $detail->id,
-            			  'date' => $detail->date,
-                          'pic' => $detail->pic,
-                          'pic_name' => $detail->employee_pic->name,
-                          'shift' => $detail->shift,
-                          'product' => $detail->product,
-                          'material_number' => $detail->material_number,
-                          'part' => $detail->material->material_name,
-                          'process' => $detail->process,
-                      	  'machine' => $detail->machine,
-                      		'punch_number' => $detail->punch_number,
-                      		'die_number' => $detail->die_number,
-                      		'punch_value' => $detail->punch_value,
-                      		'die_value' => $detail->die_value,
-                      		'punch_total' => $detail->punch_total,
-                      		'die_total' => $detail->die_total,
-                      		'start_time' => $detail->start_time,
-                      		'end_time' => $detail->end_time);
+            if($request->get('kanagata') == 'Punch'){
+            	$detail = MpKanagataLog::where('punch_number',$request->get("kanagata_number"))->orderBy('id', 'DESC')->first();
+	            $data = array('kanagata_log_id' => $detail->id,
+	            			  'date' => $detail->date,
+	                          'pic' => $detail->pic,
+	                          'pic_name' => $detail->employee_pic->name,
+	                          'shift' => $detail->shift,
+	                          'product' => $detail->product,
+	                          'material_number' => $detail->material_number,
+	                          'part' => $detail->material->material_name,
+	                          'process' => $detail->process,
+	                      	  'machine' => $detail->machine,
+	                      		'punch_number' => $detail->punch_number,
+	                      		'die_number' => $detail->die_number,
+	                      		'punch_value' => $detail->punch_value,
+	                      		'die_value' => $detail->die_value,
+	                      		'punch_total' => $detail->punch_total,
+	                      		'die_total' => $detail->die_total,
+	                      		'start_time' => $detail->start_time,
+	                      		'end_time' => $detail->end_time);
+            }
+            else{
+            	$detail = MpKanagataLog::where('die_number',$request->get("kanagata_number"))->orderBy('id', 'DESC')->first();
+	            $data = array('kanagata_log_id' => $detail->id,
+	            			  'date' => $detail->date,
+	                          'pic' => $detail->pic,
+	                          'pic_name' => $detail->employee_pic->name,
+	                          'shift' => $detail->shift,
+	                          'product' => $detail->product,
+	                          'material_number' => $detail->material_number,
+	                          'part' => $detail->material->material_name,
+	                          'process' => $detail->process,
+	                      	  'machine' => $detail->machine,
+	                      		'punch_number' => $detail->punch_number,
+	                      		'die_number' => $detail->die_number,
+	                      		'punch_value' => $detail->punch_value,
+	                      		'die_value' => $detail->die_value,
+	                      		'punch_total' => $detail->punch_total,
+	                      		'die_total' => $detail->die_total,
+	                      		'start_time' => $detail->start_time,
+	                      		'end_time' => $detail->end_time);
+            }
 
             $response = array(
               'status' => true,
