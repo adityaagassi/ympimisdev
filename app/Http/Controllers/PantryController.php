@@ -197,7 +197,6 @@ class PantryController extends Controller
 			);
 			return Response::json($response);
 		}
-
     }
 
      
@@ -361,8 +360,8 @@ class PantryController extends Controller
     }
 
     public function daftarkonfirmasi(){
-		$title = 'Pantry Drink Confirmation';
-		$title_jp = '???';
+		$title = 'Pantry Drink Order Confirmation';
+		$title_jp = '飲み物注文確認';
 
 		return view('pantry.pesanan_konfirmasi', array(
 			'title' => $title,

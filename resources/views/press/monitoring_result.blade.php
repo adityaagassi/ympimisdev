@@ -18,7 +18,9 @@ table.table-bordered > tbody > tr > td{
   vertical-align: middle;
   text-align: center;
   padding:3px;
-
+}
+table.table-condensed > thead > tr > th{   
+  color: black
 }
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(150,150,150);
