@@ -195,6 +195,8 @@
 												 		$type[] = 'Material';
 												 	}elseif ($tinjauan[$i] == 4) {
 												 		$type[] = 'Method';
+												 	}elseif ($tinjauan[$i] == 5) {
+												 		$type[] = 'Other';
 												 	}
 												 }
 												 echo implode(' , ', $type);
@@ -312,6 +314,9 @@
 		            <label class="checkbox-inline">
 		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="4" id="tinjauan">Method
 		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="tinjauanCheckbox" name="tinjauan" value="5" id="tinjauan">Other
+		            </label>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Problem</label>
@@ -383,6 +388,9 @@
 		            </label>
 		            <label class="checkbox-inline">
 		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="4" id="edittinjauan">Method
+		            </label>
+		            <label class="checkbox-inline">
+		              <input type="checkbox" class="edittinjauanCheckbox" name="edittinjauan" value="5" id="edittinjauan">Other
 		            </label>
 	            </div>
 	            <div class="form-group">

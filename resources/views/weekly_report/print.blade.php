@@ -93,6 +93,8 @@
 												 		$type[] = 'Material';
 												 	}elseif ($tinjauan[$i] == 4) {
 												 		$type[] = 'Method';
+												 	}elseif ($tinjauan[$i] == 5) {
+												 		$type[] = 'Other';
 												 	}
 												 }
 												 echo implode(' , ', $type);

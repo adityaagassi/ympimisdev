@@ -41,22 +41,22 @@
 @stop
 @section('header')
 <section class="content-header">
-{{-- 	 @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-    {{ session('status') }}
-  </div>   
-  @endif --}}
-  <h1>
-  	Daily Reports<span class="text-purple"> </span>
-  	{{-- <small>WIP Control <span class="text-purple"> 仕掛品管理</span></small> --}}
-  </h1>
-  <ol class="breadcrumb">
-  	<li>
-  		<a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-sm bg-purple" style="color:white">Create {{ $page }}</a>
-  	</li>
-  </ol>
+	{{-- 	 @if (session('status'))
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+		{{ session('status') }}
+	</div>   
+	@endif --}}
+	<h1>
+		Daily Reports<span class="text-purple"> </span>
+		{{-- <small>WIP Control <span class="text-purple"> 仕掛品管理</span></small> --}}
+	</h1>
+	<ol class="breadcrumb">
+		<li>
+			<a href="javascript:void(0)" onclick="openModalCreate()" class="btn btn-sm bg-purple" style="color:white">Create {{ $page }}</a>
+		</li>
+	</ol>
 </section>
 @stop
 @section('content')
