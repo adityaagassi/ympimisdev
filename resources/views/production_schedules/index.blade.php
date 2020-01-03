@@ -297,8 +297,21 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
+                <label>Location</label>
+                <select class="form-control select2" multiple="multiple" name="location[]" id='location' data-placeholder="Select Location" style="width: 100%;">
+                  <option></option>
+                  @foreach($locations as $location)
+                  <option value="{{ $location->hpl }}">{{ $location->hpl }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
                 <label>Origin Group</label>
-                <select class="form-control select2" multiple="multiple" name="origin_group[]" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;" required>
+                <select class="form-control select2" multiple="multiple" name="origin_group[]" id='origin_group' data-placeholder="Select Origin Group" style="width: 100%;">
                   <option></option>
                   @foreach($origin_groups as $origin_group)
                   <option value="{{ $origin_group->origin_group_code }}">{{ $origin_group->origin_group_code }} - {{ $origin_group->origin_group_name }}</option>
