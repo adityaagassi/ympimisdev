@@ -100,7 +100,10 @@ table > thead > tr > th{
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;height: 500px;"></div>
+				<div id="container1" style="width: 100%;height: 420px;"></div>
+			</div>
+			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container2" style="width: 100%;height: 420px;"></div>
 			</div>
 		</div>
 	</div>
@@ -133,6 +136,45 @@ table > thead > tr > th{
                   </tr>
                 </thead>
                 <tbody id="tableBodyResult">
+                </tbody>
+                <tfoot>
+				</tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal2">
+    <div class="modal-dialog" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table2"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="tableResult2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                  	<th>Nomor</th>
+                    <th>Check Date</th>
+                    <th>Injection Date</th>
+                    <th>Head</th>    
+                    <th>Block</th>
+                    <th>Height</th>
+                    <th>Judgement</th>
+                    <th>PIC</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBodyResult2">
                 </tbody>
                 <tfoot>
 				</tfoot>
@@ -540,87 +582,300 @@ table > thead > tr > th{
 			}
 		});
 
+		$.get('{{ url("fetch/recorder/height_check_monitoring/".$remark) }}',data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
+
+					//Chart Machine Report
+					var jumlah_ok2 = [];
+					var jumlah_ng2 = [];
+					var tanggal2 = [];
+
+					for (var i = 0; i < result.datas.length; i++) {
+						tanggal2.push(result.datas[i].date);
+						jumlah_ok2.push(parseInt(result.datas[i].jumlah_ok2));
+						jumlah_ng2.push(parseInt(result.datas[i].jumlah_ng2));
+						// series.push([machine[i], jml[i]]);
+					}
+
+
+					Highcharts.chart('container2', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: 'Height Gauge Block Check Monitoring - '+remark,
+							style: {
+								fontSize: '20px',
+								fontWeight: 'bold'
+							}
+						},
+						subtitle: {
+							text: 'on '+result.monthTitle,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: tanggal2,
+							type: 'category',
+							// gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							lineWidth:2,
+							lineColor:'#9e9e9e',
+							labels: {
+								style: {
+									fontSize: '15px'
+								}
+							},
+						},
+						yAxis: {
+							title: {
+								text: 'Total Height Gauge Block Check',
+								style: {
+			                        color: '#eee',
+			                        fontSize: '20px',
+			                        fontWeight: 'bold',
+			                        fill: '#6d869f'
+			                    }
+							},
+							labels:{
+					        	style:{
+									fontSize:"15px"
+								}
+					        },
+							type: 'linear'
+						},
+						tooltip: {
+							headerFormat: '<span>Production Result</span><br/>',
+							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
+						},
+						legend: {
+							layout: 'horizontal',
+							align: 'right',
+							verticalAlign: 'top',
+							x: -90,
+							y: 30,
+							floating: true,
+							borderWidth: 1,
+							backgroundColor:
+							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+							shadow: true,
+							itemStyle: {
+				                fontSize:'12px',
+				            },
+						},	
+						plotOptions: {
+							series:{
+								cursor: 'pointer',
+				                point: {
+				                  events: {
+				                    click: function () {
+				                      ShowModal2(this.category,this.series.name,result.remark);
+				                    }
+				                  }
+				                },
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										fontSize: '1vw'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer'
+							},
+						},credits: {
+							enabled: false
+						},
+						series: [{
+							type: 'column',
+							data: jumlah_ok2,
+							name: 'Jumlah OK',
+							stacking: 'normal',
+							colorByPoint: false,
+							color: "#92cf11",
+							key:'OK'
+						},{
+							type: 'column',
+							data: jumlah_ng2,
+							name: 'Jumlah NG',
+							stacking: 'normal',
+							colorByPoint: false,
+							color:'#dc3939',
+							key:'NG'
+						},
+						]
+					});
+				}
+			}
+		});
+
 	}
 
 	function ShowModal(tanggal,judgement,remark) {
-    tabel = $('#example2').DataTable();
-    tabel.destroy();
+	    tabel = $('#example2').DataTable();
+	    tabel.destroy();
 
-    $("#myModal").modal("show");
+	    $("#myModal").modal("show");
 
-    var data = {
-		tanggal:tanggal,
-    	judgement:judgement,
-    	remark:remark
-	}
-	var jdgm = '';
-	if (judgement == 'Jumlah OK') {
-		jdgm = 'OK';
-	}
-	else{
-		jdgm = 'NG';
-	}
-
-    $.get('{{ url("index/recorder/detail_monitoring") }}', data, function(result, status, xhr){
-		if(result.status){
-			$('#tableResult').DataTable().clear();
-			$('#tableResult').DataTable().destroy();
-			$('#tableBodyResult').html("");
-			var tableData = "";
-			var count = 1;
-			$.each(result.lists, function(key, value) {
-				tableData += '<tr>';
-				tableData += '<td>'+ count +'</td>';
-				tableData += '<td>'+ value.check_date +'</td>';
-				tableData += '<td>'+ value.injection_date +'</td>';
-				tableData += '<td>'+ value.head +'</td>';
-				tableData += '<td>'+ value.block +'</td>';
-				tableData += '<td>'+ value.push_pull +'</td>';
-				tableData += '<td>'+ value.judgement +'</td>';
-				tableData += '<td>'+ value.pic_check +'</td>';
-				tableData += '</tr>';
-				count += 1;
-			});
-			$('#tableBodyResult').append(tableData);
-			$('#tableResult').DataTable({
-				'dom': 'Bfrtip',
-				'responsive':true,
-				'lengthMenu': [
-				[ 5, 10, 25, -1 ],
-				[ '5 rows', '10 rows', '25 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
-					{
-						extend: 'pageLength',
-						className: 'btn btn-default',
-					},
-					
-					]
-				},
-				'paging': true,
-				'lengthChange': true,
-				'pageLength': 5,
-				'searching': true,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true
-			});
+	    var data = {
+			tanggal:tanggal,
+	    	judgement:judgement,
+	    	remark:remark
+		}
+		var jdgm = '';
+		if (judgement == 'Jumlah OK') {
+			jdgm = 'OK';
 		}
 		else{
-			alert('Attempt to retrieve data failed');
+			jdgm = 'NG';
 		}
-	});
 
-    $('#judul_table').append().empty();
-    $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
-    
-  }
+	    $.get('{{ url("index/recorder/detail_monitoring") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableResult').DataTable().clear();
+				$('#tableResult').DataTable().destroy();
+				$('#tableBodyResult').html("");
+				var tableData = "";
+				var count = 1;
+				$.each(result.lists, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ count +'</td>';
+					tableData += '<td>'+ value.check_date +'</td>';
+					tableData += '<td>'+ value.injection_date +'</td>';
+					tableData += '<td>'+ value.head +'</td>';
+					tableData += '<td>'+ value.block +'</td>';
+					tableData += '<td>'+ value.push_pull +'</td>';
+					tableData += '<td>'+ value.judgement +'</td>';
+					tableData += '<td>'+ value.pic_check +'</td>';
+					tableData += '</tr>';
+					count += 1;
+				});
+				$('#tableBodyResult').append(tableData);
+				$('#tableResult').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 5, 10, 25, -1 ],
+					[ '5 rows', '10 rows', '25 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 5,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+
+	    $('#judul_table').append().empty();
+	    $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
+	    
+	  }
+
+	  function ShowModal2(tanggal,judgement,remark) {
+	    tabel = $('#example2').DataTable();
+	    tabel.destroy();
+
+	    $("#myModal2").modal("show");
+
+	    var data = {
+			tanggal:tanggal,
+	    	judgement:judgement,
+	    	remark:remark
+		}
+		var jdgm = '';
+		if (judgement == 'Jumlah OK') {
+			jdgm = 'OK';
+		}
+		else{
+			jdgm = 'NG';
+		}
+
+	    $.get('{{ url("index/recorder/detail_monitoring2") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableResult2').DataTable().clear();
+				$('#tableResult2').DataTable().destroy();
+				$('#tableBodyResult2').html("");
+				var tableData = "";
+				var count = 1;
+				$.each(result.lists, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ count +'</td>';
+					tableData += '<td>'+ value.check_date +'</td>';
+					tableData += '<td>'+ value.injection_date +'</td>';
+					tableData += '<td>'+ value.head +'</td>';
+					tableData += '<td>'+ value.block +'</td>';
+					tableData += '<td>'+ value.ketinggian +'</td>';
+					tableData += '<td>'+ value.judgement2 +'</td>';
+					tableData += '<td>'+ value.pic_check +'</td>';
+					tableData += '</tr>';
+					count += 1;
+				});
+				$('#tableBodyResult2').append(tableData);
+				$('#tableResult2').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 5, 10, 25, -1 ],
+					[ '5 rows', '10 rows', '25 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 5,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+
+	    $('#judul_table2').append().empty();
+	    $('#judul_table2').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
+	    
+	  }
 
 
 </script>

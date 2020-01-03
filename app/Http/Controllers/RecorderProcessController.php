@@ -46,7 +46,7 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('remark', $remark);
+		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('batas_tinggi', '0.2')->with('remark', $remark);
 	}
 
 	function fetch_push_block(Request $request)
@@ -103,6 +103,8 @@ class RecorderProcessController extends Controller
               $id_user = Auth::id();
               $push_pull = $request->get('push_pull');
               $judgement = $request->get('judgement');
+              $ketinggian = $request->get('ketinggian');
+              $judgementketinggian = $request->get('judgementketinggian');
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
@@ -119,11 +121,15 @@ class RecorderProcessController extends Controller
                     'block' => $block[$i],
                     'push_pull' => $push_pull[$i],
                     'judgement' => $judgement[$i],
+                    'ketinggian' => $ketinggian[$i],
+                    'judgement2' => $judgementketinggian[$i],
                     'pic_check' => $request->get('pic_check'),
                     'created_by' => $id_user
                 ]);
 
                 $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
+
+                $bodyHtml2 = "<html><h2>NG Report of Hight Gauge Check Block Recorder</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Hight Gauge : ".$ketinggian[$i]."</p><p>Judgement : ".$judgementketinggian[$i]."</p></html>";
 
                 if($judgement[$i] == 'NG'){
                   foreach($this->mail as $mail_to){
@@ -132,6 +138,17 @@ class RecorderProcessController extends Controller
                         $message->to($mail_to);
                         $message->subject('NG Report of Recorder Push Block Check');
                         $message->setBody($bodyHtml, 'text/html' );
+                        // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
+                    });
+                  }
+                }
+                if($judgementketinggian[$i] == 'NG'){
+                  foreach($this->mail as $mail_to){
+                    Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
+                        $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+                        $message->to($mail_to);
+                        $message->subject('NG Report of Hight Gauge Check Block Recorder');
+                        $message->setBody($bodyHtml2, 'text/html' );
                         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
                     });
                   }
@@ -231,12 +248,14 @@ class RecorderProcessController extends Controller
           }
         }
         $judgementin = " and `judgement` in (".$judgement.") ";
+        $judgementin2 = " or `judgement2` in (".$judgement.") ";
       }
       else{
         $judgementin = "";
+        $judgementin2 = "";
       }
 
-      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ".$judgementin." ORDER BY push_block_recorders.id desc");
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ".$judgementin." ".$judgementin2." ORDER BY push_block_recorders.id desc");
 
       $data = array('push_block_check' => $push_block_check,
                       'remark' => $remark,);
@@ -279,6 +298,36 @@ class RecorderProcessController extends Controller
     return Response::json($response);
   }
 
+  public function fetch_height_check_monitoring(Request $request,$remark){
+    $date = '';
+    if(strlen($request->get("bulan")) > 0){
+      $date = date('Y-m', strtotime($request->get("bulan")));
+    }else{
+      $date = date('Y-m');
+    }
+
+    $monthTitle = date("F Y", strtotime($date));
+
+    $data = db::select("select 
+        weekly_calendars.week_date as date,
+                (select sum(case when judgement2 = 'OK' then 1 else 0 end) as jumlah_ok2 from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
+        as jumlah_ok2,
+        (select sum(case when judgement2 = 'NG' then 1 else 0 end) as jumlah_ok2 from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
+        as jumlah_ng2
+                        from weekly_calendars 
+                        where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$date."'
+                        and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+
+    $response = array(
+      'status' => true,
+      'datas' => $data,
+      'date' => $date,
+      'remark' => $remark,
+      'monthTitle' => $monthTitle,
+    );
+    return Response::json($response);
+  }
+
   public function detail_monitoring(Request $request)
   {
     $tanggal = $request->get("tanggal");
@@ -302,5 +351,60 @@ class RecorderProcessController extends Controller
     );
     return Response::json($response);
   }
+
+  public function detail_monitoring2(Request $request)
+  {
+    $tanggal = $request->get("tanggal");
+    $judgement = $request->get("judgement");
+    if($judgement == 'Jumlah OK'){
+      $jdgm = 'OK';
+    }
+    else{
+      $jdgm = 'NG';
+    }
+    $remark = $request->get("remark");
+
+    $query = "SELECT * FROM `push_block_recorders` where date(check_date) = '".$tanggal."' and judgement2 = '".$jdgm."' and push_block_code = '".$remark."'";
+
+    $detail = db::select($query);
+
+    $response = array(
+      'status' => true,
+      'jdgm' => $jdgm,
+      'lists' => $detail,
+    );
+    return Response::json($response);
+  }
+
+  public function print_report_push_block(Request $request,$remark)
+    {
+      $date_from = $request->get('date_from');
+      $date_to = $request->get('date_to');
+      $datenow = date('Y-m-d');
+
+      if($request->get('date_to') == null){
+        if($request->get('date_from') == null){
+          $date = "";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$datenow."'";
+        }
+      }
+      elseif($request->get('date_to') != null){
+        if($request->get('date_from') == null){
+          $date = "and date(check_date) <= '".$date_to."'";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$date_to."'";
+        }
+      }
+
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ORDER BY push_block_recorders.id desc");
+
+      $data = array('push_block_check' => $push_block_check,
+                      'remark' => $remark,);
+      return view('recorder.report.print_push_block', $data
+        )->with('page', 'Print Push Block Check')->with('remark', $remark);
+    }
 }
   

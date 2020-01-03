@@ -10,7 +10,7 @@ class PushBlockRecorder extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'push_block_code','check_date', 'injection_date','product_type','head','block','push_pull','judgement','pic_check','created_by'
+		'push_block_code','check_date', 'injection_date','product_type','head','block','push_pull','judgement','ketinggian','judgement2','pic_check','created_by'
 	];
 
     public function user()

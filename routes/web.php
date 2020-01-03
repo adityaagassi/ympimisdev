@@ -41,7 +41,7 @@ Route::get('/machinery_monitoring', function () {
 });
 
 Route::get('/information_board', function () {
-	return view('information_board');
+	return view('information_board')->with('title', 'INFORMATION BOARD')->with('title_jp', '情報板');
 });
 
 Auth::routes();
@@ -849,14 +849,12 @@ Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
-	Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
-	Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
 	Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
 	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
 	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
-
 });
 
+Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
@@ -865,6 +863,9 @@ Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
 Route::get('fetch/workshop/assign_form', 'WorkshopController@fetchAssignForm');
 Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
 Route::get('download/workshop/attachment', 'WorkshopController@downloadAttachment');
+Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
+Route::get('scan/workshop/tag/rfid', 'WorkshopController@scanTag');
+
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -1880,7 +1881,9 @@ Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessControll
 Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
 Route::get('index/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@push_block_check_monitoring');
 Route::get('fetch/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@fetch_push_block_check_monitoring');
+Route::get('fetch/recorder/height_check_monitoring/{remark}', 'RecorderProcessController@fetch_height_check_monitoring');
 Route::get('index/recorder/detail_monitoring', 'RecorderProcessController@detail_monitoring');
+Route::get('index/recorder/detail_monitoring2', 'RecorderProcessController@detail_monitoring2');
 Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
 
 //WEBCAM
