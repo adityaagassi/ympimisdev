@@ -319,12 +319,20 @@
 		            </label>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Problem</label>
+	             <label>Report Type<span class="text-red">*</span></label>
+	                <select class="form-control" onchange="inputproblemactivity(this.value)" name="inputproblemactivity" id="inputproblemactivity" style="width: 100%;" data-placeholder="Choose a Report Type..." required>
+	                	<option value="Problem">Problem</option>
+	                	<option value="Activity">Activity</option>
+	                </select>
+	            </div>
+	            <div class="form-group">
+	              <label for="" id="problem">Problem</label>
+	              <label for="" id="activity">Activity</label>
 	              <textarea name="inputproblem" id="inputproblem" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<div class="form-group">
+            	<div class="form-group" id="action">
 	              <label for="">Report Action</label>
 	              <textarea name="inputaction" id="inputaction" class="form-control" rows="2" required="required"></textarea>
 	            </div>
@@ -394,12 +402,20 @@
 		            </label>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Problem</label>
+	             <label>Report Type<span class="text-red">*</span></label>
+	                <select class="form-control" onchange="inputproblemactivity2(this.value)" name="inputproblemactivity2" id="inputproblemactivity2" style="width: 100%;" data-placeholder="Choose a Report Type..." required>
+	                	<option value="Problem">Problem</option>
+	                	<option value="Activity">Activity</option>
+	                </select>
+	            </div>
+	            <div class="form-group">
+	              <label for="" id="problem2">Problem</label>
+	              <label for="" id="activity2">Activity</label>
 	              <textarea name="editproblem" id="editproblem" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<div class="form-group">
+            	<div class="form-group" id="action2">
 	              <label for="">Report Action</label>
 	              <textarea name="editaction" id="editaction" class="form-control" rows="2" required="required"></textarea>
 	            </div>
@@ -464,6 +480,8 @@
 	    CKEDITOR.replace('editfoto_aktual' ,{
 	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
 	    });
+
+	    $('#activity').hide();
 	});
 	$('.datepicker').datepicker({
 		autoclose: true,
@@ -471,8 +489,6 @@
 		startView: "months", 
 		minViewMode: "months",
 		autoclose: true,
-		
-
 	});
 
 	$('.datepicker2').datepicker({
@@ -494,6 +510,34 @@
       format: 'yyyy-mm-dd',
       todayHighlight: true
     });
+
+    function inputproblemactivity(value) {
+    	if (value == 'Problem') {
+    		$('#activity').hide();
+    		$('#problem').show();
+    		$('#action').show();
+    		$("#inputaction").html(CKEDITOR.instances.inputaction.setData(''));
+    	}else{
+    		$('#activity').show();
+    		$('#problem').hide();
+    		$('#action').hide();
+    		$("#inputaction").html(CKEDITOR.instances.inputaction.setData('-'));
+    	}
+    }
+
+    function inputproblemactivity2(value) {
+    	if (value == 'Problem') {
+    		$('#activity2').hide();
+    		$('#problem2').show();
+    		$('#action2').show();
+    		$("#editaction").html(CKEDITOR.instances.editaction.setData(''));
+    	}else{
+    		$('#activity2').show();
+    		$('#problem2').hide();
+    		$('#action2').hide();
+    		$("#editaction").html(CKEDITOR.instances.editaction.setData('-'));
+    	}
+    }
 
 	
 </script>
@@ -684,6 +728,14 @@
 	                  		$('.edittinjauanCheckbox')[j].checked = true;
 	                  	}
 	                }
+                  }
+
+                  if (data.action == '<p>-</p>') {
+                  	$('#activity').show();
+		    		$('#problem').hide();
+		    		$('#action').hide();
+		    		$("#editaction").html(CKEDITOR.instances.editaction.setData('-'));
+		    		$("#inputproblemactivity2").val('Activity').trigger('change.select2');
                   }
                   $("#url_edit").val(url+'/'+id);
                   $("#editdepartment").val(data.department);
