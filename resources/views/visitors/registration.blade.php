@@ -56,16 +56,18 @@
 						<label for="inputEmail3" class="col-sm-2 control-label">Jenis Kendaraan</label>
 						<div class="col-sm-9">
 							{{-- <input type="text" name="lop2" id="lop2" hidden> --}}
-							<select class="form-control select2" id="kendaraan" name="kendaraan" required>								
+							<select class="form-control select2" id="kendaraan" name="kendaraan" required>
+								<option style="color:grey;" value="">Pilih Kendaraan</option>					
 								<option value="Motorcycle">Motorcycle</option>
 								<option value="Truck">Truck</option>
 								<option value="Bus">Bus</option>
 								<option value="SUV / MPV">SUV / MPV</option>
+								<option value="No Vehicle">No Vehicle</option>
 								<option value="Other">Other</option>
 							</select>
 						</div>
 					</div>
-						<div class="form-group">
+					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Nomor Kendaraan</label>
 						<div class="col-sm-9">
 							<input class="form-control" id="pol" name="pol" placeholder="Input Nomor Kendaraan" required></input>
@@ -75,7 +77,8 @@
 						<label for="inputEmail3" class="col-sm-2 control-label">Status</label>
 						<div class="col-sm-9">
 							<input type="text" name="lop2" id="lop2" hidden>
-							<select class="form-control select2" id="status" name="status" required>								
+							<select class="form-control select2" id="status" name="status" placeholder="Pilih Status" required>
+								<option style="color:grey;" value="">Pilih Status</option>
 								<option value="Visitor">Visitor</option>
 								<option value="Vendor">Vendor</option>
 							</select>
@@ -86,7 +89,7 @@
 						<div class="col-sm-9">
 							<input type="text" name="lop" id="lop" hidden>
 							<select class="form-control select2" id="status" name="employee" required>
-								<option value="">Pilih Karyawan YMPI</option>
+								<option style="color:grey;" value="">Pilih Karyawan YMPI</option>
 								@foreach($employee as $nomor => $employee)
 								<option value="{{$employee->employee_id}}">{{$employee->name}} - ( {{$employee->department}} - {{$employee->shortname}} )</option>
 								@endforeach
