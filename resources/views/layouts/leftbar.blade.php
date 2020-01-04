@@ -18,7 +18,7 @@
           <a href="{{ url("/about_mis") }}"><i class="fa fa-info"></i> <span>About MIS</span></a>
         </li>
 
-         @if(isset($page) && $page == "Project Timeline")<li class="active">@else<li>@endif
+        @if(isset($page) && $page == "Project Timeline")<li class="active">@else<li>@endif
           <a href="{{ url("/project_timeline") }}"><i class="fa fa-history"></i> <span>Project Timeline</span></a>
         </li>
 
@@ -293,9 +293,6 @@
     @if(isset($page) && $page == "Pantry Menu")<li class="active">@else<li>@endif
       <a href="{{ url("index/pantry/menu") }}"><i class="fa fa-calendar-plus-o"></i>Pantry Menu</a>
     </li>
-    @if(isset($page) && $page == "Pantry Orders")<li class="active">@else<li>@endif
-      <a href="{{ url("index/pantry/pesanan") }}"><i class="fa fa-cubes"></i>Orders List</a>
-    </li>
     @if(isset($page) && $page == "Pantry Confirmation")<li class="active">@else<li>@endif
       <a href="{{ url("index/pantry/confirmation") }}"><i class="fa fa-cubes"></i>Orders Confirmation</a>
     </li>
@@ -400,7 +397,7 @@
   </li>
   @endif
 
-   @if(in_array('S29', $navs))
+  @if(in_array('S29', $navs))
   @if(isset($page) && $page == "KD Stuffing")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_stuffing") }}"><i class="fa fa-truck"></i> <span>KD  <i class="fa fa-angle-right"></i> Stuffing</span></a>
   </li>
@@ -545,6 +542,30 @@
 </li>
 @endif
 
+@if(in_array('S30', $navs))
+@if(isset($head) && $head == "Workshop")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-industry"></i> <span>Workshop</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "WJO Form")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/workshop/create_wjo") }}"><i class="fa fa-edit"></i> <span>Create WJO</span></a>
+</li>
+
+@if(isset($page) && $page == "WJO List")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/workshop/list_wjo") }}"><i class="fa fa-list"></i> <span>List WJO</span></a>
+</li>
+
+@if(isset($page) && $page == "WJO Execution")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/workshop/wjo", "exe") }}"><i class="fa fa-list"></i> <span>WJO</span></a>
+</li>
+</ul>
+</li>
+@endif
+
 @if(in_array('S23', $navs))
 @if(isset($head) && $head == "Clinic")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
@@ -647,6 +668,9 @@
 <ul class="treeview-menu">
  @if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/overtime_control") }}"><i class="fa fa-line-chart"></i> Overtime Control</a>
+</li>
+@if(isset($page) && $page == "GA Report")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/report/ga_report") }}"><i class="fa fa-line-chart"></i> GA - Report</a>
 </li>
 </ul>
 </li>

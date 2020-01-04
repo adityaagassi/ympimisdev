@@ -129,9 +129,9 @@
 					<span style="font-size: 20px; font-weight: bold;">Drink List Order (飲み物注文リスト) </span><br><br>
 					<div class="row">
 						<?php foreach ($menus as $menu){ ?>
-						<div class="col-md-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
+						<div class="col-md-4 col-sm-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
 							<div class="text-center">
-								<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto;height: 160px">
+								<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto;height: 100px">
 								<p style="font-size: 1.5vw;padding: 5px">{{ $menu->menu }}</p>
 							</div>
 						</div>
