@@ -5,6 +5,8 @@
 	thead>tr>th{
 		font-size: 16px;
 	}
+
+
 	#tableMenuList td:hover {
 		cursor: pointer;
 		background-color: #7dfa8c;
@@ -13,6 +15,14 @@
 	#tablemenuu> tbody > tr > td :hover {
 		cursor: pointer;
 		background-color: #e0e0e0;
+	}
+
+	#tableResult > thead > tr > th {
+		border:rgba(126,86,134,.7);
+	}
+
+	#tableResult > tbody > tr > td {
+		border: 1px solid #ddd;
 	}
 
 	/*td:hover{
@@ -103,10 +113,10 @@
 		border-radius: 50%;
 		background: white;
 	}
-
+/*
 	img {
 	    width: 100%;
-	}
+	}*/
 
 </style>
 @stop
@@ -126,7 +136,7 @@
 		<div class="col-xs-5">
 			<div class="box">
 				<div class="box-body">
-					<span style="font-size: 20px; font-weight: bold;">Drink List Order (飲み物注文リスト) </span><br><br>
+					<span style="font-size: 20px; font-weight: bold;">Drink Order List (飲み物注文リスト) </span><br><br>
 					<div class="row">
 						<?php foreach ($menus as $menu){ ?>
 						<div class="col-md-4 col-sm-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
