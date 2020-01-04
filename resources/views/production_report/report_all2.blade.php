@@ -959,19 +959,23 @@ else if(frequency == 'Daily'){
         body += '<tr>';
         body += '<td>'+no+'</td>';
         body += '<td>'+result.date[i].week_date+'</td>';
-        if(parseInt(result.detail[i].jumlah_daily_check) != 0){
+        if(parseInt(result.detail[i].jumlah_daily_check) != 0 && parseInt(result.detail[i].jumlah_area_check) != 0){
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
+          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+        }
+        if(parseInt(result.detail[i].jumlah_daily_check) != 0 && parseInt(result.detail[i].jumlah_area_check) == 0){
           body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
           body += '<td style="background-color: #f7ff59"></td>';
         }
-        else if(parseInt(result.detail[i].jumlah_area_check) != 0){
+        else if(parseInt(result.detail[i].jumlah_daily_check) == 0 && parseInt(result.detail[i].jumlah_area_check) != 0){
           body += '<td style="background-color: #f7ff59"></td>';
           body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
         }
-        else{
+        else if(parseInt(result.detail[i].jumlah_area_check) == 0 && parseInt(result.detail[i].jumlah_daily_check) == 0){
           // body += '<td style="background-color: #f7ff59"></td>';
           // body += '<td style="background-color: #f7ff59"></td>';
-          body += '<td></td>';
-          body += '<td></td>';
+          body += '<td style="background-color: #f7ff59"></td>';
+          body += '<td style="background-color: #f7ff59"></td>';
         }
         body += '</tr>';
         total_plan += parseInt(result.detail[i].plan) * bb;

@@ -334,7 +334,7 @@ class ProductionReportController extends Controller
         COALESCE((select count(DISTINCT(daily_checks.production_date)) as jumlah_laporan
                 from daily_checks
                     join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$bulan."'
+                    where DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$bulan."'
                     and  actlist.frequency = 'Daily'
                                 and daily_checks.leader = '".$dataleader."'
                                 and daily_checks.deleted_at is null 
