@@ -876,7 +876,7 @@
 			var punch_value = $("#jumlah_punch").val();
 			var die_value = $("#jumlah_dies").val();
 
-			if(process == '' || machine == '' || data_ok == '' || lepas_molding == '' || pasang_molding == '' || process_time == '' || electric_supply_time == ''){
+			if(process == '' || machine == '' || data_ok == '' || lepas_molding == '' || pasang_molding == '' || process_time == '' || electric_supply_time == '' || shift == '' || material_number == ''){
 				alert("Semua Data Harus Diisi.");
 			}
 			else{

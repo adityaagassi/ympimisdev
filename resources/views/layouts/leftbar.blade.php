@@ -281,7 +281,7 @@
 @if(in_array('S28', $navs))
 @if(isset($head) && $head == "Pantry")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
-    <i class="fa fa-coffee"></i> <span>Pantry</span>
+    <i class="fa fa-cutlery"></i> <span>Pantry</span>
     <span class="pull-right-container">
       <i class="fa fa-angle-left pull-right"></i>
     </span>
