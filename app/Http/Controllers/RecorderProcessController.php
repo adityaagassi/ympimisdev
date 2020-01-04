@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\ActivityList;
 use App\PushBlockMaster;
 use App\PushBlockRecorder;
+use App\PushBlockRecorderResume;
 use Response;
 use DataTables;
 use Excel;
@@ -18,20 +19,24 @@ use File;
 use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class RecorderProcessController extends Controller
 {
     public function __construct()
     {
       $this->middleware('auth');
-      $this->product_type = ['YRS 20 G Ivory',
-                        'YRS 20 G Pink',
-                        'YRS 23 G Brown',
-                        'YRS 23 G Green',
-                    	'YRS 24 B Blue',
-                    	'YRS 24 B Red',
-                    	'YRF 21 Ivory',
-                    	'YRF 21 Beige'];
+      $this->product_type = ['YRS 23 IVORY',
+                        'YRS 24B IVORY',
+                        'YRS 20BB BLUE',
+                        'YRS 20BG GREEN',
+                    	'YRS 20BP PINK',
+                    	'YRS 20BR RED',
+                    	'YRS 20GB BLUE',
+                    	'YRS 20GG GREEN',
+                      'YRS 20GP PINK',
+                    'YRS 24BUK BROWN',
+                  'YRF 21 IVORY',];
 
       $this->mail = ['budhi.apriyanto@music.yamaha.com',
                     'khoirul.umam@music.yamaha.com',
@@ -116,7 +121,6 @@ class RecorderProcessController extends Controller
                     'check_date' => $request->get('check_date'),
                     'injection_date' => $request->get('injection_date'),
                     'product_type' => $request->get('product_type'),
-                    'production_date' => $request->get('production_date'),
                     'head' => $head[$i],
                     'block' => $block[$i],
                     'push_pull' => $push_pull[$i],
@@ -127,39 +131,111 @@ class RecorderProcessController extends Controller
                     'created_by' => $id_user
                 ]);
 
-                $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
+                // $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
 
-                $bodyHtml2 = "<html><h2>NG Report of Hight Gauge Check Block Recorder</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Hight Gauge : ".$ketinggian[$i]."</p><p>Judgement : ".$judgementketinggian[$i]."</p></html>";
+                // $bodyHtml2 = "<html><h2>NG Report of Hight Gauge Check Block Recorder</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Hight Gauge : ".$ketinggian[$i]."</p><p>Judgement : ".$judgementketinggian[$i]."</p></html>";
 
-                if($judgement[$i] == 'NG'){
-                  foreach($this->mail as $mail_to){
-                    Mail::raw([], function($message) use($bodyHtml,$mail_to) {
-                        $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                        $message->to($mail_to);
-                        $message->subject('NG Report of Recorder Push Block Check');
-                        $message->setBody($bodyHtml, 'text/html' );
-                        // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                    });
-                  }
+                // if($judgement[$i] == 'NG'){
+                //   foreach($this->mail as $mail_to){
+                //     Mail::raw([], function($message) use($bodyHtml,$mail_to) {
+                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+                //         $message->to($mail_to);
+                //         $message->subject('NG Report of Recorder Push Block Check');
+                //         $message->setBody($bodyHtml, 'text/html' );
+                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
+                //     });
+                //   }
+                // }
+                // if($judgementketinggian[$i] == 'NG'){
+                //   foreach($this->mail as $mail_to){
+                //     Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
+                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+                //         $message->to($mail_to);
+                //         $message->subject('NG Report of Hight Gauge Check Block Recorder');
+                //         $message->setBody($bodyHtml2, 'text/html' );
+                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
+                //     });
+                //   }
+                // }
+              }
+
+              $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function create_resume(Request $request)
+    {
+          try{    
+              $id_user = Auth::id();
+              $push_pull_ng_name = $request->get('push_pull_ng_name');
+              $push_pull_ng_value = $request->get('push_pull_ng_value');
+              $height_ng_name = $request->get('height_ng_name');
+              $height_ng_value = $request->get('height_ng_value');
+              $head = $request->get('head');
+              $block = $request->get('block');
+              $remark = $request->get('remark');
+
+              PushBlockRecorderResume::create([
+                'remark' => $remark,
+                  'check_date' => $request->get('check_date'),
+                  'injection_date' => $request->get('injection_date'),
+                  'product_type' => $request->get('product_type'),
+                  'head' => $head,
+                  'block' => $block,
+                  'push_pull_ng_name' => $push_pull_ng_name,
+                  'push_pull_ng_value' => $push_pull_ng_value,
+                  'height_ng_name' => $height_ng_name,
+                  'height_ng_value' => $height_ng_value,
+                  'pic_check' => $request->get('pic_check'),
+                  'created_by' => $id_user
+              ]);
+
+              if($push_pull_ng_name != 'OK'){
+                $data_push_pull = array(
+                  'push_block_code' => $remark,
+                  'check_date' => $request->get('check_date'),
+                  'injection_date' => $request->get('injection_date'),
+                  'product_type' => $request->get('product_type'),
+                  'head' => $head,
+                  'block' => $block,
+                  'push_pull_ng_name' => $request->get('push_pull_ng_name2'),
+                  'push_pull_ng_value' => $request->get('push_pull_ng_value2'),
+                  'pic_check' => $request->get('pic_check'),
+                );
+                foreach($this->mail as $mail_to){
+                    Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull_check'));
                 }
-                if($judgementketinggian[$i] == 'NG'){
-                  foreach($this->mail as $mail_to){
-                    Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
-                        $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                        $message->to($mail_to);
-                        $message->subject('NG Report of Hight Gauge Check Block Recorder');
-                        $message->setBody($bodyHtml2, 'text/html' );
-                        // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                    });
-                  }
+              }
+
+              if($height_ng_name != 'OK'){
+                $data_height = array(
+                  'push_block_code' => $remark,
+                  'check_date' => $request->get('check_date'),
+                  'injection_date' => $request->get('injection_date'),
+                  'product_type' => $request->get('product_type'),
+                  'head' => $head,
+                  'block' => $block,
+                  'height_ng_name' => $request->get('height_ng_name2'),
+                  'height_ng_value' => $request->get('height_ng_value2'),
+                  'pic_check' => $request->get('pic_check'),
+                );
+                foreach($this->mail as $mail_to){
+                    Mail::to($mail_to)->send(new SendEmail($data_height, 'height_check'));
                 }
               }
 
               $response = array(
                 'status' => true,
               );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
               return Response::json($response);
             }catch(\Exception $e){
               $response = array(
@@ -261,6 +337,16 @@ class RecorderProcessController extends Controller
                       'remark' => $remark,);
       return view('recorder.report.report_push_block', $data
         )->with('page', 'Report Push Block Check')->with('remark', $remark);
+    }
+
+    public function resume_push_block($remark)
+    {
+        $push_block_check = PushBlockRecorderResume::where('remark',$remark)->orderBy('push_block_recorder_resumes.id','desc')->get();
+
+        $data = array('push_block_check' => $push_block_check,
+                      'remark' => $remark);
+      return view('recorder.report.resume_push_block', $data
+        )->with('page', 'Resume Push Block Check')->with('remark', $remark);
     }
 
     public function push_block_check_monitoring($remark){

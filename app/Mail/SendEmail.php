@@ -114,6 +114,12 @@ class SendEmail extends Mailable
         if($this->remark == 'weekly_report'){
             return $this->from('ympimis@gmail.com')->subject('Weekly Activity Report (??)')->view('mails.weekly_report');
         }
+        if($this->remark == 'push_pull_check'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('NG Report of Push Pull Check Recorder (??)')->view('mails.push_pull_check');
+        }
+        if($this->remark == 'height_check'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('NG Report of Height Gauge Check Recorder (??)')->view('mails.height_check');
+        }
         if($this->remark == 'urgent_wjo'){
             if($this->data[0]->attachment != null){
                 return $this->from('ympimis@gmail.com')

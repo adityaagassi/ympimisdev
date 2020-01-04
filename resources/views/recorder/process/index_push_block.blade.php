@@ -524,6 +524,7 @@
 							</div>
 							<div class="col-xs-8">
 								<input type="hidden" id="head_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
+								<input type="hidden" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
 								<input type="text" id="head_1" style="width: 24%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="text" id="head_2" style="width: 24%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="text" id="head_3" style="width: 24%; height: 30px; font-size: 20px; text-align: center;" disabled>
@@ -536,6 +537,7 @@
 							</div>
 							<div class="col-xs-8">
 								<input type="hidden" id="block_id" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
+								<input type="hidden" id="block_value" style="width: 30%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="text" id="block_1" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="text" id="block_2" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="text" id="block_3" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
@@ -595,10 +597,28 @@
 	      }
 	    });
 		$('#reset_button').hide();
+
+	});
+
+	jQuery.extend(jQuery.expr[':'], {
+	    focusable: function (el, index, selector) {
+	        return $(el).is('a, button, :input, [tabindex]');
+	    }
 	});
 
 	$('#modalHeadBlock').on('shown.bs.modal', function () {
 			$('#injection_date').focus();
+	});
+
+	$(document).on('keypress', 'input,select', function (e) {
+	    if (e.which == 13) {
+	        e.preventDefault();
+	        // Get all focusable elements on the page
+	        var $canfocus = $(':focusable');
+	        var index = $canfocus.index(document.activeElement) + 1;
+	        if (index >= $canfocus.length) index = 0;
+	        $canfocus.eq(index).focus();
+	    }
 	});
 
 	function plusCount(){
@@ -613,6 +633,18 @@
 		var data = {
 			no_cavity : no_cavity,
 			type : 'head',
+		}
+
+		if (no_cavity == 1) {
+			$('#head_value').val('1-4');
+		}else if (no_cavity == 2) {
+			$('#head_value').val('5-8');
+		}else if (no_cavity == 3) {
+			$('#head_value').val('8-12');
+		}else if (no_cavity == 4) {
+			$('#head_value').val('13-16');
+		}else if (no_cavity == 5) {
+			$('#head_value').val('17-20');
 		}
 
 		$.get('{{ url("index/fetch_push_block") }}', data, function(result, status, xhr){
@@ -633,6 +665,14 @@
 		var data = {
 			no_cavity : no_cavity,
 			type : 'head',
+		}
+
+		if (no_cavity == 6) {
+			$('#block_value').val('1-8');
+		}else if (no_cavity == 7) {
+			$('#block_value').val('9-16');
+		}else if (no_cavity == 8) {
+			$('#block_value').val('16-24');
 		}
 
 		$.get('{{ url("index/fetch_push_block") }}', data, function(result, status, xhr){
@@ -678,6 +718,10 @@
 	function konfirmasi(){
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
+
+		var head_value =  $("#head_value").val();
+		var block_value =  $("#block_value").val();
+
 		var check_date = $("#check_date").val();
 		var injection_date = $("#inj_date").val();
 		var product_type = $("#prod_type").val();
@@ -699,7 +743,14 @@
 		var judgementketinggian2 = [];
 
 		var status_false = 0;
+
+		var push_pull_ng_name = [];
+		var height_ng_name = [];
+		var push_pull_ng_value = [];
+		var height_ng_value = [];
+
 		var push_block_code = '{{ $remark }}';
+
 		for(var i = 1; i <= 4; i++){
 			for(var j = 1; j <= 4; j++){
 				array_head.push($("#head_"+[j]).val());
@@ -710,6 +761,15 @@
 				judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
 				if($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == ''){
 					status_false++;
+				}
+
+				if ($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+					push_pull_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+					push_pull_ng_value.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+				}
+				if ($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+					height_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+					height_ng_value.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
 				}
 			}
 		}
@@ -724,12 +784,84 @@
 				if($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == ''){
 					status_false++;
 				}
+
+				if ($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+					push_pull_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+					push_pull_ng_value.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+				}
+
+				if ($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+					height_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+					height_ng_value.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+				}
 			}
 		}
 		if(status_false > 0){
 			alert('Semua Data Harus Diisi');
 		}
 		else{
+			if (push_pull_ng_name.join() == '') {
+				push_pull_ng_name.push('OK');
+			}
+			else{
+				push_pull_ng_name.join();
+			}
+
+			if (push_pull_ng_value.join() == '') {
+				push_pull_ng_value.push('OK');
+			}
+			else{
+				push_pull_ng_value.join();
+			}
+
+			if (height_ng_name.join() == '') {
+				height_ng_name.push('OK');
+			}
+			else{
+				height_ng_name.join();
+			}
+
+			if (height_ng_value.join() == '') {
+				height_ng_value.push('OK');
+			}
+			else{
+				height_ng_value.join();
+			}
+			// console.log(push_pull_ng_name.join());
+			// console.log(push_pull_ng_value.join());
+			// console.log(height_ng_name.join());
+			// console.log(height_ng_value.join());
+
+			var data3 = {
+				push_block_code : push_block_code,
+				check_date : check_date,
+				injection_date : injection_date,
+				pic_check : pic_check,
+				product_type : product_type,
+				head : head_value,
+				block : block_value,
+				push_pull_ng_name : push_pull_ng_name.join(),
+				push_pull_ng_value : push_pull_ng_value.join(),
+				height_ng_name : height_ng_name.join(),
+				height_ng_value : height_ng_value.join(),
+				push_pull_ng_name2 : push_pull_ng_name,
+				push_pull_ng_value2 : push_pull_ng_value,
+				height_ng_name2 : height_ng_name,
+				height_ng_value2 : height_ng_value
+			}
+			// console.log(data3);
+
+			$.post('{{ url("index/push_block_recorder_resume/create_resume") }}', data3, function(result, status, xhr){
+				if(result.status){
+					// alert('Pengisian Selesai. Tekan OK untuk menutup.');
+					// window.close();
+					openSuccessGritter('Success', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+			});
+
 			var data = {
 				push_block_code : push_block_code,
 				check_date : check_date,
@@ -768,6 +900,8 @@
 			$.post('{{ url("index/push_block_recorder/create") }}', data2, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
+					alert('Pengisian Selesai. Tekan OK untuk menutup.');
+					window.close();
 				}
 				else{
 					openErrorGritter('Error!', result.message);

@@ -99,6 +99,7 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 //----- Start mesin injeksi
 Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
 Route::get('index/injeksi', 'InjectionsController@index');
+Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
 Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
 //in
 Route::get('index/in', 'InjectionsController@in');
@@ -865,6 +866,7 @@ Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
 Route::get('download/workshop/attachment', 'WorkshopController@downloadAttachment');
 Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
 Route::get('scan/workshop/tag/rfid', 'WorkshopController@scanTag');
+Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcessLog');
 
 
 
@@ -1691,6 +1693,7 @@ Route::get('index/audit_report_activity/print_audit_report_chart/{id}/{subsectio
 Route::get('index/audit_report_activity/print_audit_report_email/{id}/{month}', 'AuditReportActivityController@print_audit_report_email');
 Route::post('index/audit_report_activity/send_email/{id}', 'AuditReportActivityController@sendemail');
 Route::post('index/audit_report_activity/approval/{id}', 'AuditReportActivityController@approval');
+Route::get('index/getemployee', 'AuditReportActivityController@getemployee');
 
 //Interview
 Route::get('index/interview/index/{id}', 'InterviewController@index');
@@ -1876,9 +1879,11 @@ Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
+Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
 Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
+Route::get('index/recorder/resume_push_block/{remark}', 'RecorderProcessController@resume_push_block');
 Route::get('index/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@push_block_check_monitoring');
 Route::get('fetch/recorder/push_block_check_monitoring/{remark}', 'RecorderProcessController@fetch_push_block_check_monitoring');
 Route::get('fetch/recorder/height_check_monitoring/{remark}', 'RecorderProcessController@fetch_height_check_monitoring');
