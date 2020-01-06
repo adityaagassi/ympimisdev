@@ -2250,23 +2250,29 @@ public function applyKaizen(Request $request)
 public function fetchKaizenResume(Request $request)
 {
   try {
-    $q = "select leader, `name`, SUM(tot) as total_operator, SUM(kz_tot) as total_sudah, SUM(belum) as total_belum, SUM(kaizen_count) as total_kaizen from 
-    (select leader.leader, count(leader.employee_id) as tot, count(kz.employee_id) as kz_tot, SUM(IF(kz.employee_id is null, 1, 0)) as belum, 0 as kaizen_count from
-    (select employees.employee_id, emp.employee_id as leader from employees join employees emp on employees.direct_superior = emp.employee_id
-    where employees.direct_superior is not null) leader left join
-    (select employee_id, leader from kaizen_forms join 
-    (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
-    group by employee_id, leader) kz on leader.employee_id = kz.employee_id 
-    and leader.leader = kz.leader
-    group by leader.leader
+    // $q = "select leader, `name`, SUM(tot) as total_operator, SUM(kz_tot) as total_sudah, SUM(belum) as total_belum, SUM(kaizen_count) as total_kaizen from 
+    // (select leader.leader, count(leader.employee_id) as tot, count(kz.employee_id) as kz_tot, SUM(IF(kz.employee_id is null, 1, 0)) as belum, 0 as kaizen_count from
+    // (select employees.employee_id, emp.employee_id as leader from employees join employees emp on employees.direct_superior = emp.employee_id
+    // where employees.direct_superior is not null) leader left join
+    // (select employee_id, leader from kaizen_forms join 
+    // (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
+    // group by employee_id, leader) kz on leader.employee_id = kz.employee_id 
+    // and leader.leader = kz.leader
+    // group by leader.leader
 
-    union all
+    // union all
 
-    select leader, 0 as tot, 0 as kz_tot, 0 as belum, count(employee_id) as kaizen_count from kaizen_forms join 
-    (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
-    group by leader) as alls
-    join employees on alls.leader = employees.employee_id
-    group by leader, `name` order by total_belum desc";
+    // select leader, 0 as tot, 0 as kz_tot, 0 as belum, count(employee_id) as kaizen_count from kaizen_forms join 
+    // (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
+    // group by leader) as alls
+    // join employees on alls.leader = employees.employee_id
+    // group by leader, `name` order by total_belum desc";
+
+    $q = "select final.leader_id, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
+    (
+    select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
+    (
+    select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = 'FY196') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final group by final.leader_id";
 
     $datas = db::select($q);
   } catch (QueryException $e) {
