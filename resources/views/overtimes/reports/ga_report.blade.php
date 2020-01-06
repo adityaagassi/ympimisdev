@@ -202,8 +202,49 @@
     var data = {
       tanggal : $("#datepicker").val()
     }
-    $.get('{{ url("fetch/report/ga_report") }}', data, function(result, status, xhr){
 
+    arr = [];
+
+    $.get('{{ url("fetch/report/ga_report") }}', data, function(result, status, xhr){
+      $.each(result.datas, function(index, value){
+        arr.push(value.ovtplanfrom+","+value.ovtplanto);
+      })
+
+      var arr2 = arr.filter(function(elem, index, self) {
+
+        return index === self.indexOf(elem);
+
+      });
+
+      arr3 = [];
+
+      for (var z = 0; z < arr2.length; z++) {
+        var bgl = 0, psr = 0;
+        for (var i = 0; i < result.datas.length; i++) {
+          var base = arr2[z].split(",");
+          if (result.datas[i].ovtplanfrom == base[0] && result.datas[i].ovtplanto == base[1]) {
+            if (result.datas[i].ovttrans == "TRNPSR") {
+              psr += 1;
+            } else if (result.datas[i].ovttrans == "TRNBGL") {
+              bgl += 1;
+            }
+          }
+        }
+
+        arr3.push([arr2[z], bgl, psr]);
+      }
+
+      var trans_body = "";
+
+      $.each(arr3, function(index, value){
+        trans_body +="<tr>";
+        trans_body +="<td>"+value[0]+"</td>";
+        trans_body +="<td>"+value[1]+"</td>";
+        trans_body +="<td>"+value[2]+"</td>";
+        trans_body +="</tr>";
+      })
+
+      $("#trans").append(trans_body);
     })
   }
 

@@ -269,15 +269,15 @@
     var ctg, tot_act = 0, avg = 0, tot_budget = 0, avg_fc = 0;
     var tot_day_budget = 0, tot_diff;
 
-    for(var i = 0; i < result.report_control.length; i++){
-    	ctg = result.report_control[i].cost_center_name;
-    	tot_act += result.report_control[i].act;
-    	tot_budget += result.report_control[i].tot;
-    	tot_day_budget += result.report_control[i].jam_harian;
+    for(var i = 0; i < result.semua.length; i++){
+    	ctg = result.semua[i].cost_center_name;
+    	tot_act += result.semua[i].actual;
+    	tot_budget += result.semua[i].budget;
+    	tot_day_budget += result.semua[i].forecast;
 
-    	seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
-    	seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
-    	budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
+    	seriesDataBudget.push(Math.round(result.semua[i].budget * 100) / 100);
+    	seriesDataAktual.push(Math.round(result.semua[i].actual * 100) / 100);
+    	budgetHarian.push(Math.round(result.semua[i].forecast * 100) / 100);
     	if(xCategories2.indexOf(ctg) === -1){
     		xCategories2[xCategories2.length] = ctg;
     	}
@@ -326,7 +326,7 @@
     		type: 'column'
     	},
     	title: {
-    		text: '<span style="font-size: 18pt;">Overtime Control - Forecast</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
+    		text: '<span style="font-size: 18pt;">Overtime Control - Forecast</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.semua[0].tanggal +'</center></span>',
     		useHTML: true
     	},
     	credits:{
