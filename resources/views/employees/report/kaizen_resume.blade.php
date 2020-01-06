@@ -166,14 +166,14 @@
 						min: 0,
 						title: {
 							text: 'Number of Kaizen Teian'
-						}
+						},
 					},
 
 					tooltip: {
 						formatter: function () {
 							return '<b>' + this.x + '</b><br/>' +
 							this.series.name + ': ' + this.y;
-						}
+						},
 					},
 
 					plotOptions: {
@@ -186,7 +186,17 @@
 								radius: 0.1
 							},
 
-						}
+						},
+						series:{
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '0.7vw'
+								}
+							},
+						},
 					},
 
 					credits: {
