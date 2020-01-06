@@ -2275,7 +2275,7 @@ public function fetchKaizenResume(Request $request)
     select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = 'FY196') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
     group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
     left join employees on employees.employee_id = final.leader_id 
-    group by final.leader_id, employees.`name`";
+    group by final.leader_id, employees.`name` order by total belum desc";
 
     $datas = db::select($q);
   } catch (QueryException $e) {
