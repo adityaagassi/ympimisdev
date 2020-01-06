@@ -2268,11 +2268,14 @@ public function fetchKaizenResume(Request $request)
     // join employees on alls.leader = employees.employee_id
     // group by leader, `name` order by total_belum desc";
 
-    $q = "select final.leader_id, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
+    $q = "select final.leader_id as leader, employees.`name`, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
     (
     select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
     (
-    select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = 'FY196') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final group by final.leader_id";
+    select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = 'FY196') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
+    group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
+    left join employees on employees.employee_id = final.leader_id 
+    group by final.leader_id, employees.`name`";
 
     $datas = db::select($q);
   } catch (QueryException $e) {
