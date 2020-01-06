@@ -48,8 +48,8 @@ class PantryController extends Controller
 
 	public function pesanmenu()
 	{
-		$title = 'Pantry Drink Order';
-		$title_jp = '給湯室飲み物注文';
+		$title = 'Pantry Item Order';
+		$title_jp = '給湯室注文品';
 		$menus = PantryMenu::whereNull('deleted_at')
         ->get();
 
@@ -66,8 +66,8 @@ class PantryController extends Controller
 	}
 
 	public function daftarpesanan(){
-		$title = 'Pantry Drink Order List';
-		$title_jp = '???';
+		$title = 'Pantry Order List';
+		$title_jp = '注文内容';
 		$orders = PantryOrder::where('status', 'confirmed')
         ->get();
 
@@ -360,8 +360,8 @@ class PantryController extends Controller
     }
 
     public function daftarkonfirmasi(){
-		$title = 'Pantry Drink Order Confirmation';
-		$title_jp = '飲み物注文確認';
+		$title = 'Pantry Order Confirmation';
+		$title_jp = '注文内容確認';
 
 		return view('pantry.pesanan_konfirmasi', array(
 			'title' => $title,

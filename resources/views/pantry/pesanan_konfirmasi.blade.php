@@ -77,7 +77,7 @@ label {
   </div>   
   @endif
 
-  @if(Auth::user()->username == "pantry" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "S")
+  @if(Auth::user()->role_code == "GA" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "S")
 
   <div class="row">
     <div class="col-xs-12">
@@ -215,9 +215,9 @@ label {
             tableData += '<tr>';
             tableData += '<td>'+ value.name +'</td>';
              if (value.informasi == "Hot") {
-              tableData += '<td>  <label class="label label-danger">'+value.informasi+'</label> '+ value.minuman +'</td>';
+              tableData += '<td style="font-size:18px">  <label class="label label-danger">'+value.informasi+'</label> '+ value.minuman +'</td>';
             }else{
-              tableData += '<td>  <label class="label label-info">'+value.informasi+'</label> '+ value.minuman +'</td>';
+              tableData += '<td style="font-size:18px">  <label class="label label-info">'+value.informasi+'</label> '+ value.minuman +'</td>';
             }
             tableData += '<td>'+ value.keterangan +'</td>';
             tableData += '<td>'+ value.gula +'</td>';
