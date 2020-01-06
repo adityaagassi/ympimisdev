@@ -160,7 +160,7 @@ class AuditReportActivityController extends Controller
 
         $bulan = date('Y-m');
 
-        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and `month` = '".$bulan."' and status = 'Belum Dikerjakan'");
+        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and status = 'Belum Dikerjakan'");
 
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);
@@ -168,7 +168,7 @@ class AuditReportActivityController extends Controller
         $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
         $data = array(
@@ -233,12 +233,12 @@ class AuditReportActivityController extends Controller
 
         $bulan = date('Y-m');
 
-        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and `month` = '".$bulan."'");
+        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' ");
 
         $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
         $audit_report_activity = AuditReportActivity::find($audit_report_id);
@@ -604,7 +604,7 @@ class AuditReportActivityController extends Controller
                     $laktivitas->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            
@@ -639,4 +639,20 @@ class AuditReportActivityController extends Controller
           }
           return redirect('/index/audit_report_activity/print_audit_report_email/'.$id.'/'.$month)->with('status', 'Approved.')->with('page', 'Laporan Aktivitas Audit');
       }
+
+      public function getemployee(Request $request){
+
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs where employee_id = '".$request->get('employee_id')."'";
+        $employee = DB::select($queryOperator);
+        foreach ($employee as $key) {
+            $name = $key->name;
+        }
+
+        $response = array(
+            'status' => true,
+            'lists' => $employee,
+            'name' => $name,
+        );
+        return Response::json($response);
+    }
 }
