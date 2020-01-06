@@ -349,11 +349,11 @@ class ProductionReportController extends Controller
                                 and area_checks.deleted_at is null 
                                 and actlist.department_id = '".$id."'),0)
         as jumlah_area_check,
-        (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."') as jumlah_day,
+        (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)) as jumlah_day,
         4 as jumlah_week,
         (SELECT IF(DATE_FORMAT(CURDATE(),'%Y-%m') != '".$bulan."',
-            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND LAST_DAY(concat('".$bulan."','-01'))),
-            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(DATE_FORMAT(CURDATE(),'%Y-%m'),'-01') AND CURDATE())) as jumlah_day)
+            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND LAST_DAY(concat('".$bulan."','-01')) and week_date not in (select tanggal from ftm.kalender)),
+            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(DATE_FORMAT(CURDATE(),'%Y-%m'),'-01') AND CURDATE() and week_date not in (select tanggal from ftm.kalender))) as jumlah_day)
         as cur_day,
         (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
         from activity_lists
