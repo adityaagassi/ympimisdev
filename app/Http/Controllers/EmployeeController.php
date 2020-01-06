@@ -2266,7 +2266,7 @@ public function fetchKaizenResume(Request $request)
     (select MIN(week_date) as min , MAX(week_date) as max from weekly_calendars where fiscal_year = 'FY196') dt on kaizen_forms.propose_date >= dt.min and kaizen_forms.propose_date <= dt.max
     group by leader) as alls
     join employees on alls.leader = employees.employee_id
-    group by leader, `name`";
+    group by leader, `name` order by total_belum desc";
 
     $datas = db::select($q);
   } catch (QueryException $e) {

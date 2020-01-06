@@ -201,13 +201,15 @@
 						name: 'Mengumpulkan',
 						data: kumpul,
 						color: '#2caddb'
-					},
-					{
-						type: 'line',
-						name: 'Jumlah usulan',
-						data: total_kz,
-						color: '#44ab4b'
-					}]
+					}
+					// ,
+					// {
+					// 	type: 'line',
+					// 	name: 'Jumlah usulan',
+					// 	data: total_kz,
+					// 	color: '#44ab4b'
+					// }
+					]
 				});
 			} else {
 
