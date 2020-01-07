@@ -100,6 +100,8 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
 Route::get('index/injeksi', 'InjectionsController@index');
 Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
+Route::post('index/injeksi/store_ng_temp', 'InjectionsController@store_ng_temp');
+Route::get('index/injeksi/get_ng_temp', 'InjectionsController@get_ng_temp');
 Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
 //in
 Route::get('index/in', 'InjectionsController@in');
@@ -868,7 +870,7 @@ Route::get('update/workshop/reject_urgent/{id}', 'WorkshopNotificationController
 Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');
 Route::get('fetch/workshop/assign_form', 'WorkshopController@fetchAssignForm');
 Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
-Route::get('download/workshop/attachment', 'WorkshopController@downloadAttachment');
+Route::get('download/workshop/{id}', 'WorkshopController@downloadAttachment');
 Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
 Route::get('scan/workshop/tag/rfid', 'WorkshopController@scanTag');
 Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcessLog');

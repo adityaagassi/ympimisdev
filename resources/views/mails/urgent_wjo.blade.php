@@ -73,9 +73,9 @@
 			</table>
 			<br>
 			<span style="font-weight: bold;"><i>Apakah anda menyetujui permohonan ini sebagai WJO Urgent?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="http://172.17.128.87/miraidev/public/workshop/approve_urgent/{{ $order_no }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
+			<a style="background-color: green; width: 50px;" href="{{ url("update/workshop/approve_urgent/".$order_no) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="http://172.17.128.87/miraidev/public/workshop/reject_urgent/{{ $order_no }}">&nbsp; Tidak &nbsp;</a><br>
+			<a style="background-color: orange; width: 50px;" href="{{ url("update/workshop/reject_urgent/".$order_no) }}">&nbsp; Tidak &nbsp;</a><br>
 		</center>
 	</div>
 </body>

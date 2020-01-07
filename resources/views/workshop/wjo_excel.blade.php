@@ -54,7 +54,7 @@
                 <td>{{ $workshop_job_order->main_process }}</td>
                 <td>{{ $workshop_job_order->rating }}</td>
                 <td>{{ $workshop_job_order->note }}</td>
-                <td>{{ $workshop_job_order->drawing_number }}</td>
+                <td>{{ $workshop_job_order->item_number }}</td>
                 <td>{{ $workshop_job_order->approver_name }}</td>
                 <td>{{ $workshop_job_order->pic_name }}</td>
             </tr>
@@ -62,6 +62,5 @@
         </tbody>
     </table>
     @endif
-    <br>
 </body>
 </html>

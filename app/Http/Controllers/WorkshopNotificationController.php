@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\SendEmail;
 use App\CodeGenerator;
 use App\WorkshopJobOrder;
+use App\WorkshopJobOrderLog;
 use App\WorkshopMaterial;
 use App\EmployeeSync;
 use Carbon\Carbon;
@@ -27,15 +28,39 @@ class WorkshopNotificationController extends Controller{
 
 		if($wjo->remark == 0){
 			$wjo->remark = 1;
+
+			$manager = EmployeeSync::where('position', '=', 'Manager')
+			->where('group', '=', 'Maintenance')
+			->first();
+
+			$wjo_log = new WorkshopJobOrderLog([
+				'order_no' => $id,
+				'remark' => 1,
+				'created_by' => $manager->employee_id
+			]);
 			$wjo->save();
 
-			$message = 'WJO dengan Order No. '.$id;
-			$message2 ='Berhasil di approve sebagai WJO dengan prioritas urgent';
-			return view('workshop.wjo_approval_message', array(
-				'head' => $id,
-				'message' => $message,
-				'message2' => $message2,
-			))->with('page', 'WJO Approval');
+			try {
+				DB::transaction(function() use ($wjo, $wjo_log){
+					$wjo->save();
+					$wjo_log->save();
+				});
+
+				$message = 'WJO dengan Order No. '.$id;
+				$message2 ='Berhasil di approve sebagai WJO dengan prioritas urgent';
+				return view('workshop.wjo_approval_message', array(
+					'head' => $id,
+					'message' => $message,
+					'message2' => $message2,
+				))->with('page', 'WJO Approval');
+
+			} catch (Exception $e) {
+				return view('workshop.wjo_approval_message', array(
+					'head' => $id,
+					'message' => 'Update Error',
+					'message2' => $e->getMessage(),
+				))->with('page', 'WJO Approval');
+			}
 
 		}else{
 			$message = 'WJO dengan Order No. '.$id;
@@ -53,16 +78,40 @@ class WorkshopNotificationController extends Controller{
 
 		if($wjo->remark == 0){
 			$wjo->remark = 1;
-			$wjo->priority = 'normal';
-			$wjo->save();
+			$wjo->priority = 'Normal';
 
-			$message = 'WJO dengan Order No. '.$id;
-			$message2 = 'berubah menjadi WJO dengan prioritas normal';
-			return view('workshop.wjo_approval_message', array(
-				'head' => $id,
-				'message' => $message,
-				'message2' => $message2,
-			))->with('page', 'WJO Approval');
+			$manager = EmployeeSync::where('position', '=', 'Manager')
+			->where('group', '=', 'Maintenance')
+			->first();
+
+			$wjo_log = new WorkshopJobOrderLog([
+				'order_no' => $id,
+				'remark' => 1,
+				'created_by' => $manager->employee_id		
+			]);
+			$wjo->save();			
+
+			try {
+				DB::transaction(function() use ($wjo, $wjo_log){
+					$wjo->save();
+					$wjo_log->save();
+				});
+
+				$message = 'Reject WJO Urgent berhasil';
+				$message2 = $id.' berubah sebagai WJO dengan prioritas normal';
+				return view('workshop.wjo_approval_message', array(
+					'head' => $id,
+					'message' => $message,
+					'message2' => $message2,
+				))->with('page', 'WJO Approval');
+
+			} catch (Exception $e) {
+				return view('workshop.wjo_approval_message', array(
+					'head' => $id,
+					'message' => 'Update Error',
+					'message2' => $e->getMessage(),
+				))->with('page', 'WJO Approval');
+			}
 
 		}else{
 			$message = 'WJO dengan Order No. '.$id;
