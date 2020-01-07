@@ -143,7 +143,7 @@
 					<div class="box-body">
 						<span style="font-size: 20px; font-weight: bold;">Items (注文品) </span><br><br>
 						<div class="row">
-							<?php foreach ($menus as $menu){ ?>
+							<?php foreach ($menutop as $menu){ ?>
 							<div class="col-md-4 col-sm-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
 								<div class="text-center">
 									<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto;height: 100px">
@@ -157,8 +157,27 @@
 							</center>
 						</div> -->
 
-						<?php } ?>
-					</div>
+							<?php } ?>
+						</div>
+						<hr>
+						<span style="font-size: 20px; font-weight: bold;">Khusus Tamu (お客様専用注文品) </span><br><br>
+						<div class="row">
+							<?php foreach ($menubot as $menu){ ?>
+							<div class="col-md-4 col-sm-6 col-xs-12" onclick="getData({{$menu->id}})" style="cursor: pointer;">
+								<div class="text-center">
+									<img src="{{ url('images/minuman', $menu->gambar) }}" class="img-responsive" style="margin: auto;height: 100px">
+									<p style="font-size: 1.5vw;padding: 5px">{{ $menu->menu }}</p>
+								</div>
+							</div>
+						<!-- <div onclick="getData({{$menu->id}})" style="cursor: pointer;display: inline-block;margin-left: 20px">
+							<center>
+								<img src="{{ url('images/minuman', $menu->gambar) }}" alt="kopi" width="210px">
+								<p style="font-size: 1.5vw;padding: 5px">{{ $menu->menu }}</p>
+							</center>
+						</div> -->
+
+							<?php } ?>
+						</div>
 					<!-- <table class="table" id="tablemenuu">
 						<thead>
 							<tr>
@@ -243,7 +262,6 @@
 					<div class="col-xs-6">
 						<span style="font-weight: bold; font-size: 16px;">Sugar (砂糖) </span><br>
 						<select class="form-control select2" style="width: 100%; height: 40px; font-size: 18px; text-align: center;" id="gula" name="gula" data-placeholder="Choose Amount Of Sugar" required>
-							<option></option>
 							<option value='No Sugar'>No Sugar</option>
 							<option value='Less Sugar'>Less Sugar</option>
 							<option value='Many Sugar'>Many Sugar</option>

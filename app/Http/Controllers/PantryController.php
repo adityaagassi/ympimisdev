@@ -50,8 +50,10 @@ class PantryController extends Controller
 	{
 		$title = 'Pantry Item Order';
 		$title_jp = '給湯室注文品';
-		$menus = PantryMenu::whereNull('deleted_at')
-        ->get();
+		$menus = PantryMenu::whereNull('deleted_at')->get();
+
+        $menutop = PantryMenu::whereNull('deleted_at')->limit(3)->get();
+        $menubot = PantryMenu::whereNull('deleted_at')->skip(3)->limit(3)->get();
 
         $username = Auth::user()->username;
         $user = "select name from users where username='$username'";
@@ -61,6 +63,8 @@ class PantryController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'menus' => $menus,
+            'menutop' => $menutop,
+            'menubot' => $menubot,
 			'users' => $users
 		))->with('page', 'Pantry')->with('head', 'Pantry');
 	}
@@ -129,7 +133,7 @@ class PantryController extends Controller
 		catch(\Exception $e){
 			$response = array(
 				'status' => false,
-				'message' => $e->getMessage()
+				'message' => 'Pilih Item Terlebih Dahulu <br>注文品を予め選択してください',
 			);
 			return Response::json($response);
 		}
