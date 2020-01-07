@@ -439,7 +439,7 @@
                 </div>
               </div>
               <div  class="col-md-2">
-                  <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                  <a href="{{ url('/files/car/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
               </div>
             <?php } ?>                       
           </div>

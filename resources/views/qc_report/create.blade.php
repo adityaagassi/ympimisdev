@@ -137,6 +137,7 @@
             <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
             <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
             <input type="hidden" class="form-control" name="getbulan" id="getbulan" placeholder="getbulan" required>
+            <input type="hidden" class="form-control" name="getyear" id="getyear" placeholder="getyear" required>
             <!-- <input type="text" class="form-control" name="staff" id="staff" placeholder="staff" required value="O11081664">
             <input type="text" class="form-control" name="chief" id="chief" placeholder="chief" required value="G03110980">
             <input type="text" class="form-control" name="manager" id="manager" placeholder="manager" required value="A97100056">
@@ -279,8 +280,10 @@
           var time = new Date(tgl);
           var dateArr = tgl.split("/");
           var forDate = dateArr[1];
+          var forYear = dateArr[2];
           // console.log(forDate);
-          $('#getbulan').val(forDate);  
+          $('#getbulan').val(forDate); 
+          $('#getyear').val(forYear);  
     }
 
 
@@ -290,6 +293,7 @@
         var nomorcpar = document.getElementById("cpar_no");
         var kategori_cpar = document.getElementById("kategori");
         var getbulan = document.getElementById("getbulan").value;
+        var gettahun = document.getElementById("getyear").value;
         var getdepartemen = departemen.options[departemen.selectedIndex].value;
         var getsumber = sumber.options[sumber.selectedIndex].value;
         var kategori;
@@ -338,7 +342,7 @@
               var nomordepan = $('#nomordepan').val();
               var truenumber = addZero(nomordepan);
               // var nomorsplit = nomor.split("/");
-              nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+year;
+              nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+gettahun;
            }
         });
     }

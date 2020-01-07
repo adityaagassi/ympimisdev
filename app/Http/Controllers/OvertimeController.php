@@ -1447,8 +1447,8 @@ public function fetchCostCenterBudget(Request $request)
 {
 	$tgl = date('Y-m',strtotime($request->get('tgl')));
 	$query = "select budgets.cost_center, period, budget from budgets
-	left join cost_centers on budgets.cost_center = cost_centers.cost_center
-	where DATE_FORMAT(period,'%Y-%m') = '".$tgl."' and cost_centers.cost_center_name = '".$request->get('cc')."' limit 1";
+	left join cost_centers2 on budgets.cost_center = cost_centers2.cost_center
+	where DATE_FORMAT(period,'%Y-%m') = '".$tgl."' and cost_centers2.cost_center_name = '".$request->get('cc')."' limit 1";
 
 	$datas = DB::select($query);
 
@@ -1462,66 +1462,29 @@ public function fetchCostCenterBudget(Request $request)
 
 public function overtimeDetail(Request $request)
 {
-	$tgl = date('Y-m-d',strtotime($request->get('tgl')));
-	$bulan = date('Y-m',strtotime($request->get('tgl')));
+	$from = date('Y-m-01',strtotime($request->get('tgl')));
+	$to = date('Y-m-d',strtotime($request->get('tgl')));
 
 	$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
 	->select('cost_center')->first();
 
-	$query = "SELECT
-	final2.nik,
-	c.name,
-	sum( final2.jam ) AS jam,
-	GROUP_CONCAT( DISTINCT c.kep ) AS kep 
-	FROM
-	(
-	SELECT
-	over_time_member.nik,
-	over_time.tanggal,
-	sum( IF(status = 0,over_time_member.jam , over_time_member.final) ) AS jam 
-	FROM
-	over_time
-	LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
-	WHERE
-	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."'
-	AND over_time_member.nik IS NOT NULL 
-	AND over_time.deleted_at IS NULL 
-	and over_time.tanggal <= '".$tgl."'
-	and jam_aktual = 0
-	GROUP BY
-	over_time_member.nik,
-	over_time.tanggal 
-	) AS final2
-	LEFT JOIN (
-	SELECT
-	over_time_member.nik,
-	karyawan.name,
-	karyawan.cost_center,
-	GROUP_CONCAT( DISTINCT over_time.keperluan ) AS kep 
-	FROM
-	over_time
-	LEFT JOIN over_time_member ON over_time_member.id_ot = over_time.id
-	LEFT JOIN (select ympimis.employees.employee_id, name, cost_center from ympimis.employees left join (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ympimis.employees.employee_id) as karyawan ON karyawan.employee_id = over_time_member.nik 
-	WHERE
-	DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$bulan."' 
-	AND over_time.tanggal <= '".$tgl."' 
-	AND over_time_member.nik IS NOT NULL 
-	AND jam_aktual = 0
-	GROUP BY
-	over_time_member.nik,
-	karyawan.name,
-	karyawan.cost_center
-	) AS c ON final2.nik = c.nik 
-	WHERE
-	c.cost_center = '".$cost_center->cost_center."'
-	AND jam > 0 
-	GROUP BY
-	final2.nik,
-	c.name
-	ORDER BY
-	sum( final2.jam ) DESC";
-
-	$datas = db::connection('mysql3')->select($query);
+	$datas = db::connection('sunfish')->select("
+		select A.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, SUM(floor((total_ot / 60) * 2  + 0.5) / 2) as jam, 
+		STUFF((
+		SELECT ',' + T.remark
+		FROM VIEW_YMPI_Emp_Attendance T
+		WHERE A.emp_no = T.emp_no
+		and T.ovtrequest_no is not null 
+		and T.ovtplanfrom >= '".$from."' 
+		and T.ovtplanto <= '".$to."'
+		FOR XML PATH('')), 1, 1, '') as kep
+		from VIEW_YMPI_Emp_Attendance A
+		left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = A.emp_no
+		where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' 
+		and A.ovtrequest_no is not null 
+		and A.ovtplanfrom >= '".$from."' 
+		and A.ovtplanto <= '".$to."'
+		group by A.emp_no, VIEW_YMPI_Emp_OrgUnit.Full_name");
 
 	$response = array(
 		'status' => true,

@@ -245,7 +245,7 @@
 
 		drawChart();
 
-    setInterval(drawChart, 3000);
+    setInterval(drawChart, 300000);
   });
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -370,7 +370,7 @@
     			point: {
     				events: {
     					click: function () {
-    						modalTampil(this.category, result.report_control[0].tanggal);
+    						modalTampil(this.category, result.semua[0].tanggal);
     					}
     				}
     			},
@@ -443,7 +443,7 @@ function total_budget(costCenter, date) {
 }
 
 function modalTampil(costCenter, date) {
-	$("#myModal").modal('show');
+  $("#myModal").modal('show');
       var showChar = 100;  // How many characters are shown by default
       var ellipsestext = "...";
       var moretext = "Show more >";
@@ -485,7 +485,7 @@ function modalTampil(costCenter, date) {
             dataT += '<td>'+ data.datas[i].jam +'</td>';
             dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
             dataT += '</tr>';
-            jml += data.datas[i].jam;
+            jml += parseFloat(data.datas[i].jam);
           }
           $("#tabelDetail").append(dataT);
 
