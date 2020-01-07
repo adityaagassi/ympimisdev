@@ -190,8 +190,7 @@
 			if(result.status){
 				$('#modal1').modal('show');
 				$('#ng-rate-body').append().empty();
-				$('#judul').append().empty();
-				
+				$('#judul1').append().empty();
 				$('#judul1').append('<b>'+result.ng[0].operator_id+' - '+result.ng[0].name+' on '+bulanText(bulan)+'</b>');
 
 				var ng = 0;
@@ -238,6 +237,7 @@
 			if(result.status){
 				$('#modal2').modal('show');
 				$('#data-log-body').append().empty();
+				$('#judul2').append().empty();
 				$('#judul2').append('<b>'+result.emp[0].employee_id+' - '+result.emp[0].name+' on '+bulanText(bulan)+'</b>');
 
 
