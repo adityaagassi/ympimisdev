@@ -48,7 +48,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     {{ $page }}
-    <small>Verifikasi Corrective Action Report</small>
+    <small>Verifikasi Quality Assurance</small>
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -111,9 +111,6 @@ table.table-bordered > tfoot > tr > th{
          @endif
         </div>
 
-        
-
-
         @foreach($cars as $cars)
 
         <?php if ($cpars->file != null){ ?>
@@ -148,7 +145,6 @@ table.table-bordered > tfoot > tr > th{
           <div class="box box-success box-solid">
             <div class="box-header with-border">
               <h3 class="box-title">File CAR Yang Telah Diupload</h3>
-
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -174,6 +170,8 @@ table.table-bordered > tfoot > tr > th{
 
 
         @if($cpars->status_code != 1)
+
+
           <div class="form-group row" align="left">
             <div class="col-xs-12" style="margin-top: 3%; margin-bottom: 1%;">
               <div class="col-xs-4" style="padding: 0px;">
@@ -183,12 +181,30 @@ table.table-bordered > tfoot > tr > th{
               </div>
               <div class="col-xs-1" style="padding: 0px;">
                 <a class="btn btn-success" onclick='addVerifikasi();'><i class='fa fa-plus' ></i></a>
-                <input type="text" id="jumlahVerif" name="jumlahVerif">
+                <input type="hidden" id="jumlahVerif" name="jumlahVerif">
               </div>
             </div>
             <div id='verif'></div>
           </div>
 
+
+          @if(count($verifikasi) > 0)
+
+            <?php for ($i = 0; $i < count($verifikasi); $i++) { ?>
+              <div class="col-xs-12" id="add_ver_<?= $i ?>">
+                <div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">
+                    Nama File : <?= $verifikasi[$i]->foto ?>
+                </div>
+                <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div>
+                <div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;">
+                    <div class="form-group">
+                        <input type="text" id="ket_<?= $i ?>" name="ket_<?= $i ?>" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control" value="<?= $verifikasi[$i]->keterangan ?>" disabled> 
+                      </div>
+                </div>
+                <div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="hapus('<?= $verifikasi[$i]->id_ver ?>')"><i class="fa fa-close"></i></a> </div>
+            </div>
+            <?php } ?>
+          @endif
 
           <div class="form-group row" align="left">
             <label class="col-sm-4">Cost Estimation (optional)</span></label>
@@ -325,29 +341,47 @@ table.table-bordered > tfoot > tr > th{
     }
 
     var ver = 1;
-    var jumlahVerif = 1;
+    var jumlahVerif = 0;
     function addVerifikasi() {
-      $add = '<div class="col-xs-12" id="add_ver_'+ ver +'"> <div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"> <input type="file" id="gambar_'+ ver +'" name="gambar_'+ ver +'" data-placeholder="Upload File" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"> </div>    <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div><div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;"> <div class="form-group"> <input type="text" id="ket_'+ ver +'" name="ket_'+ ver +'" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control"> </div></div><div class="col-xs-1" style="padding: 0px;"> <button class="btn btn-danger" onclick="remove('+ver+')"><i class="fa fa-close"></i></button> </div></div>';
+      ++jumlahVerif;  
+      $add = '<div class="col-xs-12" id="add_ver_'+ jumlahVerif +'"> <div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"> <input type="file" id="gambar_'+ jumlahVerif +'" name="gambar_'+ jumlahVerif +'" data-placeholder="Upload File" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"> </div>    <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div><div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;"> <div class="form-group"> <input type="text" id="ket_'+ jumlahVerif +'" name="ket_'+ jumlahVerif +'" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control"> </div></div><div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="remove('+jumlahVerif+')"><i class="fa fa-close"></i></a> </div></div>';
 
       $('#verif').append($add);
 
       $('#jumlahVerif').val(jumlahVerif);
-      jumlahVerif++;
       ver++;
     }
 
     function remove(id) {
-    $("#add_ver_"+id).remove();
+      
+      jumlahVerif--;
+      $('#jumlahVerif').val(jumlahVerif);
+      $("#add_ver_"+id).remove();
 
-    if(ver != id){
-      for (var i = id; i < ver; i++) {
-        document.getElementById("add_ver_"+ (i+1)).id = "add_ver_"+ i;
-        document.getElementById("gambar_"+ (i+1)).id = "gambar_"+ i;
-        document.getElementById("ket"+ (i+1)).id = "ket"+ i;
-      }   
+      if(ver != id){
+        for (var i = id; i < ver; i++) {
+          document.getElementById("add_ver_"+ (i+1)).id = "add_ver_"+ i;
+          document.getElementById("gambar_"+ (i+1)).id = "gambar_"+ i;
+          document.getElementById("ket"+ (i+1)).id = "ket"+ i;
+        }   
+      }
+      ver--;
     }
-    ver--;
-  }
+
+    function hapus(id){
+        var data = {
+          id : id,
+        }
+        $.post('{{ url("index/qc_report/deleteVerifikasi") }}', data, function(result, status, xhr){
+          if(result.status){
+            openSuccessGritter('Success Hapus Verifikasi', result.message);
+            location.reload();
+          }
+          else{
+            openErrorGritter('Error!', result.message);
+          }
+        });
+      }
 
   </script>
 @stop

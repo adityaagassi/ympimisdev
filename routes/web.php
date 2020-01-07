@@ -165,6 +165,10 @@ Route::get('fetch/MonhtlyStockHead', 'InjectionsController@MonhtlyStockHead');
 Route::get('fetch/MonhtlyStockFoot', 'InjectionsController@MonhtlyStockFoot');
 Route::get('fetch/MonhtlyStockBlock', 'InjectionsController@MonhtlyStockBlock');
 
+Route::get('index/dailyNG', 'InjectionsController@indexDailyNG');
+Route::get('fetch/dailyNG', 'InjectionsController@dailyNG');
+Route::get('fetch/detailDailyNG', 'InjectionsController@detailDailyNG');
+
 //end report
 
 
@@ -851,6 +855,7 @@ Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
 	Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
+	Route::post('check/workshop/wjo_rfid', 'WorkshopController@checkTag');
 	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
 	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
 });
@@ -1925,6 +1930,8 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
 	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
 
+	
+
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
 	Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
@@ -1949,6 +1956,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/close1/{id}', 'QcReportController@close1');
 	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
 	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
+	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
 });
 
 Route::get('index/request_qa', 'QcRequestController@index');

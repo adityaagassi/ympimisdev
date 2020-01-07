@@ -14,6 +14,7 @@ use DateTime;
 use App\QcCpar;
 use App\QcCar;
 use App\QcCparItem;
+use App\QcVerifikasi;
 use App\Department;
 use App\Employee;
 use App\Material;
@@ -1909,20 +1910,37 @@ class QcReportController extends Controller
          ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
          ->where('qc_cars.cpar_no','=',$cpars->cpar_no)
          ->get();
+
+         $verifikasi = QcCpar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.foto')
+         ->join('qc_verifikasis','qc_verifikasis.cpar_no','=','qc_cpars.cpar_no')
+         ->where('qc_verifikasis.cpar_no','=',$cpars->cpar_no)
+         ->get();         
        
           return view('qc_report.verifikasi_qa', array(
             'cars' => $cars,
             'cpars' => $cpars,
+            'verifikasi' => $verifikasi
           ))->with('page', 'Verifikasi QA');
       }
 
       public function close1(Request $request,$id)
       {
         try{
-            $cpars = QcCpar::find($id);
-            $cpars->cost = $request->get('cost');
-            $cpars->save();
-            return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'Data Has Been Updated')->with('page', 'QA verification');
+          $id_user = Auth::id();
+            $jumlahVerif = $request->get('jumlahVerif');
+            for ($i = 1; $i <= $jumlahVerif; $i++) {
+              $keterangan = $request->get('ket_'.$i);
+              $files=$request->file('gambar_'.$i);
+                $nama=$files->getClientOriginalName();
+                $files->move('files/gambar',$nama);
+                QcVerifikasi::create([
+                    'cpar_no' => $request->get('cpar_no'),
+                    'foto' => $nama,
+                    'keterangan' => $keterangan,
+                    'created_by' => $id_user
+                ]);
+            }
+            return redirect('/index/qc_report/verifikasiqa/'.$id)->with('status', 'Data Has Been Updated')->with('page', 'QA verification');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -1998,6 +2016,17 @@ class QcReportController extends Controller
               return back()->with('error', $e->getMessage())->with('page', 'QA verification');
             }
           }
+      }
+
+      public function deleteVerifikasi(Request $request)
+      {
+          $pantry = QcVerifikasi::find($request->get("id"));
+          $pantry->forceDelete();
+
+          $response = array(
+          'status' => true
+        );
+        return Response::json($response);
       }
 
 

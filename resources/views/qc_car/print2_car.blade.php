@@ -153,6 +153,18 @@
 			<tr style="page-break-inside:avoid">
 				<td colspan="11"><b style="font-size: 20px">C. Corrective Action</b> : <?= $car->perbaikan ?></td>
 			</tr>
+			<tr style="page-break-inside:avoid">
+				<td colspan="11">
+					<b style="font-size: 20px">D. QA Verification</b> 
+					<?php for ($i=0; $i < count($verifikasi); $i++) { ?>
+						<br><br>
+						<p style="font-size: 18px">Verifikasi <?= $i+1 ?> : <?= $verifikasi[$i]->keterangan ?></p>
+						<br>
+						<img src='{{ url("files/gambar/".$verifikasi[$i]->foto) }}' width="400">
+					<?php } ?>
+					
+				</td>
+			</tr>
 			<tr>
 				<td colspan="9"></td>
 				<td class="centera">Prepared</td>

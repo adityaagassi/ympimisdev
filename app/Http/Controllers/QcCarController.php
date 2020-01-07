@@ -181,6 +181,8 @@ class QcCarController extends Controller
 
      public function print_car2($id)
     {
+      $car = QcCar::find($id);
+
       $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','pic.name as picname','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','chief.name as chiefname','foreman.name as foremanname','coordinator.name as coordinatorname')
       ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
       ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
@@ -198,8 +200,14 @@ class QcCarController extends Controller
       ->where('qc_cars.id','=',$id)
       ->get();
 
+      $verifikasi = QcCar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.foto')
+         ->join('qc_verifikasis','qc_verifikasis.cpar_no','=','qc_cars.cpar_no')
+         ->where('qc_verifikasis.cpar_no','=',$car->cpar_no)
+         ->get(); 
+
        return view('qc_car.print2_car', array(
           'cars' => $cars,
+          'verifikasi' => $verifikasi
         ))->with('page', 'CAR');
       
       return $pdf->stream("CAR ".$id. ".pdf");
@@ -582,7 +590,6 @@ class QcCarController extends Controller
             } 
 
             else if($verif[0]->verifikatorchief == null && $verif[0]->verifikatorforeman == null && $verif[0]->verifikatorcoordinator == null) {
-                
                 if (($qc_cars->email_status == "SentStaff" && $qc_cars->posisi == "staff") || ($qc_cars->email_status == "SentForeman" && $qc_cars->posisi == "foreman")) {
                   $qc_cars->email_status = "SentManager";
                   $qc_cars->email_send_date = date('Y-m-d');

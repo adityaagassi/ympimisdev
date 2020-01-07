@@ -145,6 +145,10 @@ label {
 
     fetchTable();
     setInterval(fetchTable, 10000);
+    setTimeout(function(){
+      location = ''
+    },3600000);
+    console.clear();
   });
 
   function open_Modal(id) {
