@@ -1151,9 +1151,8 @@ class MiddleProcessController extends Controller
 			left join standart_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$request->get('bulan')."'
 			and operator_id = '".$request->get('nik')."'
-			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sun'
-			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sat'
-			GROUP BY d.operator_id, tgl");
+			GROUP BY d.operator_id, tgl
+			HAVING act > 60");
 
 		$emp = Employee::where('employee_id', '=', $request->get('nik'))->select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
 
@@ -1176,9 +1175,8 @@ class MiddleProcessController extends Controller
 		$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
 			left join standart_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
-			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sun'
-			and DATE_FORMAT(d.selesai_start_time,'%a') != 'Sat'
-			GROUP BY d.operator_id, tgl");
+			GROUP BY d.operator_id, tgl
+			HAVING act > 60");
 
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
 			where g.location = 'bff'");
@@ -1613,6 +1611,7 @@ class MiddleProcessController extends Controller
 			left join standart_times t on b.material_child = t.material_number
 			where quantity > 0
 			and due_date = '".$tanggal."'
+			and remark = 'SX51'
 			group by b.material_child) plan
 			left join materials m on plan.material_child = m.material_number
 			group by LEFT(m.`key`,1)) plan
