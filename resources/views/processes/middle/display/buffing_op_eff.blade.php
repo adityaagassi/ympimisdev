@@ -635,6 +635,11 @@
 		});
 	}
 
+
+	$('#check-modal').on('shown.bs.modal', function () {
+		$('#input_employee_id').focus();
+	});
+
 	$('#input_employee_id').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			showData();
