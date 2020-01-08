@@ -14,6 +14,7 @@ use App\Overtime;
 use App\OvertimeDetail;
 use App\OrganizationStructure;
 use App\Mutationlog;
+use App\WeeklyCalendar;
 use PDF;
 use Dompdf\Dompdf;
 
@@ -1756,11 +1757,132 @@ public function detailOvertimeByEmployee(Request $request){
 
 public function fetchGAReport(Request $request)
 {
-	$tg = date('Y-m-d',strtotime($request->get('tanggal')));
+	$now = date("Y-m-d", strtotime($request->get('tanggal')));
+	$weekly_calendars = WeeklyCalendar::where('week_date', '=', $now)->first();
 
-	$ot = db::connection('sunfish')->select("SELECT VIEW_YMPI_Emp_OvertimePlan.emp_no, Full_name, Division , Department, [Section], [Sub-Section], [Group], ovttrans, cast(ovtplanfrom as time) ovtplanfrom, cast(ovtplanto as time) ovtplanto from VIEW_YMPI_Emp_OvertimePlan 
-		join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OvertimePlan.emp_no = VIEW_YMPI_Emp_OrgUnit.Emp_no
-		where CONVERT(char(10), ovtplanfrom,126) = '".$tg."' order by ovtplanfrom asc, ovtplanto asc");
+
+	if($weekly_calendars->remark == 'H'){
+		$ot = db::connection('sunfish')->select("
+			select ot_from, ot_to, coalesce(sum(makan1),0) as makan1, coalesce(sum(makan2),0) as makan2, coalesce(sum(makan3),0) as makan3, coalesce(sum(extra2),0) as extra2, coalesce(sum(extra3),0) as extra3, coalesce(sum(trn_bgl),0) as trn_bgl, coalesce(sum(trn_psr),0) as trn_psr from 
+			(
+			SELECT
+			convert(varchar, ovtplanfrom, 108) as ot_from, convert(varchar, ovtplanto, 108) as ot_to,
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_1%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 300
+			THEN 1 
+			ELSE null
+			END AS makan1,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 300
+			THEN 1 
+			ELSE null
+			END AS makan2,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_3%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 300
+			THEN 1 
+			ELSE null
+			END AS makan3,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 300
+			THEN 1 
+			ELSE null
+			END AS extra2,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_3%'
+			THEN 1 
+			ELSE null
+			END AS extra3,
+
+			CASE
+			WHEN
+			ovttrans = 'TRNBGL'
+			THEN 1 
+			ELSE null
+			END AS trn_bgl,
+
+			CASE
+			WHEN
+			ovttrans = 'TRNPSR'
+			THEN 1 
+			ELSE null
+			END AS trn_psr
+
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan
+			where convert(varchar, ovtplanfrom, 105) = '".$request->get('tanggal')."'
+			) as ga_report group by ot_from, ot_to order by ot_to asc
+			");
+	}
+	else{
+		$ot = db::connection('sunfish')->select("
+			select ot_from, ot_to, coalesce(sum(makan1),0) as makan1, coalesce(sum(makan2),0) as makan2, coalesce(sum(makan3),0) as makan3, coalesce(sum(extra2),0) as extra2, coalesce(sum(extra3),0) as extra3, coalesce(sum(trn_bgl),0) as trn_bgl, coalesce(sum(trn_psr),0) as trn_psr from 
+			(
+			SELECT
+			convert(varchar, ovtplanfrom, 108) as ot_from, convert(varchar, ovtplanto, 108) as ot_to,
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_1%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 150
+			THEN 1 
+			ELSE null
+			END AS makan1,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 150
+			THEN 1 
+			ELSE null
+			END AS makan2,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_3%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 150
+			THEN 1 
+			ELSE null
+			END AS makan3,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 150
+			THEN 1 
+			ELSE null
+			END AS extra2,
+
+			CASE
+			WHEN
+			shiftdaily_code LIKE 'Shift_3%'
+			THEN 1 
+			ELSE null
+			END AS extra3,
+
+			CASE
+			WHEN
+			ovttrans = 'TRNBGL'
+			THEN 1 
+			ELSE null
+			END AS trn_bgl,
+
+			CASE
+			WHEN
+			ovttrans = 'TRNPSR'
+			THEN 1 
+			ELSE null
+			END AS trn_psr
+
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan
+			where convert(varchar, ovtplanfrom, 105) = '".$request->get('tanggal')."'
+			) as ga_report group by ot_from, ot_to order by ot_to asc
+			");
+	}
 
 	$response = array(
 		'status' => true,
