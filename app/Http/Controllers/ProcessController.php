@@ -724,6 +724,7 @@ class ProcessController extends Controller
 						$stamp_inventory->save();
 					}
 
+					$code_generator->index = $code_generator->index+1;
 					try{
 						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
 							$code_generator->save();
@@ -786,6 +787,7 @@ class ProcessController extends Controller
 						$stamp_inventory->save();
 					}
 					
+					$code_generator->index = $code_generator->index+1;
 					try{
 						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
 							$code_generator->save();
@@ -2341,14 +2343,13 @@ $barcode = DB::select($query);
 $date = date('Y-m-d');
 $querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
 (
-	SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
+	SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='043'
 )";
 $date2 = DB::select($querydate);
 
 return view('processes.assy_fl.print_label_besar_flute',array(
 	'barcode' => $barcode,
 	'date2' => $date2,
-
 	'remark' => $remark,
 ))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
