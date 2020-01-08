@@ -789,11 +789,11 @@ class ProcessController extends Controller
 					
 					$code_generator->index = $code_generator->index+1;
 					try{
-						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+						// DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
 							$code_generator->save();
 							$plc_counter->save();
 							$log_process->save();
-						});				
+						// });				
 					}
 					catch(\Exception $e){
 						$response = array(
