@@ -1260,7 +1260,7 @@ class MiddleProcessController extends Controller
 			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 			GROUP BY l.operator_id, e.`name`) g
 			on ng.operator_id = g.operator_id
-			order by ng_rate desc");
+			order by ng_rate asc");
 
 		$hpl = '';	
 		if($request->get('hpl') != null) {
