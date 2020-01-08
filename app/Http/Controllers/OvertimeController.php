@@ -1780,7 +1780,7 @@ public function fetchGAReport(Request $request)
 			VIEW_YMPI_Emp_OvertimePlan
 			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_OvertimePlan.emp_no 
 			WHERE
-			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '01-01-2020' 
+			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '".$now."' 
 			AND (COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) <> '-' 
 			or
 			CASE
@@ -1868,7 +1868,7 @@ public function fetchGAReport(Request $request)
 			VIEW_YMPI_Emp_OvertimePlan
 			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_OvertimePlan.emp_no 
 			WHERE
-			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '01-01-2020' 
+			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '".$now."' 
 			AND (COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) <> '-' 
 			or
 			CASE
