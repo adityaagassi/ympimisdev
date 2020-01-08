@@ -1762,6 +1762,33 @@ public function fetchGAReport(Request $request)
 
 
 	if($weekly_calendars->remark == 'H'){
+		$details = db::connection('sunfish')->select("
+			SELECT CONVERT
+			( VARCHAR, VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 108 ) AS ot_from,
+			CONVERT ( VARCHAR, VIEW_YMPI_Emp_OvertimePlan.ovtplanto, 108 ) AS ot_to,
+			VIEW_YMPI_Emp_OvertimePlan.shiftdaily_code,
+			VIEW_YMPI_Emp_OvertimePlan.emp_no,
+			VIEW_YMPI_Emp_OrgUnit.Full_name,
+			VIEW_YMPI_Emp_OrgUnit.Section,
+			COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) AS trans,
+			CASE
+
+			WHEN DATEDIFF( MINUTE, ovtplanfrom, ovtplanto ) >= 300 THEN
+			'Ya' ELSE '-' 
+			END AS food 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_OvertimePlan.emp_no 
+			WHERE
+			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '01-01-2020' 
+			AND (COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) <> '-' 
+			or
+			CASE
+
+			WHEN DATEDIFF( MINUTE, ovtplanfrom, ovtplanto ) >= 300 THEN
+			'Ya' ELSE '-' 
+			END <> '-') order by VIEW_YMPI_Emp_OvertimePlan.shiftdaily_code asc, VIEW_YMPI_Emp_OvertimePlan.emp_no asc
+			");
 		$ot = db::connection('sunfish')->select("
 			select ot_from, ot_to, coalesce(sum(makan1),0) as makan1, coalesce(sum(makan2),0) as makan2, coalesce(sum(makan3),0) as makan3, coalesce(sum(extra2),0) as extra2, coalesce(sum(extra3),0) as extra3, coalesce(sum(trn_bgl),0) as trn_bgl, coalesce(sum(trn_psr),0) as trn_psr from 
 			(
@@ -1823,6 +1850,33 @@ public function fetchGAReport(Request $request)
 			");
 	}
 	else{
+		$details = db::connection('sunfish')->select("
+			SELECT CONVERT
+			( VARCHAR, VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 108 ) AS ot_from,
+			CONVERT ( VARCHAR, VIEW_YMPI_Emp_OvertimePlan.ovtplanto, 108 ) AS ot_to,
+			VIEW_YMPI_Emp_OvertimePlan.shiftdaily_code,
+			VIEW_YMPI_Emp_OvertimePlan.emp_no,
+			VIEW_YMPI_Emp_OrgUnit.Full_name,
+			VIEW_YMPI_Emp_OrgUnit.Section,
+			COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) AS trans,
+			CASE
+
+			WHEN DATEDIFF( MINUTE, ovtplanfrom, ovtplanto ) >= 150 THEN
+			'Ya' ELSE '-' 
+			END AS food 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_OvertimePlan.emp_no 
+			WHERE
+			CONVERT ( VARCHAR, ovtplanfrom, 105 ) = '01-01-2020' 
+			AND (COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) <> '-' 
+			or
+			CASE
+
+			WHEN DATEDIFF( MINUTE, ovtplanfrom, ovtplanto ) >= 150 THEN
+			'Ya' ELSE '-' 
+			END <> '-') order by VIEW_YMPI_Emp_OvertimePlan.shiftdaily_code asc, VIEW_YMPI_Emp_OvertimePlan.emp_no asc
+			");
 		$ot = db::connection('sunfish')->select("
 			select ot_from, ot_to, coalesce(sum(makan1),0) as makan1, coalesce(sum(makan2),0) as makan2, coalesce(sum(makan3),0) as makan3, coalesce(sum(extra2),0) as extra2, coalesce(sum(extra3),0) as extra3, coalesce(sum(trn_bgl),0) as trn_bgl, coalesce(sum(trn_psr),0) as trn_psr from 
 			(
@@ -1886,7 +1940,8 @@ public function fetchGAReport(Request $request)
 
 	$response = array(
 		'status' => true,
-		'datas' => $ot
+		'datas' => $ot,
+		'details' => $details
 	);
 	return $response;
 }

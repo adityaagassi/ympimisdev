@@ -3,6 +3,11 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
+     thead input {
+          width: 100%;
+          padding: 3px;
+          box-sizing: border-box;
+     }
      .morecontent span {
           display: none;
      }
@@ -63,111 +68,147 @@
           <div class="col-xs-12">
                <div class="box box-solid">
                     <div class="box-body">
-                         <form class="form-horizontal">
-                              <div class="form-group">
-                                   <label for="datepicker" class="col-sm-2 control-label">Tanggal</label>
+                         <div class="row">
+                              <div class="col-xs-7">
+                                   <form class="form-horizontal">
+                                        <div class="form-group">
+                                             <label for="datepicker" class="col-sm-2 control-label">Tanggal</label>
+                                             <div class="col-sm-3">
+                                                  <input type="text" class="form-control datepicker" id="datepicker" placeholder="Select date" onchange="changeTanggal(); ">
+                                             </div>
+                                        </div>
 
-                                   <div class="col-sm-3">
-                                        <input type="text" class="form-control datepicker" id="datepicker" placeholder="Select date" onchange="changeTanggal(); ">
-                                   </div>
+                                        <div class="form-group">
+                                             <label class="col-sm-2 control-label">Total Makan</label>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 1</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='makan1' onclick="makan(1,'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 2</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='makan2' onclick="makan(2,'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 3</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='makan3' onclick="makan(3,'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                        </div>
+
+                                        <!-- ali -->
+                                        <div class="form-group">
+                                             <label class="col-sm-2 control-label">Total Extra Food</label>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 1</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='extra1' onclick="extmakan(1, 'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 2</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='extra2' onclick="extmakan(2, 'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                             <div class="col-sm-3">
+                                                  <table class="table table-bordered table-striped text-center" id="shf1">
+                                                       <thead>
+                                                            <tr><th>Shift 3</th></tr>
+                                                       </thead>
+                                                       <tbody>
+                                                            <tr><td id='extra3' onclick="extmakan(3, 'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                             <label class="col-sm-2 control-label">Transport</label>
+                                             <div class="col-sm-10">
+                                                  <table class="table table-bordered table-striped table-hover text-center" id="trs">
+                                                       <thead>
+                                                            <tr>
+                                                                 <th>Jam</th>
+                                                                 <th scope="col" width="30%">Bangil</th>
+                                                                 <th scope="col" width="30%">Pasuruan</th>
+                                                            </tr>
+                                                       </thead>
+                                                       <tbody id="trans">
+
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                        </div>
+
+                                   </form>
                               </div>
-
-                              <div class="form-group">
-                                   <label class="col-sm-2 control-label">Total Makan</label>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 1</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='makan1' onclick="makan(1,'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 2</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='makan2' onclick="makan(2,'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 3</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='makan3' onclick="makan(3,'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
+                              <div class="col-xs-5" style="padding-left: 0;">
+                                   <table id="tableDetailEmp" class="table table-bordered table-striped table-hover">
+                                        <thead style="background-color: rgba(126,86,134,.7);">
+                                             <tr>
+                                                  <th style="width: 1%;">Shift</th>
+                                                  <th style="width: 3%">Jam</th>
+                                                  <th style="width: 3%">ID</th>
+                                                  <th style="width: 10%">Nama</th>
+                                                  <th style="width: 5%">Section</th>
+                                                  <th style="width: 1%">Trn</th>
+                                                  <th style="width: 1%">Mkn</th>
+                                             </tr>
+                                        </thead>
+                                        <tbody id="tableBodyEmp">
+                                        </tbody>
+                                        <tfoot>
+                                             <tr>
+                                                  <th></th>
+                                                  <th></th>
+                                                  <th></th>
+                                                  <th></th>
+                                                  <th></th>
+                                                  <th></th>
+                                                  <th></th>
+                                             </tr>
+                                        </tfoot>
+                                   </table>
                               </div>
-
-                              <!-- ali -->
-                              <div class="form-group">
-                                   <label class="col-sm-2 control-label">Total Extra Food</label>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 1</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='extra1' onclick="extmakan(1, 'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 2</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='extra2' onclick="extmakan(2, 'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                                   <div class="col-sm-2">
-                                        <table class="table table-bordered table-striped text-center" id="shf1">
-                                             <thead>
-                                                  <tr><th>Shift 3</th></tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr><td id='extra3' onclick="extmakan(3, 'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                              </div>
-
-                              <div class="form-group">
-                                   <label class="col-sm-2 control-label">Transport</label>
-                                   <div class="col-sm-6">
-                                        <table class="table table-bordered table-striped table-hover text-center" id="trs">
-                                             <thead>
-                                                  <tr>
-                                                       <th>Jam</th>
-                                                       <th scope="col" width="30%">Bangil</th>
-                                                       <th scope="col" width="30%">Pasuruan</th>
-                                                  </tr>
-                                             </thead>
-                                             <tbody id="trans">
-
-                                             </tbody>
-                                        </table>
-                                   </div>
-                              </div>
-
-                         </form>
+                         </div>
                     </div>
                </div>
           </div>
      </div>
-
 </section>
 @endsection
 @section('scripts')
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
      $.ajaxSetup({
           headers: {
@@ -176,6 +217,7 @@
      });
 
      jQuery(document).ready(function() {
+          $('body').toggleClass("sidebar-collapse");
      });
 
      var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -186,6 +228,8 @@
                tanggal:tanggal
           }
           $.get('{{ url("fetch/report/ga_report") }}', data, function(result, status, xhr){
+               $('#tableDetailEmp').DataTable().clear();
+               $('#tableDetailEmp').DataTable().destroy();
                $('#trans').html('');
                var makan1 = 0;
                var makan2 = 0;
@@ -210,6 +254,69 @@
                     extra3 += parseFloat(value.extra3);
                });
 
+               var tableData2 = "";
+               $('#tableBodyEmp').html('');
+
+               $.each(result.details, function(key, value) {
+                    tableData2 += '<tr>';
+                    tableData2 += '<td style="font-size:12px;">'+value.shiftdaily_code+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.ot_from+'-'+value.ot_to+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.emp_no+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.Full_name+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.Section+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.trans+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.food+'</td>';
+                    tableData2 += '</tr>';
+               });
+               $('#tableBodyEmp').append(tableData2);
+
+               $('#tableDetailEmp tfoot th').each(function(){
+                    var title = $(this).text();
+                    $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="4"/>' );
+               });
+               var table =  $('#tableDetailEmp').DataTable({
+                    'dom': 'Bfrtip',
+                    'responsive':true,
+                    'lengthMenu': [
+                    [ 10, 25, 50, -1 ],
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                    ],
+                    'buttons': {
+                         buttons:[
+                         {
+                              extend: 'pageLength',
+                              className: 'btn btn-default',
+                         },
+                         ]
+                    },
+                    'paging': true,
+                    'lengthChange': true,
+                    'pageLength': 10,
+                    'searching': true,
+                    'ordering': true,
+                    'order': [],
+                    'info': true,
+                    'autoWidth': true,
+                    "sPaginationType": "full_numbers",
+                    "bJQueryUI": true,
+                    "bAutoWidth": false,
+                    "processing": true
+               });
+
+               table.columns().every( function () {
+                    var that = this;
+
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                         if ( that.search() !== this.value ) {
+                              that
+                              .search( this.value )
+                              .draw();
+                         }
+                    } );
+               } );
+
+               $('#tableDetailEmp tfoot tr').appendTo('#tableDetailEmp thead');
+
                $('#trans').append(tableData);
                $('#makan1').text(makan1);
                $('#makan2').text(makan2);
@@ -219,33 +326,33 @@
                $('#extra3').text(extra3);
 
           });
-     }
+}
 
-     $('#datepicker').datepicker({
-          autoclose: true,
-          format: "dd-mm-yyyy",
+$('#datepicker').datepicker({
+     autoclose: true,
+     format: "dd-mm-yyyy",
+});
+
+function openSuccessGritter(title, message){
+     jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-success',
+          image: '{{ url("images/image-screen.png") }}',
+          sticky: false,
+          time: '3000'
      });
+}
 
-     function openSuccessGritter(title, message){
-          jQuery.gritter.add({
-               title: title,
-               text: message,
-               class_name: 'growl-success',
-               image: '{{ url("images/image-screen.png") }}',
-               sticky: false,
-               time: '3000'
-          });
-     }
-
-     function openErrorGritter(title, message) {
-          jQuery.gritter.add({
-               title: title,
-               text: message,
-               class_name: 'growl-danger',
-               image: '{{ url("images/image-stop.png") }}',
-               sticky: false,
-               time: '3000'
-          });
-     }	
+function openErrorGritter(title, message) {
+     jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '3000'
+     });
+}	
 </script>
 @endsection
