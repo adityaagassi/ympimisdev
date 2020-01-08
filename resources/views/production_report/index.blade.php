@@ -21,7 +21,7 @@
 			<?php $no = 1 ?>
 			@foreach($activity_list as $activity_list)
 				@if($activity_list->activity_type == "Pengecekan Foto")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Daily Check FG</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Daily Check FG / KD</a>
 				@elseif($activity_list->activity_type == "Laporan Aktivitas")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Laporan Aktivitas Audit IK</a>
 				@elseif($activity_list->activity_type == "Pengecekan")
