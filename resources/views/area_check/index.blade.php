@@ -180,6 +180,7 @@
 											</tr>
 										</thead>
 										<tbody>
+											@if(count($area_check) != 0)
 											@foreach($area_check as $area_check)
 											<tr>
 												<td>{{$area_check->subsection}}</td>
@@ -213,6 +214,7 @@
 												</td>
 											</tr>
 											@endforeach
+											@endif
 										</tbody>
 										<tfoot>
 											<tr>
@@ -316,12 +318,12 @@
 	                </select>
 	            </div>
             </div>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          	<div class="modal-footer">
-              <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-              <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
-            </div>
+		      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		      	<div class="modal-footer">
+		          <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+		          <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+		        </div>
+		      </div>
           </div>
       </div>
     </div>
@@ -461,10 +463,10 @@
 </script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<!-- <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script> -->
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	function openSuccessGritter(title, message){
