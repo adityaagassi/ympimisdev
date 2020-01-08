@@ -1996,9 +1996,29 @@ public function fetchDataKaizen()
   ->make(true);
 }
 
+public function inputKaizenDetailNote(Request $request){
+  $kaizen_form = KaizenForm::where('id', '=', $request->get('id'))->first();
+  $kaizen_form->remark = $request->get('catatan');
+  try{
+    $kaizen_form->save();
+
+    return response()->json([
+      'status' => true,
+      'message' => 'Catatan berhasil disimpan'
+    ]);
+
+  }
+  catch(\Exception $e){
+    return response()->json([
+      'status' => false,
+      'message' => $e->getMessage(),
+    ]);
+  }
+}
+
 public function fetchDetailKaizen(Request $request)
 {
-  $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'))
+  $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'), 'kaizen_forms.remark')
   ->leftJoin('employees','employees.employee_id','=','kaizen_forms.leader')
   ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
   ->leftJoin('standart_costs','standart_costs.id','=','kaizen_calculations.id_cost')

@@ -256,8 +256,8 @@
 							</tfoot>
 						</table>
 						Note :
-						<textarea class="form-control" placeholder="Write a note. . ."></textarea>
-						<button class="btn btn-primary"><i class="fa fa-paper-plane-o"></i> Send</button>
+						<textarea class="form-control" placeholder="Write a note. . ." id="catatan"></textarea>
+						<button class="btn btn-primary" id="confirmCatatan" onclick="confirmCatatan()"><i class="fa fa-paper-plane-o"></i> Send</button>
 					</div>
 				</div>
 			</div>
@@ -498,6 +498,22 @@
 			$("#assess_tot").html(total1 + total2 + total3);
 		});
 
+		function confirmCatatan(){
+			var note = $('#catatan').val();
+			data = {
+				id: id,
+				catatan:note,
+			}
+			$.post('{{ url("input/kaizen/detail/note") }}', data, function(result) {
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
+
 		function getKaizen(id) {
 			data = {
 				id: id
@@ -516,6 +532,7 @@
 				$("#before").html(result[0].condition);
 				$("#after").html(result[0].improvement);
 
+				$('#catatan').val(result[0].remark);
 				$("#tableEstimasi").empty();
 				bd = "";
 				tot = 0;
