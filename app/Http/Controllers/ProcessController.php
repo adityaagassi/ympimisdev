@@ -2916,7 +2916,26 @@ public function fetchResultFlStamp(Request $request)
 	}
 
 
-	$queryAll = "select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(stamp) as stamp, sum(h1) as h1,sum(h2) as h2 from
+	$queryAll = "select model,
+				sum(debt) as debt,
+				sum(plan) as plan,
+				sum(actual) as actual,
+				sum(plan) + (-sum(debt)) as targetToday,
+				((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)) as sisaToday,
+				sum(wip) as wip,
+				sum(ng) as ng,
+				sum(stamp) as stamp,
+				sum(h1) as h1,
+				IF(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)) < 0,
+						sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)))),
+						-sum(h1)) 
+				as sisaH1,
+				sum(h2) as h2,
+				IF((sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng))))) < 0,
+						sum(h2) + (sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng))))),
+						sum(h2)) 
+				as sisaH2
+				from
 	(
 	select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1,0 as h2 from
 	(

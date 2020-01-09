@@ -101,7 +101,11 @@ Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator'
 Route::get('index/injeksi', 'InjectionsController@index');
 Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
 Route::post('index/injeksi/store_ng_temp', 'InjectionsController@store_ng_temp');
+Route::post('index/injeksi/update_ng_temp', 'InjectionsController@update_ng_temp');
+Route::post('index/injeksi/store_molding_log', 'InjectionsController@store_molding_log');
 Route::get('index/injeksi/get_ng_temp', 'InjectionsController@get_ng_temp');
+Route::get('index/injeksi/get_molding_log', 'InjectionsController@get_molding_log');
+Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp');
 Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
 //in
 Route::get('index/in', 'InjectionsController@in');
@@ -863,6 +867,7 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 });
 
 Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
+Route::get('fetch/workshop/machine', 'WorkshopController@fetchMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
@@ -873,7 +878,10 @@ Route::get('export/workshop/list_wjo', 'WorkshopController@exportListWJO');
 Route::get('download/workshop/{id}', 'WorkshopController@downloadAttachment');
 Route::get('scan/workshop/operator/rfid', 'WorkshopController@scanOperator');
 Route::get('scan/workshop/tag/rfid', 'WorkshopController@scanTag');
+Route::get('scan/workshop/leader/rfid', 'WorkshopController@scanLeader');
 Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcessLog');
+Route::get('close/workshop/check_rfid', 'WorkshopController@checkCloseTag');
+
 
 
 
@@ -1015,6 +1023,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
 	Route::get('fetch/kaizen/applied', 'EmployeeController@fetchAppliedKaizen');
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
+	Route::post('input/kaizen/detail/note', 'EmployeeController@inputKaizenDetailNote');
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');

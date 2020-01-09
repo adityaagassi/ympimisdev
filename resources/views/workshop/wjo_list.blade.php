@@ -319,6 +319,85 @@
 									</div>
 								</div>
 								<br>
+							</div>
+
+							<div id="close_body">
+								<div class="col-xs-12">
+									<h2 id="closed_order_no" style="text-align: center; font-size: 3vw; margin-bottom: 2%"></h2>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%; padding-left: 0px;">Target Selesai</label>
+										<div class="col-xs-8" align="left">
+											<div class="input-group date">
+												<div class="input-group-addon bg-default">
+													<i class="fa fa-calendar"></i>
+												</div>
+												<input type="text" class="form-control" id="closed_target_date" disabled>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_priority" disabled>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_department" disabled>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_bagian" disabled>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">PIC</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_pic" disabled>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xs-6">
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_category" disabled>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Nama Barang</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_item_name" disabled>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Jumlah</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_quantity" disabled>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Material</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_material" disabled>
+										</div>
+									</div>
+									<div class="form-group row" align="right">
+										<label class="col-xs-4" style="margin-top: 1%;">Kesulitan</label>
+										<div class="col-xs-8" align="left">
+											<input type="text" class="form-control" id="closed_difficulty" disabled>
+										</div>
+									</div>
+								</div>
 							</div>			
 
 						</div>
@@ -326,6 +405,7 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
+				<button id="close-button" class="btn btn-success" onclick="closen()"><i class="fa fa-save"></i> Close</button>
 			</div>
 		</div>
 	</div>
@@ -410,28 +490,28 @@
 								</div>
 								<div class="col-xs-6">
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Nama Barang</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<input type="text" class="form-control" id="assign_item_name" required>
 										</div>
 									</div>
 
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Jumlah</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<input type="text" class="form-control" id="assign_quantity" required>
 										</div>
 									</div>
 
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Material</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<input type="text" class="form-control" id="assign_material" required>
 										</div>
 									</div>
 
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Uraian Permintaan</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<textarea class="form-control" id="assign_problem_desc" rows="3" required></textarea>
 										</div>
@@ -439,7 +519,7 @@
 								</div>
 								<div class="col-xs-6" style="margin-top: 5%;">
 									<div class="form-group row" align="right" id="show_target">
-										<label class="col-xs-4" style="margin-top: 1%;">Target Selesai</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
 										<div class="col-xs-8">
 											<div class="input-group date">
 												<div class="input-group-addon bg-default">
@@ -450,7 +530,7 @@
 										</div>
 									</div>
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<select class="form-control select2" data-placeholder="Pilih Kategori" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
 												<option value=""></option>
@@ -477,7 +557,7 @@
 								</div>
 								<div class="col-xs-6" style="margin-top: 5%;">
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">PIC</label>
+										<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<select class="form-control select2" data-placeholder="Pilih Operator" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
 												<option value=""></option>
@@ -490,7 +570,7 @@
 										</div>
 									</div>
 									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Kesulitan</label>
+										<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
 										<div class="col-xs-8" align="left">
 											<select class="form-control select2" data-placeholder="Pilih Kesulitan" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
 												<option value=""></option>
@@ -692,6 +772,10 @@
 		$('#show_request').hide();
 		$('#show_target').hide();
 
+		$('#close_body').hide();
+		$('#close-button').hide();
+
+
 
 		fillTable();
 	});
@@ -708,6 +792,11 @@
 	$("#modal-assignment").on("hidden.bs.modal", function () {
 		$('#assign_body').hide();
 		$('#assign-button').hide();
+	});
+
+	$("#modal-close").on("hidden.bs.modal", function () {
+		$('#close_body').hide();
+		$('#close_button').hide();
 	});
 
 	$('#tag').keydown(function(event) {
@@ -748,7 +837,38 @@
 	$('#close_tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			if($("#close_tag").val().length >= 10){
-				close();
+				var tag = $("#close_tag").val();
+				var data = {
+					tag : tag,
+				}
+
+				$("#loading").show();		
+				$.get('{{ url("close/workshop/check_rfid") }}', data,  function(result, status, xhr){
+					if(result.status){
+						var group = result.wjo.sub_section.split("_");
+
+						document.getElementById("closed_order_no").innerHTML = result.wjo.order_no;
+						document.getElementById("closed_target_date").value = result.wjo.target_date;
+						document.getElementById("closed_priority").value = result.wjo.priority;
+						document.getElementById("closed_department").value = group[0];
+						document.getElementById("closed_bagian").value = group[1];
+						document.getElementById("closed_pic").value = result.wjo.name;
+						document.getElementById("closed_category").value = result.wjo.category;
+						document.getElementById("closed_item_name").value = result.wjo.item_name;
+						document.getElementById("closed_quantity").value = result.wjo.quantity;
+						document.getElementById("closed_material").value = result.wjo.material;
+						document.getElementById("closed_difficulty").value = result.wjo.difficulty;
+
+						$('#close_body').show();
+						$('#close-button').show();
+
+						$("#loading").hide();
+						openSuccessGritter('Success', result.message);
+					}else{
+						$("#loading").hide();
+						openErrorGritter('Error!', result.message);
+					}
+				});
 			}
 			else{
 				openErrorGritter('Error!', 'WJO Tag invalid.');
@@ -920,7 +1040,7 @@
 		});
 	}
 
-	function close() {
+	function closen() {
 		var tag = $("#close_tag").val();
 
 		var data = {
@@ -931,7 +1051,7 @@
 		$.post('{{ url("close/workshop/wjo") }}', data,  function(result, status, xhr){
 			if(result.status){
 				$("#close_tag").val("");
-				
+
 				fillTable();
 				$("#loading").hide();
 				$("#modal-close").modal('hide');
@@ -957,7 +1077,7 @@
 		var pic = $("#assign_pic").val(); 
 		var difficulty = $("#assign_difficulty").val(); 
 
-		if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || target_date == "" || category == "" || pic == "" || difficulty == ""){
+		if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || category == "" || pic == "" || difficulty == ""){
 			openErrorGritter('Error!', 'All fields must be filled');
 			$("#loading").hide();
 			return false;
@@ -1041,8 +1161,6 @@
 
 
 				$('#assign_item_number').val(result.wjo.item_number).trigger('change');  
-
-
 
 				$("#modal-assignment").modal('show');
 				

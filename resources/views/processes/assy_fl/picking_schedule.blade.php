@@ -53,9 +53,12 @@
 							<th rowspan="2" style="padding:0; width:1%;">Act Packing</th>
 							<th colspan="2" style="padding:0; width:1%;">Stock</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy</th>
+							<th rowspan="2" style="padding:0; width:1%;">Sisa Sub-Assy</th>
 							<th rowspan="2" style="padding:0; width:1%;">Stamp</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1)</th>
+							<th rowspan="2" style="padding:0; width:1%;">Sisa Sub-Assy (H+1)</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+2)</th>
+							<th rowspan="2" style="padding:0; width:1%;">Sisa Sub-Assy (H+2)</th>
 							<!-- <th>Diff</th> -->
 						</tr>
 						<tr>
@@ -68,6 +71,9 @@
 					<tfoot style="background-color: RGB(252, 248, 227); color: black;">
 						<tr>
 							<th>Total</th>
+							<th></th>
+							<th></th>
+							<th></th>
 							<th></th>
 							<th></th>
 							<th></th>
@@ -118,6 +124,9 @@
 					var planData = '';
 					var totalTarget = '';
 					var totalSubassy = '';
+					var sisaToday = 0;
+					var sisaH1 = 0;
+					var sisaH2 = 0;
 					var no = 1;
 
 					$.each(result.planData, function(key, value) {
@@ -125,6 +134,23 @@
 						
 						totalTarget = value.plan;
 						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.wip - value.ng)) ;
+						var h1 = Math.round(value.h1);
+						if (totalSubassy < 0) {
+							totalSubassy = 0;
+							h1 = Math.round(value.h1) - (value.stamp - value.actual);
+						}
+						if (h1 < 0) {
+							h1 = 0;
+						}
+
+						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
+							h1 = 0;
+						}
+
+						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
+							h1 = Math.round(value.h1) - (value.wip - value.ng);
+						}
+
 						var h2 = Math.round(value.h2);
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
@@ -142,6 +168,18 @@
 							h2 = Math.round(value.h2) - (value.wip - value.ng);
 						}
 
+						if (value.sisaToday >= 0) {
+							sisaToday = value.sisaToday;
+						}
+
+						if (value.sisaH1 >= 0) {
+							sisaH1 = value.sisaH1;
+						}
+
+						if (value.sisaH2 >= 0) {
+							sisaH2 = value.sisaH2;
+						}
+
 
 						if (no % 2 === 0 ) {
 							color = 'style="background-color: rgb(60,60,60)"';
@@ -156,10 +194,13 @@
 						planData += '<td style="width: 1%">'+ value.actual +'</td>';
 						planData += '<td style="width: 1%">'+ value.wip +'</td>';
 						planData += '<td style="width: 1%">'+ value.ng +'</td>';
-						planData += '<td style="width: 1%">'+ totalSubassy +'</td>';
+						planData += '<td style="width: 1%">'+ value.targetToday +'</td>';
+						planData += '<td style="width: 1%">'+ sisaToday +'</td>';
 						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
-						planData += '<td style="width: 1%">'+ value.h1 +'</td>';
+						planData += '<td style="width: 1%">'+ h1 +'</td>';
+						planData += '<td style="width: 1%">'+ sisaH1 +'</td>';
 						planData += '<td style="width: 1%">'+ h2 +'</td>';
+						planData += '<td style="width: 1%">'+ sisaH2 +'</td>';
 						planData += '</tr>';
 
 						no += 1;
@@ -186,10 +227,10 @@
 							};
 							var api = this.api();
 							
-							var total_actual = api.column(7).data().reduce(function (a, b) {
+							var sisa_sub_assy = api.column(7).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(7).footer()).html(total_actual.toLocaleString());
+							$(api.column(7).footer()).html(sisa_sub_assy.toLocaleString());
 
 							var mtd = api.column(1).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
@@ -221,15 +262,30 @@
 							}, 0)
 							$(api.column(6).footer()).html(h.toLocaleString());
 
-							var h1 = api.column(8).data().reduce(function (a, b) {
+							var stamp = api.column(8).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(8).footer()).html(h1.toLocaleString());
+							$(api.column(8).footer()).html(stamp.toLocaleString());
 
-							var h2 = api.column(9).data().reduce(function (a, b) {
+							var h1 = api.column(9).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(9).footer()).html(h2.toLocaleString());
+							$(api.column(9).footer()).html(h1.toLocaleString());
+
+							var sisaH1 = api.column(10).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(10).footer()).html(sisaH1.toLocaleString());
+
+							var h2 = api.column(11).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(11).footer()).html(h2.toLocaleString());
+
+							var sisaH2 = api.column(12).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(12).footer()).html(sisaH2.toLocaleString());
 
 
 						},

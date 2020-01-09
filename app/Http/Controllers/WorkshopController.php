@@ -45,15 +45,34 @@ class WorkshopController extends Controller{
 		$this->status = $statuses;
 		$this->employee = $employees;
 		$this->machine = $machines;
+		$this->leader = [
+			'PI1108003',
+			'PI9903004'
+		];
 	}
 
 	public function indexWJO($id){
 		$title = 'WJO Execution';
 		$title_jp = '??';
 
+		if($id == 'exe'){
+			return view('workshop.wjo', array(
+				'exe' => $id,
+				'machines' => $this->machine,
+				'machine_name' => '',
+				'process_name' => '',
+				'title' => $title,
+				'title_jp' => $title_jp,
+			))->with('page', 'WJO Execution')->with('head', 'Workshop');
+		}
+
+		$machine = WorkshopProcess::where('machine_code', '=', $id)->first();
+
 		return view('workshop.wjo', array(
 			'exe' => $id,
 			'machines' => $this->machine,
+			'machine_name' => $machine->machine_name,
+			'process_name' => $machine->process_name,
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'WJO Execution')->with('head', 'Workshop');
@@ -97,19 +116,113 @@ class WorkshopController extends Controller{
 
 	public function scanOperator(Request $request){
 		$tag = EmployeeTag::where('tag', '=', $request->get('employee_id'))->first();
+		if(!$tag){
+			$response = array(
+				'status' => false,
+				'message' => 'Tag tidak ditemukan',
+			);
+			return Response::json($response);
+		}
+
 		$employee = EmployeeSync::where('employee_id', '=', $tag->employee_id)->first();
+		if(!$employee){
+			$response = array(
+				'status' => false,
+				'message' => 'Tag belum terdaftar',
+			);
+			return Response::json($response);
+		}
 
 		$response = array(
 			'status' => true,
+			'message' => 'Tag Operator ditemukan',
 			'employee' => $employee,
-			'message' => 'Tag operator ditemukan',
 		);
 		return Response::json($response);
+	}
+
+	public function scanLeader(Request $request){
+		$tag = EmployeeTag::where('tag', '=', $request->get('employee_id'))->first();
+		if(!$tag){
+			$response = array(
+				'status' => false,
+				'message' => 'Tag tidak ditemukan'
+			);
+			return Response::json($response);
+		}
+
+		$employee = EmployeeSync::where('employee_id', '=', $tag->employee_id)->first();
+		if($employee){
+			if(in_array($employee->employee_id, $this->leader)){
+				
+				$process = WorkshopFlowProcess::where('item_number', '=', $request->get('item_number'))
+				->update(['status' => 0]);
+				$process = WorkshopFlowProcess::where('item_number', '=', $request->get('item_number'))
+				->where('sequence_process', '>=', $request->get('sequence_process'))
+				->forceDelete();
+
+				$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+				->where('workshop_logs.order_no', '=', $request->get('order_no'))
+				->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+				->get();
+
+				$wjo = WorkshopJobOrder::leftJoin('workshop_materials', 'workshop_materials.item_number', '=', 'workshop_job_orders.item_number')
+				->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
+				->where('tag', '=', $request->get('order_no'))
+				->orderBy('order_no','desc')
+				->select('workshop_job_orders.order_no',
+					'workshop_job_orders.item_number',
+					'workshop_job_orders.priority',
+					'workshop_job_orders.category',
+					'workshop_job_orders.item_name',
+					'workshop_job_orders.tag',
+					'workshop_job_orders.quantity',
+					'workshop_job_orders.material',
+					'workshop_job_orders.problem_description',
+					'workshop_job_orders.target_date',
+					'employee_syncs.name',
+					'workshop_materials.file_name')
+				->first();
+
+				$process = [];
+
+				$response = array(
+					'status' => true,
+					'wjo' => $wjo,
+					'started_at' => $started_at,
+					'flow_process' => $process,
+					'wjo_log' => $workshop_log,
+					'current_machine' => $current_machine,
+					'message' => 'WJO ditemukan'
+				);
+				return Response::json($response);
+
+
+				$response = array(
+					'status' => true,
+					'message' => 'Proses berhasil diubah'
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Tag tidak ditemukan'
+				);
+				return Response::json($response);
+			}
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Tag belum terdaftar'
+			);
+			return Response::json($response);
+		}
 
 	}
 
 	public function scanTag(Request $request){
 		$current_machine = WorkshopProcess::where('machine_code', '=', $request->get('machine_code'))->first();
+
 
 		$temp = WorkshopTempProcess::where('tag', '=', $request->get('tag'))->first();
 		if(!$temp){
@@ -121,10 +234,13 @@ class WorkshopController extends Controller{
 		}
 		$started_at = $temp->started_at;
 
+
 		$wjo = WorkshopJobOrder::leftJoin('workshop_materials', 'workshop_materials.item_number', '=', 'workshop_job_orders.item_number')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
 		->where('tag', '=', $request->get('tag'))
 		->orderBy('order_no','desc')
 		->select('workshop_job_orders.order_no',
+			'workshop_job_orders.item_number',
 			'workshop_job_orders.priority',
 			'workshop_job_orders.category',
 			'workshop_job_orders.item_name',
@@ -133,6 +249,7 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.material',
 			'workshop_job_orders.problem_description',
 			'workshop_job_orders.target_date',
+			'employee_syncs.name',
 			'workshop_materials.file_name')
 		->first();
 
@@ -144,20 +261,75 @@ class WorkshopController extends Controller{
 			return Response::json($response);
 		}
 
+
+		if($wjo->item_number){
+			$wjo_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+			->where('order_no', '=', $wjo->order_no)
+			->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_logs.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+			->orderBy('sequence_process', 'desc')
+			->first();
+
+			if($wjo_log){		
+				$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+				->where('item_number', '=', $wjo->item_number)
+				->where('sequence_process', '=', ($wjo_log->sequence_process + 1))
+				->where('status', '=', 1)
+				->select('workshop_flow_processes.item_number', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+				->first();
+
+				if($flow){
+					if($flow->process_name != $current_machine->process_name){
+						$response = array(
+							'status' => false,
+							'message' => 'Proses tidak sama dengan sebelumnya',
+							'item_number' => $wjo->item_number,
+							'order_no' => $wjo->order_no,
+							'sequence_process' => ($wjo_log->sequence_process + 1)
+						);
+						return Response::json($response);
+					}
+				}
+
+			}else{
+				$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+				->where('item_number', '=', $wjo->item_number)
+				->where('sequence_process', '=', 1)
+				->where('status', '=', 1)
+				->select('workshop_flow_processes.item_number', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+				->first();
+
+				if($flow){
+					if($flow->process_name != $current_machine->process_name){
+						$response = array(
+							'status' => false,
+							'message' => 'Proses tidak sama dengan sebelumnya',
+							'item_number' => $wjo->item_number,
+							'order_no' => $wjo->order_no,
+							'sequence_process' => 1						
+						);
+						return Response::json($response);
+					}
+				}
+			}
+		}
+
+
 		$wjo->remark = 3;
 		$wjo->save();
 
-		if($wjo->category == 'Equipment'){
 
+		$process = [];
+		if($wjo->category == 'Equipment'){
 			$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
 			->where('workshop_logs.order_no', '=', $wjo->order_no)
-			->select('workshop_logs.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+			->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name')
 			->get();
 
 			$response = array(
 				'status' => true,
 				'wjo' => $wjo,
 				'started_at' => $started_at,
+				'flow_process' => $process,
 				'wjo_log' => $workshop_log,
 				'current_machine' => $current_machine,
 				'message' => 'WJO ditemukan'
@@ -170,22 +342,20 @@ class WorkshopController extends Controller{
 			->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.item_number', 'workshop_processes.machine_name', 'workshop_processes.process_name')
 			->get();
 
-			$flow_process = [];
-
-			if($process){
+			if(count($process) > 0){
 				$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
 				->where('workshop_logs.order_no', '=', $wjo->order_no)
-				->select('workshop_logs.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+				->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name')
 				->get();
 
 				$response = array(
 					'status' => true,
 					'wjo' => $wjo,
 					'started_at' => $started_at,
-					'flow_process' => $flow_process,
+					'flow_process' => $process,
 					'wjo_log' => $workshop_log,
 					'current_machine' => $current_machine,
-					'message' => 'WJO ditemukan',
+					'message' => 'WJO ditemukan'
 				);
 				return Response::json($response);
 
@@ -199,10 +369,10 @@ class WorkshopController extends Controller{
 					'status' => true,
 					'wjo' => $wjo,
 					'started_at' => $started_at,
-					'flow_process' => $flow_process,
+					'flow_process' => $process,
 					'wjo_log' => $workshop_log,
 					'current_machine' => $current_machine,
-					'message' => 'WJO ditemukan',
+					'message' => 'WJO ditemukan'
 				);
 				return Response::json($response);
 			}		
@@ -312,8 +482,7 @@ class WorkshopController extends Controller{
 		$wjo = WorkshopJobOrder::where('order_no', '=', $order_no)->first();
 		$wjo->remark = 3;
 
-		$log = WorkshopLog::where('order_no', '=', $order_no)->first();
-
+		$log = WorkshopLog::where('order_no', '=', $order_no)->orderBy('sequence_process', 'desc')->first();
 		if($log){
 			$workshop_log = new WorkshopLog([
 				'order_no' => $order_no,
@@ -335,11 +504,42 @@ class WorkshopController extends Controller{
 		$temp = WorkshopTempProcess::where('tag', '=', $tag);
 
 		try {
+
+			if($wjo->item_number){
+				$process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number)
+				->orderBy('sequence_process', 'desc')
+				->first();
+
+				if($process){
+					if($process->status == 0){
+						$flow_process = new WorkshopFlowProcess([
+							'item_number' => $wjo->item_number,
+							'sequence_process' => $process->sequence_process + 1,
+							'machine_code' => $machine_code,
+							'status' => 0,
+							'created_by' => $operator_id,
+						]);
+						$flow_process->save();
+					}
+				}else{
+					$flow_process = new WorkshopFlowProcess([
+						'item_number' => $wjo->item_number,
+						'sequence_process' => 1,
+						'machine_code' => $machine_code,
+						'status' => 0,
+						'created_by' => $operator_id,
+					]);
+					$flow_process->save();
+				}
+
+			}
+
 			DB::transaction(function() use ($wjo, $workshop_log, $temp){
 				$wjo->save();
 				$workshop_log->save();
 				$temp->delete();
-			});	
+			});
+
 
 			$response = array(
 				'status' => true,
@@ -354,7 +554,7 @@ class WorkshopController extends Controller{
 			return Response::json($response);
 		}
 
-		
+
 	}	
 
 	public function createWJO(Request $request){
@@ -455,7 +655,7 @@ class WorkshopController extends Controller{
 
 	public function checkTag(Request $request){
 		$tag = $request->get('tag');
-		
+
 		$tag_availability = WorkshopTagAvailability::where('tag', '=', $tag)
 		->where('status', '=', 0)
 		->first();
@@ -466,7 +666,7 @@ class WorkshopController extends Controller{
 				'message' => 'WJO Tag tersedia',
 			);
 			return Response::json($response);
-			
+
 		}else{
 			$response = array(
 				'status' => false,
@@ -474,6 +674,31 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function checkCloseTag(Request $request){
+		$tag = $request->get('tag');
+
+		$wjo = WorkshopJobOrder::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
+		->where('workshop_job_orders.tag', '=', $tag)
+		->where('workshop_job_orders.remark', '=', 3)
+		->select('workshop_job_orders.order_no', 'workshop_job_orders.target_date', 'workshop_job_orders.priority', 'workshop_job_orders.sub_section', 'employee_syncs.name', 'workshop_job_orders.difficulty', 'workshop_job_orders.category', 'workshop_job_orders.item_name', 'workshop_job_orders.quantity', 'workshop_job_orders.material')
+		->first();
+
+		if($wjo){
+			$response = array(
+				'status' => true,
+				'wjo' => $wjo,
+				'message' => 'WJO ditemukan',
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'WJO tidak sedang dikerjakan',
+			);
+			return Response::json($response);
+		}		
 	}
 
 	public function updateWJO(Request $request){
@@ -523,7 +748,7 @@ class WorkshopController extends Controller{
 		try{
 			$tag_availability = WorkshopTagAvailability::updateOrCreate(
 				['tag' => $tag],
-				['tag' => $tag, 'status' => 1, 'updated_at' => Carbon::now()]
+				['tag' => $tag, 'status' => 0, 'updated_at' => Carbon::now()]
 			);
 
 			DB::transaction(function() use ($wjo, $wjo_log, $tag){
@@ -543,7 +768,7 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 
 	}
 
@@ -599,6 +824,8 @@ class WorkshopController extends Controller{
 		if($wjo){
 			try{
 				$wjo->remark = 4;
+				$wjo->finish_date = date('Y-m-d');
+
 
 				$wjo_log = new WorkshopJobOrderLog([
 					'order_no' => $wjo->order_no,
@@ -611,14 +838,17 @@ class WorkshopController extends Controller{
 					['tag' => $tag, 'status' => 1, 'updated_at' => Carbon::now()]
 				);
 
-				DB::transaction(function() use ($wjo, $wjo_log){
+				$flow_process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number);
+
+				DB::transaction(function() use ($wjo, $wjo_log, $flow_process){
 					$wjo->save();
 					$wjo_log->save();
+					$flow_process->update(['status' => 1]);
 				});		
 
 				$response = array(
 					'status' => true,
-					'message' => 'Reject WJO berhasil',
+					'message' => 'Close WJO berhasil',
 				);
 				return Response::json($response);
 			} catch (Exception $e) {
@@ -641,7 +871,7 @@ class WorkshopController extends Controller{
 
 	public function downloadAttachment(Request $request, $id){
 		$name = $request->get('file');
-		
+
 		if($id == 'attachment'){
 			$path = '/workshop/' . $name;			
 		}elseif($id == 'drawing'){
@@ -737,6 +967,17 @@ class WorkshopController extends Controller{
 		$response = array(
 			'status' => true,
 			'wjo' => $wjo,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMachine(Request $request){
+		$machine = WorkshopProcess::where('machine_code', '=', $request->get('machine_code'))->first();
+
+		$response = array(
+			'status' => true,
+			'machine_name' => $machine->machine_name,
+			'process_name' => $machine->process_name,
 		);
 		return Response::json($response);
 	}
