@@ -294,7 +294,7 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[8]) < parseInt(rowData[7])  ) {
+								if ( parseInt(rowData[7]) == 0  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
@@ -310,7 +310,7 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[10]) < parseInt(rowData[9])  ) {
+								if ( parseInt(rowData[10]) == 0  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
@@ -326,7 +326,7 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[12]) < parseInt(rowData[11])  ) {
+								if ( parseInt(rowData[12]) == 0  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
