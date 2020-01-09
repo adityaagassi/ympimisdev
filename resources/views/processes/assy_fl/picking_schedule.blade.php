@@ -54,7 +54,8 @@
 							<th colspan="2" style="padding:0; width:1%;">Stock</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy</th>
 							<th rowspan="2" style="padding:0; width:1%;">Stamp</th>
-							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1&H+2)</th>
+							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1)</th>
+							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+2)</th>
 							<!-- <th>Diff</th> -->
 						</tr>
 						<tr>
@@ -67,6 +68,7 @@
 					<tfoot style="background-color: RGB(252, 248, 227); color: black;">
 						<tr>
 							<th>Total</th>
+							<th></th>
 							<th></th>
 							<th></th>
 							<th></th>
@@ -156,6 +158,7 @@
 						planData += '<td style="width: 1%">'+ value.ng +'</td>';
 						planData += '<td style="width: 1%">'+ totalSubassy +'</td>';
 						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
+						planData += '<td style="width: 1%">'+ h1 +'</td>';
 						planData += '<td style="width: 1%">'+ h2 +'</td>';
 						planData += '</tr>';
 
