@@ -125,21 +125,21 @@
 						
 						totalTarget = value.plan;
 						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.wip - value.ng)) ;
-						var h2 = Math.round(value.h1);
+						var h2 = Math.round(value.h2);
 						if (totalSubassy < 0) {
 							totalSubassy = 0;
-							h2 = Math.round(value.h1) - (value.stamp - value.actual);
+							h2 = Math.round(value.h2) - (value.stamp - value.actual);
 						}
 						if (h2 < 0) {
 							h2 = 0;
 						}
 
-						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
+						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h2)) {
 							h2 = 0;
 						}
 
-						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
-							h2 = Math.round(value.h1) - (value.wip - value.ng);
+						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h2)) {
+							h2 = Math.round(value.h2) - (value.wip - value.ng);
 						}
 
 
@@ -221,10 +221,15 @@
 							}, 0)
 							$(api.column(6).footer()).html(h.toLocaleString());
 
-							var h2 = api.column(8).data().reduce(function (a, b) {
+							var h1 = api.column(8).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(8).footer()).html(h2.toLocaleString());
+							$(api.column(8).footer()).html(h1.toLocaleString());
+
+							var h2 = api.column(9).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(9).footer()).html(h2.toLocaleString());
 
 
 						},
@@ -249,7 +254,7 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[8]) > 0) {
+								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[9]) > 0) {
 									if (parseInt(rowData[6]) <= 0) {
 										$(td).css('background-color', 'RGB(255,204,255)')
 										$(td).css('color', 'black')

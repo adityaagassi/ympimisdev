@@ -644,11 +644,11 @@ class ProcessController extends Controller
 
 					$code_generator->index = $code_generator->index+1;
 					try{
-						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+						// DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
 							$code_generator->save();
 							$plc_counter->save();
 							$log_process->save();
-						});				
+						// });				
 					}
 					catch(\Exception $e){
 						$response = array(
@@ -726,11 +726,11 @@ class ProcessController extends Controller
 
 					$code_generator->index = $code_generator->index+1;
 					try{
-						DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
+						// DB::transaction(function() use ($code_generator, $plc_counter, $log_process){
 							$code_generator->save();
 							$plc_counter->save();
 							$log_process->save();
-						});				
+						// });				
 					}
 					catch(\Exception $e){
 						$response = array(
@@ -2858,19 +2858,35 @@ public function fetchResultSaxnew(Request $request)
 public function fetchResultFlStamp(Request $request)
 {
 	if(date('D')=='Fri' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-	}
-	else if(date('D')=='Sat' ){
 		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
 	}
+	else if(date('D')=='Sat' ){
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	}
 	else if(date('D')=='Thu' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
 	}
 	else if(date('D')=='Wed' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
 	}
 	else{
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+	}
+
+	if(date('D')=='Fri' ){
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	}
+	else if(date('D')=='Sat' ){
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	}
+	else if(date('D')=='Thu' ){
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	}
+	else if(date('D')=='Wed' ){
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	}
+	else{
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
 	}
 
 	$first = date('Y-m-01');
@@ -2900,9 +2916,9 @@ public function fetchResultFlStamp(Request $request)
 	}
 
 
-	$queryAll = "select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(stamp) as stamp, sum(h1) as h1 from
+	$queryAll = "select model, sum(debt) as debt, sum(plan) as plan, sum(actual) as actual, sum(wip) as wip, sum(ng) as ng, sum(stamp) as stamp, sum(h1) as h1,sum(h2) as h2 from
 	(
-	select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1 from
+	select materials.model, sum(assy.debt) as debt, sum(assy.plan) as plan, sum(assy.actual) as actual, 0 as wip, 0 as ng, 0 as stamp, 0 as h1,0 as h2 from
 	(
 	select material_number, 0 as debt, sum(quantity) as plan, 0 as actual from production_schedules where due_date = '".$now."' group by material_number
 
@@ -2925,19 +2941,23 @@ public function fetchResultFlStamp(Request $request)
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` is null group by model
+	select model, 0 as debt, 0 as plan, 0 as actual, sum(quantity) as wip, 0 as ng, 0 as stamp, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and `status` is null group by model
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1 from stamp_inventories where origin_group_code = '041' and `status` = 'ng' group by model
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, sum(quantity) as ng, 0 as stamp, 0 as h1,0 as h2 from stamp_inventories where origin_group_code = '041' and `status` = 'ng' group by model
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1 from log_processes where origin_group_code = '041' and process_code = '1' and date(created_at) = '".$now."' group by model
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, sum(quantity) as stamp, 0 as h1,0 as h2 from log_processes where origin_group_code = '041' and process_code = '1' and date(created_at) = '".$now."' group by model
 
 	union all
 
-	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp, sum(quantity) as h1,0 as h2 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextday."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
+
+	union all
+	
+	select model, 0 as debt, 0 as plan, 0 as actual, 0 as wip, 0 as ng, 0 as stamp,0 as h1, sum(quantity) as h2 from production_schedules left join materials on materials.material_number = production_schedules.material_number where due_date = '".$nextdayplus1."' and materials.category = 'FG' and materials.origin_group_code = '041' group by materials.model
 	) as picking group by model 
 
 	";
