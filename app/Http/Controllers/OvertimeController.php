@@ -462,7 +462,7 @@ class OvertimeController extends Controller
 			");
 
 		return DataTables::of($overtimeData)->make(true);
-		
+
 	}
 
 	public function saveOvertimeHead(Request $request)
@@ -917,11 +917,11 @@ class OvertimeController extends Controller
 	}
 
 
-	// ----------------------- CHART REPORT OVERTIME ------------------------
+// ----------------------- CHART REPORT OVERTIME ------------------------
 
 	public function overtimeReport()
 	{
-	// ----------  Chart Overtime By Dep ----------
+// ----------  Chart Overtime By Dep ----------
 		$tanggal = date('Y-m');
 		$tanggalMin = date("Y-m", strtotime("-3 months"));
 
@@ -1104,10 +1104,22 @@ public function overtimeControl(Request $request)
 		$tanggal1 = date('Y-m-d');
 		$tanggal = date('Y-m-01');
 	}	
-	// -------------- CHART REPORT CONTROL -----------
+// -------------- CHART REPORT CONTROL -----------
 
-	$ot = db::connection('sunfish')->select("select ovr.*, cost_center_code, cost_center_name from
-		(select emp_no, SUM(floor((total_ot / 60) * 2  + 0.5) / 2) as jam from VIEW_YMPI_Emp_Attendance where starttime >= '".$tanggal."' and starttime <= '".$tanggal1."' and ovtrequest_no is not null group by emp_no) ovr left join VIEW_YMPI_Emp_OrgUnit on ovr.emp_no = VIEW_YMPI_Emp_OrgUnit.Emp_no");
+	$ot = db::connection('sunfish')->select("select ot.*, VIEW_YMPI_Emp_OrgUnit.cost_center_code, VIEW_YMPI_Emp_OrgUnit.cost_center_name from
+		(
+		select VIEW_YMPI_Emp_OvertimePlan.emp_no,
+		sum(
+		CASE
+		WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
+		floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60) * 2  + 0.5) / 2
+		ELSE
+		floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60) * 2  + 0.5) / 2
+		END) as jam
+		from VIEW_YMPI_Emp_OvertimePlan
+		where VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$tanggal." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$tanggal1." 23:59:59'
+		group by VIEW_YMPI_Emp_OvertimePlan.emp_no) as ot 
+		left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no");
 
 	$main_q = "select semua.cost_center, cost_center_name, SUM(bdg) as bdg, SUM(fq) as fq, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal from
 	(select cost_center, round(budget / DAY(LAST_DAY('".$tanggal1."')) * DAY('".$tanggal1."'),1) as bdg, 0 as fq from budgets 
@@ -1189,7 +1201,7 @@ public function overtimeReportDetail(Request $request)
 		group by employee_id,`group`, department, section
 		) employee on employee.employee_id = s.nik
 		where department = "'.$department.'"';
-		
+
 
 		$lebih_detail = 'select d.nik, jam, null week_name, keperluan, tanggal from
 		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, group_concat(keperluan) as keperluan from ftm.over_time
@@ -1283,7 +1295,7 @@ public function overtimeReportDetail(Request $request)
 	);
 	return Response::json($response);
 }
-	// --------------------- END CHART REPORT OVERTIME -------------------
+// --------------------- END CHART REPORT OVERTIME -------------------
 
 // --------------------- Start Employement ---------------------
 public function indexOvertimeDouble()
@@ -1466,26 +1478,31 @@ public function overtimeDetail(Request $request)
 	$from = date('Y-m-01',strtotime($request->get('tgl')));
 	$to = date('Y-m-d',strtotime($request->get('tgl')));
 
-	$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
+	$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
 	->select('cost_center')->first();
 
 	$datas = db::connection('sunfish')->select("
-		select A.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, SUM(floor((total_ot / 60) * 2  + 0.5) / 2) as jam, 
+		select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
+		(
+		select A.emp_no,
+		sum(
+		CASE
+		WHEN A.total_ot > 0 THEN
+		floor((A.total_ot / 60) * 2  + 0.5) / 2
+		ELSE
+		floor((A.TOTAL_OVT_PLAN / 60) * 2  + 0.5) / 2
+		END) as jam,
 		STUFF((
 		SELECT ',' + T.remark
-		FROM VIEW_YMPI_Emp_Attendance T
+		FROM VIEW_YMPI_Emp_OvertimePlan T
 		WHERE A.emp_no = T.emp_no
-		and T.ovtrequest_no is not null 
-		and T.ovtplanfrom >= '".$from."' 
-		and T.ovtplanto <= '".$to."'
+		and T.ovtplanfrom >= '".$from." 00:00:00' 
+		and T.ovtplanto <= '".$to." 23:59:59'
 		FOR XML PATH('')), 1, 1, '') as kep
-		from VIEW_YMPI_Emp_Attendance A
-		left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = A.emp_no
-		where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' 
-		and A.ovtrequest_no is not null 
-		and A.ovtplanfrom >= '".$from."' 
-		and A.ovtplanto <= '".$to."'
-		group by A.emp_no, VIEW_YMPI_Emp_OrgUnit.Full_name");
+		from VIEW_YMPI_Emp_OvertimePlan A
+		where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
+		group by A.emp_no
+	) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."'");
 
 	$response = array(
 		'status' => true,
@@ -1647,7 +1664,7 @@ public function fetchDetailOutsource(Request $request)
 
 	return DataTables::of($detail)->make(true);
 
-	
+
 }
 
 public function fetchOvertimeDataOutsource(Request $request)
@@ -1738,7 +1755,7 @@ public function fetchOvertimeByEmployee(Request $request){
 	})
 	->rawColumns(['action' => 'detail'])
 	->make(true);
-	
+
 }
 
 public function detailOvertimeByEmployee(Request $request){
