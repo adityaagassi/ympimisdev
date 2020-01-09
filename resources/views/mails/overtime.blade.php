@@ -24,7 +24,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="9" style="background-color: #9f84a7">Production Overtime</th>
+						<th colspan="6" style="background-color: #9f84a7">Production Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
@@ -56,7 +56,7 @@
 			<table style="border-color: black">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
-						<th colspan="9" style="background-color: #9f84a7">Office Overtime</th>
+						<th colspan="6" style="background-color: #9f84a7">Office Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>

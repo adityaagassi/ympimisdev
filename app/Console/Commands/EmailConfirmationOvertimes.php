@@ -111,7 +111,7 @@ class EmailConfirmationOvertimes extends Command
         $data = $unconfirmed;
 
         if(count($unconfirmed) > 0){
-            Mail::to($mail_to)->send(new SendEmail($data, 'confirmation_overtime'));
+            Mail::from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia')->to($mail_to)->send(new SendEmail($data, 'confirmation_overtime'));
         }
     }
 }

@@ -78,16 +78,16 @@ class SendEmailOvertimes extends Command
 
         $ofc = array();
         foreach ($ofc_1 as $of) {
-         array_push($ofc, $of->employee_id);
-     }
+           array_push($ofc, $of->employee_id);
+       }
 
 
-     $offices = array();
-     $productions = array();
-     $c_ofc = 1;
-     $c_prd = 1;
+       $offices = array();
+       $productions = array();
+       $c_ofc = 1;
+       $c_prd = 1;
 
-     foreach ($datas as $data) {
+       foreach ($datas as $data) {
         if(in_array($data->nik, $ofc) && $c_ofc <= 20){
             array_push($offices, [
                 'period' => $mon,
@@ -122,7 +122,7 @@ class SendEmailOvertimes extends Command
     ];
 
     if($datas != null){
-        Mail::from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia')->to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
+        Mail::to($mail_to)->send(new SendEmail($overtimes, 'overtime'));
     }
 }
 }
