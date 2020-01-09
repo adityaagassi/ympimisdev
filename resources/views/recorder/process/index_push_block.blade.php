@@ -833,7 +833,7 @@
 			// console.log(height_ng_value.join());
 
 			var data3 = {
-				push_block_code : push_block_code,
+				remark : push_block_code,
 				check_date : check_date,
 				injection_date : injection_date,
 				pic_check : pic_check,
@@ -900,8 +900,8 @@
 			$.post('{{ url("index/push_block_recorder/create") }}', data2, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
-					alert('Pengisian Selesai. Tekan OK untuk menutup.');
-					window.close();
+					// alert('Pengisian Selesai. Tekan OK untuk menutup.');
+					// window.close();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
