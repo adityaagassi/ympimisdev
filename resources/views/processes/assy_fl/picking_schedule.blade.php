@@ -290,11 +290,43 @@
 
 						},
 						"columnDefs": [  {
-							"targets": 6,
+							"targets": 7,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
 								if ( parseInt(rowData[7]) < parseInt(rowData[6])  ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+									$(td).css('color', 'black')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+									$(td).css('color', 'black')
+								}
+							}
+						},
+						{
+							"targets": 10,
+							"createdCell": function (td, cellData, rowData, row, col) {
+
+
+								if ( parseInt(rowData[10]) < parseInt(rowData[9])  ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+									$(td).css('color', 'black')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+									$(td).css('color', 'black')
+								}
+							}
+						},
+						{
+							"targets": 12,
+							"createdCell": function (td, cellData, rowData, row, col) {
+
+
+								if ( parseInt(rowData[12]) < parseInt(rowData[11])  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
