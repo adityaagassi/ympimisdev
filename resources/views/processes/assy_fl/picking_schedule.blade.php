@@ -158,7 +158,7 @@
 						planData += '<td style="width: 1%">'+ value.ng +'</td>';
 						planData += '<td style="width: 1%">'+ totalSubassy +'</td>';
 						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
-						planData += '<td style="width: 1%">'+ h1 +'</td>';
+						planData += '<td style="width: 1%">'+ value.h1 +'</td>';
 						planData += '<td style="width: 1%">'+ h2 +'</td>';
 						planData += '</tr>';
 
