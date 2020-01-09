@@ -64,9 +64,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('record:daily_stocks')->dailyAt('07:00');
 
         $schedule->command('email:shipment')->weekdays()->dailyAt('08:40');
-        // $schedule->command('email:overtime')->weekdays()->dailyAt('08:42');
+        $schedule->command('email:overtime')->weekdays()->dailyAt('08:42');
         $schedule->command('email:shipment')->weekends()->dailyAt('13:00');
-        // $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
+        $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
         $schedule->command('email:middle_kanban')->weekdays()->dailyAt('07:00');
         // $schedule->command('email:confirmation_overtime')->weekdays()->dailyAt('06:55');
 
