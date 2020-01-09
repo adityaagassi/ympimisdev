@@ -294,7 +294,7 @@
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[7]) < parseInt(rowData[6])  ) {
+								if ( parseInt(rowData[8]) < parseInt(rowData[7])  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
