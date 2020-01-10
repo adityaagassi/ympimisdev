@@ -1,22 +1,16 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
-	.content{
-		color: white;
-		font-weight: bold;
-	}
-	.progress {
-		height: 20px;
-	}
 </style>
 @endsection
 @section('header')
+<section class="content-header" style="padding-top: 0; padding-bottom: 0;">
+</section>
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
 		<div class="col-xs-12" style="padding-top: 0;">
-			<span style="font-size: 2vw; vertical-align: top; color: rgb(255,140,0);">PAPAN INFORMASI MIRAI</span>
 			<ul class="timeline">
 				<li class="time-label">
 					<span style="background-color: #605ca8;">

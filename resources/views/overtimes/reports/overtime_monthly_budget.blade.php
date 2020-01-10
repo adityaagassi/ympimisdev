@@ -246,13 +246,13 @@
 
 	function drawChart() {
 
-		var tanggal = $('#tgl').val();
+    var tanggal = $('#tgl').val();
 
-		var data = {
-			tgl:tanggal
-		}
+    var data = {
+      tgl:tanggal
+    }
 
-		$.get('{{ url("fetch/report/overtime_report_control") }}', data, function(result) {
+    $.get('{{ url("fetch/report/overtime_report_control") }}', data, function(result) {
 
     // -------------- CHART OVERTIME REPORT CONTROL ----------------------
 
@@ -260,21 +260,21 @@
     var seriesDataBudget = [];
     var seriesDataAktual = [];
     var budgetHarian = [];
-    var ctg, tot_act = 0, avg = 0, tot_budget = 0, avg_fc = 0;
+    var ctg, tot_act = 0, avg = 0, tot_budget = 0, avg_bdg = 0;
     var tot_day_budget = 0, tot_diff;
 
-    for(var i = 0; i < result.report_control.length; i++){
-    	ctg = result.report_control[i].cost_center_name;
-    	tot_act += result.report_control[i].act;
-    	tot_budget += result.report_control[i].tot;
-    	tot_day_budget += result.report_control[i].jam_harian;
+    for(var i = 0; i < result.semua.length; i++){
+      ctg = result.semua[i].cost_center_name;
+      tot_act += result.semua[i].actual;
+      tot_budget += result.semua[i].budget;
+      tot_day_budget += result.semua[i].forecast;
 
-    	seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
-    	seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
-    	budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
-    	if(xCategories2.indexOf(ctg) === -1){
-    		xCategories2[xCategories2.length] = ctg;
-    	}
+      seriesDataBudget.push(Math.round(result.semua[i].budget * 100) / 100);
+      seriesDataAktual.push(Math.round(result.semua[i].actual * 100) / 100);
+      budgetHarian.push(Math.round(result.semua[i].budget * 100) / 100);
+      if(xCategories2.indexOf(ctg) === -1){
+        xCategories2[xCategories2.length] = ctg;
+      }
     }
 
     tot_diff = tot_act - tot_budget;
@@ -294,12 +294,12 @@
     $("#tot_act").text(tot_act2);
 
     if (tot_diff > 0) {
-    	$('#diff_text').removeClass('text-green').addClass('text-red');
-    	$("#tot_diff").html("+ "+tot_diff2);
+      $('#diff_text').removeClass('text-green').addClass('text-red');
+      $("#tot_diff").html("+ "+tot_diff2);
     }
     else {
-    	$('#diff_text').removeClass('text-red').addClass('text-green');
-    	$("#tot_diff").html(tot_diff2);
+      $('#diff_text').removeClass('text-red').addClass('text-green');
+      $("#tot_diff").html(tot_diff2);
     }
 
     avg = tot_act / result.emp_total.jml;
@@ -311,110 +311,110 @@
     $("#avg_bdg").html(avg_bdg);
 
     // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-    // 	return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+    //  return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
     // };
 
     Highcharts.chart('over_control', {
-    	chart: {
-    		spacingTop: 10,
-    		type: 'column'
-    	},
-    	title: {
-    		text: '<span style="font-size: 18pt;">Overtime Control - Budget</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
-    		useHTML: true
-    	},
-    	credits:{
-    		enabled:false
-    	},
-    	legend: {
-    		itemStyle: {
-    			color: '#000000',
-    			fontWeight: 'bold',
-    			fontSize: '20px'
-    		}
-    	},
-    	yAxis: {
-    		tickInterval: 10,
-    		min:0,
-    		allowDecimals: false,
-    		title: {
-    			text: 'Amount of Hours'
-    		}
-    	},
-    	xAxis: {
-    		labels: {
-    			style: {
-    				color: 'rgba(75, 30, 120)',
-    				fontSize: '12px',
-    				fontWeight: 'bold'
-    			}
-    		},
-    		categories: xCategories2
-    	},
-    	tooltip: {
-    		formatter: function () {
-    			return '<b>' + this.series.name + '</b><br/>' +
-    			this.point.y + ' ' + this.series.name.toLowerCase();
-    		}
-    	},
-    	plotOptions: {
-    		column: {
-    			pointPadding: 0.93,
-    			cursor: 'pointer',
-    			point: {
-    				events: {
-    					click: function () {
-    						modalTampil(this.category, result.report_control[0].tanggal);
-    					}
-    				}
-    			},
-    			minPointLength: 3,
-    			dataLabels: {
-    				allowOverlap: true,
-    				enabled: true,
-    				y: -25,
-    				style: {
-    					color: 'black',
-    					fontSize: '13px',
-    					textOutline: false,
-    					fontWeight: 'bold',
-    				},
-    				rotation: -90
-    			},
-    			pointWidth: 15,
-    			pointPadding: 0,
-    			borderWidth: 0,
-    			groupPadding: 0.1,
-    			animation: false,
-    			opacity: 1
-    		},
-    		scatter : {
-    			dataLabels: {
-    				enabled: false
-    			},
-    			animation: false
-    		}
-    	},
-    	series: [{
-    		name: 'Budget Accumulative',
-    		data: seriesDataBudget,
-    		color: "#157fd6"
-    	}, {
-    		name: 'Actual Accumulative',
-    		data: seriesDataAktual,
-    		color: "#7300ab"
-    	},
-    	// {
-    	// 	name: 'Forecast Production',
-    	// 	marker: {
-    	// 		symbol: 'c-rect',
-    	// 		lineWidth:4,
-    	// 		lineColor: '#02ff17',
-    	// 		radius: 10,
-    	// 	},
-    	// 	type: 'scatter',
-    	// 	data: budgetHarian
-    	// }
+      chart: {
+        spacingTop: 10,
+        type: 'column'
+      },
+      title: {
+        text: '<span style="font-size: 18pt;">Overtime Control - Budget</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.semua[0].tanggal +'</center></span>',
+        useHTML: true
+      },
+      credits:{
+        enabled:false
+      },
+      legend: {
+        itemStyle: {
+          color: '#000000',
+          fontWeight: 'bold',
+          fontSize: '20px'
+        }
+      },
+      yAxis: {
+        tickInterval: 10,
+        min:0,
+        allowDecimals: false,
+        title: {
+          text: 'Amount of Hours'
+        }
+      },
+      xAxis: {
+        labels: {
+          style: {
+            color: 'rgba(75, 30, 120)',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }
+        },
+        categories: xCategories2
+      },
+      tooltip: {
+        formatter: function () {
+          return '<b>' + this.series.name + '</b><br/>' +
+          this.point.y + ' ' + this.series.name.toLowerCase();
+        }
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.93,
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function () {
+                modalTampil(this.category, result.semua[0].tanggal);
+              }
+            }
+          },
+          minPointLength: 3,
+          dataLabels: {
+            allowOverlap: true,
+            enabled: true,
+            y: -25,
+            style: {
+              color: 'black',
+              fontSize: '13px',
+              textOutline: false,
+              fontWeight: 'bold',
+            },
+            rotation: -90
+          },
+          pointWidth: 15,
+          pointPadding: 0,
+          borderWidth: 0,
+          groupPadding: 0.1,
+          animation: false,
+          opacity: 1
+        },
+        scatter : {
+          dataLabels: {
+            enabled: false
+          },
+          animation: false
+        }
+      },
+      series: [{
+        name: 'Budget Accumulative',
+        data: budgetHarian,
+        color: "#02ff17"
+      }, {
+        name: 'Actual Accumulative',
+        data: seriesDataAktual,
+        color: "#7300ab"
+      },
+      // {
+      //  name: 'Forecast Production',
+      //  marker: {
+      //    symbol: 'c-rect',
+      //    lineWidth:4,
+      //    lineColor: '#02ff17',
+      //    radius: 10,
+      //  },
+      //  type: 'scatter',
+      //  data: budgetHarian
+      // }
       ]
     });
   });
@@ -479,7 +479,7 @@ function modalTampil(costCenter, date) {
             dataT += '<td>'+ data.datas[i].jam +'</td>';
             dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
             dataT += '</tr>';
-            jml += data.datas[i].jam;
+            jml += parseFloat(data.datas[i].jam);
           }
           $("#tabelDetail").append(dataT);
 
