@@ -337,24 +337,7 @@
 									$(td).css('color', 'black')
 								}
 							}
-						},
-						{
-							"targets": 8,
-							"createdCell": function (td, cellData, rowData, row, col) {
-
-
-								if ( parseInt(rowData[6]) >= 0  && parseInt(rowData[9]) > 0) {
-									if (parseInt(rowData[6]) <= 0) {
-										$(td).css('background-color', 'RGB(255,204,255)')
-										$(td).css('color', 'black')
-									}
-								}
-								else
-								{
-										// $(td).css('background-color', 'RGB(204,255,255)')
-									}
-								}
-							}]
+						}]
 						});
 				}
 				else{
