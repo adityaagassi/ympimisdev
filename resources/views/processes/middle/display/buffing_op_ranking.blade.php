@@ -80,7 +80,7 @@
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%; margin-top: 1%;"></div>
 				<div id="container3" style="width: 100%; margin-top: 1%;"></div>
-				<div id="container2" style="width: 100%; margin-top: 1%; display: none;"></div>
+				<div id="container2" style="width: 100%; margin-top: 1%;"></div>
 				
 			</div>
 		</div>
