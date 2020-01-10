@@ -13,7 +13,7 @@
 		<div class="col-xs-12" style="padding-top: 0;">
 			<ul class="timeline">
 				<li class="time-label">
-					<span style="background-color: #605ca8;">
+					<span style="background-color: #605ca8; color: white;">
 						01 January 2019
 					</span>
 				</li>
