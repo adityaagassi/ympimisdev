@@ -405,14 +405,14 @@
 								groupPadding: 0.93,
 								borderWidth: 0.93,
 								cursor: 'pointer',
-								point: {
-									events: {
-										click: function (event) {
-											showNGDetail(result.bulan, event.point.category);
+								// point: {
+								// 	events: {
+								// 		click: function (event) {
+								// 			showNGDetail(result.bulan, event.point.category);
 
-										}
-									}
-								},
+								// 		}
+								// 	}
+								// },
 							}
 						},credits: {
 							enabled: false
@@ -541,14 +541,14 @@
 								groupPadding: 0.93,
 								borderWidth: 0.93,
 								cursor: 'pointer',
-								// point: {
-								// 	events: {
-								// 		click: function (event) {
-								// 			showNGDetail(result.bulan, event.point.category);
+								point: {
+									events: {
+										click: function (event) {
+											showNGDetail(result.bulan, event.point.category);
 
-								// 		}
-								// 	}
-								// },
+										}
+									}
+								},
 							}
 						},credits: {
 							enabled: false
