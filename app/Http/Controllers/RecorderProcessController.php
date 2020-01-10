@@ -195,6 +195,7 @@ class RecorderProcessController extends Controller
                   'push_pull_ng_value' => $push_pull_ng_value,
                   'height_ng_name' => $height_ng_name,
                   'height_ng_value' => $height_ng_value,
+                  'jumlah_cek' => '32',
                   'pic_check' => $request->get('pic_check'),
                   'created_by' => $id_user
               ]);
@@ -357,29 +358,30 @@ class RecorderProcessController extends Controller
     public function fetch_push_block_check_monitoring(Request $request,$remark){
     $date = '';
     if(strlen($request->get("bulan")) > 0){
-      $date = date('Y-m', strtotime($request->get("bulan")));
+      $date = date('Y-m-d', strtotime($request->get("bulan")));
     }else{
-      $date = date('Y-m');
+      $date = date('Y-m-d');
     }
 
-    $monthTitle = date("F Y", strtotime($date));
+    // $monthTitle = date("F Y", strtotime($date));
 
-    $data = db::select("select 
-        weekly_calendars.week_date as date,
-                (select sum(case when judgement = 'OK' then 1 else 0 end) as jumlah_ok from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
-        as jumlah_ok,
-        (select sum(case when judgement = 'NG' then 1 else 0 end) as jumlah_ok from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
-        as jumlah_ng
-                        from weekly_calendars 
-                        where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$date."'
-                        and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+    $data = db::select("select DISTINCT(pic_check),
+        sum(jumlah_cek) as jumlah_cek,
+        COALESCE((select SUM((CHAR_LENGTH(push_pull_ng_value) - CHAR_LENGTH(REPLACE(push_pull_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where push_pull_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
+        as jumlah_ng_push_pull,
+        COALESCE((select SUM((CHAR_LENGTH(height_ng_value) - CHAR_LENGTH(REPLACE(height_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where height_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
+        as jumlah_ng_height 
+        from push_block_recorder_resumes as pushresume1
+        where check_date = '".$date."' 
+        and remark = '".$remark."' 
+        GROUP BY pic_check");
 
     $response = array(
       'status' => true,
       'datas' => $data,
       'date' => $date,
       'remark' => $remark,
-      'monthTitle' => $monthTitle,
+      // 'monthTitle' => $monthTitle,
     );
     return Response::json($response);
   }
@@ -387,52 +389,54 @@ class RecorderProcessController extends Controller
   public function fetch_height_check_monitoring(Request $request,$remark){
     $date = '';
     if(strlen($request->get("bulan")) > 0){
-      $date = date('Y-m', strtotime($request->get("bulan")));
+      $date = date('Y-m-d', strtotime($request->get("bulan")));
     }else{
-      $date = date('Y-m');
+      $date = date('Y-m-d');
     }
 
-    $monthTitle = date("F Y", strtotime($date));
+    // $monthTitle = date("F Y", strtotime($date));
 
-    $data = db::select("select 
-        weekly_calendars.week_date as date,
-                (select sum(case when judgement2 = 'OK' then 1 else 0 end) as jumlah_ok2 from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
-        as jumlah_ok2,
-        (select sum(case when judgement2 = 'NG' then 1 else 0 end) as jumlah_ok2 from push_block_recorders where push_block_code = '".$remark."' and DATE_FORMAT(date(check_date),'%Y-%m') = '".$date."' and date(check_date) = week_date GROUP BY check_date) 
-        as jumlah_ng2
-                        from weekly_calendars 
-                        where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$date."'
-                        and weekly_calendars.week_date not in (select tanggal from ftm.kalender)");
+    $data = db::select("select DISTINCT(pic_check),
+        sum(jumlah_cek) as jumlah_cek,
+        COALESCE((select SUM((CHAR_LENGTH(push_pull_ng_value) - CHAR_LENGTH(REPLACE(push_pull_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where push_pull_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
+        as jumlah_ng_push_pull,
+        COALESCE((select SUM((CHAR_LENGTH(height_ng_value) - CHAR_LENGTH(REPLACE(height_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where height_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
+        as jumlah_ng_height 
+        from push_block_recorder_resumes as pushresume1
+        where check_date = '".$date."' 
+        and remark = '".$remark."' 
+        GROUP BY pic_check");
 
     $response = array(
       'status' => true,
       'datas' => $data,
       'date' => $date,
       'remark' => $remark,
-      'monthTitle' => $monthTitle,
+      // 'monthTitle' => $monthTitle,
     );
     return Response::json($response);
   }
 
   public function detail_monitoring(Request $request)
   {
-    $tanggal = $request->get("tanggal");
-    $judgement = $request->get("judgement");
-    if($judgement == 'Jumlah OK'){
-      $jdgm = 'OK';
+    if ($request->get("tanggal") == null) {
+      $tanggal = date('Y-m-d');
     }
     else{
-      $jdgm = 'NG';
+      $tanggal = $request->get("tanggal");
     }
+    $pic = $request->get("pic");
     $remark = $request->get("remark");
 
-    $query = "SELECT * FROM `push_block_recorders` where date(check_date) = '".$tanggal."' and judgement = '".$jdgm."' and push_block_code = '".$remark."'";
+    $query = "select * from push_block_recorder_resumes where check_date = '".$tanggal."' and pic_check = '".$pic."' and remark = '".$remark."'";
 
     $detail = db::select($query);
 
     $response = array(
       'status' => true,
-      'jdgm' => $jdgm,
+      'tanggal' => $tanggal,
+      'pic' => $pic,
+      'remark' => $remark,
       'lists' => $detail,
     );
     return Response::json($response);

@@ -91,7 +91,7 @@ table > thead > tr > th{
 						<div class="input-group-addon bg-green" style="border: none;">
 							<i class="fa fa-calendar"></i>
 						</div>
-						<input type="text" class="form-control datepicker" id="bulan" placeholder="Select Month">
+						<input type="text" class="form-control datepicker" id="bulan" placeholder="Select Date">
 					</div>
 				</div>
 				<div class="col-xs-2">
@@ -100,11 +100,11 @@ table > thead > tr > th{
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;height: 420px;"></div>
+				<div id="container1" style="width: 100%;height: 520px;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
+			<!-- <div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;height: 420px;"></div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -128,10 +128,12 @@ table > thead > tr > th{
                   	<th>Nomor</th>
                     <th>Check Date</th>
                     <th>Injection Date</th>
+                    <th>Product</th>
                     <th>Head</th>    
                     <th>Block</th>
-                    <th>Push Pull</th>
-                    <th>Judgement</th>
+                    <th>Push Pull Check</th>
+                    <th>Height Check</th>
+                    <th>Jumlah Cek</th>
                     <th>PIC</th>
                   </tr>
                 </thead>
@@ -207,11 +209,11 @@ table > thead > tr > th{
 	});
 
 	$('.datepicker').datepicker({
+		<?php $tgl_max = date('d-m-Y') ?>
 		autoclose: true,
-		format: "yyyy-mm",
-		startView: "months", 
-		minViewMode: "months",
-		autoclose: true,
+		format: "dd-mm-yyyy",
+		todayHighlight: true,	
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
 	Highcharts.createElement('link', {
@@ -441,27 +443,28 @@ table > thead > tr > th{
 		var bulan = $('#bulan').val();
 		
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-		
-		var data = {
-			bulan:bulan
-			// proses:proses
-		}
 
 		var remark = '{{ $remark }}';
+
+		var data = {
+			bulan:bulan,
+		}
 
 		$.get('{{ url("fetch/recorder/push_block_check_monitoring/".$remark) }}',data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 
 					//Chart Machine Report
-					var jumlah_ok = [];
-					var jumlah_ng = [];
-					var tanggal = [];
+					var jumlah_cek = [];
+					var jumlah_ng_push_pull = [];
+					var jumlah_ng_height = [];
+					var pic = [];
 
 					for (var i = 0; i < result.datas.length; i++) {
-						tanggal.push(result.datas[i].date);
-						jumlah_ok.push(parseInt(result.datas[i].jumlah_ok));
-						jumlah_ng.push(parseInt(result.datas[i].jumlah_ng));
+						pic.push(result.datas[i].pic_check);
+						jumlah_cek.push(parseInt(result.datas[i].jumlah_cek));
+						jumlah_ng_push_pull.push(parseInt(result.datas[i].jumlah_ng_push_pull));
+						jumlah_ng_height.push(parseInt(result.datas[i].jumlah_ng_height));
 						// series.push([machine[i], jml[i]]);
 					}
 
@@ -471,21 +474,21 @@ table > thead > tr > th{
 							type: 'column'
 						},
 						title: {
-							text: 'Recorder Push Block Check Monitoring - '+remark,
+							text: 'Recorder Push Pull & Height Check Monitoring By PIC - '+remark,
 							style: {
 								fontSize: '20px',
 								fontWeight: 'bold'
 							}
 						},
 						subtitle: {
-							text: 'on '+result.monthTitle,
+							text: 'on '+result.date,
 							style: {
 								fontSize: '1vw',
 								fontWeight: 'bold'
 							}
 						},
 						xAxis: {
-							categories: tanggal,
+							categories: pic,
 							type: 'category',
 							// gridLineWidth: 1,
 							gridLineColor: 'RGB(204,255,255)',
@@ -499,7 +502,7 @@ table > thead > tr > th{
 						},
 						yAxis: {
 							title: {
-								text: 'Total Push Block Check',
+								text: 'Total Push Block & Height Check',
 								style: {
 			                        color: '#eee',
 			                        fontSize: '20px',
@@ -515,7 +518,7 @@ table > thead > tr > th{
 							type: 'linear'
 						},
 						tooltip: {
-							headerFormat: '<span>Production Result</span><br/>',
+							headerFormat: '<span>Total Check</span><br/>',
 							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
 						},
 						legend: {
@@ -539,7 +542,7 @@ table > thead > tr > th{
 				                point: {
 				                  events: {
 				                    click: function () {
-				                      ShowModal(this.category,this.series.name,result.remark);
+				                      ShowModal(this.category,result.remark);
 				                    }
 				                  }
 				                },
@@ -547,7 +550,7 @@ table > thead > tr > th{
 									enabled: true,
 									format: '{point.y}',
 									style:{
-										fontSize: '1vw'
+										fontSize: '1.5vw'
 									}
 								},
 								animation: false,
@@ -561,19 +564,26 @@ table > thead > tr > th{
 						},
 						series: [{
 							type: 'column',
-							data: jumlah_ok,
-							name: 'Jumlah OK',
-							stacking: 'normal',
+							data: jumlah_cek,
+							name: 'Jumlah Cek',
 							colorByPoint: false,
-							color: "#92cf11",
+							color: "#218380",
 							key:'OK'
 						},{
 							type: 'column',
-							data: jumlah_ng,
-							name: 'Jumlah NG',
-							stacking: 'normal',
+							data: jumlah_ng_push_pull,
+							name: 'Jumlah NG Push Pull Check',
+							// stacking:'normal',
 							colorByPoint: false,
-							color:'#dc3939',
+							color:'#d81159',
+							key:'NG'
+						},{
+							type: 'column',
+							data: jumlah_ng_height,
+							name: 'Jumlah NG Height Check',
+							// stacking:'normal',
+							colorByPoint: false,
+							color:'#8f2d56',
 							key:'NG'
 						},
 						]
@@ -582,160 +592,151 @@ table > thead > tr > th{
 			}
 		});
 
-		$.get('{{ url("fetch/recorder/height_check_monitoring/".$remark) }}',data, function(result, status, xhr) {
-			if(xhr.status == 200){
-				if(result.status){
+		// $.get('{{ url("fetch/recorder/height_check_monitoring/".$remark) }}',data, function(result, status, xhr) {
+		// 	if(xhr.status == 200){
+		// 		if(result.status){
 
-					//Chart Machine Report
-					var jumlah_ok2 = [];
-					var jumlah_ng2 = [];
-					var tanggal2 = [];
+		// 			//Chart Machine Report
+		// 			var jumlah_cek = [];
+		// 			var jumlah_ng_height = [];
+		// 			var pic = [];
 
-					for (var i = 0; i < result.datas.length; i++) {
-						tanggal2.push(result.datas[i].date);
-						jumlah_ok2.push(parseInt(result.datas[i].jumlah_ok2));
-						jumlah_ng2.push(parseInt(result.datas[i].jumlah_ng2));
-						// series.push([machine[i], jml[i]]);
-					}
+		// 			for (var i = 0; i < result.datas.length; i++) {
+		// 				pic.push(result.datas[i].pic_check);
+		// 				jumlah_cek.push(parseInt(result.datas[i].jumlah_cek));
+		// 				jumlah_ng_height.push(parseInt(result.datas[i].jumlah_ng_height));
+		// 				// series.push([machine[i], jml[i]]);
+		// 			}
 
 
-					Highcharts.chart('container2', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: 'Height Gauge Block Check Monitoring - '+remark,
-							style: {
-								fontSize: '20px',
-								fontWeight: 'bold'
-							}
-						},
-						subtitle: {
-							text: 'on '+result.monthTitle,
-							style: {
-								fontSize: '1vw',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: tanggal2,
-							type: 'category',
-							// gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							lineWidth:2,
-							lineColor:'#9e9e9e',
-							labels: {
-								style: {
-									fontSize: '15px'
-								}
-							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Height Gauge Block Check',
-								style: {
-			                        color: '#eee',
-			                        fontSize: '20px',
-			                        fontWeight: 'bold',
-			                        fill: '#6d869f'
-			                    }
-							},
-							labels:{
-					        	style:{
-									fontSize:"15px"
-								}
-					        },
-							type: 'linear'
-						},
-						tooltip: {
-							headerFormat: '<span>Production Result</span><br/>',
-							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
-						},
-						legend: {
-							layout: 'horizontal',
-							align: 'right',
-							verticalAlign: 'top',
-							x: -90,
-							y: 30,
-							floating: true,
-							borderWidth: 1,
-							backgroundColor:
-							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-							shadow: true,
-							itemStyle: {
-				                fontSize:'12px',
-				            },
-						},	
-						plotOptions: {
-							series:{
-								cursor: 'pointer',
-				                point: {
-				                  events: {
-				                    click: function () {
-				                      ShowModal2(this.category,this.series.name,result.remark);
-				                    }
-				                  }
-				                },
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										fontSize: '1vw'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							},
-						},credits: {
-							enabled: false
-						},
-						series: [{
-							type: 'column',
-							data: jumlah_ok2,
-							name: 'Jumlah OK',
-							stacking: 'normal',
-							colorByPoint: false,
-							color: "#92cf11",
-							key:'OK'
-						},{
-							type: 'column',
-							data: jumlah_ng2,
-							name: 'Jumlah NG',
-							stacking: 'normal',
-							colorByPoint: false,
-							color:'#dc3939',
-							key:'NG'
-						},
-						]
-					});
-				}
-			}
-		});
+		// 			Highcharts.chart('container2', {
+		// 				chart: {
+		// 					type: 'column'
+		// 				},
+		// 				title: {
+		// 					text: 'Height Gauge Check Monitoring By PIC - '+remark,
+		// 					style: {
+		// 						fontSize: '20px',
+		// 						fontWeight: 'bold'
+		// 					}
+		// 				},
+		// 				subtitle: {
+		// 					text: 'on '+result.date,
+		// 					style: {
+		// 						fontSize: '1vw',
+		// 						fontWeight: 'bold'
+		// 					}
+		// 				},
+		// 				xAxis: {
+		// 					categories: pic,
+		// 					type: 'category',
+		// 					// gridLineWidth: 1,
+		// 					gridLineColor: 'RGB(204,255,255)',
+		// 					lineWidth:2,
+		// 					lineColor:'#9e9e9e',
+		// 					labels: {
+		// 						style: {
+		// 							fontSize: '15px'
+		// 						}
+		// 					},
+		// 				},
+		// 				yAxis: {
+		// 					title: {
+		// 						text: 'Total Height Gauge Block Check',
+		// 						style: {
+		// 	                        color: '#eee',
+		// 	                        fontSize: '20px',
+		// 	                        fontWeight: 'bold',
+		// 	                        fill: '#6d869f'
+		// 	                    }
+		// 					},
+		// 					labels:{
+		// 			        	style:{
+		// 							fontSize:"15px"
+		// 						}
+		// 			        },
+		// 					type: 'linear'
+		// 				},
+		// 				tooltip: {
+		// 					headerFormat: '<span>Production Result</span><br/>',
+		// 					pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
+		// 				},
+		// 				legend: {
+		// 					layout: 'horizontal',
+		// 					align: 'right',
+		// 					verticalAlign: 'top',
+		// 					x: -90,
+		// 					y: 30,
+		// 					floating: true,
+		// 					borderWidth: 1,
+		// 					backgroundColor:
+		// 					Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+		// 					shadow: true,
+		// 					itemStyle: {
+		// 		                fontSize:'12px',
+		// 		            },
+		// 				},	
+		// 				plotOptions: {
+		// 					series:{
+		// 						cursor: 'pointer',
+		// 		                point: {
+		// 		                  events: {
+		// 		                    click: function () {
+		// 		                      ShowModal2(this.category,this.series.name,result.remark);
+		// 		                    }
+		// 		                  }
+		// 		                },
+		// 						dataLabels: {
+		// 							enabled: true,
+		// 							format: '{point.y}',
+		// 							style:{
+		// 								fontSize: '1vw'
+		// 							}
+		// 						},
+		// 						animation: false,
+		// 						pointPadding: 0.93,
+		// 						groupPadding: 0.93,
+		// 						borderWidth: 0.93,
+		// 						cursor: 'pointer'
+		// 					},
+		// 				},credits: {
+		// 					enabled: false
+		// 				},
+		// 				series: [{
+		// 					type: 'column',
+		// 					data: jumlah_cek,
+		// 					name: 'Jumlah OK',
+		// 					colorByPoint: false,
+		// 					color: "#92cf11",
+		// 					key:'OK'
+		// 				},{
+		// 					type: 'line',
+		// 					data: jumlah_ng_height,
+		// 					name: 'Jumlah NG',
+		// 					stacking: 'normal',
+		// 					colorByPoint: false,
+		// 					color:'#dc3939',
+		// 					key:'NG'
+		// 				},
+		// 				]
+		// 			});
+		// 		}
+		// 	}
+		// });
 
 	}
 
-	function ShowModal(tanggal,judgement,remark) {
-	    tabel = $('#example2').DataTable();
-	    tabel.destroy();
+	function ShowModal(pic,remark) {
 
 	    $("#myModal").modal("show");
 
+	    var tanggal = $('#tanggal').val();
+
 	    var data = {
 			tanggal:tanggal,
-	    	judgement:judgement,
+			pic:pic,
 	    	remark:remark
 		}
-		var jdgm = '';
-		if (judgement == 'Jumlah OK') {
-			jdgm = 'OK';
-		}
-		else{
-			jdgm = 'NG';
-		}
-
 	    $.get('{{ url("index/recorder/detail_monitoring") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#tableResult').DataTable().clear();
@@ -743,15 +744,38 @@ table > thead > tr > th{
 				$('#tableBodyResult').html("");
 				var tableData = "";
 				var count = 1;
+				var push_ng = [];
+				var height_ng = [];
 				$.each(result.lists, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.check_date +'</td>';
 					tableData += '<td>'+ value.injection_date +'</td>';
+					tableData += '<td>'+ value.product_type +'</td>';
 					tableData += '<td>'+ value.head +'</td>';
 					tableData += '<td>'+ value.block +'</td>';
-					tableData += '<td>'+ value.push_pull +'</td>';
-					tableData += '<td>'+ value.judgement +'</td>';
+					if(value.push_pull_ng_name != 'OK'){
+						push_pull_ng_name = value.push_pull_ng_name.split(',');
+						push_pull_ng_value = value.push_pull_ng_value.split(',');
+						for (var i=0; i < push_pull_ng_name.length; i++) { 
+							push_ng.push("Head-Block = "+push_pull_ng_name[i]+" Memiliki Nilai NG = <label class='label label-danger' readonly>"+push_pull_ng_value[i]+"</label><br>")
+						}
+						tableData += '<td>'+ push_ng.join("") +'</td>';
+					}else{
+						tableData += '<td><label class="label label-success">'+ value.push_pull_ng_name +'</label></td>';
+					}
+
+					if(value.height_ng_name != 'OK'){
+						height_ng_name = value.height_ng_name.split(',');
+						height_ng_value = value.height_ng_value.split(',');
+						for (var i=0; i < height_ng_name.length; i++) { 
+							height_ng.push("Head-Block = "+height_ng_name[i]+" Memiliki Nilai NG = <label class='label label-danger' readonly>"+height_ng_value[i]+"</label><br>")
+						}
+						tableData += '<td>'+ height_ng.join("") +'</td>';
+					}else{
+						tableData += '<td><label class="label label-success">'+ value.height_ng_name +'</label></td>';
+					}
+					tableData += '<td>'+ value.jumlah_cek +'</td>';
 					tableData += '<td>'+ value.pic_check +'</td>';
 					tableData += '</tr>';
 					count += 1;
@@ -793,7 +817,7 @@ table > thead > tr > th{
 		});
 
 	    $('#judul_table').append().empty();
-	    $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
+	    $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan oleh <b>'+pic+'</b> (<b>'+remark+'</b>)</center>');
 	    
 	  }
 

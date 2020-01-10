@@ -900,8 +900,8 @@
 			$.post('{{ url("index/push_block_recorder/create") }}', data2, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
-					// alert('Pengisian Selesai. Tekan OK untuk menutup.');
-					// window.close();
+					alert('Pengisian Selesai. Tekan OK untuk menutup.');
+					window.close();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
