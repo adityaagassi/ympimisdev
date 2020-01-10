@@ -55,6 +55,16 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexOpAssesment(){
+		$title = 'Operator Evaluation';
+		$title_jp = '??';
+
+		return view('processes.middle.display.buffing_op_assesment', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Operator Evaluation');
+	}
+
 	public function indexReportBuffingCancelled(){
 		$title = 'Buffing Cancelled Log';
 		$title_jp = '??';
@@ -108,7 +118,7 @@ class MiddleProcessController extends Controller
 	}
 	
 	public function indexReportOpTime(){
-		$title = 'Operator Buffing Time';
+		$title = 'Buffing Operator Time';
 		$title_jp = '??';
 
 		return view('processes.middle.report.operator_time', array(
@@ -1164,19 +1174,87 @@ class MiddleProcessController extends Controller
 		return Response::json($response);
 	}
 
-	public function fetchBuffingOpWorkMonthly(Request $request){
-		$bulan="";
-		if(strlen($request->get('bulan')) > 0){
-			$bulan = $request->get('bulan');
-		}else{
-			$bulan = date('m-Y');
+	public function fetchBuffingOpEffMonthly(Request $request){
+		$datefrom = date("Y-m-01");
+		$dateto = date("Y-m-d");
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto')) > 0){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 
-		$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+		$ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate, ((g.g - ng.ng) / g.g) as post_rate FROM
+			(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+			GROUP BY l.operator_id) g
+			left join
+			(SELECT l.operator_id, sum(l.quantity) ng from middle_ng_logs l
+			where l.location = 'bff-kensa'
+			and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+			GROUP BY l.operator_id) ng
+			on ng.operator_id = g.operator_id
+			left join employees e on e.employee_id = g.operator_id
+			where g.operator_id in (select eg.employee_id from employee_groups eg where location = 'bff')
+			order by operator_id asc;");
+
+		$eff = db::connection("digital_kanban")->select("select operator_id, act, std, std/act as eff from (
+			select d.operator_id, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
 			left join standart_times s on s.material_number = d.material_number
-			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
-			GROUP BY d.operator_id, tgl
-			HAVING act > 60");
+			where DATE_FORMAT(d.selesai_start_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
+			GROUP BY d.operator_id
+			HAVING act > 60) eff
+			where operator_id in (select employee_id from employee_groups where location = 'bff')
+			order by operator_id asc;");
+
+
+		$response = array(
+			'status' => true,
+			'ng' => $ng,
+			'eff' => $eff,
+			'datefrom' => $datefrom,
+			'dateto' => $dateto
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchBuffingOpWorkMonthly(Request $request, $id){
+		$bulan="";
+		$datefrom = date("Y-m-01");
+		$dateto = date("Y-m-d");
+
+		if($id == 'assesment'){
+			if(strlen($request->get('datefrom')) > 0){
+				$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			}
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+			}
+
+			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+				left join standart_times s on s.material_number = d.material_number
+				where DATE_FORMAT(d.selesai_start_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
+				GROUP BY d.operator_id, tgl
+				HAVING act > 60");
+		}else{
+			if(strlen($request->get('bulan')) > 0){
+				$bulan = $request->get('bulan');
+			}else{
+				$bulan = date('m-Y');
+			}
+
+			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+				left join standart_times s on s.material_number = d.material_number
+				where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
+				GROUP BY d.operator_id, tgl
+				HAVING act > 60");
+		}
 
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
 			where g.location = 'bff'");
@@ -1185,7 +1263,9 @@ class MiddleProcessController extends Controller
 			'status' => true,
 			'act' => $act,
 			'emp' => $emp,
-			'bulan' => $bulan
+			'bulan' => $bulan,
+			'datefrom' => $datefrom,
+			'dateto' => $dateto
 		);
 		return Response::json($response);
 	}
@@ -1222,62 +1302,75 @@ class MiddleProcessController extends Controller
 	}
 
 
-	public function fetchBuffingOpNgMonthly(Request $request){
+	public function fetchBuffingOpNgMonthly(Request $request, $id){
 		$bulan="";
-		if(strlen($request->get('bulan')) > 0){
-			$bulan = $request->get('bulan');
+		$datefrom = date("Y-m-01");
+		$dateto = date("Y-m-d");
+
+
+		if($id == 'assesment'){
+			if(strlen($request->get('datefrom')) > 0){
+				$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			}
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+			}
+
+			$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+				(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
+				left join employees e on e.employee_id = l.operator_id
+				left join materials m on l.material_number = m.material_number
+				where l.location = 'bff-kensa'
+				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				GROUP BY l.operator_id, e.`name`) ng
+				left join
+				(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
+				left join employees e on e.employee_id = l.operator_id
+				left join materials m on l.material_number = m.material_number
+				where l.location = 'bff-kensa'
+				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				GROUP BY l.operator_id, e.`name`) g
+				on ng.operator_id = g.operator_id
+				order by ng_rate asc");
 		}else{
-			$bulan = date('m-Y');
-		}
-
-		$addHpl = "";
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl."'".$hpls[$i]."'";
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.',';
-				}
+			if(strlen($request->get('bulan')) > 0){
+				$bulan = $request->get('bulan');
+			}else{
+				$bulan = date('m-Y');
 			}
-			$addHpl = "and m.hpl in (".$hpl.") ";
-		}
 
-		$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-			(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
-			left join employees e on e.employee_id = l.operator_id
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
-			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
-			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-			GROUP BY l.operator_id, e.`name`) ng
-			left join
-			(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
-			left join employees e on e.employee_id = l.operator_id
-			left join materials m on l.material_number = m.material_number
-			where l.location = 'bff-kensa' and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' ".$addHpl."
-			and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
-			and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-			GROUP BY l.operator_id, e.`name`) g
-			on ng.operator_id = g.operator_id
-			order by ng_rate asc");
-
-		$hpl = '';	
-		if($request->get('hpl') != null) {
-			$hpls =  explode(",", $request->get('hpl'));
-			for ($i=0; $i < count($hpls); $i++) {
-				$hpl = $hpl.$hpls[$i];
-				if($i != (count($hpls)-1)){
-					$hpl = $hpl.' & ';
-				}
-			}
+			$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+				(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
+				left join employees e on e.employee_id = l.operator_id
+				left join materials m on l.material_number = m.material_number
+				where l.location = 'bff-kensa'
+				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				GROUP BY l.operator_id, e.`name`) ng
+				left join
+				(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
+				left join employees e on e.employee_id = l.operator_id
+				left join materials m on l.material_number = m.material_number
+				where l.location = 'bff-kensa'
+				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' 
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
+				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				GROUP BY l.operator_id, e.`name`) g
+				on ng.operator_id = g.operator_id
+				order by ng_rate asc");
 		}
 
 		$response = array(
 			'status' => true,
 			'op_ng' => $op_ng,
-			'hpl' => $hpl,
-			'bulan' => $bulan
+			'bulan' => $bulan,
+			'datefrom' => $datefrom,
+			'dateto' => $dateto,
 		);
 		return Response::json($response);
 
