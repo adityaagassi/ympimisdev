@@ -90,7 +90,7 @@ table.table-bordered > tfoot > tr > th{
     
     @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
     <form role="form" method="post" enctype='multipart/form-data' action="{{url('index/qc_report/close1', $cpars->id)}}">
-    @elseif(Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+    @elseif(Auth::user()->username == $cpars->manager)
     <form role="form" method="post" enctype='multipart/form-data' action="{{url('index/qc_report/close2', $cpars->id)}}">
     @endif 
 
@@ -102,12 +102,11 @@ table.table-bordered > tfoot > tr > th{
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
-          <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
 
-         <a href="{{url('index/qc_car/print_car_new', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
-         
-         @if($cpars->posisi == "QA")
-         <a class="btn btn-md btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
+          @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+
+          <a class="btn btn-md btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
+
          @endif
         </div>
 
@@ -170,49 +169,107 @@ table.table-bordered > tfoot > tr > th{
 
 
         @if($cpars->status_code != 1)
-
-
-          <div class="form-group row" align="left">
-            <div class="col-xs-12" style="margin-top: 3%; margin-bottom: 1%;">
-              <div class="col-xs-4" style="padding: 0px;">
-                <label style="font-weight: bold; font-size: 18px;">
-                  <span><i class="fa fa-photo"></i> Verifikasi</span>
-                </label>
+          @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+            <div class="form-group row" align="left">
+              <div class="col-xs-12" style="margin-top: 3%; margin-bottom: 1%;">
+                <div class="col-xs-4" style="padding: 0px;">
+                  <label style="font-weight: bold; font-size: 18px;">
+                    <span><i class="fa fa-photo"></i> Verifikasi</span>
+                  </label>
+                </div>
+                <div class="col-xs-1" style="padding: 0px;">
+                  <a class="btn btn-success" onclick='addVerifikasi();'><i class='fa fa-plus' ></i></a>
+                  <input type="hidden" id="jumlahVerif" name="jumlahVerif">
+                </div>
               </div>
-              <div class="col-xs-1" style="padding: 0px;">
-                <a class="btn btn-success" onclick='addVerifikasi();'><i class='fa fa-plus' ></i></a>
-                <input type="hidden" id="jumlahVerif" name="jumlahVerif">
+              <div id='verif'></div>
+            </div>
+
+
+            @if(count($verifikasi) > 0)
+
+              <?php for ($i = 0; $i < count($verifikasi); $i++) { ?>
+                <div class="col-xs-12" id="add_ver_<?= $i ?>">
+                  <div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">
+                      Nama File : <?= $verifikasi[$i]->foto ?>
+                  </div>
+                  <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div>
+                  <div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;">
+                      <div class="form-group">
+                          <input type="text" id="ket_<?= $i ?>" name="ket_<?= $i ?>" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control" value="<?= $verifikasi[$i]->keterangan ?>" disabled> 
+                        </div>
+                  </div>
+                  <div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="hapus('<?= $verifikasi[$i]->id_ver ?>')"><i class="fa fa-close"></i></a> </div>
+              </div>
+              <?php } ?>
+            @endif
+
+            <div class="form-group row" align="left">
+              <label class="col-sm-4">Cost Estimation (optional)</span></label>
+              <div class="col-sm-12">
+                <textarea type="text" class="form-control" name="cost">{{$cpars->cost}}</textarea>
               </div>
             </div>
-            <div id='verif'></div>
-          </div>
-
-
-          @if(count($verifikasi) > 0)
-
-            <?php for ($i = 0; $i < count($verifikasi); $i++) { ?>
-              <div class="col-xs-12" id="add_ver_<?= $i ?>">
-                <div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">
-                    Nama File : <?= $verifikasi[$i]->foto ?>
-                </div>
-                <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div>
-                <div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;">
-                    <div class="form-group">
-                        <input type="text" id="ket_<?= $i ?>" name="ket_<?= $i ?>" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control" value="<?= $verifikasi[$i]->keterangan ?>" disabled> 
-                      </div>
-                </div>
-                <div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="hapus('<?= $verifikasi[$i]->id_ver ?>')"><i class="fa fa-close"></i></a> </div>
-            </div>
-            <?php } ?>
+            <button type="submit" class="btn btn-success col-sm-14">Edit</button>
           @endif
 
-          <div class="form-group row" align="left">
-            <label class="col-sm-4">Cost Estimation (optional)</span></label>
-            <div class="col-sm-12">
-              <textarea type="text" class="form-control" name="cost">{{$cpars->cost}}</textarea>
-            </div>
+          @if($cpars->posisi == "QA2" && Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+
+          <table class="table table-striped">
+            <tr>
+              <td style="font-size: 20px">
+                Laporan CPAR
+              </td>
+              <td>
+                <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size: 20px">
+                Laporan CAR
+              </td>
+              <td>
+                <a href="{{url('index/qc_car/print_car_new', $cars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
+              </td>
+            </tr>
+          </table>
+          <br><br>
+          <div class="col-sm-12">
+            <div class="col-sm-3"></div>
+            <a class="btn btn-primary col-sm-12" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})"  style="width: 50%; font-weight: bold; font-size: 20px;margin-top: 10px;float: center">Verifikasi & Send Email Manager</a>
+
+            <!-- <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject </a> -->    
           </div>
-          <button type="submit" class="btn btn-success col-sm-14">Edit</button>
+
+          @endif
+
+          @if($cpars->posisi == "QAmanager" && Auth::user()->username == $cpars->manager)
+
+          <table class="table table-striped">
+            <tr>
+              <td style="font-size: 20px">
+                Laporan CPAR
+              </td>
+              <td>
+                <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size: 20px">
+                Laporan CAR
+              </td>
+              <td>
+                <a href="{{url('index/qc_car/print_car_new', $cars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
+              </td>
+            </tr>
+          </table>
+          <br><br>
+          <div class="col-sm-12">
+            <button type="submit" class="btn btn-success col-sm-12"  style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px;float: center">CLOSE CPAR {{$cpars->cpar_no}} 
+            </button> 
+          </div>
+
+          @endif
 
         @endif
 

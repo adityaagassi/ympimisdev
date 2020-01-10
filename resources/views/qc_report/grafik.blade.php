@@ -3,10 +3,8 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-
 table.table-bordered{
   border:1px solid rgb(150,150,150);
-
 }
 table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
@@ -156,9 +154,8 @@ table > thead > tr > th{
                 <option value="Eksternal">Eksternal</option>
                 <option value="Internal">Internal</option>
                 <option value="Supplier">Supplier</option>
-              </select>
-            -->
-          </div>
+              </select> -->
+        </div>
 
          <div class="col-md-2">
             <div class="input-group">
@@ -173,6 +170,8 @@ table > thead > tr > th{
                 </select>
             </div>
           </div>
+
+          
 
         <div class="col-xs-2">
           <button class="btn btn-success btn-sm" onclick="drawChart()">Update Chart</button>
@@ -234,10 +233,9 @@ table > thead > tr > th{
                 <th style="width: 15%; padding: 0;vertical-align: middle;;font-size: 16px;" rowspan="2">No CPAR</th>
                 <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Subject</th>
                 <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Departemen</th>
-                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="6">CPAR</th>
-                <th style="width: 30%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="5">CAR</th>
-                <th style="background-color:#448aff;width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">QA Verification</th>
-
+                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="6">CPAR</th>
+                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="5">CAR</th>
+                <th style="background-color:#448aff;width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">QA Verification</th>
               </tr>
               <tr>
                 <th style="width: 5%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
@@ -255,7 +253,7 @@ table > thead > tr > th{
 
                 <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
-
+                <th style="width: 6%; padding: 0;vertical-align: middle;">Manager</th>
               </tr>
             </thead>
             <tbody id="tabelisi">
@@ -1033,7 +1031,7 @@ table > thead > tr > th{
                 }
               }
 
-              if (value.email_status == "SentQA2") {
+              if (value.email_status_car == "SentQA" && value.email_status == "SentQA2") {
                   if (value.posisi_cpar == "QA2") {
                       if (d == 0) {  
                           statusqa2 = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';
@@ -1061,6 +1059,34 @@ table > thead > tr > th{
                 }
               }
 
+              if (value.email_status == "SentQA2" && value.posisi_cpar == "QAmanager") {
+                  if (value.posisi_cpar == "QAmanager") {
+                      if (d == 0) {  
+                          statusqamanager = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
+                          color = 'style="background-color:red"';
+                        // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        d = 1;
+                      } else {
+                        statusqamanager = '';
+                      }
+                  }
+                  else{
+                      statusqamanager = '<span class="label label-success">'+namam2+'</span>';
+                      color = 'style="background-color:green"'; 
+                      // statusqamanager = '<img src="{{ url("ok.png")}}" width="40" height="40">';
+                  }
+              }
+              else {
+                if (d == 0) {  
+                  statusqamanager = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
+                  color = 'style="background-color:red"';
+                  // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  d = 1;
+                } else {
+                  statusqamanager = '';
+                }
+              }
+
 
             table += '<tr>';
             table += '<td>'+value.cpar_no+'</td>';
@@ -1079,6 +1105,7 @@ table > thead > tr > th{
             table += '<td>'+statusgmcar+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+statusqa+'</td>';
             table += '<td>'+statusqa2+'</td>';
+            table += '<td>'+statusqamanager+'</td>';
             table += '</tr>';
 
               

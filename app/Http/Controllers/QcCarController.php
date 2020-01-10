@@ -34,17 +34,71 @@ class QcCarController extends Controller
        ->orderBy('qc_cars.id','desc')
        ->get();
 
-       $id = Auth::id();
+       // $id = Auth::id();
 
-       //get departemen by login
+       // //get departemen by login
 
-       $user = "select department_name from users join mutation_logs on users.username = mutation_logs.employee_id join departments on departments.department_name = mutation_logs.department where users.id=14 and valid_to IS NULL;";
-       $users = DB::select($user);
+       // $user = "select department_name from users join mutation_logs on users.username = mutation_logs.employee_id join departments on departments.department_name = mutation_logs.department where users.id=14 and valid_to IS NULL;";
+       // $users = DB::select($user);
+
+       $departments = Department::select('departments.id', 'departments.department_name')->get();
+
+        // $materials = Material::select('materials.material_number', 'materials.material_description')->get();
+        $statuses = QcCpar::select('statuses.status_code','statuses.status_name')
+        ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+        ->distinct()
+        ->get();
 
        return view('qc_car.index', array(
         'cars' => $cars,
-        'users' => $users
+        'departments' => $departments,
+        'statuses' => $statuses
+
        ))->with('page', 'CAR');
+    }
+
+    public function filter_data(Request $request){
+        $kategori = $request->get('kategori');
+        $department_id = $request->get('department_id');
+        $status = $request->get('status');
+
+        $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','qc_cpars.judul_komplain','departments.department_name','employees.name','statuses.status_name')
+         ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+         ->join('departments','qc_cpars.department_id','=','departments.id')
+         ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
+         ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+         ->orderBy('qc_cars.id','desc')
+         ->whereNull('qc_cpars.deleted_at');
+
+
+          if(strlen($request->get('kategori')) > 0){
+            $cars = $cars->where('qc_cpars.kategori', '=', $request->get('kategori'));
+          }
+
+          if(strlen($request->get('department_id')) > 0){
+            $cars = $cars->where('qc_cpars.department_id', '=', $request->get('department_id'));
+          }
+
+          if(strlen($request->get('status_code')) > 0){
+            $cars = $cars->where('qc_cpars.status_code', '=', $request->get('status_code'));
+          }
+
+          $carfix = $cars->get();
+
+          $departments = Department::select('departments.id', 'departments.department_name')->get();
+
+          // $materials = Material::select('materials.material_number', 'materials.material_description')->get();
+          $statuses = QcCpar::select('statuses.status_code','statuses.status_name')
+          ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+          ->distinct()
+          ->get();
+
+         return view('qc_car.index', array(
+          'cars' => $carfix,
+          'departments' => $departments,
+          'statuses' => $statuses
+
+         ))->with('page', 'CAR');
     }
 
     public function detail($id)
@@ -89,7 +143,6 @@ class QcCarController extends Controller
           $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.grade_name like '%staff%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 
           $pic = DB::select($getpic);
-       
        }
 
         return view('qc_car.detail', array(

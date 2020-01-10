@@ -69,7 +69,15 @@
 						<div class="input-group-addon bg-green" style="border: none;">
 							<i class="fa fa-calendar"></i>
 						</div>
-						<input type="text" class="form-control datepicker" id="bulan" placeholder="Select Month">
+						<input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From">
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
 					</div>
 				</div>
 				<div class="col-xs-2">
@@ -78,10 +86,10 @@
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
+				<div id="container" style="width: 100%; margin-top: 1%;"></div>
 				<div id="container1" style="width: 100%; margin-top: 1%;"></div>
 				<div id="container3" style="width: 100%; margin-top: 1%;"></div>
-				<div id="container2" style="width: 100%; margin-top: 1%; display: none;"></div>
-				
+				<div id="container2" style="width: 100%; margin-top: 1%;"></div>				
 			</div>
 		</div>
 	</div>
@@ -222,7 +230,6 @@
 
 			}
 		});
-
 	}
 
 	function showTimeDetail(bulan, param) {
@@ -267,28 +274,165 @@
 				body += '<td>'+ Math.ceil(sum_act/result.detail.length) +'</td>';
 				body += '</tr>';
 
-
 				$('#data-log-body').append(body);
-
 
 			}
 		});
 	}
 
 	function fillChart() {
-		var bulan = $('#bulan').val();
+		var datefrom = $('#datefrom').val();
+		var dateto = $('#dateto').val();
 
 		var data = {
-			bulan: bulan
+			datefrom: datefrom,
+			dateto: dateto
 		}
 
-		var position = $(document).scrollTop();		
+		var position = $(document).scrollTop();
 
-		$.get('{{ url("fetch/middle/bff_op_ng_monthly/resume") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/bff_op_eff_monthly") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+					
+					var name = [];
+					var eff = [];
+					var data = [];
+
+					for (var i = 0; i < result.ng.length; i++) {
+						var name_temp = result.ng[i].name.split(" ");
+						var xAxis = '';
+						xAxis += result.ng[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
+
+						name.push(xAxis);
+
+						for (var j = 0; j < result.eff.length; j++) {
+							if(result.ng[i].operator_id == result.eff[j].operator_id){
+								data.push([xAxis, (result.ng[i].post_rate * result.eff[j].eff * 100)]);					
+							}
+						}
+
+					}
+
+					name = [];
+					data.sort(function(a, b){return b[1] - a[1]});
+					for (var i = 0; i < data.length; i++) {
+						name.push(data[i][0]);
+						if(data[i][1] > 85){
+							eff.push({y: data[i][1], color: 'rgb(144,238,126)'});
+						}else{
+							eff.push({y: data[i][1], color: 'rgb(255,116,116)'})
+						}
+					}
+					
+					Highcharts.chart('container', {
+						chart: {
+							type: 'column'
+						},
+						title: {
+							text: '<span style="font-size: 18pt;">Highest Operator Overall Efficiency</span>',
+							useHTML: true
+						},
+						subtitle: {
+							text:  result.datefrom + ' ~ ' + result.dateto,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
+						},
+						xAxis: {
+							categories: name,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								rotation: -45,
+								style: {
+									fontSize: '13px'
+								}
+							},
+						},
+						yAxis: {
+							title: {
+								text: 'Overall Efficiency (%)'
+							},
+							plotLines: [{
+								color: '#FF0000',
+								value: 85,
+								dashStyle: 'shortdash',
+								width: 2,
+								zIndex: 5,
+								label: {
+									align:'right',
+									text: 'Target 85%',
+									x:-7,
+									style: {
+										fontSize: '12px',
+										color: '#FF0000',
+										fontWeight: 'bold'
+									}
+								}
+							}],
+						},
+						legend : {
+							enabled: false
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span>{point.category}</span><br/><span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+
+						},
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:.2f}%',
+									rotation: -90,
+									style:{
+										fontSize: '15px'
+									}
+								},
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function (event) {
+											showNGDetail(result.bulan, event.point.category);
+
+										}
+									}
+								},
+							}
+						},credits: {
+							enabled: false
+						},
+						series: [
+						{
+							name: 'Overall Efficiency',
+							data: eff
+						}
+						]
+					});
+					$(document).scrollTop(position);
+
+				}
+			}
+		});	
+
+		$.get('{{ url("fetch/middle/bff_op_ng_monthly/assesment") }}', data, function(result, status, xhr) {
+			if(xhr.status == 200){
+				if(result.status){
 					
 					var name = [];
 					var ng_rate = [];
@@ -330,8 +474,15 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Highest NG Rate by OP on '+ bulanText(result.bulan) +'</span>',
+							text: '<span style="font-size: 18pt;">Highest NG Rate by OP</span>',
 							useHTML: true
+						},
+						subtitle: {
+							text:  result.datefrom + ' ~ ' + result.dateto,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: name,
@@ -390,14 +541,14 @@
 								groupPadding: 0.93,
 								borderWidth: 0.93,
 								cursor: 'pointer',
-								point: {
-									events: {
-										click: function (event) {
-											showNGDetail(result.bulan, event.point.category);
+								// point: {
+								// 	events: {
+								// 		click: function (event) {
+								// 			showNGDetail(result.bulan, event.point.category);
 
-										}
-									}
-								},
+								// 		}
+								// 	}
+								// },
 							}
 						},credits: {
 							enabled: false
@@ -415,7 +566,7 @@
 			}
 		});
 
-		$.get('{{ url("fetch/middle/bff_op_work_monthly/resume") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/bff_op_work_monthly/assesment") }}', data, function(result, status, xhr) {
 
 			if(xhr.status == 200){
 				if(result.status){
@@ -478,8 +629,15 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Highest Working Time Average on '+ bulanText(result.bulan) +'</span>',
+							text: '<span style="font-size: 18pt;">Highest Working Time Average</span>',
 							useHTML: true
+						},
+						subtitle: {
+							text:  result.datefrom + ' ~ ' + result.dateto,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: categories,
@@ -617,8 +775,15 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Highest Productivity Average on '+ bulanText(result.bulan) +'</span>',
+							text: '<span style="font-size: 18pt;">Highest Productivity Average</span>',
 							useHTML: true
+						},
+						subtitle: {
+							text:  result.datefrom + ' ~ ' + result.dateto,
+							style: {
+								fontSize: '1vw',
+								fontWeight: 'bold'
+							}
 						},
 						xAxis: {
 							categories: categories,
@@ -927,13 +1092,9 @@ function getActualFullDate() {
 }
 
 $('.datepicker').datepicker({
-	<?php $tgl_max = date('m-Y') ?>
-	format: "mm-yyyy",
-	startView: "months", 
-	minViewMode: "months",
+	format: "yyyy-mm-dd",
+	todayHighlight: true,
 	autoclose: true,
-	endDate: '<?php echo $tgl_max ?>'
-
 });
 
 function bulanText(param){

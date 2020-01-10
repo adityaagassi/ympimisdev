@@ -94,11 +94,8 @@ class QcReportController extends Controller
             // $date_request = date('Y-m-d', strtotime($request->get('bulandari')));
             $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.tgl_permintaan', 'like','%'.$bulandari.'%');
           }
-
-          
         }
 
-        
         if(strlen($request->get('kategori')) > 0){
           $cpar_detailsTable = $cpar_detailsTable->where('qc_cpars.kategori', '=', $request->get('kategori'));
         }
@@ -704,6 +701,7 @@ class QcReportController extends Controller
       $bulan = db::select("select DISTINCT MONTH(tgl_permintaan) as bulan, MONTHNAME(tgl_permintaan) as namabulan FROM qc_cpars order by bulan asc;");
       $tahun = db::select("select DISTINCT YEAR(tgl_permintaan) as tahun FROM qc_cpars order by tahun desc");
       $dept = db::select("select id, department_name from departments where departments.id not in (1,2,3,4,11)");
+      $statuses = db::select("select distinct qc_cpars.status_code, status_name from statuses join qc_cpars on qc_cpars.status_code = statuses.status_code");
       
        return view('qc_report.grafik',  
         array('title' => 'CPAR CAR Monitoring', 
@@ -711,7 +709,8 @@ class QcReportController extends Controller
               'fys' => $fys,
               'bulans' => $bulan,
               'years' => $tahun, 
-              'departemens' => $dept
+              'departemens' => $dept,
+              'status' => $statuses
             )
         )->with('page', 'CPAR Graph');
     }
@@ -1926,7 +1925,12 @@ class QcReportController extends Controller
       public function close1(Request $request,$id)
       {
         try{
-          $id_user = Auth::id();
+            $id_user = Auth::id();
+
+            $cpars = QcCpar::find($id);
+            $cpars->cost = $request->get('cost');
+            $cpars->save();
+
             $jumlahVerif = $request->get('jumlahVerif');
             for ($i = 1; $i <= $jumlahVerif; $i++) {
               $keterangan = $request->get('ket_'.$i);
@@ -1955,18 +1959,25 @@ class QcReportController extends Controller
 
       public function emailverification(Request $request,$id){
 
-          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.judul_komplain, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
 
           $cars = db::select($query);
 
           $cpars = QcCpar::find($id);
 
-          if ($cpars->staff != null) {
+          if ($cpars->posisi == "QA") {
+            if ($cpars->staff != null ) {
             $to = "chief";
+            }
+            else if ($cpars->leader != null ) {
+              $to = "foreman";
+            }
+          } 
+
+          else if($cpars->posisi == "QA2") {
+            $to = "manager";
           }
-          else if ($cpars->leader != null) {
-            $to = "foreman";
-          }
+          
 
           $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
           $mails = DB::select($mailto);
@@ -1975,9 +1986,17 @@ class QcReportController extends Controller
             $mailtoo = $mail->email;
           }
 
-          $cpars->posisi = "QA2";
-          $cpars->email_status = "SentQA2";
-          $cpars->save();
+          if($cpars->posisi == "QA") {
+            $cpars->posisi = "QA2";
+            $cpars->email_status = "SentQA2";
+            $cpars->save();
+          }
+          else if ($cpars->posisi = "QA2"){
+            $cpars->posisi = "QAmanager";
+            // $cpars->email_status = "SentQAManager";
+            $cpars->progress = "100";
+            $cpars->save();
+          }
 
           Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
           return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'E-mail has Been Sent')->with('page', 'QA verification');
@@ -1988,22 +2007,22 @@ class QcReportController extends Controller
 
         try{
             $cpars = QcCpar::find($id);
+            $cpars->posisi = "QAFIX";
             $cpars->status_code = "1";
-            $cpars->posisi = "QAmanager";
             $cpars->save();
 
-            $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
+            // $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cpars.id='".$id."'";
 
-            $cars = db::select($query);
+            // $cars = db::select($query);
 
-            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.manager = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
-            $mails = DB::select($mailto);
+            // $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.manager = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+            // $mails = DB::select($mailto);
 
-            foreach($mails as $mail){
-              $mailtoo = $mail->email;
-            }
+            // foreach($mails as $mail){
+            //   $mailtoo = $mail->email;
+            // }
 
-            Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+            // Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
           
             return redirect('/index/qc_report/verifikasiqa/'.$cpars->id)->with('status', 'CPAR has been closed.')->with('page', 'QA verification');
           }

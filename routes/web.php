@@ -957,9 +957,10 @@ Route::get('fetch/middle/report_hourly_lcq', 'MiddleProcessController@fetchRepor
 // Report Middle Buffing
 Route::get('index/middle/report_buffing_ng', 'MiddleProcessController@indexReportBuffingNg');
 Route::get('fetch/middle/bff_ng_rate_monthly', 'MiddleProcessController@fetchBuffingNgRateMonthly');
-Route::get('fetch/middle/bff_op_ng_monthly', 'MiddleProcessController@fetchBuffingOpNgMonthly');
+Route::get('fetch/middle/bff_op_eff_monthly', 'MiddleProcessController@fetchBuffingOpEffMonthly');
+Route::get('fetch/middle/bff_op_ng_monthly/{id}', 'MiddleProcessController@fetchBuffingOpNgMonthly');
 Route::get('fetch/middle/bff_op_ng_monthly_detail', 'MiddleProcessController@fetchBuffingOpNgMonthlyDetail');
-Route::get('fetch/middle/bff_op_work_monthly', 'MiddleProcessController@fetchBuffingOpWorkMonthly');
+Route::get('fetch/middle/bff_op_work_monthly/{id}', 'MiddleProcessController@fetchBuffingOpWorkMonthly');
 Route::get('fetch/middle/bff_op_work_monthly_detail', 'MiddleProcessController@fetchBuffingOpWorkMonthlyDetail');
 Route::get('fetch/middle/bff_ng_monthly', 'MiddleProcessController@fetchBuffingNgMonthly');
 Route::get('fetch/middle/bff_ng_rate_daily', 'MiddleProcessController@fetchBuffingNgDaily');
@@ -1001,6 +1002,8 @@ Route::get('index/middle/buffing_ic_atokotei', 'MiddleProcessController@indexBuf
 Route::get('fetch/middle/buffing_ic_atokotei', 'MiddleProcessController@fetchBuffingIcAtokotei');
 Route::get('index/middle/buffing_work_order/{id}', 'MiddleProcessController@indexBuffingWorkOrder');
 Route::get('fetch/middle/buffing_target', 'MiddleProcessController@fetchTarget');
+Route::get('index/middle/buffing_operator_assesment', 'MiddleProcessController@indexOpAssesment');
+
 
 
 //MIZUSUMASHI
@@ -1945,6 +1948,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
+	Route::post('index/qc_car/filter', 'QcCarController@filter_data');
 	Route::get('index/qc_car/detail/{id}', 'QcCarController@detail');
 	Route::post('index/qc_car/create_pic/{id}', 'QcCarController@create_pic');
 	Route::post('index/qc_car/detail_action/{id}', 'QcCarController@detail_action');
@@ -2072,6 +2076,7 @@ Route::get('index/press/report_kanagata_lifetime', 'PressController@report_kanag
 Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filter_report_kanagata_lifetime');
 Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkanagatalifetime')->name('kanagata_lifetime.getkanagatalifetime');
 Route::post('index/kanagata/update/{id}','PressController@update');
+Route::post('index/kanagata/reset','PressController@reset');
 
 
 //ROOMS

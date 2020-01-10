@@ -47,7 +47,7 @@ td{
 <section class="content-header">
   <h1>
     List of {{ $page }}s
-    <small>Validate Your CPAR</small>
+    <small>Corrective and Preventive Action Request</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url("index/qc_report/create")}}" class="btn btn-primary btn-sm" style="color:white">Create {{ $page }}</a></li>
@@ -147,13 +147,13 @@ td{
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>No CPAR</th>
-                <th>Kategori</th> 
+                <th>Judul Komplain</th>
                 <th>Manager</th>    
+                <th>Departemen</th>
                 <th>Lokasi</th>
                 <th>Tgl Permintaan</th>
                 <th>Tgl Balas</th>
-                <th>Judul Komplain</th>
-                <th>Departemen</th>
+                <th>Kategori</th> 
                 <th>Sumber Komplain</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -347,13 +347,13 @@ td{
         },
         "columns": [
           { "data": "cpar_no" },
-          { "data": "kategori" },
+          { "data": "judul_komplain" },
           { "data": "name" },
+          { "data": "department_name" , "width": "15%"},
           { "data": "lokasi" },
           { "data": "tgl_permintaan" },
           { "data": "tgl_balas" },
-          { "data": "judul_komplain" },
-          { "data": "department_name" , "width": "15%"},
+          { "data": "kategori" },
           { "data": "sumber_komplain" },
           { "data": "status_name" },
           { "data": "action", "width": "10%"}

@@ -40,7 +40,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     List of {{ $page }}s
-    <small>Create Your CAR</small>
+    <small>Corrective Action Report</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url("index/qc_car/verifikator")}}" class="btn btn-primary btn-sm" style="color:white">Check Verifikator</a></li>
@@ -63,22 +63,63 @@ table.table-bordered > tfoot > tr > th{
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">List Data <span class="text-purple">CAR</span></h3>
+          <h3 class="box-title">Filter <span class="text-purple">CAR</span></h3>
 
         </div>
         <div class="box-body">
+          <form role="form" method="post" action="{{url('index/qc_car/filter')}}">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="col-md-12">
+            <div class="col-md-4">
+              <div class="form-group">
+                <select class="form-control select2" data-placeholder="Select Kategori" name="kategori" id="kategori" style="width: 100%;">
+                  <option></option>
+                  <option value="Eksternal">Eksternal</option>
+                  <option value="Internal">Internal</option>
+                  <option value="Supplier">Supplier</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <select class="form-control select2" data-placeholder="Select Departemen" name="department_id" id="department_id" style="width: 100%;">
+                  <option></option>
+                  @foreach($departments as $department)
+                  <option value="{{ $department->id }}">{{ $department->department_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <select class="form-control select2" data-placeholder="Select CPAR Status" name="status_code" id="status_code" style="width: 100%;">
+                  <option></option>
+                  @foreach($statuses as $status)
+                  <option value="{{ $status->status_code }}">{{ $status->status_code }} - {{ $status->status_name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-md-offset-5">
+            <div class="form-group">
+              <a href="{{ url('index/qc_car') }}" class="btn btn-danger">Clear Filter</a>
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+          </form>
+
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>No CPAR</th>
-                <th>Kategori</th> 
+                <th>Judul Komplain</th>
+                <th>Departemen</th>
                 <!-- <th>Manager</th>     -->
                 <th>Lokasi</th>
                 <th>Tgl Permintaan</th>
                 <th>Tgl Balas</th>
-                <th>Judul Komplain</th>
-                <th>Departemen</th>
+                <th>Kategori</th> 
                 <th>Sumber Komplain</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -88,16 +129,23 @@ table.table-bordered > tfoot > tr > th{
               @foreach($cars as $car)
               <tr>
                 <td>{{$car->cpar_no}}</td>
-                <td>{{$car->kategori}}</td>
+                <td>{{$car->judul_komplain}}</td>
+                <td>{{$car->department_name}}</td>
                 <!-- <td>{{$car->name}}</td> -->
                 <td style="width: 10%">{{$car->lokasi}}</td>
                 <td>{{$car->tgl_permintaan}}</td>
                 <td>{{$car->tgl_balas}}</td>
-                <td>{{$car->judul_komplain}}</td>
-                <td>{{$car->department_name}}</td>
+                <td>{{$car->kategori}}</td>
                 <td>{{$car->sumber_komplain}}</td>
                 <td>
-                  {{$car->status_name}}
+                  @if($car->status_name == "QA Verification")
+                    <label class="label label-info">{{$car->status_name}}</label>
+                  @elseif($car->status_name== "Closed")
+                    <label class="label label-success">{{$car->status_name}}</label>
+                  @elseif($car->status_name== "Unverified CAR")
+                    <label class="label label-danger">{{$car->status_name}}</label>
+                  @endif
+                  
                 </td>
                 <td style="width: 15%">
                   <center>
@@ -166,6 +214,8 @@ table.table-bordered > tfoot > tr > th{
   });
 
   jQuery(document).ready(function() {
+    $('body').toggleClass("sidebar-collapse");
+    $("#navbar-collapse").text('');
     $('#tgl_permintaan').datepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

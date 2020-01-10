@@ -66,6 +66,7 @@
 			<a href="{{ secure_url("index/middle/buffing_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/middle/buffing_group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Achievement</a>
 			<a href="{{ url("index/middle/buffing_group_balance") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Group Work Balance</a>
+			<a href="{{ url("index/middle/buffing_operator_assesment") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Evaluation</a>
 			{{-- <a href="{{ url("index/middle/buffing_daily_op_ng_rate") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Daily NG Rate by Operator</a> --}}
 			<a href="{{ url("index/middle/muzusumashi") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Mizusumashi Monitoring</a>
 			<a href="{{ url("index/middle/buffing_ic_atokotei") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Incoming Check Atokotei</a>
