@@ -128,45 +128,47 @@
 					var sisaH1 = 0;
 					var sisaH2 = 0;
 					var no = 1;
+					console.log(result.nextday);
+					console.log(result.nextdayplus1);
 
 					$.each(result.planData, function(key, value) {
 						// alert(value.planh2 );
 						
-						totalTarget = value.plan;
-						totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.wip - value.ng)) ;
-						var h1 = Math.round(value.h1);
-						if (totalSubassy < 0) {
-							totalSubassy = 0;
-							h1 = Math.round(value.h1) - (value.stamp - value.actual);
-						}
-						if (h1 < 0) {
-							h1 = 0;
-						}
+						// totalTarget = value.plan;
+						// totalSubassy = (((totalTarget + (-value.debt)) - value.actual) - (value.wip - value.ng)) ;
+						// var h1 = Math.round(value.h1);
+						// if (totalSubassy < 0) {
+						// 	totalSubassy = 0;
+						// 	h1 = Math.round(value.h1) - (value.stamp - value.actual);
+						// }
+						// if (h1 < 0) {
+						// 	h1 = 0;
+						// }
 
-						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
-							h1 = 0;
-						}
+						// if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h1)) {
+						// 	h1 = 0;
+						// }
 
-						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
-							h1 = Math.round(value.h1) - (value.wip - value.ng);
-						}
+						// if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h1)) {
+						// 	h1 = Math.round(value.h1) - (value.wip - value.ng);
+						// }
 
-						var h2 = Math.round(value.h2);
-						if (totalSubassy < 0) {
-							totalSubassy = 0;
-							h2 = Math.round(value.h2) - (value.stamp - value.actual);
-						}
-						if (h2 < 0) {
-							h2 = 0;
-						}
+						// var h2 = Math.round(value.h2);
+						// if (totalSubassy < 0) {
+						// 	totalSubassy = 0;
+						// 	h2 = Math.round(value.h2) - (value.stamp - value.actual);
+						// }
+						// if (h2 < 0) {
+						// 	h2 = 0;
+						// }
 
-						if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h2)) {
-							h2 = 0;
-						}
+						// if (value.stamp <= 0 && (value.wip - value.ng) >= Math.round(value.h2)) {
+						// 	h2 = 0;
+						// }
 
-						if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h2)) {
-							h2 = Math.round(value.h2) - (value.wip - value.ng);
-						}
+						// if (value.stamp <= 0 && (value.wip - value.ng) <= Math.round(value.h2)) {
+						// 	h2 = Math.round(value.h2) - (value.wip - value.ng);
+						// }
 
 						if (value.sisaToday >= 0) {
 							sisaToday = value.sisaToday;
@@ -180,7 +182,6 @@
 							sisaH2 = value.sisaH2;
 						}
 
-
 						if (no % 2 === 0 ) {
 							color = 'style="background-color: rgb(60,60,60)"';
 						} else {
@@ -190,16 +191,16 @@
 						planData += '<tr '+color+'>';
 						planData += '<td style="width: 1%">'+ value.model +'</td>';
 						planData += '<td style="width: 1%">'+ value.debt +'</td>';						
-						planData += '<td style="width: 1%">'+ totalTarget +'</td>';
+						planData += '<td style="width: 1%">'+ value.plan +'</td>';
 						planData += '<td style="width: 1%">'+ value.actual +'</td>';
 						planData += '<td style="width: 1%">'+ value.wip +'</td>';
 						planData += '<td style="width: 1%">'+ value.ng +'</td>';
 						planData += '<td style="width: 1%">'+ value.targetToday +'</td>';
 						planData += '<td style="width: 1%">'+ sisaToday +'</td>';
 						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
-						planData += '<td style="width: 1%">'+ h1 +'</td>';
+						planData += '<td style="width: 1%">'+ value.h1 +'</td>';
 						planData += '<td style="width: 1%">'+ sisaH1 +'</td>';
-						planData += '<td style="width: 1%">'+ h2 +'</td>';
+						planData += '<td style="width: 1%">'+ value.h2 +'</td>';
 						planData += '<td style="width: 1%">'+ sisaH2 +'</td>';
 						planData += '</tr>';
 

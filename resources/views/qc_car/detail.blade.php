@@ -86,7 +86,6 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>  
-    <?php if (Auth::user()->username == $cars->car_cpar->employee_id || Auth::user()->username == $cars->pic || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS"){ ?>
       
     <form role="form" method="post" action="{{url('index/qc_car/detail_action', $cars->id)}}" enctype="multipart/form-data">
       <div class="box-body">
@@ -259,7 +258,6 @@ table.table-bordered > tfoot > tr > th{
         <?php } ?>
       </div>
     </form>
-  <?php } ?>
   </div>
   
   <?php foreach ($cpar as $cpars){ ?>
