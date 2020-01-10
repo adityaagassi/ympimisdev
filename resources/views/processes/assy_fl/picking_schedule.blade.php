@@ -128,8 +128,6 @@
 					var sisaH1 = 0;
 					var sisaH2 = 0;
 					var no = 1;
-					console.log(result.nextday);
-					console.log(result.nextdayplus1);
 
 					$.each(result.planData, function(key, value) {
 						// alert(value.planh2 );
@@ -173,13 +171,22 @@
 						if (value.sisaToday >= 0) {
 							sisaToday = value.sisaToday;
 						}
+						else if(value.sisaToday < 0){
+							sisaToday = 0;
+						}
 
 						if (value.sisaH1 >= 0) {
 							sisaH1 = value.sisaH1;
 						}
+						else if(value.sisaH1 < 0){
+							sisaH1 = 0;
+						}
 
 						if (value.sisaH2 >= 0) {
 							sisaH2 = value.sisaH2;
+						}
+						else if(value.sisaH2 < 0){
+							sisaH2 = 0;
 						}
 
 						if (no % 2 === 0 ) {
