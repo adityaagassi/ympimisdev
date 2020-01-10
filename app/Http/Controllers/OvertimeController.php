@@ -1112,9 +1112,9 @@ public function overtimeControl(Request $request)
 		sum(
 		CASE
 		WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-		floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60) * 2  + 0.5) / 2
+		floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
 		ELSE
-		floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60) * 2  + 0.5) / 2
+		floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
 		END) as jam
 		from VIEW_YMPI_Emp_OvertimePlan
 		where VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$tanggal." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$tanggal1." 23:59:59'
@@ -1488,12 +1488,12 @@ public function overtimeDetail(Request $request)
 		sum(
 		CASE
 		WHEN A.total_ot > 0 THEN
-		floor((A.total_ot / 60) * 2  + 0.5) / 2
+		floor((A.total_ot / 60.0) * 2  + 0.5) / 2
 		ELSE
-		floor((A.TOTAL_OVT_PLAN / 60) * 2  + 0.5) / 2
+		floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
 		END) as jam,
 		STUFF((
-		SELECT ',' + T.remark
+		SELECT distinct ',' + T.remark
 		FROM VIEW_YMPI_Emp_OvertimePlan T
 		WHERE A.emp_no = T.emp_no
 		and T.ovtplanfrom >= '".$from." 00:00:00' 
