@@ -1502,7 +1502,7 @@ public function overtimeDetail(Request $request)
 		from VIEW_YMPI_Emp_OvertimePlan A
 		where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
 		group by A.emp_no
-	) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."'");
+	) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
 
 	$response = array(
 		'status' => true,
