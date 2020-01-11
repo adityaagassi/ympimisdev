@@ -149,7 +149,7 @@
         <div class="form-group row increment" align="left">
           <label class="col-sm-1">File</label>
           <div class="col-sm-5">
-            <input type="file" name="files[]">
+            <input type="file" name="files[]" multiple="">
             <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
           </div>
           <span id="customer">

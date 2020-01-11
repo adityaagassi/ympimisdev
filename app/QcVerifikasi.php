@@ -10,7 +10,7 @@ class QcVerifikasi extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'cpar_no','foto','keterangan','created_by'
+		'cpar_no','tanggal','status','keterangan','created_by'
 	];
 
 	public function user()

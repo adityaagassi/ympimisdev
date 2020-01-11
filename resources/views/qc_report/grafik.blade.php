@@ -245,7 +245,7 @@ table > thead > tr > th{
                 <th style="width: 5%; padding: 0;vertical-align: middle;">GM</th>
                 <th style="width: 5%; padding: 0;vertical-align: middle;">Received By Manager</th>
 
-                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Foreman</th>
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">Manager</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">DGM</th>

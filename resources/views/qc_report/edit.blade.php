@@ -235,7 +235,7 @@
       <div class="form-group row increment" align="left">
         <label class="col-sm-1">File</label>
         <div class="col-sm-5">
-          <input type="file" name="files[]">
+          <input type="file" name="files[]" multiple="">
           <button type="button" class="btn btn-success plusdata"><i class="glyphicon glyphicon-plus"></i>Add</button>
         </div>
         <span id="customer">
@@ -314,14 +314,20 @@
                 <div class="box-body">
                   <?php $data = json_decode($cpars->file);
                     for ($i = 0; $i < count($data); $i++) { ?>
-                    <div class="col-md-4">
-                      <div class="isi">
-                        <?= $data[$i] ?>
+                      <div class="col-md-12">
+                        <div class="col-md-3">
+                          <div class="isi">
+                            <?= $data[$i] ?>
+                          </div>
+                        </div>
+                        <div  class="col-md-2">
+                            <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                        </div>
+                        <div class="col-md-1">
+                          <a href="javascript:void(0)" onclick="hapus('{{$data[$i]}}','{{$cpars->id}}')" class="btn btn-danger pull-left">
+                            <i class="fa fa-trash"></i></a>
+                      </div>   
                       </div>
-                    </div>
-                    <div  class="col-md-2">
-                        <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
-                    </div>
                   <?php } ?>                       
                 </div>
               </div>    
@@ -1236,6 +1242,22 @@
         }
       })
     }
+
+    function hapus(nama_file,idcpar){
+        var data = {
+          nama_file : nama_file,
+          idcpar : idcpar
+        };
+        $.post('{{ url("index/qc_report/deletefiles") }}', data, function(result, status, xhr){
+          if(result.status){
+            openSuccessGritter('Success Hapus File', result.message);
+            location.reload();
+          }
+          else{
+            openErrorGritter('Error!', result.message);
+          }
+        })
+      }
 
     function modalDelete(id) {
       var data = {

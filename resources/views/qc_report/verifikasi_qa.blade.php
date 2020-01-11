@@ -98,12 +98,16 @@ table.table-bordered > tfoot > tr > th{
 
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
-          <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
+          <label class="col-sm-1" style="font-size: 20px">No CPAR<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
 
           @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+
+          <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
+
+          <a href="{{url('index/qc_car/print_car_new', $cars[0]->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" target="_blank" >CAR Report</a>
 
           <a class="btn btn-md btn-primary" data-toggle="tooltip" title="Send Email Ke Chief / Foreman" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email</a>
 
@@ -170,8 +174,66 @@ table.table-bordered > tfoot > tr > th{
 
         @if($cpars->status_code != 1)
           @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+ 
+            @if(count($verifikasi) == 0)
+
             <div class="form-group row" align="left">
-              <div class="col-xs-12" style="margin-top: 3%; margin-bottom: 1%;">
+              <label class="col-sm-12 text-center">
+                <span class="col-sm-12 text-center" style="font-size: 20px;background-color: #ddd;padding-right:10px;padding-left: 10px">
+                  Verifikasi
+                </span>
+              </label>
+              <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+                <div class="col-xs-1" style="padding: 0px;">
+                  <label style="font-weight: bold; font-size: 18px;">
+                    <span>Tanggal</span>
+                  </label>
+                </div>
+                
+                <div class="col-xs-2">
+                    <input type="text" class="form-control" value="<?= date('Y-m-d H:i:s') ?>" disabled>
+                    <input type="hidden" class="form-control" id="tanggal1" name="tanggal1" value="<?= date('Y-m-d H:i:s') ?>"  >
+                </div>
+               
+              </div>
+
+              <div class="col-xs-12">
+                <div class="col-xs-1" style="padding: 0px;">
+                  <label style="font-weight: bold; font-size: 18px;">
+                    <span>Status</span>
+                  </label>
+                </div>
+
+                <div class="col-xs-2">
+                    <select class="form-control select2" id="status1" name="status1" style="width: 100%;" data-placeholder="Pilih Status">
+                      <option value="Close">Close</option>
+                      <option value="Open">Open</option>
+                    </select>
+                </div>
+              </div>
+
+              <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+                <div class="col-xs-2" style="padding: 0px;">
+                  <label style="font-weight: bold; font-size: 18px;">
+                    <span>Verification Result</span>
+                  </label>
+                </div>
+                <div class="col-xs-12" style="padding: 0px;">
+                  <textarea type="text" class="form-control" name="verifikasi1" id="verifikasi1"></textarea>
+                </div>
+              </div>
+
+              <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+
+              <div class="col-xs-1" style="padding: 0px;">
+                  <a class="btn btn-success" onclick='addVeri();'><i class='fa fa-plus' ></i> Add Verifikasi</a>
+                  <input type="hidden" id="jumlahVerif" name="jumlahVerif" value="1">
+                </div>
+              </div>
+
+              <div id='verif'></div>
+              
+              <!-- <div class="col-xs-12" style="margin-top: 3%; margin-bottom: 1%;">
                 <div class="col-xs-4" style="padding: 0px;">
                   <label style="font-weight: bold; font-size: 18px;">
                     <span><i class="fa fa-photo"></i> Verifikasi</span>
@@ -182,35 +244,89 @@ table.table-bordered > tfoot > tr > th{
                   <input type="hidden" id="jumlahVerif" name="jumlahVerif">
                 </div>
               </div>
-              <div id='verif'></div>
+              <div id='verif'></div> -->
             </div>
 
-
-            @if(count($verifikasi) > 0)
-
-              <?php for ($i = 0; $i < count($verifikasi); $i++) { ?>
-                <div class="col-xs-12" id="add_ver_<?= $i ?>">
-                  <div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">
-                      Nama File : <?= $verifikasi[$i]->foto ?>
-                  </div>
-                  <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div>
-                  <div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;">
-                      <div class="form-group">
-                          <input type="text" id="ket_<?= $i ?>" name="ket_<?= $i ?>" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control" value="<?= $verifikasi[$i]->keterangan ?>" disabled> 
-                        </div>
-                  </div>
-                  <div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="hapus('<?= $verifikasi[$i]->id_ver ?>')"><i class="fa fa-close"></i></a> </div>
-              </div>
-              <?php } ?>
-            @endif
+            @elseif(count($verifikasi) > 0)
 
             <div class="form-group row" align="left">
-              <label class="col-sm-4">Cost Estimation (optional)</span></label>
+            <?php for ($i = 0; $i < count($verifikasi); $i++) { ?>
+                  <label class="col-sm-12 text-center">
+                    <span class="col-sm-12 text-center" style="font-size: 20px;background-color: #ddd;padding-right:10px;padding-left: 10px">
+                      Verifikasi
+                    </span>
+                  </label>
+                  <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+                    <div class="col-xs-1" style="padding: 0px;">
+                      <label style="font-weight: bold; font-size: 18px;">
+                        <span>Tanggal</span>
+                      </label>
+                    </div>
+                    
+                    <div class="col-xs-2">
+                        <input type="text" class="form-control" id="tanggal<?= $i+1 ?>" name="tanggal<?= $i+1 ?>" value="<?= $verifikasi[$i]->tanggal ?>" disabled>
+                    </div>
+                   
+                  </div>
+
+                  <div class="col-xs-12">
+                    <div class="col-xs-1" style="padding: 0px;">
+                      <label style="font-weight: bold; font-size: 18px;">
+                        <span>Status</span>
+                      </label>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <select class="form-control select2" id="status<?= $i+1 ?>" name="status<?= $i+1 ?>" style="width: 100%;" data-placeholder="Pilih Status">
+                          @if($verifikasi[$i]->status == "Close")
+                          <option value="Close"  selected="">Close</option>
+                          <option value="Open">Open</option>
+                          @elseif($verifikasi[$i]->status == "Open")
+                          <option value="Close">Close</option>
+                          <option value="Open" selected="">Open</option>
+                          @endif
+                        </select>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+                    <div class="col-xs-2" style="padding: 0px;">
+                      <label style="font-weight: bold; font-size: 18px;">
+                        <span>Verification Result</span>
+                      </label>
+                    </div>
+                    <div class="col-xs-12" style="padding: 0px;">
+                      <textarea type="text" class="form-control" name="verifikasi<?= $i+1 ?>" id="verifikasi<?= $i+1 ?>"><?= $verifikasi[$i]->keterangan ?></textarea>
+                    </div>
+                  </div>
+          
+              
+              <?php } ?>
+                <div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;">
+
+                <div class="col-xs-1" style="padding: 0px;">
+                    <a class="btn btn-success" onclick='addVeri();'><i class='fa fa-plus' ></i> Add Verifikasi</a>
+                    <input type="hidden" id="jumlahVerif" name="jumlahVerif" value="<?= count($verifikasi) ?>">
+                  </div>
+                </div>
+
+                <div id='verif'></div>
+            </div>
+            @endif
+
+            
+
+            <div class="form-group row" align="left">
+              <label class="col-sm-12 text-center">
+                <span class="col-sm-12" style="font-size: 20px;background-color: #ddd;padding-right:10px;padding-left: 10px">
+                  Cost Estimation (optional)
+                </span>
+              </label>
               <div class="col-sm-12">
                 <textarea type="text" class="form-control" name="cost">{{$cpars->cost}}</textarea>
               </div>
             </div>
-            <button type="submit" class="btn btn-success col-sm-14">Edit</button>
+            <button type="submit" class="btn btn-success col-md-14" style="width: 100%">Simpan</button>
           @endif
 
           @if($cpars->posisi == "QA2" && Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
@@ -345,6 +461,18 @@ table.table-bordered > tfoot > tr > th{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
 
+    CKEDITOR.replace('verifikasi1' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    CKEDITOR.replace('verifikasi2' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
+    CKEDITOR.replace('verifikasi3' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -398,16 +526,33 @@ table.table-bordered > tfoot > tr > th{
     }
 
     var ver = 1;
-    var jumlahVerif = 0;
-    function addVerifikasi() {
-      ++jumlahVerif;  
-      $add = '<div class="col-xs-12" id="add_ver_'+ jumlahVerif +'"> <div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"> <input type="file" id="gambar_'+ jumlahVerif +'" name="gambar_'+ jumlahVerif +'" data-placeholder="Upload File" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"> </div>    <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div><div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;"> <div class="form-group"> <input type="text" id="ket_'+ jumlahVerif +'" name="ket_'+ jumlahVerif +'" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control"> </div></div><div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="remove('+jumlahVerif+')"><i class="fa fa-close"></i></a> </div></div>';
+    var jumlahVerif = document.getElementById('jumlahVerif').value;
+
+    function addVeri() {
+      ++jumlahVerif;
+
+      $add = '<label class="col-sm-12 text-center"> <span class="col-sm-12 text-center" style="font-size: 20px;background-color: #ddd;padding-right:10px;padding-left: 10px"> Verifikasi '+ jumlahVerif +' </span></label><div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;"> <div class="col-xs-1" style="padding: 0px;"> <label style="font-weight: bold; font-size: 18px;"> <span>Tanggal</span> </label> </div><div class="col-xs-2"> <input type="text" class="form-control" id="tanggal'+ jumlahVerif +'" name="tanggal'+ jumlahVerif +'" value="<?= date('Y-m-d H:i:s') ?>"> </div></div><div class="col-xs-12"> <div class="col-xs-1" style="padding: 0px;"> <label style="font-weight: bold; font-size: 18px;"> <span>Status</span> </label> </div><div class="col-xs-2"> <select class="form-control select2" name="status'+ jumlahVerif +'" style="width: 100%;" data-placeholder="Pilih Status"> <option value="Close">Close</option> <option value="Open">Open</option> </select> </div></div><div class="col-xs-12" style="margin-top: 1%; margin-bottom: 1%;"> <div class="col-xs-2" style="padding: 0px;"> <label style="font-weight: bold; font-size: 18px;"> <span>Verification Result</span> </label> </div><div class="col-xs-12" style="padding: 0px;"> <textarea type="text" class="form-control" name="verifikasi'+ jumlahVerif +'"></textarea> </div></div>';
 
       $('#verif').append($add);
 
       $('#jumlahVerif').val(jumlahVerif);
       ver++;
+
+      CKEDITOR.replace('verifikasi'+ jumlahVerif +'' ,{
+          filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      });
+
     }
+
+    // function addVerifikasi() {
+    //   ++jumlahVerif;  
+    //   $add = '<div class="col-xs-12" id="add_ver_'+ jumlahVerif +'"> <div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"> <input type="file" id="gambar_'+ jumlahVerif +'" name="gambar_'+ jumlahVerif +'" data-placeholder="Upload File" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"> </div>    <div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;">Keterangan</div><div class="col-xs-4" style="color: black; padding: 0px; padding-right: 1%;"> <div class="form-group"> <input type="text" id="ket_'+ jumlahVerif +'" name="ket_'+ jumlahVerif +'" data-placeholder="Keterangan" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" class="form-control"> </div></div><div class="col-xs-1" style="padding: 0px;"> <a class="btn btn-danger" onclick="remove('+jumlahVerif+')"><i class="fa fa-close"></i></a> </div></div>';
+
+    //   $('#verif').append($add);
+
+    //   $('#jumlahVerif').val(jumlahVerif);
+    //   ver++;
+    // }
 
     function remove(id) {
       

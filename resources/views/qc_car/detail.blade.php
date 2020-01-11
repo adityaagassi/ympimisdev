@@ -123,52 +123,39 @@ table.table-bordered > tfoot > tr > th{
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cars->cpar_no }}" readonly="">
           </div>
 
-          <label class="col-sm-2">Tinjauan 4M<span class="text-red">*</span></label>
+          <label class="col-sm-2">Tinjauan 4M<span class="text-red">*</span></label>      
           <div class="col-sm-4">
-            <?php 
-              $tinjauan = $cars->tinjauan; 
-              
-              if($tinjauan != NULL){
-                $split = explode (",", $tinjauan);
-                $hitungsplit = count($split);
-              }else{
-                $split = 0;
-              }
-            ?>
-
             <label class="checkbox-inline">
-              <?php if ($split[0] == "0" ){ ?>
-              <input type="hidden" name="tinjauan[]" value="0" id="manhidden">
-              <?php } ?>
-              <input type="checkbox" name="tinjauan[]" value="1" id="man" 
-              <?php if ($split[0] == "1" ){
-                echo "checked"; 
-              } ?>>Man<br>
+              <input type="checkbox" class="tinjauan4mCheckbox" <?php $tinjauan = explode(',',$cars->tinjauan);
+              foreach ($tinjauan as $key) {
+                if ($key == 1) {
+                  echo 'checked';
+                }
+              }?> name="tinjauan4m[]" value="1" id="tinjauan4m">Man
             </label>
             <label class="checkbox-inline">
-              <?php if ($split[1] == "0" ){ ?>
-              <input type="hidden" name="tinjauan[]" value="0" id="machinehidden">
-              <?php } ?>
-              
-              <input type="checkbox" name="tinjauan[]" value="1" id="machine" <?php if ($split[1] == "1" ){
-                echo "checked"; 
-              } ?>>Machine<br>
+              <input type="checkbox" class="tinjauan4mCheckbox" name="tinjauan4m[]" value="2" id="tinjauan4m" <?php $tinjauan = explode(',',$cars->tinjauan);
+              foreach ($tinjauan as $key) {
+                if ($key == 2) {
+                  echo 'checked';
+                }
+              }?>>Machine
             </label>
             <label class="checkbox-inline">
-              <?php if ($split[2] == "0" ){ ?>
-              <input type="hidden" name="tinjauan[]" value="0" id="materialhidden">
-              <?php } ?>
-              <input type="checkbox" name="tinjauan[]" value="1" id="material" <?php if ($split[2] == "1" ){
-                echo "checked"; 
-              } ?>>Material<br>
+              <input type="checkbox" class="tinjauan4mCheckbox" name="tinjauan4m[]" value="3" id="tinjauan4m" <?php $tinjauan = explode(',',$cars->tinjauan);
+              foreach ($tinjauan as $key) {
+                if ($key == 3) {
+                  echo 'checked';
+                }
+              }?>>Material
             </label>
             <label class="checkbox-inline">
-              <?php if ($split[3] == "0" ){ ?>
-              <input type="hidden" name="tinjauan[]" value="0" id="methodhidden">
-              <?php } ?>
-              <input type="checkbox" name="tinjauan[]" value="1" id="method" <?php if ($split[3] == "1" ){
-                echo "checked"; 
-              } ?>>Method<br>
+              <input type="checkbox" class="tinjauan4mCheckbox" name="tinjauan4m[]" value="4" id="tinjauan4m" <?php $tinjauan = explode(',',$cars->tinjauan);
+              foreach ($tinjauan as $key) {
+                if ($key == 4) {
+                  echo 'checked';
+                }
+              }?>>Method
             </label>
           </div>
         </div>
@@ -224,23 +211,30 @@ table.table-bordered > tfoot > tr > th{
                   <h3 class="box-title">File Yang Telah Diupload</h3>
 
                   <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i> </button>
                   </div>
                   <!-- /.box-tools -->
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+
                   <?php $data = json_decode($cars->file);
                     for ($i = 0; $i < count($data); $i++) { ?>
-                    <div class="col-md-4">
-                      <div class="isi">
-                        <?= $data[$i] ?>
+                    <div class="col-md-12">
+                      <div class="col-md-3">
+                        <div class="isi">
+                          <?= $data[$i] ?>
+                        </div>
                       </div>
+                      <div  class="col-md-2">
+                          <a href="{{ url('/files/car/'.$data[$i]) }}" class="btn btn-primary pull-right">Download / Preview</a>
+                      </div>
+                      <div class="col-md-1">
+                          <a href="javascript:void(0)" onclick="hapus('{{$data[$i]}}','{{$cars->id}}')" class="btn btn-danger pull-left">
+                            <i class="fa fa-trash"></i></a>
+                      </div>                      
                     </div>
-                    <div  class="col-md-2">
-                        <a href="{{ url('/files/car/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
-                    </div>
+                    <br><br><br>
                   <?php } ?>                       
                 </div>
               </div>    
@@ -545,6 +539,22 @@ table.table-bordered > tfoot > tr > th{
       });
     }
 
+    function hapus(nama_file,idcar){
+        var data = {
+          nama_file : nama_file,
+          idcar : idcar
+        };
+        $.post('{{ url("index/qc_car/deletefiles") }}', data, function(result, status, xhr){
+          if(result.status){
+            openSuccessGritter('Success Hapus File', result.message);
+            location.reload();
+          }
+          else{
+            openErrorGritter('Error!', result.message);
+          }
+        })
+      }
+    
     function sendemail(id) {
       var data = {
         id:id

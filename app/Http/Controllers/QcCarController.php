@@ -16,6 +16,7 @@ use App\QcVerifikator;
 use App\Department;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
+use File;
 
 class QcCarController extends Controller
 {
@@ -101,12 +102,12 @@ class QcCarController extends Controller
          ))->with('page', 'CAR');
     }
 
-    public function detail($id)
+    public function detail($idcar)
     {
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-       $cars = QcCar::find($id);
+       $cars = QcCar::find($idcar);
 
        $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')
        ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
@@ -149,6 +150,7 @@ class QcCarController extends Controller
           'cars' => $cars,
           'cpar' => $cpar,
           'users' => $users,
+          'idcar' => $idcar,
           'pic' => $pic
         ))->with('page', 'CAR');
     }
@@ -159,10 +161,16 @@ class QcCarController extends Controller
           
           $cars = QcCar::find($id);
 
-          $tinjauanall= $request->tinjauan;
-          foreach ($tinjauanall as $carstinjauan) {
-             $carstinjauan = implode(',', $request->tinjauan);			    
+          $tinjauanall= $request->get('tinjauan4m');
+          if ($tinjauanall == null ) {
+            $carstinjauan = 0;
           }
+          else{
+            foreach ($tinjauanall as $carstinjauan) {
+               $carstinjauan = implode(',', $request->tinjauan4m);          
+            }
+          }
+
            $id_user = Auth::id();
 
            $files=array();
@@ -253,7 +261,7 @@ class QcCarController extends Controller
       ->where('qc_cars.id','=',$id)
       ->get();
 
-      $verifikasi = QcCar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.foto')
+      $verifikasi = QcCar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.status','qc_verifikasis.tanggal')
          ->join('qc_verifikasis','qc_verifikasis.cpar_no','=','qc_cars.cpar_no')
          ->where('qc_verifikasis.cpar_no','=',$car->cpar_no)
          ->get(); 
@@ -863,5 +871,53 @@ class QcCarController extends Controller
        return view('qc_car.verifikator', array(
         'verifikator' => $verifikator
        ))->with('page', 'CAR Verificator');
+    }
+
+    public function deletefiles(Request $request)
+    {
+      try{
+        $car = QcCar::find($request->get('idcar'));
+        $namafile = json_decode($car->file);
+        // var_dump($namafile);
+        // foreach ($car as $car) {
+        //   $namafile = json_decode($car->file);
+        // }
+        // $namafilebaru[] = Null;
+        $namafilebarubaru = "";
+        foreach ($namafile as $key) {
+          if ($key == $request->get('nama_file')) {
+            File::delete('files/car/'.$key);
+          }
+          else{
+              if (count($key) > 0) {
+                $namafilebarubaru = $key;
+                $namafilebaru[] = $namafilebarubaru;
+              }
+          }
+        }
+        
+        if ($namafilebarubaru != "") {
+          $car->file = json_encode($namafilebaru);
+          $car->save();
+        }
+        else{
+          $car->file = "";
+          $car->save();
+        }
+
+        $response = array(
+          'status' => true,
+          'message' => 'Berhasil Hapus Data',
+          // 'file' => $jumlah
+        );
+        return Response::json($response);
+      }
+      catch(\Exception $e){
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 }

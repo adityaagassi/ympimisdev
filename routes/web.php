@@ -244,6 +244,18 @@ Route::get('fetch/getPlanAll', 'InjectionsController@getPlanAll');
 // ------------- end start 3 hari
 
 
+//molding injection
+
+Route::get('index/injection/molding', 'InjectionsController@molding');
+Route::get('get/injeksi/get_molding', 'InjectionsController@get_molding');
+Route::get('fetch/injeksi/fetch_molding', 'InjectionsController@fetch_molding');
+Route::post('index/injeksi/store_history_temp', 'InjectionsController@store_history_temp');
+Route::get('index/injeksi/get_history_temp', 'InjectionsController@get_history_temp');
+Route::post('index/injeksi/update_history_temp', 'InjectionsController@update_history_temp');
+Route::post('index/injeksi/store_history_molding', 'InjectionsController@store_history_molding');
+
+//end molding injection
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -320,6 +332,12 @@ Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderB
 
 
 //EMPLOYEE
+Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
+	Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
+	Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
+	Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
+});
+
 Route::get('index/report/gender', 'EmployeeController@indexReportGender');
 Route::get('fetch/report/gender2', 'EmployeeController@fetchReportGender2');
 Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
@@ -331,6 +349,7 @@ Route::get('fetch/report/detail_stat', 'EmployeeController@detailReport');
 Route::get('index/report/leave_control', 'AbsenceController@indexReportLeaveControl');
 
 //OVERTIME
+Route::get('fetch/report/overtime_section', 'OvertimeController@fetchReportOvertimeSection');
 Route::get('index/report/overtime_monthly_fq', 'OvertimeController@indexReportControlFq');
 // Route::get('index/report/overtime_monthly', 'OvertimeController@indexReportControl');
 Route::get('index/report/overtime_monthly_bdg', 'OvertimeController@indexReportControlBdg');
@@ -864,6 +883,8 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::post('check/workshop/wjo_rfid', 'WorkshopController@checkTag');
 	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
 	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
+	Route::get('/index/workshop/drawing', 'WorkshopController@indexDrawing');
+
 });
 
 Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
@@ -1929,7 +1950,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/edit_item', 'QcReportController@fetch_item_edit');
 	Route::get('index/qc_report/view_item', 'QcReportController@view_item');
 	Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
-	
+	Route::post('index/qc_report/deletefiles', 'QcReportController@deletefiles');
 	Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
 	Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
 	Route::get('index/qc_report/sign', 'QcReportController@sign');
@@ -1956,6 +1977,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/print_car_new/{id}', 'QcCarController@print_car2');
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
+	Route::post('index/qc_car/deletefiles', 'QcCarController@deletefiles');
 	
 
 	//Verifikator CAR

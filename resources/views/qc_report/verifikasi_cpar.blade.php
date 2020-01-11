@@ -1260,13 +1260,15 @@
           <div class="box-body">
             <?php $data = json_decode($cpars->file);
               for ($i = 0; $i < count($data); $i++) { ?>
-              <div class="col-md-4">
-                <div class="isi">
-                  <?= $data[$i] ?>
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <div class="isi">
+                    <?= $data[$i] ?>
+                  </div>
                 </div>
-              </div>
-              <div  class="col-md-2">
-                  <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                <div  class="col-md-2">
+                    <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                </div>
               </div>
             <?php } ?>                       
           </div>

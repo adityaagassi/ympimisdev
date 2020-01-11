@@ -26,6 +26,7 @@ use App\Vendor;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use File;
 // use App\QcTtdCoba;
 
 
@@ -174,7 +175,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','10','11','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','11','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -376,7 +377,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','10','11','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','11','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -1706,7 +1707,7 @@ class QcReportController extends Controller
                   'posisi' => 'bagian',
                   'email_status' => 'SentBagian',
                   'email_send_date' => date('Y-m-d'),
-                  'tinjauan' => '0,0,0,0',
+                  'tinjauan' => '0',
                   'progress' => '15',
                   'created_by' => $id_user
                 ]);
@@ -1910,7 +1911,7 @@ class QcReportController extends Controller
          ->where('qc_cars.cpar_no','=',$cpars->cpar_no)
          ->get();
 
-         $verifikasi = QcCpar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.foto')
+         $verifikasi = QcCpar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.tanggal','qc_verifikasis.status')
          ->join('qc_verifikasis','qc_verifikasis.cpar_no','=','qc_cpars.cpar_no')
          ->where('qc_verifikasis.cpar_no','=',$cpars->cpar_no)
          ->get();         
@@ -1933,16 +1934,25 @@ class QcReportController extends Controller
 
             $jumlahVerif = $request->get('jumlahVerif');
             for ($i = 1; $i <= $jumlahVerif; $i++) {
-              $keterangan = $request->get('ket_'.$i);
-              $files=$request->file('gambar_'.$i);
-                $nama=$files->getClientOriginalName();
-                $files->move('files/gambar',$nama);
-                QcVerifikasi::create([
-                    'cpar_no' => $request->get('cpar_no'),
-                    'foto' => $nama,
-                    'keterangan' => $keterangan,
-                    'created_by' => $id_user
-                ]);
+              $tanggal = $request->get('tanggal'.$i);
+              $status = $request->get('status'.$i);
+              $keterangan = $request->get('verifikasi'.$i);
+              QcVerifikasi::create([
+                'cpar_no' => $request->get('cpar_no'),
+                'tanggal' => $tanggal,
+                'status' => $status,
+                'keterangan' => $keterangan,
+                'created_by' => $id_user
+              ]);
+              // $files=$request->file('gambar_'.$i);
+              //   $nama=$files->getClientOriginalName();
+              //   $files->move('files/gambar',$nama);
+              //   QcVerifikasi::create([
+              //       'cpar_no' => $request->get('cpar_no'),
+              //       'foto' => $nama,
+              //       'keterangan' => $keterangan,
+              //       'created_by' => $id_user
+              //   ]);
             }
             return redirect('/index/qc_report/verifikasiqa/'.$id)->with('status', 'Data Has Been Updated')->with('page', 'QA verification');
           }
@@ -2048,5 +2058,52 @@ class QcReportController extends Controller
         return Response::json($response);
       }
 
+      public function deletefiles(Request $request)
+      {
+        try{
+          $cpar = QcCpar::find($request->get('idcpar'));
+          $namafile = json_decode($cpar->file);
+          // var_dump($namafile);
+          // foreach ($car as $car) {
+          //   $namafile = json_decode($car->file);
+          // }
+          // $namafilebaru[] = Null;
+          $namafilebarubaru = "";
+          foreach ($namafile as $key) {
+            if ($key == $request->get('nama_file')) {
+              File::delete('files/'.$key);
+            }
+            else{
+                if (count($key) > 0) {
+                  $namafilebarubaru = $key;
+                  $namafilebaru[] = $namafilebarubaru;
+                }
+            }
+          }
+          
+          if ($namafilebarubaru != "") {
+            $cpar->file = json_encode($namafilebaru);
+            $cpar->save();
+          }
+          else{
+            $cpar->file = "";
+            $cpar->save();
+          }
+
+          $response = array(
+            'status' => true,
+            'message' => 'Berhasil Hapus Data',
+            // 'file' => $jumlah
+          );
+          return Response::json($response);
+        }
+        catch(\Exception $e){
+          $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+        }
+      }
 
 }
