@@ -171,7 +171,7 @@ class PressController extends Controller
 
 	public function fetchPunch(Request $request){
 
-		$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."'");
+		$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
 		
 		$total_punch = 0;
 	      if(count($kanagata_log_punch) == 0){
@@ -191,7 +191,7 @@ class PressController extends Controller
 
 	public function fetchDie(Request $request){
 
-		$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."'");
+		$kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = '".$request->get('process')."' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
 		$total_die = 0;
 	      if(count($kanagata_log_dies) == 0){
 	      	$total_die = 0;
@@ -267,9 +267,9 @@ class PressController extends Controller
                     'created_by' => $id_user
                 ]);
 
-               $kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."'");
+               $kanagata_log_dies = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and die_number = '".$request->get('die_number')."' and die_status = 'Running'");
 
-				$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."'");
+				$kanagata_log_punch = DB::SELECT("SELECT * FROM `mp_kanagata_logs` where process = 'Forging' and material_number = '".$request->get('material_number')."' and punch_number = '".$request->get('punch_number')."' and punch_status = 'Running'");
 
 			  $total_punch = 0;
 		      if(count($kanagata_log_punch) == 0){
@@ -308,6 +308,8 @@ class PressController extends Controller
 	                'die_value' => $request->get('die_value'),
 	                'punch_total' => $total_punch,
 	                'die_total' => $total_die,
+	                'punch_status' => 'Running',
+	                'die_status' => 'Running',
 	                'created_by' => $id_user
 	          ]);
 
@@ -751,6 +753,43 @@ class PressController extends Controller
                 $kanagata_lifetime->punch_total = $request->get('punch_total');
                 $kanagata_lifetime->die_total = $request->get('die_total');
                 $kanagata_lifetime->save();
+
+            // return redirect('index/interview/details/'.$interview_id)
+            //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
+               $response = array(
+                'status' => true,
+              );
+              // return redirect('index/interview/details/'.$interview_id)
+              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function reset(Request $request)
+    {
+        try{
+        	$kanagata = $request->get('kanagata');
+        	$gmc_number = $request->get('gmc_number');
+        	$kanagata_lifetime = MpKanagataLog::where('material_number',$gmc_number)->get();
+        	foreach ($kanagata_lifetime as $key) {
+        		$id_kanagata = $key->id;
+	        	if ($kanagata == 'Punch') {
+	        		$kanagata_lifetime2 = MpKanagataLog::find($id_kanagata);
+	                $kanagata_lifetime2->punch_status = 'Close';
+	                $kanagata_lifetime2->save();
+	        	}
+	        	elseif ($kanagata == 'Dies') {
+	        		$kanagata_lifetime2 = MpKanagataLog::find($id_kanagata);
+	                $kanagata_lifetime2->die_status = 'Close';
+	                $kanagata_lifetime2->save();
+	        	}
+        	}
 
             // return redirect('index/interview/details/'.$interview_id)
             //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');

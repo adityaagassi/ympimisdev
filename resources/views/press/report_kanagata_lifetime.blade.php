@@ -59,7 +59,7 @@ table.table-bordered > tfoot > tr > th{
 		<div class="col-xs-12">
 			<div class="box box-primary">
 				<div class="box-body">
-					<div class="col-xs-6">
+					<div class="col-xs-4">
 						<div class="box-header">
 							<h3 class="box-title">Filter</h3>
 						</div>
@@ -89,8 +89,8 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 col-md-offset-5">
-							<div class="col-md-6">
+						<div class="col-md-12 col-md-offset-3">
+							<div class="col-md-9">
 								<div class="form-group pull-right">
 									<a href="{{ url('index/initial/press') }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/press/report_kanagata_lifetime') }}" class="btn btn-danger">Clear</a>
@@ -100,8 +100,8 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						</form>
 					</div>
-					@if($role_code == 'PROD' ||$role_code == 'MIS')
-					<div class="col-xs-6">
+					@if($role_code == 'PROD' || $role_code == 'MIS')
+					<div class="col-xs-4">
 						<div class="box-header">
 							<h3 class="box-title">Edit Kanagata Lifetime</h3>
 						</div>
@@ -124,12 +124,46 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 pull-right">
+						<div class="col-md-9 pull-right">
 							<!-- <div class="col-md-6"> -->
 								<div class="form-group pull-right">
 									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
-									<button type="button" class="btn btn-warning col-sm-14" data-toggle="modal" data-target="#edit-modal" onclick="edit_kanagata('{{ url("index/kanagata/update") }}',$('#kanagata').val(),$('#kanagata_number').val());">
+									<button type="button" class="btn btn-warning col-sm-14" onclick="edit_kanagata('{{ url("index/kanagata/update") }}',$('#kanagata').val(),$('#kanagata_number').val());">
 						               Edit
+						            </button>
+								</div>
+							<!-- </div> -->
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="box-header">
+							<h3 class="box-title">Reset Kanagata Lifetime</h3>
+						</div>
+						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="col-md-12">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Kanagata</label>
+									<select class="form-control select2" name="kanagata_reset" id="kanagata_reset" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+					                  <option value=""></option>
+					                  <option value="Punch">Punch</option>
+					                  <option value="Dies">Dies</option>
+					                </select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>GMC Number</label>
+									<input type="text" class="form-control pull-right" id="gmc_number" name="gmc_number" autocomplete="off" placeholder="Enter GMC Number">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-9 pull-right">
+							<!-- <div class="col-md-6"> -->
+								<div class="form-group pull-right">
+									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
+									<button type="button" class="btn btn-danger col-sm-14" onclick="reset_kanagata('{{ url("index/kanagata/reset") }}',$('#kanagata_reset').val(),$('#gmc_number').val());">
+						               Reset
 						            </button>
 								</div>
 							<!-- </div> -->
@@ -158,6 +192,8 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Dies Value</th>
 				                <th>Running Punch</th>
 				                <th>Running Dies</th>
+				                <th>Punch Status</th>
+				                <th>Dies Status</th>
 				              </tr>
 				            </thead>
 				            <tbody id="tableTroubleList">
@@ -179,12 +215,16 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$kanagata_lifetime->die_value}}</td>
 				                <td>{{$kanagata_lifetime->punch_total}}</td>
 				                <td>{{$kanagata_lifetime->die_total}}</td>
+				                <td>{{$kanagata_lifetime->punch_status}}</td>
+				                <td>{{$kanagata_lifetime->die_status}}</td>
 				              </tr>
 				              <?php $no++ ?>
 				              @endforeach
 				            </tbody>
 				            <tfoot>
 				              <tr>
+				                <th></th>
+				                <th></th>
 				                <th></th>
 				                <th></th>
 				                <th></th>
@@ -324,13 +364,18 @@ table.table-bordered > tfoot > tr > th{
 	});
 
 	function edit_kanagata(url,kanagata,kanagata_number) {
-    	$.ajax({
+		if (kanagata_number === '' || kanagata === '') {
+			alert('Isi Jenis Kanagata dan Kanagata Number.')
+			$("#edit-modal").modal('hide');
+		}else{
+			$("#edit-modal").modal('show');
+			$.ajax({
                 url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?kanagata=" + kanagata +"&kanagata_number="+kanagata_number,
                 method: 'GET',
                 success: function(data) {
                   var json = data;
                   // obj = JSON.parse(json);
-                  console.log(data.data);
+                  // console.log(data.data);
                   var data = data.data;
                   $("#url_edit").val(url+'/'+data.kanagata_log_id);
                   $("#editdate").val(data.date);
@@ -347,6 +392,37 @@ table.table-bordered > tfoot > tr > th{
                   $("#editdies_total").val(data.die_total);
                 }
             });
+		}
+    	
+      // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
+      // console.log($('#formedit2').attr("action"));
+    }
+
+    function reset_kanagata(url,kanagata,gmc_number) {
+		if (gmc_number === '' || kanagata === '') {
+			alert('Isi Jenis Kanagata dan GMC Number.')
+			// $("#edit-modal").modal('hide');
+		}else{
+			if (confirm('Apakah Anda ingin RESET Kanagata?')) {
+				var data = {
+					kanagata:kanagata,
+					gmc_number:gmc_number
+				}
+				$.post('{{ url("index/kanagata/reset") }}', data, function(result, status, xhr){
+					if(result.status){
+						// $("#edit-modal").modal('hide');
+						// $('#example1').DataTable().ajax.reload();
+						// $('#example2').DataTable().ajax.reload();
+						openSuccessGritter('Success','Kanagata Lifetime has been reset');
+						window.location.reload();
+					} else {
+						audio_error.play();
+						openErrorGritter('Error','Reset Kanagata Lifetime Failed');
+					}
+				});
+		    }
+		}
+    	
       // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
       // console.log($('#formedit2').attr("action"));
     }
