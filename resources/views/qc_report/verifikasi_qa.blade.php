@@ -98,7 +98,7 @@ table.table-bordered > tfoot > tr > th{
 
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
-          <label class="col-sm-1" style="font-size: 20px">No CPAR<span class="text-red">*</span></label>
+          <label class="col-sm-1" style="font-size: 14px">No CPAR<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
@@ -172,7 +172,6 @@ table.table-bordered > tfoot > tr > th{
         <?php } ?>
 
 
-        @if($cpars->status_code != 1)
           @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
  
             @if(count($verifikasi) == 0)
@@ -386,8 +385,6 @@ table.table-bordered > tfoot > tr > th{
           </div>
 
           @endif
-
-        @endif
 
         <!-- <table class="table table-striped table-bordered " style="border: 1px solid #f4f4f4">
           <thead>

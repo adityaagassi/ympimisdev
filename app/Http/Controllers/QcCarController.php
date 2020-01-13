@@ -104,12 +104,12 @@ class QcCarController extends Controller
 
     public function detail($idcar)
     {
-        $emp_id = Auth::user()->username;
-        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
        $cars = QcCar::find($idcar);
 
-       $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi')
+       $cpar = QcCar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.kategori','qc_cpars.employee_id','qc_cpars.lokasi','qc_cpars.judul_komplain','qc_cpars.sumber_komplain')
        ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
        ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
        ->get();
@@ -125,33 +125,46 @@ class QcCarController extends Controller
        $dept = "select department_name from qc_cpars join departments on departments.id = qc_cpars.department_id where qc_cpars.cpar_no='".$cars->cpar_no."'";
        $departemen = DB::select($dept); 
 
-       if($cpar[0]->kategori == "Internal"){
+       $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.grade_name like '%staff%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+
+       $pic = DB::select($getpic);
+
+       $cfm = "select employees.employee_id, employees.name, mutation_logs.department, promotion_logs.position from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.position like '%chief%' or promotion_logs.position like '%foreman%' or promotion_logs.position = 'manager') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+
+       $choosecf = DB::select($cfm);
+
+       // $m = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.position = 'manager' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+
+       // $choosem = DB::select($m);
+
+       // if($cpar[0]->kategori == "Internal"){
           
-          $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.position like '%foreman%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+       //    $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.position like '%foreman%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 
-          $pic = DB::select($getpic);
+       //    $pic = DB::select($getpic);
    
-          if($pic == NULL){
+       //    if($pic == NULL){
 
-            $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.grade_name like '%staff%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+       //      $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.grade_name like '%staff%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 
-            $pic = DB::select($getpic);
+       //      $pic = DB::select($getpic);
 
-          }
+       //    }
 
-       } else if($cpar[0]->kategori == "Eksternal" || $cpar[0]->kategori == "Supplier"){
+       // } else if($cpar[0]->kategori == "Eksternal" || $cpar[0]->kategori == "Supplier"){
 
-          $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.grade_name like '%staff%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+       //    $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and promotion_logs.grade_name like '%staff%' and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 
-          $pic = DB::select($getpic);
-       }
+       //    $pic = DB::select($getpic);
+       // }
 
         return view('qc_car.detail', array(
           'cars' => $cars,
           'cpar' => $cpar,
           'users' => $users,
           'idcar' => $idcar,
-          'pic' => $pic
+          'pic' => $pic,
+          'cfm' => $choosecf
         ))->with('page', 'CAR');
     }
 
@@ -244,7 +257,7 @@ class QcCarController extends Controller
     {
       $car = QcCar::find($id);
 
-      $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','pic.name as picname','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','chief.name as chiefname','foreman.name as foremanname','coordinator.name as coordinatorname')
+      $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','pic.name as picname','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','chief.name as chiefname','foreman.name as foremanname','coordinator.name as coordinatorname','qc_cpars.posisi as posisi_cpar','staffqa.name as staffqaname','leaderqa.name as leaderqaname','chiefqa.name as chiefqaname','foremanqa.name as foremanqaname','managerqa.name as managerqaname','qc_cpars.staff','qc_cpars.leader')
       ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
       ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
       ->join('qc_verifikators','qc_cpars.department_id','=','qc_verifikators.department_id')
@@ -257,6 +270,11 @@ class QcCarController extends Controller
       ->join('employees as pic','qc_cars.pic','=','pic.employee_id')
       ->join('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
       ->join('employees as gm','qc_cpars.gm','=','gm.employee_id')
+      ->leftjoin('employees as staffqa','qc_cpars.staff','=','staffqa.employee_id')
+      ->leftjoin('employees as leaderqa','qc_cpars.leader','=','leaderqa.employee_id')
+      ->leftjoin('employees as chiefqa','qc_cpars.chief','=','chiefqa.employee_id')
+      ->leftjoin('employees as foremanqa','qc_cpars.foreman','=','foremanqa.employee_id')
+      ->leftjoin('employees as managerqa','qc_cpars.manager','=','managerqa.employee_id')
       ->whereNull('mutation_logs.valid_to')
       ->where('qc_cars.id','=',$id)
       ->get();
@@ -296,6 +314,7 @@ class QcCarController extends Controller
         try{
             $cars = QcCar::find($id);
             $cars->pic = $request->get('pic'); 
+            $cars->tgl_car = date('Y-m-d');
             $cars->progress = "20";
             $cars->save();
 
@@ -323,6 +342,7 @@ class QcCarController extends Controller
             }
 
             $cars->email_send_date = date('Y-m-d');
+
 
             if($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") {
               $cars->email_status = "SentStaff";            
@@ -440,13 +460,20 @@ class QcCarController extends Controller
 
           $verif = DB::select($verifikator);
 
-
           if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
-
             if ($verif[0]->kategori == "Eksternal") {
                if ($qc_cars->checked_chief == NULL) {
                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                  $mails = DB::select($mailto);                 
+
+                 if ($mails == NULL) {
+                    $to = 'employee_id';
+
+
+                    $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                    $mails = DB::select($mailto);
+                 }
+
                } else {
                   if ($posisi == "chief") {
                     $to = "employee_id";
@@ -517,7 +544,6 @@ class QcCarController extends Controller
                   $mails = DB::select($mailto);
               }
             }
-          
           } else{
 
             if ($posisi == "staff" || $posisi == "foreman") {
@@ -539,7 +565,6 @@ class QcCarController extends Controller
           }
 
           if($cars != null){
-
             if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
 
               if ($qc_cars->email_status == "SentStaff" && $qc_cars->posisi == "staff") {
@@ -547,9 +572,16 @@ class QcCarController extends Controller
                     $qc_cars->email_status = "SentCoordinator";
                     $qc_cars->posisi = "coordinator";  
                 }                
-                else{
+                else if($verif[0]->verifikatorchief != null){
                     $qc_cars->email_status = "SentChief";
                     $qc_cars->posisi = "chief";
+                }
+                else{
+                    $qc_cars->email_status = "SentManager";
+                    $qc_cars->posisi = "manager";
+                    $qc_cars->checked_chief = "none";
+                    $qc_cars->checked_foreman = "none";
+                    $qc_cars->checked_coordinator = "none";
                 }
                 
                 $qc_cars->email_send_date = date('Y-m-d');
@@ -647,7 +679,6 @@ class QcCarController extends Controller
               else if($qc_cars->email_status == "SentChief" || $qc_cars->email_status == "SentManager" || $qc_cars->email_status == "SentDGM" || $qc_cars->email_status == "SentGM" || $qc_cars->email_status == "SentQA"){
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('error', 'Email pernah dikirim')->with('page', 'CAR');
               }
-
             } 
 
             else if($verif[0]->verifikatorchief == null && $verif[0]->verifikatorforeman == null && $verif[0]->verifikatorcoordinator == null) {
@@ -681,7 +712,6 @@ class QcCarController extends Controller
                   $qc_cars->email_status = "SentQA";
                   $qc_cars->email_send_date = date('Y-m-d');
                   $qc_cars->posisi = "qa";
-                  
                   $qc_cars->save();
 
                   $cpar = QcCpar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.status_code','qc_cpars.posisi')
@@ -718,6 +748,18 @@ class QcCarController extends Controller
           else{
             return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('error', 'Data tidak tersedia.')->with('page', 'CAR');
           }
+     }
+
+     public function sendemail2(Request $request, $id,$posisi) {
+        $id_user = Auth::id();
+        $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+
+        $cars = db::select($query);
+
+        $qc_cars = QcCar::find($id);
+
+
+
      }
 
      public function verifikasicar($id){

@@ -117,7 +117,7 @@
 					Section : {{ $car->section }}
 				</td>
 				<td colspan="2" width="20%">
-					Date : <?php echo date('d F Y', strtotime($car->tgl_permintaan)) ?>
+					Date : <?php echo date('d F Y', strtotime($car->tgl_car)) ?>
 				</td>
 				<td colspan="3" width="20%">
 					Location : {{ $car->lokasi }}			
@@ -126,19 +126,37 @@
 			<tr>
 				<td colspan="2" width="20%">Tinjauan 4M : </td>
 				<td colspan="2" width="20%" class="" style="font-size: 16px">Man <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
-				@if($split[0]=='1')
-					checked @endif>
+				<?php
+					foreach ($split as $key) {
+		                if ($key == 1) {
+		                  echo 'checked';
+		                }
+		            } ?>>
 				</td>
 				<td colspan="2" width="20%" class="" style="font-size: 16px">Material <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
-				@if($split[1]=='1')
-					checked @endif>
+				<?php
+					foreach ($split as $key) {
+		                if ($key == 2) {
+		                  echo 'checked';
+		                }
+		            } ?>>
 				</td>
 				<td colspan="2" width="20%" class="" style="font-size: 16px">Machine <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
-				@if($split[2]=='1')
-					checked @endif</td>
+				<?php
+					foreach ($split as $key) {
+		                if ($key == 3) {
+		                  echo 'checked';
+		                }
+		            } ?>>
+				</td>
 				<td colspan="3" width="20%" class="" style="font-size: 16px">Method <input type="checkbox" class="centera" style="font-size: 14px;margin: 0" 
-				@if($split[3]=='1')
-					checked @endif</td>	
+				<?php
+					foreach ($split as $key) {
+		                if ($key == 4) {
+		                  echo 'checked';
+		                }
+		            } ?>>
+		        </td>	
 			</tr>
 			<tr style="page-break-inside:avoid">
 				<td colspan="11"><b style="font-size: 20px">Description</b> : <?= $car->deskripsi ?></td>
@@ -209,6 +227,52 @@
 			</tr>
 
 			<?php } ?>
+
+			<tr>
+				<td colspan="8"></td>
+				<td>Prepared By</td>
+				<td>Checked By</td>
+				<td>Checked By</td>
+			</tr>
+			<tr>
+				<td colspan="8" rowspan="2"></td>
+				<td rowspan="2">
+					@if($car->posisi_cpar == "QA" || $car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager")
+						@if($car->staff != null)
+							{{$car->staffqaname}}
+						@elseif($car->leader != null)
+							{{$car->leaderqaname}}
+						@else
+							&nbsp;
+						@endif
+					@endif
+				</td>
+				<td rowspan="2">
+					@if($car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager")
+						@if($car->staff != null)
+							{{$car->chiefqaname}}
+						@elseif($car->leader != null)
+							{{$car->foremanname}}
+						@else
+							&nbsp;
+						@endif
+					@endif
+				</td>
+				<td rowspan="2">
+					@if($car->posisi_cpar == "QAmanager")
+						{{$car->managerqaname}}
+					@else
+						&nbsp;
+					@endif
+				</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td colspan="8"></td>
+				<td>Staff</td>
+				<td>Chief</td>
+				<td>Manager</td>
+			</tr>
 			
 			<!-- <tr>
 				<td colspan="10"></td>

@@ -894,7 +894,7 @@ table > thead > tr > th{
               else{
                 if (d == 0) {   
                   if (namacfcar2 == "Tidak Ada") {
-                    statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';                    
+                    statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">None</span></a>';                    
                     statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                     color = 'style="background-color:red"';
                     // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
