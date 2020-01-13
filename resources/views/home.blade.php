@@ -86,10 +86,10 @@
                             <a href="{{ url("index/report/overtime_monthly_bdg") }}">
                                 <i class="fa fa-caret-right"></i> OT Monitor By CC - Budget <br> (コストセンターによる残業管理)
                             </a>
-                            <br>
+                           {{--  <br>
                             <a href="http://172.17.128.4/myhris/management/overtime_control">
                                 <i class="fa fa-caret-right"></i> OT Monitor Daily (日次ざんぎぃう管理)
-                            </a>
+                            </a> --}}
                             <br>
                             <a href="{{ url("index/report/overtime_section")}}">
                                 <i class="fa fa-caret-right"></i> OT By CC (コストセンター別の残業)
@@ -112,6 +112,10 @@
                         <td>
                             <span style="font-weight: bold;">Manpower Information (人工の情報)</span>
                             <br>
+                            <a href="{{ url("index/report/manpower") }}">
+                                <i class="fa fa-caret-right"></i> Manpower Information (人工の情報)
+                            </a>
+                            {{-- <br>
                             <a href="{{ url("index/report/stat") }}">
                                 <i class="fa fa-caret-right"></i>By Status (雇用形態別)
                             </a>
@@ -130,7 +134,7 @@
                             <br>
                             <a href="{{ url("index/report/gender") }}">
                                 <i class="fa fa-caret-right"></i>By Gender (性別)
-                            </a>
+                            </a> --}}
                             <br>
                             <a href="{{ url("index/report/total_meeting") }}">
                                 <i class="fa fa-caret-right"></i> Total Meeting (トータルミーティング)
@@ -347,7 +351,7 @@
                                 <i class="fa fa-caret-right"></i> Create WJO ()
                             </a>
                             <br>
-                          
+
                         </td>
                     </tr>
                 </tbody>
