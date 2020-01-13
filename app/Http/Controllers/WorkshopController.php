@@ -24,6 +24,8 @@ use Carbon\Carbon;
 use DataTables;
 use Response;
 use Excel;
+use DateTime;
+use File;
 
 class WorkshopController extends Controller{
 	public function __construct(){
@@ -49,6 +51,16 @@ class WorkshopController extends Controller{
 			'PI1108003',
 			'PI9903004'
 		];
+	}
+
+	public function indexDrawing(){
+		$title = 'Drawing';
+		$title_jp = '??';
+
+		return view('workshop.drawing', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Drawing')->with('head', 'Workshop');
 	}
 
 	public function indexWJO($id){
@@ -110,8 +122,7 @@ class WorkshopController extends Controller{
 			'workshop_materials' => $this->material,
 			'statuses' => $this->status,
 			'employees' => $this->employee,
-		))->with('page', 'WJO List')->with('head', 'Workshop');
-		
+		))->with('page', 'WJO List')->with('head', 'Workshop');	
 	}
 
 	public function scanOperator(Request $request){
@@ -217,28 +228,14 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
-
 	}
 
 	public function scanTag(Request $request){
-		$current_machine = WorkshopProcess::where('machine_code', '=', $request->get('machine_code'))->first();
-
-
-		$temp = WorkshopTempProcess::where('tag', '=', $request->get('tag'))->first();
-		if(!$temp){
-			$temp = new WorkshopTempProcess([
-				'tag' => $request->get('tag'),
-				'started_at' => date('Y-m-d H:i:s'),
-			]);
-			$temp->save();
-		}
-		$started_at = $temp->started_at;
-
-
 		$wjo = WorkshopJobOrder::leftJoin('workshop_materials', 'workshop_materials.item_number', '=', 'workshop_job_orders.item_number')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
-		->where('tag', '=', $request->get('tag'))
-		->orderBy('order_no','desc')
+		->where('workshop_job_orders.tag', '=', $request->get('tag'))
+		->where('workshop_job_orders.remark', '=', 2)
+		->orWhere('workshop_job_orders.remark', '=', 3)
 		->select('workshop_job_orders.order_no',
 			'workshop_job_orders.item_number',
 			'workshop_job_orders.priority',
@@ -249,7 +246,8 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.material',
 			'workshop_job_orders.problem_description',
 			'workshop_job_orders.target_date',
-			'employee_syncs.name',
+			db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as name'),
+			'workshop_job_orders.attachment',
 			'workshop_materials.file_name')
 		->first();
 
@@ -261,6 +259,22 @@ class WorkshopController extends Controller{
 			return Response::json($response);
 		}
 
+		$current_machine = WorkshopProcess::where('machine_code', '=', $request->get('machine_code'))->first();
+
+		$temp = WorkshopTempProcess::where('tag', '=', $request->get('tag'))->first();
+		if(!$temp){
+			$temp = new WorkshopTempProcess([
+				'tag' => $request->get('tag'),
+				'started_at' => date('Y-m-d H:i:s'),
+			]);
+			$temp->save();
+		}
+		$started_at = $temp->started_at;
+
+		$approved_time = WorkshopJobOrderLog::where('order_no', '=', $wjo->order_no)
+		->where('remark', '=', 2)
+		->first();
+		$approved_time = $approved_time->created_at;
 
 		if($wjo->item_number){
 			$wjo_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
@@ -329,6 +343,7 @@ class WorkshopController extends Controller{
 				'status' => true,
 				'wjo' => $wjo,
 				'started_at' => $started_at,
+				'approved_time' => $approved_time,
 				'flow_process' => $process,
 				'wjo_log' => $workshop_log,
 				'current_machine' => $current_machine,
@@ -339,7 +354,8 @@ class WorkshopController extends Controller{
 			$process = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
 			->where('workshop_flow_processes.item_number', '=', $wjo->item_number)
 			->where('workshop_flow_processes.status', '=', 1)
-			->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.item_number', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+			->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.item_number', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.std_time')
+			->orderBy('sequence_process', 'asc')
 			->get();
 
 			if(count($process) > 0){
@@ -352,6 +368,7 @@ class WorkshopController extends Controller{
 					'status' => true,
 					'wjo' => $wjo,
 					'started_at' => $started_at,
+					'approved_time' => $approved_time,
 					'flow_process' => $process,
 					'wjo_log' => $workshop_log,
 					'current_machine' => $current_machine,
@@ -369,6 +386,7 @@ class WorkshopController extends Controller{
 					'status' => true,
 					'wjo' => $wjo,
 					'started_at' => $started_at,
+					'approved_time' => $approved_time,
 					'flow_process' => $process,
 					'wjo_log' => $workshop_log,
 					'current_machine' => $current_machine,
@@ -378,7 +396,6 @@ class WorkshopController extends Controller{
 			}		
 
 		}	
-
 	}
 
 	public function exportListWJO(Request $request){
@@ -472,6 +489,81 @@ class WorkshopController extends Controller{
 		})->export('xlsx');
 	}
 
+	public function editDrawing(Request $request){
+		$id = $request->get('edit_id');
+		$item_number = $request->get('edit_item_number');
+		$item_description = $request->get('edit_item_description');
+
+		$drawing = WorkshopMaterial::where('id', $id)->first();
+		if($drawing->file_name){
+			File::delete('drawing/'.$drawing->file_name);
+		}
+
+		$file = $request->file('edit_file');
+		$file_name = $item_number.'.'.$file->getClientOriginalExtension();
+		$file->move(public_path('drawing'), $file_name);
+
+		try {
+			$drawing = WorkshopMaterial::where('id', $id)
+			->update([
+				'item_number' => $item_number,
+				'item_description' => $item_description,
+				'file_name' => $file_name,
+				'remark' => 'drawing',
+				'created_by' => Auth::id(),
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Drawing berhasil diedit',
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function createDrawing(Request $request){
+
+		$item_number = $request->get('item_number');
+		$item_description = $request->get('item_description');
+
+		$file = $request->file('upload_file');
+		$file_name = $item_number.'.'.$file->getClientOriginalExtension();
+		$file->move(public_path('drawing'), $file_name);
+
+
+		$drawing = new WorkshopMaterial([
+			'item_number' => $item_number,
+			'item_description' => $item_description,
+			'file_name' => $file_name,
+			'remark' => 'drawing',
+			'created_by' => Auth::id(),
+		]);
+
+		try {
+			DB::transaction(function() use ($drawing){
+				$drawing->save();
+			});
+
+			$response = array(
+				'status' => true,
+				'message' => 'Drawing berhasil ditambahkan',
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function createProcessLog(Request $request){
 		$order_no = $request->get('order_no');
 		$tag = $request->get('tag');
@@ -501,11 +593,16 @@ class WorkshopController extends Controller{
 			]);
 		}
 
-		$temp = WorkshopTempProcess::where('tag', '=', $tag);
+		$temp = WorkshopTempProcess::where('tag', '=', $tag)->first();
 
 		try {
 
 			if($wjo->item_number){
+
+				$started_at = new DateTime($temp->started_at);
+				$now = new DateTime("now");
+				$std_time = $now->getTimestamp() - $started_at->getTimestamp();
+
 				$process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number)
 				->orderBy('sequence_process', 'desc')
 				->first();
@@ -517,16 +614,32 @@ class WorkshopController extends Controller{
 							'sequence_process' => $process->sequence_process + 1,
 							'machine_code' => $machine_code,
 							'status' => 0,
+							'std_time' => $std_time,
 							'created_by' => $operator_id,
 						]);
 						$flow_process->save();
+					}else{
+						if($log){
+							$flow_process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number)
+							->where('sequence_process', '=', $log->sequence_process + 1)
+							->first();
+						}else{
+							$flow_process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number)
+							->where('sequence_process', '=', 1)
+							->first();
+						}
+
+						$flow_process->std_time = ($flow_process->std_time + $std_time ) / 2;
+						$flow_process->save();
 					}
+
 				}else{
 					$flow_process = new WorkshopFlowProcess([
 						'item_number' => $wjo->item_number,
 						'sequence_process' => 1,
 						'machine_code' => $machine_code,
 						'status' => 0,
+						'std_time' => $std_time,
 						'created_by' => $operator_id,
 					]);
 					$flow_process->save();
@@ -553,8 +666,6 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
-
-
 	}	
 
 	public function createWJO(Request $request){
@@ -626,7 +737,6 @@ class WorkshopController extends Controller{
 
 
 		try {
-
 			DB::transaction(function() use ($wjo, $wjo_log){
 				$wjo->save();
 				$wjo_log->save();
@@ -768,8 +878,6 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
-
-
 	}
 
 	public function rejectWJO(Request $request){
@@ -865,8 +973,6 @@ class WorkshopController extends Controller{
 			);
 			return Response::json($response);
 		}
-
-
 	}
 
 	public function downloadAttachment(Request $request, $id){
@@ -884,6 +990,19 @@ class WorkshopController extends Controller{
 			'file_path' => $file_path,
 		);
 		return Response::json($response); 
+	}
+
+	public function fetchDrawing(){
+		$drawing = WorkshopMaterial::leftJOin('users', 'users.id', '=', 'workshop_materials.created_by')
+		->where('workshop_materials.remark', 'drawing')
+		->select('workshop_materials.item_number', 'workshop_materials.item_description', 'users.name', 'workshop_materials.created_at', 'workshop_materials.file_name')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'drawing' => $drawing,
+		);
+		return Response::json($response);
 	}
 
 	public function fetchListWJO(Request $request){
@@ -978,6 +1097,16 @@ class WorkshopController extends Controller{
 			'status' => true,
 			'machine_name' => $machine->machine_name,
 			'process_name' => $machine->process_name,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchEditDrawing(Request $request){
+		$drawing = WorkshopMaterial::where('item_number', $request->get('item_number'))->first();
+
+		$response = array(
+			'status' => true,
+			'drawing' => $drawing,
 		);
 		return Response::json($response);
 	}

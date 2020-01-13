@@ -61,7 +61,15 @@
 	<input type="hidden" id="started_at">
 	<input type="hidden" id="item_number">
 	<input type="hidden" id="sequence_process">
+	<input type="hidden" id="green">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
+		<div class="col-xs-12" style="padding: 0px; margin-bottom: 0.5%;">
+			<div class="progress-group" id="progress_div">
+				<div class="progress" style="height: 30px; border: 1px solid; padding: 0px; margin: 0px;">
+					<div class="progress-bar progress-bar-striped" id="progress_bar" style="font-size: 20px; padding-top: 0.25%;"></div>
+				</div>
+			</div>
+		</div>
 		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;">
 				<tbody>
@@ -94,7 +102,7 @@
 					<i class="glyphicon glyphicon-credit-card"></i>
 				</div>
 			</div>	
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 0.25%;">
 				<thead>
 					<tr>
 						<th style="width:15%; background-color: rgb(50, 50, 50); color: white; text-align: center; padding:0;font-size: 35px;" colspan="4" id="text_order_no">Order No.</th>
@@ -108,6 +116,12 @@
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_drawing"></td>
 					</tr>
 					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">PIC</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_pic"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Attachment</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_attach"></td>
+					</tr>	
+					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Target Selesai</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_target_date"></td>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Kategori</td>
@@ -118,7 +132,7 @@
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_material"></td>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Jumlah</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_quantity"></td>
-					</tr>	
+					</tr>
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Nama Barang</td>
 						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px;" id="text_item_name"></td>
@@ -127,23 +141,17 @@
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Uraian Permintaan</td>
 						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px;" id="text_problem_description"></td>
 					</tr>		
-					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">PIC</td>
-						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px;" id="text_pic"></td>
-					</tr>
-					<tr>
-						
-					</tr>
+					
 				</tbody>
 			</table>
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
-				<thead>
+				<thead id='process_progress_bar'>
 					<tr>
 						<th style="background-color: rgb(50, 50, 50); padding: 0px;" colspan="2">
-							<div class="col-md-12" style="padding: 0px;">
+							<div class="col-xs-12" style="padding: 0px;">
 								<div class="progress-group" id="progress_div">
 									<div class="progress" style="height: 30px; border: 1px solid; padding: 0px; margin: 0px;">
-										<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar" style="font-size: 20px; padding-top: 0.5%;"></div>
+										<div class="progress-bar progress-bar-success progress-bar-striped" id="process_bar" style="font-size: 20px; padding-top: 0.5%;"></div>
 									</div>
 								</div>
 							</div>
@@ -152,7 +160,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 75%; color: white; font-size: 2vw;">
+						<td style="width: 75%; color: white; font-size: 2vw; background-color: rgb(50, 50, 50);">
 							<p style="margin: 0px;"><label id='hours'>00</label>:<label id='minutes'>00</label>:<label id='seconds'>00</label></p>
 						</td>
 						<td style="width: 25%;">
@@ -240,18 +248,76 @@
 				});
 			}
 
+			$('#process_progress_bar').hide();
+
 			setInterval(setTime, 1000);
 		});
 
 		var duration = 0;
-		var count = false;
+		var count1 = false;
+		var count2 = false;
 		var started_at;
+		var std_time;
+		var approved_time;
+		var target_date;
 		function setTime() {
-			if(count){
+			if(count1){
 				document.getElementById("hours").innerHTML = pad(parseInt(diff_seconds(new Date(), started_at) / 3600));
 				document.getElementById("minutes").innerHTML = pad(parseInt((diff_seconds(new Date(), started_at) % 3600) / 60));
 				document.getElementById("seconds").innerHTML = pad(diff_seconds(new Date(), started_at) % 60);
+
+				var actual = diff_seconds(new Date(), started_at);
+				var percent = (actual / std_time) * 100;
+
+				// console.log(actual);
+				// console.log(std_time);
+				// console.log(percent);
+
+
+				$('#process_bar').append().empty();
+				if(percent <= 100){
+					$('#process_bar').addClass('active');
+					$('#process_bar').addClass('progress-bar-success');
+					$('#process_bar').html(Math.round(percent)+'%');
+					$('#process_bar').css('width', percent+'%');
+					$('#process_bar').css('color', 'white');
+					$('#process_bar').css('font-weight', 'bold');
+				}else{
+					$('#process_bar').addClass('active');
+					$('#process_bar').addClass('progress-bar-danger');
+					$('#process_bar').html('100%');
+					$('#process_bar').css('width', '100%');
+					$('#process_bar').css('color', 'white');
+					$('#process_bar').css('font-weight', 'bold');
+
+				}	
 			}
+
+			if(count2){
+				var actual = diff_seconds(new Date(), approved_time);
+				var target = diff_seconds(target_date, approved_time);
+				var percent = (actual / target) * 100;
+
+				$('#progress_bar').append().empty();
+				if(percent <= 100){
+					$('#progress_bar').addClass('active');
+					$('#progress_bar').addClass('progress-bar-success');
+					$('#progress_bar').html(Math.round(percent)+'%');
+					$('#progress_bar').css('width', percent+'%');
+					$('#progress_bar').css('color', 'white');
+					$('#progress_bar').css('font-weight', 'bold');
+				}else{
+					$('#progress_bar').addClass('active');
+					$('#progress_bar').addClass('progress-bar-danger');
+					$('#progress_bar').html('100%');
+					$('#progress_bar').css('width', '100%');
+					$('#progress_bar').css('color', 'white');
+					$('#progress_bar').css('font-weight', 'bold');
+
+				}	
+			}
+
+
 		}
 
 		function pad(val) {
@@ -319,7 +385,6 @@
 							$('#operator').val('');
 						}
 					});
-
 				}
 			}
 		});
@@ -343,7 +408,6 @@
 							$('#leader').val('');
 						}
 					});
-
 				}
 			}
 		});
@@ -359,16 +423,12 @@
 					$.get('{{ url("scan/workshop/tag/rfid") }}', data, function(result, status, xhr){
 						if(result.status){
 							duration = 0;
-							count = true;
+							count1 = true;
+							count2 = true;
 							started_at = new Date(result.started_at);
-
-							$('#progress_bar').append().empty();
-							$('#progress_bar').addClass('active');
-							$('#progress_bar').html('45%');
-							$('#progress_bar').css('width', '45%');
-							$('#progress_bar').css('color', 'white');
-							$('#progress_bar').css('font-weight', 'bold');
-
+							approved_time = new Date(result.approved_time.date);
+							var date = result.wjo.target_date.split("-");
+							target_date = new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0);
 
 							$('#tag').val('');
 							openSuccessGritter('Success!', result.message);
@@ -400,19 +460,26 @@
 							if(result.wjo.file_name){
 								$('#text_drawing').css('padding-top', '0.25%');
 								$('#text_drawing').css('padding-bottom', '0.75%');
-								$('#text_drawing').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadAtt(\''+result.wjo.file_name+'\')">'+ result.wjo.file_name +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
+								$('#text_drawing').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadDrw(\''+result.wjo.file_name+'\')">'+ result.wjo.file_name +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
 							}else{
 								$('#text_drawing').append('-');
 							}
 
-
+							$('#text_attach').append().empty();
+							if(result.wjo.attachment){
+								$('#text_attach').css('padding-top', '0.25%');
+								$('#text_attach').css('padding-bottom', '0.75%');
+								$('#text_attach').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadAtt(\''+result.wjo.attachment+'\')">'+ result.wjo.attachment +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
+							}else{
+								$('#text_attach').append('-');
+							}
 
 							$("#step").append().empty();
 							var step = '';
-							var green = ''
+							var green = '';
 							step += '<ul class="timeline">';
 							step += '<li class="time-label">';
-							step += '<span class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+							step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 							step += '</li>';
 
 							if(result.flow_process.length > 0){
@@ -424,13 +491,16 @@
 								for (var i = 0; i < result.flow_process.length; i++) {
 									step += '<li>';
 									step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.flow_process[i].sequence_process +'</i>';
-									step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding: 1%; padding-left: 2%;">';
+									step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold;">Langkah '+ result.flow_process[i].sequence_process +'</p>';
 									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'</p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 									step += '</div>';
 									step += '</li>';
 
+									if(result.flow_process[i].sequence_process == (green + 1)){
+										std_time = result.flow_process[i].std_time;
+									}
 								}
 								step += '<li>';
 								step += '<i class="fa fa-check-square-o bg-blue"></i>';
@@ -441,7 +511,7 @@
 									for (var i = 0; i < result.wjo_log.length; i++) {
 										step += '<li>';
 										step += '<i class="fa fa-stack-1x">'+ result.wjo_log[i].sequence_process +'</i>';
-										step += '<div class="timeline-item" style="padding: 1%; padding-left: 2%;">';
+										step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 										step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold;">Langkah '+ result.wjo_log[i].sequence_process +'</p>';
 										step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
 										step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
@@ -450,7 +520,7 @@
 									}
 									step += '<li>';
 									step += '<i class="fa fa-stack-1x bg-green">'+ (result.wjo_log.length + 1) +'</i>';
-									step += '<div class="timeline-item bg-green" style="padding: 1%; padding-left: 2%;">';
+									step += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold; color: white;">Langkah '+ (result.wjo_log.length + 1) +'</p>';
 									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
@@ -460,7 +530,7 @@
 								}else{
 									step += '<li>';
 									step += '<i class="fa fa-stack-1x bg-green">1</i>';
-									step += '<div class="timeline-item bg-green" style="padding: 1%; padding-left: 2%;">';
+									step += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold; color: white;">Langkah 1</p>';
 									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
@@ -470,8 +540,13 @@
 							}
 
 							$("#step").append(step);
+							document.getElementById("green").value = green;
 							$("#timeline_number_" + green).addClass('bg-green');
 							$("#timeline_box_" + green).addClass('bg-green');
+
+							if(result.wjo.category != 'Equipment'){
+								$('#process_progress_bar').show();
+							}
 
 
 
@@ -501,7 +576,7 @@
 }
 });
 
-function downloadAtt(attachment) {
+function downloadDrw(attachment) {
 	var data = {
 		file:attachment
 	}
@@ -518,17 +593,34 @@ function downloadAtt(attachment) {
 			alert('Disconnected from server');
 		}
 	});
+}
 
+function downloadAtt(attachment) {
+	var data = {
+		file:attachment
+	}
+	$.get('{{ url("download/workshop/attachment") }}', data, function(result, status, xhr){
+		if(xhr.status == 200){
+			if(result.status){
+				window.open(result.file_path);
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});	
 }
 
 function finish(){
-	count = false;
-
 	var order_no = $("#order_no").val();
 	var tag = $("#tag_input").val();
 	var machine_code = $("#exe").val();
 	var operator_id = $("#operator_id").val();
 	var started_at = $("#started_at").val();
+	var green = $("#green").val();
 
 	var data = {
 		order_no : order_no,
@@ -543,7 +635,12 @@ function finish(){
 			if(result.status){
 				$('#tag').val('');
 				$('#tag').focus();
-				$('#progress_bar').removeClass('active');
+
+				// $(".fa").removeClass('bg-green');
+				// $(".timeline_item").removeClass('bg-green');
+
+				count1 = false;
+				$('#process_bar').removeClass('active');
 
 				openSuccessGritter('Success!', result.message);			
 			}

@@ -10,7 +10,7 @@ class WorkshopLog extends Model{
 
 	use SoftDeletes;
 	protected $fillable = [
-		'order_no', 'machine_code', 'operator_id', 'started_at' 
+		'order_no', 'sequence_process', 'machine_code', 'operator_id', 'started_at' 
 	];
 
 }

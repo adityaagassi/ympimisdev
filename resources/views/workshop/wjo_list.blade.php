@@ -48,7 +48,7 @@
 	<h1>
 		{{ $title }}
 		<small><span class="text-purple"> {{ $title_jp }}</span></small>
-		<button href="javascript:void(0)" class="btn btn-success btn-md pull-right" data-toggle="modal" data-target="#modal-close" style="margin-right: 5px">
+		<button href="javascript:void(0)" class="btn btn-warning btn-md pull-right" data-toggle="modal" data-target="#modal-close" style="margin-right: 5px">
 			<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Close WJO
 		</button>
 	</h1>
@@ -293,14 +293,9 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">
-						&times;
-					</span>
-				</button>
-				<h4 class="modal-title">
-					Close WJO
-				</h4>
+				<div class="col-xs-12" style="background-color: #e08e0b;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Close WJO</h1>
+				</div>
 			</div>
 			<div class="modal-body" style="padding-top: 0px;">
 				<div class="row">
@@ -416,14 +411,9 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">
-						&times;
-					</span>
-				</button>
-				<h4 class="modal-title">
-					Penugasan WJO
-				</h4>
+				<div class="col-xs-12" style="background-color: #3c8dbc;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Penugasan WJO</h1>
+				</div>
 			</div>
 			<div class="modal-body" style="padding-top: 0px;">
 				<div class="row">
@@ -540,18 +530,20 @@
 											</select>
 										</div>
 									</div>
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Drawing</label>
-										<div class="col-xs-8" align="left">
-											<select class="form-control select2" data-placeholder="Pilih Drawing" id="assign_item_number" style="width: 100% height: 35px; font-size: 15px;" >
-												<option value=""></option>
-												@foreach($workshop_materials as $material)
-												@if($material->remark == 'drawing')
-												<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
-												@endif
-												@endforeach
-											</select>
-										</div>
+									<div id="drawing">
+										<div class="form-group row" align="right">
+											<label class="col-xs-4" style="margin-top: 1%;">Drawing<span class="text-red">*</span></label>
+											<div class="col-xs-8" align="left">
+												<select class="form-control select2" data-placeholder="Pilih Drawing" id="assign_item_number" style="width: 100% height: 35px; font-size: 15px;" >
+													<option value=""></option>
+													@foreach($workshop_materials as $material)
+													@if($material->remark == 'drawing')
+													<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
+													@endif
+													@endforeach
+												</select>
+											</div>
+										</div>	
 									</div>
 
 								</div>
@@ -604,14 +596,9 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">
-						&times;
-					</span>
-				</button>
-				<h4 class="modal-title">
-					Reject WJO
-				</h4>
+				<div class="col-xs-12" style="background-color: #d73925;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Reject WJO</h1>
+				</div>
 			</div>
 			<div class="modal-body">
 				<div class="row">
@@ -775,6 +762,7 @@
 		$('#close_body').hide();
 		$('#close-button').hide();
 
+		$('#drawing').hide();
 
 
 		fillTable();
@@ -783,6 +771,14 @@
 	function clearConfirmation(){
 		location.reload(true);		
 	}
+
+	$('#category').on('change', function() {
+		if(this.value != 'Equipment'){
+			$('#drawing').show();
+		}else{
+			$('#drawing').hide();
+		}
+	});
 
 	$('#modal-assignment').on('shown.bs.modal', function () {
 		$("#tag").val("");

@@ -110,6 +110,7 @@ Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedu
 //in
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
+Route::post('scan/part_molding', 'InjectionsController@scanPartMolding');
 Route::get('send/Part', 'InjectionsController@sendPart');
 Route::get('get/Inpart', 'InjectionsController@getDataIn');
 //end in
@@ -378,6 +379,7 @@ Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeCon
 Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
+Route::get('fetch/report/total_meeting', 'EmployeeController@fetchTotalMeeting');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
 Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
@@ -883,7 +885,10 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::post('check/workshop/wjo_rfid', 'WorkshopController@checkTag');
 	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
 	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
-	Route::get('/index/workshop/drawing', 'WorkshopController@indexDrawing');
+	Route::get('index/workshop/drawing', 'WorkshopController@indexDrawing');
+	Route::post('create/workshop/drawing', 'WorkshopController@createDrawing');
+	Route::post('edit/workshop/drawing', 'WorkshopController@editDrawing');
+
 
 });
 
@@ -902,6 +907,9 @@ Route::get('scan/workshop/tag/rfid', 'WorkshopController@scanTag');
 Route::get('scan/workshop/leader/rfid', 'WorkshopController@scanLeader');
 Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcessLog');
 Route::get('close/workshop/check_rfid', 'WorkshopController@checkCloseTag');
+Route::get('fetch/workshop/drawing', 'WorkshopController@fetchDrawing');
+Route::get('fetch/workshop/edit_drawing', 'WorkshopController@fetchEditDrawing');
+
 
 
 

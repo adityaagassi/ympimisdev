@@ -10,7 +10,7 @@ class WorkshopMaterial extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'material_number', 'material_description', 'reamark', 'created_by'
+		'item_number', 'item_description', 'file_name', 'remark', 'created_by'
 	];
 
 }
