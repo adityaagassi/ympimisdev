@@ -47,9 +47,7 @@
 			<?php if($role_code == "PROD-SPL" || $role_code == "MIS" || $role_code == "S"){ ?>
 				<a href="{{ url("index/production_report/approval/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Approval</a>
 			<?php } ?>
-			<?php if($role_code == "PROD-SPL" || $role_code == "M" || $role_code == "MIS" || $role_code == "S" || $role_code == "STD-SPL"){ ?>
 				<a href="{{ url("index/leader_task_report/index/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Leader Task Report</a>
-			<?php } ?>
 		</div>
 	</div>
 </section>

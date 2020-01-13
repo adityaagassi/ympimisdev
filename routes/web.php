@@ -1851,10 +1851,13 @@ Route::get('index/audit_guidance/getdetail','AuditGuidanceController@getdetail')
 Route::post('index/audit_guidance/update/{id}/{audit_guidance_id}', 'AuditGuidanceController@update');
 
 //report leader tasks
-Route::get('index/leader_task_report/index/{id}', 'LeaderTaskReportController@index');
-Route::get('index/leader_task_report/leader_task_list/{id}/{leader_name}', 'LeaderTaskReportController@leader_task_list');
-Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
-Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
+Route::group(['nav' => 'M25', 'middleware' => 'permission'], function(){
+	Route::get('index/leader_task_report/index/{id}', 'LeaderTaskReportController@index');
+	Route::get('index/leader_task_report/leader_task_list/{id}/{leader_name}', 'LeaderTaskReportController@leader_task_list');
+	Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
+	Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
+});
+
 
 //AREA CHECK POINT
 Route::get('index/area_check_point/index/{id}', 'AreaCheckPointController@index');
