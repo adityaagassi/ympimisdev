@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         Commands\UploadTransferKD::class,
         Commands\SyncSunfish::class,
         Commands\SendEmailKaizen::class,
+        Commands\EmployeeHistory::class,
     ];
 
     /**

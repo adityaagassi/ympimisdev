@@ -73,7 +73,6 @@
 						<div class="tab-pane active" id="tab_1">
 							<div id="chart" style="width: 99%;"></div>
 						</div>
-
 					</div>
 				</div>
 			</div>
