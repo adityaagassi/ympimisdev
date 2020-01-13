@@ -103,16 +103,16 @@
 				<?php $no = 1 ?>
 				@foreach($laporanAktivitas as $laporanAktivitas)
 				<tr>
-					<td class="head"><center>{{ $no }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->date }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $no }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->date }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
 					<td class="head"><center><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></center></td>
-					<td class="head"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
-					<td class="head"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
-					<td class="head" colspan="2"><center>{{ $laporanAktivitas->operator }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
+					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
+					<td rowspan="3" class="head" colspan="2"><center>{{ $laporanAktivitas->operator }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
-					<td class="head" id="approval2">
+					<td rowspan="3" class="head" id="approval2">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						@if($laporanAktivitas->approval == Null)
 						    <label class="label label-success"><input type="checkbox" id="customCheck" name="approve[]" value="{{ $laporanAktivitas->id_audit_report }}">Approve
@@ -120,6 +120,12 @@
 						@endif
 					</td>
 					@endif
+				</tr>
+				<tr>
+					<td>Tindakan Perbaikan : {{ $laporanAktivitas->tindakan_perbaikan }}</td>
+				</tr>
+				<tr>
+					<td>Target : {{ $laporanAktivitas->target }}</td>
 				</tr>
 				<?php $no++ ?>
 				@endforeach
