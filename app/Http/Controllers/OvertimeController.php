@@ -1582,31 +1582,58 @@ public function overtimeDetail(Request $request)
 	$from = date('Y-m-01',strtotime($request->get('tgl')));
 	$to = date('Y-m-d',strtotime($request->get('tgl')));
 
-	$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
-	->select('cost_center')->first();
+	if($from >= '2020-01-01'){
 
-	$datas = db::connection('sunfish')->select("
-		select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
-		(
-		select A.emp_no,
-		sum(
-		CASE
-		WHEN A.total_ot > 0 THEN
-		floor((A.total_ot / 60.0) * 2  + 0.5) / 2
-		ELSE
-		floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-		END) as jam,
-		STUFF((
-		SELECT distinct ',' + T.remark
-		FROM VIEW_YMPI_Emp_OvertimePlan T
-		WHERE A.emp_no = T.emp_no
-		and T.ovtplanfrom >= '".$from." 00:00:00' 
-		and T.ovtplanto <= '".$to." 23:59:59'
-		FOR XML PATH('')), 1, 1, '') as kep
-		from VIEW_YMPI_Emp_OvertimePlan A
-		where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
-		group by A.emp_no
-	) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
+		$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
+		->select('cost_center')->first();
+
+		$datas = db::connection('sunfish')->select("
+			select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
+			(
+			select A.emp_no,
+			sum(
+			CASE
+			WHEN A.total_ot > 0 THEN
+			floor((A.total_ot / 60.0) * 2  + 0.5) / 2
+			ELSE
+			floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
+			END) as jam,
+			STUFF((
+			SELECT distinct ',' + T.remark
+			FROM VIEW_YMPI_Emp_OvertimePlan T
+			WHERE A.emp_no = T.emp_no
+			and T.ovtplanfrom >= '".$from." 00:00:00' 
+			and T.ovtplanto <= '".$to." 23:59:59'
+			FOR XML PATH('')), 1, 1, '') as kep
+			from VIEW_YMPI_Emp_OvertimePlan A
+			where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
+			group by A.emp_no
+		) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
+	}
+	else{
+		$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
+		->select('cost_center')->first();
+
+		$q = "SELECT
+		over_time_member.nik,
+		ympimis.employees.name,
+		sum( IF ( over_time_member.STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam,
+		GROUP_CONCAT(over_time.keperluan) as kep
+		FROM
+		over_time_member
+		LEFT JOIN over_time ON over_time.id = over_time_member.id_ot
+		LEFT JOIN ( SELECT employee_id, cost_center FROM ympimis.mutation_logs WHERE valid_to IS NULL ) cc ON cc.employee_id = over_time_member.nik
+		LEFT JOIN ympimis.employees ON ympimis.employees.employee_id = over_time_member.nik  
+		WHERE
+		over_time.deleted_at IS NULL 
+		AND over_time.tanggal >= '2019-12-01' 
+		AND over_time.tanggal <= '2019-12-31' 
+		and cc.cost_center = '22000'
+		GROUP BY
+		over_time_member.nik, ympimis.employees.name"
+
+		$datas = db::connection('mysql3')->select($q);
+	}
 
 	$response = array(
 		'status' => true,
