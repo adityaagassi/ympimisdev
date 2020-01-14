@@ -669,6 +669,7 @@ table > thead > tr > th{
             //CPAR
             var urldetailcpar = '{{ url("index/qc_report/update/") }}';
             var urlverifikasi = '{{ url("index/qc_report/verifikasicpar/") }}';
+            var urlverifikasigm = '{{ url("index/qc_report/verifikasigm/") }}';
             var urldetailcar = '{{ url("index/qc_car/detail/") }}';
             var urlverifikasicar = '{{ url("index/qc_car/verifikasicar/") }}';
             var urlverifikasiqa = '{{ url("index/qc_report/verifikasiqa/") }}';
@@ -787,7 +788,7 @@ table > thead > tr > th{
               if (value.approved_gm == "Checked") {
                   if (value.posisi_cpar == "gm") {
                       if (d == 0) {  
-                        statusgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
+                        statusgm = '<a href="'+urlverifikasigm+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                         color = 'style="background-color:red"';
                         // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                         d = 1;

@@ -27,7 +27,7 @@ use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use File;
-// use App\QcTtdCoba;
+use App\QcTtdCoba;
 
 
 class QcReportController extends Controller
@@ -1477,7 +1477,6 @@ class QcReportController extends Controller
 
     public function print_cpar($id)
     {
-
       $qc_cpars = QcCpar::find($id);
 
       if ($qc_cpars->staff != null) {
@@ -1525,51 +1524,135 @@ class QcReportController extends Controller
       return $pdf->stream("CPAR ".$cpar. ".pdf");
     }
 
-     public function coba_print($id)
+     public function print_cpar_new($id)
       {
 
-       $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name')
-          ->join('departments','qc_cpars.department_id','=','departments.id')
-          ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
-          ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
-          // ->join('qc_cpars_items','qc_cpars.cpar_no','=')
-          ->where('qc_cpars.id','=',$id)
-          ->get();
+       $qc_cpars = QcCpar::find($id);
 
-        $parts = QcCparItem::select('qc_cpar_items.*')
-        ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
+      if ($qc_cpars->staff != null) {
+          $posisi = "staff";
+          $posisi2 = "chief";
+      } else if ($qc_cpars->leader != null) {
+          $posisi = "leader";
+          $posisi2 = "foreman";
+      } 
+
+      $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
+        ->join('departments','qc_cpars.department_id','=','departments.id')
+        ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
+        ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+        ->leftjoin('destinations','qc_cpars.destination_code','=','destinations.destination_code')
+        ->leftjoin('vendors','qc_cpars.vendor','=','vendors.vendor')
+        ->leftjoin('employees as '.$posisi,'qc_cpars.'.$posisi,'=',$posisi.'.employee_id')
+        ->leftjoin('employees as '.$posisi2,'qc_cpars.'.$posisi2,'=',$posisi2.'.employee_id')
+        ->leftjoin('employees as manager','qc_cpars.manager','=','manager.employee_id')
+        ->leftjoin('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
+        ->leftjoin('employees as gm','qc_cpars.gm','=','gm.employee_id')
+        // ->join('qc_cpars_items','qc_cpars.cpar_no','=')
+
         ->where('qc_cpars.id','=',$id)
         ->get();
 
-        return view('qc_report.print_cpar', array(
+        $parts = QcCparItem::select('qc_cpar_items.*','material_plant_data_lists.material_description')
+        ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
+        ->join('material_plant_data_lists','qc_cpar_items.part_item','=','material_plant_data_lists.material_number')
+        ->where('qc_cpars.id','=',$id)
+        ->get();
+
+        return view('qc_report.print2_cpar', array(
             'cpars' => $cpars,
             'parts' => $parts
         ))->with('page', 'CPAR');
+      }
 
+      // Sign Online
+      public function verifikasigm($id){
+          $cpar = QcCpar::find($id);
+
+          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name','qc_ttd_cobas.ttd')
+          ->join('departments','qc_cpars.department_id','=','departments.id')
+          ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
+          ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+          ->leftjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
+          ->where('qc_cpars.id','=',$id)
+          ->get();
+
+          return view('qc_report.verifikasi_gm', array(
+            'cpar' => $cpar,
+            'cparss' =>  $cpars
+          ))->with('page', 'CPAR');
       }
 
       public function sign()
       {
-          return view('qc_report.signature')->with('page', 'CPARS');
+          return view('qc_report.signature')->with('page', 'CPAR');
       }
 
       public function save_sign(Request $request)
       {
+          $id_user = Auth::id();
+
           $result = array();
-          $imagedata = base64_decode( $request->get('img_data'));
+          $imagedata = base64_decode($request->get('img_data'));
           $filename = md5(date("dmYhisA"));
           //Location to where you want to created sign image
-          $file_name = './images/'.$filename.'.png';
+          $file_name = './images/sign/'.$filename.'.png';
           file_put_contents($file_name,$imagedata);
           $result['status'] = 1;
           $result['file_name'] = $file_name;
           echo json_encode($result);
 
           $ttd = new QcTtdCoba([
-            'ttd' => $result['file_name']
+            'ttd' => $result['file_name'],
+            'cpar_no' => $request->get('cpar_no'),
+            'created_by' => $id_user
           ]);
 
           $ttd->save();
+
+          $cpars = QcCpar::find($request->get('id'));
+          if ($cpars->posisi == "gm") {            
+            $cpars->approved_gm = "Checked"; 
+
+            $mailto = "select distinct employees.name,email from qc_cpars join employees on qc_cpars.employee_id = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$request->get('id')."'";
+            $mails = DB::select($mailto);
+
+            foreach($mails as $mail){
+              $mailtoo = $mail->email;
+            }
+
+            $cpars->email_status = "SentBagian";
+            $cpars->email_send_date = date('Y-m-d');
+            $cpars->posisi = "bagian";
+            $cpars->received_manager = "Received";
+            $cpars->progress = "60";
+            $cpars->save();
+
+            $cars = new QcCar([
+              'cpar_no' => $cpars->cpar_no,
+              'posisi' => 'bagian',
+              'email_status' => 'SentBagian',
+              'email_send_date' => date('Y-m-d'),
+              'tinjauan' => '0',
+              'progress' => '15',
+              'created_by' => $id_user
+            ]);
+
+            $cars->save();
+
+            $query2 = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$request->get('id')."'";
+
+            $cpars2 = db::select($query2);
+
+            Mail::to('rioirvansyah6@gmail.com')->send(new SendEmail($cpars2, 'cpar'));
+            // return redirect('/index/verifikasigm')->with('status', 'E-mail has Been Sent To Department')->with('page', 'CPAR');
+
+
+          }
+          $cpars->save();
+
+          
+
       }
 
       //------ Email ------
@@ -1618,8 +1701,6 @@ class QcReportController extends Controller
               $mailtoo = $mail->email;
               // var_dump($mailtoo);die();
             }
-
-          
 
           if($cpars != null){
           // var_dump($cpars);die();
@@ -1808,7 +1889,6 @@ class QcReportController extends Controller
 
       public function checked(Request $request,$id)
       {
-
           $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
           $emailcpar = db::select($query);
 

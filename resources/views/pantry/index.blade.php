@@ -332,7 +332,7 @@
 								</table>
 							</div>
 						</div>
-						<button class="btn btn-success" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+						<button onclick="finalConfirm()" class="btn btn-success" class="btn btn-danger btn-sm" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
 							ORDER CONFIRMATION
 						</button>
 					</div>
@@ -569,7 +569,7 @@
 					if(result.status){		
 						$('#jumlah').val("1");
 				// console.log(result.sms);
-				$('#myModal').modal('hide');
+				// $('#myModal').modal('hide');
 				openSuccessGritter('Success', result.message);
 				daftarmenu();
 			}

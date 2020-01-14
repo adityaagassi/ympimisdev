@@ -142,13 +142,9 @@ table.table-bordered > tfoot > tr > th{
 										
 										<button id="btnSaveSign">Save Signature</button>
 										<!-- <button type="button" class="button clear" data-action="clear">Clear</button> -->
-
-
 									</div>
 								</div>
 							</div>
-
-
 						</div>
 					</div>
 				</div>

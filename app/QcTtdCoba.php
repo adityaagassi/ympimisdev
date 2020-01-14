@@ -10,6 +10,11 @@ class QcTtdCoba extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'id','ttd'
+		'id','ttd','cpar_no','created_by'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo('App\User', 'created_by')->withTrashed();
+	}
 }
