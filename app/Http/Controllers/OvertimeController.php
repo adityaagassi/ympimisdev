@@ -1212,7 +1212,7 @@ public function overtimeControl(Request $request)
 		over_time_member
 		LEFT JOIN over_time ON over_time.id = over_time_member.id_ot
 		LEFT JOIN ( SELECT employee_id, cost_center FROM ympimis.mutation_logs WHERE valid_to IS NULL ) employees ON employees.employee_id = over_time_member.nik
-		LEFT JOIN ympimis.cost_centers ON cost_centers.cost_center = employees.cost_center 
+		LEFT JOIN (select distinct cost_center, cost_center_name from ympimis.cost_centers) as cost_centers ON cost_centers.cost_center = employees.cost_center 
 		WHERE
 		over_time.deleted_at IS NULL 
 		AND over_time.tanggal >= '".$tanggal."' 
