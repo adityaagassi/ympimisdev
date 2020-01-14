@@ -178,8 +178,8 @@
 						if (value.sisaH1 >= 0) {
 							sisaH1 = value.sisaH1;
 						}
-						else if(value.sisaH1 < 0 || value.sisaH1 == 0){
-							sisaH1 = value.h1;
+						else if(value.sisaH1 < 0){
+							sisaH1 = 0;
 						}
 
 						if (value.sisaH2 >= 0) {
