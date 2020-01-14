@@ -67,7 +67,7 @@ class SyncSunfish extends Command
             $row['sub_group'] = $data['Sub-Group'];
             $row['group'] = $data['Group'];
             $row['employment_status'] = $data['employ_code'];
-            $row['cost_center'] = $data['cost_center'];
+            $row['cost_center'] = $data['cost_center_code'];
             $row['assignment'] = $data['Penugasan'];
             $row['created_at'] = date('Y-m-d H:i:s');
             $row['updated_at'] = date('Y-m-d H:i:s');
