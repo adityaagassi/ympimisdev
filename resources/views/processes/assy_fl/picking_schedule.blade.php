@@ -54,7 +54,8 @@
 							<th colspan="2" style="padding:0; width:1%;">Stock</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy</th>
 							<th rowspan="2" style="padding:0; width:1%;">Sisa Sub-Assy</th>
-							<th rowspan="2" style="padding:0; width:1%;">Stamp</th>
+							<th rowspan="2" style="padding:0; width:1%;">Stamp FG</th>
+							<th rowspan="2" style="padding:0; width:1%;">Stamp KD</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+1)</th>
 							<th rowspan="2" style="padding:0; width:1%;">Sisa Sub-Assy (H+1)</th>
 							<th rowspan="2" style="padding:0; width:1%;">Target Sub-Assy (H+2)</th>
@@ -71,6 +72,7 @@
 					<tfoot style="background-color: RGB(252, 248, 227); color: black;">
 						<tr>
 							<th>Total</th>
+							<th></th>
 							<th></th>
 							<th></th>
 							<th></th>
@@ -205,6 +207,7 @@
 						planData += '<td style="width: 1%">'+ value.targetToday +'</td>';
 						planData += '<td style="width: 1%">'+ sisaToday +'</td>';
 						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
+						planData += '<td style="width: 1%">'+ value.stamp_kd +'</td>';
 						planData += '<td style="width: 1%">'+ value.h1 +'</td>';
 						planData += '<td style="width: 1%">'+ sisaH1 +'</td>';
 						planData += '<td style="width: 1%">'+ value.h2 +'</td>';
@@ -275,25 +278,30 @@
 							}, 0)
 							$(api.column(8).footer()).html(stamp.toLocaleString());
 
-							var h1 = api.column(9).data().reduce(function (a, b) {
+							var stamp_kd = api.column(9).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(9).footer()).html(h1.toLocaleString());
+							$(api.column(9).footer()).html(stamp_kd.toLocaleString());
 
-							var sisaH1 = api.column(10).data().reduce(function (a, b) {
+							var h1 = api.column(10).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(10).footer()).html(sisaH1.toLocaleString());
+							$(api.column(10).footer()).html(h1.toLocaleString());
 
-							var h2 = api.column(11).data().reduce(function (a, b) {
+							var sisaH1 = api.column(11).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(11).footer()).html(h2.toLocaleString());
+							$(api.column(11).footer()).html(sisaH1.toLocaleString());
 
-							var sisaH2 = api.column(12).data().reduce(function (a, b) {
+							var h2 = api.column(12).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
-							$(api.column(12).footer()).html(sisaH2.toLocaleString());
+							$(api.column(12).footer()).html(h2.toLocaleString());
+
+							var sisaH2 = api.column(13).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(13).footer()).html(sisaH2.toLocaleString());
 
 
 						},
@@ -314,11 +322,11 @@
 							}
 						},
 						{
-							"targets": 10,
+							"targets": 11,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[10]) != 0  ) {
+								if ( parseInt(rowData[11]) != 0  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
@@ -330,11 +338,11 @@
 							}
 						},
 						{
-							"targets": 12,
+							"targets": 13,
 							"createdCell": function (td, cellData, rowData, row, col) {
 
 
-								if ( parseInt(rowData[12]) != 0  ) {
+								if ( parseInt(rowData[13]) != 0  ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
 									$(td).css('color', 'black')
 								}
