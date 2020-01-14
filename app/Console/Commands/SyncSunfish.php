@@ -39,7 +39,7 @@ class SyncSunfish extends Command
     public function handle()
     {
         $insert = array();
-        $datas = db::connection('sunfish')->select("select * from dbo.view_ympi_emp_orgunit");
+        $datas = db::connection('sunfish')->select("SELECT DISTINCT * FROM VIEW_YMPI_Emp_OrgUnit");
         $datas2 = json_decode(json_encode($datas), true);
         
         foreach ($datas2 as $data) {
