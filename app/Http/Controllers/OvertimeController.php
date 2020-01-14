@@ -1626,9 +1626,9 @@ public function overtimeDetail(Request $request)
 		LEFT JOIN ympimis.employees ON ympimis.employees.employee_id = over_time_member.nik  
 		WHERE
 		over_time.deleted_at IS NULL 
-		AND over_time.tanggal >= '2019-12-01' 
-		AND over_time.tanggal <= '2019-12-31' 
-		and cc.cost_center = '22000'
+		AND over_time.tanggal >= '".$from."' 
+		AND over_time.tanggal <= '".$to."' 
+		and cc.cost_center = '".$cost_center->cost_center."'
 		GROUP BY
 		over_time_member.nik, ympimis.employees.name";
 
