@@ -1207,7 +1207,7 @@ public function overtimeControl(Request $request)
 		over_time_member.nik AS emp_no,
 		sum( IF ( over_time_member.STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam,
 		employees.cost_center AS cost_center_code,
-		ympimis.cost_centers.cost_center_name 
+		cost_centers.cost_center_name 
 		FROM
 		over_time_member
 		LEFT JOIN over_time ON over_time.id = over_time_member.id_ot
@@ -1220,7 +1220,7 @@ public function overtimeControl(Request $request)
 		GROUP BY
 		over_time_member.nik,
 		employees.cost_center,
-		ympimis.cost_centers.cost_center_name";
+		cost_centers.cost_center_name";
 
 		$ot = db::connection('mysql3')->select($q);
 
