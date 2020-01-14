@@ -1630,7 +1630,7 @@ public function overtimeDetail(Request $request)
 		AND over_time.tanggal <= '2019-12-31' 
 		and cc.cost_center = '22000'
 		GROUP BY
-		over_time_member.nik, ympimis.employees.name"
+		over_time_member.nik, ympimis.employees.name";
 
 		$datas = db::connection('mysql3')->select($q);
 	}
