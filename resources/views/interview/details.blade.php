@@ -1031,32 +1031,36 @@ table.table-bordered > tfoot > tr > th{
 		var komitmen_hotel_konsep = $('input[id="komitmen_hotel_konsep_create"]:checked').val();
 		var janji_tindakan_dasar = $('input[id="janji_tindakan_dasar_create"]:checked').val();
 
-		var data = {
-			pesertascan:pesertascan,
-			nik:nik,
-			filosofi_yamaha:filosofi_yamaha,
-			aturan_k3:aturan_k3,
-			komitmen_berkendara:komitmen_berkendara,
-			kebijakan_mutu:kebijakan_mutu,
-			enam_pasal_keselamatan:enam_pasal_keselamatan,
-			budaya_kerja:budaya_kerja,
-			budaya_5s:budaya_5s,
-			komitmen_hotel_konsep:komitmen_hotel_konsep,
-			janji_tindakan_dasar:janji_tindakan_dasar,
-			interview_id:interview_id
-		}
-		console.table(data);
-		
-		$.post('{{ url("index/interview/create_participant") }}', data, function(result, status, xhr){
-			if(result.status){
-				$("#create-modal").modal('hide');
-				openSuccessGritter('Success','New Participant has been created');
-				window.location.reload();
-			} else {
-				audio_error.play();
-				openErrorGritter('Error','Create Participant Failed');
+		if (pesertascan == '' && nik == '') {
+			alert('Isi Semua Data');
+		}else{
+			var data = {
+				pesertascan:pesertascan,
+				nik:nik,
+				filosofi_yamaha:filosofi_yamaha,
+				aturan_k3:aturan_k3,
+				komitmen_berkendara:komitmen_berkendara,
+				kebijakan_mutu:kebijakan_mutu,
+				enam_pasal_keselamatan:enam_pasal_keselamatan,
+				budaya_kerja:budaya_kerja,
+				budaya_5s:budaya_5s,
+				komitmen_hotel_konsep:komitmen_hotel_konsep,
+				janji_tindakan_dasar:janji_tindakan_dasar,
+				interview_id:interview_id
 			}
-		});
+			// console.table(data);
+			
+			$.post('{{ url("index/interview/create_participant") }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#create-modal").modal('hide');
+					openSuccessGritter('Success','New Participant has been created');
+					window.location.reload();
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Create Participant Failed');
+				}
+			});
+		}
 	}
 
   	$(function () {
