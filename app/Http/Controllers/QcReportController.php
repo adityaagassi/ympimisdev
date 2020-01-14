@@ -1887,7 +1887,7 @@ class QcReportController extends Controller
 
           $cpars->save();
 
-          $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan from qc_cpars where qc_cpars.id='".$id."'";
+          $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan, qc_cpars.posisi, qc_cpars.judul_komplain from qc_cpars where qc_cpars.id='".$id."'";
           $querycpar = db::select($query);
 
           $mailto = "select distinct email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
@@ -1899,6 +1899,46 @@ class QcReportController extends Controller
 
           Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
           return redirect('/index/qc_report/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');
+      }
+
+      public function uncheckedqa(Request $request,$id)
+      {
+          $alasan = $request->get('alasan');
+
+          $cpars = QcCpar::find($id);
+          
+          $cpars->alasan = $alasan;
+
+          if ($cpars->posisi == "QA2") {
+            $cpars->posisi = "QA";
+            $cpars->email_status = "SentQA";              
+          }
+          else if ($cpars->posisi == "QAmanager") {
+            $cpars->posisi = "QA";
+            $cpars->email_status = "SentQA";               
+          }
+
+          if ($cpars->staff != null) {
+            $to = "staff";
+          }
+          else if ($cpars->leader != null) {
+            $to = "leader";
+          }
+
+          $cpars->save();
+
+          $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan, qc_cpars.posisi, qc_cpars.judul_komplain from qc_cpars where qc_cpars.id='".$id."'";
+          $querycpar = db::select($query);
+
+          $mailto = "select distinct email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mails = DB::select($mailto);
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
+          return redirect('/index/qc_report/verifikasiqa/'.$id)->with('success', 'Verification Not Approved')->with('page', 'CPAR');
       }
 
       //Verifikasi CAR Oleh QA

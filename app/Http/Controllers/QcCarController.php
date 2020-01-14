@@ -125,9 +125,20 @@ class QcCarController extends Controller
        $dept = "select department_name from qc_cpars join departments on departments.id = qc_cpars.department_id where qc_cpars.cpar_no='".$cars->cpar_no."'";
        $departemen = DB::select($dept); 
 
-       $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.grade_name like '%staff%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 
-       $pic = DB::select($getpic);
+       if ($departemen[0]->department_name == "production engineering") {
+         $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.position like '%chief%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+
+         $pic = DB::select($getpic);
+       } 
+
+       else{
+         $getpic = "select employees.employee_id, employees.name, mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.grade_name like '%staff%' or promotion_logs.position like '%foreman%') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
+
+         $pic = DB::select($getpic);
+       }
+
+
 
        $cfm = "select employees.employee_id, employees.name, mutation_logs.department, promotion_logs.position from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where mutation_logs.department='".$departemen[0]->department_name."' and (promotion_logs.position like '%chief%' or promotion_logs.position like '%foreman%' or promotion_logs.position = 'manager') and mutation_logs.valid_to IS NULL and promotion_logs.valid_to IS NULL";
 

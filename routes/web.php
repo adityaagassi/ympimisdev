@@ -892,7 +892,7 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 
 });
 
-Route::get('index/workshop/wjo/{id}', 'WorkshopController@indexWJO');
+Route::get('index/workshop/wjo', 'WorkshopController@indexWJO');
 Route::get('fetch/workshop/machine', 'WorkshopController@fetchMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
@@ -2005,6 +2005,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
 	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
+	Route::post('index/qc_report/uncheckedqa/{id}', 'QcReportController@uncheckedqa');
 });
 
 Route::get('index/request_qa', 'QcRequestController@index');

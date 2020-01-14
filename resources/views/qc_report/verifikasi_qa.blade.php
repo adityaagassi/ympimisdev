@@ -351,9 +351,11 @@ table.table-bordered > tfoot > tr > th{
           <br><br>
           <div class="col-sm-12">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary col-sm-12" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})"  style="width: 50%; font-weight: bold; font-size: 20px;margin-top: 10px;float: center">Verifikasi & Send Email Manager</a>
-
-            <!-- <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject </a> -->    
+            <a class="btn btn-primary col-sm-12" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})"  style="width: 50%; font-weight: bold; font-size: 20px;margin-top: 10px;">Verifikasi & Send Email Manager</a>
+          </div>
+          <div class="col-sm-12">
+            <div class="col-sm-3"></div>
+            <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 50%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject </a> 
           </div>
 
           @endif
@@ -383,7 +385,10 @@ table.table-bordered > tfoot > tr > th{
             <button type="submit" class="btn btn-success col-sm-12"  style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px;float: center">CLOSE CPAR {{$cpars->cpar_no}} 
             </button> 
           </div>
-
+          <div class="col-sm-12">
+            <div class="col-sm-3"></div>
+            <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject </a> 
+          </div>
           @endif
 
         <!-- <table class="table table-striped table-bordered " style="border: 1px solid #f4f4f4">
@@ -431,13 +436,35 @@ table.table-bordered > tfoot > tr > th{
 
           </tbody>
         </table> -->
-        
         @endforeach
-
-
       </div>
     </form>
     @endif
+  </div>
+
+   <div class="modal modal-danger fade" id="notapproved{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" method="post" action="{{url('index/qc_report/uncheckedqa/'.$cpars->id)}}">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <h4>Berikan alasan tidak menyetujui verifikasi ini</h4>
+                <textarea class="form-control" required="" name="alasan"></textarea> 
+                *Verifikasi yang tidak disetujui akan dikirim ke staff/leader QA
+            </div>    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-outline">Not Approved</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   
   @endsection
