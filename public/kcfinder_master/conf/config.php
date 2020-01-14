@@ -54,7 +54,7 @@ return array(
     'jpegQuality' => 90,
     'thumbsDir' => ".thumbs",
 
-    'maxImageWidth' => 500,
+    'maxImageWidth' => 750,
     'maxImageHeight' => 0,
 
     'thumbWidth' => 100,
