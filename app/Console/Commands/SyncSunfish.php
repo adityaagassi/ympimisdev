@@ -64,7 +64,7 @@ class SyncSunfish extends Command
             $row['department'] = $data['Department'];
             $row['section'] = $data['Section'];
             $row['group'] = $data['Group'];
-            $row['sub_Group'] = $data['Sub-Group'];
+            $row['sub_group'] = $data['Sub-Group'];
             $row['group'] = $data['Group'];
             $row['employment_status'] = $data['employ_code'];
             $row['cost_center'] = $data['cost_center'];
