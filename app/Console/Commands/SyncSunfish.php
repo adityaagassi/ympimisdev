@@ -68,11 +68,16 @@ class SyncSunfish extends Command
             $row['employment_status'] = $data['employ_code'];
             $row['cost_center'] = $data['cost_center'];
             $row['assignment'] = $data['Penugasan'];
+            $row['created_at'] = date('Y-m-d H:i:s');
+            $row['updated_at'] = date('Y-m-d H:i:s');
 
             $insert[] = $row;
         }
         
         DB::table('employee_syncs')->truncate();
-        DB::table('employee_syncs')->insert($insert);
+        foreach (array_chunk($insert,1000) as $t)  
+        {
+            DB::table('employee_syncs')->insert($t);
+        }
     }
 }
