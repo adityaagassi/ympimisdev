@@ -249,13 +249,28 @@ Route::get('fetch/getPlanAll', 'InjectionsController@getPlanAll');
 
 Route::get('index/injection/molding', 'InjectionsController@molding');
 Route::get('get/injeksi/get_molding', 'InjectionsController@get_molding');
+Route::get('get/injeksi/get_molding_pasang', 'InjectionsController@get_molding_pasang');
 Route::get('fetch/injeksi/fetch_molding', 'InjectionsController@fetch_molding');
+Route::get('fetch/injeksi/fetch_molding_pasang', 'InjectionsController@fetch_molding_pasang');
 Route::post('index/injeksi/store_history_temp', 'InjectionsController@store_history_temp');
 Route::get('index/injeksi/get_history_temp', 'InjectionsController@get_history_temp');
 Route::post('index/injeksi/update_history_temp', 'InjectionsController@update_history_temp');
 Route::post('index/injeksi/store_history_molding', 'InjectionsController@store_history_molding');
 
 //end molding injection
+
+//maintenance molding injection
+
+Route::get('index/injection/molding_maintenance', 'InjectionsController@molding_maintenance');
+Route::get('get/injeksi/get_molding_master', 'InjectionsController@get_molding_master');
+Route::get('fetch/injeksi/fetch_molding_master', 'InjectionsController@fetch_molding_master');
+Route::post('index/injeksi/store_maintenance_temp', 'InjectionsController@store_maintenance_temp');
+Route::get('index/injeksi/get_maintenance_temp', 'InjectionsController@get_maintenance_temp');
+Route::post('index/injeksi/update_maintenance_temp', 'InjectionsController@update_maintenance_temp');
+Route::post('index/injeksi/store_maintenance_molding', 'InjectionsController@store_maintenance_molding');
+
+
+//end maintenance molding injection
 
 // end mesin injeksi
 
@@ -893,7 +908,7 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 });
 
 Route::get('index/workshop/wjo', 'WorkshopController@indexWJO');
-Route::get('fetch/workshop/machine', 'WorkshopController@fetchMachine');
+Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
@@ -909,6 +924,10 @@ Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcess
 Route::get('close/workshop/check_rfid', 'WorkshopController@checkCloseTag');
 Route::get('fetch/workshop/drawing', 'WorkshopController@fetchDrawing');
 Route::get('fetch/workshop/edit_drawing', 'WorkshopController@fetchEditDrawing');
+
+Route::get('index/workshop/wjo_monitoring', 'WorkshopController@indexWJOMonitoring');
+Route::get('fetch/workshop/wjo_monitoring', 'WorkshopController@fetchWJOMonitoring');
+
 
 
 
@@ -1963,12 +1982,13 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/delete_item', 'QcReportController@delete_item');
 	Route::post('index/qc_report/deletefiles', 'QcReportController@deletefiles');
 	Route::get('index/qc_report/print_cpar/{id}', 'QcReportController@print_cpar');
-	Route::get('index/qc_report/coba_print/{id}', 'QcReportController@coba_print');
-	Route::get('index/qc_report/sign', 'QcReportController@sign');
+	Route::get('index/qc_report/print_cpar_new/{id}', 'QcReportController@print_cpar_new');
+	Route::get('index/qc_report/sendemail/{id}/{posisi}', 'QcReportController@sendemail');
 
+	Route::get('index/qc_report/verifikasigm/{id}', 'QcReportController@verifikasigm');
+	Route::get('index/qc_report/sign', 'QcReportController@sign');
 	Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
-	Route::get('index/qc_report/sendemail/{id}/{posisi}', 'QcReportController@sendemail');
 
 	//verifikasi CPAR
 	Route::get('index/qc_report/statuscpar/{id}', 'QcReportController@statuscpar');
@@ -2005,7 +2025,6 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
 	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
-	Route::post('index/qc_report/uncheckedqa/{id}', 'QcReportController@uncheckedqa');
 });
 
 Route::get('index/request_qa', 'QcRequestController@index');

@@ -252,7 +252,7 @@
 						@if($car->staff != null)
 							{{$car->chiefqaname}}
 						@elseif($car->leader != null)
-							{{$car->foremanname}}
+							{{$car->foremanqaname}}
 						@else
 							&nbsp;
 						@endif

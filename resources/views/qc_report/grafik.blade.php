@@ -171,7 +171,18 @@ table > thead > tr > th{
             </div>
           </div>
 
-          
+        <div class="col-md-2">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" multiple="multiple" id="status" data-placeholder="Pilih Status" style="border-color: #605ca8" >
+                @foreach($status as $status)
+                  <option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
+                @endforeach
+              </select>
+          </div>
+        </div>
 
         <div class="col-xs-2">
           <button class="btn btn-success btn-sm" onclick="drawChart()">Update Chart</button>
@@ -351,11 +362,11 @@ table > thead > tr > th{
                   <tr>
                     <th>No CPAR</th>
                     <th>Category</th> 
+                    <th>Complain</th>
                     <th>Manager</th>    
                     <th>Location</th>
                     <th>Request Date</th>
                     <th>Due Date</th>
-                    <th>Complain</th>
                     <th>Departement</th>
                     <th>Source Of Complaint</th>
                     <th>Next Verification</th>
@@ -453,18 +464,22 @@ table > thead > tr > th{
   }
 
   function drawChart() {
+    fetchTable();
+    
     // var tahun = $('#tahun').val();
     var tglfrom = $('#tglfrom').val();
     var tglto = $('#tglto').val();
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
+    var status = $('#status').val();
 
     var data = {
       // tahun: tahun,
       tglfrom: tglfrom,
       tglto: tglto,
       kategori: kategori,
-      departemen: departemen
+      departemen: departemen,
+      status:status
     };
 
 
@@ -614,8 +629,15 @@ table > thead > tr > th{
   }
 
   function fetchTable(){
+
+    var kategori = $('#kategori').val();
+    var departemen = $('#departemen').val();
+    var status = $('#status').val();
+
     var data = {
-      // tgl : $('#tgl').val()
+      kategori: kategori,
+      departemen: departemen,
+      status:status
     }
     $.get('{{ url("index/qc_report/fetchtable") }}', data, function(result, status, xhr){
       if(xhr.status == 200){
@@ -803,7 +825,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
+                  statusgm = '<a href="'+urlverifikasigm+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                   color = 'style="background-color:red"';
                   // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                   d = 1;
@@ -1316,11 +1338,11 @@ table > thead > tr > th{
       "columns": [
           { "data": "cpar_no" },
           { "data": "kategori" },
+          { "data": "judul_komplain" },
           { "data": "name" },
           { "data": "lokasi" },
           { "data": "tgl_permintaan" },
           { "data": "tgl_balas" },
-          { "data": "judul_komplain" },
           { "data": "department_name" },
           { "data": "sumber_komplain" },
           { "data": "verif", "className": "table-posisi" },

@@ -774,9 +774,20 @@ class QcReportController extends Controller
           $dep = 'and department_id in'.$dept;
       } else {
           $dep = '';
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+          $statt = json_encode($status);
+          $stat = str_replace(array("[","]"),array("(",")"),$statt);
+
+          $sta = 'and qc_cpars.status_code in'.$stat;
+      } else {
+          $sta = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep." ".$sta."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -1323,12 +1334,46 @@ class QcReportController extends Controller
 
     public function fetchtable(Request $request)
     {
+
+      $kategori = $request->get('kategori');
+
+      if ($kategori != null) {
+          $cat = json_encode($kategori);
+          $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+          $kate = 'and kategori in'.$kat;
+      }else{
+          $kate = '';
+      }
+
+      $departemen = $request->get('departemen');
+
+      if ($departemen != null) {
+          $deptt = json_encode($departemen);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and qc_cpars.department_id in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+          $statt = json_encode($status);
+          $stat = str_replace(array("[","]"),array("(",")"),$statt);
+
+          $sta = 'and qc_cpars.status_code in '.$stat;
+      } else {
+          $sta = 'and qc_cpars.status_code not in (1)';
+      }      
+
       $data = db::select("select qc_cpars.id,qc_cars.id as id_car, qc_cpars.cpar_no, qc_cpars.status_code, qc_cpars.judul_komplain, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
         (CASE WHEN qc_verifikators.verifikatorchief is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),'Tidak Ada'))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
               ELSE 'Tidak Ada'
-        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.status_code != '1' order by kategori,cpar_no asc");
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sta." order by kategori,cpar_no asc");
 
       $response = array(
         'status' => true,
@@ -1509,6 +1554,12 @@ class QcReportController extends Controller
       ->where('qc_cpars.id','=',$id)
       ->get();
 
+      $cparttds = QcCpar::select('qc_cpars.*','qc_ttd_cobas.ttd')
+      ->leftjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
+      ->where('qc_cpars.id','=',$id)
+      ->get();
+
+
       $pdf = \App::make('dompdf.wrapper');
       $pdf->getDomPDF()->set_option("enable_php", true);
       $pdf->setPaper('Legal', 'potrait');
@@ -1516,7 +1567,8 @@ class QcReportController extends Controller
       
       $pdf->loadView('qc_report.print_cpar', array(
         'cpars'=>$cpars,
-        'parts'=>$parts
+        'parts'=>$parts,
+        'cparss'=>$cparttds
       ));
       
       $cpar = str_replace("/"," ",$qc_cpars->cpar_no);
@@ -1527,7 +1579,7 @@ class QcReportController extends Controller
      public function print_cpar_new($id)
       {
 
-       $qc_cpars = QcCpar::find($id);
+      $qc_cpars = QcCpar::find($id);
 
       if ($qc_cpars->staff != null) {
           $posisi = "staff";
@@ -1567,19 +1619,53 @@ class QcReportController extends Controller
 
       // Sign Online
       public function verifikasigm($id){
-          $cpar = QcCpar::find($id);
+          // $cpar = QcCpar::find($id);
 
-          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name','qc_ttd_cobas.ttd')
-          ->join('departments','qc_cpars.department_id','=','departments.id')
-          ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
-          ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
-          ->leftjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
-          ->where('qc_cpars.id','=',$id)
-          ->get();
+          $qc_cpars = QcCpar::find($id);
+
+          if ($qc_cpars->staff != null) {
+              $posisi = "staff";
+              $posisi2 = "chief";
+          } else if ($qc_cpars->leader != null) {
+              $posisi = "leader";
+              $posisi2 = "foreman";
+          } 
+
+          $cpars = QcCpar::select('qc_cpars.*','destinations.destination_name','vendors.name as vendorname','departments.department_name','employees.name',$posisi.'.name as '.$posisi.'name',$posisi2.'.name as '.$posisi2.'name','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name')
+            ->join('departments','qc_cpars.department_id','=','departments.id')
+            ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
+            ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+            ->leftjoin('destinations','qc_cpars.destination_code','=','destinations.destination_code')
+            ->leftjoin('vendors','qc_cpars.vendor','=','vendors.vendor')
+            ->leftjoin('employees as '.$posisi,'qc_cpars.'.$posisi,'=',$posisi.'.employee_id')
+            ->leftjoin('employees as '.$posisi2,'qc_cpars.'.$posisi2,'=',$posisi2.'.employee_id')
+            ->leftjoin('employees as manager','qc_cpars.manager','=','manager.employee_id')
+            ->leftjoin('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
+            ->leftjoin('employees as gm','qc_cpars.gm','=','gm.employee_id')
+            // ->join('qc_cpars_items','qc_cpars.cpar_no','=')
+
+            ->where('qc_cpars.id','=',$id)
+            ->get();
+
+            $parts = QcCparItem::select('qc_cpar_items.*','material_plant_data_lists.material_description')
+            ->join('qc_cpars','qc_cpar_items.cpar_no','=','qc_cpars.cpar_no')
+            ->join('material_plant_data_lists','qc_cpar_items.part_item','=','material_plant_data_lists.material_number')
+            ->where('qc_cpars.id','=',$id)
+            ->get();
+
+            $cparttds = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name','qc_ttd_cobas.ttd')
+            ->join('departments','qc_cpars.department_id','=','departments.id')
+            ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
+            ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+            ->leftjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
+            ->where('qc_cpars.id','=',$id)
+            ->get();
 
           return view('qc_report.verifikasi_gm', array(
-            'cpar' => $cpar,
-            'cparss' =>  $cpars
+            'cpar' => $qc_cpars,
+            'cparss' =>  $cparttds,
+            'cpars' => $cpars,
+            'parts' => $parts
           ))->with('page', 'CPAR');
       }
 

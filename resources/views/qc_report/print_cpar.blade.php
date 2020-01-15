@@ -175,9 +175,9 @@
 						&nbsp;
 					@endif
 				</td>
-				<td rowspan="2" style="vertical-align: middle;">
+				<td rowspan="2" style="vertical-align: middle;text-align: center">
 					@if($cpar->approved_gm == "Checked")
-						{{$cpar->gmname}}
+              			{{$cpar->gmname}}
 					@else
 						&nbsp;
 					@endif
