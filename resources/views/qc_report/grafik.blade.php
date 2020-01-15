@@ -237,7 +237,6 @@ table > thead > tr > th{
       <div class="col-md-12" style="margin-top: 10px; padding-right: 0;padding-left: 10px">
           <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
           <div id="chart" style="width: 99%"></div>
-
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
@@ -1082,7 +1081,7 @@ table > thead > tr > th{
                 }
               }
 
-              if (value.email_status == "SentQA2" && value.posisi_cpar == "QAmanager") {
+              if (value.email_status == "SentQA2" && value.posisi_cpar == "QAFIX") {
                   if (value.posisi_cpar == "QAmanager") {
                       if (d == 0) {  
                           statusqamanager = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';

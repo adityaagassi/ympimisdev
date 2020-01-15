@@ -237,7 +237,7 @@
 			<tr>
 				<td colspan="8" rowspan="2"></td>
 				<td rowspan="2">
-					@if($car->posisi_cpar == "QA" || $car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager")
+					@if($car->posisi_cpar == "QA" || $car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager" || $car->posisi_cpar == "QAFIX")
 						@if($car->staff != null)
 							{{$car->staffqaname}}
 						@elseif($car->leader != null)
@@ -248,7 +248,7 @@
 					@endif
 				</td>
 				<td rowspan="2">
-					@if($car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager")
+					@if($car->posisi_cpar == "QA2" || $car->posisi_cpar == "QAmanager" || $car->posisi_cpar == "QAFIX")
 						@if($car->staff != null)
 							{{$car->chiefqaname}}
 						@elseif($car->leader != null)
@@ -259,7 +259,7 @@
 					@endif
 				</td>
 				<td rowspan="2">
-					@if($car->posisi_cpar == "QAmanager")
+					@if($car->posisi_cpar == "QAmanager" || $car->posisi_cpar == "QAFIX")
 						{{$car->managerqaname}}
 					@else
 						&nbsp;

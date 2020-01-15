@@ -237,7 +237,7 @@
 			</tr>
 			<tr>
 				<td rowspan="2">
-					@if($cpar->posisi == "QA" || $cpar->posisi == "QA2" || $cpar->posisi == "QAmanager")
+					@if($cpar->posisi == "QA" || $cpar->posisi == "QA2" || $cpar->posisi == "QAmanager" || $cpar->posisi == "QAFIX")
 						@if($cpar->staff != null)
 							{{$cpar->staffname}}
 						@elseif($cpar->leader != null)
@@ -248,7 +248,7 @@
 					@endif
 				</td>
 				<td rowspan="2">
-					@if($cpar->posisi == "QA2" || $cpar->posisi == "QAmanager")
+					@if($cpar->posisi == "QA2" || $cpar->posisi == "QAmanager" || $cpar->posisi == "QAFIX")
 						@if($cpar->staff != null)
 							{{$cpar->chiefname}}
 						@elseif($cpar->leader != null)
@@ -259,7 +259,7 @@
 					@endif
 				</td>
 				<td rowspan="2">
-					@if($cpar->posisi == "QAmanager")
+					@if($cpar->posisi == "QAmanager" || $cpar->posisi == "QAFIX")
 						{{$cpar->managername}}
 					@else
 						&nbsp;
