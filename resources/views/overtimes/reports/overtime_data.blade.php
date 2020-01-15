@@ -26,6 +26,8 @@
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid rgb(211,211,211);
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
@@ -190,15 +192,15 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 1%">Date</th>
-										<th style="width: 2%">ID Overtime</th>
-										<th style="width: 1%">Employee ID</th>
+										<th style="width: 2%">OT ID</th>
+										<th style="width: 1%">ID</th>
 										<th style="width: 5%">Name</th>
-										<th style="width: 2%">Department</th>
-										<th style="width: 1%">Section</th>
+										<th style="width: 2%">Dept</th>
+										<th style="width: 1%">Sect</th>
 										<th style="width: 1%">Group</th>
-										<th style="width: 1%">Cost Center</th>
-										<th style="width: 1%">Overtime</th>
-										<th style="width: 5%">Reason</th>
+										<th style="width: 1%">CC</th>
+										<th style="width: 1%">OT</th>
+										<th style="width: 7%">Reason</th>
 									</tr>
 								</thead>
 								<tbody>
