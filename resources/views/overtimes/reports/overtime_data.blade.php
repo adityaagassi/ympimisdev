@@ -189,16 +189,16 @@
 							<table id="overtimeDataTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 8%">Date</th>
-										<th style="width: 8%">ID Overtime</th>
-										<th style="width: 7%">Employee ID</th>
-										<th style="width: 10%">Name</th>
-										<th style="width: 15%">Department</th>
-										<th style="width: 15%">Section</th>
-										<th style="width: 15%">Group</th>
-										<th style="width: 8%">Cost Center</th>
-										<th style="width: 3%">Overtime</th>
-										<th style="width: 15%">Reason</th>
+										<th style="width: 1%">Date</th>
+										<th style="width: 2%">ID Overtime</th>
+										<th style="width: 1%">Employee ID</th>
+										<th style="width: 5%">Name</th>
+										<th style="width: 2%">Department</th>
+										<th style="width: 1%">Section</th>
+										<th style="width: 1%">Group</th>
+										<th style="width: 1%">Cost Center</th>
+										<th style="width: 1%">Overtime</th>
+										<th style="width: 5%">Reason</th>
 									</tr>
 								</thead>
 								<tbody>
