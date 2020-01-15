@@ -357,7 +357,7 @@ table.table-bordered > tfoot > tr > th{
 
           @endif
 
-          @if($cpars->posisi == "QAmanager" && Auth::user()->username == "PI1910003")
+          @if($cpars->posisi == "QAmanager" && Auth::user()->username == $cpars->manager)
           <table class="table table-striped">
             <tr>
               <td style="font-size: 20px">
