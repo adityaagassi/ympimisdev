@@ -86,7 +86,7 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>
-    @if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+    @if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL")
     
     @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
     <form role="form" method="post" enctype='multipart/form-data' action="{{url('index/qc_report/close1', $cpars->id)}}">
@@ -98,7 +98,7 @@ table.table-bordered > tfoot > tr > th{
 
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="form-group row" align="left">
-          <label class="col-sm-1" style="font-size: 14px">No CPAR<span class="text-red">*</span></label>
+          <label class="col-sm-1" style="font-size: 14px">No CPAR<span class="text-red">* </span></label>
           <div class="col-sm-5">
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
@@ -170,12 +170,9 @@ table.table-bordered > tfoot > tr > th{
             </div>
           </div>    
         <?php } ?>
-
-
           @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
  
             @if(count($verifikasi) == 0)
-
             <div class="form-group row" align="left">
               <label class="col-sm-12 text-center">
                 <span class="col-sm-12 text-center" style="font-size: 20px;background-color: #ddd;padding-right:10px;padding-left: 10px">
@@ -360,8 +357,7 @@ table.table-bordered > tfoot > tr > th{
 
           @endif
 
-          @if($cpars->posisi == "QAmanager" && Auth::user()->username == $cpars->manager)
-
+          @if($cpars->posisi == "QAmanager" && Auth::user()->username == "PI1910003")
           <table class="table table-striped">
             <tr>
               <td style="font-size: 20px">
