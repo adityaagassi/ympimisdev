@@ -496,5 +496,70 @@ class RecorderProcessController extends Controller
       return view('recorder.report.print_push_block', $data
         )->with('page', 'Print Push Block Check')->with('remark', $remark);
     }
+
+    function get_push_pull(Request $request)
+    {
+          try{
+            $detail = PushBlockRecorder::find($request->get("id"));
+            $data = array('push_block_id' => $detail->id,
+                          'check_date' => $detail->check_date,
+                          'injection_date' => $detail->injection_date,
+                          'product_type' => $detail->product_type,
+                          'head' => $detail->head,
+                          'block' => $detail->block,
+                          'push_pull' => $detail->push_pull,
+                          'judgement' => $detail->judgement,
+                          'ketinggian' => $detail->ketinggian,
+                          'judgement2' => $detail->judgement2,
+                          'pic_check' => $detail->pic_check);
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    function update(Request $request,$id)
+    {
+        try{
+                $push_pull = PushBlockRecorder::find($id);
+                $push_pull->push_pull = $request->get('push_pull');
+                $push_pull->judgement = $request->get('judgement');
+                $push_pull->ketinggian = $request->get('ketinggian');
+                $push_pull->judgement2 = $request->get('judgement2');
+                $push_pull->save();
+
+               $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
 }
   

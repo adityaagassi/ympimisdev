@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Report Push Block Check - {{ $remark }} <span class="text-purple">??</span>
+		Report Push Pull & Height Check - {{ $remark }} <span class="text-purple">??</span>
 		<!-- <small> <span class="text-purple">??</span></small> -->
 	</h1>
 	<ol class="breadcrumb">
@@ -184,6 +184,7 @@
 												<th>Ketinggian</th>
 												<th>Judgement Ketinggian</th>
 												<th>PIC</th>
+												<th>Acrtion</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -199,11 +200,18 @@
 												<td>{{ $push_block_check->ketinggian }}</td>
 												<td>{{ $push_block_check->judgement2 }}</td>
 												<td>{{ $push_block_check->pic_check }}</td>
+												<td><center>
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_push_block('{{ url("index/recorder/update") }}','{{ $push_block_check->id }}');">
+											               <i class="fa fa-edit"></i>
+											            </button>
+													</center>
+												</td>
 											</tr>
 											@endforeach
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -225,6 +233,75 @@
 			</div>
 		</div>
 	</div>
+
+<div class="modal fade" id="edit-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Edit Push Pull & Height Check Recorder</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="box-body">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+	            <div class="form-group">
+	              <input type="hidden" name="url_edit" id="url_edit" class="form-control">
+	              <label for="">Check Date</label>
+				  <input type="text" name="check_date" id="check_date" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Injection Date</label>
+				  <input type="text" name="injection_date" id="injection_date" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Product</label>
+				  <input type="text" name="product_type" id="product_type" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Head</label>
+				  <input type="text" name="head" id="head" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Block</label>
+				  <input type="text" name="block" id="block" class="form-control" readonly required="required" title="" readonly>
+	            </div>	            
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<div class="form-group">	              
+	              <label for="">PIC</label>
+				  <input type="text" name="pic" id="pic" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Push Pull</label>
+				  <input type="text" name="push_pull" id="push_pull" class="form-control" required="required" title="" onkeyup="push_pull()">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Judgement</label>
+				  <input type="text" name="judgement_push_pull" id="judgement_push_pull" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Ketinggian</label>
+				  <input type="text" name="ketinggian" id="ketinggian" class="form-control" required="required" title="" onkeyup="ketinggian()">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Judgement Ketinggian</label>
+				  <input type="text" name="judgement2" id="judgement2" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+            </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          	<div class="modal-footer">
+	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+	            <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
+	          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </section>
 @endsection
 
@@ -350,5 +427,119 @@
 		$('#example1 tfoot tr').appendTo('#example1 thead');
 
 	});
+
+	function edit_push_block(url,id) {
+    	$.ajax({
+                url: "{{ route('recorder.get_push_pull') }}?id=" + id,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  var data = data.data;
+                  $("#url_edit").val(url+'/'+id);
+                  $("#check_date").val(data.check_date);
+                  $("#injection_date").val(data.injection_date);
+                  $("#product_type").val(data.product_type);
+                  $("#head").val(data.head);
+                  $("#block").val(data.block);
+                  $("#push_pull").val(data.push_pull);
+                  $("#judgement_push_pull").val(data.judgement);
+                  $("#ketinggian").val(data.ketinggian);
+                  $("#judgement2").val(data.judgement2);
+                  $("#pic").val(data.pic_check);
+                  if (data.judgement == 'NG') {
+                  	document.getElementById('judgement_push_pull').style.backgroundColor = "#ff4f4f";
+                  	document.getElementById('judgement_push_pull').style.color = "#fff";
+                  }
+                  else{
+                  	document.getElementById('judgement_push_pull').style.backgroundColor = "#7fff6e";
+                  	document.getElementById('judgement_push_pull').style.color = "#000";
+                  }
+                  if (data.judgement2 == 'NG') {
+                  	document.getElementById('judgement2').style.backgroundColor = "#ff4f4f";
+                  	document.getElementById('judgement2').style.color = "#fff";
+                  }
+                  else{
+                  	document.getElementById('judgement2').style.backgroundColor = "#7fff6e";
+                  	document.getElementById('judgement2').style.color = "#000";
+                  }
+                }
+            });
+      // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
+      // console.log($('#formedit2').attr("action"));
+    }
+
+    function push_pull() {
+		var batas_bawah = '3';
+		var batas_atas = '17';
+
+		var x = document.getElementById('push_pull').value;
+		if(x == ''){
+			document.getElementById('push_pull').style.backgroundColor = "#ff4f4f";
+		}
+		else{
+			document.getElementById('push_pull').style.backgroundColor = "#7fff6e";
+		}
+		if(parseFloat(x) < parseFloat(batas_bawah) || parseFloat(x) > parseFloat(batas_atas)){
+			$('#judgement_push_pull').val('NG');
+			document.getElementById('judgement_push_pull').style.backgroundColor = "#ff4f4f";
+			document.getElementById('judgement_push_pull').style.color = "#fff";
+		}
+		else{
+			$('#judgement_push_pull').val('OK');
+			document.getElementById('judgement_push_pull').style.backgroundColor = "#7fff6e";
+			document.getElementById('judgement_push_pull').style.color = "#000";
+		}
+	}
+
+	function ketinggian() {
+		var batas_tinggi = '0.2';
+
+		var x = document.getElementById('ketinggian').value;
+		if(x == ''){
+			document.getElementById('ketinggian').style.backgroundColor = "#ff4f4f";
+		}
+		else{
+			document.getElementById('ketinggian').style.backgroundColor = "#7fff6e";
+		}
+		if(parseFloat(x) > parseFloat(batas_tinggi)){
+			$('#judgement2').val('NG');
+			document.getElementById('judgement2').style.backgroundColor = "#ff4f4f";
+			document.getElementById('judgement2').style.color = "#fff";
+		}
+		else{
+			$('#judgement2').val('OK');
+			document.getElementById('judgement2').style.backgroundColor = "#7fff6e";
+			document.getElementById('judgement2').style.color = "#000";
+		}
+	}
+
+	function update(){
+		var push_pull = $('#push_pull').val();
+		var judgement = $('#judgement_push_pull').val();
+		var ketinggian = $('#ketinggian').val();
+		var judgement2 = $('#judgement2').val();
+		var url = $('#url_edit').val();
+
+		var data = {
+			push_pull:push_pull,
+			judgement:judgement,
+			ketinggian:ketinggian,
+			judgement2:judgement2
+		}
+		// console.table(data);
+		
+		$.post(url, data, function(result, status, xhr){
+			if(result.status){
+				$("#edit-modal").modal('hide');
+				// $('#example1').DataTable().ajax.reload();
+				// $('#example2').DataTable().ajax.reload();
+				openSuccessGritter('Success','Push Pull Recorder Check has been updated');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Update Push Pull Recorder Check Failed');
+			}
+		});
+	}
 </script>
 @endsection
