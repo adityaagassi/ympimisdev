@@ -1,58 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
-<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-  .morecontent span {
-    display: none;
-  }
-  .morelink {
-    display: block;
-  }
-
-  thead>tr>th{
-    text-align:center;
-    overflow:hidden;
-    padding: 3px;
-  }
-  tbody>tr>td{
-    text-align:center;
-  }
-  tfoot>tr>th{
-    text-align:center;
-  }
-  th:hover {
-    overflow: visible;
-  }
-  td:hover {
-    overflow: visible;
-  }
-  table.table-bordered{
-    border:1px solid black;
-  }
-  table.table-bordered > thead > tr > th{
-    border:1px solid black;
-  }
-  table.table-bordered > tbody > tr > td{
-    border:1px solid black;
-    vertical-align: middle;
-    padding:0;
-  }
-  table.table-bordered > tfoot > tr > th{
-    border:1px solid black;
-    padding:0;
-  }
-  td{
-    overflow:hidden;
-    text-overflow: ellipsis;
-  }
-  .dataTable > thead > tr > th[class*="sort"]:after{
-    content: "" !important;
-  }
-  #queueTable.dataTable {
-    margin-top: 0px!important;
-  }
-  #loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -62,47 +11,41 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px;">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="col-md-12">
-				<div class="col-md-2 pull-right">
-					<div class="input-group date">
-						<div class="input-group-addon bg-purple" style="border-color: #605ca8">
-							<i class="fa fa-calendar"></i>
-						</div>
-            <select class="form-control" id="fq" onchange="drawChart()" style="border-color: #605ca8">
-              <option value="FY196">FY196</option>
-              <option value="FY195">FY195</option>
-            </select>
+<section class="content" style="padding-top: 0;">
+     <div class="row">
+          <div class="col-xs-12">
+               <div class="row">
+                    <div class="col-xs-2">
+                         <select class="form-control select2" data-placeholder="Pilih Bagian" id="cost_center" style="width: 100% height: 35px; font-size: 15px;" required>
+                              <option value=""></option>
+                              @foreach($cost_centers as $cost_center)
+                              <option value="{{ $cost_center->cost_center }}">{{ $cost_center->cost_center }} - {{ strtoupper($cost_center->cost_center_name) }}</option>
+                              @endforeach
+                         </select>
+                    </div>
+                    <div class="col-xs-2">
+                         <div class="input-group date">
+                              <div class="input-group-addon bg-purple" style="border: none;">
+                                   <i class="fa fa-calendar"></i>
+                              </div>
+                              <input type="text" class="form-control datepicker" id="month_from" placeholder="Bulan Mulai">
+                         </div>
+                    </div>
+                    <div class="col-xs-2">
+                         <div class="input-group date">
+                              <div class="input-group-addon bg-purple" style="border: none;">
+                                   <i class="fa fa-calendar"></i>
+                              </div>
+                              <input type="text" class="form-control datepicker" id="month_to" placeholder="Bulan Sampai">
+                         </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="fetchChart()"><i class="fa fa-search"></i> Search</button>
+               </div>
           </div>
-          <br>
-        </div>
-
-        <div class="col-md-2 pull-right">
-          <div class="input-group date">
-            <div class="input-group-addon bg-purple" style="border-color: #605ca8">
-              <i class="fa fa-group"></i>
-            </div>
-            <select class="form-control select2" id="section" style="border-color: #605ca8" onchange="drawChart()">
-
-              @foreach($cost_center as $cc)
-              <option value="{{ $cc->cost_center }}" > {{$cc->cost_center_name}}</option>
-              @endforeach
-            </select>
-            
+          <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chartOvertime" style="width: 100%; height: 700px;"></div>
           </div>
-          <br>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-        <div id="over_control" style="width: 100%; height: 550px;"></div>
-      </div> 
-
-    </div>
-  </div>
-
+     </div>
 </section>
 @endsection
 @section('scripts')
@@ -111,180 +54,318 @@
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
+     $.ajaxSetup({
+          headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+     });
 
-	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");
+     jQuery(document).ready(function() {
+          $('.datepicker').datepicker({
+               <?php $tgl_max = date('m-Y') ?>
+               format: "mm-yyyy",
+               startView: "months", 
+               minViewMode: "months",
+               autoclose: true,
+               endDate: '<?php echo $tgl_max ?>'
 
-		drawChart();
-	});
+          });
+          $('.select2').select2();
+     });
 
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+     Highcharts.createElement('link', {
+          href: '{{ url("fonts/UnicaOne.css")}}',
+          rel: 'stylesheet',
+          type: 'text/css'
+     }, null, document.getElementsByTagName('head')[0]);
 
-	function drawChart() {
-
-		var fq = $('#fq').val();
-    var section = $('#section').val();
-
-    var data = {
-     tahun: fq,
-     section: section
-   }
-
-   $.get('{{ url("fetch/report/overtime_report_section") }}', data, function(result) {
-
-    // -------------- CHART OVERTIME REPORT CONTROL ----------------------
-    var seriesData = [];
-    var xCategories = [];
-    var seriesDataFirst = [];
-    var uniqueNames = [];
-    var newData = [];
-    var i, cat;
-    var title = fq;
-    var check = 0;
-
-    for(i = 0; i < result.date.length; i++){
-     xCategories.push(result.date[i].bulan);
-   }
-
-   $.each(result.datas, function(i, el){
-    if($.inArray(el.employee_id+"-"+el.name, uniqueNames) === -1) uniqueNames.push(el.employee_id+"-"+el.name);
-  });
-
-
-   $.each(uniqueNames, function(key, value) {
-    $.each(xCategories, function(key2, value2) {
-      seriesDataFirst.push({nik:value, date:value2});
-    });
-  });
-
-   // console.log(seriesDataFirst);
-
-   $.each(seriesDataFirst, function(key, value) {
-    $.each(result.datas, function(index, elem) {
-      if(value.nik == (elem.employee_id+"-"+elem.name) && value.date == elem.mon) {
-        newData.push({nik:value.nik, date:value.date, jam:elem.jam});
-        check = 1;
-      }
-    });
-
-    if (check == 0) {
-      newData.push({nik:value.nik, date:value.date, jam:0});
-    }
-
-    check = 0;
-  });
-
-   
-
-
-   for(i = 0; i < newData.length; i++){
-    if(seriesData){
-      var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == newData[i].nik;});
-      if(currSeries.length === 0){
-        seriesData[seriesData.length] = currSeries = {name: newData[i].nik, data: []};
-      }
-      else {
-        currSeries = currSeries[0];
-      }
-      var index = currSeries.data.length;
-      currSeries.data[index] = newData[i].jam;
-    }
-    else {
-      seriesData[0] = {name: newData[i].jam, data: [intVal(newData[i].jam)]}
-    }
-  }
-
-  var target = [];
-
-  $.each(result.budgets, function(key, value) {
-    target.push(value.budget_mp);
-  })
-
-
-        // Populate series
-        seriesData.push({type: 'spline', name: 'Target OT', data: target, color: 'red', dashStyle: 'dash'});
-
-        
-
-        $('#over_control').highcharts({
+     Highcharts.theme = {
+          colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
           chart: {
-            type: 'spline'
+               backgroundColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                    stops: [
+                    [0, '#2a2a2b'],
+                    [1, '#3e3e40']
+                    ]
+               },
+               style: {
+                    fontFamily: 'sans-serif'
+               },
+               plotBorderColor: '#606063'
           },
           title: {
-            text: 'YEAR '+title
+               style: {
+                    color: '#E0E0E3',
+                    textTransform: 'uppercase',
+                    fontSize: '20px'
+               }
+          },
+          subtitle: {
+               style: {
+                    color: '#E0E0E3',
+                    textTransform: 'uppercase'
+               }
           },
           xAxis: {
-            categories: xCategories
+               gridLineColor: '#707073',
+               labels: {
+                    style: {
+                         color: '#E0E0E3'
+                    }
+               },
+               lineColor: '#707073',
+               minorGridLineColor: '#505053',
+               tickColor: '#707073',
+               title: {
+                    style: {
+                         color: '#A0A0A3'
+
+                    }
+               }
           },
           yAxis: {
-            title: {
-              text: 'Total Jam'
-            }
-          },
-          legend: {
-            enabled: false
+               gridLineColor: '#707073',
+               labels: {
+                    style: {
+                         color: '#E0E0E3'
+                    }
+               },
+               lineColor: '#707073',
+               minorGridLineColor: '#505053',
+               tickColor: '#707073',
+               tickWidth: 1,
+               title: {
+                    style: {
+                         color: '#A0A0A3'
+                    }
+               }
           },
           tooltip: {
-            formatter: function () {
-              return this.series.name +
-              ' : ' + this.y + 'hour(s)';
-            }
+               backgroundColor: 'rgba(0, 0, 0, 0.85)',
+               style: {
+                    color: '#F0F0F0'
+               }
           },
           plotOptions: {
-            line: {
-              dataLabels: {
-                enabled: false
-              },
-              enableMouseTracking: true
-            },
-            series: {
-              marker: {
-                enabled: false
-              },
-              lineWidth: 1
-            }
+               series: {
+                    dataLabels: {
+                         color: 'white'
+                    },
+                    marker: {
+                         lineColor: '#333'
+                    }
+               },
+               boxplot: {
+                    fillColor: '#505053'
+               },
+               candlestick: {
+                    lineColor: 'white'
+               },
+               errorbar: {
+                    color: 'white'
+               }
           },
-          credits:{
-            enabled:false
+          legend: {
+               itemStyle: {
+                    color: '#E0E0E3'
+               },
+               itemHoverStyle: {
+                    color: '#FFF'
+               },
+               itemHiddenStyle: {
+                    color: '#606063'
+               }
           },
-          series: seriesData
-        });
-      });
-   
- }
+          credits: {
+               style: {
+                    color: '#666'
+               }
+          },
+          labels: {
+               style: {
+                    color: '#707073'
+               }
+          },
 
- $('#tgl').datepicker({
-   <?php $tgl_max = date('d-m-Y') ?>
-   autoclose: true,
-   format: "dd-mm-yyyy",
-   endDate: '<?php echo $tgl_max ?>',
- });
+          drilldown: {
+               activeAxisLabelStyle: {
+                    color: '#F0F0F3'
+               },
+               activeDataLabelStyle: {
+                    color: '#F0F0F3'
+               }
+          },
 
- function openSuccessGritter(title, message){
-   jQuery.gritter.add({
-    title: title,
-    text: message,
-    class_name: 'growl-success',
-    image: '{{ url("images/image-screen.png") }}',
-    sticky: false,
-    time: '3000'
-  });
- }
+          navigation: {
+               buttonOptions: {
+                    symbolStroke: '#DDDDDD',
+                    theme: {
+                         fill: '#505053'
+                    }
+               }
+          },
 
- function openErrorGritter(title, message) {
-   jQuery.gritter.add({
-    title: title,
-    text: message,
-    class_name: 'growl-danger',
-    image: '{{ url("images/image-stop.png") }}',
-    sticky: false,
-    time: '3000'
-  });
- }	
+          rangeSelector: {
+               buttonTheme: {
+                    fill: '#505053',
+                    stroke: '#000000',
+                    style: {
+                         color: '#CCC'
+                    },
+                    states: {
+                         hover: {
+                              fill: '#707073',
+                              stroke: '#000000',
+                              style: {
+                                   color: 'white'
+                              }
+                         },
+                         select: {
+                              fill: '#000003',
+                              stroke: '#000000',
+                              style: {
+                                   color: 'white'
+                              }
+                         }
+                    }
+               },
+               inputBoxBorderColor: '#505053',
+               inputStyle: {
+                    backgroundColor: '#333',
+                    color: 'silver'
+               },
+               labelStyle: {
+                    color: 'silver'
+               }
+          },
+
+          navigator: {
+               handles: {
+                    backgroundColor: '#666',
+                    borderColor: '#AAA'
+               },
+               outlineColor: '#CCC',
+               maskFill: 'rgba(255,255,255,0.1)',
+               series: {
+                    color: '#7798BF',
+                    lineColor: '#A6C7ED'
+               },
+               xAxis: {
+                    gridLineColor: '#505053'
+               }
+          },
+
+          scrollbar: {
+               barBackgroundColor: '#808083',
+               barBorderColor: '#808083',
+               buttonArrowColor: '#CCC',
+               buttonBackgroundColor: '#606063',
+               buttonBorderColor: '#606063',
+               rifleColor: '#FFF',
+               trackBackgroundColor: '#404043',
+               trackBorderColor: '#404043'
+          },
+
+          legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+          background2: '#505053',
+          dataLabelsColor: '#B0B0B3',
+          textColor: '#C0C0C0',
+          contrastTextColor: '#F0F0F3',
+          maskColor: 'rgba(255,255,255,0.3)'
+     };
+     Highcharts.setOptions(Highcharts.theme);
+
+     function fetchChart(){
+          var month_from = $('#month_from').val();
+          var month_to = $('#month_to').val();
+          var cost_center = $('#cost_center').val();
+          var data = {
+               month_from:month_from,
+               month_to:month_to,
+               cost_center:cost_center
+          }
+          $.get('{{ url("fetch/report/overtime_section") }}', data, function(result, status, xhr){
+               if(result.status){
+                    var data = result.overtimes;
+                    var seriesData = [];
+                    var xCategories = [];
+                    var i, cat;                    
+
+                    for(i = 0; i < data.length; i++){
+                         cat = data[i].period;
+                         if(xCategories.indexOf(cat) === -1){
+                              xCategories[xCategories.length] = cat;
+                         }
+                    }
+                    for(i = 0; i < data.length; i++){
+                         var ot = parseFloat(data[i].ot);
+                         var full_name = data[i].employee_id+"-"+data[i].name;
+                         if(seriesData){
+                              var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == full_name.toUpperCase();});
+                              if(currSeries.length === 0){
+                                   seriesData[seriesData.length] = currSeries = {name: full_name.toUpperCase(), data: []};
+                              } else {
+                                   currSeries = currSeries[0];
+                              }
+                              var index = currSeries.data.length;
+                              currSeries.data[index] = parseFloat(ot.toFixed(1));
+                         } else {
+                              seriesData[0] = {name: full_name.toUpperCase(), data: [parseFloat(ot.toFixed(1))]}
+                         }
+                    }
+
+                    $('#chartOvertime').highcharts({
+                         chart: {
+                              type: 'spline'
+                         },
+                         title: {
+                              text: 'Total Overtime Person'
+                         },
+                         xAxis: {
+                              categories: xCategories
+                         },
+                         yAxis: {
+                              title: {
+                                   text: 'Total Jam'
+                              }
+                         },
+                         legend: {
+                              enabled: false
+                         },
+                         tooltip: {
+                              formatter: function () {
+                                   return this.series.name +
+                                   ' : ' + this.y + 'hour(s)';
+                              }
+                         },
+                         plotOptions: {
+                              line: {
+                                   dataLabels: {
+                                        enabled: false
+                                   },
+                                   enableMouseTracking: true
+                              },
+                              series: {
+                                   marker: {
+                                        enabled: false
+                                   },
+                                   lineWidth: 1
+                              }
+                         },
+                         credits:{
+                              enabled:false
+                         },
+                         series: seriesData
+                    });
+               }
+               else{
+                    alert(result.message);
+               }
+          });
+     }
+
+
 </script>
 @endsection

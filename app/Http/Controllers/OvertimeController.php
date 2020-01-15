@@ -53,7 +53,7 @@ class OvertimeController extends Controller
 
 	public function indexReportSection(){
 
-		$cost_centers = db::table('cost_centers2')->orderBy('cost_center_name', 'asc')->get();
+		$cost_centers = db::table('cost_centers2')->orderBy('cost_center', 'asc')->get();
 
 		return view('overtimes.reports.overtime_section', array(
 			'title' => 'Overtime by Section',
@@ -181,24 +181,142 @@ class OvertimeController extends Controller
 			return Response::json($response);
 		}
 
+		$first_sunfish = date('Y-m-01', strtotime("01-".$request->get('month_from')));
+		$last_sunfish = date('Y-m-t', strtotime("01-".$request->get('month_to')));
 		$first = date('Y-m-01', strtotime("01-".$request->get('month_from')));
 		$last = date('Y-m-t', strtotime("01-".$request->get('month_to')));
 
-		$overtimes = db::connection('sunfish')->select("select ot.*, VIEW_YMPI_Emp_OrgUnit.cost_center_code, VIEW_YMPI_Emp_OrgUnit.cost_center_name from
-			(
-			select VIEW_YMPI_Emp_OvertimePlan.emp_no,
-			FORMAT(VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 'MM-yyyy') as period,
-			sum(
-			CASE
-			WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-			floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
-			ELSE
-			floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-			END) as jam
-			from VIEW_YMPI_Emp_OvertimePlan
-			where VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$last." 23:59:59'
-			group by VIEW_YMPI_Emp_OvertimePlan.emp_no, FORMAT(VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 'MM-yyyy')) as ot 
-			left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$request->get('cost_center')."'");
+		$sunfishs = [];
+		$mirais = [];
+
+		if($last_sunfish >= '2020-01-01'){
+			if($first_sunfish <= '2020-01-01'){
+				$first_sunfish = '2020-01-01';
+			}
+			$sunfishs = db::connection('sunfish')->select("SELECT
+				X.period,
+				X.Emp_no,
+				X.Full_name,
+				X.cost_center_code,
+				COALESCE ( jam, 0 ) AS jam 
+				FROM
+				(
+				SELECT
+				P.period,
+				O.Emp_no,
+				O.Full_name,
+				O.cost_center_code 
+				FROM
+				VIEW_YMPI_Emp_OrgUnit O
+				CROSS JOIN ( SELECT DISTINCT format ( ovtplanfrom, 'yyyy-MM' ) AS period FROM VIEW_YMPI_Emp_OvertimePlan WHERE ovtplanfrom >= '".$first_sunfish." 00:00:00' AND ovtplanto <= '".$last_sunfish." 23:59:59' ) P 
+				WHERE
+				O.cost_center_code = '".$request->get('cost_center')."' 
+				AND O.end_date is null
+				) AS X
+				LEFT JOIN (
+				SELECT
+				VIEW_YMPI_Emp_OvertimePlan.Emp_no,
+				FORMAT ( VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 'yyyy-MM' ) AS period,
+				SUM (
+				CASE
+
+				WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
+				floor( ( VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor( ( VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				END 
+				) AS jam 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan 
+				WHERE
+				VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first_sunfish." 00:00:00' 
+				AND VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$last_sunfish." 23:59:59' 
+				GROUP BY
+				VIEW_YMPI_Emp_OvertimePlan.emp_no,
+				FORMAT ( VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom, 'yyyy-MM' ) 
+				) AS Y ON Y.period = X.period 
+				AND Y.Emp_no = X.Emp_no
+				ORDER BY
+				X.period ASC,
+				X.Emp_no ASC");
+		}
+		if($first <= '2020-01-01'){
+			if($last >= '2020-01-01'){
+				$last = '2019-12-31';
+			}
+			$mirais = db::connection('mysql3')->select("SELECT
+				X.period,
+				X.employee_id,
+				X.cost_center,
+				X.name,
+				COALESCE ( Y.jam, 0 ) AS jam 
+				FROM
+				(
+				SELECT
+				P.period,
+				O.employee_id,
+				O.name,
+				O.cost_center 
+				FROM
+				(
+				SELECT
+				A.employee_id,
+				A.name,
+				cc.cost_center 
+				FROM
+				ympimis.employees A
+				LEFT JOIN ( SELECT employee_id, cost_center FROM ympimis.mutation_logs WHERE valid_to IS NULL ) cc ON cc.employee_id = A.employee_id 
+				WHERE
+				A.end_date IS NULL 
+				AND cc.cost_center = '".$request->get('cost_center')."'
+				) AS O
+				CROSS JOIN ( SELECT DISTINCT date_format( week_date, '%Y-%m' ) AS period FROM ympimis.weekly_calendars WHERE week_date >= '".$first."' AND week_date <= '".$last."' ) AS P 
+				ORDER BY
+				P.period ASC,
+				O.employee_id ASC 
+				) AS X
+				LEFT JOIN (
+				SELECT
+				date_format( over_time.tanggal, '%Y-%m' ) AS period,
+				over_time_member.nik,
+				sum( IF ( over_time_member.STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam 
+				FROM
+				over_time_member
+				LEFT JOIN over_time ON over_time.id = over_time_member.id_ot 
+				WHERE
+				over_time.deleted_at IS NULL 
+				AND over_time.tanggal >= '".$first."' 
+				AND over_time.tanggal <= '".$last."' 
+				GROUP BY
+				date_format( over_time.tanggal, '%Y-%m' ),
+				over_time_member.nik 
+				) AS Y ON Y.period = X.period 
+				AND Y.nik = X.employee_id
+				ORDER BY X.period asc, X.employee_id asc");
+		}
+
+		$overtimes = array();
+
+		if($mirais != null){
+			foreach ($mirais as $key) {
+				array_push($overtimes, 
+					[
+						"period" => $key->period,
+						"employee_id" => $key->employee_id,
+						"name" => $key->name,
+						"ot" => $key->jam
+					]);
+			}
+		}
+		if($sunfishs != null){
+			foreach ($sunfishs as $key) {
+				array_push($overtimes, 
+					[
+						"period" => $key->period,
+						"employee_id" => $key->Emp_no,
+						"name" => $key->Full_name,
+						"ot" => $key->jam
+					]);
+			}
+		}
 
 		$response = array(
 			'status' => true,
@@ -594,9 +712,7 @@ class OvertimeController extends Controller
 				where A.TOTAL_OVT_PLAN > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."
 				ORDER BY
 				A.ovtplanfrom ASC");
-		}	
-
-		// return Response::json($overtimeData);
+		}
 
 		return DataTables::of($overtimeData)->make(true);
 
