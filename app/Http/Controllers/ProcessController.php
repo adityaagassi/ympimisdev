@@ -2857,37 +2857,83 @@ public function fetchResultSaxnew(Request $request)
 //------flute
 public function fetchResultFlStamp(Request $request)
 {
-	if(date('D')=='Fri' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-	}
-	else if(date('D')=='Sat' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-	}
-	else if(date('D')=='Thu' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-	}
-	else if(date('D')=='Wed' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-	}
-	else{
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
-	}
+	// if(date('D')=='Fri' ){
+	// 	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	// 	$ceknextday = DB::SELECT("SELECT * FROM `weekly_calendars` where week_date = '".$nextday."'");
+ //        foreach ($ceknextday as $key) {
+ //            if ($key->remark == 'H') {
+ //                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+ //            }
+ //        }
+	// }
+	// else if(date('D')=='Sat' ){
+	// 	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	// 	$ceknextday = DB::SELECT("SELECT * FROM `weekly_calendars` where week_date = '".$nextday."'");
+ //        foreach ($ceknextday as $key) {
+ //            if ($key->remark == 'H') {
+ //                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+ //            }
+ //        }
+	// }
+	// else if(date('D')=='Thu' ){
+	// 	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	// 	$ceknextday = DB::SELECT("SELECT * FROM `weekly_calendars` where week_date = '".$nextday."'");
+ //        foreach ($ceknextday as $key) {
+ //            if ($key->remark == 'H') {
+ //                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+ //            }
+ //        }
+	// }
+	// else if(date('D')=='Wed' ){
+	// 	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	// 	$ceknextday = DB::SELECT("SELECT * FROM `weekly_calendars` where week_date = '".$nextday."'");
+ //        foreach ($ceknextday as $key) {
+ //            if ($key->remark == 'H') {
+ //                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(6)));
+ //            }
+ //        }
+	// }
+	// else{
+	// 	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+	// }
 
-	if(date('D')=='Fri' ){
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-	}
-	else if(date('D')=='Sat' ){
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-	}
-	else if(date('D')=='Thu' ){
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-	}
-	else if(date('D')=='Wed' ){
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-	}
-	else{
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-	}
+	$i = 1;
+    $nextday = date('Y-m-d', strtotime(carbon::now()->addDays($i)));
+    $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+    foreach ($weekly_calendars as $key) {
+        if ($key->week_date == $nextday) {
+            if ($key->remark == 'H') {
+                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(++$i)));
+            }
+        }
+    }
+
+    $j = 2;
+    $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+    $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+    foreach ($weekly_calendars as $key) {
+        if ($key->week_date == $nextdayplus1) {
+            if ($key->remark == 'H') {
+                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+            }
+        }
+    }
+
+	// if(date('D')=='Fri' ){
+	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
+	// }
+	// else if(date('D')=='Sat' ){
+	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+	// }
+	// else if(date('D')=='Thu' ){
+	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	// }
+	// else if(date('D')=='Wed' ){
+	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
+	// }
+	// else{
+	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
+	// }
 
 	$first = date('Y-m-01');
 	if(date('Y-m-d') != date('Y-m-01')){
