@@ -132,19 +132,16 @@ class OvertimeController extends Controller
 		$title = 'Overtime Data';
 		$title_jp = '残業データ';
 
-		$code;
-		$cost_center = db::select('select cost_center from ympimis.cost_centers group by cost_center');
-		$department = db::select("select child_code from organization_structures where remark = '".'department'."'");
-		$section = db::select("select child_code from organization_structures where remark = '".'section'."'");
-		$group = db::select("select child_code from organization_structures where remark = '".'group'."'");
+		// $datas = db::table('employee_syncs')->select("select * from employee_syncs");
+
+		$q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+		$datas = db::select($q);
 
 		return view('overtimes.reports.overtime_data', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'cost_centers' => $cost_center,
-			'departments' => $department,
-			'sections' => $section,
-			'groups' => $group
+			'datas' => $datas
 		));
 	}
 
@@ -409,93 +406,197 @@ class OvertimeController extends Controller
 	}
 
 	public function fetchOvertimeData(Request $request){
-		$tanggal = "";
-		$addcode = "";
-		$addcostcenter = "";
-		$adddepartment = "";
-		$addsection = "";
-		$addgrup = "";
 
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$tanggal = "and tanggal >= '".$datefrom."' ";
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-				$tanggal = $tanggal."and tanggal <= '".$dateto."' ";
-			}
-		}
+		if(date('Y-m-d', strtotime($request->get('datefrom'))) <= '2019-12-31' && date('Y-m-d', strtotime($request->get('dateto'))) <= '2019-12-31'){
+			$tanggal = "";
+			$addcostcenter = "";
+			$adddepartment = "";
+			$addsection = "";
+			$addgrup = "";
+			$addnik = "";
 
-		if($request->get('code') != null) {
-			$codes = $request->get('code');
-			$codelength = count($codes);
-			$code = "";
-
-			for($x = 0; $x < $codelength; $x++) {
-				$code = $code."'".$codes[$x]."'";
-				if($x != $codelength-1){
-					$code = $code.",";
+			if(strlen($request->get('datefrom')) > 0){
+				$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+				$tanggal = "and tanggal >= '".$datefrom."' ";
+				if(strlen($request->get('dateto')) > 0){
+					$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+					$tanggal = $tanggal."and tanggal <= '".$dateto."' ";
 				}
 			}
-			$addcode = "and code in (".$code.") ";
+
+			if($request->get('cost_center_code') != null) {
+				$costcenter = implode(",", $request->get('cost_center_code'));
+				$addcostcenter = "and bagian.cost_center in (".$costcenter.") ";
+			}
+
+			if($request->get('department') != null) {
+				$departments = $request->get('department');
+				$deptlength = count($departments);
+				$department = "";
+
+				for($x = 0; $x < $deptlength; $x++) {
+					$department = $department."'".$departments[$x]."'";
+					if($x != $deptlength-1){
+						$department = $department.",";
+					}
+				}
+				$adddepartment = "and bagian.department in (".$department.") ";
+			}
+
+			if($request->get('section') != null) {
+				$sections = $request->get('section');
+				$sectlength = count($sections);
+				$section = "";
+
+				for($x = 0; $x < $sectlength; $x++) {
+					$section = $section."'".$sections[$x]."'";
+					if($x != $sectlength-1){
+						$section = $section.",";
+					}
+				}
+				$addsection = "and bagian.section in (".$section.") ";
+			}
+
+			if($request->get('group') != null) {
+				$groups = $request->get('group');
+				$grplen = count($groups);
+				$group = "";
+
+				for($x = 0; $x < $grplen; $x++) {
+					$group = $group."'".$groups[$x]."'";
+					if($x != $grplen-1){
+						$group = $group.",";
+					}
+				}
+				$addgrup = "and bagian.group in (".$group.") ";
+			}
+
+			if($request->get('employee_id') != null) {
+				$niks = $request->get('employee_id');
+				$niklen = count($niks);
+				$nik = "";
+
+				for($x = 0; $x < $niklen; $x++) {
+					$nik = $nik."'".$niks[$x]."'";
+					if($x != $niklen-1){
+						$nik = $nik.",";
+					}
+				}
+				$addnik = "and ovr.nik in (".$nik.") ";
+			}
+			$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, ovr.id_overtime, emp.name, bagian.cost_center, bagian.department, bagian.section, bagian.group, ot, keperluan, code from
+				(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(id_ot) as id_overtime, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
+				where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
+				left join ympimis.employees as emp on emp.employee_id = ovr.nik
+				left join (select employee_id, cost_center, division, department, section, sub_section, `group` from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
+				left join ympimis.cost_centers on ympimis.cost_centers.section = bagian.section and ympimis.cost_centers.sub_sec = bagian.sub_section and ympimis.cost_centers.group = bagian.group
+				where ot > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."
+				order by ot asc
+				");
 		}
+		else{
+			$tanggal = "";
+			$addcostcenter = "";
+			$adddepartment = "";
+			$addsection = "";
+			$addgrup = "";
+			$addnik = "";
 
-		if($request->get('costcenter') != null) {
-			$costcenter = implode(",", $request->get('costcenter'));
-			$addcostcenter = "and bagian.cost_center in (".$costcenter.") ";
-		}
-
-		if($request->get('department') != null) {
-			$departments = $request->get('department');
-			$deptlength = count($departments);
-			$department = "";
-
-			for($x = 0; $x < $deptlength; $x++) {
-				$department = $department."'".$departments[$x]."'";
-				if($x != $deptlength-1){
-					$department = $department.",";
+			if(strlen($request->get('datefrom')) > 0){
+				$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+				$tanggal = "and A.ovtplanfrom >= '".$datefrom."' ";
+				if(strlen($request->get('dateto')) > 0){
+					$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+					$tanggal = $tanggal."and A.ovtplanto <= '".$dateto."' ";
 				}
 			}
-			$adddepartment = "and bagian.department in (".$department.") ";
-		}
 
-		if($request->get('section') != null) {
-			$sections = $request->get('section');
-			$sectlength = count($sections);
-			$section = "";
-
-			for($x = 0; $x < $sectlength; $x++) {
-				$section = $section."'".$sections[$x]."'";
-				if($x != $sectlength-1){
-					$section = $section.",";
-				}
+			if($request->get('cost_center_code') != null) {
+				$costcenter = implode(",", $request->get('cost_center_code'));
+				$addcostcenter = "and B.cost_center_code in (".$costcenter.") ";
 			}
-			$addsection = "and bagian.section in (".$section.") ";
-		}
 
-		if($request->get('group') != null) {
-			$groups = $request->get('group');
-			$grplen = count($groups);
-			$group = "";
+			if($request->get('department') != null) {
+				$departments = $request->get('department');
+				$deptlength = count($departments);
+				$department = "";
 
-			for($x = 0; $x < $grplen; $x++) {
-				$group = $group."'".$groups[$x]."'";
-				if($x != $grplen-1){
-					$group = $group.",";
+				for($x = 0; $x < $deptlength; $x++) {
+					$department = $department."'".$departments[$x]."'";
+					if($x != $deptlength-1){
+						$department = $department.",";
+					}
 				}
+				$adddepartment = "and B.Department in (".$department.") ";
 			}
-			$addgrup = "and bagian.group in (".$group.") ";
-		}
 
+			if($request->get('section') != null) {
+				$sections = $request->get('section');
+				$sectlength = count($sections);
+				$section = "";
 
-		$overtimeData = db::connection('mysql3')->select("select distinct ovr.tanggal, ovr.nik, ovr.id_overtime, emp.name, bagian.cost_center, bagian.department, bagian.section, bagian.group, ot, keperluan, code from
-			(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot, GROUP_CONCAT(id_ot) as id_overtime, GROUP_CONCAT(keperluan) keperluan from over_time_member left join over_time on over_time.id = over_time_member.id_ot
-			where deleted_at is null and jam_aktual = 0 ".$tanggal." group by tanggal, nik) ovr
-			left join ympimis.employees as emp on emp.employee_id = ovr.nik
-			left join (select employee_id, cost_center, division, department, section, sub_section, `group` from ympimis.mutation_logs where valid_to is null) bagian on bagian.employee_id = ovr.nik
-			left join ympimis.cost_centers on ympimis.cost_centers.section = bagian.section and ympimis.cost_centers.sub_sec = bagian.sub_section and ympimis.cost_centers.group = bagian.group
-			where ot > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addcode."".$addgrup."
-			order by ot asc
-			");
+				for($x = 0; $x < $sectlength; $x++) {
+					$section = $section."'".$sections[$x]."'";
+					if($x != $sectlength-1){
+						$section = $section.",";
+					}
+				}
+				$addsection = "and B.[Section] in (".$section.") ";
+			}
+
+			if($request->get('group') != null) {
+				$groups = $request->get('group');
+				$grplen = count($groups);
+				$group = "";
+
+				for($x = 0; $x < $grplen; $x++) {
+					$group = $group."'".$groups[$x]."'";
+					if($x != $grplen-1){
+						$group = $group.",";
+					}
+				}
+				$addgrup = "and B.[Group] in (".$group.") ";
+			}
+
+			if($request->get('employee_id') != null) {
+				$niks = $request->get('employee_id');
+				$niklen = count($niks);
+				$nik = "";
+
+				for($x = 0; $x < $niklen; $x++) {
+					$nik = $nik."'".$niks[$x]."'";
+					if($x != $niklen-1){
+						$nik = $nik.",";
+					}
+				}
+				$addnik = "and A.Emp_no in (".$nik.") ";
+			}
+
+			$overtimeData = db::connection('sunfish')->select("
+				SELECT
+				format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS tanggal,
+				A.Emp_no AS nik,
+				A.requestno AS id_overtime,
+				B.Full_name AS name,
+				B.cost_center_code AS cost_center,
+				B.Department AS department,
+				B.[Section] AS [section],
+				B.[Group] AS [group],
+				IIF (
+				total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				) AS ot,
+				UPPER ( A.remark ) AS keperluan 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON A.Emp_no = B.Emp_no 
+				where A.TOTAL_OVT_PLAN > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."
+				ORDER BY
+				A.ovtplanfrom ASC");
+		}	
+
+		// return Response::json($overtimeData);
 
 		return DataTables::of($overtimeData)->make(true);
 

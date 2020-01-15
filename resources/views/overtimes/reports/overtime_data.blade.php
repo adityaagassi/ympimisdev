@@ -60,7 +60,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom" name="dateFrom">
+									<input type="text" class="form-control pull-right" id="datefrom">
 								</div>
 							</div>
 						</div>
@@ -71,7 +71,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto" name="dateTo">
+									<input type="text" class="form-control pull-right" id="dateto">
 								</div>
 							</div>
 						</div>
@@ -80,20 +80,38 @@
 						<div class="col-md-4 col-md-offset-2">
 							<div class="form-group">
 								<label>Cost Center</label>
-								<select class="form-control select2" multiple="multiple" name="costcenter" id='costcenter' data-placeholder="Select Cost Center" style="width: 100%;">
-									@foreach($cost_centers as $cost_center)
-									<option value="{{ $cost_center->cost_center }}">{{ $cost_center->cost_center }}</option>
+								<select class="form-control select2" multiple="multiple" name="cost_center_code" id='cost_center_code' data-placeholder="Select Cost Center" style="width: 100%;">
+									<option value=""></option>
+									@php
+									$cost_center_code = array();
+									@endphp
+									@foreach($datas as $data)
+									@if(!in_array($data->cost_center, $cost_center_code))
+									<option value="{{ $data->cost_center }}">{{ $data->cost_center }} - {{ $data->cost_center_name }}</option>
+									@php
+									array_push($cost_center_code, $data->cost_center);
+									@endphp
+									@endif
 									@endforeach
 								</select>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
-								<label>Code</label>
-								<select class="form-control select2" multiple="multiple" name="code" id='code' data-placeholder="Select Code" style="width: 100%;">
-									<option value="PL">PL</option>
-									<option value="INDIRECT">Indirect</option>
-									<option value="DIRECT">Direct</option>
+								<label>Department</label>
+								<select class="form-control select2" multiple="multiple" name="department" id='department' data-placeholder="Select Department" style="width: 100%;">
+									<option value=""></option>
+									@php
+									$department = array();
+									@endphp
+									@foreach($datas as $data)
+									@if(!in_array($data->department, $department))
+									<option value="{{ $data->department }}">{{ $data->department }}</option>
+									@php
+									array_push($department, $data->department);
+									@endphp
+									@endif
+									@endforeach
 								</select>
 							</div>
 						</div>	
@@ -103,30 +121,57 @@
 							<div class="form-group">
 								<label>Section</label>
 								<select class="form-control select2" multiple="multiple" name="section" id='section' data-placeholder="Select Section" style="width: 100%;">
-									@foreach($sections as $section)
-									<option value="{{ $section->child_code }}">{{ $section->child_code }}</option>
+									<option value=""></option>
+									@php
+									$section = array();
+									@endphp
+									@foreach($datas as $data)
+									@if(!in_array($data->section, $section))
+									<option value="{{ $data->section }}">{{ $data->section }}</option>
+									@php
+									array_push($section, $data->section);
+									@endphp
+									@endif
 									@endforeach
 								</select>
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
-								<label>Department</label>
-								<select class="form-control select2" multiple="multiple" name="department" id='department' data-placeholder="Select Department" style="width: 100%;">
-									@foreach($departments as $department)
-									<option value="{{ $department->child_code }}">{{ $department->child_code }}</option>
+								<label>Sub Group</label>
+								<select class="form-control select2" multiple="multiple" name="group" id='group' data-placeholder="Select Group" style="width: 100%;">
+									<option value=""></option>
+									@php
+									$group = array();
+									@endphp
+									@foreach($datas as $data)
+									@if(!in_array($data->group, $group))
+									<option value="{{ $data->group }}">{{ $data->group }}</option>
+									@php
+									array_push($group, $data->group);
+									@endphp
+									@endif
 									@endforeach
 								</select>
 							</div>
 						</div>			
 					</div>
 					<div class="row">
-						<div class="col-md-4 col-md-offset-2">
+						<div class="col-md-8 col-md-offset-2">
 							<div class="form-group">
-								<label>Sub Group</label>
-								<select class="form-control select2" multiple="multiple" name="group" id='group' data-placeholder="Select Sub Group" style="width: 100%;">
-									@foreach($groups as $group)
-									<option value="{{ $group->child_code }}">{{ $group->child_code }}</option>
+								<label>Employee ID</label>
+								<select class="form-control select2" multiple="multiple" name="employee_id" id='employee_id' data-placeholder="Select Employee ID" style="width: 100%;">
+									<option value=""></option>
+									@php
+									$employee_id = array();
+									@endphp
+									@foreach($datas as $data)
+									@if(!in_array($data->employee_id, $employee_id))
+									<option value="{{ $data->employee_id }}">{{ $data->employee_id }} - {{ strtoupper($data->name) }}</option>
+									@php
+									array_push($employee_id, $data->employee_id);
+									@endphp
+									@endif
 									@endforeach
 								</select>
 							</div>
@@ -154,14 +199,12 @@
 										<th style="width: 8%">Cost Center</th>
 										<th style="width: 3%">Overtime</th>
 										<th style="width: 15%">Reason</th>
-										<th style="width: 5%">Code</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -202,18 +245,14 @@
 
 	jQuery(document).ready(function() {
 		$('#datefrom').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#dateto').datepicker({
-			autoclose: true
+			autoclose: true,
+			todayHighlight: true
 		});
-		$('.select2').select2({
-			language : {
-				noResults : function(params) {
-					return "There is no flo with status 'close'";
-				}
-			}
-		});
+		$('.select2').select2();
 	});
 
 	function clearConfirmation(){
@@ -221,24 +260,25 @@
 	}
 
 	function fillTable(){
+		$('#overtimeDataTable').DataTable().clear();
 		$('#overtimeDataTable').DataTable().destroy();
 
 		var datefrom = $('#datefrom').val();
 		var dateto = $('#dateto').val();
-		var code = $('#code').val();
-		var costcenter = $('#costcenter').val();
+		var cost_center_code = $('#cost_center_code').val();
 		var section = $('#section').val();
 		var department = $('#department').val();
 		var group = $('#group').val();
+		var employee_id = $('#employee_id').val();
 		
 		var data = {
 			datefrom:datefrom,
 			dateto:dateto,
-			code:code,
-			costcenter:costcenter,
+			cost_center_code:cost_center_code,
 			section:section,
 			department:department,
 			group:group,
+			employee_id:employee_id,
 		}
 
 		var table = $('#overtimeDataTable').DataTable({
@@ -308,8 +348,7 @@
 			{ "data": "group" },
 			{ "data": "cost_center" },
 			{ "data": "ot" },
-			{ "data": "keperluan" },
-			{ "data": "code" }
+			{ "data": "keperluan" }
 			],
 		});
 
@@ -328,7 +367,7 @@
 				}
 			});
 		});
-		$('#overtimeDataTable tfoot tr').appendTo('#overtimeDataTable thead');
+		$('#overtimeDataTable tfoot tr').appendTo('#overtimeDataTable thead');	
 
 	}
 
