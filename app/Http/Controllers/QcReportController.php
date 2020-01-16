@@ -1730,7 +1730,7 @@ class QcReportController extends Controller
 
             $cpars2 = db::select($query2);
 
-            Mail::to('rioirvansyah6@gmail.com')->send(new SendEmail($cpars2, 'cpar'));
+            Mail::to($mailtoo)->send(new SendEmail($cpars2, 'cpar'));
             // return redirect('/index/verifikasigm')->with('status', 'E-mail has Been Sent To Department')->with('page', 'CPAR');
 
 

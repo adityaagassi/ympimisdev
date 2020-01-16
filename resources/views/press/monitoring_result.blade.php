@@ -416,6 +416,8 @@ table > thead > tr > th{
 			// proses:proses
 		}
 
+		// var tanggalnew = tanggal.toString("MMMM yyyy");
+
 		$.get('{{ url("fetch/press/monitoring") }}',data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
@@ -452,7 +454,7 @@ table > thead > tr > th{
 							}
 						},
 						subtitle: {
-							text: 'on '+result.date,
+							text: 'on '+result.dateTitle,
 							style: {
 								fontSize: '1vw',
 								fontWeight: 'bold'
@@ -605,7 +607,7 @@ table > thead > tr > th{
 							}
 						},
 						subtitle: {
-							text: 'on '+result.date,
+							text: 'on '+result.dateTitle,
 							style: {
 								fontSize: '1vw',
 								fontWeight: 'bold'

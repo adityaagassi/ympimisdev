@@ -409,6 +409,8 @@ class PressController extends Controller
 			$date = date('Y-m-d');
 		}
 
+		$dateTitle = date("d M Y", strtotime($date));
+
 		 $process = $request->get('proses');
 
 	      if ($process != null) {
@@ -436,7 +438,8 @@ class PressController extends Controller
 			'status' => true,
 			'datas' => $data,
 			'date' => $date,
-			'operator' => $operator
+			'operator' => $operator,
+			'dateTitle' => $dateTitle
 		);
 		return Response::json($response);
 	}
