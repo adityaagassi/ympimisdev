@@ -400,6 +400,8 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
+				<br>
+				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
 				<button id="close-button" class="btn btn-success" onclick="closen()"><i class="fa fa-save"></i> Close</button>
 			</div>
 		</div>
@@ -584,6 +586,8 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
+				<br>
+				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
 				<button id="assign-button" class="btn btn-success" onclick="assign()"><i class="fa fa-save"></i> Save</button>
 			</div>
 		</div>
@@ -676,7 +680,7 @@
 							</div>
 							<div class="col-xs-12" style="margin-top: 5%;">
 								<div class="form-group row" align="right">
-									<label class="col-xs-2" style="margin-top: 1%;">Alasan Ditolak</label>
+									<label class="col-xs-2" style="margin-top: 1%;">Alasan Ditolak<span class="text-red">*</span></label>
 									<div class="col-xs-10">
 										<textarea class="form-control" id="reject_reason" placeholder="Alasan WJO Ditolak" style="width: 100%;" required></textarea> 										
 									</div>
@@ -687,6 +691,8 @@
 				</div>
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
+				<br>
+				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
 				<button class="btn btn-success" onclick="reject()"><i class="fa fa-save"></i> Save</button>
 			</div>
 		</div>
@@ -772,7 +778,7 @@
 		location.reload(true);		
 	}
 
-	$('#category').on('change', function() {
+	$('#assign_category').on('change', function() {
 		if(this.value != 'Equipment'){
 			$('#drawing').show();
 		}else{
@@ -954,7 +960,7 @@
 
 				var tableData = "";
 				for (var i = 0; i < result.tableData.length; i++) {
-					
+
 					var group = result.tableData[i].sub_section.split("_");
 
 					if(result.tableData[i].priority == 'Urgent'){
@@ -1096,17 +1102,18 @@
 		$("#loading").show();		
 		$.post('{{ url("update/workshop/wjo") }}', data,  function(result, status, xhr){
 			if(result.status){
-				
+
 				$("#tag").val("");
 				$("#assign_target_date").val("");
 				$('#assign_pic').prop('selectedIndex', 0).change();
 				$('#assign_difficulty').prop('selectedIndex', 0).change();
 				$('#assign_category').prop('selectedIndex', 0).change();
 				$('#assign_item_number').prop('selectedIndex', 0).change();
-				
+
 				fillTable();
 				$("#loading").hide();
 				$("#modal-assignment").modal('hide');
+				$('#drawing').hide();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#tag").val("");
@@ -1115,14 +1122,14 @@
 				$('#assign_difficulty').prop('selectedIndex', 0).change();
 				$('#assign_category').prop('selectedIndex', 0).change();
 				$('#assign_item_number').prop('selectedIndex', 0).change();
-				
+
 				fillTable();
 				$("#loading").hide();
 				$("#modal-assignment").modal('hide');
 				openErrorGritter('Error!', result.message);
 			}
 		});
-		
+
 	}
 
 	function showAssignment(order_no) {
@@ -1159,7 +1166,7 @@
 				$('#assign_item_number').val(result.wjo.item_number).trigger('change');  
 
 				$("#modal-assignment").modal('show');
-				
+
 			}
 		});
 	}
@@ -1182,9 +1189,9 @@
 		$("#loading").show();		
 		$.post('{{ url("reject/workshop/wjo") }}', data,  function(result, status, xhr){
 			if(result.status){
-				
+
 				$("#reject_reason").val("");
-				
+
 				fillTable();
 				$("#loading").hide();
 				$("#modal-reject").modal('hide');
@@ -1217,7 +1224,7 @@
 				document.getElementById("reject_problem_desc").value = result.wjo.problem_description;
 
 				$("#modal-reject").modal('show');
-				
+
 			}
 		});
 	}
@@ -1239,7 +1246,7 @@
 				alert('Disconnected from server');
 			}
 		});
-		
+
 	}
 
 	function openSuccessGritter(title, message){

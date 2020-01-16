@@ -559,8 +559,12 @@
   <a href="{{ url("/index/workshop/list_wjo") }}"><i class="fa fa-list"></i> <span>List WJO</span></a>
 </li>
 
+@if(isset($page) && $page == "Drawing")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/workshop/drawing") }}"><i class="fa fa-files-o"></i> <span>Drawing</span></a>
+</li>
+
 @if(isset($page) && $page == "WJO Execution")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/workshop/wjo", "exe") }}"><i class="fa fa-list"></i> <span>WJO</span></a>
+  <a href="{{ url("/index/workshop/wjo") }}"><i class="fa fa-archive"></i> <span>WJO</span></a>
 </li>
 </ul>
 </li>

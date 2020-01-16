@@ -12,7 +12,6 @@
 	.morelink {
 		display: block;
 	}
-
 	thead>tr>th{
 		text-align:center;
 		overflow:hidden;

@@ -351,8 +351,15 @@
                                 <i class="fa fa-caret-right"></i> Create WJO ()
                             </a>
                             <br>
-
-                        </td>
+                            <a href="{{ url("index/workshop/wjo_monitoring") }}">
+                                <i class="fa fa-caret-right"></i> WJO Monitoring ()
+                            </a>
+                            <br>
+                            <a href="{{ url("index/workshop/productivity") }}">
+                                <i class="fa fa-caret-right"></i> Workshop Productivity ()
+                            </a>
+                            <br>
+                        </td>                        
                     </tr>
                 </tbody>
             </table>

@@ -201,7 +201,7 @@
 
 						<div class="col-xs-12" style="padding-bottom: 1%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
-								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:</span></span>
+								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:&nbsp;&nbsp;</span></span>
 							</div>
 							<div class="col-xs-5">
 								<select class="form-control select2" data-placeholder="Pilih Drawing" name="drawing" id="drawing" style="width: 100% height: 35px; font-size: 15px;">
@@ -234,7 +234,7 @@
 						<th style="width: 1%">Tanggal Pengajuan</th>
 						<th style="width: 1%">WJO</th>
 						<th style="width: 1%">Prioritas</th>
-						<th style="width: 1%">Nama</th>
+						<th style="width: 1%">Nama Barang</th>
 						<th style="width: 1%">Jumlah</th>
 						<th style="width: 1%">Material</th>
 						<th style="width: 1%">Request Selesai</th>
@@ -283,7 +283,7 @@
 		$("#sub_section").append(opt);
 		$('#sub_section').prop('selectedIndex', 0).change();
 
-		$('#request').hide();
+		$('#request').hide();	
 
 		$('#material-other').hide();
 
@@ -292,6 +292,8 @@
 			format: "yyyy-mm-dd",
 			todayHighlight: true
 		});
+
+		fetchTable('all');
 	});
 
 	$('#material').on('change', function() {
@@ -348,6 +350,9 @@
 				$('#createModal').modal('hide');
 
 				openSuccessGritter('Success', result.message);
+
+				location.reload(true);		
+
 			},
 			error: function(result, status, xhr){
 				$("#loading").hide();
@@ -363,13 +368,14 @@
 	function fetchTable(id){
 		var username = $('#username').val();
 		var data = {
-			remark:id,
-			username:username
+			remark: id,
+			username: username,
+			order: 'order_no desc'
 		}
 		$.get('{{ url("fetch/workshop/list_wjo") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#tableList').DataTable().clear();
-				$('#tableList').DataTable().destroy();
+				$('#traceabilityTable').DataTable().clear();
+				$('#traceabilityTable').DataTable().destroy();
 				$('#tableBody').html("");
 
 				var tableData = "";
@@ -415,7 +421,7 @@
 				}
 
 				$('#tableBody').append(tableData);
-				$('#tableList').DataTable({
+				$('#traceabilityTable').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [

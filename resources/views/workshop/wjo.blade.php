@@ -48,16 +48,36 @@
 	}
 	#loading, #error { display: none; }
 
+	.kedip {
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-animation: pulse 1s infinite;  /* Safari 4+ */
+		-moz-animation: pulse 1s infinite;  /* Fx 5+ */
+		-o-animation: pulse 1s infinite;  /* Opera 12+ */
+		animation: pulse 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes pulse {
+		0%, 49% {
+			background-color: #00a65a;
+			color: white;
+		}
+		50%, 100% {
+			background-color: #ffffff;
+			color: #444;
+		}
+	}
+
 </style>
 @stop
 @section('header')
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<input type="hidden" id="machine_code">
 	<input type="hidden" id="tag_input">
 	<input type="hidden" id="order_no">
-	<input type="hidden" id="exe" value="{{ $exe }}">
-	<input type="hidden" id="operator_id">
+	<input type="hidden" id="operator_id" value="{{ $employee_id }}">
 	<input type="hidden" id="started_at">
 	<input type="hidden" id="item_number">
 	<input type="hidden" id="sequence_process">
@@ -70,16 +90,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;">
-				<tbody>
-					<tr>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size: 25px; width: 30%;" id="machine_information">{{ $process_name }} ({{ $machine_name }})</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">			
 
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 0.25%;">
 				<thead>
 					<tr>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="2">Operator</th>
@@ -87,22 +100,13 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:25px; width: 30%;" id="op">-</td>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 25px;" id="op2">-</td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:25px; width: 30%;" id="op">{{ $employee_id }}</td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 25px;" id="op2">{{ $name }}</td>
 					</tr>
 				</tbody>
 			</table>
 
-			<div class="input-group">
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 2vw;">
-					<i class="glyphicon glyphicon-credit-card"></i>
-				</div>
-				<input type="text" style="text-align: center; border-color: black; height: 45px; font-size: 2vw;" class="form-control" id="tag" name="tag" placeholder="Tap WJO Tag..." required>
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 2vw;">
-					<i class="glyphicon glyphicon-credit-card"></i>
-				</div>
-			</div>	
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 0.25%;">
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
 				<thead>
 					<tr>
 						<th style="width:15%; background-color: rgb(50, 50, 50); color: white; text-align: center; padding:0;font-size: 35px;" colspan="4" id="text_order_no">Order No.</th>
@@ -118,7 +122,7 @@
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">PIC</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_pic"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Attachment</td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Lampiran</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_attach"></td>
 					</tr>	
 					<tr>
@@ -144,6 +148,24 @@
 					
 				</tbody>
 			</table>
+
+			<div class="input-group">
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
+					<i class="glyphicon glyphicon-credit-card"></i>
+				</div>
+				<input type="text" style="text-align: center; border-color: black; height: 40px; font-size: 25px;" class="form-control" id="machine" placeholder="Tap Machine Tag..." required>
+				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
+					<i class="glyphicon glyphicon-credit-card"></i>
+				</div>
+			</div>
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;" id="machine_table">
+				<tbody>
+					<tr>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size: 25px; width: 30%;" id="machine_information"></td>
+					</tr>
+				</tbody>
+			</table>
+
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
 				<thead id='process_progress_bar'>
 					<tr>
@@ -175,33 +197,15 @@
 		<div class="col-xs-5" style="padding-right: 0;" id="step"></div>
 	</section>
 
-	<div class="modal fade" id="modalMachine">
+	
+	<div class="modal fade" id="modalTag">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding">
 						<div class="form-group">
-							<label for="exampleInputEmail1">Mesin</label>
-							<select class="form-control select2" data-placeholder="Pilih Mesin" id="machine" onChange="focusOperator()" style="width: 100% height: 35px; font-size: 15px;" required>
-								<option value=""></option>
-								@foreach($machines as $machine)
-								<option value="{{ $machine->machine_code }}">{{ $machine->machine_name }}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="modalOperator">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="modal-body table-responsive no-padding">
-						<div class="form-group">
-							<label for="exampleInputEmail1">Tag Karyawan</label>
-							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID" required>
+							<label for="exampleInputEmail1">WJO Card</label>
+							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="tag" placeholder="Tap WJO Card" required>
 						</div>
 					</div>
 				</div>
@@ -215,7 +219,7 @@
 					<div class="modal-body table-responsive no-padding">
 						<div class="form-group">
 							<label style="text-align: center;" for="exampleInputEmail1">Tap ID Leader/Foreman untuk mengubah alur proses yang telah tersimpan</label>
-							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="leader" placeholder="Scan ID" required>
+							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="leader" placeholder="Tap ID" required>
 						</div>
 					</div>
 				</div>
@@ -236,47 +240,41 @@
 		jQuery(document).ready(function() {
 			$('.select2').select2();
 
-			if($('#exe').val() == 'exe'){
-				$('#modalMachine').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-			}else{
-				$('#modalOperator').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-			}
+			$('#modalTag').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
 
 			$('#process_progress_bar').hide();
+			$('#machine_table').hide();
+
+
 
 			setInterval(setTime, 1000);
 		});
 
-		var duration = 0;
-		var count1 = false;
-		var count2 = false;
+		var count_time = false;
+		var count_progress_bar = false;
+		var count_process_bar = false;
 		var started_at;
 		var std_time;
 		var approved_time;
 		var target_date;
 		function setTime() {
-			if(count1){
+			if(count_time){
 				document.getElementById("hours").innerHTML = pad(parseInt(diff_seconds(new Date(), started_at) / 3600));
 				document.getElementById("minutes").innerHTML = pad(parseInt((diff_seconds(new Date(), started_at) % 3600) / 60));
 				document.getElementById("seconds").innerHTML = pad(diff_seconds(new Date(), started_at) % 60);
+			}
 
+			if(count_process_bar){
 				var actual = diff_seconds(new Date(), started_at);
 				var percent = (actual / std_time) * 100;
-
-				// console.log(actual);
-				// console.log(std_time);
-				// console.log(percent);
-
-
+				
 				$('#process_bar').append().empty();
 				if(percent <= 100){
 					$('#process_bar').addClass('active');
+					$('#process_bar').removeClass('progress-bar-danger');
 					$('#process_bar').addClass('progress-bar-success');
 					$('#process_bar').html(Math.round(percent)+'%');
 					$('#process_bar').css('width', percent+'%');
@@ -293,7 +291,7 @@
 				}	
 			}
 
-			if(count2){
+			if(count_progress_bar){
 				var actual = diff_seconds(new Date(), approved_time);
 				var target = diff_seconds(target_date, approved_time);
 				var percent = (actual / target) * 100;
@@ -316,8 +314,6 @@
 
 				}	
 			}
-
-
 		}
 
 		function pad(val) {
@@ -334,107 +330,39 @@
 			return Math.abs(Math.round(diff));
 		}
 
-		function focusOperator(){
-			var machine_code = $("#machine").val();
-			document.getElementById("exe").value = machine_code;
-
-			var data = {
-				machine_code : machine_code
-			}
-
-			$.get('{{ url("fetch/workshop/machine") }}', data, function(result, status, xhr){
-				if(result.status){
-					document.getElementById("machine_information").innerHTML = result.process_name + '  (' + result.machine_name + ')';
-
-					$('#modalMachine').modal('hide');
-					$('#modalOperator').modal({
-						backdrop: 'static',
-						keyboard: false
-					});
-				}
-			});
-
-		}
-
-		$('#modalOperator').on('shown.bs.modal', function () {
-			$('#operator').focus();
-		});
-
 		$('#modalLeader').on('shown.bs.modal', function () {
 			$('#leader').focus();
 		});
 
-		$('#operator').keydown(function(event) {
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#operator").val().length >= 10){
-					var data = {
-						employee_id : $("#operator").val()
-					}
-					$.get('{{ url("scan/workshop/operator/rfid") }}', data, function(result, status, xhr){
-						if(result.status){
-							openSuccessGritter('Success!', result.message);
-							document.getElementById("operator_id").value = result.employee.employee_id;
-							$('#modalOperator').modal('hide');
-							$('#tag').focus();
-							$('#op').html(result.employee.employee_id);
-							$('#op2').html(result.employee.name);
-						}
-						else{
-							audio_error.play();
-							openErrorGritter('Error', result.message);
-							$('#operator').val('');
-						}
-					});
-				}
-			}
-		});
-
-		$('#leader').keydown(function(event) {
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				if($("#leader").val().length >= 10){
-					var data = {
-						employee_id : $("#leader").val(),
-						item_number : $("#item_number").val(),
-						sequence_process : $("#sequence_process").val(),
-					}
-					$.get('{{ url("scan/workshop/leader/rfid") }}', data, function(result, status, xhr){
-						if(result.status){
-							openSuccessGritter('Success!', result.message);
-							$('#modalLeader').modal('hide');
-						}
-						else{
-							audio_error.play();
-							openErrorGritter('Error', result.message);
-							$('#leader').val('');
-						}
-					});
-				}
-			}
+		$('#modalTag').on('shown.bs.modal', function () {
+			$('#tag').focus();
 		});
 
 		$('#tag').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
 				if($("#tag").val().length >= 10){
+					var tag = $("#tag").val();
+
 					var data = {
-						tag : $("#tag").val(),
-						machine_code : $("#exe").val()
+						tag : tag
 					}
 
 					$.get('{{ url("scan/workshop/tag/rfid") }}', data, function(result, status, xhr){
 						if(result.status){
-							duration = 0;
-							count1 = true;
-							count2 = true;
-							started_at = new Date(result.started_at);
+							
+							count_progress_bar = true;
+							
 							approved_time = new Date(result.approved_time.date);
 							var date = result.wjo.target_date.split("-");
 							target_date = new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0);
 
 							$('#tag').val('');
+							$('#machine').focus();
+
+							$('#modalTag').modal('hide');
 							openSuccessGritter('Success!', result.message);
 							document.getElementById("tag_input").value = result.wjo.tag;
 							document.getElementById("order_no").value = result.wjo.order_no;
-							document.getElementById("started_at").value = result.started_at;
 
 							$('#text_priority').append().empty();
 							if(result.wjo.priority == 'Urgent'){
@@ -477,103 +405,255 @@
 							$("#step").append().empty();
 							var step = '';
 							var green = '';
-							step += '<ul class="timeline">';
-							step += '<li class="time-label">';
-							step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-							step += '</li>';
-
+							
 							if(result.flow_process.length > 0){
+								$('#process_progress_bar').show();
 								if(result.wjo_log.length == 0){
 									green = 0;
 								}else{
 									green = result.wjo_log.length;
 								}
+								step += '<ul class="timeline">';
+								step += '<li class="time-label">';
+								step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+								step += '</li>';
 								for (var i = 0; i < result.flow_process.length; i++) {
 									step += '<li>';
 									step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.flow_process[i].sequence_process +'</i>';
 									step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold;">Langkah '+ result.flow_process[i].sequence_process +'</p>';
 									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'</p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 									step += '</div>';
 									step += '</li>';
-
-									if(result.flow_process[i].sequence_process == (green + 1)){
-										std_time = result.flow_process[i].std_time;
-									}
 								}
 								step += '<li>';
 								step += '<i class="fa fa-check-square-o bg-blue"></i>';
 								step += '</li>';
 								step += '</ul>';
 							}else{
+								$('#process_progress_bar').hide();
 								if(result.wjo_log.length > 0){
+									step += '<ul class="timeline">';
+									step += '<li class="time-label">';
+									step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+									step += '</li>';
 									for (var i = 0; i < result.wjo_log.length; i++) {
 										step += '<li>';
-										step += '<i class="fa fa-stack-1x">'+ result.wjo_log[i].sequence_process +'</i>';
-										step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-										step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold;">Langkah '+ result.wjo_log[i].sequence_process +'</p>';
+										step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
+										step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 										step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
 										step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 										step += '</div>';
 										step += '</li>';
 									}
-									step += '<li>';
-									step += '<i class="fa fa-stack-1x bg-green">'+ (result.wjo_log.length + 1) +'</i>';
-									step += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold; color: white;">Langkah '+ (result.wjo_log.length + 1) +'</p>';
-									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
-									step += '</div>';
-									step += '</li>';
+									green = result.wjo_log.length;
 
-								}else{
-									step += '<li>';
-									step += '<i class="fa fa-stack-1x bg-green">1</i>';
-									step += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding-bottom: 0px; margin-bottom: 0px; font-size: 1vw; font-weight: bold; color: white;">Langkah 1</p>';
-									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
-									step += '</div>';
-									step += '</li>';
-								}	
+								}
 							}
 
 							$("#step").append(step);
 							document.getElementById("green").value = green;
-							$("#timeline_number_" + green).addClass('bg-green');
-							$("#timeline_box_" + green).addClass('bg-green');
 
-							if(result.wjo.category != 'Equipment'){
-								$('#process_progress_bar').show();
+							for (var i = 0; i < green; i++) {
+								$("#timeline_number_" + i).addClass('bg-green');
+								$("#timeline_box_" + i).addClass('bg-green');						
 							}
-
-
-
+							
 						}
 						else{
-							if(result.message == 'Proses tidak sama dengan sebelumnya'){
-								audio_error.play();
-								openErrorGritter('Error', result.message);
-								$('#tag').val('');
-								if(confirm("Proses tidak sama dengan sebelumnya\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
-									$('#modalLeader').modal('show');
-									document.getElementById("order_no").value = result.order_no;
-									document.getElementById("item_number").value = result.item_number;
-									document.getElementById("sequence_process").value = result.sequence_process;
+							audio_error.play();
+							openErrorGritter('Error', result.message);
+							$('#tag').val('');
+						}
+						
+					});
+}
+}
+});
 
-								}
+$('#machine').keydown(function(event) {
+	if (event.keyCode == 13 || event.keyCode == 9) {
+		if($("#machine").val().length >= 10){
+			var machine_code = $("#machine").val();
+			var	order_no = $("#order_no").val();
+			var	operator_id = $("#operator_id").val();
 
-							}else{
-								audio_error.play();
-								openErrorGritter('Error', result.message);
-								$('#tag').val('');
+			var data = {
+				machine_tag : machine_code,
+				order_no : order_no,
+				operator_id : operator_id
+			}
+
+			$.get('{{ url("fetch/workshop/machine") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					count_time = true;
+					count_process_bar = true;
+
+					$('#machine').val('');
+					$('#machine_table').show();
+					document.getElementById("machine_code").value = result.current_machine.machine_code;
+					document.getElementById("machine_information").innerHTML = result.current_machine.process_name + '  (' + result.current_machine.machine_name + ')';					
+					document.getElementById("started_at").value = result.started_at;
+					started_at = new Date(result.started_at);
+
+
+
+					$("#step").append().empty();
+					var step = '';
+					var green = '';
+					step += '<ul class="timeline">';
+					step += '<li class="time-label">';
+					step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+					step += '</li>';
+					if(result.flow_process.length > 0){
+						$('#process_progress_bar').show();
+						
+						if(result.wjo_log.length == 0){
+							green = 0;
+						}else{
+							green = result.wjo_log.length;
+						}
+						for (var i = 0; i < result.flow_process.length; i++) {
+							step += '<li>';
+							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.flow_process[i].sequence_process +'</i>';
+							step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'</p>';
+							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
+							step += '</div>';
+							step += '</li>';
+
+							if(result.flow_process[i].sequence_process == (green + 1)){
+								std_time = result.flow_process[i].std_time;
 							}
 						}
-					});
+						step += '<li>';
+						step += '<i class="fa fa-check-square-o bg-blue"></i>';
+						step += '</li>';
+						step += '</ul>';
+					}else{
+						if(result.wjo_log.length > 0){
+							for (var i = 0; i < result.wjo_log.length; i++) {
+								step += '<li>';
+								step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
+								step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+								step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
+								step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+								step += '</div>';
+								step += '</li>';
+							}
+							step += '<li>';
+							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ result.wjo_log.length +'">'+ (result.wjo_log.length + 1) +'</i>';
+							step += '<div class="timeline-item" id="timeline_box_'+ result.wjo_log.length +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
+							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+							step += '</div>';
+							step += '</li>';
 
+							green = result.wjo_log.length;
+						}else{
+							step += '<li>';
+							step += '<i class="fa fa-stack-1x bg-green" id="timeline_number_0">1</i>';
+							step += '<div class="timeline-item bg-green" id="timeline_box_0" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
+							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+							step += '</div>';
+							step += '</li>';
+
+							green = 0;
+						}	
+					}
+
+					$("#step").append(step);
+					document.getElementById("green").value = green;
+
+					for (var i = 0; i < green; i++) {
+						$("#timeline_number_" + i).addClass('bg-green');
+						$("#timeline_box_" + i).addClass('bg-green');						
+					}
+
+					$("#timeline_number_" + green).addClass('kedip');
+					$("#timeline_box_" + green).addClass('kedip');
+
+
+
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+					$('#machine').val('');
+
+					if(result.message == 'Proses tidak sama dengan sebelumnya'){
+						if(confirm("Alur proses tidak sama dengan sebelumnya\nUntuk mengubah alur yang sudah ada perlu persetujuan Leader\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
+							$('#modalLeader').modal('show');
+							document.getElementById("order_no").value = result.order_no;
+							document.getElementById("item_number").value = result.item_number;
+							document.getElementById("sequence_process").value = result.sequence_process;
+						}
+					}
+				}
+			});
 }
 }
+});
+
+$('#leader').keydown(function(event) {
+	if (event.keyCode == 13 || event.keyCode == 9) {
+		if($("#leader").val().length >= 10){
+			var data = {
+				employee_id : $("#leader").val(),
+				order_no : $("#order_no").val(),
+				item_number : $("#item_number").val(),
+				sequence_process : $("#sequence_process").val(),
+			}
+			$.get('{{ url("scan/workshop/leader/rfid") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					$('#modalLeader').modal('hide');
+
+					$('#leader').val('');
+					$('#machine').focus();
+					count_process_bar = false;
+
+					$("#step").append().empty();
+					var step = '';
+					var green = '';
+
+					if(result.wjo_log.length > 0){
+						$('#process_progress_bar').hide();
+
+						step += '<ul class="timeline">';
+						step += '<li class="time-label">';
+						step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+						step += '</li>';
+						for (var i = 0; i < result.wjo_log.length; i++) {
+							step += '<li>';
+							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
+							step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
+							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							step += '</div>';
+							step += '</li>';
+						}
+						green = result.wjo_log.length;
+					}
+
+					$("#step").append(step);
+					document.getElementById("green").value = green;
+
+					for (var i = 0; i < green; i++) {
+						$("#timeline_number_" + i).addClass('bg-green');
+						$("#timeline_box_" + i).addClass('bg-green');						
+					}
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error', result.message);
+					$('#leader').val('');
+				}
+			});
+		}
+	}
 });
 
 function downloadDrw(attachment) {
@@ -617,7 +697,7 @@ function downloadAtt(attachment) {
 function finish(){
 	var order_no = $("#order_no").val();
 	var tag = $("#tag_input").val();
-	var machine_code = $("#exe").val();
+	var machine_code = $("#machine_code").val();
 	var operator_id = $("#operator_id").val();
 	var started_at = $("#started_at").val();
 	var green = $("#green").val();
@@ -633,16 +713,19 @@ function finish(){
 	if(confirm("Apakah anda yakin untuk mengakhiri proses ini?\nData tidak dapat dikembalikan.")){
 		$.post('{{ url("create/workshop/tag/process_log") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#tag').val('');
-				$('#tag').focus();
+				$("#timeline_number_" + green).removeClass('kedip');
+				$("#timeline_box_" + green).removeClass('kedip');
 
-				// $(".fa").removeClass('bg-green');
-				// $(".timeline_item").removeClass('bg-green');
+				$("#timeline_number_" + green).addClass('bg-green');
+				$("#timeline_box_" + green).addClass('bg-green');
 
-				count1 = false;
+				count_time = false;
+				count_process_bar = false;
 				$('#process_bar').removeClass('active');
 
-				openSuccessGritter('Success!', result.message);			
+				$('#machine').focus();
+
+				openSuccessGritter('Success!', result.message);		
 			}
 			else{
 				audio_error.play();
@@ -666,7 +749,7 @@ function openSuccessGritter(title, message){
 		class_name: 'growl-success',
 		image: '{{ url("images/image-screen.png") }}',
 		sticky: false,
-		time: '3000'
+		time: '4000'
 	});
 }
 
@@ -677,7 +760,7 @@ function openErrorGritter(title, message) {
 		class_name: 'growl-danger',
 		image: '{{ url("images/image-stop.png") }}',
 		sticky: false,
-		time: '3000'
+		time: '4000'
 	});
 }
 
