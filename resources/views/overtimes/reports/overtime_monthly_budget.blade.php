@@ -571,7 +571,7 @@
       }, {
         name: 'Actual Accumulative',
         data: seriesDataAktual,
-        color: "#7300ab"
+        color: "#ae05f7"
       },
       ]
     });

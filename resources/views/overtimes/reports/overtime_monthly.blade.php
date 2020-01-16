@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="col-xs-12" style="padding-top: 10px;">
-      <div id="over_control" style="width: 100%; height: 500px;"></div>
+      <div id="over_control" style="width: 100%; height: 600px;"></div>
     </div>
     <div class="col-xs-12" style="padding-top: 10px;">
       <div class="box box-solid" style="background-color: rgb(240,240,240);">
@@ -572,7 +572,7 @@
         }, {
           name: 'Actual Accumulative',
           data: seriesDataAktual,
-          color: "#7300ab"
+          color: "#ae05f7"
         },
         ]
       });
