@@ -21,6 +21,15 @@ class DailyCheckController extends Controller
     public function __construct()
     {
       $this->middleware('auth');
+      if (isset($_SERVER['HTTP_USER_AGENT']))
+        {
+            $http_user_agent = $_SERVER['HTTP_USER_AGENT']; 
+            if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent)) 
+            {
+                // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
+                die();
+            }
+        }
       $this->product = ['Saxophone',
                         'Flute',
                         'Clarinet'];
