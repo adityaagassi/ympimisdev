@@ -64,163 +64,116 @@
 </section>
 @endsection
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="content" style="padding-left: 0px; padding-right: 0px; padding-top: 0px">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="col-md-12">
-				<div class="col-md-2 pull-right">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border-color: #00a65a">
-							<i class="fa fa-calendar"></i>
-						</div>
-						<input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select Date" style="border-color: #00a65a">
-					</div>
-					<br>
-				</div>
-			</div>
-			<div class="col-md-12">
-				<div id="over_control" style="width: 100%; height: 500px;"></div>
-			</div>
-			<div class="col-md-12">
-				<div class="box box-solid">
-					<div class="box-body" style="padding-top: 0px">
-						<div class="col-md-12">
-              <table width="100%">
-                <tr>
-                  <td width="1%">
-                    <div class="description-block border-right" style="color: #157fd6">
-                      <h5 class="description-header" style="font-size: 42px;">
-                        <span class="description-percentage" id="tot_budget"></span>
-                      </h5>      
-                      <span class="description-text" style="font-size: 28px;">Total Budget<br><span>予算月間累計</span></span>   
-                    </div>
-                  </td>
-                  <td width="1%">
-                    <div class="description-block border-right" style="color: #7300ab" >
-                      <h5 class="description-header" style="font-size: 42px; ">
-                        <span class="description-percentage" id="tot_act"></span>
-                      </h5>      
-                      <span class="description-text" style="font-size: 28px;">Total Actual<br><span >単月実績</span></span>   
-                    </div>
-                  </td>
-                  <td width="1%">
-                    <div class="description-block border-right text-green" id="diff_text">
-                      <h5 class="description-header" style="font-size: 42px;">
-                        <span class="description-percentage" id="tot_diff"></span>
-                      </h5>      
-                      <span class="description-text" style="font-size: 30px;">Difference</span>
-                      <br><span class="description-text" style="font-size: 16px">(ACT-BDG)</span>
-                      <br><span class="description-text" style="font-size: 28px;">差異</span>   
-                    </div>
-                  </td>
-                  <td width="1%">
-                    <div class="description-block border-right" style="color: #157fd6">
-                      <h5 class="description-header" style="font-size: 42px;">
-                        <span class="description-percentage" id="avg_bdg"></span>
-                      </h5>      
-                      <span class="description-text" style="font-size: 28px;">Budget Average<br><span>予算月間平均</span></span>   
-                    </div>
-                  </td>
-                  <td width="1%">
-                    <div class="description-block border-right text-yellow">
-                     <h5 class="description-header" style="font-size: 42px;">
-                      <span class="description-percentage" id="avg"></span>
-                    </h5>      
-                    <span class="description-text" style="font-size: 28px;">Average<br><span >平均</span></span>
-                  </div>
-                </td>
-                <!-- <td width="1%">
-                  <div class="description-block border-right text-yellow">
-                   <h5 class="description-header" style="font-size: 42px;">
-                    <span class="description-percentage" id="total_budget"></span>
-                  </h5>      
-                  <span class="description-text" style="font-size: 28px;">Total Budget<br><span>??</span></span>
-                </div>
-              </td> -->
-            </tr>
-          </table>
-          <div class="col-md-3">
-
-          </div>
-
-						<!-- 	<div class="col-md-3">
-								<div class="description-block border-right" style="color: #02ff17">
-									<h5 class="description-header" style="font-size: 50px;">
-										<span class="description-percentage" id="tot_day_budget"></span>
-									</h5>      
-									<span class="description-text" style="font-size: 35px;">Total Forecast<br><span >単月見込み</span></span>   
-								</div>
-							</div> -->
-
-							<div class="col-md-3">
-								
-							</div>
-							<div class="col-md-2">
-								
-							</div>
-              <div class="col-md-2">
-
+<section class="content" style="padding-top: 0;">
+  <div class="row">
+    <div class="col-xs-2 pull-right">
+      <div class="input-group date">
+        <div class="input-group-addon bg-purple" style="border: none;">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Pilih Tanggal">
+      </div>
+    </div>
+    <div class="col-xs-12" style="padding-top: 10px;">
+      <div id="over_control" style="width: 100%; height: 500px;"></div>
+    </div>
+    <div class="col-xs-12" style="padding-top: 10px;">
+      <div class="box box-solid" style="background-color: rgb(240,240,240);">
+        <table style="width: 100%;">
+          <tr>
+            <td width="1%">
+              <div class="description-block border-right" style="color: #2fe134">
+                <h5 class="description-header" style="font-size: 48px;">
+                  <span class="description-percentage" id="tot_budget"></span>
+                </h5>      
+                <span class="description-text" style="font-size: 32px;">Total Budget<br><span>予算月間累計</span></span>   
               </div>
-              <div class="col-md-2">
-
+            </td>
+            <td width="1%">
+              <div class="description-block border-right" style="color: #7300ab" >
+                <h5 class="description-header" style="font-size: 48px; ">
+                  <span class="description-percentage" id="tot_act"></span>
+                </h5>      
+                <span class="description-text" style="font-size: 32px;">Total Actual<br><span >単月実績</span></span>   
               </div>
+            </td>
+            <td width="1%">
+              <div class="description-block border-right text-green" id="diff_text">
+                <h5 class="description-header" style="font-size: 48px;">
+                  <span class="description-percentage" id="tot_diff"></span>
+                </h5>      
+                <span class="description-text" style="font-size: 32px;">Diff(Act-Bdg)</span>
+                <br><span class="description-text" style="font-size: 32px;">差異</span>   
+              </div>
+            </td>
+            <td width="1%">
+              <div class="description-block border-right" style="color: #2fe134">
+                <h5 class="description-header" style="font-size: 48px;">
+                  <span class="description-percentage" id="avg_bdg"></span>
+                </h5>      
+                <span class="description-text" style="font-size: 32px;">Budget Average<br><span >予算月間平均</span></span>   
+              </div>
+            </td>
+            <td width="1%">
+              <div class="description-block border-right text-yellow">
+               <h5 class="description-header" style="font-size: 48px;">
+                <span class="description-percentage" id="avg"></span>
+              </h5>      
+              <span class="description-text" style="font-size: 32px;">Average<br><span >平均</span></span>
             </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="float: right; " id="modal-title"></h4> 
+        <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="progressbar2">
+              <center>
+                <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
+                <br><h4>Loading ...</h4>
+              </center>
+            </div>
+            <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th>No</th>
+                  <th>NIK</th>
+                  <th>Nama</th>
+                  <th>Total Lembur (jam)</th>
+                  <th>Keperluan</th>
+                </tr>
+              </thead>
+              <tbody id="tabelDetail"></tbody>
+              <tfoot>
+
+                <th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
+                <th id="tot" style="font-weight: bold; size: 25px"></th>
+                <th  style="font-weight: bold; size: 25px"></th>
+
+              </tfoot>
+            </table>
           </div>
         </div>
       </div>
-
-      <div class="modal fade" id="myModal">
-        <div class="modal-dialog modal-lg">
-         <div class="modal-content">
-          <div class="modal-header">
-           <h4 style="float: right; " id="modal-title"></h4> 
-           <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-         </div>
-         <div class="modal-body">
-           <div class="row">
-            <div class="col-md-12">
-             <div id="progressbar2">
-              <center>
-               <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
-               <br><h4>Loading ...</h4>
-             </center>
-           </div>
-           <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
-            <thead style="background-color: rgba(126,86,134,.7);">
-             <tr>
-              <th>No</th>
-              <th>NIK</th>
-              <th>Nama</th>
-              <th>Total Lembur (jam)</th>
-              <th>Keperluan</th>
-            </tr>
-          </thead>
-          <tbody id="tabelDetail"></tbody>
-          <tfoot>
-
-            <th colspan="3" style="font-weight: bold; size: 25px; text-align: center;">TOTAL </th>
-            <th id="tot" style="font-weight: bold; size: 25px"></th>
-            <th  style="font-weight: bold; size: 25px"></th>
-
-          </tfoot>
-        </table>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-   <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
- </div>
 </div>
-<!-- /.modal-content -->
-</div>
-<!-- /.modal-dialog -->
-</div>
-
-</div>
-</div>
-
-</section>
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -239,12 +192,216 @@
 
 		drawChart();
 
-    setInterval(drawChart, 3000);
+    setInterval(drawChart, 300000);
   });
 
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+  Highcharts.createElement('link', {
+    href: '{{ url("fonts/UnicaOne.css")}}',
+    rel: 'stylesheet',
+    type: 'text/css'
+  }, null, document.getElementsByTagName('head')[0]);
 
-	function drawChart() {
+  Highcharts.theme = {
+    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+    '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+    chart: {
+      backgroundColor: {
+        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+        stops: [
+        [0, '#2a2a2b'],
+        [1, '#3e3e40']
+        ]
+      },
+      style: {
+        fontFamily: 'sans-serif'
+      },
+      plotBorderColor: '#606063'
+    },
+    title: {
+      style: {
+        color: '#E0E0E3',
+        textTransform: 'uppercase',
+        fontSize: '20px'
+      }
+    },
+    subtitle: {
+      style: {
+        color: '#E0E0E3',
+        textTransform: 'uppercase'
+      }
+    },
+    xAxis: {
+      gridLineColor: '#707073',
+      labels: {
+        style: {
+          color: '#E0E0E3'
+        }
+      },
+      lineColor: '#707073',
+      minorGridLineColor: '#505053',
+      tickColor: '#707073',
+      title: {
+        style: {
+          color: '#A0A0A3'
+
+        }
+      }
+    },
+    yAxis: {
+      gridLineColor: '#707073',
+      labels: {
+        style: {
+          color: '#E0E0E3'
+        }
+      },
+      lineColor: '#707073',
+      minorGridLineColor: '#505053',
+      tickColor: '#707073',
+      tickWidth: 1,
+      title: {
+        style: {
+          color: '#A0A0A3'
+        }
+      }
+    },
+    tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      style: {
+        color: '#F0F0F0'
+      }
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          color: 'white'
+        },
+        marker: {
+          lineColor: '#333'
+        }
+      },
+      boxplot: {
+        fillColor: '#505053'
+      },
+      candlestick: {
+        lineColor: 'white'
+      },
+      errorbar: {
+        color: 'white'
+      }
+    },
+    legend: {
+      itemStyle: {
+        color: '#E0E0E3'
+      },
+      itemHoverStyle: {
+        color: '#FFF'
+      },
+      itemHiddenStyle: {
+        color: '#606063'
+      }
+    },
+    credits: {
+      style: {
+        color: '#666'
+      }
+    },
+    labels: {
+      style: {
+        color: '#707073'
+      }
+    },
+
+    drilldown: {
+      activeAxisLabelStyle: {
+        color: '#F0F0F3'
+      },
+      activeDataLabelStyle: {
+        color: '#F0F0F3'
+      }
+    },
+
+    navigation: {
+      buttonOptions: {
+        symbolStroke: '#DDDDDD',
+        theme: {
+          fill: '#505053'
+        }
+      }
+    },
+
+    rangeSelector: {
+      buttonTheme: {
+        fill: '#505053',
+        stroke: '#000000',
+        style: {
+          color: '#CCC'
+        },
+        states: {
+          hover: {
+            fill: '#707073',
+            stroke: '#000000',
+            style: {
+              color: 'white'
+            }
+          },
+          select: {
+            fill: '#000003',
+            stroke: '#000000',
+            style: {
+              color: 'white'
+            }
+          }
+        }
+      },
+      inputBoxBorderColor: '#505053',
+      inputStyle: {
+        backgroundColor: '#333',
+        color: 'silver'
+      },
+      labelStyle: {
+        color: 'silver'
+      }
+    },
+
+    navigator: {
+      handles: {
+        backgroundColor: '#666',
+        borderColor: '#AAA'
+      },
+      outlineColor: '#CCC',
+      maskFill: 'rgba(255,255,255,0.1)',
+      series: {
+        color: '#7798BF',
+        lineColor: '#A6C7ED'
+      },
+      xAxis: {
+        gridLineColor: '#505053'
+      }
+    },
+
+    scrollbar: {
+      barBackgroundColor: '#808083',
+      barBorderColor: '#808083',
+      buttonArrowColor: '#CCC',
+      buttonBackgroundColor: '#606063',
+      buttonBorderColor: '#606063',
+      rifleColor: '#FFF',
+      trackBackgroundColor: '#404043',
+      trackBorderColor: '#404043'
+    },
+
+    legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+    background2: '#505053',
+    dataLabelsColor: '#B0B0B3',
+    textColor: '#C0C0C0',
+    contrastTextColor: '#F0F0F3',
+    maskColor: 'rgba(255,255,255,0.3)'
+  };
+  Highcharts.setOptions(Highcharts.theme);
+
+  var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+  function drawChart() {
 
     var tanggal = $('#tgl').val();
 
@@ -316,35 +473,46 @@
 
     Highcharts.chart('over_control', {
       chart: {
-        spacingTop: 10,
-        type: 'column'
+        type: 'column',
+        backgroundColor: null
       },
       title: {
-        text: '<span style="font-size: 18pt;">Overtime Control - Budget</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.semua[0].tanggal +'</center></span>',
-        useHTML: true
+        text: 'Overtime Control - Budget<br><center style="font-size: 24px;">'+ result.semua[0].tanggal +'</center>',
+        style: {
+          fontSize: '30px',
+          fontWeight: 'bold'
+        }
       },
       credits:{
         enabled:false
       },
       legend: {
         itemStyle: {
-          color: '#000000',
           fontWeight: 'bold',
           fontSize: '20px'
         }
       },
       yAxis: {
-        tickInterval: 10,
         min:0,
+        tickPositioner: function () {
+          var count = 0;
+          var arr = [];
+          var maxDeviation = Math.ceil((this.dataMax*1.3)/500)*500;
+          for (var i = 0; i <= maxDeviation/500; i++) {
+            arr.push(count);
+            count += 500;
+          }
+
+          return arr;
+        },
         allowDecimals: false,
         title: {
-          text: 'Amount of Hours'
+          text: 'Hour(s)'
         }
       },
       xAxis: {
         labels: {
           style: {
-            color: 'rgba(75, 30, 120)',
             fontSize: '12px',
             fontWeight: 'bold'
           }
@@ -382,8 +550,9 @@
             rotation: -90
           },
           pointWidth: 15,
-          pointPadding: 0,
-          borderWidth: 0,
+          pointPadding: 0.97,
+          groupPadding: 0.97,
+          borderWidth: 0.97,
           groupPadding: 0.1,
           animation: false,
           opacity: 1
@@ -404,17 +573,6 @@
         data: seriesDataAktual,
         color: "#7300ab"
       },
-      // {
-      //  name: 'Forecast Production',
-      //  marker: {
-      //    symbol: 'c-rect',
-      //    lineWidth:4,
-      //    lineColor: '#02ff17',
-      //    radius: 10,
-      //  },
-      //  type: 'scatter',
-      //  data: budgetHarian
-      // }
       ]
     });
   });
