@@ -176,6 +176,10 @@ Route::get('index/dailyNG', 'InjectionsController@indexDailyNG');
 Route::get('fetch/dailyNG', 'InjectionsController@dailyNG');
 Route::get('fetch/detailDailyNG', 'InjectionsController@detailDailyNG');
 
+Route::get('index/molding_monitoring', 'InjectionsController@index_molding_monitoring');
+Route::get('fetch/molding_monitoring', 'InjectionsController@molding_monitoring');
+Route::get('fetch/detail_molding_monitoring', 'InjectionsController@detail_molding_monitoring');
+
 //end report
 
 
@@ -1960,6 +1964,8 @@ Route::get('fetch/recorder/height_check_monitoring/{remark}', 'RecorderProcessCo
 Route::get('index/recorder/detail_monitoring', 'RecorderProcessController@detail_monitoring');
 Route::get('index/recorder/detail_monitoring2', 'RecorderProcessController@detail_monitoring2');
 Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
+Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pull')->name('recorder.get_push_pull');
+Route::post('index/recorder/update/{id}','RecorderProcessController@update');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
