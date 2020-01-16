@@ -114,7 +114,7 @@
 
         <!-- Email Foreman -->
 
-        @if($cars->email_status == "SentForeman" && $cars->checked_foreman == "Checked")
+        @if($cars->email_status == "SentForeman2" && $cars->checked_foreman == "Checked")
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
         @elseif(Auth::user()->username == $cars->verifikatorforeman && $cars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->

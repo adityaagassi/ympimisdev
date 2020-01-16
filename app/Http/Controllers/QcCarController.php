@@ -611,6 +611,15 @@ class QcCarController extends Controller
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CAR');
               }
 
+              else if($qc_cars->email_status == "SentForeman2" && $qc_cars->posisi == "foreman2"){
+                $qc_cars->email_status = "SentManager";
+                $qc_cars->email_send_date = date('Y-m-d');
+                $qc_cars->posisi = "manager";
+                $qc_cars->save();
+                Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
+              }
+
               else if($qc_cars->email_status == "SentChief" && $qc_cars->posisi == "chief"){
                 $qc_cars->email_status = "SentManager";
                 $qc_cars->email_send_date = date('Y-m-d');
