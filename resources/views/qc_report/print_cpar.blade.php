@@ -177,6 +177,9 @@
 				</td>
 				<td rowspan="2" style="vertical-align: middle;text-align: center">
 					@if($cpar->approved_gm == "Checked")
+						@if(count($cparss[0]['ttd']) > 0)
+						<img width="50" src="{{url($cparss[0]['ttd'])}}" alt="" style="vertical-align: middle !important">
+						@endif
               			{{$cpar->gmname}}
 					@else
 						&nbsp;

@@ -211,7 +211,7 @@ class QcReportController extends Controller
 
         $destinations = Destination::select('destinations.*')->get();
 
-        $vendors = "select id, vendor, name from vendors";
+        $vendors = "select id, vendor, name from vendors where vendor != 'Y31504'";
         $vendor = DB::select($vendors);
 
         return view('qc_report.create', array(
@@ -281,7 +281,8 @@ class QcReportController extends Controller
                 $posisi = "leader";
                 $chief = null;
 
-                $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance' ";
+                $getforeman = "select employees.employee_id,users.username,employees.`name`,mutation_logs.department from employees join mutation_logs on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id join departments on mutation_logs.department = departments.department_name join users on users.username = employees.employee_id where promotion_logs.position = 'foreman' and promotion_logs.valid_to is null and mutation_logs.valid_to is null and mutation_logs.department='Quality Assurance'";
+
                 $fore = DB::select($getforeman);
                 
                 if ($fore != null) {
@@ -334,6 +335,7 @@ class QcReportController extends Controller
             'tgl_permintaan' => date("Y-m-d", strtotime($date_permintaan)),
             'tgl_balas' => date("Y-m-d", strtotime($date_balas)),
             'judul_komplain' => $request->get('judul_komplain'),
+            'kategori_komplain' => $request->get('kategori_komplain'),
             'file' => $file->filename,
             'via_komplain' => $request->get('via_komplain'),
             'sumber_komplain' => $request->get('sumber_komplain'),
@@ -411,7 +413,7 @@ class QcReportController extends Controller
 
         $destinations = Destination::select('destinations.*')->get();
 
-        $vendors = "select id, vendor, name from vendors";
+        $vendors = "select id, vendor, name from vendors where vendor != 'Y31504'";
         $vendor = DB::select($vendors);
 
         $parts = QcCparItem::select('qc_cpar_items.*')
@@ -479,6 +481,7 @@ class QcReportController extends Controller
             $cpars->tgl_permintaan = date('Y-m-d', strtotime($date_permintaan));
             $cpars->tgl_balas = date("Y-m-d", strtotime($date_balas));
             $cpars->judul_komplain = $request->get('judul_komplain');
+            $cpars->kategori_komplain = $request->get('kategori_komplain');
             $cpars->via_komplain = $request->get('via_komplain');
             $cpars->sumber_komplain = $request->get('sumber_komplain');
             $cpars->destination_code = $request->get('customer');
@@ -733,20 +736,6 @@ class QcReportController extends Controller
       //   $tgl = date("Y-m-d");
       // }
 
-      // if($request->get('tgl') != null){
-      //   $bulan = $request->get('tgl');
-      //   $fynow = DB::select("select DISTINCT(fiscal_year) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$bulan."'");
-      //   foreach($fynow as $fynow){
-      //       $fy = $fynow->fiscal_year;
-      //   }
-      // }
-      // else{
-      //   $bulan = date('Y-m');
-      //   $fynow = DB::select("select fiscal_year from weekly_calendars where CURDATE() = week_date");
-      //   foreach($fynow as $fynow){
-      //       $fy = $fynow->fiscal_year;
-      //   }
-      // }        
       $tahun = date('Y');
       $tglfrom = $request->get('tglfrom');
       $tglto = $request->get('tglto');
@@ -814,21 +803,17 @@ class QcReportController extends Controller
       return Response::json($response); 
     }
 
-    public function fetchDept(Request $request)
+
+
+    public function fetchKategori(Request $request)
     {   
-      $tahun = date('Y');
-      $tglfrom = $request->get('tglfrom');
-      $tglto = $request->get('tglto');
 
-      if ($tglfrom == "") {
-          $tglfrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      $tglnow = date('Y-m-d');
+      $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+      foreach ($fy as $fys) {
+          $fiscal = $fys->fiscal_year;
       }
-
-      if ($tglto == "") {
-          $tglto = date('Y-m', strtotime(carbon::now()));
-      }
-
-      // $files=array();
 
       $kategori = $request->get('kategori');
 
@@ -852,22 +837,12 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("SELECT count(cpar_no) as jumlah, department_name,sum(case when qc_cpars.status_code = '0' then 1 else 0 end) as open, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as progress, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from departments
-        LEFT JOIN qc_cpars on qc_cpars.department_id = departments.id
-        LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code
-        where departments.id not in (1,2,3,4,5,11)
-        GROUP BY departments.department_name ORDER BY departments.id;");
-
-      // $tahun = date('Y');
-
-      // $monthTitle = date("Y", strtotime($bulan));
+      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year, month(tgl_permintaan) ASC");
 
       $response = array(
         'status' => true,
         'datas' => $data,
-        'tahun' => $tahun,
-        'tglfrom' => $tglfrom,
-        'tglto' => $tglto,
+        'fiscal' => $fiscal,
         'kategori' =>  $kate,
         'departemen' => $dep
       );

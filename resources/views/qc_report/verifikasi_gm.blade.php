@@ -304,7 +304,6 @@
           </td>
           <td rowspan="2" style="vertical-align: middle;text-align: center;">
             @if($cpar->approved_gm == "Checked")
-              
               <img src="{{url($cparss[0]['ttd'])}}" width="150px">
               <br>{{$cpar->gmname}}
             @else

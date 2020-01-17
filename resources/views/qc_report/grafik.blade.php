@@ -147,17 +147,10 @@ table > thead > tr > th{
                 <option value="Eksternal">Eksternal</option>
                 <option value="Internal">Internal</option>
                 <option value="Supplier">Supplier</option>
-              </select>
+            </select>
           </div>
-            <!-- <div class="form-group">
-              <select class="form-control select2" multiple="multiple" id="kategori" data-placeholder="Select Kategori">
-                <option value="Eksternal">Eksternal</option>
-                <option value="Internal">Internal</option>
-                <option value="Supplier">Supplier</option>
-              </select> -->
         </div>
-
-         <div class="col-md-2">
+        <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
@@ -169,7 +162,7 @@ table > thead > tr > th{
                   @endforeach
                 </select>
             </div>
-          </div>
+        </div>
 
         <div class="col-md-2">
           <div class="input-group">
@@ -187,57 +180,16 @@ table > thead > tr > th{
         <div class="col-xs-2">
           <button class="btn btn-success btn-sm" onclick="drawChart()">Update Chart</button>
         </div>
-
-        <!-- <div class="col-md-2 pull-right">
-          <select class="form-control" id="fq" data-placeholder="Pilih Fiscal year" onchange="drawChart()" style="border-color: #605ca8" >
-              <option value="" selected>Semua Fiscal Year</option>
-              <option value="196">FY196</option>
-              <option value="195">FY195</option>
-            </select>
-          <br>
-        </div> -->
-
-        <!-- <div class="col-md-2 pull-right">
-              <select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="drawChart()">
-                @foreach($fys as $fy)
-                <option value="{{ $fy->fiscal_year }}">{{ $fy->fiscal_year }}</option>
-                @endforeach
-              </select>
-              <input type="text" name="fy" id="fy" hidden>
-          </div> -->
-       
-        
-
-        <!-- <div class="col-md-2">
-          <select class="form-control" id="bulanfrom" data-placeholder="Bulan Dari" style="border-color: #605ca8" onchange="getbulanke()">
-              <option value="">Bulan Dari</option>
-              @foreach($bulans as $bulan)
-                <option value="{{ $bulan->bulan }}">{{ $bulan->namabulan }}</option>
-                @endforeach
-            </select>
-        </div> -->
-
-        <!-- <div class="col-md-2">
-          <select class="form-control" id="bulanto" data-placeholder="Bulan Ke" style="border-color: #605ca8" >
-              <option value="">Bulan Ke</option>
-             
-            </select>
-        </div>
-
-        <div class="col-md-2">
-          <select class="form-control" id="tahun" data-placeholder="Pilih Tahun" style="border-color: #605ca8" >
-              <option value="">Semua Tahun</option>
-               @foreach($years as $year)
-                <option value="{{ $year->tahun }}"
-                  <?php if($year->tahun == date('Y')){ echo "selected";}?>
-                  >{{ $year->tahun }}</option>
-                @endforeach
-            </select>
-        </div>-->
-      <div class="col-md-12" style="margin-top: 10px; padding-right: 0;padding-left: 10px">
-          <!-- <div class="box-header with-border" id="boxTitle">Tes</div> -->
+      </div>
+      
+      <div class="col-md-8" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
           <div id="chart" style="width: 99%"></div>
-          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 10px; width: 99%">
+      </div>
+      <div class="col-md-4" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+          <div id="chartresume" style="width: 99%"></div>
+      </div>
+      <div class="col-md-12" style="padding-right: 0;padding-left: 10px">
+          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
                 <th style="width: 15%; padding: 0;vertical-align: middle;;font-size: 16px;" rowspan="2">No CPAR</th>
@@ -267,81 +219,11 @@ table > thead > tr > th{
               </tr>
             </thead>
             <tbody id="tabelisi">
-              <!-- <tr>
-                <td>05/196.S/XI/2019</td>
-                <td>procurement</td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td></td>
-                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"> </td>
-                <td></td>         
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>06/196.S/XI/2019</td>
-                <td>procurement</td>
-                <td></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>02/196.I/XI/2019</td>
-                <td>welding-surface treatment (wi-wst)</td>
-                <td></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td><img src="{{ url("ok.png")}}" width="50" height="50" class="zoom"></td>
-                <td></td>
-                <td><img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr> -->
             </tbody>
             <tfoot>
             </tfoot>
           </table>
       </div>
-
-      <!-- <div class="col-md-12" style="margin-top: 20px">
-        <div class="box">
-          {{-- <div class="box-header with-border" id="boxTitle">Tes</div> --}}
-          <div class="nav-tabs-custom">
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_1">
-                <div id="chartdept" style="width: 99%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 
@@ -417,6 +299,7 @@ table > thead > tr > th{
     $('.select2').select2();
 
     drawChart();
+    drawChartResume();
     fetchTable();
     setInterval(fetchTable, 300000);
     // drawChartDepartemen();
@@ -473,14 +356,12 @@ table > thead > tr > th{
     var status = $('#status').val();
 
     var data = {
-      // tahun: tahun,
       tglfrom: tglfrom,
       tglto: tglto,
       kategori: kategori,
       departemen: departemen,
       status:status
     };
-
 
     $.get('{{ url("index/qc_report/fetchReport") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
@@ -537,12 +418,12 @@ table > thead > tr > th{
             },
             yAxis: {
               lineWidth:2,
-              lineColor:'#9e9e9e',
+              lineColor:'#fff',
               type: 'linear',
               title: {
                 text: 'Total Kasus'
               },
-              tickInterval: 1,  
+              tickInterval: 2,  
               stackLabels: {
                   enabled: true,
                   style: {
@@ -552,18 +433,158 @@ table > thead > tr > th{
               }
             },
             legend: {
-              align: 'right',
-              x: -30,
-              verticalAlign: 'top',
-              y: 30,
+              // align: 'right',
+              // x: -30,
+              // verticalAlign: 'top',
+              // y: 30,
+              reversed: true,
               itemStyle:{
                 color: "white",
                 fontSize: "12px",
                 fontWeight: "bold",
 
               },
-              floating: true,
-              shadow: false
+              // floating: true,
+              // shadow: false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  color:  Highcharts.ColorString,
+                  stacking: 'normal',
+                  borderRadius: 1,
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [{
+                name: 'Unverified CPAR',
+                color: '#ff6666', //ff6666
+                data: statusunverifiedcpar
+            }, {
+                name: 'Unverified CAR',
+                data: statusunverifiedcar,
+                color : '#f0ad4e' //f5f500
+            },
+            {
+                name: 'QA Verification',
+                data: statusverifikasi,
+                color : '#448aff' //f5f500
+            },
+            {
+                name: 'Closed',
+                data: statusclose,
+                color : '#5cb85c' //00f57f
+            }
+            ]
+          })
+        } else{
+          alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function drawChartResume() {
+    
+    var tglfrom = $('#tglfrom').val();
+    var tglto = $('#tglto').val();
+    var departemen = $('#departemen').val();
+    var status = $('#status').val();
+
+    var data = {
+      tglfrom: tglfrom,
+      tglto: tglto,
+      departemen: departemen,
+      status:status
+    };
+
+    $.get('{{ url("index/qc_report/fetchKategori") }}', data, function(result, status, xhr) {
+      if(xhr.status == 200){
+        if(result.status){
+          var fiscal = result.fiscal;
+          if(fiscal == null){
+            fiscal = "All"
+          }
+
+          var kategori = [], jml = [], statusunverifiedcpar = [], statusunverifiedcar = [], statusverifikasi = [], statusclose = [];
+
+          $.each(result.datas, function(key, value) {
+            kategori.push(value.kategori);
+            jml.push(value.jumlah);
+            statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
+            statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
+            statusverifikasi.push(parseInt(value.qaverification));
+            statusclose.push(parseInt(value.close));
+          })
+
+          $('#chartresume').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Complain Report By Category',
+              style: {
+                fontSize: '18px',
+                fontWeight: 'bold'
+              }
+            },
+            subtitle: {
+              text: 'On '+result.fiscal,
+              style: {
+                fontSize: '1vw',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: kategori,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                text: 'Total Kasus'
+              },
+              tickInterval: 4,  
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              enabled: false
             },
             plotOptions: {
               series: {

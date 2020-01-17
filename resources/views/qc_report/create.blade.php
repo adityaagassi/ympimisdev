@@ -146,6 +146,8 @@
           </div>
         </div>
 
+        <div id="kategori_komplain"></div>
+
         <div class="form-group row increment" align="left">
           <label class="col-sm-1">File</label>
           <div class="col-sm-5">
@@ -163,6 +165,7 @@
               </select>
             </div>
           </span>
+          
           <span id="supplier">
             <label class="col-sm-1">Supplier<span class="text-red">*</span></label>
             <div class="col-sm-5" align="left">
@@ -174,6 +177,9 @@
               </select>
             </div>
           </span>
+
+          <div id="kategori_komplain_internal"></div>
+
         </div>
           
 
@@ -313,14 +319,30 @@
           kategori_cpar.value = "Eksternal";
           $("#customer").show();
           $("#supplier").hide();
+
+          $addeksternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><option value="KD Parts">KD Parts</option><option value="FG">FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option></select></div></div>';
+
+          $('#kategori_komplain').append($addeksternal);
+
         } else if (kategori == "S"){
           kategori_cpar.value = "Supplier";
           $("#supplier").show();
           $("#customer").hide();
+
+          $addsupplier = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><option value="Non YMMJ">Non YMMJ</option></select></div></div>';
+
+          $('#kategori_komplain').append($addsupplier);
+
         } else if (kategori == "I"){
           kategori_cpar.value = "Internal";
+          $("#kategori_komplain").show();
           $("#customer").hide();
           $("#supplier").hide();
+
+          $addinternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><option value="Ketidaksesuaian Kualitas">Ketidaksesuaian Kualitas</option></select></div></div>';
+
+          $('#kategori_komplain_internal').append($addinternal);
+
         }
 
         // var bulan = new Date().getMonth()+1;

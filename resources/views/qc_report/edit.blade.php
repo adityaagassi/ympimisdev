@@ -226,11 +226,13 @@
         <label class="col-sm-1">No CPAR<span class="text-red">*</span></label>
         <div class="col-sm-5">
           <input type="text" class="form-control" name="cpar_no" id="cpar_no" placeholder="Masukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
-          <input type="hidden" class="form-control" name="kategori" id="kategori" placeholder="kategori" value="{{ $cpars->kategori }}">
-            <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
-            <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
+          <input type="text" class="form-control" name="kategori" id="kategori" placeholder="kategori" value="{{ $cpars->kategori }}">
+          <input type="hidden" class="form-control" name="nomordepan" id="nomordepan" placeholder="nomordepan" required>
+          <input type="hidden" class="form-control" name="lastthree" id="lastthree" placeholder="lastthree" required>
         </div>
       </div>
+
+      <div id="kategori_komplain"></div>
 
       <div class="form-group row increment" align="left">
         <label class="col-sm-1">File</label>
@@ -268,6 +270,8 @@
               </select>
             </div>
           </span>
+
+          <div id="kategori_komplain_internal"></div>
       </div>
       <div class="clone hide">
         <div class="form-group row control-group" style="margin-top:10px">
@@ -838,12 +842,30 @@
     if (document.getElementById("kategori").value == "Eksternal") {
       $("#customer").show();
       $("#supplier").hide();
+
+      $k = '{{ $cpars->kategori_komplain }}';
+
+      $addeksternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><?php if($cpars->kategori_komplain == "KD Parts") { ?><option value="KD Parts" selected>KD Parts</option><option value="FG">FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option> <?php } else if ($cpars->kategori_komplain == "FG") { ?> <option value="KD Parts">KD Parts</option><option value="FG" selected>FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option><?php } else if ($cpars->kategori_komplain == "NG Jelas") { ?> <option value="KD Parts">KD Parts</option><option value="FG">FG</option><option value="NG Jelas" selected>NG Jelas</option><option value="Claim Rate">Claim Rate</option><?php } else if ($cpars->kategori_komplain == "Claim Rate") { ?><option value="KD Parts">KD Parts</option><option value="FG">FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate" selected>Claim Rate</option><?php } else { ?> <option></option><option value="KD Parts">KD Parts</option><option value="FG">FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option><?php } ?>';
+
+      $('#kategori_komplain').append($addeksternal);
+
     } else if (document.getElementById("kategori").value == "Supplier"){
       $("#supplier").show();
       $("#customer").hide();
+
+      $addsupplier = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><?php if($cpars->kategori_komplain == "Non YMMJ") { ?><option value="Non YMMJ" selected>Non YMMJ</option><?php } else { ?><option></option><option value="Non YMMJ">Non YMMJ</option><?php } ?></select></div></div>';
+
+      $('#kategori_komplain').append($addsupplier);
+
+
     } else if (document.getElementById("kategori").value == "Internal"){
       $("#customer").hide();
       $("#supplier").hide();
+
+
+      $addinternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><?php if($cpars->kategori_komplain == "Ketidaksesuaian Kualitas") { ?><option value="Ketidaksesuaian Kualitas" selected>Ketidaksesuaian Kualitas</option><?php } else { ?><option></option><option value="Ketidaksesuaian Kualitas">Ketidaksesuaian Kualitas</option><?php } ?></select></div></div>';
+
+      $('#kategori_komplain_internal').append($addinternal);
     }
   });
 
