@@ -45,19 +45,41 @@
 		background-color: rgba(255,0,0,.85);
 	}
 
-	.gambar {
+	.laktasi {
 		width: 100px;
-		height: 175px;
+		height: 160px;
 		background-color: rgba(118,255,3,.6);
 		border-radius: 15px;
-		margin-left: 30px;
 		margin-top: 15px;
 		display: inline-block;
 		border: 2px solid white;
 	}
 
-	.gambar img {
-		max-width:87%; 
+	.laktasi img {
+		width: 85px;
+		height: 110px;
+		margin-top: 10px; 
+		height:auto;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		vertical-align:middle;
+	}
+
+	.bed {
+		width: 100px;
+		height: 160px;
+		background-color: rgba(118,255,3,.6);
+		border-radius: 15px;
+		margin-top: 15px;
+		display: inline-block;
+		border: 2px solid white;
+	}
+
+	.bed img {
+		width: 85px;
+		height: 110px;
+		margin-top: 10px; 
 		height:auto;
 		display: block;
 		margin-left: auto;
@@ -96,44 +118,50 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-xs-7 pull-right" style="display: none;">
+		<div class="col-xs-6 pull-right">
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Gents.png") }}">
+				<div class="laktasi" id="gambar-1">
+					<img src="{{ url("images/Laktasi.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Gents.png") }}">
+				<div class="laktasi" id="gambar-1">
+					<img src="{{ url("images/Laktasi.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Gents.png") }}">
+				<div class="laktasi" id="gambar-1">
+					<img src="{{ url("images/Laktasi.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Gents.png") }}">
+				<div class="laktasi" id="gambar-1">
+					<img src="{{ url("images/Laktasi.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Ladies.png") }}">
+				<div class="bed" id="gambar-1">
+					<img src="{{ url("images/Bed.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="gambar" id="gambar-1">
-					<img src="{{ url("images/Ladies.png") }}">
+				<div class="bed" id="gambar-1">
+					<img src="{{ url("images/Bed.png") }}">
 					<p class='text_stat' id='text-1'>VACANT</p>
 				</div>
 			</div>
 		</div>
+		{{-- <div class="col-xs-2">
+			<table class="table" id="tableQty" style="font-size: 2vw; padding: 0px;">
+				<tbody id="tableBodyQty">
+				</tbody>
+			</table>
+		</div> --}}
 		<div class="col-xs-12" style="padding-top: 2%;">
 			<table class="table table-bordered" id="tableList">
 				<thead>

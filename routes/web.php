@@ -1114,9 +1114,12 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 });
 Route::get('index/display/clinic_monitoring', 'ClinicController@indexClinicMonitoring');
 Route::get('index/display/clinic_visit', 'ClinicController@indexClinicVisit');
+Route::get('index/display/clinic_disease', 'ClinicController@indexClinicDisease');
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
+Route::get('fetch/display/clinic_disease', 'ClinicController@fetchDisease');
+
 //END CLINIC
 
 
@@ -2038,6 +2041,8 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
 });
 
+// Request CPAR QA
+
 Route::get('index/request_qa', 'QcRequestController@index');
 Route::get('index/request_qa/create', 'QcRequestController@create');
 Route::post('index/request_qa/create_action', 'QcRequestController@create_action');
@@ -2054,6 +2059,13 @@ Route::get('index/request_qa/print/{id}', 'QcRequestController@print_report');
 Route::post('index/request_qa/approval/{id}', 'QcRequestController@approval');
 Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi');
 
+// Form Ketidaksesuaian
+Route::get('index/qa_ymmj', 'QcYmmjController@index');
+Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
+Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
+Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
+
+
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
@@ -2063,7 +2075,7 @@ Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_
 Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_monitoring4');
 Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_monitoring5');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
-Route::get('index/qc_report/fetchDept', 'QcReportController@fetchDept');
+Route::get('index/qc_report/fetchKategori', 'QcReportController@fetchKategori');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
 Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');

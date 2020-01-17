@@ -132,6 +132,16 @@ class ClinicController extends Controller{
 
 	}
 
+	public function indexClinicDisease(){
+		$title = "Clinic Patient's Disease";
+		$title_jp = '??';
+
+		return view('clinic.display.clinic_disease', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', $title)->with('head','Clinic');
+	}
+
 	public function indexClinicMonitoring(){
 		$title = 'Clinic Visit Monitoring';
 		$title_jp = '??';
@@ -166,6 +176,10 @@ class ClinicController extends Controller{
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'Diagnose')->with('head','Clinic');
+	}
+
+	public function fetchClinicDisease(Request $request){
+		# code...
 	}
 
 	public function fetchDiagnose(Request $request){
@@ -266,6 +280,38 @@ class ClinicController extends Controller{
 			'clinic_visit' => $clinic_visit,
 		);
 		return Response::json($response);
+	}
+
+
+	public function fetchDisease(Request $request){
+		$date_log = "";
+
+		if(strlen($request->get('datefrom')) > 0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$date_log = "WHERE date(visited_at) BETWEEN '".$datefrom."'";
+
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$date_log = $date_log." AND '".$dateto."'";
+			}else{
+				$date_log = $date_log." AND '". date('Y-m-d') ."'";
+			}
+		}else{
+			$date_log = "WHERE date(visited_at) BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
+		}
+
+		$disease = db::select("select diagnose, count(employee_id) qty from clinic_patient_details ".$date_log."
+			and diagnose is not null
+			group by diagnose
+			order by qty desc");
+
+		$response = array(
+			'status' => true,
+			'disease' => $disease,
+		);
+		return Response::json($response);
+
+
 	}
 
 	public function deleteVisitor(Request $request){
@@ -377,5 +423,6 @@ class ClinicController extends Controller{
 			return Response::json($response);
 		}
 	}
+
 
 }

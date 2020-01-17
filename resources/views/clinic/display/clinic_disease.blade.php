@@ -57,7 +57,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<form method="GET" action="{{ action('ClinicController@indexClinicVisit') }}">
+		<form method="GET" action="{{ action('ClinicController@indexClinicDisease') }}">
 			<div class="col-xs-2">
 				<div class="input-group date">
 					<div class="input-group-addon bg-green" style="border: none;">
@@ -81,11 +81,9 @@
 		<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 
 		<div class="col-xs-12">
-			<div id="container1" style="min-width: 300px; height: 200px; margin: 0 auto"></div>
+			<div id="container1" style="height: 550px; margin: 0 auto"></div>
 		</div>
-		<div class="col-xs-12">
-			<div id="container2" style="min-width: 300px; margin: 0 auto"></div>
-		</div>
+
 
 	</div>
 
@@ -125,85 +123,29 @@
 			datefrom:datefrom,
 		}
 
-		$.get('{{ url("fetch/daily_clinic_visit") }}', data, function(result, status, xhr) {
+
+		$.get('{{ url("fetch/display/clinic_disease") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var date = [];
-				var visit = [];
-				for (i = 0; i < result.clinic_visit.length; i++) {
-					date.push(result.clinic_visit[i].week_date);
-					visit.push(parseInt(result.clinic_visit[i].visit));
+				var disease = [];
+				var qty = [];
+				for (i = 0; i < result.disease.length; i++) {
+					disease.push(result.disease[i].diagnose);
+					qty.push(parseInt(result.disease[i].qty));
 				}
 
 				Highcharts.chart('container1', {
 					chart: {
-						type: 'spline'
-					},
-					title: {
-						text: 'Daily Clinic Visit'
-					},						
-					xAxis: {
-						categories: date,
-					},
-					yAxis: {
-						title: {
-							text: 'Clinic Visit'
-						}
-					},
-					tooltip: {
-						shared: true,
-					},
-					credits: {
-						enabled: false
-					},
-					legend: {
-						enabled: false
-					},
-					plotOptions: {
-						areaspline: {
-							fillOpacity: 0.5,
-							dataLabels: {
-								enabled: true
-							},
-							enableMouseTracking: true
-						}
-					},
-					series: 
-					[{
-						name: 'Clinic Visit',
-						data: visit,
-						color: '#90ee7e'
-					}]
-				});		
-			}
-
-		});
-
-		$.get('{{ url("fetch/clinic_visit") }}', data, function(result, status, xhr) {
-			if(result.status){
-				var section = [];
-				var visit = [];
-				for (i = 0; i < result.clinic_visit.length; i++) {
-					if(result.clinic_visit[i].section){
-						section.push(result.clinic_visit[i].section);
-					}else{
-						section.push('Not Found');
-					}
-					visit.push(parseInt(result.clinic_visit[i].qty));
-				}
-
-				Highcharts.chart('container2', {
-					chart: {
 						type: 'column'
 					},
 					title: {
-						text: 'Clinic Visit'
+						text: "Clinic Patient's Disease"
 					},						
 					xAxis: {
-						categories: section,
+						categories: disease,
 					},
 					yAxis: {
 						title: {
-							text: 'Patient(s)'
+							text: "Patient(s)"
 						}
 					},
 					tooltip: {
@@ -233,8 +175,8 @@
 					},
 					series: 
 					[{
-						name: 'Clinic Visit',
-						data: visit,
+						name: 'Patient',
+						data: qty,
 						colorByPoint: true,
 					}]
 				});		

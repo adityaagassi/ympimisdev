@@ -186,13 +186,13 @@
                             <a href="{{ url("index/qc_car") }}">
                                 <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
                             </a>
-<!--                             <br>
-                            <a href="{{ url("index/qc_report/komplain_monitoring5") }}">
-                                <i class="fa fa-caret-right"></i> CPAR & CAR Position
-                            </a> -->
                             <br>                            
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
                                 <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
+                            </a>
+                            <br>                            
+                            <a href="{{ url("index/qa_ymmj") }}">
+                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ
                             </a>
                         </td>
                     </tr>
@@ -239,7 +239,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                     <td>
+                       <td>
                         <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a>
@@ -254,6 +254,10 @@
                             <br>
                             <a href="{{ url("index/display/clinic_visit?dateto=&datefrom=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
+                            </a>
+                            <br>
+                            <a href="{{ url("index/display/clinic_disease?dateto=&datefrom=") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Patient's Disease ()
                             </a>
                             <br>
                             <a href="{{ url("index/emergency_response") }}">
