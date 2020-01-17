@@ -232,7 +232,18 @@
 						},
 					},
 					plotOptions: {
-						series: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '15px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
 							cursor: 'pointer',
 							point: {
 								events: {
@@ -241,11 +252,6 @@
 									}
 								}
 							},
-							borderWidth: 0,
-							dataLabels: {
-								enabled: false,
-								format: '{point.y}'
-							}
 						},
 						column: {
 							color:  Highcharts.ColorString,
@@ -274,11 +280,9 @@
 					}]
 				});
 
-
-
 				var name = [];
 				var time = [];
-				for (var i = 0; i < result.operators.length; i++) {
+				for (var i = 0; i < result.operators.length; i++) {	
 					name.push(result.operators[i].name);
 					time.push(parseInt(result.operators[i].time));
 				}
@@ -313,7 +317,18 @@
 						},
 					},
 					plotOptions: {
-						series: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '15px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
 							cursor: 'pointer',
 							point: {
 								events: {
@@ -322,11 +337,6 @@
 									}
 								}
 							},
-							borderWidth: 0,
-							dataLabels: {
-								enabled: false,
-								format: '{point.y}'
-							}
 						},
 						column: {
 							color:  Highcharts.ColorString,

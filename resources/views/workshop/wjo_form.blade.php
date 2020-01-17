@@ -231,18 +231,17 @@
 			<table id="traceabilityTable" class="table table-bordered table-striped table-hover">
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
-						<th style="width: 1%">Tanggal Pengajuan</th>
-						<th style="width: 1%">WJO</th>
-						<th style="width: 1%">Prioritas</th>
-						<th style="width: 1%">Nama Barang</th>
-						<th style="width: 1%">Jumlah</th>
-						<th style="width: 1%">Material</th>
-						<th style="width: 1%">Request Selesai</th>
-						<th style="width: 1%">Uraian</th>
-						<th style="width: 1%">Lampiran</th>
-						<th style="width: 1%">Drawing</th>
-						<th style="width: 1%">PIC</th>
-						<th style="width: 1%">Action</th>
+						<th style="width: 5%">Tanggal Pengajuan</th>
+						<th style="width: 5%">WJO</th>
+						<th style="width: 5%">Prioritas</th>
+						<th style="width: 10%">Jenis Pekerjaan</th>
+						<th style="width: 15%">Nama Barang</th>
+						<th style="width: 5%">Jumlah</th>
+						<th style="width: 10%">Material</th>
+						<th style="width: 5%">Target</th>
+						<th style="width: 5%">Status</th>
+						<th style="width: 7%">PIC</th>
+						<th style="width: 7%">Action</th>
 					</tr>
 				</thead>
 				<tbody id="tableBody">
@@ -381,41 +380,29 @@
 				var tableData = "";
 				for (var i = 0; i < result.tableData.length; i++) {
 
+					tableData += '<tr>';
+					tableData += '<td>'+ result.tableData[i].created_at +'</td>';
+					tableData += '<td>'+ result.tableData[i].order_no +'</td>';
 					if(result.tableData[i].priority == 'Urgent'){
-						tableData += '<tr style="background-color: rgba(213,0,0 ,.5);">';
+						var priority = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
 					}else{
-						tableData += '<tr>';
+						var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 					}
-
-					var assign = '';
-					if(result.tableData[i].process_name == 'Listed'){
-						assign = ' onclick="showAssignment(\''+result.tableData[i].order_no+'\')"';
-					}
-
-					tableData += '<td'+ assign +'>'+ result.tableData[i].created_at +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].order_no +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].priority +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].item_name +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
-					tableData += '<td'+ assign +'>'+ (result.tableData[i].target_date || '-') +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
-					
-					if(result.tableData[i].attachment != null){
-						tableData += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+result.tableData[i].attachment+'\')" class="fa fa-paperclip"></a></td>';
-					}else{
-						tableData += '<td>-</td>';							
-					}
-					if(result.tableData[i].attachment != null){
-						tableData += '<td><a href="javascript:void(0)" onClick="downloadDrw(\''+result.tableData[i].item_number+'\')" class="fa fa-paperclip"></a></td>';
-					}else{
-						tableData += '<td>-</td>';							
-					}
-					tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
+					tableData += '<td>'+ priority +'</td>';
+					tableData += '<td>'+ result.tableData[i].type +'</td>';
+					tableData += '<td>'+ result.tableData[i].item_name +'</td>';
+					tableData += '<td>'+ result.tableData[i].quantity +'</td>';
+					tableData += '<td>'+ result.tableData[i].material +'</td>';
+					tableData += '<td>'+ (result.tableData[i].target_date || '-') +'</td>';
+					tableData += '<td>'+ result.tableData[i].process_name +'</td>';	
+					tableData += '<td>'+ (result.tableData[i].pic || '-') +'</td>';	
 					if(result.tableData[i].remark == '0' || result.tableData[i].remark == '1'){
-						tableData += '<td><a href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-primary">Ubah</a></td>';
+						tableData += '<td>';
+						tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-warning">Edit</a>';
+						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a>';
+						tableData += '</td>';
 					}else{
-						tableData += '<td>-</td>';							
+						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a></td>';							
 					}
 					tableData += '</tr>';	
 				}

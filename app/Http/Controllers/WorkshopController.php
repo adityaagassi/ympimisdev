@@ -1348,7 +1348,26 @@ class WorkshopController extends Controller{
 			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.created_by', '=', $request->get('username'));
 		}
 
-		$workshop_job_orders = $workshop_job_orders->select('workshop_job_orders.remark', 'workshop_job_orders.id', 'workshop_job_orders.order_no', 'workshop_job_orders.created_at', 'workshop_job_orders.sub_section', 'workshop_job_orders.order_no', 'approver.name as approver', 'workshop_job_orders.item_name', 'workshop_job_orders.material', 'workshop_job_orders.quantity', 'pic.name as pic', 'workshop_job_orders.difficulty', 'workshop_job_orders.priority', 'workshop_job_orders.target_date', 'workshop_job_orders.finish_date', 'processes.process_name', 'workshop_job_orders.attachment', 'workshop_job_orders.item_number',  'workshop_job_orders.remark');
+		$workshop_job_orders = $workshop_job_orders
+		->select('workshop_job_orders.id',
+			'workshop_job_orders.order_no',
+			'workshop_job_orders.created_at',
+			'workshop_job_orders.sub_section',
+			'workshop_job_orders.remark',
+			'workshop_job_orders.type',
+			'approver.name as approver',
+			'workshop_job_orders.item_name',
+			'workshop_job_orders.material',
+			'workshop_job_orders.quantity',
+			db::raw('concat(SPLIT_STRING(pic.name, " ", 1), " ", SPLIT_STRING(pic.name, " ", 2)) as pic'),
+			'workshop_job_orders.difficulty',
+			'workshop_job_orders.priority',
+			'workshop_job_orders.target_date',
+			'workshop_job_orders.finish_date',
+			'processes.process_name',
+			'workshop_job_orders.attachment',
+			'workshop_job_orders.item_number',
+			'workshop_job_orders.remark');
 
 		$workshop_job_orders = $workshop_job_orders->get();
 
@@ -1475,16 +1494,14 @@ class WorkshopController extends Controller{
 			on m.machine_name = t.machine_name
 			order by time desc, machine_name asc");
 
-		$operator = db::select("
-			select operator.`name`, COALESCE(CEILING(time.time/60),0) as time from
-			(select employee_id,  concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` from employee_syncs
-			where `group` = 'Workshop'
-			and position <> 'leader') operator
+		$operator = db::select("select operator.`name`, COALESCE(CEILING(time.time/60),0) as time from
+			(select op.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from workshop_operators op
+			left join employee_syncs e on op.operator_id = e.employee_id) operator
 			left join
 			(select operator_id, sum(timestampdiff(SECOND, started_at, created_at)) as time from workshop_logs
 			where date(started_at) = '".$date."'
 			group by operator_id) time
-			on operator.employee_id = time.operator_id
+			on operator.operator_id = time.operator_id
 			order by time desc, `name` asc");
 
 		$response = array(

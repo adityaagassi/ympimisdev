@@ -263,13 +263,13 @@
 									<th style="width: 1%;">Masuk</th>
 									<th style="width: 1%;">Dept.</th>
 									<th style="width: 1%;">Bag.</th>
-									<th style="width: 1%;">Approved By</th>
+									<th style="width: 1%;">Prioritas</th>
 									<th style="width: 1%;">Nama Barang</th>
 									<th style="width: 1%;">Material</th>
 									<th style="width: 1%;">Qty</th>
+									<th style="width: 1%;">Approved By</th>
 									<th style="width: 1%;">PIC</th>
 									<th style="width: 1%;">Kesulitan</th>
-									<th style="width: 1%;">Prioritas</th>
 									<th style="width: 1%;">Target Selesai</th>
 									<th style="width: 1%;">Actual Selesai</th>
 									<th style="width: 1%;">Progress</th>
@@ -963,28 +963,31 @@
 
 					var group = result.tableData[i].sub_section.split("_");
 
-					if(result.tableData[i].priority == 'Urgent'){
-						tableData += '<tr style="background-color: rgba(213,0,0 ,.5);">';
-					}else{
-						tableData += '<tr>';
-					}
 
 					var assign = '';
 					if(result.tableData[i].process_name == 'Listed'){
 						assign = ' onclick="showAssignment(\''+result.tableData[i].order_no+'\')"';
 					}
 
+					tableData += '<tr>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].order_no +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].created_at +'</td>';
 					tableData += '<td'+ assign +'>'+ group[0] +'</td>';
 					tableData += '<td'+ assign +'>'+ group[1] +'</td>';
-					tableData += '<td'+ assign +'>'+ (result.tableData[i].approver || '-') +'</td>';
+					
+					if(result.tableData[i].priority == 'Urgent'){
+						var priority = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
+					}else{
+						var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
+					}
+					tableData += '<td'+ assign +'>'+ priority +'</td>';
+
 					tableData += '<td'+ assign +'>'+ result.tableData[i].item_name +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
+					tableData += '<td'+ assign +'>'+ (result.tableData[i].approver || '-') +'</td>';
 					tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
 					tableData += '<td'+ assign +'>'+ (result.tableData[i].difficulty || '-') +'</td>';
-					tableData += '<td'+ assign +'>'+ result.tableData[i].priority +'</td>';
 					tableData += '<td'+ assign +'>'+ (result.tableData[i].target_date || '-') +'</td>';
 					tableData += '<td'+ assign +'>'+ (result.tableData[i].finish_date || '-') +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].process_name +'</td>';

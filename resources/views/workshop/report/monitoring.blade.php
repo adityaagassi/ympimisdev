@@ -391,21 +391,25 @@
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
 
+					if(result.progress[i].approved){
+						approved_time.push(new Date(result.progress[i].approved));
+					}else{
+						approved_time.push(0);
+					}
+
 					if(result.progress[i].target_date){
-						if(result.progress[i].approved){
-							approved_time.push(new Date(result.progress[i].approved));
-						}else{
-							approved_time.push(0);
-						}
 						var date = result.progress[i].target_date.split("-");
 						target_date.push(new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0));
-
-						body += '<div class="progress-group">';
-						body += '<div class="progress" style="background-color: #212121; height: 25px; border: 1px solid; padding: 0px; margin: 0px;">';
-						body += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+i+'" style="font-size: 12px; padding-top: 0.5%;"></div>';
-						body += '</div>';
-						body += '</div>';
+					}else{
+						target_date.push(0)
 					}
+
+					body += '<div class="progress-group">';
+					body += '<div class="progress" style="background-color: #212121; height: 25px; border: 1px solid; padding: 0px; margin: 0px;">';
+					body += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+i+'" style="font-size: 12px; padding-top: 0.5%;"></div>';
+					body += '</div>';
+					body += '</div>';
+					
 					body += '</td>';				
 					body += '</tr>';
 
